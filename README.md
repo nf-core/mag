@@ -27,4 +27,4 @@ The nf-core/mag pipeline comes with documentation about the pipeline, found in t
 5. [Troubleshooting](docs/troubleshooting.md)
 
 ### Credits
-This pipeline was written by Hadrien Gourlé ([HadrienG](hadriengourle.com)) at [SLU](https://slu.se).
+This pipeline was written by [Hadrien Gourlé](hadriengourle.com) at [SLU](https://slu.se).

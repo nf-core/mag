@@ -82,12 +82,12 @@ if( !(workflow.runName ==~ /[a-z]+_[a-z]+/) ){
 }
 
 /*
- * Create a channel for input read files
+ * Create channels for input read files
  */
 Channel
     .fromFilePairs( params.reads, size: params.singleEnd ? 1 : 2 )
     .ifEmpty { exit 1, "Cannot find any reads matching: ${params.reads}\nNB: Path needs to be enclosed in quotes!\nNB: Path requires at least one * wildcard!\nIf this is single-end data, please specify --singleEnd on the command line." }
-    .into { read_files_fastqc }
+    .into { read_files_atropos }
 
 
 // Header log info
@@ -143,34 +143,42 @@ process get_software_versions {
     """
     echo $params.version > v_pipeline.txt
     echo $workflow.nextflow.version > v_nextflow.txt
-    fastqc --version > v_fastqc.txt
+    atropos | head -2 | tail -1 > v_atropos.txt
     multiqc --version > v_multiqc.txt
     scrape_software_versions.py > software_versions_mqc.yaml
     """
 }
 
 
-
 /*
- * STEP 1 - FastQC
+ * STEP 1 - Read trimming and pre/post qc
  */
-process fastqc {
+process atropos {
     tag "$name"
-    publishDir "${params.outdir}/fastqc", mode: 'copy',
-        saveAs: {filename -> filename.indexOf(".zip") > 0 ? "zips/$filename" : "$filename"}
+    publishDir "${params.outdir}/atropos", mode: 'copy'
 
     input:
-    set val(name), file(reads) from read_files_fastqc
+    set val(name), file(reads) from read_files_atropos
 
     output:
-    file "*_fastqc.{zip,html}" into fastqc_results
+    set val(name), file("${name}_trimmed_R{1,2}.fastq.gz") into trimmed_reads
+    file("${name}.report.txt") into atropos_report
 
     script:
-    """
-    fastqc -q $reads
-    """
+    def single = reads instanceof Path
+    if ( !single ) {
+        """
+        atropos trim --op-order GACQW --trim-n -o "${name}_trimmed_R1.fastq.gz" \
+        -p "${name}_trimmed_R2.fastq.gz" --report-file "${name}.report.txt" \
+        --no-cache-adapters --stats both -pe1 "${reads[0]}" -pe2 "${reads[1]}"
+        """
+    }
+    else {
+        """
+        echo not implemented :-(
+        """
+    }
 }
-
 
 
 /*
@@ -181,8 +189,8 @@ process multiqc {
 
     input:
     file multiqc_config
-    file ('fastqc/*') from fastqc_results.collect()
     file ('software_versions/*') from software_versions_yaml
+    file atropos_report from atropos_report
 
     output:
     file "*multiqc_report.html" into multiqc_report
@@ -195,7 +203,6 @@ process multiqc {
     multiqc -f $rtitle $rfilename --config $multiqc_config .
     """
 }
-
 
 
 /*
