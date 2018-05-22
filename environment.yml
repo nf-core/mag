@@ -1,0 +1,8 @@
+name: mag-0.1.0
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+dependencies:
+  - fastqc=0.11.7
+  - multiqc=1.5
