@@ -1,4 +1,7 @@
-# nf-core/mag
+# [UNDER CONSTRUCTION] nf-core/mag
+
+THIS PIPELINE IS A WORK IN PROGRESS. Thanks for checking it out! Hopefully it will be fonctional soon.
+
 Assembly, binning and annotation of metagenomes
 
 [![Build Status](https://travis-ci.org/nf-core/mag.svg?branch=master)](https://travis-ci.org/nf-core/mag)
