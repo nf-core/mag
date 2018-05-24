@@ -77,16 +77,16 @@ then
     echo "Found existing test set, using $data_dir"
 else
     echo "Downloading test set..."
-    curl https://your_website.com/nf-core/mag_test_set.tar.bz2 > ${data_path}/nf-core/mag_test_set.tar.bz2
+    curl -J -L https://github.com/HadrienG/test-datasets/raw/mag/test_data/mag_test_set.tar.bz2 > ${data_path}/mag_test_set.tar.bz2
     echo "Unpacking test set..."
-    tar xvjf ${data_path}/nf-core/mag_test_set.tar.bz2 -C ${data_path}
+    tar xvjf ${data_path}/mag_test_set.tar.bz2 -C ${data_path}
     echo "Done"
 fi
 
 # Run name
 run_name="Test nf-core/mag Run: "$(date +%s)
-
-cmd="nextflow run $pipelinescript -resume -name \"$run_name\" $profile $dockerfl $singularityfl --reads \"${data_dir}/*.fastq.gz\""
+# -name \"$run_name\"
+cmd="nextflow run $pipelinescript -resume $profile $dockerfl $singularityfl --reads \"${data_path}/*R{1,2}.fastq.gz\""
 echo "Starting nextflow... Command:"
 echo $cmd
 echo "-------------------------------------------------------"
