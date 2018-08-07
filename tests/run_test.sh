@@ -84,9 +84,9 @@ else
 fi
 
 # Run name
-run_name="Test nf-core/mag Run: "$(date +%s)
+# run_name="Test nf-core/mag Run: "$(date +%s)
 # -name \"$run_name\"
-cmd="nextflow run $pipelinescript -resume $profile $dockerfl $singularityfl --reads \"${data_path}/*R{1,2}.fastq.gz\""
+cmd="nextflow run $pipelinescript -resume $profile $dockerfl --reads \"${data_path}/*R{1,2}.fastq.gz\""
 echo "Starting nextflow... Command:"
 echo $cmd
 echo "-------------------------------------------------------"
