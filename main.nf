@@ -130,11 +130,11 @@ try {
               "============================================================"
 }
 
-
 /*
  * Parse software version numbers
  */
 process get_software_versions {
+    validExitStatus 0,2
 
     output:
     file 'software_versions_mqc.yaml' into software_versions_yaml
@@ -143,8 +143,8 @@ process get_software_versions {
     """
     echo $params.version > v_pipeline.txt
     echo $workflow.nextflow.version > v_nextflow.txt
-    atropos | head -2 | tail -1 > v_atropos.txt
     multiqc --version > v_multiqc.txt
+    atropos | head -2 | tail -1 > v_atropos.txt
     scrape_software_versions.py > software_versions_mqc.yaml
     """
 }
@@ -184,45 +184,45 @@ process atropos {
 /*
  * STEP 2 - MultiQC
  */
-process multiqc {
-    publishDir "${params.outdir}/MultiQC", mode: 'copy'
-
-    input:
-    file multiqc_config
-    file ('software_versions/*') from software_versions_yaml
-    file atropos_report from atropos_report
-
-    output:
-    file "*multiqc_report.html" into multiqc_report
-    file "*_data"
-
-    script:
-    rtitle = custom_runName ? "--title \"$custom_runName\"" : ''
-    rfilename = custom_runName ? "--filename " + custom_runName.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
-    """
-    multiqc -f $rtitle $rfilename --config $multiqc_config .
-    """
-}
-
-
-/*
- * STEP 3 - Output Description HTML
- */
-process output_documentation {
-    tag "$prefix"
-    publishDir "${params.outdir}/Documentation", mode: 'copy'
-
-    input:
-    file output_docs
-
-    output:
-    file "results_description.html"
-
-    script:
-    """
-    markdown_to_html.r $output_docs results_description.html
-    """
-}
+// process multiqc {
+//     publishDir "${params.outdir}/MultiQC", mode: 'copy'
+//
+//     input:
+//     file multiqc_config
+//     // file ('software_versions/*') from software_versions_yaml
+//     file atropos_report from atropos_report
+//
+//     output:
+//     file "*multiqc_report.html" into multiqc_report
+//     file "*_data"
+//
+//     script:
+//     rtitle = custom_runName ? "--title \"$custom_runName\"" : ''
+//     rfilename = custom_runName ? "--filename " + custom_runName.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
+//     """
+//     multiqc -f $rtitle $rfilename --config $multiqc_config .
+//     """
+// }
+//
+//
+// /*
+//  * STEP 3 - Output Description HTML
+//  */
+// process output_documentation {
+//     tag "$prefix"
+//     publishDir "${params.outdir}/Documentation", mode: 'copy'
+//
+//     input:
+//     file output_docs
+//
+//     output:
+//     file "results_description.html"
+//
+//     script:
+//     """
+//     markdown_to_html.r $output_docs results_description.html
+//     """
+// }
 
 
 
