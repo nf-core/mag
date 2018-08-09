@@ -28,4 +28,4 @@ env:
 
 script:
   - "nf-core lint ${TRAVIS_BUILD_DIR}"
-  - "cd ${TRAVIS_BUILD_DIR}/tests && ./run_test.sh"
+  - "make test"
