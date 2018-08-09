@@ -82,48 +82,8 @@ By default, the pipeline expects paired-end data. If you have single-end data, y
 
 It is not possible to run a mixture of single-end and paired-end files in one run.
 
-
-## Reference Genomes
-
-The pipeline config files come bundled with paths to the illumina iGenomes reference index files. If running with docker or AWS, the configuration is set up to use the [AWS-iGenomes](https://ewels.github.io/AWS-iGenomes/) resource.
-
-### `--genome` (using iGenomes)
-There are 31 different species supported in the iGenomes references. To run the pipeline, you must specify which to use with the `--genome` flag.
-
-You can find the keys to specify the genomes in the [iGenomes config file](../conf/igenomes.config). Common genomes that are supported are:
-
-* Human
-  * `--genome GRCh37`
-* Mouse
-  * `--genome GRCm38`
-* _Drosophila_
-  * `--genome BDGP6`
-* _S. cerevisiae_
-  * `--genome 'R64-1-1'`
-
-> There are numerous others - check the config file for more.
-
-Note that you can use the same configuration setup to save sets of reference files for your own use, even if they are not part of the iGenomes resource. See the [Nextflow documentation](https://www.nextflow.io/docs/latest/config.html) for instructions on where to save such a file.
-
-The syntax for this reference configuration is as follows:
-
-```nextflow
-params {
-  genomes {
-    'GRCh37' {
-      fasta   = '<path to the genome fasta file>' // Used if no star index given
-    }
-    // Any number of additional genomes, key is used with --genome
-  }
-}
-```
-
-### `--fasta`
-If you prefer, you can specify the full path to your reference genome when you run the pipeline:
-
-```bash
---fasta '[path to Fasta reference]'
-```
+### `--three`
+This is the 3' dapater sequence to be used for read trimming. By default it is the TruSeq "AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC"
 
 ## Job Resources
 ### Automatic resubmission
@@ -139,7 +99,7 @@ The output directory where the results will be saved.
 ### `--email`
 Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits. If set in your user config file (`~/.nextflow/config`) then you don't need to speicfy this on the command line for every run.
 
-### `-name`
+### `--name`
 Name for the pipeline run. If not specified, Nextflow will automatically generate a random mnemonic.
 
 This is used in the MultiQC report (if not default) and in the summary HTML / e-mail (always).
