@@ -47,9 +47,6 @@ Pipeline Configuration:
 <% out << summary.collect{ k,v -> " - $k: $v" }.join("\n") %>
 
 
-Software Versions:
------------------------
-<% out << software_versions.collect{ k,v -> " - $k: $v" }.join("\n") %>
 
 --
 nf-core/mag

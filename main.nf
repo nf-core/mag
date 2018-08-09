@@ -25,14 +25,11 @@ def helpMessage() {
 
     Mandatory arguments:
       --reads                       Path to input data (must be surrounded with quotes)
-      --genome                      Name of iGenomes reference
+      --three                       Sequence of 3' adapter to remove
       -profile                      Hardware config to use. docker / aws
 
     Options:
       --singleEnd                   Specifies that the input is single end reads
-
-    References                      If not specified in the configuration file or you wish to overwrite any of the references.
-      --fasta                       Path to Fasta reference
 
     Other options:
       --outdir                      The output directory where the results will be saved
@@ -53,25 +50,13 @@ if (params.help){
 
 // Configurable variables
 params.name = false
-params.fasta = params.genome ? params.genomes[ params.genome ].fasta ?: false : false
+// params.fasta = params.genome ? params.genomes[ params.genome ].fasta ?: false : false
 params.multiqc_config = "$baseDir/conf/multiqc_config.yaml"
 params.email = false
 params.plaintext_email = false
 
 multiqc_config = file(params.multiqc_config)
 output_docs = file("$baseDir/docs/output.md")
-
-// Validate inputs
-if ( params.fasta ){
-    fasta = file(params.fasta)
-    if( !fasta.exists() ) exit 1, "Fasta file not found: ${params.fasta}"
-}
-//
-// NOTE - THIS IS NOT USED IN THIS PIPELINE, EXAMPLE ONLY
-// If you want to use the above in a process, define the following:
-//   input:
-//   file fasta from fasta
-//
 
 
 // Has the run name been specified by the user?
@@ -82,13 +67,23 @@ if( !(workflow.runName ==~ /[a-z]+_[a-z]+/) ){
 }
 
 /*
- * Create a channel for input read files
+ * Create channels for input read files
  */
 Channel
     .fromFilePairs( params.reads, size: params.singleEnd ? 1 : 2 )
     .ifEmpty { exit 1, "Cannot find any reads matching: ${params.reads}\nNB: Path needs to be enclosed in quotes!\nNB: Path requires at least one * wildcard!\nIf this is single-end data, please specify --singleEnd on the command line." }
-    .into { read_files_fastqc }
+    .set { read_files_atropos }
 
+/*
+ * reverse complement of adapter sequence
+ */
+String.metaClass.complement = {
+    def complements = [ A:'T', T:'A', U:'A', G:'C', C:'G', Y:'R', R:'Y', S:'S',
+                        W:'W', K:'M', M:'K', B:'V', D:'H', H:'D', V:'B', N:'N' ]
+    delegate.toUpperCase().collect { base -> complements[ base ] ?: 'X' }.join()
+}
+params.three = "AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC"
+reverse_three = params.three.reverse().complement()
 
 // Header log info
 log.info "========================================="
@@ -97,7 +92,7 @@ log.info "========================================="
 def summary = [:]
 summary['Run Name']     = custom_runName ?: workflow.runName
 summary['Reads']        = params.reads
-summary['Fasta Ref']    = params.fasta
+// summary['Fasta Ref']    = params.fasta
 summary['Data Type']    = params.singleEnd ? 'Single-End' : 'Paired-End'
 summary['Max Memory']   = params.max_memory
 summary['Max CPUs']     = params.max_cpus
@@ -130,11 +125,11 @@ try {
               "============================================================"
 }
 
-
 /*
  * Parse software version numbers
  */
 process get_software_versions {
+    validExitStatus 0,2
 
     output:
     file 'software_versions_mqc.yaml' into software_versions_yaml
@@ -143,34 +138,45 @@ process get_software_versions {
     """
     echo $params.version > v_pipeline.txt
     echo $workflow.nextflow.version > v_nextflow.txt
-    fastqc --version > v_fastqc.txt
     multiqc --version > v_multiqc.txt
+    atropos | head -2 | tail -1 > v_atropos.txt
     scrape_software_versions.py > software_versions_mqc.yaml
     """
 }
 
 
-
 /*
- * STEP 1 - FastQC
+ * STEP 1 - Read trimming and pre/post qc
  */
-process fastqc {
+process atropos {
     tag "$name"
-    publishDir "${params.outdir}/fastqc", mode: 'copy',
-        saveAs: {filename -> filename.indexOf(".zip") > 0 ? "zips/$filename" : "$filename"}
+    publishDir "${params.outdir}/atropos", mode: 'copy'
 
     input:
-    set val(name), file(reads) from read_files_fastqc
+    set val(name), file(reads) from read_files_atropos
+    val adapter from params.three
+    val adapter_reverse from reverse_three
 
     output:
-    file "*_fastqc.{zip,html}" into fastqc_results
+    set val(name), file("${name}_trimmed_R{1,2}.fastq.gz") into trimmed_reads
+    file("${name}.report.txt") into atropos_report
 
     script:
-    """
-    fastqc -q $reads
-    """
+    def single = reads instanceof Path
+    if ( !single ) {
+        """
+        atropos trim -a ${adapter} -A ${adapter_reverse} --op-order GACQW \
+        --trim-n -o "${name}_trimmed_R1.fastq.gz" -p "${name}_trimmed_R2.fastq.gz" \
+        --report-file "${name}.report.txt" --no-cache-adapters --stats both \
+        -pe1 "${reads[0]}" -pe2 "${reads[1]}"
+        """
+    }
+    else {
+        """
+        echo not implemented :-(
+        """
+    }
 }
-
 
 
 /*
@@ -181,8 +187,8 @@ process multiqc {
 
     input:
     file multiqc_config
-    file ('fastqc/*') from fastqc_results.collect()
-    file ('software_versions/*') from software_versions_yaml
+    file ('software_versions/*') from software_versions_yaml.collect()
+    file atropos_report from atropos_report
 
     output:
     file "*multiqc_report.html" into multiqc_report
@@ -195,105 +201,103 @@ process multiqc {
     multiqc -f $rtitle $rfilename --config $multiqc_config .
     """
 }
-
-
-
-/*
- * STEP 3 - Output Description HTML
- */
-process output_documentation {
-    tag "$prefix"
-    publishDir "${params.outdir}/Documentation", mode: 'copy'
-
-    input:
-    file output_docs
-
-    output:
-    file "results_description.html"
-
-    script:
-    """
-    markdown_to_html.r $output_docs results_description.html
-    """
-}
+//
+//
+// /*
+//  * STEP 3 - Output Description HTML
+//  */
+// process output_documentation {
+//     tag "$prefix"
+//     publishDir "${params.outdir}/Documentation", mode: 'copy'
+//
+//     input:
+//     file output_docs
+//
+//     output:
+//     file "results_description.html"
+//
+//     script:
+//     """
+//     markdown_to_html.r $output_docs results_description.html
+//     """
+// }
 
 
 
 /*
  * Completion e-mail notification
  */
-workflow.onComplete {
+ workflow.onComplete {
 
-    // Set up the e-mail variables
-    def subject = "[nf-core/mag] Successful: $workflow.runName"
-    if(!workflow.success){
-      subject = "[nf-core/mag] FAILED: $workflow.runName"
-    }
-    def email_fields = [:]
-    email_fields['version'] = params.version
-    email_fields['runName'] = custom_runName ?: workflow.runName
-    email_fields['success'] = workflow.success
-    email_fields['dateComplete'] = workflow.complete
-    email_fields['duration'] = workflow.duration
-    email_fields['exitStatus'] = workflow.exitStatus
-    email_fields['errorMessage'] = (workflow.errorMessage ?: 'None')
-    email_fields['errorReport'] = (workflow.errorReport ?: 'None')
-    email_fields['commandLine'] = workflow.commandLine
-    email_fields['projectDir'] = workflow.projectDir
-    email_fields['summary'] = summary
-    email_fields['summary']['Date Started'] = workflow.start
-    email_fields['summary']['Date Completed'] = workflow.complete
-    email_fields['summary']['Pipeline script file path'] = workflow.scriptFile
-    email_fields['summary']['Pipeline script hash ID'] = workflow.scriptId
-    if(workflow.repository) email_fields['summary']['Pipeline repository Git URL'] = workflow.repository
-    if(workflow.commitId) email_fields['summary']['Pipeline repository Git Commit'] = workflow.commitId
-    if(workflow.revision) email_fields['summary']['Pipeline Git branch/tag'] = workflow.revision
-    if(workflow.container) email_fields['summary']['Docker image'] = workflow.container
-    email_fields['software_versions'] = software_versions
-    email_fields['software_versions']['Nextflow Build'] = workflow.nextflow.build
-    email_fields['software_versions']['Nextflow Compile Timestamp'] = workflow.nextflow.timestamp
+     // Set up the e-mail variables
+     def subject = "[nf-core/mag] Successful: $workflow.runName"
+     if(!workflow.success){
+       subject = "[nf-core/mag] FAILED: $workflow.runName"
+     }
+     def email_fields = [:]
+     email_fields['version'] = params.version
+     email_fields['runName'] = custom_runName ?: workflow.runName
+     email_fields['success'] = workflow.success
+     email_fields['dateComplete'] = workflow.complete
+     email_fields['duration'] = workflow.duration
+     email_fields['exitStatus'] = workflow.exitStatus
+     email_fields['errorMessage'] = (workflow.errorMessage ?: 'None')
+     email_fields['errorReport'] = (workflow.errorReport ?: 'None')
+     email_fields['commandLine'] = workflow.commandLine
+     email_fields['projectDir'] = workflow.projectDir
+     email_fields['summary'] = summary
+     email_fields['summary']['Date Started'] = workflow.start
+     email_fields['summary']['Date Completed'] = workflow.complete
+     email_fields['summary']['Pipeline script file path'] = workflow.scriptFile
+     email_fields['summary']['Pipeline script hash ID'] = workflow.scriptId
+     if(workflow.repository) email_fields['summary']['Pipeline repository Git URL'] = workflow.repository
+     if(workflow.commitId) email_fields['summary']['Pipeline repository Git Commit'] = workflow.commitId
+     if(workflow.revision) email_fields['summary']['Pipeline Git branch/tag'] = workflow.revision
+     email_fields['summary']['Nextflow Version'] = workflow.nextflow.version
+     email_fields['summary']['Nextflow Build'] = workflow.nextflow.build
+     email_fields['summary']['Nextflow Compile Timestamp'] = workflow.nextflow.timestamp
 
-    // Render the TXT template
-    def engine = new groovy.text.GStringTemplateEngine()
-    def tf = new File("$baseDir/assets/email_template.txt")
-    def txt_template = engine.createTemplate(tf).make(email_fields)
-    def email_txt = txt_template.toString()
+     // Render the TXT template
+     def engine = new groovy.text.GStringTemplateEngine()
+     def tf = new File("$baseDir/assets/email_template.txt")
+     def txt_template = engine.createTemplate(tf).make(email_fields)
+     def email_txt = txt_template.toString()
 
-    // Render the HTML template
-    def hf = new File("$baseDir/assets/email_template.html")
-    def html_template = engine.createTemplate(hf).make(email_fields)
-    def email_html = html_template.toString()
+     // Render the HTML template
+     def hf = new File("$baseDir/assets/email_template.html")
+     def html_template = engine.createTemplate(hf).make(email_fields)
+     def email_html = html_template.toString()
 
-    // Render the sendmail template
-    def smail_fields = [ email: params.email, subject: subject, email_txt: email_txt, email_html: email_html, baseDir: "$baseDir" ]
-    def sf = new File("$baseDir/assets/sendmail_template.txt")
-    def sendmail_template = engine.createTemplate(sf).make(smail_fields)
-    def sendmail_html = sendmail_template.toString()
+     // Render the sendmail template
+     def smail_fields = [ email: params.email, subject: subject, email_txt: email_txt, email_html: email_html, baseDir: "$baseDir" ]
+     def sf = new File("$baseDir/assets/sendmail_template.txt")
+     def sendmail_template = engine.createTemplate(sf).make(smail_fields)
+     def sendmail_html = sendmail_template.toString()
 
-    // Send the HTML e-mail
-    if (params.email) {
-        try {
-          if( params.plaintext_email ){ throw GroovyException('Send plaintext e-mail, not HTML') }
-          // Try to send HTML e-mail using sendmail
-          [ 'sendmail', '-t' ].execute() << sendmail_html
-          log.info "[nf-core/mag] Sent summary e-mail to $params.email (sendmail)"
-        } catch (all) {
-          // Catch failures and try with plaintext
-          [ 'mail', '-s', subject, params.email ].execute() << email_txt
-          log.info "[nf-core/mag] Sent summary e-mail to $params.email (mail)"
-        }
-    }
+     // Send the HTML e-mail
+     if (params.email) {
+         try {
+           if( params.plaintext_email ){ throw GroovyException('Send plaintext e-mail, not HTML') }
+           // Try to send HTML e-mail using sendmail
+           [ 'sendmail', '-t' ].execute() << sendmail_html
+           log.info "[nf-core/mag] Sent summary e-mail to $params.email (sendmail)"
+         } catch (all) {
+           // Catch failures and try with plaintext
+           [ 'mail', '-s', subject, params.email ].execute() << email_txt
+           log.info "[nf-core/mag] Sent summary e-mail to $params.email (mail)"
+         }
+     }
 
-    // Write summary e-mail HTML to a file
-    def output_d = new File( "${params.outdir}/Documentation/" )
-    if( !output_d.exists() ) {
-      output_d.mkdirs()
-    }
-    def output_hf = new File( output_d, "pipeline_report.html" )
-    output_hf.withWriter { w -> w << email_html }
-    def output_tf = new File( output_d, "pipeline_report.txt" )
-    output_tf.withWriter { w -> w << email_txt }
+     // Write summary e-mail HTML to a file
+     def output_d = new File( "${params.outdir}/Documentation/" )
+     if( !output_d.exists() ) {
+       output_d.mkdirs()
+     }
+     def output_hf = new File( output_d, "pipeline_report.html" )
+     output_hf.withWriter { w -> w << email_html }
+     def output_tf = new File( output_d, "pipeline_report.txt" )
+     output_tf.withWriter { w -> w << email_txt }
 
-    log.info "[nf-core/mag] Pipeline Complete"
+     log.info "[nf-core/mag] Pipeline Complete"
 
-}
+ }

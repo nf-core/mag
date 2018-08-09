@@ -9,6 +9,9 @@ cache: pip
 matrix:
   fast_finish: true
 
+before_install:
+  - docker pull hadrieng/mag:0.1.0
+
 install:
   # Install Nextflow
   - mkdir /tmp/nextflow
@@ -28,4 +31,4 @@ env:
 
 script:
   - "nf-core lint ${TRAVIS_BUILD_DIR}"
-  - "cd ${TRAVIS_BUILD_DIR}/tests && ./run_test.sh"
+  - "make test"
