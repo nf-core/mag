@@ -9,6 +9,9 @@ cache: pip
 matrix:
   fast_finish: true
 
+before_install:
+  - docker pull hadrieng/mag:0.1.0
+
 install:
   # Install Nextflow
   - mkdir /tmp/nextflow
