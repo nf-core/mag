@@ -25,6 +25,7 @@ def helpMessage() {
 
     Mandatory arguments:
       --reads                       Path to input data (must be surrounded with quotes)
+      --three                       Sequence of 3' adapter to remove
       -profile                      Hardware config to use. docker / aws
 
     Options:
@@ -73,6 +74,16 @@ Channel
     .ifEmpty { exit 1, "Cannot find any reads matching: ${params.reads}\nNB: Path needs to be enclosed in quotes!\nNB: Path requires at least one * wildcard!\nIf this is single-end data, please specify --singleEnd on the command line." }
     .set { read_files_atropos }
 
+/*
+ * reverse complement of adapter sequence
+ */
+String.metaClass.complement = {
+    def complements = [ A:'T', T:'A', U:'A', G:'C', C:'G', Y:'R', R:'Y', S:'S',
+                        W:'W', K:'M', M:'K', B:'V', D:'H', H:'D', V:'B', N:'N' ]
+    delegate.toUpperCase().collect { base -> complements[ base ] ?: 'X' }.join()
+}
+params.three = "AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC"
+reverse_three = params.three.reverse().complement()
 
 // Header log info
 log.info "========================================="
@@ -143,6 +154,8 @@ process atropos {
 
     input:
     set val(name), file(reads) from read_files_atropos
+    val adapter from params.three
+    val adapter_reverse from reverse_three
 
     output:
     set val(name), file("${name}_trimmed_R{1,2}.fastq.gz") into trimmed_reads
@@ -152,9 +165,10 @@ process atropos {
     def single = reads instanceof Path
     if ( !single ) {
         """
-        atropos trim --op-order GACQW --trim-n -o "${name}_trimmed_R1.fastq.gz" \
-        -p "${name}_trimmed_R2.fastq.gz" --report-file "${name}.report.txt" \
-        --no-cache-adapters --stats both -pe1 "${reads[0]}" -pe2 "${reads[1]}"
+        atropos trim -a ${adapter} -A ${adapter_reverse} --op-order GACQW \
+        --trim-n -o "${name}_trimmed_R1.fastq.gz" -p "${name}_trimmed_R2.fastq.gz" \
+        --report-file "${name}.report.txt" --no-cache-adapters --stats both \
+        -pe1 "${reads[0]}" -pe2 "${reads[1]}"
         """
     }
     else {
