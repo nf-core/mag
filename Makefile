@@ -6,7 +6,7 @@ clean:
 lint:
 	nf-core lint .
 
-test: clean
+test: clean lint
 	cd tests && ./run_test.sh -d hadrieng/mag:0.1.0 -t ../data
 
 docker:

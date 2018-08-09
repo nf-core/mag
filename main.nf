@@ -25,14 +25,10 @@ def helpMessage() {
 
     Mandatory arguments:
       --reads                       Path to input data (must be surrounded with quotes)
-      --genome                      Name of iGenomes reference
       -profile                      Hardware config to use. docker / aws
 
     Options:
       --singleEnd                   Specifies that the input is single end reads
-
-    References                      If not specified in the configuration file or you wish to overwrite any of the references.
-      --fasta                       Path to Fasta reference
 
     Other options:
       --outdir                      The output directory where the results will be saved
@@ -53,25 +49,13 @@ if (params.help){
 
 // Configurable variables
 params.name = false
-params.fasta = params.genome ? params.genomes[ params.genome ].fasta ?: false : false
+// params.fasta = params.genome ? params.genomes[ params.genome ].fasta ?: false : false
 params.multiqc_config = "$baseDir/conf/multiqc_config.yaml"
 params.email = false
 params.plaintext_email = false
 
 multiqc_config = file(params.multiqc_config)
 output_docs = file("$baseDir/docs/output.md")
-
-// Validate inputs
-if ( params.fasta ){
-    fasta = file(params.fasta)
-    if( !fasta.exists() ) exit 1, "Fasta file not found: ${params.fasta}"
-}
-//
-// NOTE - THIS IS NOT USED IN THIS PIPELINE, EXAMPLE ONLY
-// If you want to use the above in a process, define the following:
-//   input:
-//   file fasta from fasta
-//
 
 
 // Has the run name been specified by the user?
@@ -87,7 +71,7 @@ if( !(workflow.runName ==~ /[a-z]+_[a-z]+/) ){
 Channel
     .fromFilePairs( params.reads, size: params.singleEnd ? 1 : 2 )
     .ifEmpty { exit 1, "Cannot find any reads matching: ${params.reads}\nNB: Path needs to be enclosed in quotes!\nNB: Path requires at least one * wildcard!\nIf this is single-end data, please specify --singleEnd on the command line." }
-    .into { read_files_atropos }
+    .set { read_files_atropos }
 
 
 // Header log info
@@ -97,7 +81,7 @@ log.info "========================================="
 def summary = [:]
 summary['Run Name']     = custom_runName ?: workflow.runName
 summary['Reads']        = params.reads
-summary['Fasta Ref']    = params.fasta
+// summary['Fasta Ref']    = params.fasta
 summary['Data Type']    = params.singleEnd ? 'Single-End' : 'Paired-End'
 summary['Max Memory']   = params.max_memory
 summary['Max CPUs']     = params.max_cpus
@@ -232,9 +216,9 @@ process multiqc {
  workflow.onComplete {
 
      // Set up the e-mail variables
-     def subject = "[{{ cookiecutter.pipeline_name }}] Successful: $workflow.runName"
+     def subject = "[nf-core/mag] Successful: $workflow.runName"
      if(!workflow.success){
-       subject = "[{{ cookiecutter.pipeline_name }}] FAILED: $workflow.runName"
+       subject = "[nf-core/mag] FAILED: $workflow.runName"
      }
      def email_fields = [:]
      email_fields['version'] = params.version
@@ -282,11 +266,11 @@ process multiqc {
            if( params.plaintext_email ){ throw GroovyException('Send plaintext e-mail, not HTML') }
            // Try to send HTML e-mail using sendmail
            [ 'sendmail', '-t' ].execute() << sendmail_html
-           log.info "[{{ cookiecutter.pipeline_name }}] Sent summary e-mail to $params.email (sendmail)"
+           log.info "[nf-core/mag] Sent summary e-mail to $params.email (sendmail)"
          } catch (all) {
            // Catch failures and try with plaintext
            [ 'mail', '-s', subject, params.email ].execute() << email_txt
-           log.info "[{{ cookiecutter.pipeline_name }}] Sent summary e-mail to $params.email (mail)"
+           log.info "[nf-core/mag] Sent summary e-mail to $params.email (mail)"
          }
      }
 
@@ -300,6 +284,6 @@ process multiqc {
      def output_tf = new File( output_d, "pipeline_report.txt" )
      output_tf.withWriter { w -> w << email_txt }
 
-     log.info "[{{ cookiecutter.pipeline_name }}] Pipeline Complete"
+     log.info "[nf-core/mag] Pipeline Complete"
 
  }
