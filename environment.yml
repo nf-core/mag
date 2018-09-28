@@ -1,0 +1,8 @@
+name: nf-core-mag-1.0dev
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+dependencies:
+  - fastqc=0.11.7
+  - multiqc=1.6
