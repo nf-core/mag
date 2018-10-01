@@ -14,9 +14,7 @@ By default, pipeline uses the `local` Nextflow executor - in other words, all jo
 To specify your cluster environment, add the following line to your config file:
 
 ```nextflow
-process {
-  executor = 'YOUR_SYSTEM_TYPE'
-}
+process.executor = 'YOUR_SYSTEM_TYPE'
 ```
 
 Many different cluster types are supported by Nextflow. For more information, please see the [Nextflow documentation](https://www.nextflow.io/docs/latest/executor.html).
@@ -34,45 +32,31 @@ process {
 ## Software Requirements
 To run the pipeline, several software packages are required. How you satisfy these requirements is essentially up to you and depends on your system. If possible, we _highly_ recommend using either Docker or Singularity.
 
+Please see the [`installation documentation`](../installation.md) for how to run using the below as a one-off. These instructions are about configuring a config file for repeated use.
+
 ### Docker
 Docker is a great way to run nf-core/mag, as it manages all software installations and allows the pipeline to be run in an identical software environment across a range of systems.
 
-Nextflow has [excellent integration](https://www.nextflow.io/docs/latest/docker.html) with Docker, and beyond installing the two tools, not much else is required.
+Nextflow has [excellent integration](https://www.nextflow.io/docs/latest/docker.html) with Docker, and beyond installing the two tools, not much else is required - nextflow will automatically fetch the [nfcore/mag](https://hub.docker.com/r/nfcore/mag/) image that we have created and is hosted at dockerhub at run time.
 
-First, install docker on your system: [Docker Installation Instructions](https://docs.docker.com/engine/installation/)
-
-Then, simply run the analysis pipeline:
-```bash
-nextflow run nf-core/mag -profile docker --reads '<path to your reads>'
-```
-
-Nextflow will recognise `nf-core/mag` and download the pipeline from GitHub. The `-profile docker` configuration lists the [hadrieng/mag](https://hub.docker.com/r/hadrieng/mag/) image that we have created and is hosted at dockerhub, and this is downloaded.
-
-The public docker images are tagged with the same version numbers as the code, which you can use to ensure reproducibility. When running the pipeline, specify the pipeline version with `-r`, for example `-r v1.3`. This uses pipeline code and docker image from this tagged version.
-
-To add docker support to your own config file (instead of using the `docker` profile, which runs locally), add the following:
+To add docker support to your own config file, add the following:
 
 ```nextflow
-docker {
-  enabled = true
-}
-process {
-  container = wf_container
-}
+docker.enabled = true
+process.container = "nfcore/mag"
 ```
 
-The variable `wf_container` is defined dynamically and automatically specifies the image tag if Nextflow is running with `-r`.
+Note that the dockerhub organisation name annoyingly can't have a hyphen, so is `nfcore` and not `nf-core`.
 
-A test suite for docker comes with the pipeline, and can be run by moving to the [`tests` directory](https://github.com/nf-core/mag/tree/master/tests) and running `./run_test.sh`. This will download a small yeast genome and some data, and attempt to run the pipeline through docker on that small dataset. This is automatically run using [Travis](https://travis-ci.org/nf-core/mag/) whenever changes are made to the pipeline.
 
 ### Singularity image
-Many HPC environments are not able to run Docker due to security issues. [Singularity](http://singularity.lbl.gov/) is a tool designed to run on such HPC systems which is very similar to Docker. Even better, it can use create images directly from dockerhub.
-
-To use the singularity image for a single run, use `-with-singularity 'docker://nf-core/mag'`. This will download the docker container from dockerhub and create a singularity image for you dynamically.
+Many HPC environments are not able to run Docker due to security issues.
+[Singularity](http://singularity.lbl.gov/) is a tool designed to run on such HPC systems which is very similar to Docker.
 
 To specify singularity usage in your pipeline config file, add the following:
 
 ```nextflow
+<<<<<<< HEAD
 singularity {
   enabled = true
 }
@@ -84,55 +68,33 @@ process {
 The variable `wf_container` is defined dynamically and automatically specifies the image tag if Nextflow is running with `-r`.
 
 If you intend to run the pipeline offline, nextflow will not be able to automatically download the singularity image for you. Instead, you'll have to do this yourself manually first, transfer the image file and then point to that.
+=======
+singularity.enabled = true
+process.container = "shub://nf-core/mag"
+```
+
+If you intend to run the pipeline offline, nextflow will not be able to automatically download the singularity image for you.
+Instead, you'll have to do this yourself manually first, transfer the image file and then point to that.
+>>>>>>> TEMPLATE
 
 First, pull the image file where you have an internet connection:
 
 ```bash
-singularity pull --name mag.img docker://nf-core/mag
+singularity pull --name nf-core-mag.simg shub://nf-core/mag
 ```
 
-Then transfer this file and run the pipeline with this path:
+Then transfer this file and point the config file to the image:
 
-```bash
-nextflow run /path/to/mag -with-singularity /path/to/mag.img
+```nextflow
+singularity.enabled = true
+process.container = "/path/to/nf-core-mag.simg"
 ```
 
 
-### Manual Installation
-As a last resort, you may need to install the required software manually. We recommend using [Bioconda](https://bioconda.github.io/) to do this. The following instructions are an example only and will not be updated with the pipeline.
+### Conda
+If you're not able to use Docker or Singularity, you can instead use conda to manage the software requirements.
+To use conda in your own config file, add the following:
 
-#### 1) Install miniconda in your home directory
-``` bash
-cd
-wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
-bash Miniconda3-latest-Linux-x86_64.sh
-```
-
-#### 2) Add the bioconda conda channel (and others)
-```bash
-conda config --add channels anaconda
-conda config --add channels conda-forge
-conda config --add channels defaults
-conda config --add channels r
-conda config --add channels bioconda
-conda config --add channels salilab
-```
-
-#### 3) Create a conda environment, with all necessary packages:
-```bash
-conda create --name mag_py2.7 python=2.7
-source activate mag_py2.7
-conda install --yes \
-    fastqc \
-    multiqc
-```
-_(Feel free to adjust versions as required.)_
-
-##### 4) Usage
-Once created, the conda environment can be activated before running the pipeline and deactivated afterwards:
-
-```bash
-source activate mag_py2.7
-# run pipeline
-source deactivate
+```nextflow
+process.conda = "$baseDir/environment.yml"
 ```

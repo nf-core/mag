@@ -1,3 +1,3 @@
 
-## 0.1.0 - 2018-05-22
-Initial release of nf-core/mag, created with the NGI-NFcookiecutter template: https://github.com/ewels/NGI-NFcookiecutter.
+## nf-core/mag version 0.1.0dev -
+Initial release of nf-core/mag, created with the [nf-core](http://nf-co.re/) template.
