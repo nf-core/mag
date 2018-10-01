@@ -1,4 +1,4 @@
-name: nfcore-mag-0.1.0
+name: nf-core-mag-0.1.0dev
 channels:
   - bioconda
   - conda-forge

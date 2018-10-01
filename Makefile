@@ -7,8 +7,8 @@ lint:
 	nf-core lint .
 
 test: clean lint
-	cd tests && ./run_test.sh -d hadrieng/mag:0.1.0 -t ../data
+	cd tests && ./run_test.sh -d hadrieng/mag:0.1.0dev -t ../data
 
 docker:
-	docker rmi --force hadrieng/mag:0.1.0
-	docker build -t hadrieng/mag:0.1.0 .
+	docker rmi --force hadrieng/mag:0.1.0dev
+	docker build -t hadrieng/mag:0.1.0dev .
