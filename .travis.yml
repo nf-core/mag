@@ -13,7 +13,7 @@ before_install:
   # Pull the docker image first so the test doesn't wait for this
   - docker pull hadrieng/mag
   # Fake the tag locally so that the pipeline runs properly
-  - docker tag hadrieng/mag hadrieng/mag:latest
+  - docker tag hadrieng/mag hadrieng/mag:0.1.0
 
 install:
   # Install Nextflow
