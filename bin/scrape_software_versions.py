@@ -6,14 +6,14 @@ import re
 regexes = {
     'nf-core/mag': ['v_pipeline.txt', r"(\S+)"],
     'Nextflow': ['v_nextflow.txt', r"(\S+)"],
-    'MultiQC': ['v_multiqc.txt', r"multiqc, version (\S+)"],
-    'atropos': ['v_atropos.txt', r"Atropos version (\S+)"]
+    'MultiQC': ['v_multiqc.txt', r"multiqc, version (\S+)"]
+    # 'atropos': ['v_atropos.txt', r"Atropos version (\S+)"]
 }
 results = OrderedDict()
 results['nf-core/mag'] = '<span style="color:#999999;\">N/A</span>'
 results['Nextflow'] = '<span style="color:#999999;\">N/A</span>'
 results['MultiQC'] = '<span style="color:#999999;\">N/A</span>'
-results['atropos'] = '<span style="color:#999999;\">N/A</span>'
+# results['atropos'] = '<span style="color:#999999;\">N/A</span>'
 
 # Search each file using its regex
 for k, v in regexes.items():
