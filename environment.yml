@@ -7,4 +7,5 @@ dependencies:
   - fastqc=0.11.7
   - multiqc=1.5
   - atropos=1.1.18
-  - r=3.5.0
+  - r=3.5.1
+  - megahit=1.1.3

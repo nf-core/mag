@@ -234,6 +234,21 @@ process multiqc {
     """
 }
 
+
+process megahit {
+    publishDir "${params.outdir}/megahit", mode: 'copy'
+
+    input:
+    set val(name), file(reads) from trimmed_reads
+
+    output:
+    file("megahit/final.contigs.fa") into megahit_assembly
+
+    script:
+    """
+    megahit -1 "${reads[0]}" -2 "${reads[1]}" -o megahit
+    """
+}
 //
 //
 // /*
