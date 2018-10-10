@@ -1,13 +1,16 @@
 clean:
 	rm -rf work/
 	rm -rf .nextflow.log*
-	cd tests && rm -rf work && rm -rf .nextflow.log* && rm -rf .nextflow/
+	rm -rf tests/
 
 lint:
 	nf-core lint .
 
 test: clean lint
-	cd tests && ./run_test.sh -d hadrieng/mag:0.1.0dev -t ../data
+	mkdir -p tests/data && cd tests/data &&\
+	curl -O -J -L https://github.com/HadrienG/test-datasets/raw/mag/test_data/test_metagenome_R1.fastq.gz &&\
+	curl -O -J -L https://github.com/HadrienG/test-datasets/raw/mag/test_data/test_metagenome_R2.fastq.gz &&\
+	cd .. && nextflow run ../main.nf -profile test,docker
 
 docker:
 	docker rmi --force hadrieng/mag:0.1.0dev

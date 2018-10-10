@@ -95,10 +95,29 @@ reverse_three = params.three.reverse().complement()
 /*
  * Create a channel for input read files
  */
-Channel
-    .fromFilePairs( params.reads, size: params.singleEnd ? 1 : 2 )
-    .ifEmpty { exit 1, "Cannot find any reads matching: ${params.reads}\nNB: Path needs to be enclosed in quotes!\nIf this is single-end data, please specify --singleEnd on the command line." }
-    .set { read_files_atropos }
+ /*
+  * Create a channel for input read files
+  */
+ if(params.readPaths){
+     if(params.singleEnd){
+         Channel
+             .from(params.readPaths)
+             .map { row -> [ row[0], [file(row[1][0])]] }
+             .ifEmpty { exit 1, "params.readPaths was empty - no input files supplied" }
+             .set { read_files_atropos }
+     } else {
+         Channel
+             .from(params.readPaths)
+             .map { row -> [ row[0], [file(row[1][0]), file(row[1][1])]] }
+             .ifEmpty { exit 1, "params.readPaths was empty - no input files supplied" }
+             .set { read_files_atropos }
+     }
+ } else {
+     Channel
+         .fromFilePairs( params.reads, size: params.singleEnd ? 1 : 2 )
+         .ifEmpty { exit 1, "Cannot find any reads matching: ${params.reads}\nNB: Path needs to be enclosed in quotes!\nNB: Path requires at least one * wildcard!\nIf this is single-end data, please specify --singleEnd on the command line." }
+         .set { read_files_atropos }
+ }
 
 
 
@@ -237,6 +256,7 @@ process multiqc {
 
 
 process megahit {
+    tag "$name"
     publishDir "${params.outdir}/megahit", mode: 'copy'
 
     input:
@@ -253,6 +273,7 @@ process megahit {
 
 
 process metabat {
+    tag "$name"
     publishDir "${params.outdir}/metabat", mode: 'copy'
 
     input:
@@ -269,7 +290,7 @@ process metabat {
         samtools view -bS | samtools sort -o assembly.bam
     samtools index assembly.bam
     jgi_summarize_bam_contig_depths --outputDepth depth.txt assembly.bam
-    metabat2 -i "${assembly}" -a depth.txt -o metabat/ -m 1500
+    metabat2 -i "${assembly}" -a depth.txt -o bins/ -m 1500
     """
 
 }
