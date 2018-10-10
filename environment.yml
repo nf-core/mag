@@ -3,9 +3,13 @@ channels:
   - bioconda
   - conda-forge
   - defaults
+  - ursky
 dependencies:
   - fastqc=0.11.7
   - multiqc=1.5
   - atropos=1.1.18
   - r=3.5.1
   - megahit=1.1.3
+  - metabat2=2.12.1
+  - samtools=1.9
+  - bowtie2=2.3.4.3

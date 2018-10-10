@@ -210,6 +210,7 @@ process atropos {
     }
 }
 
+trimmed_reads.into{trimmed_reads_megahit; trimmed_reads_metabat}
 
 /*
  * STEP 2 - MultiQC
@@ -239,7 +240,7 @@ process megahit {
     publishDir "${params.outdir}/megahit", mode: 'copy'
 
     input:
-    set val(name), file(reads) from trimmed_reads
+    set val(name), file(reads) from trimmed_reads_megahit
 
     output:
     file("megahit/final.contigs.fa") into megahit_assembly
@@ -248,6 +249,29 @@ process megahit {
     """
     megahit -1 "${reads[0]}" -2 "${reads[1]}" -o megahit
     """
+}
+
+
+process metabat {
+    publishDir "${params.outdir}/metabat", mode: 'copy'
+
+    input:
+    file(assembly) from megahit_assembly
+    set val(name), file(reads) from trimmed_reads_metabat
+
+    output:
+    file("bins/") into metabat_bins
+
+    script:
+    """
+    bowtie2-build "${assembly}" ref
+    bowtie2 -x ref -1 "${reads[0]}" -2 "${reads[1]}" | \
+        samtools view -bS | samtools sort -o assembly.bam
+    samtools index assembly.bam
+    jgi_summarize_bam_contig_depths --outputDepth depth.txt assembly.bam
+    metabat2 -i "${assembly}" -a depth.txt -o metabat/ -m 1500
+    """
+
 }
 //
 //
