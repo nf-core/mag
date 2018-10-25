@@ -294,6 +294,23 @@ process metabat {
     """
 
 }
+
+
+process checkm {
+    publishDir "${params.outdir}/checkm", mode: 'copy'
+
+    input:
+    file(bins) from metabat_bins
+
+    output:
+    file("checkm") into checkm_results
+
+    script:
+    """
+    checkm lineage_wf -x fa "${bins}" checkm/
+    """
+
+}
 //
 //
 // /*
