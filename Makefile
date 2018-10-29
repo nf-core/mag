@@ -8,8 +8,8 @@ lint:
 
 test: clean lint
 	mkdir -p tests/data && cd tests/data &&\
-	curl -O -J -L https://github.com/HadrienG/test-datasets/raw/mag/test_data/test_mag_R1.fastq.gz &&\
-	curl -O -J -L https://github.com/HadrienG/test-datasets/raw/mag/test_data/test_mag_R2.fastq.gz &&\
+	curl -O -J -L https://github.com/HadrienG/test-datasets/raw/mag/test_data/test_minigut_R1.fastq.gz &&\
+	curl -O -J -L https://github.com/HadrienG/test-datasets/raw/mag/test_data/test_minigut_R2.fastq.gz &&\
 	cd .. && nextflow run ../main.nf -profile test,docker
 
 docker:

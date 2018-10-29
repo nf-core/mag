@@ -290,7 +290,7 @@ process metabat {
         samtools view -bS | samtools sort -o assembly.bam
     samtools index assembly.bam
     jgi_summarize_bam_contig_depths --outputDepth depth.txt assembly.bam
-    metabat2 -i "${assembly}" -a depth.txt -o bins/ -m 1500
+    metabat2 -i "${assembly}" -a depth.txt -o bins/bin -m 1500
     """
 
 }
