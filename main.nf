@@ -266,30 +266,8 @@ process fastqc_trimmed {
 
 
 /*
- * STEP 2 - MultiQC
+ * STEP 2 - Assembly
  */
-process multiqc {
-    publishDir "${params.outdir}/MultiQC", mode: 'copy'
-
-    input:
-    file multiqc_config
-    file ('software_versions/*') from software_versions_yaml.collect()
-    file (fastqc_raw:'fastqc/*') from fastqc_results.collect().ifEmpty([])
-    file (fastqc_trimmed:'fastqc/*') from fastqc_results_trimmed.collect().ifEmpty([])
-
-    output:
-    file "*multiqc_report.html" into multiqc_report
-    file "*_data"
-
-    script:
-    rtitle = custom_runName ? "--title \"$custom_runName\"" : ''
-    rfilename = custom_runName ? "--filename " + custom_runName.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
-    """
-    multiqc -f $rtitle $rfilename --config $multiqc_config .
-    """
-}
-
-
 process megahit {
     tag "$name"
     publishDir "${params.outdir}/", mode: 'copy'
@@ -298,11 +276,30 @@ process megahit {
     set val(name), file(reads) from trimmed_reads_megahit
 
     output:
-    file("megahit/final.contigs.fa") into megahit_assembly
+    set val(name), file("megahit/final.contigs.fa") into megahit_assembly
 
     script:
     """
     megahit -1 "${reads[0]}" -2 "${reads[1]}" -o megahit
+    """
+}
+megahit_assembly.into{assembly_quast; assembly_metabat}
+
+
+
+process quast {
+    tag "$name"
+    publishDir "${params.outdir}/quast/$name", mode: 'copy'
+
+    input:
+    set val(name), file(assembly) from assembly_quast
+
+    output:
+    file("quast_results/latest/*") into quast_results
+
+    script:
+    """
+    quast.py --threads "${task.cpus}" -l "${name}" "${assembly}"
     """
 }
 
@@ -312,7 +309,7 @@ process metabat {
     publishDir "${params.outdir}/metabat", mode: 'copy'
 
     input:
-    file(assembly) from megahit_assembly
+    set val(_name), file(assembly) from assembly_metabat
     set val(name), file(reads) from trimmed_reads_metabat
 
     output:
@@ -345,6 +342,32 @@ process checkm {
     checkm lineage_wf -x fa "${bins}" checkm/
     """
 
+}
+
+
+/*
+ * STEP 4 - MultiQC
+ */
+process multiqc {
+    publishDir "${params.outdir}/MultiQC", mode: 'copy'
+
+    input:
+    file multiqc_config
+    file ('software_versions/*') from software_versions_yaml.collect()
+    file (fastqc_raw:'fastqc/*') from fastqc_results.collect().ifEmpty([])
+    file (fastqc_trimmed:'fastqc/*') from fastqc_results_trimmed.collect().ifEmpty([])
+    file ('quast/*') from quast_results.collect()
+
+    output:
+    file "*multiqc_report.html" into multiqc_report
+    file "*_data"
+
+    script:
+    rtitle = custom_runName ? "--title \"$custom_runName\"" : ''
+    rfilename = custom_runName ? "--filename " + custom_runName.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
+    """
+    multiqc -f $rtitle $rfilename --config $multiqc_config .
+    """
 }
 //
 //

@@ -13,3 +13,4 @@ dependencies:
   - metabat2=2.12.1
   - samtools=1.9
   - bowtie2=2.3.4.3
+  - quast=5.0.1
