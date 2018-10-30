@@ -104,19 +104,19 @@ reverse_three = params.three.reverse().complement()
              .from(params.readPaths)
              .map { row -> [ row[0], [file(row[1][0])]] }
              .ifEmpty { exit 1, "params.readPaths was empty - no input files supplied" }
-             .set { read_files_atropos }
+             .into { read_files_fastqc; read_files_atropos }
      } else {
          Channel
              .from(params.readPaths)
              .map { row -> [ row[0], [file(row[1][0]), file(row[1][1])]] }
              .ifEmpty { exit 1, "params.readPaths was empty - no input files supplied" }
-             .set { read_files_atropos }
+             .into { read_files_fastqc; read_files_atropos }
      }
  } else {
      Channel
          .fromFilePairs( params.reads, size: params.singleEnd ? 1 : 2 )
          .ifEmpty { exit 1, "Cannot find any reads matching: ${params.reads}\nNB: Path needs to be enclosed in quotes!\nNB: Path requires at least one * wildcard!\nIf this is single-end data, please specify --singleEnd on the command line." }
-         .set { read_files_atropos }
+         .into { read_files_fastqc; read_files_atropos }
  }
 
 
@@ -199,6 +199,23 @@ process get_software_versions {
 /*
  * STEP 1 - Read trimming and pre/post qc
  */
+process fastqc_raw {
+    tag "$name"
+    publishDir "${params.outdir}/fastqc", mode: 'copy'
+
+    input:
+    set val(name), file(reads) from read_files_fastqc
+
+    output:
+    file "*_fastqc.{zip,html}" into fastqc_results
+
+    script:
+    """
+    fastqc -q $reads
+    """
+}
+
+
 process atropos {
     tag "$name"
     publishDir "${params.outdir}/atropos", mode: 'copy'
@@ -228,8 +245,25 @@ process atropos {
         """
     }
 }
+trimmed_reads.into{trimmed_reads_megahit; trimmed_reads_metabat; trimmed_reads_fastqc}
 
-trimmed_reads.into{trimmed_reads_megahit; trimmed_reads_metabat}
+
+process fastqc_trimmed {
+    tag "$name"
+    publishDir "${params.outdir}/fastqc", mode: 'copy'
+
+    input:
+    set val(name), file(reads) from trimmed_reads_fastqc
+
+    output:
+    file "*_fastqc.{zip,html}" into fastqc_results_trimmed
+
+    script:
+    """
+    fastqc -q $reads
+    """
+}
+
 
 /*
  * STEP 2 - MultiQC
@@ -240,7 +274,8 @@ process multiqc {
     input:
     file multiqc_config
     file ('software_versions/*') from software_versions_yaml.collect()
-    file atropos_report from atropos_report
+    file (fastqc_raw:'fastqc/*') from fastqc_results.collect().ifEmpty([])
+    file (fastqc_trimmed:'fastqc/*') from fastqc_results_trimmed.collect().ifEmpty([])
 
     output:
     file "*multiqc_report.html" into multiqc_report
@@ -257,7 +292,7 @@ process multiqc {
 
 process megahit {
     tag "$name"
-    publishDir "${params.outdir}/megahit", mode: 'copy'
+    publishDir "${params.outdir}/", mode: 'copy'
 
     input:
     set val(name), file(reads) from trimmed_reads_megahit
@@ -297,7 +332,7 @@ process metabat {
 
 
 process checkm {
-    publishDir "${params.outdir}/checkm", mode: 'copy'
+    publishDir "${params.outdir}/", mode: 'copy'
 
     input:
     file(bins) from metabat_bins
