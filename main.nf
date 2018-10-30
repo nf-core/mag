@@ -304,6 +304,9 @@ process quast {
 }
 
 
+/*
+ * STEP 3 - Binning
+ */
 process metabat {
     tag "$name"
     publishDir "${params.outdir}/metabat", mode: 'copy'
@@ -313,7 +316,7 @@ process metabat {
     set val(name), file(reads) from trimmed_reads_metabat
 
     output:
-    file("bins/") into metabat_bins
+    set val(name), file("bins/") into metabat_bins
 
     script:
     """
@@ -329,17 +332,22 @@ process metabat {
 
 
 process checkm {
+    tag "$name"
     publishDir "${params.outdir}/", mode: 'copy'
 
     input:
-    file(bins) from metabat_bins
+    set val(name), file(bins) from metabat_bins
 
     output:
-    file("checkm") into checkm_results
+    file("checkm/lineage") into checkm_results
+    file("checkm/plots") into checkm_plots
+    file("checkm/qa.txt") into checkm_qa
 
     script:
     """
-    checkm lineage_wf -x fa "${bins}" checkm/
+    mkdir -p checkm
+    checkm lineage_wf -x fa "${bins}" checkm/lineage > "checkm/qa.txt"
+    checkm bin_qa_plot -x fa checkm/lineage "${bins}" checkm/plots
     """
 
 }
