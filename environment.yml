@@ -7,10 +7,14 @@ channels:
 dependencies:
   - fastqc=0.11.8
   - multiqc=1.6
-  - atropos=1.1.18
-  - r=3.5.1
+  - fastp=0.19.5
   - megahit=1.1.3
   - metabat2=2.12.1
   - samtools=1.9
   - bowtie2=2.3.4.3
   - quast=5.0.1
+  - hmmer=3.2.1
+  - prodigal=2.6.3
+  - pplacer=1.1.alpha19
+  - python=2.7.15
+  - r=3.5.1

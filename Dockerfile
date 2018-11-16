@@ -6,3 +6,12 @@ LABEL description="Docker image containing all requirements for nf-core/mag pipe
 COPY environment.yml /
 RUN conda env create -f /environment.yml && conda clean -a
 ENV PATH /opt/conda/envs/nf-core-mag-0.1.0dev/bin:$PATH
+RUN pip install checkm-genome refinem
+
+# checkm db
+RUN mkdir -p checkm_data && \
+    cd checkm_data && \
+    curl -L -O https://data.ace.uq.edu.au/public/CheckM_databases/checkm_data_2015_01_16.tar.gz && \
+    tar xzf checkm_data_2015_01_16.tar.gz && \
+    cd .. && \
+    printf "checkm_data\ncheckm_data\n" | checkm data setRoot
