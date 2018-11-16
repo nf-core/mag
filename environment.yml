@@ -18,3 +18,4 @@ dependencies:
   - pplacer=1.1.alpha19
   - python=2.7.15
   - r=3.5.1
+  - biopython=1.72

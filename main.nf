@@ -317,6 +317,7 @@ process metabat {
 
     output:
     set val(name), file("bins/") into metabat_bins
+    set val(name), file("assembly.bam") into mapped_reads_assembly
 
     script:
     """
@@ -337,19 +338,43 @@ process checkm {
 
     input:
     set val(name), file(bins) from metabat_bins
+    set val(_name), file(bam) into mapped_reads_assembly
 
     output:
     file("checkm/lineage") into checkm_results
     file("checkm/plots") into checkm_plots
     file("checkm/qa.txt") into checkm_qa
+    file("checkm/merger.tsv") into checkm_merge_info
+
+    file("merged_stats/lineage") into checkm_merge_results
+    file("merged_stats/plots") into checkm_merge_plots
+    file("merged_stats/qa.txt") into checkm_merge_qa
+    set val(name), file("merged/") into checkm_merge_bins
 
     script:
     """
     mkdir -p checkm
-    checkm lineage_wf -x fa "${bins}" checkm/lineage > "checkm/qa.txt"
+    checkm lineage_wf -x fa "${bins}" checkm/lineage > checkm/qa.txt
     checkm bin_qa_plot -x fa checkm/lineage "${bins}" checkm/plots
-    """
 
+    checkm coverage -x fa metabat/ checkm/coverage.txt "${bam}"
+    checkm profile checkm/coverage.txt > checkm/profile.txt
+    checkm tree_qa checkm > checkm/tree_qa.txt
+
+    samtools view test.bam | awk '{print length(\$10)}' | head -1000 \
+        > checkm/read_length.txt
+
+    checkm taxon_set domain Bacteria bacteria.ms
+    checkm merge -x fa --delta_cont 5 --merged_cont 15 bacteria.ms "${bins}" checkm/merger/
+
+    mkdir -p merged
+    mkdir -p merged_stats
+    merge_bins.py --cov checkm/profile.txt --tree checkm/tree_qa.txt \
+        --length checkm/read_length.txt \
+        --merger checkm/merger/merger.tsv "${bins}" merged/
+    checkm lineage_wf -x fa merged merged_stats/lineage > merged_stats/qa.txt
+    checkm bin_qa_plot -x fa merged_stats/lineage merged merged_stats/plots
+    """
 }
 
 
