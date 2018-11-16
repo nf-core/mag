@@ -104,19 +104,19 @@ reverse_three = params.three.reverse().complement()
              .from(params.readPaths)
              .map { row -> [ row[0], [file(row[1][0])]] }
              .ifEmpty { exit 1, "params.readPaths was empty - no input files supplied" }
-             .into { read_files_fastqc; read_files_atropos }
+             .into { read_files_fastqc; read_files_fastp }
      } else {
          Channel
              .from(params.readPaths)
              .map { row -> [ row[0], [file(row[1][0]), file(row[1][1])]] }
              .ifEmpty { exit 1, "params.readPaths was empty - no input files supplied" }
-             .into { read_files_fastqc; read_files_atropos }
+             .into { read_files_fastqc; read_files_fastp }
      }
  } else {
      Channel
          .fromFilePairs( params.reads, size: params.singleEnd ? 1 : 2 )
          .ifEmpty { exit 1, "Cannot find any reads matching: ${params.reads}\nNB: Path needs to be enclosed in quotes!\nNB: Path requires at least one * wildcard!\nIf this is single-end data, please specify --singleEnd on the command line." }
-         .into { read_files_fastqc; read_files_atropos }
+         .into { read_files_fastqc; read_files_fastp }
  }
 
 
@@ -216,27 +216,27 @@ process fastqc_raw {
 }
 
 
-process atropos {
+process fastp {
     tag "$name"
     publishDir "${params.outdir}/atropos", mode: 'copy'
 
     input:
-    set val(name), file(reads) from read_files_atropos
+    set val(name), file(reads) from read_files_fastp
     val adapter from params.three
     val adapter_reverse from reverse_three
 
     output:
     set val(name), file("${name}_trimmed_R{1,2}.fastq.gz") into trimmed_reads
-    file("${name}.report.txt") into atropos_report
+    // file("${name}.report.txt") into atropos_report
 
     script:
     def single = reads instanceof Path
     if ( !single ) {
         """
-        atropos trim -a ${adapter} -A ${adapter_reverse} --op-order GACQW \
-        --trim-n -o "${name}_trimmed_R1.fastq.gz" -p "${name}_trimmed_R2.fastq.gz" \
-        --report-file "${name}.report.txt" --no-cache-adapters --stats both \
-        -pe1 "${reads[0]}" -pe2 "${reads[1]}"
+        fastp -q 5 -w 4 \
+            --adapter_sequence=${adapter} --adapter_sequence_r2=${adapter_reverse} \
+            -i "${reads[0]}" -I "${reads[1]}" \
+            -o fastp/${name}_trimmed_R1.fastq.gz -O fastp/${name}_trimmed_R2.fastq.gz
         """
     }
     else {
