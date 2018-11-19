@@ -338,7 +338,7 @@ process checkm {
 
     input:
     set val(name), file(bins) from metabat_bins
-    set val(_name), file(bam) into mapped_reads_assembly
+    set val(_name), file(bam) from mapped_reads_assembly
 
     output:
     file("checkm/lineage") into checkm_results
