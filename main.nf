@@ -344,7 +344,7 @@ process checkm {
     file("checkm/lineage") into checkm_results
     file("checkm/plots") into checkm_plots
     file("checkm/qa.txt") into checkm_qa
-    file("checkm/merger.tsv") into checkm_merge_info
+    file("checkm/merger/merger.tsv") into checkm_merge_info
 
     file("merged_stats/lineage") into checkm_merge_results
     file("merged_stats/plots") into checkm_merge_plots
@@ -357,19 +357,21 @@ process checkm {
     checkm lineage_wf -x fa "${bins}" checkm/lineage > checkm/qa.txt
     checkm bin_qa_plot -x fa checkm/lineage "${bins}" checkm/plots
 
+    samtools index "${bam}"
     checkm coverage -x fa "${bins}" checkm/coverage.txt "${bam}"
     checkm profile checkm/coverage.txt > checkm/profile.txt
-    checkm tree_qa checkm > checkm/tree_qa.txt
+    checkm tree_qa checkm/lineage > checkm/tree_qa.txt
 
-    samtools view test.bam | awk '{print length(\$10)}' | head -1000 \
-        > checkm/read_length.txt
+    samtools view "${bam}" > rl_tmp_1
+    awk '{print length(\$10)}' < rl_tmp_1 > rl_tmp_2
+    head -1000 rl_tmp_2 > checkm/read_length.txt
 
     checkm taxon_set domain Bacteria bacteria.ms
     checkm merge -x fa --delta_cont 5 --merged_cont 15 bacteria.ms "${bins}" checkm/merger/
 
     mkdir -p merged
     mkdir -p merged_stats
-    merge_bins.py --cov checkm/profile.txt --tree checkm/tree_qa.txt \
+    merge_bins.py --profile checkm/profile.txt --tree checkm/tree_qa.txt \
         --length checkm/read_length.txt \
         --merger checkm/merger/merger.tsv "${bins}" merged/
     checkm lineage_wf -x fa merged merged_stats/lineage > merged_stats/qa.txt
