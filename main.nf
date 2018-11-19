@@ -357,7 +357,7 @@ process checkm {
     checkm lineage_wf -x fa "${bins}" checkm/lineage > checkm/qa.txt
     checkm bin_qa_plot -x fa checkm/lineage "${bins}" checkm/plots
 
-    checkm coverage -x fa metabat/ checkm/coverage.txt "${bam}"
+    checkm coverage -x fa "${bins}" checkm/coverage.txt "${bam}"
     checkm profile checkm/coverage.txt > checkm/profile.txt
     checkm tree_qa checkm > checkm/tree_qa.txt
 
