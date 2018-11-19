@@ -236,7 +236,7 @@ process fastp {
         fastp -q 5 -w 4 \
             --adapter_sequence=${adapter} --adapter_sequence_r2=${adapter_reverse} \
             -i "${reads[0]}" -I "${reads[1]}" \
-            -o fastp/${name}_trimmed_R1.fastq.gz -O fastp/${name}_trimmed_R2.fastq.gz
+            -o ${name}_trimmed_R1.fastq.gz -O ${name}_trimmed_R2.fastq.gz
         """
     }
     else {
