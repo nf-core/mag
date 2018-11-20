@@ -16,6 +16,7 @@ dependencies:
   - hmmer=3.2.1
   - prodigal=2.6.3
   - pplacer=1.1.alpha19
+  - diamond=0.9.22
   - python=2.7.15
   - r=3.5.1
   - biopython=1.72

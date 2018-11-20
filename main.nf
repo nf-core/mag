@@ -283,7 +283,7 @@ process megahit {
     megahit -1 "${reads[0]}" -2 "${reads[1]}" -o megahit
     """
 }
-megahit_assembly.into{assembly_quast; assembly_metabat}
+megahit_assembly.into{assembly_quast; assembly_metabat; assembly_refinem}
 
 
 
@@ -331,6 +331,7 @@ process metabat {
 
 }
 
+mapped_reads_assembly.into{mapped_reads_checkm; mapped_reads_refinem}
 
 process checkm {
     tag "$name"
@@ -338,7 +339,7 @@ process checkm {
 
     input:
     set val(name), file(bins) from metabat_bins
-    set val(_name), file(bam) from mapped_reads_assembly
+    set val(_name), file(bam) from mapped_reads_checkm
 
     output:
     file("checkm/lineage") into checkm_results
@@ -378,6 +379,56 @@ process checkm {
         --merger checkm/merger/merger.tsv "${bins}" merged/
     checkm lineage_wf -x fa merged merged_stats/lineage > merged_stats/qa.txt
     checkm bin_qa_plot -x fa merged_stats/lineage merged merged_stats/plots
+    """
+}
+
+
+process refinem_download_db {
+    output:
+        file("???") into refinem_diamond_db
+        file("???") info taxon_profile
+        file("???") into refinem_16s_db
+    script:
+    """
+    BASE=https://data.ace.uq.edu.au/public/misc_downloads/refinem
+    curl -O \${BASE}/gtdb_r80_protein_db.2017-11-09.tar.gz
+    curl -O \${BASE}/gtdb_r80_taxonomy.2017-12-15.tsv
+    curl -O \${BASE}/gtdb_r80_ssu_db.2018-01-18.tar.gz
+    tar -xzf gtdb_r80_protein_db.2017-11-09.tar.gz
+    tar -xzf gtdb_r80_ssu_db.2018-01-18.tar.gz
+    diamond makedb -d gtdb_r80_protein_db.2017-11-09.faa --in gtdb_r80_protein_db.2017-11-09.faa
+    makeblastdb -dbtype nucl -in gtdb_r80_ssu_db.2018-01-18.fna
+    """
+}
+
+
+process refinem {
+    tag "$name"
+    publishDir "${params.outdir}/", mode: 'copy'
+
+    input:
+    set val(name), file(bins) from checkm_merge_bins
+    set val(_name), file(bam) from mapped_reads_refinem
+    set val(__name), file(assembly) from assembly_refinem
+
+    output:
+    set val(name), file("refinem_bins") into refinem_bins
+
+    script:
+    """
+    # filter by GC / tetra
+    refinem scaffold_stats -c 16 "${assembly}" "${bins}" refinem "${bam}"
+    refinem outliers refinem/scaffold_stats.tsv refinem
+    refinem filter_bins "${bins}" refinem/outliers.tsv new_bins_tmp_1
+    # filter by taxonomic assignment
+    refinem call_genes new_bins_tmp_1 gene_calls
+    refinem taxon_profile gene_calls refinem/scaffold_stats.tsv DB REF_TAX taxon_profile
+    refinem taxon_filter taxon_profile taxon_filter.tsv
+    refinem filter_bins new_bins_tmp_1 taxon_filter.tsv new_bins_tmp_2
+    # filter incongruent 16S
+    refinem ssu_erroneous new_bins_tmp_2 taxon_profile DB REFTAX ssu
+    refinem filter_bins new_bins_tmp_2 ssu/ssu_erroneous.tsv refinem_bins
+    # TODO inspect top-hit and give e-value threshold to filter a contig
     """
 }
 
