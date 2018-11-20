@@ -12,7 +12,6 @@ before_install:
   - '[ $TRAVIS_PULL_REQUEST = "false" ] || [ $TRAVIS_BRANCH != "master" ] || ([ $TRAVIS_PULL_REQUEST_SLUG = $TRAVIS_REPO_SLUG ] && [ $TRAVIS_PULL_REQUEST_BRANCH = "dev" ])'
   # Pull the docker image first so the test doesn't wait for this
   - docker pull hadrieng/mag:0.1.0dev
-  - docker pull hadrieng/checkm
   # Fake the tag locally so that the pipeline runs properly
   - docker tag hadrieng/mag:0.1.0dev hadrieng/mag:0.1.0dev
 

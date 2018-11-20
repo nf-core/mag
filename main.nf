@@ -362,6 +362,8 @@ process checkm {
     checkm profile checkm/coverage.txt > checkm/profile.txt
     checkm tree_qa checkm/lineage > checkm/tree_qa.txt
 
+    # somwhow this fails with error code 141
+    # samtools view "${bam}" | awk '{print length(\$10)}' | head -1000 > checkm/read_length.txt
     samtools view "${bam}" > rl_tmp_1
     awk '{print length(\$10)}' < rl_tmp_1 > rl_tmp_2
     head -1000 rl_tmp_2 > checkm/read_length.txt
