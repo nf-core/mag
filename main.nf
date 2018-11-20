@@ -233,7 +233,7 @@ process fastp {
     def single = reads instanceof Path
     if ( !single ) {
         """
-        fastp -q 5 -w 4 \
+        fastp -q 5 -w "${task.cpus}" \
             --adapter_sequence=${adapter} --adapter_sequence_r2=${adapter_reverse} \
             -i "${reads[0]}" -I "${reads[1]}" \
             -o ${name}_trimmed_R1.fastq.gz -O ${name}_trimmed_R2.fastq.gz
@@ -280,7 +280,7 @@ process megahit {
 
     script:
     """
-    megahit -1 "${reads[0]}" -2 "${reads[1]}" -o megahit
+    megahit -t "${task.cpus}" -1 "${reads[0]}" -2 "${reads[1]}" -o megahit
     """
 }
 megahit_assembly.into{assembly_quast; assembly_metabat; assembly_refinem}
@@ -321,12 +321,13 @@ process metabat {
 
     script:
     """
-    bowtie2-build "${assembly}" ref
-    bowtie2 -x ref -1 "${reads[0]}" -2 "${reads[1]}" | \
-        samtools view -bS | samtools sort -o assembly.bam
+    bowtie2-build --threads "${task.cpus}" "${assembly}" ref
+    bowtie2 -p "${task.cpus}" -x ref -1 "${reads[0]}" -2 "${reads[1]}" | \
+        samtools view -@ "${task.cpus}" -bS | \
+        samtools sort -@ "${task.cpus}" -o assembly.bam
     samtools index assembly.bam
     jgi_summarize_bam_contig_depths --outputDepth depth.txt assembly.bam
-    metabat2 -i "${assembly}" -a depth.txt -o bins/bin -m 1500
+    metabat2 -t "${task.cpus}" -i "${assembly}" -a depth.txt -o bins/bin -m 1500
     """
 
 }
@@ -355,29 +356,29 @@ process checkm {
     script:
     """
     mkdir -p checkm
-    checkm lineage_wf -x fa "${bins}" checkm/lineage > checkm/qa.txt
+    checkm lineage_wf -t "${task.cpus}" -x fa "${bins}" checkm/lineage > checkm/qa.txt
     checkm bin_qa_plot -x fa checkm/lineage "${bins}" checkm/plots
 
     samtools index "${bam}"
-    checkm coverage -x fa "${bins}" checkm/coverage.txt "${bam}"
+    checkm coverage -t "${task.cpus}" -x fa "${bins}" checkm/coverage.txt "${bam}"
     checkm profile checkm/coverage.txt > checkm/profile.txt
     checkm tree_qa checkm/lineage > checkm/tree_qa.txt
 
     # somwhow this fails with error code 141
     # samtools view "${bam}" | awk '{print length(\$10)}' | head -1000 > checkm/read_length.txt
-    samtools view "${bam}" > rl_tmp_1
+    samtools view -@ "${task.cpus}" "${bam}" > rl_tmp_1
     awk '{print length(\$10)}' < rl_tmp_1 > rl_tmp_2
     head -1000 rl_tmp_2 > checkm/read_length.txt
 
     checkm taxon_set domain Bacteria bacteria.ms
-    checkm merge -x fa --delta_cont 5 --merged_cont 15 bacteria.ms "${bins}" checkm/merger/
+    checkm merge -t "${task.cpus}" -x fa --delta_cont 5 --merged_cont 15 bacteria.ms "${bins}" checkm/merger/
 
     mkdir -p merged
     mkdir -p merged_stats
     merge_bins.py --profile checkm/profile.txt --tree checkm/tree_qa.txt \
         --length checkm/read_length.txt \
         --merger checkm/merger/merger.tsv "${bins}" merged/
-    checkm lineage_wf -x fa merged merged_stats/lineage > merged_stats/qa.txt
+    checkm lineage_wf -t "${task.cpus}" -x fa merged merged_stats/lineage > merged_stats/qa.txt
     checkm bin_qa_plot -x fa merged_stats/lineage merged merged_stats/plots
     """
 }
@@ -417,18 +418,18 @@ process refinem {
     script:
     """
     # filter by GC / tetra
-    refinem scaffold_stats -c 16 "${assembly}" "${bins}" refinem "${bam}"
+    refinem scaffold_stats -c "${task.cpus}" "${assembly}" "${bins}" refinem "${bam}"
     refinem outliers refinem/scaffold_stats.tsv refinem
     refinem filter_bins "${bins}" refinem/outliers.tsv new_bins_tmp_1
     # filter by taxonomic assignment
-    refinem call_genes new_bins_tmp_1 gene_calls
-    refinem taxon_profile gene_calls refinem/scaffold_stats.tsv DB REF_TAX taxon_profile
-    refinem taxon_filter taxon_profile taxon_filter.tsv
+    refinem call_genes -c "${task.cpus}" new_bins_tmp_1 gene_calls
+    refinem taxon_profile -c "${task.cpus}" gene_calls refinem/scaffold_stats.tsv DB REF_TAX taxon_profile
+    refinem taxon_filter -c "${task.cpus}" taxon_profile taxon_filter.tsv
     refinem filter_bins new_bins_tmp_1 taxon_filter.tsv new_bins_tmp_2
     # filter incongruent 16S
-    refinem ssu_erroneous new_bins_tmp_2 taxon_profile DB REFTAX ssu
-    refinem filter_bins new_bins_tmp_2 ssu/ssu_erroneous.tsv refinem_bins
+    refinem ssu_erroneous -c "${task.cpus}" new_bins_tmp_2 taxon_profile DB REFTAX ssu
     # TODO inspect top-hit and give e-value threshold to filter a contig
+    refinem filter_bins new_bins_tmp_2 ssu/ssu_erroneous.tsv refinem_bins
     """
 }
 
