@@ -30,14 +30,17 @@ def helpMessage() {
                                     Available: standard, conda, docker, singularity, awsbatch, test
 
     Options:
+      -name                         Name for the pipeline run. If not specified, Nextflow will automatically generate a random mnemonic.
       --singleEnd                   Specifies that the input is single end reads
+      --outdir                      The output directory where the results will be saved
+      --email                       Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits
+
+    Trimming options:
       --adapter_forward             Sequence of 3' adapter to remove in the forward reads
       --adapter_reverse             Sequence of 3' adapter to remove in the reverse reads
 
-    Other options:
-      --outdir                      The output directory where the results will be saved
-      --email                       Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits
-      -name                         Name for the pipeline run. If not specified, Nextflow will automatically generate a random mnemonic.
+    Binning options:
+      --refinem                     Enable bin refinement with refinem.
 
     AWSBatch options:
       --awsqueue                    The AWSBatch JobQueue that needs to be set when running on AWSBatch
@@ -83,10 +86,15 @@ if( !(workflow.runName ==~ /[a-z]+_[a-z]+/) ){
 }
 
 /*
- * default adapter sequences
+ * trimming options
  */
 params.adapter_forward = "AGATCGGAAGAGCACACGTCTGAACTCCAGTCA"
 params.adapter_reverse = "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT"
+
+/*
+ * binning options
+ */
+params.refinem = false
 
 /*
  * Create a channel for input read files
@@ -183,7 +191,9 @@ process get_software_versions {
     echo $params.pipelineVersion > v_pipeline.txt
     echo $workflow.nextflow.version > v_nextflow.txt
     multiqc --version > v_multiqc.txt
-    # atropos | head -2 | tail -1 > v_atropos.txt
+    fastqc --version > v_fastqc.txt
+    fastp --version > v_fastp.txt
+    megahit --version > v_megahit.txt
     scrape_software_versions.py > software_versions_mqc.yaml
     """
 }
@@ -204,7 +214,7 @@ process fastqc_raw {
 
     script:
     """
-    fastqc -t "${task.cpus}" -q "${reads}"
+    fastqc -t "${task.cpus}" -q $reads
     """
 }
 
@@ -252,7 +262,7 @@ process fastqc_trimmed {
 
     script:
     """
-    fastqc -t "${task.cpus}" -q "${reads}"
+    fastqc -t "${task.cpus}" -q ${reads}
     """
 }
 
@@ -372,54 +382,61 @@ process checkm {
 }
 
 
-// process refinem_download_db {
-//     output:
-//         file("???") into refinem_diamond_db
-//         file("???") info taxon_profile
-//         file("???") into refinem_16s_db
-//     script:
-//     """
-//     BASE=https://data.ace.uq.edu.au/public/misc_downloads/refinem
-//     curl -O \${BASE}/gtdb_r80_protein_db.2017-11-09.tar.gz
-//     curl -O \${BASE}/gtdb_r80_taxonomy.2017-12-15.tsv
-//     curl -O \${BASE}/gtdb_r80_ssu_db.2018-01-18.tar.gz
-//     tar -xzf gtdb_r80_protein_db.2017-11-09.tar.gz
-//     tar -xzf gtdb_r80_ssu_db.2018-01-18.tar.gz
-//     diamond makedb -d gtdb_r80_protein_db.2017-11-09.faa --in gtdb_r80_protein_db.2017-11-09.faa
-//     makeblastdb -dbtype nucl -in gtdb_r80_ssu_db.2018-01-18.fna
-//     """
-// }
+process refinem_download_db {
+    output:
+        file("gtdb_r80_protein_db.2017-11-09.tar.gz") into refinem_diamond_db
+        file("gtdb_r80_ssu_db.2018-01-18.tar.gz") into refinem_16s_db
+        file("gtdb_r80_taxonomy.2017-12-15.tsv") into refinem_taxon_profile
+
+    when:
+        params.refinem == true
+
+    script:
+    """
+    BASE=https://data.ace.uq.edu.au/public/misc_downloads/refinem
+    curl -O \${BASE}/gtdb_r80_protein_db.2017-11-09.tar.gz
+    curl -O \${BASE}/gtdb_r80_taxonomy.2017-12-15.tsv
+    curl -O \${BASE}/gtdb_r80_ssu_db.2018-01-18.tar.gz
+    tar -xzf gtdb_r80_protein_db.2017-11-09.tar.gz
+    tar -xzf gtdb_r80_ssu_db.2018-01-18.tar.gz
+    diamond makedb -d gtdb_r80_protein_db.2017-11-09.faa --in gtdb_r80_protein_db.2017-11-09.faa
+    makeblastdb -dbtype nucl -in gtdb_r80_ssu_db.2018-01-18.fna
+    """
+}
 
 
-// process refinem {
-//     tag "$name"
-//     publishDir "${params.outdir}/", mode: 'copy'
-//
-//     input:
-//     set val(name), file(bins) from checkm_merge_bins
-//     set val(_name), file(bam) from mapped_reads_refinem
-//     set val(__name), file(assembly) from assembly_refinem
-//
-//     output:
-//     set val(name), file("refinem_bins") into refinem_bins
-//
-//     script:
-//     """
-//     # filter by GC / tetra
-//     refinem scaffold_stats -c "${task.cpus}" "${assembly}" "${bins}" refinem "${bam}"
-//     refinem outliers refinem/scaffold_stats.tsv refinem
-//     refinem filter_bins "${bins}" refinem/outliers.tsv new_bins_tmp_1
-//     # filter by taxonomic assignment
-//     refinem call_genes -c "${task.cpus}" new_bins_tmp_1 gene_calls
-//     refinem taxon_profile -c "${task.cpus}" gene_calls refinem/scaffold_stats.tsv DB REF_TAX taxon_profile
-//     refinem taxon_filter -c "${task.cpus}" taxon_profile taxon_filter.tsv
-//     refinem filter_bins new_bins_tmp_1 taxon_filter.tsv new_bins_tmp_2
-//     # filter incongruent 16S
-//     refinem ssu_erroneous -c "${task.cpus}" new_bins_tmp_2 taxon_profile DB REFTAX ssu
-//     # TODO inspect top-hit and give e-value threshold to filter a contig
-//     refinem filter_bins new_bins_tmp_2 ssu/ssu_erroneous.tsv refinem_bins
-//     """
-// }
+process refinem {
+    tag "$name"
+    publishDir "${params.outdir}/", mode: 'copy'
+
+    input:
+    set val(name), file(bins) from checkm_merge_bins
+    set val(_name), file(bam) from mapped_reads_refinem
+    set val(__name), file(assembly) from assembly_refinem
+
+    output:
+    set val(name), file("refinem_bins") into refinem_bins
+
+    when:
+        params.refinem == true
+
+    script:
+    """
+    # filter by GC / tetra
+    refinem scaffold_stats -c "${task.cpus}" "${assembly}" "${bins}" refinem "${bam}"
+    refinem outliers refinem/scaffold_stats.tsv refinem
+    refinem filter_bins "${bins}" refinem/outliers.tsv new_bins_tmp_1
+    # filter by taxonomic assignment
+    refinem call_genes -c "${task.cpus}" new_bins_tmp_1 gene_calls
+    refinem taxon_profile -c "${task.cpus}" gene_calls refinem/scaffold_stats.tsv DB REF_TAX taxon_profile
+    refinem taxon_filter -c "${task.cpus}" taxon_profile taxon_filter.tsv
+    refinem filter_bins new_bins_tmp_1 taxon_filter.tsv new_bins_tmp_2
+    # filter incongruent 16S
+    refinem ssu_erroneous -c "${task.cpus}" new_bins_tmp_2 taxon_profile DB REFTAX ssu
+    # TODO inspect top-hit and give e-value threshold to filter a contig
+    refinem filter_bins new_bins_tmp_2 ssu/ssu_erroneous.tsv refinem_bins
+    """
+}
 
 
 /*
@@ -443,7 +460,7 @@ process multiqc {
     rtitle = custom_runName ? "--title \"$custom_runName\"" : ''
     rfilename = custom_runName ? "--filename " + custom_runName.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
     """
-    multiqc -f "${rtitle}" "${rfilename}" --config "${multiqc_config}" .
+    multiqc -f ${rtitle} ${rfilename} --config ${multiqc_config} .
     """
 }
 //
