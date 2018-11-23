@@ -43,6 +43,7 @@ def helpMessage() {
 
     Binning options:
       --refinem                     Enable bin refinement with refinem.
+      --no_checkm                   Disable bin QC and merging with checkm
 
     AWSBatch options:
       --awsqueue                    The AWSBatch JobQueue that needs to be set when running on AWSBatch
@@ -99,6 +100,7 @@ params.trimming_quality = 15
  * binning options
  */
 params.refinem = false
+params.no_checkm = false
 
 /*
  * Create a channel for input read files
@@ -235,11 +237,10 @@ process fastp {
     val trim_qual from params.trimming_quality
 
     output:
-    set val(name), file("${name}_trimmed_R{1,2}.fastq.gz") into trimmed_reads
+    set val(name), file("${name}_trimmed*.fastq.gz") into trimmed_reads
 
     script:
-    def single = reads instanceof Path
-    if ( !single ) {
+    if ( !params.singleEnd ) {
         """
         fastp -w "${task.cpus}" -q "${qual}" --cut_by_quality5 \
             --cut_by_quality3 --cut_mean_quality "${trim_qual}"\
@@ -250,7 +251,10 @@ process fastp {
     }
     else {
         """
-        echo not implemented :-(
+        fastp -w "${task.cpus}" -q "${qual}" --cut_by_quality5 \
+            --cut_by_quality3 --cut_mean_quality "${trim_qual}"\
+            --adapter_sequence="${adapter}" --adapter_sequence_r2="${adapter_reverse}" \
+            -i ${reads} -o "${name}_trimmed.fastq.gz"
         """
     }
 }
@@ -288,9 +292,16 @@ process megahit {
     set val(name), file("megahit/final.contigs.fa") into megahit_assembly
 
     script:
+    if ( !params.singleEnd ) {
     """
     megahit -t "${task.cpus}" -1 "${reads[0]}" -2 "${reads[1]}" -o megahit
     """
+    }
+    else {
+    """
+    megahit -t "${task.cpus}" -r ${reads} -o megahit
+    """
+    }
 }
 megahit_assembly.into{assembly_quast; assembly_metabat; assembly_refinem}
 
@@ -304,11 +315,11 @@ process quast {
     set val(name), file(assembly) from assembly_quast
 
     output:
-    file("quast_results/latest/*") into quast_results
+    file("quast_${name}/*") into quast_results
 
     script:
     """
-    quast.py --threads "${task.cpus}" -l "${name}" "${assembly}"
+    quast.py --threads "${task.cpus}" -l "${name}" "${assembly}" -o "quast_${name}"
     """
 }
 
@@ -329,6 +340,7 @@ process metabat {
     set val(name), file("assembly.bam") into mapped_reads_assembly
 
     script:
+    if ( !params.singleEnd ) {
     """
     bowtie2-build --threads "${task.cpus}" "${assembly}" ref
     bowtie2 -p "${task.cpus}" -x ref -1 "${reads[0]}" -2 "${reads[1]}" | \
@@ -338,6 +350,18 @@ process metabat {
     jgi_summarize_bam_contig_depths --outputDepth depth.txt assembly.bam
     metabat2 -t "${task.cpus}" -i "${assembly}" -a depth.txt -o bins/bin -m 1500
     """
+    }
+    else {
+    """
+    bowtie2-build --threads "${task.cpus}" "${assembly}" ref
+    bowtie2 -p "${task.cpus}" -x ref -U ${reads} | \
+        samtools view -@ "${task.cpus}" -bS | \
+        samtools sort -@ "${task.cpus}" -o assembly.bam
+    samtools index assembly.bam
+    jgi_summarize_bam_contig_depths --outputDepth depth.txt assembly.bam
+    metabat2 -t "${task.cpus}" -i "${assembly}" -a depth.txt -o bins/bin -m 1500
+    """
+    }
 
 }
 
@@ -361,6 +385,9 @@ process checkm {
     file("merged_stats/plots") into checkm_merge_plots
     file("merged_stats/qa.txt") into checkm_merge_qa
     set val(name), file("merged/") into checkm_merge_bins
+
+    when:
+        params.no_checkm == false
 
     script:
     """
@@ -457,7 +484,7 @@ process multiqc {
     file ('software_versions/*') from software_versions_yaml.collect()
     file (fastqc_raw:'fastqc/*') from fastqc_results.collect().ifEmpty([])
     file (fastqc_trimmed:'fastqc/*') from fastqc_results_trimmed.collect().ifEmpty([])
-    file ('quast/*') from quast_results.collect()
+    file ('quast*/*') from quast_results.collect()
 
     output:
     file "*multiqc_report.html" into multiqc_report
