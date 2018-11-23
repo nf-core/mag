@@ -38,6 +38,8 @@ def helpMessage() {
     Trimming options:
       --adapter_forward             Sequence of 3' adapter to remove in the forward reads
       --adapter_reverse             Sequence of 3' adapter to remove in the reverse reads
+      --mean_quality                Mean qualified quality value for keeping read (default: 15)
+      --trimming_quality            Trimming quality value for the sliding window (default: 15)
 
     Binning options:
       --refinem                     Enable bin refinement with refinem.
@@ -90,6 +92,8 @@ if( !(workflow.runName ==~ /[a-z]+_[a-z]+/) ){
  */
 params.adapter_forward = "AGATCGGAAGAGCACACGTCTGAACTCCAGTCA"
 params.adapter_reverse = "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT"
+params.mean_quality = 15
+params.trimming_quality = 15
 
 /*
  * binning options
@@ -227,6 +231,8 @@ process fastp {
     set val(name), file(reads) from read_files_fastp
     val adapter from params.adapter_forward
     val adapter_reverse from params.adapter_reverse
+    val qual from params.mean_quality
+    val trim_qual from params.trimming_quality
 
     output:
     set val(name), file("${name}_trimmed_R{1,2}.fastq.gz") into trimmed_reads
@@ -235,7 +241,8 @@ process fastp {
     def single = reads instanceof Path
     if ( !single ) {
         """
-        fastp -q 5 -w "${task.cpus}" \
+        fastp -w "${task.cpus}" -q "${qual}" --cut_by_quality5 \
+            --cut_by_quality3 --cut_mean_quality "${trim_qual}"\
             --adapter_sequence=${adapter} --adapter_sequence_r2=${adapter_reverse} \
             -i "${reads[0]}" -I "${reads[1]}" \
             -o ${name}_trimmed_R1.fastq.gz -O ${name}_trimmed_R2.fastq.gz
