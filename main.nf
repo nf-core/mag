@@ -26,12 +26,13 @@ def helpMessage() {
 
     Mandatory arguments:
       --reads                       Path to input data (must be surrounded with quotes)
-      --three                       Sequence of 3' adapter to remove
       -profile                      Configuration profile to use. Can use multiple (comma separated)
                                     Available: standard, conda, docker, singularity, awsbatch, test
 
     Options:
       --singleEnd                   Specifies that the input is single end reads
+      --adapter_forward             Sequence of 3' adapter to remove in the forward reads
+      --adapter_reverse             Sequence of 3' adapter to remove in the reverse reads
 
     Other options:
       --outdir                      The output directory where the results will be saved
@@ -82,22 +83,14 @@ if( !(workflow.runName ==~ /[a-z]+_[a-z]+/) ){
 }
 
 /*
- * reverse complement of adapter sequence
+ * default adapter sequences
  */
-String.metaClass.complement = {
-    def complements = [ A:'T', T:'A', U:'A', G:'C', C:'G', Y:'R', R:'Y', S:'S',
-                        W:'W', K:'M', M:'K', B:'V', D:'H', H:'D', V:'B', N:'N' ]
-    delegate.toUpperCase().collect { base -> complements[ base ] ?: 'X' }.join()
-}
-params.three = "AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC"
-reverse_three = params.three.reverse().complement()
+params.adapter_forward = "AGATCGGAAGAGCACACGTCTGAACTCCAGTCA"
+params.adapter_reverse = "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT"
 
 /*
  * Create a channel for input read files
  */
- /*
-  * Create a channel for input read files
-  */
  if(params.readPaths){
      if(params.singleEnd){
          Channel
@@ -211,7 +204,7 @@ process fastqc_raw {
 
     script:
     """
-    fastqc -q $reads
+    fastqc -t "${task.cpus}" -q "${reads}"
     """
 }
 
@@ -222,12 +215,11 @@ process fastp {
 
     input:
     set val(name), file(reads) from read_files_fastp
-    val adapter from params.three
-    val adapter_reverse from reverse_three
+    val adapter from params.adapter_forward
+    val adapter_reverse from params.adapter_reverse
 
     output:
     set val(name), file("${name}_trimmed_R{1,2}.fastq.gz") into trimmed_reads
-    // file("${name}.report.txt") into atropos_report
 
     script:
     def single = reads instanceof Path
@@ -260,7 +252,7 @@ process fastqc_trimmed {
 
     script:
     """
-    fastqc -q $reads
+    fastqc -t "${task.cpus}" -q "${reads}"
     """
 }
 
@@ -380,54 +372,54 @@ process checkm {
 }
 
 
-process refinem_download_db {
-    output:
-        file("???") into refinem_diamond_db
-        file("???") info taxon_profile
-        file("???") into refinem_16s_db
-    script:
-    """
-    BASE=https://data.ace.uq.edu.au/public/misc_downloads/refinem
-    curl -O \${BASE}/gtdb_r80_protein_db.2017-11-09.tar.gz
-    curl -O \${BASE}/gtdb_r80_taxonomy.2017-12-15.tsv
-    curl -O \${BASE}/gtdb_r80_ssu_db.2018-01-18.tar.gz
-    tar -xzf gtdb_r80_protein_db.2017-11-09.tar.gz
-    tar -xzf gtdb_r80_ssu_db.2018-01-18.tar.gz
-    diamond makedb -d gtdb_r80_protein_db.2017-11-09.faa --in gtdb_r80_protein_db.2017-11-09.faa
-    makeblastdb -dbtype nucl -in gtdb_r80_ssu_db.2018-01-18.fna
-    """
-}
+// process refinem_download_db {
+//     output:
+//         file("???") into refinem_diamond_db
+//         file("???") info taxon_profile
+//         file("???") into refinem_16s_db
+//     script:
+//     """
+//     BASE=https://data.ace.uq.edu.au/public/misc_downloads/refinem
+//     curl -O \${BASE}/gtdb_r80_protein_db.2017-11-09.tar.gz
+//     curl -O \${BASE}/gtdb_r80_taxonomy.2017-12-15.tsv
+//     curl -O \${BASE}/gtdb_r80_ssu_db.2018-01-18.tar.gz
+//     tar -xzf gtdb_r80_protein_db.2017-11-09.tar.gz
+//     tar -xzf gtdb_r80_ssu_db.2018-01-18.tar.gz
+//     diamond makedb -d gtdb_r80_protein_db.2017-11-09.faa --in gtdb_r80_protein_db.2017-11-09.faa
+//     makeblastdb -dbtype nucl -in gtdb_r80_ssu_db.2018-01-18.fna
+//     """
+// }
 
 
-process refinem {
-    tag "$name"
-    publishDir "${params.outdir}/", mode: 'copy'
-
-    input:
-    set val(name), file(bins) from checkm_merge_bins
-    set val(_name), file(bam) from mapped_reads_refinem
-    set val(__name), file(assembly) from assembly_refinem
-
-    output:
-    set val(name), file("refinem_bins") into refinem_bins
-
-    script:
-    """
-    # filter by GC / tetra
-    refinem scaffold_stats -c "${task.cpus}" "${assembly}" "${bins}" refinem "${bam}"
-    refinem outliers refinem/scaffold_stats.tsv refinem
-    refinem filter_bins "${bins}" refinem/outliers.tsv new_bins_tmp_1
-    # filter by taxonomic assignment
-    refinem call_genes -c "${task.cpus}" new_bins_tmp_1 gene_calls
-    refinem taxon_profile -c "${task.cpus}" gene_calls refinem/scaffold_stats.tsv DB REF_TAX taxon_profile
-    refinem taxon_filter -c "${task.cpus}" taxon_profile taxon_filter.tsv
-    refinem filter_bins new_bins_tmp_1 taxon_filter.tsv new_bins_tmp_2
-    # filter incongruent 16S
-    refinem ssu_erroneous -c "${task.cpus}" new_bins_tmp_2 taxon_profile DB REFTAX ssu
-    # TODO inspect top-hit and give e-value threshold to filter a contig
-    refinem filter_bins new_bins_tmp_2 ssu/ssu_erroneous.tsv refinem_bins
-    """
-}
+// process refinem {
+//     tag "$name"
+//     publishDir "${params.outdir}/", mode: 'copy'
+//
+//     input:
+//     set val(name), file(bins) from checkm_merge_bins
+//     set val(_name), file(bam) from mapped_reads_refinem
+//     set val(__name), file(assembly) from assembly_refinem
+//
+//     output:
+//     set val(name), file("refinem_bins") into refinem_bins
+//
+//     script:
+//     """
+//     # filter by GC / tetra
+//     refinem scaffold_stats -c "${task.cpus}" "${assembly}" "${bins}" refinem "${bam}"
+//     refinem outliers refinem/scaffold_stats.tsv refinem
+//     refinem filter_bins "${bins}" refinem/outliers.tsv new_bins_tmp_1
+//     # filter by taxonomic assignment
+//     refinem call_genes -c "${task.cpus}" new_bins_tmp_1 gene_calls
+//     refinem taxon_profile -c "${task.cpus}" gene_calls refinem/scaffold_stats.tsv DB REF_TAX taxon_profile
+//     refinem taxon_filter -c "${task.cpus}" taxon_profile taxon_filter.tsv
+//     refinem filter_bins new_bins_tmp_1 taxon_filter.tsv new_bins_tmp_2
+//     # filter incongruent 16S
+//     refinem ssu_erroneous -c "${task.cpus}" new_bins_tmp_2 taxon_profile DB REFTAX ssu
+//     # TODO inspect top-hit and give e-value threshold to filter a contig
+//     refinem filter_bins new_bins_tmp_2 ssu/ssu_erroneous.tsv refinem_bins
+//     """
+// }
 
 
 /*
@@ -451,7 +443,7 @@ process multiqc {
     rtitle = custom_runName ? "--title \"$custom_runName\"" : ''
     rfilename = custom_runName ? "--filename " + custom_runName.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
     """
-    multiqc -f $rtitle $rfilename --config $multiqc_config .
+    multiqc -f "${rtitle}" "${rfilename}" --config "${multiqc_config}" .
     """
 }
 //
