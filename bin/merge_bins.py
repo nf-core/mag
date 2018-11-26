@@ -14,6 +14,7 @@ from Bio.SeqUtils import GC
 
 class Bin(object):
     """a genome bin"""
+
     def __init__(self, id, compl, contam):
         super(Bin, self).__init__()
         self.id = id
@@ -26,6 +27,7 @@ class Bin(object):
 class PossibleMerge(object):
     """A possible merger between two bins. Corresponds to one line of
     merger.tsv"""
+
     def __init__(self, line):
         self.bin_1 = Bin(line[0], line[2], line[3])
         self.bin_2 = Bin(line[1], line[4], line[5])
@@ -128,10 +130,10 @@ def merge(args):
         for p1, p2 in zip(pm.bin_1.phylo, pm.bin_2.phylo):
             clades.append((p1, p2))
 
-        if pm.delta_contam <= 5 and \
-           pm.merged_contam <= 20 and \
-           pm.delta_compl >= 10 and \
-           abs_delta_cov <= 0.25 and \
+        if pm.delta_contam <= args.delta_cont and \
+           pm.merged_contam <= args.merged_cont and \
+           pm.delta_compl >= args.delta_compl and \
+           abs_delta_cov >= args.abs_delta_cov and \
            clades[-1][0] == clades[-1][1]:
 
             # then read the two bins
@@ -147,7 +149,7 @@ def merge(args):
                 gc_bin_2 = GC(concat_seq_2)
 
             # then merge if similar GC content
-            if abs(gc_bin_1 - gc_bin_2) <= 3:
+            if abs(gc_bin_1 - gc_bin_2) <= args.delta_gc:
                 output_name = "%s/merged_%i.fa" % (args.outdir, n_merged)
                 concatenate([bin_1_p, bin_2_p], output_name)
                 all_bins.remove(bin_1_p)
@@ -188,6 +190,36 @@ def main():
         "--merger",
         metavar="merger.tsv",
         help="merger.tsv produced by checkm merge"
+    )
+    parser.add_argument(
+        "--delta_cont",
+        metavar="int",
+        default=5,
+        help="Max increase in contamination to merge bins (default: 5)"
+    )
+    parser.add_argument(
+        "--merged_cont",
+        metavar="int",
+        default=15,
+        help="Max total contamination to merge bins (default: 15)"
+    )
+    parser.add_argument(
+        "--delta_compl",
+        metavar="int",
+        default=10,
+        help="Min increase in completion to merge bins (default: 10)"
+    )
+    parser.add_argument(
+        "--abs_delta_cov",
+        metavar="float",
+        default=0.75,
+        help="Min coverage ratio to merge bins (default: 0.75)"
+    )
+    parser.add_argument(
+        "--delta_gc",
+        metavar="int",
+        default=3,
+        help="Max %GC diffrence to merge bins (default: 3)"
     )
     parser.add_argument(
         "bins",

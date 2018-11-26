@@ -44,6 +44,12 @@ def helpMessage() {
     Binning options:
       --refinem                     Enable bin refinement with refinem.
       --no_checkm                   Disable bin QC and merging with checkm
+      --min_contig_size             Minimum contig size to be considered for binning (default: 1500)
+      --delta_cont                  Maximum increase in contamination to merge compatible bins (default: 5)
+      --merged_cont                 Maximum total contamination to merge compatible bins (default: 15)
+      --delta_compl                 Minimum increase in completion to merge compatible bins (default: 10)
+      --abs_delta_cov               Minimum coverage ratio to merge compatible bins (default: 0.75)
+      --delta_gc                    Maximum %GC difference to merge compatible bins (default: 3)
 
     AWSBatch options:
       --awsqueue                    The AWSBatch JobQueue that needs to be set when running on AWSBatch
@@ -101,6 +107,12 @@ params.trimming_quality = 15
  */
 params.refinem = false
 params.no_checkm = false
+params.min_contig_size = 1500
+params.delta_cont = 5
+params.merged_cont = 15
+params.delta_compl = 10
+params.abs_delta_cov = 0.75
+params.delta_gc = 3
 
 /*
  * Create a channel for input read files
@@ -289,17 +301,18 @@ process megahit {
     set val(name), file(reads) from trimmed_reads_megahit
 
     output:
-    set val(name), file("megahit/final.contigs.fa") into megahit_assembly
+    set val(name), file("megahit/${name}.contigs.fa") into megahit_assembly
 
     script:
     if ( !params.singleEnd ) {
     """
-    megahit -t "${task.cpus}" -1 "${reads[0]}" -2 "${reads[1]}" -o megahit
+    megahit -t "${task.cpus}" -1 "${reads[0]}" -2 "${reads[1]}" -o megahit \
+        --out-prefix "${name}"
     """
     }
     else {
     """
-    megahit -t "${task.cpus}" -r ${reads} -o megahit
+    megahit -t "${task.cpus}" -r ${reads} -o megahit --out-prefix "${name}"
     """
     }
 }
@@ -334,6 +347,7 @@ process metabat {
     input:
     set val(_name), file(assembly) from assembly_metabat
     set val(name), file(reads) from trimmed_reads_metabat
+    val(min_size) from params.min_contig_size
 
     output:
     set val(name), file("bins/") into metabat_bins
@@ -348,7 +362,7 @@ process metabat {
         samtools sort -@ "${task.cpus}" -o assembly.bam
     samtools index assembly.bam
     jgi_summarize_bam_contig_depths --outputDepth depth.txt assembly.bam
-    metabat2 -t "${task.cpus}" -i "${assembly}" -a depth.txt -o bins/bin -m 1500
+    metabat2 -t "${task.cpus}" -i "${assembly}" -a depth.txt -o bins/bin -m ${min_size}
     """
     }
     else {
@@ -359,7 +373,7 @@ process metabat {
         samtools sort -@ "${task.cpus}" -o assembly.bam
     samtools index assembly.bam
     jgi_summarize_bam_contig_depths --outputDepth depth.txt assembly.bam
-    metabat2 -t "${task.cpus}" -i "${assembly}" -a depth.txt -o bins/bin -m 1500
+    metabat2 -t "${task.cpus}" -i "${assembly}" -a depth.txt -o bins/bin -m ${min_size}
     """
     }
 
@@ -374,6 +388,11 @@ process checkm {
     input:
     set val(name), file(bins) from metabat_bins
     set val(_name), file(bam) from mapped_reads_checkm
+    val(delta_cont) from params.delta_cont
+    val(merged_cont) from params.merged_cont
+    val(delta_compl) from params.delta_compl
+    val(abs_delta_cov) from params.abs_delta_cov
+    val(delta_gc) from params.delta_gc
 
     output:
     file("checkm/lineage") into checkm_results
@@ -403,11 +422,14 @@ process checkm {
     samtools view "${bam}" | awk '{if (NR <=1000) print length(\$10)}' >  checkm/read_length.txt
 
     checkm taxon_set domain Bacteria bacteria.ms
-    checkm merge -t "${task.cpus}" -x fa --delta_cont 5 --merged_cont 15 bacteria.ms "${bins}" checkm/merger/
+    checkm merge -t "${task.cpus}" -x fa --delta_cont "${delta_cont}" --merged_cont "${merged_cont}" \
+        bacteria.ms "${bins}" checkm/merger/
 
     mkdir -p merged
     mkdir -p merged_stats
-    merge_bins.py --profile checkm/profile.txt --tree checkm/tree_qa.txt \
+    merge_bins.py --delta_cont "${delta_cont}" --merged_cont "${merged_cont}" \
+        --delta_compl "${delta_compl}" --abs_delta_cov "${abs_delta_cov}" --delta_gc "${delta_gc}" \
+        --profile checkm/profile.txt --tree checkm/tree_qa.txt \
         --length checkm/read_length.txt \
         --merger checkm/merger/merger.tsv "${bins}" merged/
     checkm lineage_wf -t "${task.cpus}" -x fa merged merged_stats/lineage > merged_stats/qa.txt
