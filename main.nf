@@ -43,6 +43,7 @@ def helpMessage() {
 
     Binning options:
       --refinem                     Enable bin refinement with refinem.
+      --refinem_db                  Path to refinem database
       --no_checkm                   Disable bin QC and merging with checkm
       --min_contig_size             Minimum contig size to be considered for binning (default: 1500)
       --delta_cont                  Maximum increase in contamination to merge compatible bins (default: 5)
@@ -113,6 +114,8 @@ params.merged_cont = 15
 params.delta_compl = 10
 params.abs_delta_cov = 0.75
 params.delta_gc = 3
+
+params.refinem_db = false
 
 /*
  * Create a channel for input read files
@@ -439,60 +442,98 @@ process checkm {
 
 
 process refinem_download_db {
+    time '4h'
+    publishDir "${params.outdir}/db"
     output:
-        file("gtdb_r80_protein_db.2017-11-09.tar.gz") into refinem_diamond_db
-        file("gtdb_r80_ssu_db.2018-01-18.tar.gz") into refinem_16s_db
-        file("gtdb_r80_taxonomy.2017-12-15.tsv") into refinem_taxon_profile
+        file("refinem_databases/") into refinem_db
 
     when:
-        params.refinem == true
+        params.refinem == true && params.refinem_db ==false && params.no_checkm == false
 
     script:
     """
-    BASE=https://data.ace.uq.edu.au/public/misc_downloads/refinem
-    curl -O \${BASE}/gtdb_r80_protein_db.2017-11-09.tar.gz
-    curl -O \${BASE}/gtdb_r80_taxonomy.2017-12-15.tsv
-    curl -O \${BASE}/gtdb_r80_ssu_db.2018-01-18.tar.gz
-    tar -xzf gtdb_r80_protein_db.2017-11-09.tar.gz
-    tar -xzf gtdb_r80_ssu_db.2018-01-18.tar.gz
-    diamond makedb -d gtdb_r80_protein_db.2017-11-09.faa --in gtdb_r80_protein_db.2017-11-09.faa
-    makeblastdb -dbtype nucl -in gtdb_r80_ssu_db.2018-01-18.fna
+    wget https://storage.googleapis.com/mag_refinem_db/refinem_databases.tar.gz
+    tar xzf refinem_databases.tar.gz
     """
 }
 
+if (params.refinem_db) {
+    refinem_db = file(params.refinem_db)
+}
+mapped_reads_refinem.into {mapped_reads_refinem_1; mapped_reads_refinem_2}
+assembly_refinem.into {assembly_refinem_1; assembly_refinem_2}
 
-process refinem {
-    tag "$name"
-    publishDir "${params.outdir}/", mode: 'copy'
+process refinem_pass_1 {
+    tag "${name}"
 
     input:
     set val(name), file(bins) from checkm_merge_bins
-    set val(_name), file(bam) from mapped_reads_refinem
-    set val(__name), file(assembly) from assembly_refinem
+    set val(_name), file(bam) from mapped_reads_refinem_1
+    set val(__name), file(assembly) from assembly_refinem_1
+    file(refinem_db) from refinem_db
+
+    output:
+    set val(name), file("bins_pass_1") into refinem_bins_pass_1
+
+    when:
+        params.refinem == true && params.no_checkm == false
+
+    script:
+    """
+    # filter by GC / tetra
+    samtools index "${bam}"
+    refinem scaffold_stats -x fa -c "${task.cpus}" "${assembly}" "${bins}" refinem "${bam}"
+    refinem outliers --no_plots refinem/scaffold_stats.tsv refinem
+    refinem filter_bins -x fa "${bins}" refinem/outliers.tsv new_bins_tmp_1
+    # filter by taxonomic assignment
+    refinem call_genes -x fa -c "${task.cpus}" new_bins_tmp_1 gene_calls
+    refinem taxon_profile -c "${task.cpus}" gene_calls refinem/scaffold_stats.tsv \
+        "${refinem_db}/gtdb_r86.dmnd" "${refinem_db}/gtdb_r86_taxonomy.2018-09-25.tsv" \
+        taxon_profile
+    refinem taxon_filter -c "${task.cpus}" taxon_profile taxon_filter.tsv
+    refinem filter_bins -x fa new_bins_tmp_1 taxon_filter.tsv bins_pass_1
+    rename 's/.filtered.filtered.fa/.fa/' bins_pass_1/*.filtered.filtered.fa
+    """
+}
+
+process refinem_pass_2 {
+    tag "${name}"
+    publishDir "${params.outdir}/", mode: 'copy'
+
+    input:
+    set val(name), file(bins) from refinem_bins_pass_1
+    set val(_name), file(bam) from mapped_reads_refinem_2
+    set val(__name), file(assembly) from assembly_refinem_2
+    file(refinem_db) from refinem_db
 
     output:
     set val(name), file("refinem_bins") into refinem_bins
 
     when:
-        params.refinem == true
+        params.refinem == true && params.no_checkm == false
 
     script:
     """
-    # filter by GC / tetra
-    refinem scaffold_stats -c "${task.cpus}" "${assembly}" "${bins}" refinem "${bam}"
-    refinem outliers refinem/scaffold_stats.tsv refinem
-    refinem filter_bins "${bins}" refinem/outliers.tsv new_bins_tmp_1
-    # filter by taxonomic assignment
-    refinem call_genes -c "${task.cpus}" new_bins_tmp_1 gene_calls
-    refinem taxon_profile -c "${task.cpus}" gene_calls refinem/scaffold_stats.tsv DB REF_TAX taxon_profile
-    refinem taxon_filter -c "${task.cpus}" taxon_profile taxon_filter.tsv
-    refinem filter_bins new_bins_tmp_1 taxon_filter.tsv new_bins_tmp_2
+    samtools index "${bam}"
     # filter incongruent 16S
-    refinem ssu_erroneous -c "${task.cpus}" new_bins_tmp_2 taxon_profile DB REFTAX ssu
+    # first we need to re-run taxon profile on the new bin dir
+    refinem scaffold_stats -x fa -c "${task.cpus}" "${assembly}" "${bins}" refinem "${bam}"
+    refinem call_genes -x fa -c "${task.cpus}" "${bins}" gene_calls
+    refinem taxon_profile -c "${task.cpus}" gene_calls refinem/scaffold_stats.tsv \
+        "${refinem_db}/gtdb_r86.dmnd" "${refinem_db}/gtdb_r86_taxonomy.2018-09-25.tsv" \
+        taxon_profile
+    # then we can identify incongruent ssu
+    refinem ssu_erroneous -x fa -c "${task.cpus}" "${bins}" taxon_profile \
+        "${refinem_db}/gtdb_r80_ssu" "${refinem_db}/gtdb_r86_taxonomy.2018-09-25.tsv" ssu
     # TODO inspect top-hit and give e-value threshold to filter a contig
-    refinem filter_bins new_bins_tmp_2 ssu/ssu_erroneous.tsv refinem_bins
+    refinem filter_bins -x fa "${bins}" ssu/ssu_erroneous.tsv refinem_bins
+    rename 's/.filtered.fa/.fa/' refinem_bins/*.filtered.fa
     """
 }
+
+// TODO: good bins channels (from checkm or refinem)
+// annotation (prokka) on bins
+// final report
 
 
 /*

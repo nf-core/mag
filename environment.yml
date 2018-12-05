@@ -20,3 +20,4 @@ dependencies:
   - python=2.7.15
   - r=3.5.1
   - biopython=1.72
+  - krona=2.7
