@@ -244,7 +244,7 @@ process fastqc_raw {
 
 process fastp {
     tag "$name"
-    publishDir "${params.outdir}/atropos", mode: 'copy'
+    // publishDir "${params.outdir}/fastp", mode: 'copy'
 
     input:
     set val(name), file(reads) from read_files_fastp
@@ -327,7 +327,7 @@ megahit_assembly.into{assembly_quast; assembly_metabat; assembly_refinem}
 
 process quast {
     tag "$name"
-    publishDir "${params.outdir}/quast/$name", mode: 'copy'
+    // publishDir "${params.outdir}/quast/$name", mode: 'copy'
 
     input:
     set val(name), file(assembly) from assembly_quast
@@ -356,7 +356,7 @@ process metabat {
 
     output:
     set val(name), file("bins/") into metabat_bins
-    set val(name), file("assembly.bam") into mapped_reads_assembly
+    set val(name), file("${name}.bam") into mapped_reads_assembly
 
     script:
     if ( !params.singleEnd ) {
@@ -364,10 +364,10 @@ process metabat {
     bowtie2-build --threads "${task.cpus}" "${assembly}" ref
     bowtie2 -p "${task.cpus}" -x ref -1 "${reads[0]}" -2 "${reads[1]}" | \
         samtools view -@ "${task.cpus}" -bS | \
-        samtools sort -@ "${task.cpus}" -o assembly.bam
-    samtools index assembly.bam
-    jgi_summarize_bam_contig_depths --outputDepth depth.txt assembly.bam
-    metabat2 -t "${task.cpus}" -i "${assembly}" -a depth.txt -o bins/bin -m ${min_size}
+        samtools sort -@ "${task.cpus}" -o "${name}.bam"
+    samtools index "${name}.bam"
+    jgi_summarize_bam_contig_depths --outputDepth depth.txt "${name}.bam"
+    metabat2 -t "${task.cpus}" -i "${assembly}" -a depth.txt -o "bins/${name}" -m ${min_size}
     """
     }
     else {
@@ -375,10 +375,10 @@ process metabat {
     bowtie2-build --threads "${task.cpus}" "${assembly}" ref
     bowtie2 -p "${task.cpus}" -x ref -U ${reads} | \
         samtools view -@ "${task.cpus}" -bS | \
-        samtools sort -@ "${task.cpus}" -o assembly.bam
-    samtools index assembly.bam
-    jgi_summarize_bam_contig_depths --outputDepth depth.txt assembly.bam
-    metabat2 -t "${task.cpus}" -i "${assembly}" -a depth.txt -o bins/bin -m ${min_size}
+        samtools sort -@ "${task.cpus}" -o "${name}.bam"
+    samtools index "${name}.bam"
+    jgi_summarize_bam_contig_depths --outputDepth depth.txt "${name}.bam"
+    metabat2 -t "${task.cpus}" -i "${assembly}" -a depth.txt -o bins/"${name}" -m ${min_size}
     """
     }
 
@@ -388,7 +388,7 @@ mapped_reads_assembly.into{mapped_reads_checkm; mapped_reads_refinem}
 
 process checkm {
     tag "$name"
-    publishDir "${params.outdir}/", mode: 'copy'
+    publishDir "${params.outdir}/checkm", mode: 'copy'
 
     input:
     set val(name), file(bins) from metabat_bins
@@ -400,45 +400,45 @@ process checkm {
     val(delta_gc) from params.delta_gc
 
     output:
-    file("checkm/lineage") into checkm_results
-    file("checkm/plots") into checkm_plots
-    file("checkm/qa.txt") into checkm_qa
-    file("checkm/merger/merger.tsv") into checkm_merge_info
+    // file("checkm/lineage") into checkm_results
+    // file("checkm/plots") into checkm_plots
+    // file("checkm/qa.txt") into checkm_qa
+    // file("checkm/merger/merger.tsv") into checkm_merge_info
 
-    file("merged_stats/lineage") into checkm_merge_results
-    file("merged_stats/plots") into checkm_merge_plots
-    file("merged_stats/qa.txt") into checkm_merge_qa
-    set val(name), file("merged/") into checkm_merge_bins
+    file("${name}_stats/lineage") into checkm_merge_results
+    file("${name}_stats/plots") into checkm_merge_plots
+    file("${name}_stats/qa.txt") into checkm_merge_qa
+    set val(name), file("${name}/") into checkm_merge_bins
 
     when:
         params.no_checkm == false
 
     script:
     """
-    mkdir -p checkm
-    checkm lineage_wf -t "${task.cpus}" -x fa "${bins}" checkm/lineage > checkm/qa.txt
-    checkm bin_qa_plot -x fa checkm/lineage "${bins}" checkm/plots
+    mkdir -p stats
+    checkm lineage_wf -t "${task.cpus}" -x fa "${bins}" stats/lineage > stats/qa.txt
+    checkm bin_qa_plot -x fa stats/lineage "${bins}" stats/plots
 
     samtools index "${bam}"
-    checkm coverage -t "${task.cpus}" -x fa "${bins}" checkm/coverage.txt "${bam}"
-    checkm profile checkm/coverage.txt > checkm/profile.txt
-    checkm tree_qa checkm/lineage > checkm/tree_qa.txt
+    checkm coverage -t "${task.cpus}" -x fa "${bins}" stats/coverage.txt "${bam}"
+    checkm profile stats/coverage.txt > stats/profile.txt
+    checkm tree_qa stats/lineage > stats/tree_qa.txt
 
-    samtools view "${bam}" | awk '{if (NR <=1000) print length(\$10)}' >  checkm/read_length.txt
+    samtools view "${bam}" | awk '{if (NR <=1000) print length(\$10)}' >  stats/read_length.txt
 
     checkm taxon_set domain Bacteria bacteria.ms
     checkm merge -t "${task.cpus}" -x fa --delta_cont "${delta_cont}" --merged_cont "${merged_cont}" \
-        bacteria.ms "${bins}" checkm/merger/
+        bacteria.ms "${bins}" stats/merger/
 
-    mkdir -p merged
-    mkdir -p merged_stats
+    mkdir -p ${name}
+    mkdir -p ${name}_stats
     merge_bins.py --delta_cont "${delta_cont}" --merged_cont "${merged_cont}" \
         --delta_compl "${delta_compl}" --abs_delta_cov "${abs_delta_cov}" --delta_gc "${delta_gc}" \
-        --profile checkm/profile.txt --tree checkm/tree_qa.txt \
-        --length checkm/read_length.txt \
-        --merger checkm/merger/merger.tsv "${bins}" merged/
-    checkm lineage_wf -t "${task.cpus}" -x fa merged merged_stats/lineage > merged_stats/qa.txt
-    checkm bin_qa_plot -x fa merged_stats/lineage merged merged_stats/plots
+        --profile stats/profile.txt --tree stats/tree_qa.txt \
+        --length stats/read_length.txt \
+        --merger stats/merger/merger.tsv "${bins}" "${name}"
+    checkm lineage_wf -t "${task.cpus}" -x fa "${name}" ${name}_stats/lineage > ${name}_stats/qa.txt
+    checkm bin_qa_plot -x fa ${name}_stats/lineage "${name}" ${name}_stats/plots
     """
 }
 
@@ -510,7 +510,7 @@ process refinem_pass_2 {
     val(ssu_evalue) from params.ssu_evalue
 
     output:
-    set val(name), file("refinem_bins") into refinem_bins
+    set val(name), file("refinem") into refinem_bins
 
     when:
         params.refinem == true && params.no_checkm == false
@@ -520,9 +520,9 @@ process refinem_pass_2 {
     samtools index "${bam}"
     # filter incongruent 16S
     # first we need to re-run taxon profile on the new bin dir
-    refinem scaffold_stats -x fa -c "${task.cpus}" "${assembly}" "${bins}" refinem "${bam}"
+    refinem scaffold_stats -x fa -c "${task.cpus}" "${assembly}" "${bins}" stats "${bam}"
     refinem call_genes -x fa -c "${task.cpus}" "${bins}" gene_calls
-    refinem taxon_profile -c "${task.cpus}" gene_calls refinem/scaffold_stats.tsv \
+    refinem taxon_profile -c "${task.cpus}" gene_calls stats/scaffold_stats.tsv \
         "${refinem_db}/gtdb_r86.dmnd" "${refinem_db}/gtdb_r86_taxonomy.2018-09-25.tsv" \
         taxon_profile
     # then we can identify incongruent ssu
@@ -530,14 +530,14 @@ process refinem_pass_2 {
         "${refinem_db}/gtdb_r80_ssu" "${refinem_db}/gtdb_r86_taxonomy.2018-09-25.tsv" ssu
     # TODO inspect top-hit and give e-value threshold to filter a contig
     filter_ssu.py --evalue ${ssu_evalue} ssu/ssu_erroneous.tsv ssu/ssu_filtered.tsv 
-    refinem filter_bins -x fa "${bins}" ssu/ssu_filtered.tsv refinem_bins
-    rename 's/.filtered.fa/.fa/' refinem_bins/*.filtered.fa
+    refinem filter_bins -x fa "${bins}" ssu/ssu_filtered.tsv refinem
+    rename 's/.filtered.fa/.fa/' refinem/*.filtered.fa
     """
 }
 
-// TODO: good bins channels (from checkm or refinem)
-// final report
-
+// TODO next releases:
+// good bins channels (from checkm or refinem) + annotation
+// multiqc modules for checkm/refinem
 
 /*
  * STEP 4 - MultiQC
@@ -563,26 +563,25 @@ process multiqc {
     multiqc -f ${rtitle} ${rfilename} --config ${multiqc_config} .
     """
 }
-//
-//
-// /*
-//  * STEP 3 - Output Description HTML
-//  */
-// process output_documentation {
-//     tag "$prefix"
-//     publishDir "${params.outdir}/Documentation", mode: 'copy'
-//
-//     input:
-//     file output_docs
-//
-//     output:
-//     file "results_description.html"
-//
-//     script:
-//     """
-//     markdown_to_html.r $output_docs results_description.html
-//     """
-// }
+
+
+/*
+ * STEP 5 - Output Description HTML
+ */
+process output_documentation {
+    publishDir "${params.outdir}/Documentation", mode: 'copy'
+
+    input:
+    file output_docs
+
+    output:
+    file "results_description.html"
+
+    script:
+    """
+    markdown_to_html.r $output_docs results_description.html
+    """
+}
 
 
 /*
