@@ -51,6 +51,7 @@ def helpMessage() {
       --delta_compl                 Minimum increase in completion to merge compatible bins (default: 10)
       --abs_delta_cov               Minimum coverage ratio to merge compatible bins (default: 0.75)
       --delta_gc                    Maximum %GC difference to merge compatible bins (default: 3)
+      --ssu_evalue                  Evalue threshold to filter incongruent 16S (default 1e-6)
 
     AWSBatch options:
       --awsqueue                    The AWSBatch JobQueue that needs to be set when running on AWSBatch
@@ -116,6 +117,7 @@ params.abs_delta_cov = 0.75
 params.delta_gc = 3
 
 params.refinem_db = false
+params.ssu_evalue = 1e-6
 
 /*
  * Create a channel for input read files
@@ -505,6 +507,7 @@ process refinem_pass_2 {
     set val(_name), file(bam) from mapped_reads_refinem_2
     set val(__name), file(assembly) from assembly_refinem_2
     file(refinem_db) from refinem_db
+    val(ssu_evalue) from params.ssu_evalue
 
     output:
     set val(name), file("refinem_bins") into refinem_bins
@@ -526,13 +529,13 @@ process refinem_pass_2 {
     refinem ssu_erroneous -x fa -c "${task.cpus}" "${bins}" taxon_profile \
         "${refinem_db}/gtdb_r80_ssu" "${refinem_db}/gtdb_r86_taxonomy.2018-09-25.tsv" ssu
     # TODO inspect top-hit and give e-value threshold to filter a contig
-    refinem filter_bins -x fa "${bins}" ssu/ssu_erroneous.tsv refinem_bins
+    filter_ssu.py --evalue ${ssu_evalue} ssu/ssu_erroneous.tsv ssu/ssu_filtered.tsv 
+    refinem filter_bins -x fa "${bins}" ssu/ssu_filtered.tsv refinem_bins
     rename 's/.filtered.fa/.fa/' refinem_bins/*.filtered.fa
     """
 }
 
 // TODO: good bins channels (from checkm or refinem)
-// annotation (prokka) on bins
 // final report
 
 
