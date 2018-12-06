@@ -1,4 +1,4 @@
-name: nf-core-mag-0.1.0dev
+name: nf-core-mag-0.1.0
 channels:
   - bioconda
   - conda-forge
@@ -12,7 +12,7 @@ dependencies:
   - metabat2=2.12.1
   - samtools=1.9
   - bowtie2=2.3.4.3
-  - quast=5.0.1
+  - quast=5.0.2
   - hmmer=3.2.1
   - prodigal=2.6.3
   - pplacer=1.1.alpha19
@@ -21,3 +21,4 @@ dependencies:
   - r=3.5.1
   - biopython=1.72
   - krona=2.7
+  - conda-forge::r-markdown=0.8

@@ -13,5 +13,5 @@ test: clean lint
 	cd .. && nextflow run ../main.nf -profile test,docker
 
 docker:
-	docker rmi --force hadrieng/mag:0.1.0dev
-	docker build -t hadrieng/mag:0.1.0dev .
+	docker rmi --force hadrieng/mag:0.1.0
+	docker build -t hadrieng/mag:0.1.0 .

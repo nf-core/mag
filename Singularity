@@ -5,10 +5,10 @@ Bootstrap:docker
 =======
     MAINTAINER Hadrien Gourlé <hadrien.gourle@slu.se>
     DESCRIPTION Singularity image containing all requirements for nf-core/mag pipeline
-    VERSION 0.1.0dev
+    VERSION 0.1.0
 
 %environment
-    PATH=/opt/conda/envs/nf-core-mag-0.1.0dev/bin:$PATH
+    PATH=/opt/conda/envs/nf-core-mag-0.1.0/bin:$PATH
     export PATH
 
 %files
