@@ -8,7 +8,7 @@ Bootstrap:docker
     VERSION 0.1.0
 
 %environment
-    PATH=/opt/conda/envs/nf-core-mag-0.1.0/bin:$PATH
+    PATH=/opt/conda/envs/nf-core-mag-1.0.0/bin:$PATH
     export PATH
 
 %files
