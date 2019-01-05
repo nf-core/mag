@@ -3,7 +3,6 @@ channels:
   - bioconda
   - conda-forge
   - defaults
-  - ursky
 dependencies:
   - fastqc=0.11.8
   - multiqc=1.6
@@ -22,3 +21,5 @@ dependencies:
   - biopython=1.72
   - krona=2.7
   - conda-forge::r-markdown=0.8
+  - checkm-genome=1.0.12
+  - refinem=0.0.24
