@@ -1,6 +1,6 @@
 FROM nfcore/base
 
-MAINTAINER Hadrien Gourlé <hadrien.gourle@slu.se>
+LABEL maintainer="Hadrien Gourlé <hadrien.gourle@slu.se>"
 LABEL description="Docker image containing all requirements for nf-core/mag pipeline"
 
 COPY environment.yml /
