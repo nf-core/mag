@@ -386,6 +386,25 @@ process metabat {
 
 mapped_reads_assembly.into{mapped_reads_checkm; mapped_reads_refinem}
 
+process checkm_download_db {
+    time '4h'
+    output:
+        file("checkm_data/") into checkm_db
+
+    when:
+        params.no_checkm == false
+
+    script:
+    """
+    mkdir -p checkm_data && \
+    cd checkm_data && \
+    curl -L -O https://data.ace.uq.edu.au/public/CheckM_databases/checkm_data_2015_01_16.tar.gz && \
+    tar xzf checkm_data_2015_01_16.tar.gz && \
+    cd .. && \
+    printf "checkm_data\ncheckm_data\n" | checkm data setRoot
+    """
+}
+
 process checkm {
     tag "$name"
     publishDir "${params.outdir}/checkm", mode: 'copy'
@@ -398,6 +417,7 @@ process checkm {
     val(delta_compl) from params.delta_compl
     val(abs_delta_cov) from params.abs_delta_cov
     val(delta_gc) from params.delta_gc
+    file("checkm_data/") from checkm_db
 
     output:
     // file("checkm/lineage") into checkm_results
