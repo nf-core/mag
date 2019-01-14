@@ -56,7 +56,7 @@ For more information about how to use MultiQC reports, see http://multiqc.info
 
 ## Megahit
 
-[megahit](https://github.com/voutcn/megahit) is single node assembler for large and complex metagenomics HTS reads.
+[megahit](https://github.com/voutcn/megahit) is a single node assembler for large and complex metagenomics HTS reads.
 
 **Output directory: `results/megahit`**
 
