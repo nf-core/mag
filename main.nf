@@ -389,7 +389,7 @@ mapped_reads_assembly.into{mapped_reads_checkm; mapped_reads_refinem}
 process checkm_download_db {
     time '4h'
     output:
-        file("checkm_data/") into checkm_db
+        file("checkm_data") into checkm_db
 
     when:
         params.no_checkm == false
@@ -417,7 +417,7 @@ process checkm {
     val(delta_compl) from params.delta_compl
     val(abs_delta_cov) from params.abs_delta_cov
     val(delta_gc) from params.delta_gc
-    file("checkm_data/") from checkm_db
+    file("checkm_data") from checkm_db
 
     output:
     // file("checkm/lineage") into checkm_results
@@ -435,6 +435,10 @@ process checkm {
 
     script:
     """
+    # re-run setRoot in case checkm has forgotten where the databases are located
+    chd=\$(readlink -f checkm_data)
+    printf "\$chd\\n\$chd\\n" | checkm data setRoot
+
     mkdir -p stats
     checkm lineage_wf -t "${task.cpus}" -x fa "${bins}" stats/lineage > stats/qa.txt
     checkm bin_qa_plot -x fa stats/lineage "${bins}" stats/plots
