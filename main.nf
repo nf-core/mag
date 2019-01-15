@@ -387,7 +387,6 @@ process metabat {
 mapped_reads_assembly.into{mapped_reads_checkm; mapped_reads_refinem}
 
 process checkm_download_db {
-    time '4h'
     output:
         file("checkm_data") into checkm_db
 
@@ -468,7 +467,6 @@ process checkm {
 
 
 process refinem_download_db {
-    time '4h'
     publishDir "${params.outdir}/db"
     output:
         file("refinem_databases/") into refinem_db
