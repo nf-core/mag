@@ -419,11 +419,6 @@ process checkm {
     file("checkm_data") from checkm_db
 
     output:
-    // file("checkm/lineage") into checkm_results
-    // file("checkm/plots") into checkm_plots
-    // file("checkm/qa.txt") into checkm_qa
-    // file("checkm/merger/merger.tsv") into checkm_merge_info
-
     file("${name}_stats/lineage") into checkm_merge_results
     file("${name}_stats/plots") into checkm_merge_plots
     file("${name}_stats/qa.txt") into checkm_merge_qa
