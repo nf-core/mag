@@ -9,7 +9,10 @@ regexes = {
     'MultiQC': ['v_multiqc.txt', r"multiqc, version (\S+)"],
     'fastqc': ['v_fastqc.txt', r"FastQC v(\S+)"],
     'fastp': ['v_fastp.txt', r"fastp (\S+)"],
-    'megahit': ['v_megahit.txt', r"MEGAHIT v(\S+)"]
+    'megahit': ['v_megahit.txt', r"MEGAHIT v(\S+)"],
+    'metabat': ['v_metabat.txt', r"version (\S+)"],
+    'checkm': ['v_checkm.txt', r"CheckM v(\S+)"],
+    'refinem': ['v_refinem.txt', r"RefineM v(\S+)"]
 }
 results = OrderedDict()
 results['nf-core/mag'] = '<span style="color:#999999;\">N/A</span>'
@@ -18,6 +21,9 @@ results['MultiQC'] = '<span style="color:#999999;\">N/A</span>'
 results['fastqc'] = '<span style="color:#999999;\">N/A</span>'
 results['fastp'] = '<span style="color:#999999;\">N/A</span>'
 results['megahit'] = '<span style="color:#999999;\">N/A</span>'
+results['metabat'] = '<span style="color:#999999;\">N/A</span>'
+results['checkm'] = '<span style="color:#999999;\">N/A</span>'
+results['refinem'] = '<span style="color:#999999;\">N/A</span>'
 
 # Search each file using its regex
 for k, v in regexes.items():

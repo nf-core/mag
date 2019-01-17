@@ -75,8 +75,8 @@ params.multiqc_config = "$baseDir/conf/multiqc_config.yaml"
 params.email = false
 params.plaintext_email = false
 
-multiqc_config = file(params.multiqc_config)
-output_docs = file("$baseDir/docs/output.md")
+ch_multiqc_config = Channel.fromPath(params.multiqc_config)
+ch_output_docs = Channel.fromPath("$baseDir/docs/output.md")
 
 // AWSBatch sanity checking
 if(workflow.profile == 'awsbatch'){
@@ -204,7 +204,7 @@ ${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style
  * Parse software version numbers
  */
 process get_software_versions {
-    validExitStatus 0,2
+    validExitStatus 0
 
     output:
     file 'software_versions_mqc.yaml' into software_versions_yaml
@@ -215,8 +215,16 @@ process get_software_versions {
     echo $workflow.nextflow.version > v_nextflow.txt
     multiqc --version > v_multiqc.txt
     fastqc --version > v_fastqc.txt
-    fastp --version > v_fastp.txt
+    fastp -v 2> v_fastp.txt
     megahit --version > v_megahit.txt
+    metabat2 -h 2> v_metabat.txt || true
+
+    # fake checkm data setRoot so we can read checkm version number
+    chd=\$(readlink -f checkm_data)
+    printf "\$chd\\n\$chd\\n" | checkm data setRoot
+
+    checkm -h > v_checkm.txt
+    refinem -h > v_refinem.txt
     scrape_software_versions.py > software_versions_mqc.yaml
     """
 }
@@ -563,7 +571,7 @@ process multiqc {
     publishDir "${params.outdir}/MultiQC", mode: 'copy'
 
     input:
-    file multiqc_config
+    file multiqc_config from ch_multiqc_config.collect().ifEmpty([])
     file ('software_versions/*') from software_versions_yaml.collect()
     file (fastqc_raw:'fastqc/*') from fastqc_results.collect().ifEmpty([])
     file (fastqc_trimmed:'fastqc/*') from fastqc_results_trimmed.collect().ifEmpty([])
@@ -589,7 +597,7 @@ process output_documentation {
     publishDir "${params.outdir}/Documentation", mode: 'copy'
 
     input:
-    file output_docs
+    file output_docs from ch_output_docs
 
     output:
     file "results_description.html"
