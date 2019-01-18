@@ -211,8 +211,8 @@ process get_software_versions {
 
     script:
     """
-    echo $params.pipelineVersion > v_pipeline.txt
-    echo $workflow.nextflow.version > v_nextflow.txt
+    echo $workflow.manifest.version > v_pipeline.txt
+    echo $workflow.manifest.nextflowVersion > v_nextflow.txt
     multiqc --version > v_multiqc.txt
     fastqc --version > v_fastqc.txt
     fastp -v 2> v_fastp.txt
@@ -262,7 +262,7 @@ process fastp {
     val trim_qual from params.trimming_quality
 
     output:
-    set val(name), file("${name}_trimmed*.fastq.gz") into trimmed_reads
+    set val(name), file("${name}_trimmed*.fastq.gz") into (trimmed_reads_megahit, trimmed_reads_metabat, trimmed_reads_fastqc)
 
     script:
     if ( !params.singleEnd ) {
@@ -283,7 +283,6 @@ process fastp {
         """
     }
 }
-trimmed_reads.into{trimmed_reads_megahit; trimmed_reads_metabat; trimmed_reads_fastqc}
 
 
 process fastqc_trimmed {
@@ -314,7 +313,7 @@ process megahit {
     set val(name), file(reads) from trimmed_reads_megahit
 
     output:
-    set val(name), file("megahit/${name}.contigs.fa") into megahit_assembly
+    set val(name), file("megahit/${name}.contigs.fa") into (assembly_quast, assembly_metabat, assembly_refinem)
 
     script:
     if ( !params.singleEnd ) {
@@ -329,8 +328,6 @@ process megahit {
     """
     }
 }
-megahit_assembly.into{assembly_quast; assembly_metabat; assembly_refinem}
-
 
 
 process quast {
@@ -364,7 +361,7 @@ process metabat {
 
     output:
     set val(name), file("bins/") into metabat_bins
-    set val(name), file("${name}.bam") into mapped_reads_assembly
+    set val(name), file("${name}.bam") into (mapped_reads_checkm, mapped_reads_refinem)
 
     script:
     if ( !params.singleEnd ) {
@@ -392,7 +389,6 @@ process metabat {
 
 }
 
-mapped_reads_assembly.into{mapped_reads_checkm; mapped_reads_refinem}
 
 process checkm_download_db {
     output:
