@@ -440,7 +440,6 @@ process checkm {
     /* When running on containers, checkm data root should be set.
     Modifying the checkm data root was not possible on Singularity
     after image creation. */
-
     checkm_data_setRoot_cmd = ""
     if (workflow.containerEngine==null) {
         checkm_data_setRoot_cmd = """
