@@ -392,10 +392,10 @@ process metabat {
 
 process checkm_download_db {
     output:
-        file("checkm_data") into checkm_db
+        file("checkm_data") into checkm_downloaded_db
 
     when:
-        params.no_checkm == false
+        (workflow.containerEngine == null) && params.no_checkm == false
 
     script:
     """
@@ -406,6 +406,11 @@ process checkm_download_db {
     cd .. && \
     printf "checkm_data\ncheckm_data\n" | checkm data setRoot
     """
+}
+
+// If checkm_data downloaded within container, create dummy channel
+if (workflow.containerEngine!=null) {
+    checkm_downloaded_db = Channel.from(false)
 }
 
 process checkm {
@@ -420,7 +425,7 @@ process checkm {
     val(delta_compl) from params.delta_compl
     val(abs_delta_cov) from params.abs_delta_cov
     val(delta_gc) from params.delta_gc
-    file("checkm_data") from checkm_db
+    val(checkm_db) from checkm_downloaded_db
 
     output:
     file("${name}_stats/lineage") into checkm_merge_results
@@ -432,10 +437,22 @@ process checkm {
         params.no_checkm == false
 
     script:
+    /* When running on containers, checkm data root should be set.
+    Modifying the checkm data root was not possible on Singularity
+    after image creation. */
+
+    checkm_data_setRoot_cmd = ""
+    if (workflow.containerEngine==null) {
+        checkm_data_setRoot_cmd = """
+                ln -s '${checkm_db}'
+                chd=\$(readlink -f checkm_data)
+                printf "\$chd\\n\$chd\\n" | checkm data setRoot
+            """
+    }
+
     """
     # re-run setRoot in case checkm has forgotten where the databases are located
-    chd=\$(readlink -f checkm_data)
-    printf "\$chd\\n\$chd\\n" | checkm data setRoot
+    ${checkm_data_setRoot_cmd}
 
     mkdir -p stats
     checkm lineage_wf -t "${task.cpus}" -x fa "${bins}" stats/lineage > stats/qa.txt
@@ -550,7 +567,7 @@ process refinem_pass_2 {
     refinem ssu_erroneous -x fa -c "${task.cpus}" "${bins}" taxon_profile \
         "${refinem_db}/gtdb_r80_ssu" "${refinem_db}/gtdb_r86_taxonomy.2018-09-25.tsv" ssu
     # TODO inspect top-hit and give e-value threshold to filter a contig
-    filter_ssu.py --evalue ${ssu_evalue} ssu/ssu_erroneous.tsv ssu/ssu_filtered.tsv 
+    filter_ssu.py --evalue ${ssu_evalue} ssu/ssu_erroneous.tsv ssu/ssu_filtered.tsv
     refinem filter_bins -x fa "${bins}" ssu/ssu_filtered.tsv refinem
     rename 's/.filtered.fa/.fa/' refinem/*.filtered.fa
     """
