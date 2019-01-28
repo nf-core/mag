@@ -210,6 +210,10 @@ process get_software_versions {
     file 'software_versions_mqc.yaml' into software_versions_yaml
 
     script:
+    // fake checkm data setRoot to something the user has write access to
+    // so we can read checkm version number. This is otherwise done in the container.
+    checkm_data_setRoot_cmd = (workflow.containerEngine==null) ? 'printf "\$HOME\\n\$HOME\\n" | checkm data setRoot' : ""
+
     """
     echo $workflow.manifest.version > v_pipeline.txt
     echo $workflow.manifest.nextflowVersion > v_nextflow.txt
@@ -219,10 +223,7 @@ process get_software_versions {
     megahit --version > v_megahit.txt
     metabat2 -h 2> v_metabat.txt || true
 
-    # fake checkm data setRoot so we can read checkm version number
-    chd=\$(readlink -f checkm_data)
-    printf "\$chd\\n\$chd\\n" | checkm data setRoot
-
+    ${checkm_data_setRoot_cmd}
     checkm -h > v_checkm.txt
     refinem -h > v_refinem.txt
     scrape_software_versions.py > software_versions_mqc.yaml
