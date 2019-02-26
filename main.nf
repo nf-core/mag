@@ -9,6 +9,7 @@ nf-core/mag Analysis Pipeline. Started 2018-05-22.
 https://github.com/nf-core/mag
 #### Authors
 Hadrien Gourlé HadrienG <hadrien.gourle@slu.se> - hadriengourle.com>
+Daniel Straub <d4straub@gmail.com>
 ----------------------------------------------------------------------------------------
 */
 
@@ -28,6 +29,11 @@ def helpMessage() {
       --reads                       Path to input data (must be surrounded with quotes)
       -profile                      Configuration profile to use. Can use multiple (comma separated)
                                     Available: standard, conda, docker, singularity, awsbatch, test
+
+    Hybrid assembly:
+      --manifest                    Path to manifest file (must be surrounded with quotes)
+                                    Has 4 headerless columns (tab separated): Sample_Id, Long_Reads, Short_Reads_1, Short_Reads_2
+                                    Only one file path per entry allowed, join multiple longread files if possible
 
     Options:
       -name                         Name for the pipeline run. If not specified, Nextflow will automatically generate a random mnemonic.
@@ -122,7 +128,41 @@ params.ssu_evalue = 1e-6
 /*
  * Create a channel for input read files
  */
- if(params.readPaths){
+def returnFile(it) {
+// Return file if it exists
+    if (workflow.profile in ['test', 'localtest'] ) {
+        inputFile = file("$workflow.projectDir/" + it)
+    } else {
+        inputFile = file(it)
+    }
+    if (!file(inputFile).exists()) exit 1, "Missing file in TSV file: ${inputFile}, see --help for more information"
+    return inputFile
+}
+
+if(params.manifest){
+    manifestFile = file(params.manifest)
+    // extracts read files from TSV and distribute into channels
+    Channel
+        .from(manifestFile)
+        .ifEmpty {exit 1, log.info "Cannot find path file ${tsvFile}"}
+        .splitCsv(sep:'\t')
+        .map { row ->
+            def id = row[0]
+            def lr = returnFile( row[1] )
+            def sr1 = returnFile( row[2] )
+            def sr2 = returnFile( row[3] )
+            [ id, lr, sr1, sr2 ]
+            }
+        .into { files_print; files_sr; files_preprocessing }
+    // report samples
+    files_print
+        .subscribe { log.info "\n$it\n" }
+    // prepare input for fastqc
+    files_sr
+        .map { id, lr, sr1, sr2 -> [ id, [ sr1, sr2 ] ] }
+        .into { read_files_fastqc; read_files_fastp }
+    
+} else if(params.readPaths){
      if(params.singleEnd){
          Channel
              .from(params.readPaths)

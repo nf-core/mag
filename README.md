@@ -29,4 +29,6 @@ The nf-core/mag pipeline comes with documentation about the pipeline, found in t
 
 ### Credits
 
-This pipeline was written by [Hadrien Gourlé](https://hadriengourle.com) at [SLU](https://slu.se).
+This pipeline was written by [Hadrien Gourlé](https://hadriengourle.com) at [SLU](https://slu.se) and Daniel Straub ([@d4straub](https://github.com/d4straub)).
+
+Long read processing was inspired by [caspargross/HybridAssembly](https://github.com/caspargross/HybridAssembly) written by Caspar Gross [@caspargross](https://github.com/caspargross)
