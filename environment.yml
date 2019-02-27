@@ -23,3 +23,9 @@ dependencies:
   - conda-forge::r-markdown=0.8
   - checkm-genome=1.0.12
   - refinem=0.0.24
+  #long read specific:
+  #- nanoplot=1.20.0 #python >=3.5 -->incompatible! alternative is pauvre
+  - pauvre=0.1.86=py_1
+  - filtlong=0.2.0=he941832_2
+  #- porechop=0.2.3_seqan2.1.1 #python >=3.5,<3.6.0a0 -->incompatible! alternative is fastp
+  - spades=3.13.0=0

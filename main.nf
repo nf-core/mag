@@ -153,10 +153,7 @@ if(params.manifest){
             def sr2 = returnFile( row[3] )
             [ id, lr, sr1, sr2 ]
             }
-        .into { files_print; files_sr; files_preprocessing }
-    // report samples
-    files_print
-        .subscribe { log.info "\n$it\n" }
+        .into { files_sr; files_all_raw }
     // prepare input for fastqc
     files_sr
         .map { id, lr, sr1, sr2 -> [ id, [ sr1, sr2 ] ] }
@@ -271,6 +268,90 @@ process get_software_versions {
 
 
 /*
+ * Trim adapter sequences on long read nanopore files, dont use quality filtering just yet
+ * TODO: Common adapter sequences: https://github.com/rrwick/Porechop/blob/master/porechop/adapters.py
+ * TODO: Currently only produces quality plots, absolutely suboptimal!
+ * TODO: NanoPlot (python 3.6+) or pauvre (process nanoqc, doesnt work atm) would be better
+ */
+process fastp_lr { 
+    tag "$id"
+    publishDir "${params.outdir}/${id}/LongReadQC/", mode: 'copy'
+
+    input:
+    set id, lr, sr1, sr2 from files_all_raw
+    
+    output:
+    set id, file('lr_trimmed.fastq.gz'), sr1, sr2 into files_lr_trimmed
+    //set id, lr, val("raw") into files_nanoplot_raw
+    file("fastp.html")
+    //file("fastp.json")
+    
+    script:
+    """
+    fastp \
+        --disable_length_filtering \
+        --disable_quality_filtering \
+        -w "${task.cpus}" \
+        -i ${lr} \
+        -o lr_trimmed.fastq.gz
+    """
+}
+
+
+/*
+ * Quality filter long reads focus on length instead of quality to improve assembly size
+ * TODO: Should illumina reads be trimmed/processed before using them here?
+ */
+process filtlong {
+    tag "$id"
+
+    input: 
+    //set id, lr, sr1, sr2 from files_porechop //original
+    set id, lr, sr1, sr2 from files_lr_trimmed
+    
+    output:
+    set id, file("${id}_lr_filtlong.fastq.gz") into files_lr_filtered 
+    //set id, file("${id}_lr_filtlong.fastq.gz"), val('filtered') into files_nanoplot_filtered    
+
+    script:
+    """
+    filtlong \
+        -1 ${sr1} \
+        -2 ${sr2} \
+        --min_length 1000 \
+        --keep_percent 90 \
+        --trim \
+        --split 1000 \
+        --length_weight 10 \
+        ${lr} | gzip > ${id}_lr_filtlong.fastq.gz
+    """
+}
+
+
+/*
+ * Quality check for nanopore reads and Quality/Length Plots
+ * TODO: make it work!
+
+process nanoqc {
+    tag "$id"
+    publishDir "${params.outdir}/${id}/LongReadQC_${type}/", mode: 'copy'
+    
+    input:
+    //set id, lr, type from files_nanoplot_raw.mix(files_nanoplot_filtered) //original
+    set id, lr, type from files_nanoplot_filtered
+
+    output:
+    file '*'
+    
+    script:
+    """
+    pauvre marginplot --fastq ${lr}
+    """
+}
+ */
+
+
+/*
  * STEP 1 - Read trimming and pre/post qc
  */
 process fastqc_raw {
@@ -302,7 +383,7 @@ process fastp {
     val trim_qual from params.trimming_quality
 
     output:
-    set val(name), file("${name}_trimmed*.fastq.gz") into (trimmed_reads_megahit, trimmed_reads_metabat, trimmed_reads_fastqc)
+    set val(name), file("${name}_trimmed*.fastq.gz") into (trimmed_reads_megahit, trimmed_reads_metabat, trimmed_reads_fastqc, trimmed_sr_spades)
 
     script:
     if ( !params.singleEnd ) {
@@ -353,7 +434,8 @@ process megahit {
     set val(name), file(reads) from trimmed_reads_megahit
 
     output:
-    set val(name), file("megahit/${name}.contigs.fa") into (assembly_quast, assembly_metabat, assembly_refinem)
+    set val(name), file("megahit/${name}.contigs.fa") into (assembly_megahit_to_quast, assembly_megahit_to_refinem)
+    set val(name), file("megahit/${name}.contigs.fa"), file(reads) into assembly_megahit_to_metabat
 
     script:
     if ( !params.singleEnd ) {
@@ -368,6 +450,64 @@ process megahit {
     """
     }
 }
+
+
+/*
+ * Spades hybrid Assembly running normal configuration
+ * TODO: use assembly_graph_spades
+ */
+
+ files_lr_filtered
+    .combine(trimmed_sr_spades, by: 0)
+    .set { files_pre_spades }
+
+process spades {
+    tag "$id"
+    publishDir "${params.outdir}/${id}/assembly_spades", mode: 'copy', pattern: "${id}*"
+
+    input:
+    set id, file(lr), file(sr) from files_pre_spades  
+
+    output:
+    //set id, val('spades'), file("${id}_graph_spades.gfa") into assembly_graph_spades
+    set val("spades-$id"), file("${id}_scaffolds_spades.fasta") into (assembly_spades_to_quast, assembly_spades_to_refinem)
+    set val("spades-$id"), file("${id}_scaffolds_spades.fasta"), file(sr) into assembly_spades_to_metabat
+    file("${id}_contigs_spades.fasta")
+    file("${id}_spades.log")
+
+    when:
+    params.manifest
+    !params.singleEnd
+     
+    script:
+    def maxmem = "${task.memory.toString().replaceAll(/[\sGB]/,'')}"
+    """
+    metaspades.py \
+        --threads "${task.cpus}" \
+        --memory "$maxmem" \
+        --pe1-1 ${sr[0]} \
+        --pe1-2 ${sr[1]} \
+        --nanopore ${lr} \
+        -o spades
+    cp spades/assembly_graph_with_scaffolds.gfa ${id}_graph_spades.gfa
+    cp spades/scaffolds.fasta ${id}_scaffolds_spades.fasta
+    cp spades/contigs.fasta ${id}_contigs_spades.fasta
+    cp spades/spades.log ${id}_spades.log
+    """
+}
+
+/*
+ * Accumulate all assemblies for further steps
+ */
+assembly_spades_to_quast
+    .mix ( assembly_megahit_to_quast )
+    .set { assembly_quast }
+assembly_spades_to_metabat
+    .mix ( assembly_megahit_to_metabat )
+    .set { assembly_metabat }
+assembly_spades_to_refinem
+    .mix ( assembly_megahit_to_refinem )
+    .set { assembly_refinem }
 
 
 process quast {
@@ -395,8 +535,7 @@ process metabat {
     publishDir "${params.outdir}/metabat", mode: 'copy'
 
     input:
-    set val(_name), file(assembly) from assembly_metabat
-    set val(name), file(reads) from trimmed_reads_metabat
+    set val(name), file(assembly), file(reads) from assembly_metabat
     val(min_size) from params.min_contig_size
 
     output:
