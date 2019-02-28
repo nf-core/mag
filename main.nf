@@ -59,6 +59,11 @@ def helpMessage() {
       --delta_gc                    Maximum %GC difference to merge compatible bins (default: 3)
       --ssu_evalue                  Evalue threshold to filter incongruent 16S (default 1e-6)
 
+    Bin quality check:
+      --no_busco                    Disable bin QC
+      --busco_reference             Download path for BUSCO database, available databases are listed here: https://busco.ezlab.org/
+                                    (default: https://busco.ezlab.org/datasets/bacteria_odb9.tar.gz)
+
     AWSBatch options:
       --awsqueue                    The AWSBatch JobQueue that needs to be set when running on AWSBatch
       --awsregion                   The AWS Region for your AWS Batch job to run on
@@ -81,6 +86,7 @@ params.multiqc_config = "$baseDir/conf/multiqc_config.yaml"
 params.email = false
 params.plaintext_email = false
 params.manifest = false
+params.busco_reference = "https://busco.ezlab.org/datasets/bacteria_odb9.tar.gz"
 
 ch_multiqc_config = Channel.fromPath(params.multiqc_config)
 ch_output_docs = Channel.fromPath("$baseDir/docs/output.md")
@@ -130,6 +136,14 @@ params.ssu_evalue = 1e-6
 /*
  * Create a channel for input read files
  */
+if(!params.no_busco){
+    Channel
+        .fromPath( "${params.busco_reference}", checkIfExists: true )
+        .set { file_busco_db }
+} else {
+    Channel.from()
+}
+
 def returnFile(it) {
 // Return file if it exists
     if (workflow.profile in ['test', 'localtest'] ) {
@@ -587,21 +601,24 @@ process metabat {
 
 
 process busco_download_db {
-    output:
-    set val("bacteria_odb9"), file("bacteria_odb9*") into busco_db
+    tag "${database.baseName}"
 
-    when:
-    !params.no_busco
+    input:
+    file(database) from file_busco_db
+
+    output:
+    set val("${database.toString().replace(".tar.gz", "")}"), file("buscodb/*") into busco_db
 
     script:
     """
-    wget https://busco.ezlab.org/datasets/bacteria_odb9.tar.gz
+    mkdir buscodb
+    tar -xf ${database} -C buscodb
     """
 }
 
 metabat_bins
     .combine(busco_db)
-    .set{ metabat_db_busco }
+    .set { metabat_db_busco }
 
 /*
  * BUSCO: Quantitative measures for the assessment of genome assembly
@@ -622,7 +639,6 @@ process busco {
     script:
     def binName = "${name}-${assembly}"
     """
-    tar -xf bacteria_odb9.tar.gz
     run_BUSCO.py \
         --in ${assembly} \
         --lineage_path $db_name \
