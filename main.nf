@@ -80,6 +80,7 @@ params.name = false
 params.multiqc_config = "$baseDir/conf/multiqc_config.yaml"
 params.email = false
 params.plaintext_email = false
+params.manifest = false
 
 ch_multiqc_config = Channel.fromPath(params.multiqc_config)
 ch_output_docs = Channel.fromPath("$baseDir/docs/output.md")
@@ -115,6 +116,7 @@ params.trimming_quality = 15
  */
 params.refinem = false
 params.no_checkm = false
+params.no_busco = false
 params.min_contig_size = 1500
 params.delta_cont = 5
 params.merged_cont = 15
@@ -166,18 +168,21 @@ if(params.manifest){
              .map { row -> [ row[0], [file(row[1][0])]] }
              .ifEmpty { exit 1, "params.readPaths was empty - no input files supplied" }
              .into { read_files_fastqc; read_files_fastp }
+        files_all_raw = Channel.from()
      } else {
          Channel
              .from(params.readPaths)
              .map { row -> [ row[0], [file(row[1][0]), file(row[1][1])]] }
              .ifEmpty { exit 1, "params.readPaths was empty - no input files supplied" }
              .into { read_files_fastqc; read_files_fastp }
+        files_all_raw = Channel.from()
      }
  } else {
      Channel
          .fromFilePairs( params.reads, size: params.singleEnd ? 1 : 2 )
          .ifEmpty { exit 1, "Cannot find any reads matching: ${params.reads}\nNB: Path needs to be enclosed in quotes!\nNB: Path requires at least one * wildcard!\nIf this is single-end data, please specify --singleEnd on the command line." }
          .into { read_files_fastqc; read_files_fastp }
+    files_all_raw = Channel.from()
  }
 
 
@@ -239,6 +244,7 @@ ${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style
 
 /*
  * Parse software version numbers
+ * TODO: all new programs!
  */
 process get_software_versions {
     validExitStatus 0
@@ -257,43 +263,55 @@ process get_software_versions {
     metabat2 -h 2> v_metabat.txt || true
 
     # fake checkm data setRoot so we can read checkm version number
-    chd=\$(readlink -f checkm_data)
-    printf "\$chd\\n\$chd\\n" | checkm data setRoot
+    #chd=\$(readlink -f checkm_data)
+    #printf "\$chd\\n\$chd\\n" | checkm data setRoot
 
-    checkm -h > v_checkm.txt
-    refinem -h > v_refinem.txt
+    #checkm -h > v_checkm.txt
+    echo unknown > v_checkm.txt
+    #refinem -h > v_refinem.txt
+    echo unknown > v_refinem.txt
     scrape_software_versions.py > software_versions_mqc.yaml
     """
 }
 
+/*
+ * Remove reads mapping to the lambda genome.
+ * TODO: missing reference, use: ftp://igenome:G3nom3s4u@ussd-ftp.illumina.com/Enterobacteriophage_lambda/NCBI/1993-04-28/Enterobacteriophage_lambda_NCBI_1993-04-28.tar.gz
+
+process nanolyse { 
+    tag "$id"
+        
+    input:
+    set id, lr, sr1, sr2 from files_all_raw
+
+    output:
+    set id, file("${id}_nanolyse.fastq.gz"), sr1, sr2 into files_nanolyse
+    set id, lr, val("raw") into files_nanoplot_raw
+
+    script:
+    """
+    zcat ${lr} | NanoLyse | gzip > ${id}_nanolyse.fastq.gz
+    """
+}
+ */
 
 /*
- * Trim adapter sequences on long read nanopore files, dont use quality filtering just yet
- * TODO: Common adapter sequences: https://github.com/rrwick/Porechop/blob/master/porechop/adapters.py
- * TODO: Currently only produces quality plots, absolutely suboptimal!
- * TODO: NanoPlot (python 3.6+) or pauvre (process nanoqc, doesnt work atm) would be better
+ * Trim adapter sequences on long read nanopore files
  */
-process fastp_lr { 
+process porechop { 
     tag "$id"
-    publishDir "${params.outdir}/${id}/LongReadQC/", mode: 'copy'
-
+        
     input:
+    //set id, lr, sr1, sr2 from files_nanolyse
     set id, lr, sr1, sr2 from files_all_raw
     
     output:
-    set id, file('lr_trimmed.fastq.gz'), sr1, sr2 into files_lr_trimmed
-    //set id, lr, val("raw") into files_nanoplot_raw
-    file("fastp.html")
-    //file("fastp.json")
+    set id, file("${id}_porechop.fastq"), sr1, sr2 into files_porechop
+    set id, lr, val("raw") into files_nanoplot_raw
     
     script:
     """
-    fastp \
-        --disable_length_filtering \
-        --disable_quality_filtering \
-        -w "${task.cpus}" \
-        -i ${lr} \
-        -o lr_trimmed.fastq.gz
+    porechop -i ${lr} -t "${task.cpus}" -o ${id}_porechop.fastq
     """
 }
 
@@ -306,12 +324,11 @@ process filtlong {
     tag "$id"
 
     input: 
-    //set id, lr, sr1, sr2 from files_porechop //original
-    set id, lr, sr1, sr2 from files_lr_trimmed
+    set id, lr, sr1, sr2 from files_porechop
     
     output:
     set id, file("${id}_lr_filtlong.fastq.gz") into files_lr_filtered 
-    //set id, file("${id}_lr_filtlong.fastq.gz"), val('filtered') into files_nanoplot_filtered    
+    set id, file("${id}_lr_filtlong.fastq.gz"), val('filtered') into files_nanoplot_filtered    
 
     script:
     """
@@ -330,25 +347,24 @@ process filtlong {
 
 /*
  * Quality check for nanopore reads and Quality/Length Plots
- * TODO: make it work!
-
-process nanoqc {
-    tag "$id"
-    publishDir "${params.outdir}/${id}/LongReadQC_${type}/", mode: 'copy'
+ */
+process nanoplot {
+    tag{id}
+    publishDir "${params.outdir}/${id}/qc/longread_${type}/", mode: 'copy'
     
     input:
-    //set id, lr, type from files_nanoplot_raw.mix(files_nanoplot_filtered) //original
-    set id, lr, type from files_nanoplot_filtered
+    set id, lr, type from files_nanoplot_raw.mix(files_nanoplot_filtered)
 
     output:
-    file '*'
+    file '*.png'
+    file '*.html'
+    file '*.txt'
     
     script:
     """
-    pauvre marginplot --fastq ${lr}
+    NanoPlot -t "${task.cpus}" -p ${type}_  --title ${id}_${type} -c darkblue --fastq ${lr}
     """
 }
- */
 
 
 /*
@@ -453,7 +469,7 @@ process megahit {
 
 
 /*
- * Spades hybrid Assembly running normal configuration
+ * metaSpades hybrid Assembly
  * TODO: use assembly_graph_spades
  */
 
@@ -505,9 +521,6 @@ assembly_spades_to_quast
 assembly_spades_to_metabat
     .mix ( assembly_megahit_to_metabat )
     .set { assembly_metabat }
-assembly_spades_to_refinem
-    .mix ( assembly_megahit_to_refinem )
-    .set { assembly_refinem }
 
 
 process quast {
@@ -539,201 +552,94 @@ process metabat {
     val(min_size) from params.min_contig_size
 
     output:
-    set val(name), file("bins/") into metabat_bins
+    set val(name), file("bins/*") into metabat_bins mode flatten
     set val(name), file("${name}.bam") into (mapped_reads_checkm, mapped_reads_refinem)
 
     script:
     if ( !params.singleEnd ) {
-    """
-    bowtie2-build --threads "${task.cpus}" "${assembly}" ref
-    bowtie2 -p "${task.cpus}" -x ref -1 "${reads[0]}" -2 "${reads[1]}" | \
-        samtools view -@ "${task.cpus}" -bS | \
-        samtools sort -@ "${task.cpus}" -o "${name}.bam"
-    samtools index "${name}.bam"
-    jgi_summarize_bam_contig_depths --outputDepth depth.txt "${name}.bam"
-    metabat2 -t "${task.cpus}" -i "${assembly}" -a depth.txt -o "bins/${name}" -m ${min_size}
-    """
+        """
+        bowtie2-build --threads "${task.cpus}" "${assembly}" ref
+        bowtie2 -p "${task.cpus}" -x ref -1 "${reads[0]}" -2 "${reads[1]}" | \
+            samtools view -@ "${task.cpus}" -bS | \
+            samtools sort -@ "${task.cpus}" -o "${name}.bam"
+        samtools index "${name}.bam"
+        jgi_summarize_bam_contig_depths --outputDepth depth.txt "${name}.bam"
+        metabat2 -t "${task.cpus}" -i "${assembly}" -a depth.txt -o "bins/${name}" -m ${min_size}
+
+        #if bin foolder is empty
+        if [ -z \"\$(ls -A bins)\" ]; then 
+            cp ${assembly} bins/
+        fi
+        """
+    } else {
+        """
+        bowtie2-build --threads "${task.cpus}" "${assembly}" ref
+        bowtie2 -p "${task.cpus}" -x ref -U ${reads} | \
+            samtools view -@ "${task.cpus}" -bS | \
+            samtools sort -@ "${task.cpus}" -o "${name}.bam"
+        samtools index "${name}.bam"
+        jgi_summarize_bam_contig_depths --outputDepth depth.txt "${name}.bam"
+        metabat2 -t "${task.cpus}" -i "${assembly}" -a depth.txt -o bins/"${name}" -m ${min_size}
+        """
     }
-    else {
-    """
-    bowtie2-build --threads "${task.cpus}" "${assembly}" ref
-    bowtie2 -p "${task.cpus}" -x ref -U ${reads} | \
-        samtools view -@ "${task.cpus}" -bS | \
-        samtools sort -@ "${task.cpus}" -o "${name}.bam"
-    samtools index "${name}.bam"
-    jgi_summarize_bam_contig_depths --outputDepth depth.txt "${name}.bam"
-    metabat2 -t "${task.cpus}" -i "${assembly}" -a depth.txt -o bins/"${name}" -m ${min_size}
-    """
-    }
 
 }
 
 
-process checkm_download_db {
+process busco_download_db {
     output:
-        file("checkm_data") into checkm_db
+    set val("bacteria_odb9"), file("bacteria_odb9*") into busco_db
 
     when:
-        params.no_checkm == false
+    !params.no_busco
 
     script:
     """
-    mkdir -p checkm_data && \
-    cd checkm_data && \
-    curl -L -O https://data.ace.uq.edu.au/public/CheckM_databases/checkm_data_2015_01_16.tar.gz && \
-    tar xzf checkm_data_2015_01_16.tar.gz && \
-    cd .. && \
-    printf "checkm_data\ncheckm_data\n" | checkm data setRoot
+    wget https://busco.ezlab.org/datasets/bacteria_odb9.tar.gz
     """
 }
 
-process checkm {
-    tag "$name"
-    publishDir "${params.outdir}/checkm", mode: 'copy'
+metabat_bins
+    .combine(busco_db)
+    .set{ metabat_db_busco }
+
+/*
+ * BUSCO: Quantitative measures for the assessment of genome assembly
+ */
+process busco {
+    tag "${name}-${assembly}"
+    publishDir "${params.outdir}/busco", mode: 'copy'
 
     input:
-    set val(name), file(bins) from metabat_bins
-    set val(_name), file(bam) from mapped_reads_checkm
-    val(delta_cont) from params.delta_cont
-    val(merged_cont) from params.merged_cont
-    val(delta_compl) from params.delta_compl
-    val(abs_delta_cov) from params.abs_delta_cov
-    val(delta_gc) from params.delta_gc
-    file("checkm_data") from checkm_db
+    set val(name), file(assembly), val(db_name), file(db) from metabat_db_busco
 
     output:
-    file("${name}_stats/lineage") into checkm_merge_results
-    file("${name}_stats/plots") into checkm_merge_plots
-    file("${name}_stats/qa.txt") into checkm_merge_qa
-    set val(name), file("${name}/") into checkm_merge_bins
-
-    when:
-        params.no_checkm == false
+    file("short_summary_${name}-${assembly}.txt") into busco_summary
+    file("${name}-${assembly}_busco_figure.png")
+    file("${name}-${assembly}_busco_figure.R")
+    file("${name}-${assembly}_busco_log.txt")
 
     script:
+    def binName = "${name}-${assembly}"
     """
-    # re-run setRoot in case checkm has forgotten where the databases are located
-    chd=\$(readlink -f checkm_data)
-    printf "\$chd\\n\$chd\\n" | checkm data setRoot
-
-    mkdir -p stats
-    checkm lineage_wf -t "${task.cpus}" -x fa "${bins}" stats/lineage > stats/qa.txt
-    checkm bin_qa_plot -x fa stats/lineage "${bins}" stats/plots
-
-    samtools index "${bam}"
-    checkm coverage -t "${task.cpus}" -x fa "${bins}" stats/coverage.txt "${bam}"
-    checkm profile stats/coverage.txt > stats/profile.txt
-    checkm tree_qa stats/lineage > stats/tree_qa.txt
-
-    samtools view "${bam}" | awk '{if (NR <=1000) print length(\$10)}' >  stats/read_length.txt
-
-    checkm taxon_set domain Bacteria bacteria.ms
-    checkm merge -t "${task.cpus}" -x fa --delta_cont "${delta_cont}" --merged_cont "${merged_cont}" \
-        bacteria.ms "${bins}" stats/merger/
-
-    mkdir -p ${name}
-    mkdir -p ${name}_stats
-    merge_bins.py --delta_cont "${delta_cont}" --merged_cont "${merged_cont}" \
-        --delta_compl "${delta_compl}" --abs_delta_cov "${abs_delta_cov}" --delta_gc "${delta_gc}" \
-        --profile stats/profile.txt --tree stats/tree_qa.txt \
-        --length stats/read_length.txt \
-        --merger stats/merger/merger.tsv "${bins}" "${name}"
-    checkm lineage_wf -t "${task.cpus}" -x fa "${name}" ${name}_stats/lineage > ${name}_stats/qa.txt
-    checkm bin_qa_plot -x fa ${name}_stats/lineage "${name}" ${name}_stats/plots
+    tar -xf bacteria_odb9.tar.gz
+    run_BUSCO.py \
+        --in ${assembly} \
+        --lineage_path $db_name \
+        --cpu "${task.cpus}" \
+        --blast_single_core \
+        --mode genome \
+        --out ${binName} \
+        >${binName}_busco_log.txt
+    generate_plot.py \
+        --working_directory run_${binName}
+    cp run_${binName}/busco_figure.png ${binName}_busco_figure.png
+    cp run_${binName}/busco_figure.R ${binName}_busco_figure.R
+    cp run_${binName}/short_summary_${binName}.txt short_summary_${binName}.txt
     """
 }
 
 
-process refinem_download_db {
-    publishDir "${params.outdir}/db"
-    output:
-        file("refinem_databases/") into refinem_db
-
-    when:
-        params.refinem == true && params.refinem_db ==false && params.no_checkm == false
-
-    script:
-    """
-    wget https://storage.googleapis.com/mag_refinem_db/refinem_databases.tar.gz
-    tar xzf refinem_databases.tar.gz
-    """
-}
-
-if (params.refinem_db) {
-    refinem_db = file(params.refinem_db)
-}
-mapped_reads_refinem.into {mapped_reads_refinem_1; mapped_reads_refinem_2}
-assembly_refinem.into {assembly_refinem_1; assembly_refinem_2}
-
-process refinem_pass_1 {
-    tag "${name}"
-
-    input:
-    set val(name), file(bins) from checkm_merge_bins
-    set val(_name), file(bam) from mapped_reads_refinem_1
-    set val(__name), file(assembly) from assembly_refinem_1
-    file(refinem_db) from refinem_db
-
-    output:
-    set val(name), file("bins_pass_1") into refinem_bins_pass_1
-
-    when:
-        params.refinem == true && params.no_checkm == false
-
-    script:
-    """
-    # filter by GC / tetra
-    samtools index "${bam}"
-    refinem scaffold_stats -x fa -c "${task.cpus}" "${assembly}" "${bins}" refinem "${bam}"
-    refinem outliers --no_plots refinem/scaffold_stats.tsv refinem
-    refinem filter_bins -x fa "${bins}" refinem/outliers.tsv new_bins_tmp_1
-    # filter by taxonomic assignment
-    refinem call_genes -x fa -c "${task.cpus}" new_bins_tmp_1 gene_calls
-    refinem taxon_profile -c "${task.cpus}" gene_calls refinem/scaffold_stats.tsv \
-        "${refinem_db}/gtdb_r86.dmnd" "${refinem_db}/gtdb_r86_taxonomy.2018-09-25.tsv" \
-        taxon_profile
-    refinem taxon_filter -c "${task.cpus}" taxon_profile taxon_filter.tsv
-    refinem filter_bins -x fa new_bins_tmp_1 taxon_filter.tsv bins_pass_1
-    rename 's/.filtered.filtered.fa/.fa/' bins_pass_1/*.filtered.filtered.fa
-    """
-}
-
-process refinem_pass_2 {
-    tag "${name}"
-    publishDir "${params.outdir}/", mode: 'copy'
-
-    input:
-    set val(name), file(bins) from refinem_bins_pass_1
-    set val(_name), file(bam) from mapped_reads_refinem_2
-    set val(__name), file(assembly) from assembly_refinem_2
-    file(refinem_db) from refinem_db
-    val(ssu_evalue) from params.ssu_evalue
-
-    output:
-    set val(name), file("refinem") into refinem_bins
-
-    when:
-        params.refinem == true && params.no_checkm == false
-
-    script:
-    """
-    samtools index "${bam}"
-    # filter incongruent 16S
-    # first we need to re-run taxon profile on the new bin dir
-    refinem scaffold_stats -x fa -c "${task.cpus}" "${assembly}" "${bins}" stats "${bam}"
-    refinem call_genes -x fa -c "${task.cpus}" "${bins}" gene_calls
-    refinem taxon_profile -c "${task.cpus}" gene_calls stats/scaffold_stats.tsv \
-        "${refinem_db}/gtdb_r86.dmnd" "${refinem_db}/gtdb_r86_taxonomy.2018-09-25.tsv" \
-        taxon_profile
-    # then we can identify incongruent ssu
-    refinem ssu_erroneous -x fa -c "${task.cpus}" "${bins}" taxon_profile \
-        "${refinem_db}/gtdb_r80_ssu" "${refinem_db}/gtdb_r86_taxonomy.2018-09-25.tsv" ssu
-    # TODO inspect top-hit and give e-value threshold to filter a contig
-    filter_ssu.py --evalue ${ssu_evalue} ssu/ssu_erroneous.tsv ssu/ssu_filtered.tsv 
-    refinem filter_bins -x fa "${bins}" ssu/ssu_filtered.tsv refinem
-    rename 's/.filtered.fa/.fa/' refinem/*.filtered.fa
-    """
-}
 
 // TODO next releases:
 // good bins channels (from checkm or refinem) + annotation
@@ -751,6 +657,7 @@ process multiqc {
     file (fastqc_raw:'fastqc/*') from fastqc_results.collect().ifEmpty([])
     file (fastqc_trimmed:'fastqc/*') from fastqc_results_trimmed.collect().ifEmpty([])
     file ('quast*/*') from quast_results.collect()
+    file ('short_summary_*.txt') from busco_summary.collect()
 
     output:
     file "*multiqc_report.html" into multiqc_report
