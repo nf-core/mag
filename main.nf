@@ -471,6 +471,7 @@ process fastp {
 /*
  * Remove PhiX contamination from Illumina reads
  * TODO: function downloaddb that also makes index
+ * TODO: PhiX into/from iGenomes.conf?
  */
 if(!params.keep_phix) {
     phix_reference = "ftp://ftp.ncbi.nlm.nih.gov/genomes/genbank/viral/Enterobacteria_phage_phiX174_sensu_lato/all_assembly_versions/GCA_002596845.1_ASM259684v1/GCA_002596845.1_ASM259684v1_genomic.fna.gz"
@@ -494,20 +495,20 @@ if(!params.keep_phix) {
         if ( !params.singleEnd ) {
             """
             bowtie2-build --threads "${task.cpus}" "${genome}" ref
-            bowtie2 -p "${task.cpus}" -x ref -1 "${reads[0]}" -2 "${reads[1]}" --un-conc-gz unmapped_%.fastq.gz
+            bowtie2 -p "${task.cpus}" -x ref -1 "${reads[0]}" -2 "${reads[1]}" --un-conc-gz ${name}_unmapped_%.fastq.gz
 
             echo "Bowtie2 reference: ${genome}" >${name}_remove_phix_log.txt
             zcat ${reads[0]} | echo "Read pairs before removal: \$((`wc -l`/4))" >>${name}_remove_phix_log.txt
-            zcat unmapped_1.fastq.gz | echo "Read pairs after removal: \$((`wc -l`/4))" >>${name}_remove_phix_log.txt
+            zcat ${name}_unmapped_1.fastq.gz | echo "Read pairs after removal: \$((`wc -l`/4))" >>${name}_remove_phix_log.txt
             """
         } else {
             """
             bowtie2-build --threads "${task.cpus}" "${genome}" ref
-            bowtie2 -p "${task.cpus}" -x ref -U ${reads}  --un-gz unmapped.fastq.gz
+            bowtie2 -p "${task.cpus}" -x ref -U ${reads}  --un-gz ${name}_unmapped.fastq.gz
 
             echo "Bowtie2 reference: $ref" >${name}_remove_phix_log.txt
             zcat ${reads[0]} | echo "Reads before removal: \$((`wc -l`/4))" >>${name}_remove_phix_log.txt
-            zcat unmapped_1.fastq.gz | echo "Reads after removal: \$((`wc -l`/4))" >>${name}_remove_phix_log.txt
+            zcat ${name}_unmapped.fastq.gz | echo "Reads after removal: \$((`wc -l`/4))" >>${name}_remove_phix_log.txt
             """
         }
 
