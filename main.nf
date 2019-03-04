@@ -60,9 +60,12 @@ def helpMessage() {
       --ssu_evalue                  Evalue threshold to filter incongruent 16S (default 1e-6)
 
     Bin quality check:
-      --no_busco                    Disable bin QC
+      --no_busco                    Disable bin QC with BUSCO (default: false)
       --busco_reference             Download path for BUSCO database, available databases are listed here: https://busco.ezlab.org/
                                     (default: https://busco.ezlab.org/datasets/bacteria_odb9.tar.gz)
+
+    Long read preprocessing:
+      --no_nanolyse                 Skip removing reads similar to the internal standard lambda genome.
 
     AWSBatch options:
       --awsqueue                    The AWSBatch JobQueue that needs to be set when running on AWSBatch
@@ -74,7 +77,7 @@ def helpMessage() {
  * SET UP CONFIGURATION VARIABLES
  */
 
-// Show help emssage
+// Show help message
 if (params.help){
     helpMessage()
     exit 0
@@ -132,6 +135,11 @@ params.delta_gc = 3
 
 params.refinem_db = false
 params.ssu_evalue = 1e-6
+
+/*
+ * long read preprocessing options
+ */
+params.no_nanolyse = false
 
 /*
  * Create a channel for input read files
@@ -288,26 +296,6 @@ process get_software_versions {
     """
 }
 
-/*
- * Remove reads mapping to the lambda genome.
- * TODO: missing reference, use: ftp://igenome:G3nom3s4u@ussd-ftp.illumina.com/Enterobacteriophage_lambda/NCBI/1993-04-28/Enterobacteriophage_lambda_NCBI_1993-04-28.tar.gz
-
-process nanolyse { 
-    tag "$id"
-        
-    input:
-    set id, lr, sr1, sr2 from files_all_raw
-
-    output:
-    set id, file("${id}_nanolyse.fastq.gz"), sr1, sr2 into files_nanolyse
-    set id, lr, val("raw") into files_nanoplot_raw
-
-    script:
-    """
-    zcat ${lr} | NanoLyse | gzip > ${id}_nanolyse.fastq.gz
-    """
-}
- */
 
 /*
  * Trim adapter sequences on long read nanopore files
@@ -316,7 +304,6 @@ process porechop {
     tag "$id"
         
     input:
-    //set id, lr, sr1, sr2 from files_nanolyse
     set id, lr, sr1, sr2 from files_all_raw
     
     output:
@@ -329,6 +316,42 @@ process porechop {
     """
 }
 
+/*
+ * Remove reads mapping to the lambda genome.
+ * TODO: add lambda phage to igenomes.config?
+ */
+nanolyse_reference = "ftp://ftp.ncbi.nlm.nih.gov/genomes/genbank/viral/Escherichia_virus_Lambda/all_assembly_versions/GCA_000840245.1_ViralProj14204/GCA_000840245.1_ViralProj14204_genomic.fna.gz"
+if (!params.no_nanolyse) {
+    Channel
+        .fromPath( "${nanolyse_reference}", checkIfExists: true )
+        .set { file_nanolyse_db }
+    process nanolyse { 
+        tag "$id"
+
+        publishDir "${params.outdir}", mode: 'copy',
+        saveAs: {filename -> filename.indexOf(".fastq.gz") == -1 ? "nanolyse/$filename" : null}
+            
+        input:
+        set id, file(lr), sr1, sr2, file(nanolyse_db) from files_porechop.combine(file_nanolyse_db)
+
+        output:
+        set id, file("${id}_nanolyse.fastq.gz"), sr1, sr2 into files_nanolyse
+        file("${id}_nanolyse_log.txt")
+    
+        script:
+        """
+        cat ${lr} | NanoLyse --reference $nanolyse_db | gzip > ${id}_nanolyse.fastq.gz
+        
+        echo "NanoLyse reference: $nanolyse_reference" >${id}_nanolyse_log.txt
+        cat ${lr} | echo "total reads before NanoLyse: \$((`wc -l`/4))" >>${id}_nanolyse_log.txt
+        zcat ${id}_nanolyse.fastq.gz | echo "total reads after NanoLyse: \$((`wc -l`/4))" >>${id}_nanolyse_log.txt
+        """
+    }
+} else {
+    files_porechop
+        .set{ files_nanolyse }
+}
+
 
 /*
  * Quality filter long reads focus on length instead of quality to improve assembly size
@@ -338,7 +361,7 @@ process filtlong {
     tag "$id"
 
     input: 
-    set id, lr, sr1, sr2 from files_porechop
+    set id, lr, sr1, sr2 from files_nanolyse
     
     output:
     set id, file("${id}_lr_filtlong.fastq.gz") into files_lr_filtered 
@@ -363,7 +386,7 @@ process filtlong {
  * Quality check for nanopore reads and Quality/Length Plots
  */
 process nanoplot {
-    tag{id}
+    tag "$id"
     publishDir "${params.outdir}/${id}/qc/longread_${type}/", mode: 'copy'
     
     input:
@@ -458,7 +481,8 @@ process fastqc_trimmed {
  */
 process megahit {
     tag "$name"
-    publishDir "${params.outdir}/", mode: 'copy'
+    publishDir "${params.outdir}/", mode: 'copy',
+        saveAs: {filename -> filename.indexOf(".fastq.gz") == -1 ? "$filename" : null}
 
     input:
     set val(name), file(reads) from trimmed_reads_megahit
@@ -493,7 +517,8 @@ process megahit {
 
 process spades {
     tag "$id"
-    publishDir "${params.outdir}/${id}/assembly_spades", mode: 'copy', pattern: "${id}*"
+    publishDir "${params.outdir}/${id}/assembly_spades", mode: 'copy', pattern: "${id}*",
+        saveAs: {filename -> filename.indexOf(".fastq.gz") == -1 ? filename : null}
 
     input:
     set id, file(lr), file(sr) from files_pre_spades  
@@ -559,7 +584,10 @@ process quast {
  */
 process metabat {
     tag "$name"
-    publishDir "${params.outdir}/metabat", mode: 'copy'
+    publishDir "${params.outdir}/metabat", mode: 'copy',
+        saveAs: {filename -> 
+            if      (filename.indexOf(".fastq.gz") > -1)   filename
+            else if (filename.indexOf(".bam") > -1)        filename }
 
     input:
     set val(name), file(assembly), file(reads) from assembly_metabat
