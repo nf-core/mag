@@ -46,6 +46,7 @@ def helpMessage() {
       --adapter_reverse             Sequence of 3' adapter to remove in the reverse reads
       --mean_quality                Mean qualified quality value for keeping read (default: 15)
       --trimming_quality            Trimming quality value for the sliding window (default: 15)
+      --keep_phix                   Keep reads similar to the Illumina internal standard PhiX genome (default: false)
 
     Binning options:
       --refinem                     Enable bin refinement with refinem.
@@ -65,9 +66,9 @@ def helpMessage() {
                                     (default: https://busco.ezlab.org/datasets/bacteria_odb9.tar.gz)
 
     Long read preprocessing:
-      --no_nanolyse                 Skip removing reads similar to the ONT internal standard lambda genome (default: false)
+      --no_nanolyse                 Keep reads similar to the ONT internal standard lambda genome (default: false)
       --filtlong_min_length         Discard any read which is shorter than this value (default: 1000)
-      --filtlong_keep_percent       Retain the best % of reads (default: 90)
+      --filtlong_keep_percent       keep the best % of reads (default: 90)
       --filtlong_split              Split reads whenever so much consequence bases fail to match a k-mer in the reference (default: 1000)
       --filtlong_length_weight      The higher the more important is read length when choosing the best reads (default: 10)
 
@@ -123,6 +124,7 @@ params.adapter_forward = "AGATCGGAAGAGCACACGTCTGAACTCCAGTCA"
 params.adapter_reverse = "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT"
 params.mean_quality = 15
 params.trimming_quality = 15
+params.keep_phix
 
 /*
  * binning options
@@ -337,7 +339,7 @@ if (!params.no_nanolyse) {
         tag "$id"
 
         publishDir "${params.outdir}", mode: 'copy',
-        saveAs: {filename -> filename.indexOf(".fastq.gz") == -1 ? "nanolyse/$filename" : null}
+            saveAs: {filename -> filename.indexOf(".fastq.gz") == -1 ? "nanolyse/$filename" : null}
             
         input:
         set id, file(lr), sr1, sr2, file(nanolyse_db) from files_porechop.combine(file_nanolyse_db)
@@ -444,7 +446,7 @@ process fastp {
     val trim_qual from params.trimming_quality
 
     output:
-    set val(name), file("${name}_trimmed*.fastq.gz") into (trimmed_reads_megahit, trimmed_reads_metabat, trimmed_reads_fastqc, trimmed_sr_spades)
+    set val(name), file("${name}_trimmed*.fastq.gz") into trimmed_reads
 
     script:
     if ( !params.singleEnd ) {
@@ -464,6 +466,54 @@ process fastp {
             -i ${reads} -o "${name}_trimmed.fastq.gz"
         """
     }
+}
+
+/*
+ * Remove PhiX contamination from Illumina reads
+ * TODO: function downloaddb that also makes index
+ */
+if(!params.keep_phix) {
+    phix_reference = "ftp://ftp.ncbi.nlm.nih.gov/genomes/genbank/viral/Enterobacteria_phage_phiX174_sensu_lato/all_assembly_versions/GCA_002596845.1_ASM259684v1/GCA_002596845.1_ASM259684v1_genomic.fna.gz"
+    Channel
+        .fromPath( "${phix_reference}", checkIfExists: true )
+        .set { file_phix_db }
+    process remove_phix {
+        tag "$name"
+
+        publishDir "${params.outdir}", mode: 'copy',
+            saveAs: {filename -> filename.indexOf(".fastq.gz") == -1 ? "remove_phix/$filename" : null}
+
+        input:
+        set val(name), file(reads), file(genome) from trimmed_reads.combine(file_phix_db)
+
+        output:
+        set val(name), file("*.fastq.gz") into (trimmed_reads_megahit, trimmed_reads_metabat, trimmed_reads_fastqc, trimmed_sr_spades)
+        file("${name}_remove_phix_log.txt")
+
+        script:
+        if ( !params.singleEnd ) {
+            """
+            bowtie2-build --threads "${task.cpus}" "${genome}" ref
+            bowtie2 -p "${task.cpus}" -x ref -1 "${reads[0]}" -2 "${reads[1]}" --un-conc-gz unmapped_%.fastq.gz
+
+            echo "Bowtie2 reference: ${genome}" >${name}_remove_phix_log.txt
+            zcat ${reads[0]} | echo "Read pairs before removal: \$((`wc -l`/4))" >>${name}_remove_phix_log.txt
+            zcat unmapped_1.fastq.gz | echo "Read pairs after removal: \$((`wc -l`/4))" >>${name}_remove_phix_log.txt
+            """
+        } else {
+            """
+            bowtie2-build --threads "${task.cpus}" "${genome}" ref
+            bowtie2 -p "${task.cpus}" -x ref -U ${reads}  --un-gz unmapped.fastq.gz
+
+            echo "Bowtie2 reference: $ref" >${name}_remove_phix_log.txt
+            zcat ${reads[0]} | echo "Reads before removal: \$((`wc -l`/4))" >>${name}_remove_phix_log.txt
+            zcat unmapped_1.fastq.gz | echo "Reads after removal: \$((`wc -l`/4))" >>${name}_remove_phix_log.txt
+            """
+        }
+
+    }
+} else {
+    trimmed_reads.into {trimmed_reads_megahit; trimmed_reads_metabat; trimmed_reads_fastqc; trimmed_sr_spades}
 }
 
 
