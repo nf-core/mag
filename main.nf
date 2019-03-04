@@ -65,7 +65,11 @@ def helpMessage() {
                                     (default: https://busco.ezlab.org/datasets/bacteria_odb9.tar.gz)
 
     Long read preprocessing:
-      --no_nanolyse                 Skip removing reads similar to the internal standard lambda genome.
+      --no_nanolyse                 Skip removing reads similar to the ONT internal standard lambda genome (default: false)
+      --filtlong_min_length         Discard any read which is shorter than this value (default: 1000)
+      --filtlong_keep_percent       Retain the best % of reads (default: 90)
+      --filtlong_split              Split reads whenever so much consequence bases fail to match a k-mer in the reference (default: 1000)
+      --filtlong_length_weight      The higher the more important is read length when choosing the best reads (default: 10)
 
     AWSBatch options:
       --awsqueue                    The AWSBatch JobQueue that needs to be set when running on AWSBatch
@@ -140,6 +144,10 @@ params.ssu_evalue = 1e-6
  * long read preprocessing options
  */
 params.no_nanolyse = false
+params.filtlong_min_length = 1000
+params.filtlong_keep_percent = 90
+params.filtlong_split = 1000
+params.filtlong_length_weight = 10
 
 /*
  * Create a channel for input read files
@@ -372,11 +380,11 @@ process filtlong {
     filtlong \
         -1 ${sr1} \
         -2 ${sr2} \
-        --min_length 1000 \
-        --keep_percent 90 \
+        --min_length ${params.filtlong_min_length} \
+        --keep_percent ${params.filtlong_keep_percent} \
         --trim \
-        --split 1000 \
-        --length_weight 10 \
+        --split ${params.filtlong_split} \
+        --length_weight ${params.filtlong_length_weight} \
         ${lr} | gzip > ${id}_lr_filtlong.fastq.gz
     """
 }
@@ -551,23 +559,13 @@ process spades {
     """
 }
 
-/*
- * Accumulate all assemblies for further steps
- */
-assembly_spades_to_quast
-    .mix ( assembly_megahit_to_quast )
-    .set { assembly_quast }
-assembly_spades_to_metabat
-    .mix ( assembly_megahit_to_metabat )
-    .set { assembly_metabat }
-
 
 process quast {
     tag "$name"
     // publishDir "${params.outdir}/quast/$name", mode: 'copy'
 
     input:
-    set val(name), file(assembly) from assembly_quast
+    set val(name), file(assembly) from assembly_spades_to_quast.mix(assembly_megahit_to_quast)
 
     output:
     file("quast_${name}/*") into quast_results
@@ -590,7 +588,7 @@ process metabat {
             else if (filename.indexOf(".bam") > -1)        filename }
 
     input:
-    set val(name), file(assembly), file(reads) from assembly_metabat
+    set val(name), file(assembly), file(reads) from assembly_spades_to_metabat.mix(assembly_megahit_to_metabat)
     val(min_size) from params.min_contig_size
 
     output:
@@ -622,6 +620,11 @@ process metabat {
         samtools index "${name}.bam"
         jgi_summarize_bam_contig_depths --outputDepth depth.txt "${name}.bam"
         metabat2 -t "${task.cpus}" -i "${assembly}" -a depth.txt -o bins/"${name}" -m ${min_size}
+
+        #if bin foolder is empty
+        if [ -z \"\$(ls -A bins)\" ]; then 
+            cp ${assembly} bins/
+        fi
         """
     }
 
