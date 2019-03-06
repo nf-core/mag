@@ -48,6 +48,10 @@ def helpMessage() {
       --trimming_quality            Trimming quality value for the sliding window (default: 15)
       --keep_phix                   Keep reads similar to the Illumina internal standard PhiX genome (default: false)
 
+    Assembly:
+      --skip_assembly_graph         Skip drawing an assembly graph
+      --bandage_mindepth            Reduce the assembly graph to include only contig with this depth (default: false)
+
     Binning options:
       --refinem                     Enable bin refinement with refinem.
       --refinem_db                  Path to refinem database
@@ -95,6 +99,8 @@ params.email = false
 params.plaintext_email = false
 params.manifest = false
 params.busco_reference = "https://busco.ezlab.org/datasets/bacteria_odb9.tar.gz"
+params.skip_assembly_graph = false
+params.bandage_mindepth = false
 
 ch_multiqc_config = Channel.fromPath(params.multiqc_config)
 ch_output_docs = Channel.fromPath("$baseDir/docs/output.md")
@@ -574,7 +580,6 @@ process megahit {
 
 /*
  * metaSpades hybrid Assembly
- * TODO: use assembly_graph_spades
  */
 
  files_lr_filtered
@@ -590,7 +595,7 @@ process spades {
     set id, file(lr), file(sr) from files_pre_spades  
 
     output:
-    //set id, val('spades'), file("${id}_graph_spades.gfa") into assembly_graph_spades
+    set id, val('spades'), file("${id}_graph_spades.gfa") into assembly_graph_spades
     set val("spades-$id"), file("${id}_scaffolds_spades.fasta") into (assembly_spades_to_quast, assembly_spades_to_refinem)
     set val("spades-$id"), file("${id}_scaffolds_spades.fasta"), file(sr) into assembly_spades_to_metabat
     file("${id}_contigs_spades.fasta")
@@ -632,6 +637,34 @@ process quast {
     """
     quast.py --threads "${task.cpus}" -l "${name}" "${assembly}" -o "quast_${name}"
     """
+}
+
+
+// Use Bandage to draw a (reduced) picture of the assembly graph
+process draw_assembly_graph {
+    tag "$id"
+    publishDir "${params.outdir}/${id}/assembly_spades/", mode: 'copy'
+
+    input:
+    set id, type, file(gfa) from assembly_graph_spades
+
+    output:
+    file("${id}*")
+
+    when:
+    !params.skip_assembly_graph
+
+    script:
+    if(!params.bandage_mindepth) {
+        """
+        Bandage image ${gfa} ${id}_${type}_graph.svg
+        """
+    } else {
+        """
+        Bandage reduce ${gfa} ${id}_graph_spades_reduced.gfa --scope depthrange --mindepth ${params.bandage_mindepth} --maxdepth 1000000
+        Bandage image ${id}_graph_spades_reduced.gfa ${id}_${type}_graph.svg
+        """
+    }
 }
 
 
