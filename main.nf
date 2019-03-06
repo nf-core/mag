@@ -41,16 +41,18 @@ def helpMessage() {
       --outdir                      The output directory where the results will be saved
       --email                       Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits
 
-    Trimming options:
+    Short read preprocessing:
       --adapter_forward             Sequence of 3' adapter to remove in the forward reads
       --adapter_reverse             Sequence of 3' adapter to remove in the reverse reads
       --mean_quality                Mean qualified quality value for keeping read (default: 15)
       --trimming_quality            Trimming quality value for the sliding window (default: 15)
       --keep_phix                   Keep reads similar to the Illumina internal standard PhiX genome (default: false)
+      --phix_reference              Download path for PhiX database
+                                    (default: "ftp://ftp.ncbi.nlm.nih.gov/genomes/genbank/viral/Enterobacteria_phage_phiX174_sensu_lato/all_assembly_versions/GCA_002596845.1_ASM259684v1/GCA_002596845.1_ASM259684v1_genomic.fna.gz")
 
     Assembly:
-      --skip_assembly_graph         Skip drawing an assembly graph
-      --bandage_mindepth            Reduce the assembly graph to include only contig with this depth (default: false)
+      --skip_assembly_graph         Skip drawing an assembly graph with Bandage
+      --bandage_mindepth            Reduce the assembly graph to include only contig above this depth (default: 0)
 
     Binning options:
       --refinem                     Enable bin refinement with refinem.
@@ -65,7 +67,7 @@ def helpMessage() {
       --ssu_evalue                  Evalue threshold to filter incongruent 16S (default 1e-6)
 
     Bin quality check:
-      --no_busco                    Disable bin QC with BUSCO (default: false)
+      --skip_busco                    Disable bin QC with BUSCO (default: false)
       --busco_reference             Download path for BUSCO database, available databases are listed here: https://busco.ezlab.org/
                                     (default: https://busco.ezlab.org/datasets/bacteria_odb9.tar.gz)
 
@@ -131,13 +133,15 @@ params.adapter_reverse = "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT"
 params.mean_quality = 15
 params.trimming_quality = 15
 params.keep_phix = false
+params.phix_reference = "ftp://ftp.ncbi.nlm.nih.gov/genomes/genbank/viral/Enterobacteria_phage_phiX174_sensu_lato/all_assembly_versions/GCA_002596845.1_ASM259684v1/GCA_002596845.1_ASM259684v1_genomic.fna.gz"
+
 
 /*
  * binning options
  */
 params.refinem = false
 params.no_checkm = false
-params.no_busco = false
+params.skip_busco = false
 params.min_contig_size = 1500
 params.delta_cont = 5
 params.merged_cont = 15
@@ -160,12 +164,18 @@ params.filtlong_length_weight = 10
 /*
  * Create a channel for input read files
  */
-if(!params.no_busco){
+if(!params.skip_busco){
     Channel
         .fromPath( "${params.busco_reference}", checkIfExists: true )
         .set { file_busco_db }
 } else {
     Channel.from()
+}
+
+if(!params.keep_phix) {
+    Channel
+        .fromPath( "${params.phix_reference}", checkIfExists: true )
+        .into { file_phix_db; file_phix_db_log }
 }
 
 def returnFile(it) {
@@ -282,7 +292,6 @@ ${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style
 
 /*
  * Parse software version numbers
- * TODO: all new programs!
  */
 process get_software_versions {
     validExitStatus 0
@@ -487,10 +496,21 @@ process fastp {
  * TODO: PhiX into/from iGenomes.conf?
  */
 if(!params.keep_phix) {
-    phix_reference = "ftp://ftp.ncbi.nlm.nih.gov/genomes/genbank/viral/Enterobacteria_phage_phiX174_sensu_lato/all_assembly_versions/GCA_002596845.1_ASM259684v1/GCA_002596845.1_ASM259684v1_genomic.fna.gz"
-    Channel
-        .fromPath( "${phix_reference}", checkIfExists: true )
-        .set { file_phix_db }
+    process phix_download_db {
+        tag "${genome}"
+
+        input:
+        file(genome) from file_phix_db
+
+        output:
+        file("ref*") into phix_db
+
+        script:
+        """
+        bowtie2-build --threads "${task.cpus}" "${genome}" ref
+        """
+    }
+
     process remove_phix {
         tag "$name"
 
@@ -498,7 +518,8 @@ if(!params.keep_phix) {
             saveAs: {filename -> filename.indexOf(".fastq.gz") == -1 ? "remove_phix/$filename" : null}
 
         input:
-        set val(name), file(reads), file(genome) from trimmed_reads.combine(file_phix_db)
+        file(ref) from phix_db
+        set val(name), file(reads), file(genome) from trimmed_reads.combine(file_phix_db_log)
 
         output:
         set val(name), file("*.fastq.gz") into (trimmed_reads_megahit, trimmed_reads_metabat, trimmed_reads_fastqc, trimmed_sr_spades)
@@ -507,19 +528,15 @@ if(!params.keep_phix) {
         script:
         if ( !params.singleEnd ) {
             """
-            bowtie2-build --threads "${task.cpus}" "${genome}" ref
             bowtie2 -p "${task.cpus}" -x ref -1 "${reads[0]}" -2 "${reads[1]}" --un-conc-gz ${name}_unmapped_%.fastq.gz
-
             echo "Bowtie2 reference: ${genome}" >${name}_remove_phix_log.txt
             zcat ${reads[0]} | echo "Read pairs before removal: \$((`wc -l`/4))" >>${name}_remove_phix_log.txt
             zcat ${name}_unmapped_1.fastq.gz | echo "Read pairs after removal: \$((`wc -l`/4))" >>${name}_remove_phix_log.txt
             """
         } else {
             """
-            bowtie2-build --threads "${task.cpus}" "${genome}" ref
             bowtie2 -p "${task.cpus}" -x ref -U ${reads}  --un-gz ${name}_unmapped.fastq.gz
-
-            echo "Bowtie2 reference: $ref" >${name}_remove_phix_log.txt
+            echo "Bowtie2 reference: ${genome}" >${name}_remove_phix_log.txt
             zcat ${reads[0]} | echo "Reads before removal: \$((`wc -l`/4))" >>${name}_remove_phix_log.txt
             zcat ${name}_unmapped.fastq.gz | echo "Reads after removal: \$((`wc -l`/4))" >>${name}_remove_phix_log.txt
             """
