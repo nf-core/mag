@@ -387,7 +387,6 @@ if (!params.no_nanolyse) {
 
 /*
  * Quality filter long reads focus on length instead of quality to improve assembly size
- * TODO: Should illumina reads be trimmed/processed before using them here?
  */
 process filtlong {
     tag "$id"
@@ -492,7 +491,6 @@ process fastp {
 
 /*
  * Remove PhiX contamination from Illumina reads
- * TODO: function downloaddb that also makes index
  * TODO: PhiX into/from iGenomes.conf?
  */
 if(!params.keep_phix) {
