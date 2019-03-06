@@ -118,13 +118,13 @@ if( !(workflow.runName ==~ /[a-z]+_[a-z]+/) ){
 }
 
 /*
- * trimming options
+ * short read preprocessing options
  */
 params.adapter_forward = "AGATCGGAAGAGCACACGTCTGAACTCCAGTCA"
 params.adapter_reverse = "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT"
 params.mean_quality = 15
 params.trimming_quality = 15
-params.keep_phix
+params.keep_phix = false
 
 /*
  * binning options
@@ -299,9 +299,16 @@ process get_software_versions {
     #printf "\$chd\\n\$chd\\n" | checkm data setRoot
 
     #checkm -h > v_checkm.txt
-    echo unknown > v_checkm.txt
     #refinem -h > v_refinem.txt
-    echo unknown > v_refinem.txt
+
+    NanoPlot --version > v_nanoplot.txt
+    filtlong --version > v_filtlong.txt
+    porechop --version > v_porechop.txt
+    NanoLyse --version > v_nanolyse.txt
+    spades.py --version > v_spades.txt
+    run_BUSCO.py --version > v_busco.txt
+    Bandage --version > v_bandage.txt
+
     scrape_software_versions.py > software_versions_mqc.yaml
     """
 }
