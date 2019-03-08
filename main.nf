@@ -175,7 +175,7 @@ if(!params.skip_busco){
 if(!params.keep_phix) {
     Channel
         .fromPath( "${params.phix_reference}", checkIfExists: true )
-        .into { file_phix_db; file_phix_db_log }
+        .set { file_phix_db }
 }
 
 def returnFile(it) {
@@ -501,7 +501,7 @@ if(!params.keep_phix) {
         file(genome) from file_phix_db
 
         output:
-        file("ref*") into phix_db
+        set file(genome), file("ref*") into phix_db
 
         script:
         """
@@ -516,8 +516,7 @@ if(!params.keep_phix) {
             saveAs: {filename -> filename.indexOf(".fastq.gz") == -1 ? "remove_phix/$filename" : null}
 
         input:
-        file(ref) from phix_db
-        set val(name), file(reads), file(genome) from trimmed_reads.combine(file_phix_db_log)
+        set val(name), file(reads), file(genome), file(db) from trimmed_reads.combine(phix_db)
 
         output:
         set val(name), file("*.fastq.gz") into (trimmed_reads_megahit, trimmed_reads_metabat, trimmed_reads_fastqc, trimmed_sr_spades)
@@ -575,8 +574,8 @@ process megahit {
     set val(name), file(reads) from trimmed_reads_megahit
 
     output:
-    set val(name), file("megahit/${name}.contigs.fa") into (assembly_megahit_to_quast, assembly_megahit_to_refinem)
-    set val(name), file("megahit/${name}.contigs.fa"), file(reads) into assembly_megahit_to_metabat
+    set val("megahit-$name"), file("megahit/${name}.contigs.fa") into (assembly_megahit_to_quast, assembly_megahit_to_refinem)
+    set val("megahit-$name"), file("megahit/${name}.contigs.fa"), file(reads) into assembly_megahit_to_metabat
 
     script:
     if ( !params.singleEnd ) {
@@ -657,7 +656,7 @@ process quast {
 
 // Use Bandage to draw a (reduced) picture of the assembly graph
 process draw_assembly_graph {
-    tag "$id"
+    tag "$type-$id"
     publishDir "${params.outdir}/${id}/assembly_spades/", mode: 'copy'
 
     input:
@@ -768,9 +767,7 @@ process busco {
     set val(name), file(assembly), val(db_name), file(db) from metabat_db_busco
 
     output:
-    file("short_summary_${name}-${assembly}.txt") into busco_summary
-    file("${name}-${assembly}_busco_figure.png")
-    file("${name}-${assembly}_busco_figure.R")
+    file("short_summary_${name}-${assembly}.txt") into (busco_summary_to_multiqc, busco_summary_to_plot)
     file("${name}-${assembly}_busco_log.txt")
 
     script:
@@ -784,14 +781,27 @@ process busco {
         --mode genome \
         --out ${binName} \
         >${binName}_busco_log.txt
-    generate_plot.py \
-        --working_directory run_${binName}
-    cp run_${binName}/busco_figure.png ${binName}_busco_figure.png
-    cp run_${binName}/busco_figure.R ${binName}_busco_figure.R
     cp run_${binName}/short_summary_${binName}.txt short_summary_${binName}.txt
     """
 }
 
+
+process busco_plot {    
+    publishDir "${params.outdir}/busco", mode: 'copy'
+
+    input:
+    file(summaries) from busco_summary_to_plot.collect()
+
+    output:
+    file("busco_figure.png")
+    file("busco_figure.R")
+
+    script:
+    """
+    generate_plot.py \
+        --working_directory .
+    """
+}
 
 
 // TODO next releases:
@@ -810,7 +820,7 @@ process multiqc {
     file (fastqc_raw:'fastqc/*') from fastqc_results.collect().ifEmpty([])
     file (fastqc_trimmed:'fastqc/*') from fastqc_results_trimmed.collect().ifEmpty([])
     file ('quast*/*') from quast_results.collect()
-    file ('short_summary_*.txt') from busco_summary.collect()
+    file ('short_summary_*.txt') from busco_summary_to_multiqc.collect()
 
     output:
     file "*multiqc_report.html" into multiqc_report
