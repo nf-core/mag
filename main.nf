@@ -67,7 +67,7 @@ def helpMessage() {
       --ssu_evalue                  Evalue threshold to filter incongruent 16S (default 1e-6)
 
     Bin quality check:
-      --skip_busco                    Disable bin QC with BUSCO (default: false)
+      --skip_busco                  Disable bin QC with BUSCO (default: false)
       --busco_reference             Download path for BUSCO database, available databases are listed here: https://busco.ezlab.org/
                                     (default: https://busco.ezlab.org/datasets/bacteria_odb9.tar.gz)
 
@@ -361,7 +361,7 @@ if (!params.no_nanolyse) {
         tag "$id"
 
         publishDir "${params.outdir}", mode: 'copy',
-            saveAs: {filename -> filename.indexOf(".fastq.gz") == -1 ? "nanolyse/$filename" : null}
+            saveAs: {filename -> filename.indexOf(".fastq.gz") == -1 ? "QC_longreads/NanoLyse/$filename" : null}
             
         input:
         set id, file(lr), sr1, sr2, file(nanolyse_db) from files_porechop.combine(file_nanolyse_db)
@@ -418,7 +418,7 @@ process filtlong {
  */
 process nanoplot {
     tag "$id"
-    publishDir "${params.outdir}/${id}/qc/longread_${type}/", mode: 'copy'
+    publishDir "${params.outdir}/QC_longreads/NanoPlot_${id}", mode: 'copy'
     
     input:
     set id, lr, type from files_nanoplot_raw.mix(files_nanoplot_filtered)
@@ -440,7 +440,8 @@ process nanoplot {
  */
 process fastqc_raw {
     tag "$name"
-    publishDir "${params.outdir}/fastqc", mode: 'copy'
+    publishDir "${params.outdir}/", mode: 'copy',
+        saveAs: {filename -> filename.indexOf(".zip") == -1 ? "QC_shortreads/fastqc/$filename" : null}
 
     input:
     set val(name), file(reads) from read_files_fastqc
@@ -457,7 +458,8 @@ process fastqc_raw {
 
 process fastp {
     tag "$name"
-    // publishDir "${params.outdir}/fastp", mode: 'copy'
+    publishDir "${params.outdir}/", mode: 'copy',
+        saveAs: {filename -> filename.indexOf(".fastq.gz") == -1 ? "QC_shortreads/fastp/$name/$filename" : null}
 
     input:
     set val(name), file(reads) from read_files_fastp
@@ -468,6 +470,7 @@ process fastp {
 
     output:
     set val(name), file("${name}_trimmed*.fastq.gz") into trimmed_reads
+    file("fastp.*")
 
     script:
     if ( !params.singleEnd ) {
@@ -513,7 +516,7 @@ if(!params.keep_phix) {
         tag "$name"
 
         publishDir "${params.outdir}", mode: 'copy',
-            saveAs: {filename -> filename.indexOf(".fastq.gz") == -1 ? "remove_phix/$filename" : null}
+            saveAs: {filename -> filename.indexOf(".fastq.gz") == -1 ? "QC_shortreads/remove_phix/$filename" : null}
 
         input:
         set val(name), file(reads), file(genome), file(db) from trimmed_reads.combine(phix_db)
@@ -547,7 +550,8 @@ if(!params.keep_phix) {
 
 process fastqc_trimmed {
     tag "$name"
-    publishDir "${params.outdir}/fastqc", mode: 'copy'
+    publishDir "${params.outdir}/", mode: 'copy',
+        saveAs: {filename -> filename.indexOf(".zip") == -1 ? "QC_shortreads/fastqc/$filename" : null}
 
     input:
     set val(name), file(reads) from trimmed_reads_fastqc
@@ -568,25 +572,26 @@ process fastqc_trimmed {
 process megahit {
     tag "$name"
     publishDir "${params.outdir}/", mode: 'copy',
-        saveAs: {filename -> filename.indexOf(".fastq.gz") == -1 ? "$filename" : null}
+        saveAs: {filename -> filename.indexOf(".fastq.gz") == -1 ? "Assembly/$filename" : null}
 
     input:
     set val(name), file(reads) from trimmed_reads_megahit
 
     output:
-    set val("megahit-$name"), file("megahit/${name}.contigs.fa") into (assembly_megahit_to_quast, assembly_megahit_to_refinem)
-    set val("megahit-$name"), file("megahit/${name}.contigs.fa"), file(reads) into assembly_megahit_to_metabat
+    set val("MEGAHIT"), val("$name"), file("MEGAHIT/${name}.contigs.fa") into (assembly_megahit_to_quast, assembly_megahit_to_refinem)
+    set val("MEGAHIT"), val("$name"), file("MEGAHIT/${name}.contigs.fa"), file(reads) into assembly_megahit_to_metabat
+    file("MEGAHIT/*.log")
 
     script:
     if ( !params.singleEnd ) {
     """
-    megahit -t "${task.cpus}" -1 "${reads[0]}" -2 "${reads[1]}" -o megahit \
+    megahit -t "${task.cpus}" -1 "${reads[0]}" -2 "${reads[1]}" -o MEGAHIT \
         --out-prefix "${name}"
     """
     }
     else {
     """
-    megahit -t "${task.cpus}" -r ${reads} -o megahit --out-prefix "${name}"
+    megahit -t "${task.cpus}" -r ${reads} -o MEGAHIT --out-prefix "${name}"
     """
     }
 }
@@ -602,18 +607,18 @@ process megahit {
 
 process spades {
     tag "$id"
-    publishDir "${params.outdir}/${id}/assembly_spades", mode: 'copy', pattern: "${id}*",
-        saveAs: {filename -> filename.indexOf(".fastq.gz") == -1 ? filename : null}
+    publishDir "${params.outdir}/", mode: 'copy', pattern: "${id}*",
+        saveAs: {filename -> filename.indexOf(".fastq.gz") == -1 ? "Assembly/SPAdes/$filename" : null}
 
     input:
     set id, file(lr), file(sr) from files_pre_spades  
 
     output:
-    set id, val('spades'), file("${id}_graph_spades.gfa") into assembly_graph_spades
-    set val("spades-$id"), file("${id}_scaffolds_spades.fasta") into (assembly_spades_to_quast, assembly_spades_to_refinem)
-    set val("spades-$id"), file("${id}_scaffolds_spades.fasta"), file(sr) into assembly_spades_to_metabat
-    file("${id}_contigs_spades.fasta")
-    file("${id}_spades.log")
+    set id, val("SPAdes"), file("${id}_graph.gfa") into assembly_graph_spades
+    set val("SPAdes"), val("$id"), file("${id}_scaffolds.fasta") into (assembly_spades_to_quast, assembly_spades_to_refinem)
+    set val("SPAdes"), val("$id"), file("${id}_scaffolds.fasta"), file(sr) into assembly_spades_to_metabat
+    file("${id}_contigs.fasta")
+    file("${id}_log.txt")
 
     when:
     params.manifest
@@ -629,27 +634,27 @@ process spades {
         --pe1-2 ${sr[1]} \
         --nanopore ${lr} \
         -o spades
-    cp spades/assembly_graph_with_scaffolds.gfa ${id}_graph_spades.gfa
-    cp spades/scaffolds.fasta ${id}_scaffolds_spades.fasta
-    cp spades/contigs.fasta ${id}_contigs_spades.fasta
-    cp spades/spades.log ${id}_spades.log
+    cp spades/assembly_graph_with_scaffolds.gfa ${id}_graph.gfa
+    cp spades/scaffolds.fasta ${id}_scaffolds.fasta
+    cp spades/contigs.fasta ${id}_contigs.fasta
+    cp spades/spades.log ${id}_log.txt
     """
 }
 
 
 process quast {
-    tag "$name"
-    // publishDir "${params.outdir}/quast/$name", mode: 'copy'
+    tag "$assembler-$sample"
+    publishDir "${params.outdir}/Assembly/$assembler", mode: 'copy'
 
     input:
-    set val(name), file(assembly) from assembly_spades_to_quast.mix(assembly_megahit_to_quast)
+    set val(assembler), val(sample), file(assembly) from assembly_spades_to_quast.mix(assembly_megahit_to_quast)
 
     output:
-    file("quast_${name}/*") into quast_results
+    file("${sample}_QC/*") into quast_results
 
     script:
     """
-    quast.py --threads "${task.cpus}" -l "${name}" "${assembly}" -o "quast_${name}"
+    quast.py --threads "${task.cpus}" -l "${assembler}-${sample}" "${assembly}" -o "${sample}_QC"
     """
 }
 
@@ -657,7 +662,7 @@ process quast {
 // Use Bandage to draw a (reduced) picture of the assembly graph
 process draw_assembly_graph {
     tag "$type-$id"
-    publishDir "${params.outdir}/${id}/assembly_spades/", mode: 'copy'
+    publishDir "${params.outdir}/Assembly/SPAdes/", mode: 'copy'
 
     input:
     set id, type, file(gfa) from assembly_graph_spades
@@ -686,21 +691,20 @@ process draw_assembly_graph {
  * STEP 3 - Binning
  */
 process metabat {
-    tag "$name"
-    publishDir "${params.outdir}/metabat", mode: 'copy',
-        saveAs: {filename -> 
-            if      (filename.indexOf(".fastq.gz") > -1)   filename
-            else if (filename.indexOf(".bam") > -1)        filename }
+    tag "$assembler-$sample"
+    publishDir "${params.outdir}/", mode: 'copy',
+        saveAs: {filename -> filename.indexOf(".bam") == -1 ? "GenomeBinning/$filename" : null}
 
     input:
-    set val(name), file(assembly), file(reads) from assembly_spades_to_metabat.mix(assembly_megahit_to_metabat)
+    set val(assembler), val(sample), file(assembly), file(reads) from assembly_spades_to_metabat.mix(assembly_megahit_to_metabat)
     val(min_size) from params.min_contig_size
 
     output:
-    set val(name), file("bins/*") into metabat_bins mode flatten
-    set val(name), file("${name}.bam") into (mapped_reads_checkm, mapped_reads_refinem)
+    set val(assembler), val(sample), file("MetaBAT2/*") into metabat_bins mode flatten
+    set val(assembler), file("${assembler}-${sample}.bam") into (mapped_reads_checkm, mapped_reads_refinem)
 
     script:
+    def name = "${assembler}-${sample}"
     if ( !params.singleEnd ) {
         """
         bowtie2-build --threads "${task.cpus}" "${assembly}" ref
@@ -709,11 +713,11 @@ process metabat {
             samtools sort -@ "${task.cpus}" -o "${name}.bam"
         samtools index "${name}.bam"
         jgi_summarize_bam_contig_depths --outputDepth depth.txt "${name}.bam"
-        metabat2 -t "${task.cpus}" -i "${assembly}" -a depth.txt -o "bins/${name}" -m ${min_size}
+        metabat2 -t "${task.cpus}" -i "${assembly}" -a depth.txt -o "MetaBAT2/${name}" -m ${min_size}
 
         #if bin foolder is empty
-        if [ -z \"\$(ls -A bins)\" ]; then 
-            cp ${assembly} bins/
+        if [ -z \"\$(ls -A MetaBAT2)\" ]; then 
+            cp ${assembly} MetaBAT2/${assembler}-${assembly}
         fi
         """
     } else {
@@ -724,11 +728,11 @@ process metabat {
             samtools sort -@ "${task.cpus}" -o "${name}.bam"
         samtools index "${name}.bam"
         jgi_summarize_bam_contig_depths --outputDepth depth.txt "${name}.bam"
-        metabat2 -t "${task.cpus}" -i "${assembly}" -a depth.txt -o bins/"${name}" -m ${min_size}
+        metabat2 -t "${task.cpus}" -i "${assembly}" -a depth.txt -o "MetaBAT2/${name}" -m ${min_size}
 
         #if bin foolder is empty
-        if [ -z \"\$(ls -A bins)\" ]; then 
-            cp ${assembly} bins/
+        if [ -z \"\$(ls -A MetaBAT2)\" ]; then 
+            cp ${assembly} MetaBAT2/${assembler}-${assembly}
         fi
         """
     }
@@ -760,18 +764,18 @@ metabat_bins
  * BUSCO: Quantitative measures for the assessment of genome assembly
  */
 process busco {
-    tag "${name}-${assembly}"
-    publishDir "${params.outdir}/busco", mode: 'copy'
+    tag "${assembly}"
+    publishDir "${params.outdir}/GenomeBinning/QC/raw/", mode: 'copy'
 
     input:
-    set val(name), file(assembly), val(db_name), file(db) from metabat_db_busco
+    set val(assembler), val(sample), file(assembly), val(db_name), file(db) from metabat_db_busco
 
     output:
-    file("short_summary_${name}-${assembly}.txt") into (busco_summary_to_multiqc, busco_summary_to_plot)
-    file("${name}-${assembly}_busco_log.txt")
+    file("short_summary_${assembly}.txt") into (busco_summary_to_multiqc, busco_summary_to_plot)
+    val("$assembler-$sample") into busco_assembler_sample_to_plot
+    file("${assembly}_busco_log.txt")
 
     script:
-    def binName = "${name}-${assembly}"
     """
     run_BUSCO.py \
         --in ${assembly} \
@@ -779,27 +783,37 @@ process busco {
         --cpu "${task.cpus}" \
         --blast_single_core \
         --mode genome \
-        --out ${binName} \
-        >${binName}_busco_log.txt
-    cp run_${binName}/short_summary_${binName}.txt short_summary_${binName}.txt
+        --out ${assembly} \
+        >${assembly}_busco_log.txt
+    cp run_${assembly}/short_summary_${assembly}.txt short_summary_${assembly}.txt
     """
 }
 
 
-process busco_plot {    
-    publishDir "${params.outdir}/busco", mode: 'copy'
+process busco_plot { 
+    publishDir "${params.outdir}/GenomeBinning/QC/", mode: 'copy'
 
     input:
     file(summaries) from busco_summary_to_plot.collect()
+    val(assemblersample) from busco_assembler_sample_to_plot.collect()
 
     output:
-    file("busco_figure.png")
-    file("busco_figure.R")
+    file("*busco_figure.png")
+    file("*busco_figure.R")
 
     script:
+    def assemblersampleunique = assemblersample.unique()
     """
-    generate_plot.py \
-        --working_directory .
+    assemblersample=\$(echo \"$assemblersampleunique\" | sed 's/[][]//g')
+    IFS=', ' read -r -a assemblersamples <<< \"\$assemblersample\"
+
+    for name in \"\${assemblersamples[@]}\"; do
+        mkdir \${name}
+        cp short_summary_\${name}* \${name}/
+        generate_plot.py --working_directory \${name}
+        cp \${name}/busco_figure.png \${name}-busco_figure.png
+        cp \${name}/busco_figure.R \${name}-busco_figure.R
+    done
     """
 }
 
