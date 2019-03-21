@@ -24,6 +24,7 @@ def helpMessage() {
     The typical command for running the pipeline is as follows:
 
     nextflow run nf-core/mag --reads '*_R{1,2}.fastq.gz' -profile docker
+    nextflow run nf-core/mag --manifest 'manifest.tsv' -profile docker
 
     Mandatory arguments:
       --reads                       Path to input data (must be surrounded with quotes)
@@ -31,9 +32,9 @@ def helpMessage() {
                                     Available: standard, conda, docker, singularity, awsbatch, test
 
     Hybrid assembly:
-      --manifest                    Path to manifest file (must be surrounded with quotes)
+      --manifest                    Path to manifest file (must be surrounded with quotes), required for hybrid assembly with metaSPAdes
                                     Has 4 headerless columns (tab separated): Sample_Id, Long_Reads, Short_Reads_1, Short_Reads_2
-                                    Only one file path per entry allowed, join multiple longread files if possible
+                                    Only one file path per entry allowed
 
     Options:
       -name                         Name for the pipeline run. If not specified, Nextflow will automatically generate a random mnemonic.
@@ -50,24 +51,28 @@ def helpMessage() {
       --phix_reference              Download path for PhiX database
                                     (default: "ftp://ftp.ncbi.nlm.nih.gov/genomes/genbank/viral/Enterobacteria_phage_phiX174_sensu_lato/all_assembly_versions/GCA_002596845.1_ASM259684v1/GCA_002596845.1_ASM259684v1_genomic.fna.gz")
 
+    Long read preprocessing:
+      --longreads_min_length        Discard any read which is shorter than this value (default: 1000)
+      --longreads_keep_percent      Keep this percent of bases (default: 90)
+      --longreads_length_weight     The higher the more important is read length when choosing the best reads (default: 10)
+      --keep_lambda                 Keep reads similar to the ONT internal standard Escherichia virus Lambda genome (default: false)
+      --lambda_reference            Download path for Escherichia virus Lambda genome
+                                    (default: "ftp://ftp.ncbi.nlm.nih.gov/genomes/genbank/viral/Escherichia_virus_Lambda/all_assembly_versions/GCA_000840245.1_ViralProj14204/GCA_000840245.1_ViralProj14204_genomic.fna.gz")
+    
     Assembly:
+      --skip_spades                 Skip SPAdes assembly
+      --skip_megahit                Skip MEGAHIT assembly
       --skip_assembly_graph         Skip drawing an assembly graph with Bandage
-      --bandage_mindepth            Reduce the assembly graph to include only contig above this depth (default: 0)
+      --bandage_mindepth            Reduce the assembly graph to include only contig above this depth (default: 20)
 
     Binning options:
+      --skip_binning                Skip metagenome binning
       --min_contig_size             Minimum contig size to be considered for binning (default: 1500)
 
     Bin quality check:
       --skip_busco                  Disable bin QC with BUSCO (default: false)
       --busco_reference             Download path for BUSCO database, available databases are listed here: https://busco.ezlab.org/
                                     (default: https://busco.ezlab.org/datasets/bacteria_odb9.tar.gz)
-
-    Long read preprocessing:
-      --no_nanolyse                 Keep reads similar to the ONT internal standard lambda genome (default: false)
-      --filtlong_min_length         Discard any read which is shorter than this value (default: 1000)
-      --filtlong_keep_percent       keep the best % of reads (default: 90)
-      --filtlong_split              Split reads whenever so much consequence bases fail to match a k-mer in the reference (default: 1000)
-      --filtlong_length_weight      The higher the more important is read length when choosing the best reads (default: 10)
 
     AWSBatch options:
       --awsqueue                    The AWSBatch JobQueue that needs to be set when running on AWSBatch
@@ -92,8 +97,6 @@ params.email = false
 params.plaintext_email = false
 params.manifest = false
 params.busco_reference = "https://busco.ezlab.org/datasets/bacteria_odb9.tar.gz"
-params.skip_assembly_graph = false
-params.bandage_mindepth = false
 
 ch_multiqc_config = Channel.fromPath(params.multiqc_config)
 ch_output_docs = Channel.fromPath("$baseDir/docs/output.md")
@@ -130,17 +133,27 @@ params.phix_reference = "ftp://ftp.ncbi.nlm.nih.gov/genomes/genbank/viral/Entero
 /*
  * binning options
  */
+params.skip_binning = false
 params.skip_busco = false
 params.min_contig_size = 1500
 
 /*
+ * assembly options
+ */
+params.skip_spades = false
+params.skip_megahit = false
+params.skip_assembly_graph = false
+params.bandage_mindepth = 20
+
+/*
  * long read preprocessing options
  */
-params.no_nanolyse = false
-params.filtlong_min_length = 1000
-params.filtlong_keep_percent = 90
+params.keep_lambda = false
+params.longreads_min_length = 1000
+params.longreads_keep_percent = 90
 params.filtlong_split = 1000
-params.filtlong_length_weight = 10
+params.longreads_length_weight = 10
+params.lambda_reference = "ftp://ftp.ncbi.nlm.nih.gov/genomes/genbank/viral/Escherichia_virus_Lambda/all_assembly_versions/GCA_000840245.1_ViralProj14204/GCA_000840245.1_ViralProj14204_genomic.fna.gz"
 
 /*
  * Create a channel for input read files
@@ -325,10 +338,9 @@ process porechop {
  * Remove reads mapping to the lambda genome.
  * TODO: add lambda phage to igenomes.config?
  */
-nanolyse_reference = "ftp://ftp.ncbi.nlm.nih.gov/genomes/genbank/viral/Escherichia_virus_Lambda/all_assembly_versions/GCA_000840245.1_ViralProj14204/GCA_000840245.1_ViralProj14204_genomic.fna.gz"
-if (!params.no_nanolyse) {
+if (!params.keep_lambda) {
     Channel
-        .fromPath( "${nanolyse_reference}", checkIfExists: true )
+        .fromPath( "${params.lambda_reference}", checkIfExists: true )
         .set { file_nanolyse_db }
     process nanolyse { 
         tag "$id"
@@ -347,7 +359,7 @@ if (!params.no_nanolyse) {
         """
         cat ${lr} | NanoLyse --reference $nanolyse_db | gzip > ${id}_nanolyse.fastq.gz
         
-        echo "NanoLyse reference: $nanolyse_reference" >${id}_nanolyse_log.txt
+        echo "NanoLyse reference: $params.lambda_reference" >${id}_nanolyse_log.txt
         cat ${lr} | echo "total reads before NanoLyse: \$((`wc -l`/4))" >>${id}_nanolyse_log.txt
         zcat ${id}_nanolyse.fastq.gz | echo "total reads after NanoLyse: \$((`wc -l`/4))" >>${id}_nanolyse_log.txt
         """
@@ -376,11 +388,10 @@ process filtlong {
     filtlong \
         -1 ${sr1} \
         -2 ${sr2} \
-        --min_length ${params.filtlong_min_length} \
-        --keep_percent ${params.filtlong_keep_percent} \
+        --min_length ${params.longreads_min_length} \
+        --keep_percent ${params.longreads_keep_percent} \
         --trim \
-        --split ${params.filtlong_split} \
-        --length_weight ${params.filtlong_length_weight} \
+        --length_weight ${params.longreads_length_weight} \
         ${lr} | gzip > ${id}_lr_filtlong.fastq.gz
     """
 }
@@ -555,6 +566,9 @@ process megahit {
     set val("MEGAHIT"), val("$name"), file("MEGAHIT/${name}.contigs.fa"), file(reads) into assembly_megahit_to_metabat
     file("MEGAHIT/*.log")
 
+    when:
+    !params.skip_megahit
+
     script:
     if ( !params.singleEnd ) {
     """
@@ -596,6 +610,7 @@ process spades {
     when:
     params.manifest
     !params.singleEnd
+    !params.skip_spades
      
     script:
     def maxmem = "${task.memory.toString().replaceAll(/[\sGB]/,'')}"
@@ -647,16 +662,10 @@ process draw_assembly_graph {
     !params.skip_assembly_graph
 
     script:
-    if(!params.bandage_mindepth) {
-        """
-        Bandage image ${gfa} ${id}_${type}_graph.svg
-        """
-    } else {
-        """
-        Bandage reduce ${gfa} ${id}_graph_spades_reduced.gfa --scope depthrange --mindepth ${params.bandage_mindepth} --maxdepth 1000000
-        Bandage image ${id}_graph_spades_reduced.gfa ${id}_${type}_graph.svg
-        """
-    }
+    """
+    Bandage reduce ${gfa} ${id}_graph_spades_reduced.gfa --scope depthrange --mindepth ${params.bandage_mindepth} --maxdepth 1000000
+    Bandage image ${id}_graph_spades_reduced.gfa ${id}_${type}_graph.svg
+    """
 }
 
 
@@ -674,6 +683,9 @@ process metabat {
 
     output:
     set val(assembler), val(sample), file("MetaBAT2/*") into metabat_bins mode flatten
+
+    when:
+    !params.skip_binning
 
     script:
     def name = "${assembler}-${sample}"
