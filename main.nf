@@ -55,16 +55,7 @@ def helpMessage() {
       --bandage_mindepth            Reduce the assembly graph to include only contig above this depth (default: 0)
 
     Binning options:
-      --refinem                     Enable bin refinement with refinem.
-      --refinem_db                  Path to refinem database
-      --no_checkm                   Disable bin QC and merging with checkm
       --min_contig_size             Minimum contig size to be considered for binning (default: 1500)
-      --delta_cont                  Maximum increase in contamination to merge compatible bins (default: 5)
-      --merged_cont                 Maximum total contamination to merge compatible bins (default: 15)
-      --delta_compl                 Minimum increase in completion to merge compatible bins (default: 10)
-      --abs_delta_cov               Minimum coverage ratio to merge compatible bins (default: 0.75)
-      --delta_gc                    Maximum %GC difference to merge compatible bins (default: 3)
-      --ssu_evalue                  Evalue threshold to filter incongruent 16S (default 1e-6)
 
     Bin quality check:
       --skip_busco                  Disable bin QC with BUSCO (default: false)
@@ -139,18 +130,8 @@ params.phix_reference = "ftp://ftp.ncbi.nlm.nih.gov/genomes/genbank/viral/Entero
 /*
  * binning options
  */
-params.refinem = false
-params.no_checkm = false
 params.skip_busco = false
 params.min_contig_size = 1500
-params.delta_cont = 5
-params.merged_cont = 15
-params.delta_compl = 10
-params.abs_delta_cov = 0.75
-params.delta_gc = 3
-
-params.refinem_db = false
-params.ssu_evalue = 1e-6
 
 /*
  * long read preprocessing options
@@ -308,14 +289,6 @@ process get_software_versions {
     fastp -v 2> v_fastp.txt
     megahit --version > v_megahit.txt
     metabat2 -h 2> v_metabat.txt || true
-
-    # fake checkm data setRoot so we can read checkm version number
-    #chd=\$(readlink -f checkm_data)
-    #printf "\$chd\\n\$chd\\n" | checkm data setRoot
-
-    #checkm -h > v_checkm.txt
-    #refinem -h > v_refinem.txt
-
     NanoPlot --version > v_nanoplot.txt
     filtlong --version > v_filtlong.txt
     porechop --version > v_porechop.txt
@@ -578,7 +551,7 @@ process megahit {
     set val(name), file(reads) from trimmed_reads_megahit
 
     output:
-    set val("MEGAHIT"), val("$name"), file("MEGAHIT/${name}.contigs.fa") into (assembly_megahit_to_quast, assembly_megahit_to_refinem)
+    set val("MEGAHIT"), val("$name"), file("MEGAHIT/${name}.contigs.fa") into assembly_megahit_to_quast
     set val("MEGAHIT"), val("$name"), file("MEGAHIT/${name}.contigs.fa"), file(reads) into assembly_megahit_to_metabat
     file("MEGAHIT/*.log")
 
@@ -615,7 +588,7 @@ process spades {
 
     output:
     set id, val("SPAdes"), file("${id}_graph.gfa") into assembly_graph_spades
-    set val("SPAdes"), val("$id"), file("${id}_scaffolds.fasta") into (assembly_spades_to_quast, assembly_spades_to_refinem)
+    set val("SPAdes"), val("$id"), file("${id}_scaffolds.fasta") into assembly_spades_to_quast
     set val("SPAdes"), val("$id"), file("${id}_scaffolds.fasta"), file(sr) into assembly_spades_to_metabat
     file("${id}_contigs.fasta")
     file("${id}_log.txt")
@@ -701,7 +674,6 @@ process metabat {
 
     output:
     set val(assembler), val(sample), file("MetaBAT2/*") into metabat_bins mode flatten
-    set val(assembler), file("${assembler}-${sample}.bam") into (mapped_reads_checkm, mapped_reads_refinem)
 
     script:
     def name = "${assembler}-${sample}"
@@ -817,10 +789,6 @@ process busco_plot {
     """
 }
 
-
-// TODO next releases:
-// good bins channels (from checkm or refinem) + annotation
-// multiqc modules for checkm/refinem
 
 /*
  * STEP 4 - MultiQC
