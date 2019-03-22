@@ -60,10 +60,11 @@ def helpMessage() {
                                     (default: "ftp://ftp.ncbi.nlm.nih.gov/genomes/genbank/viral/Escherichia_virus_Lambda/all_assembly_versions/GCA_000840245.1_ViralProj14204/GCA_000840245.1_ViralProj14204_genomic.fna.gz")
     
     Assembly:
-      --skip_spades                 Skip SPAdes assembly
+      --skip_spades                 Skip Illumina-only SPAdes assembly
+      --skip_spadeshybrid           Skip SPAdes hybrid assembly (only available when using manifest input)
       --skip_megahit                Skip MEGAHIT assembly
       --skip_assembly_graph         Skip drawing an assembly graph with Bandage
-      --bandage_mindepth            Reduce the assembly graph to include only contig above this depth (default: 20)
+      --bandage_mindepth            Reduce the assembly graph to include only contig above this depth (default: 10)
 
     Binning options:
       --skip_binning                Skip metagenome binning
@@ -141,9 +142,10 @@ params.min_contig_size = 1500
  * assembly options
  */
 params.skip_spades = false
+params.skip_spadeshybrid = false
 params.skip_megahit = false
 params.skip_assembly_graph = false
-params.bandage_mindepth = 20
+params.bandage_mindepth = 10
 
 /*
  * long read preprocessing options
@@ -506,7 +508,7 @@ if(!params.keep_phix) {
         set val(name), file(reads), file(genome), file(db) from trimmed_reads.combine(phix_db)
 
         output:
-        set val(name), file("*.fastq.gz") into (trimmed_reads_megahit, trimmed_reads_metabat, trimmed_reads_fastqc, trimmed_sr_spades)
+        set val(name), file("*.fastq.gz") into (trimmed_reads_megahit, trimmed_reads_metabat, trimmed_reads_fastqc, trimmed_sr_spadeshybrid, trimmed_reads_spades)
         file("${name}_remove_phix_log.txt")
 
         script:
@@ -528,7 +530,7 @@ if(!params.keep_phix) {
 
     }
 } else {
-    trimmed_reads.into {trimmed_reads_megahit; trimmed_reads_metabat; trimmed_reads_fastqc; trimmed_sr_spades}
+    trimmed_reads.into {trimmed_reads_megahit; trimmed_reads_metabat; trimmed_reads_fastqc; trimmed_sr_spadeshybrid; trimmed_reads_spades}
 }
 
 
@@ -589,28 +591,28 @@ process megahit {
  */
 
  files_lr_filtered
-    .combine(trimmed_sr_spades, by: 0)
-    .set { files_pre_spades }
+    .combine(trimmed_sr_spadeshybrid, by: 0)
+    .set { files_pre_spadeshybrid }
 
-process spades {
+process spadeshybrid {
     tag "$id"
     publishDir "${params.outdir}/", mode: 'copy', pattern: "${id}*",
-        saveAs: {filename -> filename.indexOf(".fastq.gz") == -1 ? "Assembly/SPAdes/$filename" : null}
+        saveAs: {filename -> filename.indexOf(".fastq.gz") == -1 ? "Assembly/SPAdesHybrid/$filename" : null}
 
     input:
-    set id, file(lr), file(sr) from files_pre_spades  
+    set id, file(lr), file(sr) from files_pre_spadeshybrid  
 
     output:
-    set id, val("SPAdes"), file("${id}_graph.gfa") into assembly_graph_spades
-    set val("SPAdes"), val("$id"), file("${id}_scaffolds.fasta") into assembly_spades_to_quast
-    set val("SPAdes"), val("$id"), file("${id}_scaffolds.fasta"), file(sr) into assembly_spades_to_metabat
+    set id, val("SPAdesHybrid"), file("${id}_graph.gfa") into assembly_graph_spadeshybrid
+    set val("SPAdesHybrid"), val("$id"), file("${id}_scaffolds.fasta") into assembly_spadeshybrid_to_quast
+    set val("SPAdesHybrid"), val("$id"), file("${id}_scaffolds.fasta"), file(sr) into assembly_spadeshybrid_to_metabat
     file("${id}_contigs.fasta")
     file("${id}_log.txt")
 
     when:
     params.manifest
     !params.singleEnd
-    !params.skip_spades
+    !params.skip_spadeshybrid
      
     script:
     def maxmem = "${task.memory.toString().replaceAll(/[\sGB]/,'')}"
@@ -630,12 +632,48 @@ process spades {
 }
 
 
+process spades {
+    tag "$id"
+    publishDir "${params.outdir}/", mode: 'copy', pattern: "${id}*",
+        saveAs: {filename -> filename.indexOf(".fastq.gz") == -1 ? "Assembly/SPAdes/$filename" : null}
+
+    input:
+    set id, file(sr) from trimmed_reads_spades  
+
+    output:
+    set id, val("SPAdes"), file("${id}_graph.gfa") into assembly_graph_spades
+    set val("SPAdes"), val("$id"), file("${id}_scaffolds.fasta") into assembly_spades_to_quast
+    set val("SPAdes"), val("$id"), file("${id}_scaffolds.fasta"), file(sr) into assembly_spades_to_metabat
+    file("${id}_contigs.fasta")
+    file("${id}_log.txt")
+
+    when:
+    !params.singleEnd
+    !params.skip_spades
+     
+    script:
+    def maxmem = "${task.memory.toString().replaceAll(/[\sGB]/,'')}"
+    """
+    metaspades.py \
+        --threads "${task.cpus}" \
+        --memory "$maxmem" \
+        --pe1-1 ${sr[0]} \
+        --pe1-2 ${sr[1]} \
+        -o spades
+    cp spades/assembly_graph_with_scaffolds.gfa ${id}_graph.gfa
+    cp spades/scaffolds.fasta ${id}_scaffolds.fasta
+    cp spades/contigs.fasta ${id}_contigs.fasta
+    cp spades/spades.log ${id}_log.txt
+    """
+}
+
+
 process quast {
     tag "$assembler-$sample"
     publishDir "${params.outdir}/Assembly/$assembler", mode: 'copy'
 
     input:
-    set val(assembler), val(sample), file(assembly) from assembly_spades_to_quast.mix(assembly_megahit_to_quast)
+    set val(assembler), val(sample), file(assembly) from assembly_spades_to_quast.mix(assembly_megahit_to_quast).mix(assembly_spadeshybrid_to_quast)
 
     output:
     file("${sample}_QC/*") into quast_results
@@ -649,11 +687,11 @@ process quast {
 
 // Use Bandage to draw a (reduced) picture of the assembly graph
 process draw_assembly_graph {
-    tag "$type-$id"
-    publishDir "${params.outdir}/Assembly/SPAdes/", mode: 'copy'
+    tag "$assembler-$id"
+    publishDir "${params.outdir}/Assembly/${assembler}/", mode: 'copy'
 
     input:
-    set id, type, file(gfa) from assembly_graph_spades
+    set val(id), val(assembler), file(gfa) from assembly_graph_spades.mix(assembly_graph_spadeshybrid)
 
     output:
     file("${id}*")
@@ -664,7 +702,7 @@ process draw_assembly_graph {
     script:
     """
     Bandage reduce ${gfa} ${id}_graph_spades_reduced.gfa --scope depthrange --mindepth ${params.bandage_mindepth} --maxdepth 1000000
-    Bandage image ${id}_graph_spades_reduced.gfa ${id}_${type}_graph.svg
+    Bandage image ${id}_graph_spades_reduced.gfa ${id}_${assembler}_graph.svg
     """
 }
 
@@ -678,7 +716,7 @@ process metabat {
         saveAs: {filename -> filename.indexOf(".bam") == -1 ? "GenomeBinning/$filename" : null}
 
     input:
-    set val(assembler), val(sample), file(assembly), file(reads) from assembly_spades_to_metabat.mix(assembly_megahit_to_metabat)
+    set val(assembler), val(sample), file(assembly), file(reads) from assembly_spades_to_metabat.mix(assembly_megahit_to_metabat).mix(assembly_spadeshybrid_to_metabat)
     val(min_size) from params.min_contig_size
 
     output:
