@@ -772,17 +772,34 @@ process busco {
     file("${assembly}_busco_log.txt")
 
     script:
-    """
-    run_BUSCO.py \
-        --in ${assembly} \
-        --lineage_path $db_name \
-        --cpu "${task.cpus}" \
-        --blast_single_core \
-        --mode genome \
-        --out ${assembly} \
-        >${assembly}_busco_log.txt
-    cp run_${assembly}/short_summary_${assembly}.txt short_summary_${assembly}.txt
-    """
+    if( workflow.profile.toString().indexOf("conda") == -1) {
+        """
+        cp -r /opt/conda/pkgs/augustus-3.3-pl526hcfae127_4/config augustus_config/
+        export AUGUSTUS_CONFIG_PATH=augustus_config
+
+        run_BUSCO.py \
+            --in ${assembly} \
+            --lineage_path $db_name \
+            --cpu "${task.cpus}" \
+            --blast_single_core \
+            --mode genome \
+            --out ${assembly} \
+            >${assembly}_busco_log.txt
+        cp run_${assembly}/short_summary_${assembly}.txt short_summary_${assembly}.txt
+        """
+    } else {
+        """
+        run_BUSCO.py \
+            --in ${assembly} \
+            --lineage_path $db_name \
+            --cpu "${task.cpus}" \
+            --blast_single_core \
+            --mode genome \
+            --out ${assembly} \
+            >${assembly}_busco_log.txt
+        cp run_${assembly}/short_summary_${assembly}.txt short_summary_${assembly}.txt
+        """
+    }
 }
 
 
