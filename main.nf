@@ -63,8 +63,6 @@ def helpMessage() {
       --skip_spades                 Skip Illumina-only SPAdes assembly
       --skip_spadeshybrid           Skip SPAdes hybrid assembly (only available when using manifest input)
       --skip_megahit                Skip MEGAHIT assembly
-      --skip_assembly_graph         Skip drawing an assembly graph with Bandage
-      --bandage_mindepth            Reduce the assembly graph to include only contig above this depth (default: 10)
 
     Binning options:
       --skip_binning                Skip metagenome binning
@@ -144,8 +142,6 @@ params.min_contig_size = 1500
 params.skip_spades = false
 params.skip_spadeshybrid = false
 params.skip_megahit = false
-params.skip_assembly_graph = false
-params.bandage_mindepth = 10
 
 /*
  * long read preprocessing options
@@ -310,7 +306,6 @@ process get_software_versions {
     NanoLyse --version > v_nanolyse.txt
     spades.py --version > v_spades.txt
     run_BUSCO.py --version > v_busco.txt
-    Bandage --version > v_bandage.txt
 
     scrape_software_versions.py > software_versions_mqc.yaml
     """
@@ -684,27 +679,6 @@ process quast {
     """
 }
 
-
-// Use Bandage to draw a (reduced) picture of the assembly graph
-process draw_assembly_graph {
-    tag "$assembler-$id"
-    publishDir "${params.outdir}/Assembly/${assembler}/", mode: 'copy'
-
-    input:
-    set val(id), val(assembler), file(gfa) from assembly_graph_spades.mix(assembly_graph_spadeshybrid)
-
-    output:
-    file("${id}*")
-
-    when:
-    !params.skip_assembly_graph
-
-    script:
-    """
-    Bandage reduce ${gfa} ${id}_graph_spades_reduced.gfa --scope depthrange --mindepth ${params.bandage_mindepth} --maxdepth 1000000
-    Bandage image ${id}_graph_spades_reduced.gfa ${id}_${assembler}_graph.svg
-    """
-}
 
 
 /*

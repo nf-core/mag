@@ -17,7 +17,6 @@ regexes = {
     'NanoLyse': ['v_nanolyse.txt', r"NanoLyse (\S+)"],
     'SPAdes': ['v_spades.txt', r"SPAdes v(\S+)"],
     'BUSCO': ['v_busco.txt', r"BUSCO (\S+)"],
-    'Bandage': ['v_bandage.txt', r"Version: (\S+)"]
 }
 results = OrderedDict()
 results['nf-core/mag'] = '<span style="color:#999999;\">N/A</span>'
