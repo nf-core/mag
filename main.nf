@@ -149,7 +149,6 @@ params.skip_megahit = false
 params.keep_lambda = false
 params.longreads_min_length = 1000
 params.longreads_keep_percent = 90
-params.filtlong_split = 1000
 params.longreads_length_weight = 10
 params.lambda_reference = "ftp://ftp.ncbi.nlm.nih.gov/genomes/genbank/viral/Escherichia_virus_Lambda/all_assembly_versions/GCA_000840245.1_ViralProj14204/GCA_000840245.1_ViralProj14204_genomic.fna.gz"
 
