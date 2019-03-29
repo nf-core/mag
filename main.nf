@@ -769,6 +769,8 @@ process busco {
     file("short_summary_${assembly}.txt") into (busco_summary_to_multiqc, busco_summary_to_plot)
     val("$assembler-$sample") into busco_assembler_sample_to_plot
     file("${assembly}_busco_log.txt")
+    file("${assembly}_buscos.faa")
+    file("${assembly}_buscos.fna")
 
     script:
     if( workflow.profile.toString().indexOf("conda") == -1) {
@@ -785,6 +787,8 @@ process busco {
             --out ${assembly} \
             >${assembly}_busco_log.txt
         cp run_${assembly}/short_summary_${assembly}.txt short_summary_${assembly}.txt
+        cat run_${assembly}/single_copy_busco_sequences/*faa >${assembly}_buscos.faa 2>/dev/null
+        cat run_${assembly}/single_copy_busco_sequences/*fna >${assembly}_buscos.fna 2>/dev/null
         """
     } else {
         """
@@ -797,6 +801,8 @@ process busco {
             --out ${assembly} \
             >${assembly}_busco_log.txt
         cp run_${assembly}/short_summary_${assembly}.txt short_summary_${assembly}.txt
+        cat run_${assembly}/single_copy_busco_sequences/*faa >${assembly}_buscos.faa 2>/dev/null
+        cat run_${assembly}/single_copy_busco_sequences/*fna >${assembly}_buscos.fna 2>/dev/null
         """
     }
 }
