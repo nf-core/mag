@@ -831,11 +831,13 @@ process busco_plot {
 
     output:
     file("*busco_figure.png")
-    file("*busco_figure.R")
+    file("raw/*busco_figure.R")
+    file("*busco_summary.txt")
 
     script:
     def assemblersampleunique = assemblersample.unique()
     """
+    #for each assembler and sample:
     assemblersample=\$(echo \"$assemblersampleunique\" | sed 's/[][]//g')
     IFS=', ' read -r -a assemblersamples <<< \"\$assemblersample\"
 
@@ -843,9 +845,17 @@ process busco_plot {
         mkdir \${name}
         cp short_summary_\${name}* \${name}/
         generate_plot.py --working_directory \${name}
+        
         cp \${name}/busco_figure.png \${name}-busco_figure.png
         cp \${name}/busco_figure.R \${name}-busco_figure.R
+
+        summary_busco.py \${name}/short_summary_*.txt >\${name}-busco_summary.txt
     done
+
+    mkdir raw
+    cp *-busco_figure.R raw/
+
+    summary_busco.py short_summary_*.txt >busco_summary.txt
     """
 }
 
