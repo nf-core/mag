@@ -787,8 +787,15 @@ process busco {
             --out ${assembly} \
             >${assembly}_busco_log.txt
         cp run_${assembly}/short_summary_${assembly}.txt short_summary_${assembly}.txt
-        cat run_${assembly}/single_copy_busco_sequences/*faa >${assembly}_buscos.faa 2>/dev/null
-        cat run_${assembly}/single_copy_busco_sequences/*fna >${assembly}_buscos.fna 2>/dev/null
+
+        for f in run_${assembly}/single_copy_busco_sequences/*faa; do 
+            [ -e "\$f" ] && cat run_${assembly}/single_copy_busco_sequences/*faa >${assembly}_buscos.faa || touch ${assembly}_buscos.faa
+            break
+        done
+        for f in run_${assembly}/single_copy_busco_sequences/*fna; do 
+            [ -e "\$f" ] && cat run_${assembly}/single_copy_busco_sequences/*fna >${assembly}_buscos.fna || touch ${assembly}_buscos.fna
+            break
+        done
         """
     } else {
         """
@@ -801,8 +808,15 @@ process busco {
             --out ${assembly} \
             >${assembly}_busco_log.txt
         cp run_${assembly}/short_summary_${assembly}.txt short_summary_${assembly}.txt
-        cat run_${assembly}/single_copy_busco_sequences/*faa >${assembly}_buscos.faa 2>/dev/null
-        cat run_${assembly}/single_copy_busco_sequences/*fna >${assembly}_buscos.fna 2>/dev/null
+
+        for f in run_${assembly}/single_copy_busco_sequences/*faa; do 
+            [ -e "\$f" ] && cat run_${assembly}/single_copy_busco_sequences/*faa >${assembly}_buscos.faa || touch ${assembly}_buscos.faa
+            break
+        done
+        for f in run_${assembly}/single_copy_busco_sequences/*fna; do 
+            [ -e "\$f" ] && cat run_${assembly}/single_copy_busco_sequences/*fna >${assembly}_buscos.fna || touch ${assembly}_buscos.fna
+            break
+        done
         """
     }
 }
