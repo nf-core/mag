@@ -63,6 +63,7 @@ def helpMessage() {
       --skip_spades                 Skip Illumina-only SPAdes assembly
       --skip_spadeshybrid           Skip SPAdes hybrid assembly (only available when using manifest input)
       --skip_megahit                Skip MEGAHIT assembly
+      --skip_quast                  Skip metaQUAST
 
     Binning options:
       --skip_binning                Skip metagenome binning
@@ -142,6 +143,7 @@ params.min_contig_size = 1500
 params.skip_spades = false
 params.skip_spadeshybrid = false
 params.skip_megahit = false
+params.skip_quast = false
 
 /*
  * long read preprocessing options
@@ -672,9 +674,12 @@ process quast {
     output:
     file("${sample}_QC/*") into quast_results
 
+    when:
+    !params.skip_quast
+
     script:
     """
-    quast.py --threads "${task.cpus}" -l "${assembler}-${sample}" "${assembly}" -o "${sample}_QC"
+    metaquast.py --threads "${task.cpus}" --rna-finding -l "${assembler}-${sample}" "${assembly}" -o "${sample}_QC"
     """
 }
 
@@ -694,6 +699,7 @@ process metabat {
 
     output:
     set val(assembler), val(sample), file("MetaBAT2/*") into metabat_bins mode flatten
+    set val(assembler), val(sample), file("MetaBAT2/*"), file(reads) into metabat_bins_quast_bins
 
     when:
     !params.skip_binning
@@ -857,6 +863,31 @@ process busco_plot {
 
     summary_busco.py short_summary_*.txt >busco_summary.txt
     """
+}
+
+process quast_bins {
+    tag "$assembler-$sample"
+    publishDir "${params.outdir}/GenomeBinning/QC/", mode: 'copy'
+
+    input:
+    set val(assembler), val(sample), file(assembly), file(reads) from metabat_bins_quast_bins
+
+    output:
+    file("QUAST/${assembler}/${sample}/*")
+
+    when:
+    !params.skip_quast
+
+    script:
+    if ( !params.singleEnd ) {
+        """
+        metaquast.py --threads "${task.cpus}" --pe1 "${reads[0]}" --pe2 "${reads[1]}" --rna-finding --gene-finding -l "${assembler}-${sample}" "${assembly}" -o "QUAST/${assembler}/${sample}"
+        """
+    } else {
+        """
+        metaquast.py --threads "${task.cpus}" --single "${reads}" --rna-finding --gene-finding -l "${assembler}-${sample}" "${assembly}" -o "QUAST/${assembler}/${sample}"
+        """        
+    }
 }
 
 
