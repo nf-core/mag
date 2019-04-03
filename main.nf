@@ -691,7 +691,7 @@ process quast {
 process metabat {
     tag "$assembler-$sample"
     publishDir "${params.outdir}/", mode: 'copy',
-        saveAs: {filename -> filename.indexOf(".bam") == -1 ? "GenomeBinning/$filename" : null}
+        saveAs: {filename -> (filename.indexOf(".bam") == -1 && filename.indexOf(".fastq.gz") == -1) ? "GenomeBinning/$filename" : null}
 
     input:
     set val(assembler), val(sample), file(assembly), file(reads) from assembly_spades_to_metabat.mix(assembly_megahit_to_metabat).mix(assembly_spadeshybrid_to_metabat)
