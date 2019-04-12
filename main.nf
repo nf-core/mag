@@ -873,7 +873,7 @@ process quast_bins {
     set val(assembler), val(sample), file(assembly), file(reads) from metabat_bins_quast_bins
 
     output:
-    file("QUAST/${assembler}/${sample}/*")
+    file("QUAST/*")
 
     when:
     !params.skip_quast
@@ -881,11 +881,21 @@ process quast_bins {
     script:
     if ( !params.singleEnd ) {
         """
-        metaquast.py --threads "${task.cpus}" --pe1 "${reads[0]}" --pe2 "${reads[1]}" --rna-finding --gene-finding -l "${assembler}-${sample}" "${assembly}" -o "QUAST/${assembler}/${sample}"
+        ASSEMBLIES=\$(echo \"$assembly\" | sed 's/[][]//g')
+        IFS=', ' read -r -a assemblies <<< \"\$ASSEMBLIES\"
+    
+        for assembly in \"\${assemblies[@]}\"; do
+            metaquast.py --threads "${task.cpus}" --pe1 "${reads[0]}" --pe2 "${reads[1]}" --rna-finding --gene-finding -l "\${assembly}" "\${assembly}" -o "QUAST/\${assembly}"
+        done    
         """
     } else {
         """
-        metaquast.py --threads "${task.cpus}" --single "${reads}" --rna-finding --gene-finding -l "${assembler}-${sample}" "${assembly}" -o "QUAST/${assembler}/${sample}"
+        ASSEMBLIES=\$(echo \"$assembly\" | sed 's/[][]//g')
+        IFS=', ' read -r -a assemblies <<< \"\$ASSEMBLIES\"
+    
+        for assembly in \"\${assemblies[@]}\"; do
+            metaquast.py --threads "${task.cpus}" --single "${reads}" --rna-finding --gene-finding -l "\${assembly}" "\${assembly}" -o "QUAST/\${assembly}"
+        done
         """        
     }
 }
