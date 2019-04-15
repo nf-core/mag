@@ -766,7 +766,7 @@ metabat_bins
  */
 process busco {
     tag "${assembly}"
-    publishDir "${params.outdir}/GenomeBinning/QC/raw/", mode: 'copy'
+    publishDir "${params.outdir}/GenomeBinning/QC/BUSCO/", mode: 'copy'
 
     input:
     set val(assembler), val(sample), file(assembly), val(db_name), file(db) from metabat_db_busco
@@ -837,8 +837,9 @@ process busco_plot {
 
     output:
     file("*busco_figure.png")
-    file("raw/*busco_figure.R")
-    file("*busco_summary.txt")
+    file("BUSCO/*busco_figure.R")
+    file("BUSCO/*busco_summary.txt")
+    file("busco_summary.txt") into busco_summary
 
     script:
     def assemblersampleunique = assemblersample.unique()
@@ -846,6 +847,8 @@ process busco_plot {
     #for each assembler and sample:
     assemblersample=\$(echo \"$assemblersampleunique\" | sed 's/[][]//g')
     IFS=', ' read -r -a assemblersamples <<< \"\$assemblersample\"
+
+    mkdir BUSCO
 
     for name in \"\${assemblersamples[@]}\"; do
         mkdir \${name}
@@ -855,11 +858,10 @@ process busco_plot {
         cp \${name}/busco_figure.png \${name}-busco_figure.png
         cp \${name}/busco_figure.R \${name}-busco_figure.R
 
-        summary_busco.py \${name}/short_summary_*.txt >\${name}-busco_summary.txt
+        summary_busco.py \${name}/short_summary_*.txt >BUSCO/\${name}-busco_summary.txt
     done
 
-    mkdir raw
-    cp *-busco_figure.R raw/
+    cp *-busco_figure.R BUSCO/
 
     summary_busco.py short_summary_*.txt >busco_summary.txt
     """
@@ -874,30 +876,53 @@ process quast_bins {
 
     output:
     file("QUAST/*")
+    file("QUAST/*-quast_summary.tsv") into quast_bin_summaries
 
     when:
     !params.skip_quast
 
     script:
-    if ( !params.singleEnd ) {
-        """
-        ASSEMBLIES=\$(echo \"$assembly\" | sed 's/[][]//g')
-        IFS=', ' read -r -a assemblies <<< \"\$ASSEMBLIES\"
+    """
+    ASSEMBLIES=\$(echo \"$assembly\" | sed 's/[][]//g')
+    IFS=', ' read -r -a assemblies <<< \"\$ASSEMBLIES\"
     
-        for assembly in \"\${assemblies[@]}\"; do
-            metaquast.py --threads "${task.cpus}" --max-ref-number 0 --rna-finding --gene-finding -l "\${assembly}" "\${assembly}" -o "QUAST/\${assembly}"
-        done    
-        """
-    } else {
-        """
-        ASSEMBLIES=\$(echo \"$assembly\" | sed 's/[][]//g')
-        IFS=', ' read -r -a assemblies <<< \"\$ASSEMBLIES\"
+    for assembly in \"\${assemblies[@]}\"; do
+        metaquast.py --threads "${task.cpus}" --max-ref-number 0 --rna-finding --gene-finding -l "\${assembly}" "\${assembly}" -o "QUAST/\${assembly}"
+        if ! [ -f "QUAST/${assembler}-quast_summary.tsv" ]; then 
+            cp "QUAST/\${assembly}/transposed_report.tsv" "QUAST/${assembler}-quast_summary.tsv"
+        else
+            tail -n +2 "QUAST/\${assembly}/transposed_report.tsv" >> "QUAST/${assembler}-quast_summary.tsv"
+        fi
+    done    
+    """
+}
+
+process merge_quast_and_busco {
+    publishDir "${params.outdir}/GenomeBinning/QC/", mode: 'copy'
+
+    input:
+    file(quast_bin_sum) from quast_bin_summaries.collect()
+    file(busco_sum) from busco_summary
+
+    output:
+    file("quast_and_busco_summary.tsv")
+    file("quast_summary.tsv")
+
+    script:
+    """
+    QUAST_BIN=\$(echo \"$quast_bin_sum\" | sed 's/[][]//g')
+    IFS=', ' read -r -a quast_bin <<< \"\$QUAST_BIN\"
     
-        for assembly in \"\${assemblies[@]}\"; do
-            metaquast.py --threads "${task.cpus}" --max-ref-number 0 --rna-finding --gene-finding -l "\${assembly}" "\${assembly}" -o "QUAST/\${assembly}"
-        done
-        """        
-    }
+    for quast_file in \"\${quast_bin[@]}\"; do
+        if ! [ -f "quast_summary.tsv" ]; then 
+            cp "\${quast_file}" "quast_summary.tsv"
+        else
+            tail -n +2 "\${quast_file}" >> "quast_summary.tsv"
+        fi
+    done   
+
+    combine_tables.py $busco_sum quast_summary.tsv >quast_and_busco_summary.tsv
+    """
 }
 
 
