@@ -679,7 +679,7 @@ process quast {
 
     script:
     """
-    metaquast.py --threads "${task.cpus}" --rna-finding -l "${assembler}-${sample}" "${assembly}" -o "${sample}_QC"
+    metaquast.py --threads "${task.cpus}" --rna-finding --max-ref-number 0 -l "${assembler}-${sample}" "${assembly}" -o "${sample}_QC"
     """
 }
 
@@ -885,7 +885,7 @@ process quast_bins {
         IFS=', ' read -r -a assemblies <<< \"\$ASSEMBLIES\"
     
         for assembly in \"\${assemblies[@]}\"; do
-            metaquast.py --threads "${task.cpus}" --pe1 "${reads[0]}" --pe2 "${reads[1]}" --rna-finding --gene-finding -l "\${assembly}" "\${assembly}" -o "QUAST/\${assembly}"
+            metaquast.py --threads "${task.cpus}" --max-ref-number 0 --rna-finding --gene-finding -l "\${assembly}" "\${assembly}" -o "QUAST/\${assembly}"
         done    
         """
     } else {
@@ -894,7 +894,7 @@ process quast_bins {
         IFS=', ' read -r -a assemblies <<< \"\$ASSEMBLIES\"
     
         for assembly in \"\${assemblies[@]}\"; do
-            metaquast.py --threads "${task.cpus}" --single "${reads}" --rna-finding --gene-finding -l "\${assembly}" "\${assembly}" -o "QUAST/\${assembly}"
+            metaquast.py --threads "${task.cpus}" --max-ref-number 0 --rna-finding --gene-finding -l "\${assembly}" "\${assembly}" -o "QUAST/\${assembly}"
         done
         """        
     }
