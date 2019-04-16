@@ -52,6 +52,7 @@ def helpMessage() {
                                     (default: "ftp://ftp.ncbi.nlm.nih.gov/genomes/genbank/viral/Enterobacteria_phage_phiX174_sensu_lato/all_assembly_versions/GCA_002596845.1_ASM259684v1/GCA_002596845.1_ASM259684v1_genomic.fna.gz")
 
     Long read preprocessing:
+      --skip_adapter_trimming       Skip removing adapter sequences from long reads
       --longreads_min_length        Discard any read which is shorter than this value (default: 1000)
       --longreads_keep_percent      Keep this percent of bases (default: 90)
       --longreads_length_weight     The higher the more important is read length when choosing the best reads (default: 10)
@@ -148,6 +149,7 @@ params.skip_quast = false
 /*
  * long read preprocessing options
  */
+params.skip_adapter_trimming = false
 params.keep_lambda = false
 params.longreads_min_length = 1000
 params.longreads_keep_percent = 90
@@ -316,20 +318,28 @@ process get_software_versions {
 /*
  * Trim adapter sequences on long read nanopore files
  */
-process porechop { 
-    tag "$id"
+if (!params.skip_adapter_trimming) {
+    process porechop { 
+        tag "$id"
+            
+        input:
+        set id, lr, sr1, sr2 from files_all_raw
         
-    input:
-    set id, lr, sr1, sr2 from files_all_raw
-    
-    output:
-    set id, file("${id}_porechop.fastq"), sr1, sr2 into files_porechop
-    set id, lr, val("raw") into files_nanoplot_raw
-    
-    script:
-    """
-    porechop -i ${lr} -t "${task.cpus}" -o ${id}_porechop.fastq
-    """
+        output:
+        set id, file("${id}_porechop.fastq"), sr1, sr2 into files_porechop
+        set id, lr, val("raw") into files_nanoplot_raw
+        
+        script:
+        """
+        porechop -i ${lr} -t "${task.cpus}" -o ${id}_porechop.fastq
+        """
+    }
+} else {
+    files_all_raw
+        .into{ files_porechop; pre_files_nanoplot_raw }
+    pre_files_nanoplot_raw
+        .map { id, lr, sr1, sr2 -> [ id, lr, "raw" ] }
+        .set { files_nanoplot_raw }
 }
 
 /*
