@@ -898,10 +898,10 @@ process quast_bins {
     
     for assembly in \"\${assemblies[@]}\"; do
         metaquast.py --threads "${task.cpus}" --max-ref-number 0 --rna-finding --gene-finding -l "\${assembly}" "\${assembly}" -o "QUAST/\${assembly}"
-        if ! [ -f "QUAST/${assembler}-quast_summary.tsv" ]; then 
-            cp "QUAST/\${assembly}/transposed_report.tsv" "QUAST/${assembler}-quast_summary.tsv"
+        if ! [ -f "QUAST/${assembler}-${sample}-quast_summary.tsv" ]; then 
+            cp "QUAST/\${assembly}/transposed_report.tsv" "QUAST/${assembler}-${sample}-quast_summary.tsv"
         else
-            tail -n +2 "QUAST/\${assembly}/transposed_report.tsv" >> "QUAST/${assembler}-quast_summary.tsv"
+            tail -n +2 "QUAST/\${assembly}/transposed_report.tsv" >> "QUAST/${assembler}-${sample}-quast_summary.tsv"
         fi
     done    
     """
