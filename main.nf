@@ -175,11 +175,7 @@ if(!params.keep_phix) {
 
 def returnFile(it) {
 // Return file if it exists
-    if (workflow.profile in ['test', 'localtest'] ) {
-        inputFile = file("$workflow.projectDir/" + it)
-    } else {
-        inputFile = file(it)
-    }
+    inputFile = file(it)
     if (!file(inputFile).exists()) exit 1, "Missing file in TSV file: ${inputFile}, see --help for more information"
     return inputFile
 }
