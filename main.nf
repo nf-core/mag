@@ -319,11 +319,11 @@ if (!params.skip_adapter_trimming) {
         tag "$id"
             
         input:
-        set id, lr, sr1, sr2 from files_all_raw
+        set id, file(lr), sr1, sr2 from files_all_raw
         
         output:
         set id, file("${id}_porechop.fastq"), sr1, sr2 into files_porechop
-        set id, lr, val("raw") into files_nanoplot_raw
+        set id, file(lr), val("raw") into files_nanoplot_raw
         
         script:
         """
@@ -353,10 +353,10 @@ if (!params.keep_lambda) {
             saveAs: {filename -> filename.indexOf(".fastq.gz") == -1 ? "QC_longreads/NanoLyse/$filename" : null}
             
         input:
-        set id, file(lr), sr1, sr2, file(nanolyse_db) from files_porechop.combine(file_nanolyse_db)
+        set id, file(lr), file(sr1), file(sr2), file(nanolyse_db) from files_porechop.combine(file_nanolyse_db)
 
         output:
-        set id, file("${id}_nanolyse.fastq.gz"), sr1, sr2 into files_nanolyse
+        set id, file("${id}_nanolyse.fastq.gz"), file(sr1), file(sr2) into files_nanolyse
         file("${id}_nanolyse_log.txt")
     
         script:
@@ -381,7 +381,7 @@ process filtlong {
     tag "$id"
 
     input: 
-    set id, lr, sr1, sr2 from files_nanolyse
+    set id, file(lr), file(sr1), file(sr2) from files_nanolyse
     
     output:
     set id, file("${id}_lr_filtlong.fastq.gz") into files_lr_filtered 
@@ -409,7 +409,7 @@ process nanoplot {
     publishDir "${params.outdir}/QC_longreads/NanoPlot_${id}", mode: 'copy'
     
     input:
-    set id, lr, type from files_nanoplot_raw.mix(files_nanoplot_filtered)
+    set id, file(lr), type from files_nanoplot_raw.mix(files_nanoplot_filtered)
 
     output:
     file '*.png'
