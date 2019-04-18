@@ -35,3 +35,4 @@ script:
   - nf-core lint ${TRAVIS_BUILD_DIR}
   # Run the pipeline with the test profile
   - nextflow run main.nf -profile test,docker
+  - nextflow run ${TRAVIS_BUILD_DIR} -profile test_hybrid,docker

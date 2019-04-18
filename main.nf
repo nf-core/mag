@@ -9,6 +9,7 @@ nf-core/mag Analysis Pipeline. Started 2018-05-22.
 https://github.com/nf-core/mag
 #### Authors
 Hadrien Gourlé HadrienG <hadrien.gourle@slu.se> - hadriengourle.com>
+Daniel Straub <d4straub@gmail.com>
 ----------------------------------------------------------------------------------------
 */
 
@@ -23,11 +24,17 @@ def helpMessage() {
     The typical command for running the pipeline is as follows:
 
     nextflow run nf-core/mag --reads '*_R{1,2}.fastq.gz' -profile docker
+    nextflow run nf-core/mag --manifest 'manifest.tsv' -profile docker
 
     Mandatory arguments:
       --reads                       Path to input data (must be surrounded with quotes)
       -profile                      Configuration profile to use. Can use multiple (comma separated)
                                     Available: standard, conda, docker, singularity, awsbatch, test
+
+    Hybrid assembly:
+      --manifest                    Path to manifest file (must be surrounded with quotes), required for hybrid assembly with metaSPAdes
+                                    Has 4 headerless columns (tab separated): Sample_Id, Long_Reads, Short_Reads_1, Short_Reads_2
+                                    Only one file path per entry allowed
 
     Options:
       -name                         Name for the pipeline run. If not specified, Nextflow will automatically generate a random mnemonic.
@@ -35,23 +42,38 @@ def helpMessage() {
       --outdir                      The output directory where the results will be saved
       --email                       Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits
 
-    Trimming options:
+    Short read preprocessing:
       --adapter_forward             Sequence of 3' adapter to remove in the forward reads
       --adapter_reverse             Sequence of 3' adapter to remove in the reverse reads
       --mean_quality                Mean qualified quality value for keeping read (default: 15)
       --trimming_quality            Trimming quality value for the sliding window (default: 15)
+      --keep_phix                   Keep reads similar to the Illumina internal standard PhiX genome (default: false)
+      --phix_reference              Download path for PhiX database
+                                    (default: "ftp://ftp.ncbi.nlm.nih.gov/genomes/genbank/viral/Enterobacteria_phage_phiX174_sensu_lato/all_assembly_versions/GCA_002596845.1_ASM259684v1/GCA_002596845.1_ASM259684v1_genomic.fna.gz")
+
+    Long read preprocessing:
+      --skip_adapter_trimming       Skip removing adapter sequences from long reads
+      --longreads_min_length        Discard any read which is shorter than this value (default: 1000)
+      --longreads_keep_percent      Keep this percent of bases (default: 90)
+      --longreads_length_weight     The higher the more important is read length when choosing the best reads (default: 10)
+      --keep_lambda                 Keep reads similar to the ONT internal standard Escherichia virus Lambda genome (default: false)
+      --lambda_reference            Download path for Escherichia virus Lambda genome
+                                    (default: "ftp://ftp.ncbi.nlm.nih.gov/genomes/genbank/viral/Escherichia_virus_Lambda/all_assembly_versions/GCA_000840245.1_ViralProj14204/GCA_000840245.1_ViralProj14204_genomic.fna.gz")
+    
+    Assembly:
+      --skip_spades                 Skip Illumina-only SPAdes assembly
+      --skip_spadeshybrid           Skip SPAdes hybrid assembly (only available when using manifest input)
+      --skip_megahit                Skip MEGAHIT assembly
+      --skip_quast                  Skip metaQUAST
 
     Binning options:
-      --refinem                     Enable bin refinement with refinem.
-      --refinem_db                  Path to refinem database
-      --no_checkm                   Disable bin QC and merging with checkm
+      --skip_binning                Skip metagenome binning
       --min_contig_size             Minimum contig size to be considered for binning (default: 1500)
-      --delta_cont                  Maximum increase in contamination to merge compatible bins (default: 5)
-      --merged_cont                 Maximum total contamination to merge compatible bins (default: 15)
-      --delta_compl                 Minimum increase in completion to merge compatible bins (default: 10)
-      --abs_delta_cov               Minimum coverage ratio to merge compatible bins (default: 0.75)
-      --delta_gc                    Maximum %GC difference to merge compatible bins (default: 3)
-      --ssu_evalue                  Evalue threshold to filter incongruent 16S (default 1e-6)
+
+    Bin quality check:
+      --skip_busco                  Disable bin QC with BUSCO (default: false)
+      --busco_reference             Download path for BUSCO database, available databases are listed here: https://busco.ezlab.org/
+                                    (default: https://busco.ezlab.org/datasets/bacteria_odb9.tar.gz)
 
     AWSBatch options:
       --awsqueue                    The AWSBatch JobQueue that needs to be set when running on AWSBatch
@@ -63,7 +85,7 @@ def helpMessage() {
  * SET UP CONFIGURATION VARIABLES
  */
 
-// Show help emssage
+// Show help message
 if (params.help){
     helpMessage()
     exit 0
@@ -74,6 +96,8 @@ params.name = false
 params.multiqc_config = "$baseDir/conf/multiqc_config.yaml"
 params.email = false
 params.plaintext_email = false
+params.manifest = false
+params.busco_reference = "https://busco.ezlab.org/datasets/bacteria_odb9.tar.gz"
 
 ch_multiqc_config = Channel.fromPath(params.multiqc_config)
 ch_output_docs = Channel.fromPath("$baseDir/docs/output.md")
@@ -97,50 +121,107 @@ if( !(workflow.runName ==~ /[a-z]+_[a-z]+/) ){
 }
 
 /*
- * trimming options
+ * short read preprocessing options
  */
 params.adapter_forward = "AGATCGGAAGAGCACACGTCTGAACTCCAGTCA"
 params.adapter_reverse = "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT"
 params.mean_quality = 15
 params.trimming_quality = 15
+params.keep_phix = false
+params.phix_reference = "ftp://ftp.ncbi.nlm.nih.gov/genomes/genbank/viral/Enterobacteria_phage_phiX174_sensu_lato/all_assembly_versions/GCA_002596845.1_ASM259684v1/GCA_002596845.1_ASM259684v1_genomic.fna.gz"
+
 
 /*
  * binning options
  */
-params.refinem = false
-params.no_checkm = false
+params.skip_binning = false
+params.skip_busco = false
 params.min_contig_size = 1500
-params.delta_cont = 5
-params.merged_cont = 15
-params.delta_compl = 10
-params.abs_delta_cov = 0.75
-params.delta_gc = 3
 
-params.refinem_db = false
-params.ssu_evalue = 1e-6
+/*
+ * assembly options
+ */
+params.skip_spades = false
+params.skip_spadeshybrid = false
+params.skip_megahit = false
+params.skip_quast = false
+
+/*
+ * long read preprocessing options
+ */
+params.skip_adapter_trimming = false
+params.keep_lambda = false
+params.longreads_min_length = 1000
+params.longreads_keep_percent = 90
+params.longreads_length_weight = 10
+params.lambda_reference = "ftp://ftp.ncbi.nlm.nih.gov/genomes/genbank/viral/Escherichia_virus_Lambda/all_assembly_versions/GCA_000840245.1_ViralProj14204/GCA_000840245.1_ViralProj14204_genomic.fna.gz"
 
 /*
  * Create a channel for input read files
  */
- if(params.readPaths){
+if(!params.skip_busco){
+    Channel
+        .fromPath( "${params.busco_reference}", checkIfExists: true )
+        .set { file_busco_db }
+} else {
+    Channel.from()
+}
+
+if(!params.keep_phix) {
+    Channel
+        .fromPath( "${params.phix_reference}", checkIfExists: true )
+        .set { file_phix_db }
+}
+
+def returnFile(it) {
+// Return file if it exists
+    inputFile = file(it)
+    if (!file(inputFile).exists()) exit 1, "Missing file in TSV file: ${inputFile}, see --help for more information"
+    return inputFile
+}
+
+if(params.manifest){
+    manifestFile = file(params.manifest)
+    // extracts read files from TSV and distribute into channels
+    Channel
+        .from(manifestFile)
+        .ifEmpty {exit 1, log.info "Cannot find path file ${tsvFile}"}
+        .splitCsv(sep:'\t')
+        .map { row ->
+            def id = row[0]
+            def lr = returnFile( row[1] )
+            def sr1 = returnFile( row[2] )
+            def sr2 = returnFile( row[3] )
+            [ id, lr, sr1, sr2 ]
+            }
+        .into { files_sr; files_all_raw }
+    // prepare input for fastqc
+    files_sr
+        .map { id, lr, sr1, sr2 -> [ id, [ sr1, sr2 ] ] }
+        .into { read_files_fastqc; read_files_fastp }
+    
+} else if(params.readPaths){
      if(params.singleEnd){
          Channel
              .from(params.readPaths)
              .map { row -> [ row[0], [file(row[1][0])]] }
              .ifEmpty { exit 1, "params.readPaths was empty - no input files supplied" }
              .into { read_files_fastqc; read_files_fastp }
+        files_all_raw = Channel.from()
      } else {
          Channel
              .from(params.readPaths)
              .map { row -> [ row[0], [file(row[1][0]), file(row[1][1])]] }
              .ifEmpty { exit 1, "params.readPaths was empty - no input files supplied" }
              .into { read_files_fastqc; read_files_fastp }
+        files_all_raw = Channel.from()
      }
  } else {
      Channel
          .fromFilePairs( params.reads, size: params.singleEnd ? 1 : 2 )
          .ifEmpty { exit 1, "Cannot find any reads matching: ${params.reads}\nNB: Path needs to be enclosed in quotes!\nNB: Path requires at least one * wildcard!\nIf this is single-end data, please specify --singleEnd on the command line." }
          .into { read_files_fastqc; read_files_fastp }
+    files_all_raw = Channel.from()
  }
 
 
@@ -218,14 +299,126 @@ process get_software_versions {
     fastp -v 2> v_fastp.txt
     megahit --version > v_megahit.txt
     metabat2 -h 2> v_metabat.txt || true
+    NanoPlot --version > v_nanoplot.txt
+    filtlong --version > v_filtlong.txt
+    porechop --version > v_porechop.txt
+    NanoLyse --version > v_nanolyse.txt
+    spades.py --version > v_spades.txt
+    run_BUSCO.py --version > v_busco.txt
 
-    # fake checkm data setRoot so we can read checkm version number
-    chd=\$(readlink -f checkm_data)
-    printf "\$chd\\n\$chd\\n" | checkm data setRoot
-
-    checkm -h > v_checkm.txt
-    refinem -h > v_refinem.txt
     scrape_software_versions.py > software_versions_mqc.yaml
+    """
+}
+
+
+/*
+ * Trim adapter sequences on long read nanopore files
+ */
+if (!params.skip_adapter_trimming) {
+    process porechop { 
+        tag "$id"
+            
+        input:
+        set id, file(lr), sr1, sr2 from files_all_raw
+        
+        output:
+        set id, file("${id}_porechop.fastq"), sr1, sr2 into files_porechop
+        set id, file(lr), val("raw") into files_nanoplot_raw
+        
+        script:
+        """
+        porechop -i ${lr} -t "${task.cpus}" -o ${id}_porechop.fastq
+        """
+    }
+} else {
+    files_all_raw
+        .into{ files_porechop; pre_files_nanoplot_raw }
+    pre_files_nanoplot_raw
+        .map { id, lr, sr1, sr2 -> [ id, lr, "raw" ] }
+        .set { files_nanoplot_raw }
+}
+
+/*
+ * Remove reads mapping to the lambda genome.
+ * TODO: add lambda phage to igenomes.config?
+ */
+if (!params.keep_lambda) {
+    Channel
+        .fromPath( "${params.lambda_reference}", checkIfExists: true )
+        .set { file_nanolyse_db }
+    process nanolyse { 
+        tag "$id"
+
+        publishDir "${params.outdir}", mode: 'copy',
+            saveAs: {filename -> filename.indexOf(".fastq.gz") == -1 ? "QC_longreads/NanoLyse/$filename" : null}
+            
+        input:
+        set id, file(lr), file(sr1), file(sr2), file(nanolyse_db) from files_porechop.combine(file_nanolyse_db)
+
+        output:
+        set id, file("${id}_nanolyse.fastq.gz"), file(sr1), file(sr2) into files_nanolyse
+        file("${id}_nanolyse_log.txt")
+    
+        script:
+        """
+        cat ${lr} | NanoLyse --reference $nanolyse_db | gzip > ${id}_nanolyse.fastq.gz
+        
+        echo "NanoLyse reference: $params.lambda_reference" >${id}_nanolyse_log.txt
+        cat ${lr} | echo "total reads before NanoLyse: \$((`wc -l`/4))" >>${id}_nanolyse_log.txt
+        zcat ${id}_nanolyse.fastq.gz | echo "total reads after NanoLyse: \$((`wc -l`/4))" >>${id}_nanolyse_log.txt
+        """
+    }
+} else {
+    files_porechop
+        .set{ files_nanolyse }
+}
+
+
+/*
+ * Quality filter long reads focus on length instead of quality to improve assembly size
+ */
+process filtlong {
+    tag "$id"
+
+    input: 
+    set id, file(lr), file(sr1), file(sr2) from files_nanolyse
+    
+    output:
+    set id, file("${id}_lr_filtlong.fastq.gz") into files_lr_filtered 
+    set id, file("${id}_lr_filtlong.fastq.gz"), val('filtered') into files_nanoplot_filtered    
+
+    script:
+    """
+    filtlong \
+        -1 ${sr1} \
+        -2 ${sr2} \
+        --min_length ${params.longreads_min_length} \
+        --keep_percent ${params.longreads_keep_percent} \
+        --trim \
+        --length_weight ${params.longreads_length_weight} \
+        ${lr} | gzip > ${id}_lr_filtlong.fastq.gz
+    """
+}
+
+
+/*
+ * Quality check for nanopore reads and Quality/Length Plots
+ */
+process nanoplot {
+    tag "$id"
+    publishDir "${params.outdir}/QC_longreads/NanoPlot_${id}", mode: 'copy'
+    
+    input:
+    set id, file(lr), type from files_nanoplot_raw.mix(files_nanoplot_filtered)
+
+    output:
+    file '*.png'
+    file '*.html'
+    file '*.txt'
+    
+    script:
+    """
+    NanoPlot -t "${task.cpus}" -p ${type}_  --title ${id}_${type} -c darkblue --fastq ${lr}
     """
 }
 
@@ -235,7 +428,8 @@ process get_software_versions {
  */
 process fastqc_raw {
     tag "$name"
-    publishDir "${params.outdir}/fastqc", mode: 'copy'
+    publishDir "${params.outdir}/", mode: 'copy',
+        saveAs: {filename -> filename.indexOf(".zip") == -1 ? "QC_shortreads/fastqc/$filename" : null}
 
     input:
     set val(name), file(reads) from read_files_fastqc
@@ -252,7 +446,8 @@ process fastqc_raw {
 
 process fastp {
     tag "$name"
-    // publishDir "${params.outdir}/fastp", mode: 'copy'
+    publishDir "${params.outdir}/", mode: 'copy',
+        saveAs: {filename -> filename.indexOf(".fastq.gz") == -1 ? "QC_shortreads/fastp/$name/$filename" : null}
 
     input:
     set val(name), file(reads) from read_files_fastp
@@ -262,7 +457,8 @@ process fastp {
     val trim_qual from params.trimming_quality
 
     output:
-    set val(name), file("${name}_trimmed*.fastq.gz") into (trimmed_reads_megahit, trimmed_reads_metabat, trimmed_reads_fastqc)
+    set val(name), file("${name}_trimmed*.fastq.gz") into trimmed_reads
+    file("fastp.*")
 
     script:
     if ( !params.singleEnd ) {
@@ -284,10 +480,66 @@ process fastp {
     }
 }
 
+/*
+ * Remove PhiX contamination from Illumina reads
+ * TODO: PhiX into/from iGenomes.conf?
+ */
+if(!params.keep_phix) {
+    process phix_download_db {
+        tag "${genome}"
+
+        input:
+        file(genome) from file_phix_db
+
+        output:
+        set file(genome), file("ref*") into phix_db
+
+        script:
+        """
+        bowtie2-build --threads "${task.cpus}" "${genome}" ref
+        """
+    }
+
+    process remove_phix {
+        tag "$name"
+
+        publishDir "${params.outdir}", mode: 'copy',
+            saveAs: {filename -> filename.indexOf(".fastq.gz") == -1 ? "QC_shortreads/remove_phix/$filename" : null}
+
+        input:
+        set val(name), file(reads), file(genome), file(db) from trimmed_reads.combine(phix_db)
+
+        output:
+        set val(name), file("*.fastq.gz") into (trimmed_reads_megahit, trimmed_reads_metabat, trimmed_reads_fastqc, trimmed_sr_spadeshybrid, trimmed_reads_spades)
+        file("${name}_remove_phix_log.txt")
+
+        script:
+        if ( !params.singleEnd ) {
+            """
+            bowtie2 -p "${task.cpus}" -x ref -1 "${reads[0]}" -2 "${reads[1]}" --un-conc-gz ${name}_unmapped_%.fastq.gz
+            echo "Bowtie2 reference: ${genome}" >${name}_remove_phix_log.txt
+            zcat ${reads[0]} | echo "Read pairs before removal: \$((`wc -l`/4))" >>${name}_remove_phix_log.txt
+            zcat ${name}_unmapped_1.fastq.gz | echo "Read pairs after removal: \$((`wc -l`/4))" >>${name}_remove_phix_log.txt
+            """
+        } else {
+            """
+            bowtie2 -p "${task.cpus}" -x ref -U ${reads}  --un-gz ${name}_unmapped.fastq.gz
+            echo "Bowtie2 reference: ${genome}" >${name}_remove_phix_log.txt
+            zcat ${reads[0]} | echo "Reads before removal: \$((`wc -l`/4))" >>${name}_remove_phix_log.txt
+            zcat ${name}_unmapped.fastq.gz | echo "Reads after removal: \$((`wc -l`/4))" >>${name}_remove_phix_log.txt
+            """
+        }
+
+    }
+} else {
+    trimmed_reads.into {trimmed_reads_megahit; trimmed_reads_metabat; trimmed_reads_fastqc; trimmed_sr_spadeshybrid; trimmed_reads_spades}
+}
+
 
 process fastqc_trimmed {
     tag "$name"
-    publishDir "${params.outdir}/fastqc", mode: 'copy'
+    publishDir "${params.outdir}/", mode: 'copy',
+        saveAs: {filename -> filename.indexOf(".zip") == -1 ? "QC_shortreads/fastqc/$filename" : null}
 
     input:
     set val(name), file(reads) from trimmed_reads_fastqc
@@ -307,258 +559,378 @@ process fastqc_trimmed {
  */
 process megahit {
     tag "$name"
-    publishDir "${params.outdir}/", mode: 'copy'
+    publishDir "${params.outdir}/", mode: 'copy',
+        saveAs: {filename -> filename.indexOf(".fastq.gz") == -1 ? "Assembly/$filename" : null}
 
     input:
     set val(name), file(reads) from trimmed_reads_megahit
 
     output:
-    set val(name), file("megahit/${name}.contigs.fa") into (assembly_quast, assembly_metabat, assembly_refinem)
+    set val("MEGAHIT"), val("$name"), file("MEGAHIT/${name}.contigs.fa") into assembly_megahit_to_quast
+    set val("MEGAHIT"), val("$name"), file("MEGAHIT/${name}.contigs.fa"), file(reads) into assembly_megahit_to_metabat
+    file("MEGAHIT/*.log")
+
+    when:
+    !params.skip_megahit
 
     script:
     if ( !params.singleEnd ) {
     """
-    megahit -t "${task.cpus}" -1 "${reads[0]}" -2 "${reads[1]}" -o megahit \
+    megahit -t "${task.cpus}" -1 "${reads[0]}" -2 "${reads[1]}" -o MEGAHIT \
         --out-prefix "${name}"
     """
     }
     else {
     """
-    megahit -t "${task.cpus}" -r ${reads} -o megahit --out-prefix "${name}"
+    megahit -t "${task.cpus}" -r ${reads} -o MEGAHIT --out-prefix "${name}"
     """
     }
 }
 
 
-process quast {
-    tag "$name"
-    // publishDir "${params.outdir}/quast/$name", mode: 'copy'
+/*
+ * metaSpades hybrid Assembly
+ */
+
+ files_lr_filtered
+    .combine(trimmed_sr_spadeshybrid, by: 0)
+    .set { files_pre_spadeshybrid }
+
+process spadeshybrid {
+    tag "$id"
+    publishDir "${params.outdir}/", mode: 'copy', pattern: "${id}*",
+        saveAs: {filename -> filename.indexOf(".fastq.gz") == -1 ? "Assembly/SPAdesHybrid/$filename" : null}
 
     input:
-    set val(name), file(assembly) from assembly_quast
+    set id, file(lr), file(sr) from files_pre_spadeshybrid  
 
     output:
-    file("quast_${name}/*") into quast_results
+    set id, val("SPAdesHybrid"), file("${id}_graph.gfa") into assembly_graph_spadeshybrid
+    set val("SPAdesHybrid"), val("$id"), file("${id}_scaffolds.fasta") into assembly_spadeshybrid_to_quast
+    set val("SPAdesHybrid"), val("$id"), file("${id}_scaffolds.fasta"), file(sr) into assembly_spadeshybrid_to_metabat
+    file("${id}_contigs.fasta")
+    file("${id}_log.txt")
+
+    when:
+    params.manifest
+    !params.singleEnd
+    !params.skip_spadeshybrid
+     
+    script:
+    def maxmem = "${task.memory.toString().replaceAll(/[\sGB]/,'')}"
+    """
+    metaspades.py \
+        --threads "${task.cpus}" \
+        --memory "$maxmem" \
+        --pe1-1 ${sr[0]} \
+        --pe1-2 ${sr[1]} \
+        --nanopore ${lr} \
+        -o spades
+    cp spades/assembly_graph_with_scaffolds.gfa ${id}_graph.gfa
+    cp spades/scaffolds.fasta ${id}_scaffolds.fasta
+    cp spades/contigs.fasta ${id}_contigs.fasta
+    cp spades/spades.log ${id}_log.txt
+    """
+}
+
+
+process spades {
+    tag "$id"
+    publishDir "${params.outdir}/", mode: 'copy', pattern: "${id}*",
+        saveAs: {filename -> filename.indexOf(".fastq.gz") == -1 ? "Assembly/SPAdes/$filename" : null}
+
+    input:
+    set id, file(sr) from trimmed_reads_spades  
+
+    output:
+    set id, val("SPAdes"), file("${id}_graph.gfa") into assembly_graph_spades
+    set val("SPAdes"), val("$id"), file("${id}_scaffolds.fasta") into assembly_spades_to_quast
+    set val("SPAdes"), val("$id"), file("${id}_scaffolds.fasta"), file(sr) into assembly_spades_to_metabat
+    file("${id}_contigs.fasta")
+    file("${id}_log.txt")
+
+    when:
+    !params.singleEnd
+    !params.skip_spades
+     
+    script:
+    def maxmem = "${task.memory.toString().replaceAll(/[\sGB]/,'')}"
+    """
+    metaspades.py \
+        --threads "${task.cpus}" \
+        --memory "$maxmem" \
+        --pe1-1 ${sr[0]} \
+        --pe1-2 ${sr[1]} \
+        -o spades
+    cp spades/assembly_graph_with_scaffolds.gfa ${id}_graph.gfa
+    cp spades/scaffolds.fasta ${id}_scaffolds.fasta
+    cp spades/contigs.fasta ${id}_contigs.fasta
+    cp spades/spades.log ${id}_log.txt
+    """
+}
+
+
+process quast {
+    tag "$assembler-$sample"
+    publishDir "${params.outdir}/Assembly/$assembler", mode: 'copy'
+
+    input:
+    set val(assembler), val(sample), file(assembly) from assembly_spades_to_quast.mix(assembly_megahit_to_quast).mix(assembly_spadeshybrid_to_quast)
+
+    output:
+    file("${sample}_QC/*") into quast_results
+
+    when:
+    !params.skip_quast
 
     script:
     """
-    quast.py --threads "${task.cpus}" -l "${name}" "${assembly}" -o "quast_${name}"
+    metaquast.py --threads "${task.cpus}" --rna-finding --max-ref-number 0 -l "${assembler}-${sample}" "${assembly}" -o "${sample}_QC"
     """
 }
+
 
 
 /*
  * STEP 3 - Binning
  */
 process metabat {
-    tag "$name"
-    publishDir "${params.outdir}/metabat", mode: 'copy'
+    tag "$assembler-$sample"
+    publishDir "${params.outdir}/", mode: 'copy',
+        saveAs: {filename -> (filename.indexOf(".bam") == -1 && filename.indexOf(".fastq.gz") == -1) ? "GenomeBinning/$filename" : null}
 
     input:
-    set val(_name), file(assembly) from assembly_metabat
-    set val(name), file(reads) from trimmed_reads_metabat
+    set val(assembler), val(sample), file(assembly), file(reads) from assembly_spades_to_metabat.mix(assembly_megahit_to_metabat).mix(assembly_spadeshybrid_to_metabat)
     val(min_size) from params.min_contig_size
 
     output:
-    set val(name), file("bins/") into metabat_bins
-    set val(name), file("${name}.bam") into (mapped_reads_checkm, mapped_reads_refinem)
+    set val(assembler), val(sample), file("MetaBAT2/*") into metabat_bins mode flatten
+    set val(assembler), val(sample), file("MetaBAT2/*"), file(reads) into metabat_bins_quast_bins
+
+    when:
+    !params.skip_binning
 
     script:
+    def name = "${assembler}-${sample}"
     if ( !params.singleEnd ) {
-    """
-    bowtie2-build --threads "${task.cpus}" "${assembly}" ref
-    bowtie2 -p "${task.cpus}" -x ref -1 "${reads[0]}" -2 "${reads[1]}" | \
-        samtools view -@ "${task.cpus}" -bS | \
-        samtools sort -@ "${task.cpus}" -o "${name}.bam"
-    samtools index "${name}.bam"
-    jgi_summarize_bam_contig_depths --outputDepth depth.txt "${name}.bam"
-    metabat2 -t "${task.cpus}" -i "${assembly}" -a depth.txt -o "bins/${name}" -m ${min_size}
-    """
+        """
+        bowtie2-build --threads "${task.cpus}" "${assembly}" ref
+        bowtie2 -p "${task.cpus}" -x ref -1 "${reads[0]}" -2 "${reads[1]}" | \
+            samtools view -@ "${task.cpus}" -bS | \
+            samtools sort -@ "${task.cpus}" -o "${name}.bam"
+        samtools index "${name}.bam"
+        jgi_summarize_bam_contig_depths --outputDepth depth.txt "${name}.bam"
+        metabat2 -t "${task.cpus}" -i "${assembly}" -a depth.txt -o "MetaBAT2/${name}" -m ${min_size}
+
+        #if bin foolder is empty
+        if [ -z \"\$(ls -A MetaBAT2)\" ]; then 
+            cp ${assembly} MetaBAT2/${assembler}-${assembly}
+        fi
+        """
+    } else {
+        """
+        bowtie2-build --threads "${task.cpus}" "${assembly}" ref
+        bowtie2 -p "${task.cpus}" -x ref -U ${reads} | \
+            samtools view -@ "${task.cpus}" -bS | \
+            samtools sort -@ "${task.cpus}" -o "${name}.bam"
+        samtools index "${name}.bam"
+        jgi_summarize_bam_contig_depths --outputDepth depth.txt "${name}.bam"
+        metabat2 -t "${task.cpus}" -i "${assembly}" -a depth.txt -o "MetaBAT2/${name}" -m ${min_size}
+
+        #if bin foolder is empty
+        if [ -z \"\$(ls -A MetaBAT2)\" ]; then 
+            cp ${assembly} MetaBAT2/${assembler}-${assembly}
+        fi
+        """
     }
-    else {
+
+}
+
+
+process busco_download_db {
+    tag "${database.baseName}"
+
+    input:
+    file(database) from file_busco_db
+
+    output:
+    set val("${database.toString().replace(".tar.gz", "")}"), file("buscodb/*") into busco_db
+
+    script:
     """
-    bowtie2-build --threads "${task.cpus}" "${assembly}" ref
-    bowtie2 -p "${task.cpus}" -x ref -U ${reads} | \
-        samtools view -@ "${task.cpus}" -bS | \
-        samtools sort -@ "${task.cpus}" -o "${name}.bam"
-    samtools index "${name}.bam"
-    jgi_summarize_bam_contig_depths --outputDepth depth.txt "${name}.bam"
-    metabat2 -t "${task.cpus}" -i "${assembly}" -a depth.txt -o bins/"${name}" -m ${min_size}
+    mkdir buscodb
+    tar -xf ${database} -C buscodb
     """
+}
+
+metabat_bins
+    .combine(busco_db)
+    .set { metabat_db_busco }
+
+/*
+ * BUSCO: Quantitative measures for the assessment of genome assembly
+ */
+process busco {
+    tag "${assembly}"
+    publishDir "${params.outdir}/GenomeBinning/QC/BUSCO/", mode: 'copy'
+
+    input:
+    set val(assembler), val(sample), file(assembly), val(db_name), file(db) from metabat_db_busco
+
+    output:
+    file("short_summary_${assembly}.txt") into (busco_summary_to_multiqc, busco_summary_to_plot)
+    val("$assembler-$sample") into busco_assembler_sample_to_plot
+    file("${assembly}_busco_log.txt")
+    file("${assembly}_buscos.faa")
+    file("${assembly}_buscos.fna")
+
+    script:
+    if( workflow.profile.toString().indexOf("conda") == -1) {
+        """
+        cp -r /opt/conda/pkgs/augustus-3.3-pl526hcfae127_4/config augustus_config/
+        export AUGUSTUS_CONFIG_PATH=augustus_config
+
+        run_BUSCO.py \
+            --in ${assembly} \
+            --lineage_path $db_name \
+            --cpu "${task.cpus}" \
+            --blast_single_core \
+            --mode genome \
+            --out ${assembly} \
+            >${assembly}_busco_log.txt
+        cp run_${assembly}/short_summary_${assembly}.txt short_summary_${assembly}.txt
+
+        for f in run_${assembly}/single_copy_busco_sequences/*faa; do 
+            [ -e "\$f" ] && cat run_${assembly}/single_copy_busco_sequences/*faa >${assembly}_buscos.faa || touch ${assembly}_buscos.faa
+            break
+        done
+        for f in run_${assembly}/single_copy_busco_sequences/*fna; do 
+            [ -e "\$f" ] && cat run_${assembly}/single_copy_busco_sequences/*fna >${assembly}_buscos.fna || touch ${assembly}_buscos.fna
+            break
+        done
+        """
+    } else {
+        """
+        run_BUSCO.py \
+            --in ${assembly} \
+            --lineage_path $db_name \
+            --cpu "${task.cpus}" \
+            --blast_single_core \
+            --mode genome \
+            --out ${assembly} \
+            >${assembly}_busco_log.txt
+        cp run_${assembly}/short_summary_${assembly}.txt short_summary_${assembly}.txt
+
+        for f in run_${assembly}/single_copy_busco_sequences/*faa; do 
+            [ -e "\$f" ] && cat run_${assembly}/single_copy_busco_sequences/*faa >${assembly}_buscos.faa || touch ${assembly}_buscos.faa
+            break
+        done
+        for f in run_${assembly}/single_copy_busco_sequences/*fna; do 
+            [ -e "\$f" ] && cat run_${assembly}/single_copy_busco_sequences/*fna >${assembly}_buscos.fna || touch ${assembly}_buscos.fna
+            break
+        done
+        """
     }
-
 }
 
 
-process checkm_download_db {
-    output:
-        file("checkm_data") into checkm_db
-
-    when:
-        params.no_checkm == false
-
-    script:
-    """
-    mkdir -p checkm_data && \
-    cd checkm_data && \
-    curl -L -O https://data.ace.uq.edu.au/public/CheckM_databases/checkm_data_2015_01_16.tar.gz && \
-    tar xzf checkm_data_2015_01_16.tar.gz && \
-    cd .. && \
-    printf "checkm_data\ncheckm_data\n" | checkm data setRoot
-    """
-}
-
-process checkm {
-    tag "$name"
-    publishDir "${params.outdir}/checkm", mode: 'copy'
+process busco_plot { 
+    publishDir "${params.outdir}/GenomeBinning/QC/", mode: 'copy'
 
     input:
-    set val(name), file(bins) from metabat_bins
-    set val(_name), file(bam) from mapped_reads_checkm
-    val(delta_cont) from params.delta_cont
-    val(merged_cont) from params.merged_cont
-    val(delta_compl) from params.delta_compl
-    val(abs_delta_cov) from params.abs_delta_cov
-    val(delta_gc) from params.delta_gc
-    file("checkm_data") from checkm_db
+    file(summaries) from busco_summary_to_plot.collect()
+    val(assemblersample) from busco_assembler_sample_to_plot.collect()
 
     output:
-    file("${name}_stats/lineage") into checkm_merge_results
-    file("${name}_stats/plots") into checkm_merge_plots
-    file("${name}_stats/qa.txt") into checkm_merge_qa
-    set val(name), file("${name}/") into checkm_merge_bins
-
-    when:
-        params.no_checkm == false
+    file("*busco_figure.png")
+    file("BUSCO/*busco_figure.R")
+    file("BUSCO/*busco_summary.txt")
+    file("busco_summary.txt") into busco_summary
 
     script:
+    def assemblersampleunique = assemblersample.unique()
     """
-    # re-run setRoot in case checkm has forgotten where the databases are located
-    chd=\$(readlink -f checkm_data)
-    printf "\$chd\\n\$chd\\n" | checkm data setRoot
+    #for each assembler and sample:
+    assemblersample=\$(echo \"$assemblersampleunique\" | sed 's/[][]//g')
+    IFS=', ' read -r -a assemblersamples <<< \"\$assemblersample\"
 
-    mkdir -p stats
-    checkm lineage_wf -t "${task.cpus}" -x fa "${bins}" stats/lineage > stats/qa.txt
-    checkm bin_qa_plot -x fa stats/lineage "${bins}" stats/plots
+    mkdir BUSCO
 
-    samtools index "${bam}"
-    checkm coverage -t "${task.cpus}" -x fa "${bins}" stats/coverage.txt "${bam}"
-    checkm profile stats/coverage.txt > stats/profile.txt
-    checkm tree_qa stats/lineage > stats/tree_qa.txt
+    for name in \"\${assemblersamples[@]}\"; do
+        mkdir \${name}
+        cp short_summary_\${name}* \${name}/
+        generate_plot.py --working_directory \${name}
+        
+        cp \${name}/busco_figure.png \${name}-busco_figure.png
+        cp \${name}/busco_figure.R \${name}-busco_figure.R
 
-    samtools view "${bam}" | awk '{if (NR <=1000) print length(\$10)}' >  stats/read_length.txt
+        summary_busco.py \${name}/short_summary_*.txt >BUSCO/\${name}-busco_summary.txt
+    done
 
-    checkm taxon_set domain Bacteria bacteria.ms
-    checkm merge -t "${task.cpus}" -x fa --delta_cont "${delta_cont}" --merged_cont "${merged_cont}" \
-        bacteria.ms "${bins}" stats/merger/
+    cp *-busco_figure.R BUSCO/
 
-    mkdir -p ${name}
-    mkdir -p ${name}_stats
-    merge_bins.py --delta_cont "${delta_cont}" --merged_cont "${merged_cont}" \
-        --delta_compl "${delta_compl}" --abs_delta_cov "${abs_delta_cov}" --delta_gc "${delta_gc}" \
-        --profile stats/profile.txt --tree stats/tree_qa.txt \
-        --length stats/read_length.txt \
-        --merger stats/merger/merger.tsv "${bins}" "${name}"
-    checkm lineage_wf -t "${task.cpus}" -x fa "${name}" ${name}_stats/lineage > ${name}_stats/qa.txt
-    checkm bin_qa_plot -x fa ${name}_stats/lineage "${name}" ${name}_stats/plots
+    summary_busco.py short_summary_*.txt >busco_summary.txt
     """
 }
 
-
-process refinem_download_db {
-    publishDir "${params.outdir}/db"
-    output:
-        file("refinem_databases/") into refinem_db
-
-    when:
-        params.refinem == true && params.refinem_db ==false && params.no_checkm == false
-
-    script:
-    """
-    wget https://storage.googleapis.com/mag_refinem_db/refinem_databases.tar.gz
-    tar xzf refinem_databases.tar.gz
-    """
-}
-
-if (params.refinem_db) {
-    refinem_db = file(params.refinem_db)
-}
-mapped_reads_refinem.into {mapped_reads_refinem_1; mapped_reads_refinem_2}
-assembly_refinem.into {assembly_refinem_1; assembly_refinem_2}
-
-process refinem_pass_1 {
-    tag "${name}"
+process quast_bins {
+    tag "$assembler-$sample"
+    publishDir "${params.outdir}/GenomeBinning/QC/", mode: 'copy'
 
     input:
-    set val(name), file(bins) from checkm_merge_bins
-    set val(_name), file(bam) from mapped_reads_refinem_1
-    set val(__name), file(assembly) from assembly_refinem_1
-    file(refinem_db) from refinem_db
+    set val(assembler), val(sample), file(assembly), file(reads) from metabat_bins_quast_bins
 
     output:
-    set val(name), file("bins_pass_1") into refinem_bins_pass_1
+    file("QUAST/*")
+    file("QUAST/*-quast_summary.tsv") into quast_bin_summaries
 
     when:
-        params.refinem == true && params.no_checkm == false
+    !params.skip_quast
 
     script:
     """
-    # filter by GC / tetra
-    samtools index "${bam}"
-    refinem scaffold_stats -x fa -c "${task.cpus}" "${assembly}" "${bins}" refinem "${bam}"
-    refinem outliers --no_plots refinem/scaffold_stats.tsv refinem
-    refinem filter_bins -x fa "${bins}" refinem/outliers.tsv new_bins_tmp_1
-    # filter by taxonomic assignment
-    refinem call_genes -x fa -c "${task.cpus}" new_bins_tmp_1 gene_calls
-    refinem taxon_profile -c "${task.cpus}" gene_calls refinem/scaffold_stats.tsv \
-        "${refinem_db}/gtdb_r86.dmnd" "${refinem_db}/gtdb_r86_taxonomy.2018-09-25.tsv" \
-        taxon_profile
-    refinem taxon_filter -c "${task.cpus}" taxon_profile taxon_filter.tsv
-    refinem filter_bins -x fa new_bins_tmp_1 taxon_filter.tsv bins_pass_1
-    rename 's/.filtered.filtered.fa/.fa/' bins_pass_1/*.filtered.filtered.fa
+    ASSEMBLIES=\$(echo \"$assembly\" | sed 's/[][]//g')
+    IFS=', ' read -r -a assemblies <<< \"\$ASSEMBLIES\"
+    
+    for assembly in \"\${assemblies[@]}\"; do
+        metaquast.py --threads "${task.cpus}" --max-ref-number 0 --rna-finding --gene-finding -l "\${assembly}" "\${assembly}" -o "QUAST/\${assembly}"
+        if ! [ -f "QUAST/${assembler}-${sample}-quast_summary.tsv" ]; then 
+            cp "QUAST/\${assembly}/transposed_report.tsv" "QUAST/${assembler}-${sample}-quast_summary.tsv"
+        else
+            tail -n +2 "QUAST/\${assembly}/transposed_report.tsv" >> "QUAST/${assembler}-${sample}-quast_summary.tsv"
+        fi
+    done    
     """
 }
 
-process refinem_pass_2 {
-    tag "${name}"
-    publishDir "${params.outdir}/", mode: 'copy'
+process merge_quast_and_busco {
+    publishDir "${params.outdir}/GenomeBinning/QC/", mode: 'copy'
 
     input:
-    set val(name), file(bins) from refinem_bins_pass_1
-    set val(_name), file(bam) from mapped_reads_refinem_2
-    set val(__name), file(assembly) from assembly_refinem_2
-    file(refinem_db) from refinem_db
-    val(ssu_evalue) from params.ssu_evalue
+    file(quast_bin_sum) from quast_bin_summaries.collect()
+    file(busco_sum) from busco_summary
 
     output:
-    set val(name), file("refinem") into refinem_bins
-
-    when:
-        params.refinem == true && params.no_checkm == false
+    file("quast_and_busco_summary.tsv")
+    file("quast_summary.tsv")
 
     script:
     """
-    samtools index "${bam}"
-    # filter incongruent 16S
-    # first we need to re-run taxon profile on the new bin dir
-    refinem scaffold_stats -x fa -c "${task.cpus}" "${assembly}" "${bins}" stats "${bam}"
-    refinem call_genes -x fa -c "${task.cpus}" "${bins}" gene_calls
-    refinem taxon_profile -c "${task.cpus}" gene_calls stats/scaffold_stats.tsv \
-        "${refinem_db}/gtdb_r86.dmnd" "${refinem_db}/gtdb_r86_taxonomy.2018-09-25.tsv" \
-        taxon_profile
-    # then we can identify incongruent ssu
-    refinem ssu_erroneous -x fa -c "${task.cpus}" "${bins}" taxon_profile \
-        "${refinem_db}/gtdb_r80_ssu" "${refinem_db}/gtdb_r86_taxonomy.2018-09-25.tsv" ssu
-    # TODO inspect top-hit and give e-value threshold to filter a contig
-    filter_ssu.py --evalue ${ssu_evalue} ssu/ssu_erroneous.tsv ssu/ssu_filtered.tsv 
-    refinem filter_bins -x fa "${bins}" ssu/ssu_filtered.tsv refinem
-    rename 's/.filtered.fa/.fa/' refinem/*.filtered.fa
+    QUAST_BIN=\$(echo \"$quast_bin_sum\" | sed 's/[][]//g')
+    IFS=', ' read -r -a quast_bin <<< \"\$QUAST_BIN\"
+    
+    for quast_file in \"\${quast_bin[@]}\"; do
+        if ! [ -f "quast_summary.tsv" ]; then 
+            cp "\${quast_file}" "quast_summary.tsv"
+        else
+            tail -n +2 "\${quast_file}" >> "quast_summary.tsv"
+        fi
+    done   
+
+    combine_tables.py $busco_sum quast_summary.tsv >quast_and_busco_summary.tsv
     """
 }
 
-// TODO next releases:
-// good bins channels (from checkm or refinem) + annotation
-// multiqc modules for checkm/refinem
 
 /*
  * STEP 4 - MultiQC
@@ -572,6 +944,7 @@ process multiqc {
     file (fastqc_raw:'fastqc/*') from fastqc_results.collect().ifEmpty([])
     file (fastqc_trimmed:'fastqc/*') from fastqc_results_trimmed.collect().ifEmpty([])
     file ('quast*/*') from quast_results.collect()
+    file ('short_summary_*.txt') from busco_summary_to_multiqc.collect()
 
     output:
     file "*multiqc_report.html" into multiqc_report
