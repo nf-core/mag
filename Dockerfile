@@ -1,6 +1,7 @@
 FROM nfcore/base
-LABEL authors="No author provided" \
-      description="Docker image containing all requirements for nf-core/mag pipeline"
+
+LABEL authors="Hadrien Gourlé <hadrien.gourle@slu.se>, Daniel Straub <d4straub@gmail.com>" \
+    description="Docker image containing all requirements for nf-core/mag pipeline"
 
 COPY environment.yml /
 RUN conda env create -f /environment.yml && conda clean -a
