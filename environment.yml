@@ -1,11 +1,13 @@
+# You can use this file to create a conda environment for this pipeline:
+#   conda env create -f environment.yml
 name: nf-core-mag-1.0.0
 channels:
-  - bioconda
   - conda-forge
+  - bioconda
   - defaults
 dependencies:
   - fastqc=0.11.8
-  - multiqc=1.6=py36h24bf2e0_0
+  - multiqc=1.7
   - fastp=0.19.5
   - megahit=1.1.3=py36_0
   - metabat2=2.12.1
