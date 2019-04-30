@@ -38,6 +38,6 @@ script:
   - nf-core lint ${TRAVIS_BUILD_DIR}
   # Lint the documentation
   - markdownlint ${TRAVIS_BUILD_DIR} -c ${TRAVIS_BUILD_DIR}/.github/markdownlint.yml
-  # Run the pipeline with the test profile
-  - nextflow run main.nf -profile test,docker
+  # Run the pipeline with the test profile(s)
+  - nextflow run ${TRAVIS_BUILD_DIR} -profile test,docker
   - nextflow run ${TRAVIS_BUILD_DIR} -profile test_hybrid,docker
