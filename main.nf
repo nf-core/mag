@@ -129,8 +129,8 @@ params.adapter_reverse = "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT"
 params.mean_quality = 15
 params.trimming_quality = 15
 params.keep_phix = false
-params.phix_reference = "ftp://ftp.ncbi.nlm.nih.gov/genomes/genbank/viral/Enterobacteria_phage_phiX174_sensu_lato/all_assembly_versions/GCA_002596845.1_ASM259684v1/GCA_002596845.1_ASM259684v1_genomic.fna.gz"
-
+// params.phix_reference = "ftp://ftp.ncbi.nlm.nih.gov/genomes/genbank/viral/Enterobacteria_phage_phiX174_sensu_lato/all_assembly_versions/GCA_002596845.1_ASM259684v1/GCA_002596845.1_ASM259684v1_genomic.fna.gz"
+params.phix_reference = "$baseDir/assets/data/GCA_002596845.1_ASM259684v1_genomic.fna.gz"
 
 /*
  * binning options
@@ -155,7 +155,8 @@ params.keep_lambda = false
 params.longreads_min_length = 1000
 params.longreads_keep_percent = 90
 params.longreads_length_weight = 10
-params.lambda_reference = "ftp://ftp.ncbi.nlm.nih.gov/genomes/genbank/viral/Escherichia_virus_Lambda/all_assembly_versions/GCA_000840245.1_ViralProj14204/GCA_000840245.1_ViralProj14204_genomic.fna.gz"
+// params.lambda_reference = "ftp://ftp.ncbi.nlm.nih.gov/genomes/genbank/viral/Escherichia_virus_Lambda/all_assembly_versions/GCA_000840245.1_ViralProj14204/GCA_000840245.1_ViralProj14204_genomic.fna.gz"
+params.lambda_reference = "$baseDir/assets/data/GCA_000840245.1_ViralProj14204_genomic.fna.gz"
 
 // Stage config files
 ch_multiqc_config = Channel.fromPath(params.multiqc_config)
