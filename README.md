@@ -1,6 +1,6 @@
 # ![mag](https://raw.githubusercontent.com/nf-core/mag/master/docs/images/mag_logo.png)
 
-# nf-core/mag
+## nf-core/mag
 
 **Assembly, binning and annotation of metagenomes**.
 

@@ -135,8 +135,6 @@ By default, the pipeline expects paired-end data. If you have single-end data, y
 
 It is not possible to run a mixture of single-end and paired-end files in one run.
 
-## Optional arguments
-
 ## Reference genomes
 
 The pipeline config files come bundled with paths to the illumina iGenomes reference index files. If running with docker or AWS, the configuration is set up to use the [AWS-iGenomes](https://ewels.github.io/AWS-iGenomes/) resource.
@@ -181,29 +179,33 @@ params {
 
 If you prefer, you can specify the full path to your reference genome when you run the pipeline:
 
-### Trimming options:
-
-    --adapter_forward             Sequence of 3' adapter to remove in the forward reads
-    --adapter_reverse             Sequence of 3' adapter to remove in the reverse reads
-    --mean_quality                Mean qualified quality value for keeping read (default: 15)
-    --trimming_quality            Trimming quality value for the sliding window (default: 15)
-
-### Binning options:
-
-    --refinem                     Enable bin refinement with refinem.
-    --refinem_db                  Path to refinem database
-    --no_checkm                   Disable bin QC and merging with checkm
-    --min_contig_size             Minimum contig size to be considered for binning (default: 1500)
-    --delta_cont                  Maximum increase in contamination to merge compatible bins (default: 5)
-    --merged_cont                 Maximum total contamination to merge compatible bins (default: 15)
-    --delta_compl                 Minimum increase in completion to merge compatible bins (default: 10)
-    --abs_delta_cov               Minimum coverage ratio to merge compatible bins (default: 0.75)
-    --delta_gc                    Maximum %GC difference to merge compatible bins (default: 3)
-    --ssu_evalue                  Evalue threshold to filter incongruent 16S (default 1e-6)
-
 ### `--igenomesIgnore`
 
 Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`.
+
+## Trimming options
+
+### `--adapter_forward`
+
+Sequence of 3' adapter to remove in the forward reads
+
+### `--adapter_reverse`
+
+Sequence of 3' adapter to remove in the reverse reads
+
+### `--mean_quality`
+
+Mean qualified quality value for keeping read (default: 15)
+
+### `--trimming_quality`
+
+Trimming quality value for the sliding window (default: 15)
+
+## Binning options
+
+### `--min_contig_size`
+
+Minimum contig size to be considered for binning (default: 1500)
 
 ## Job resources
 
