@@ -64,8 +64,9 @@ def helpMessage() {
       --skip_quast                  Skip metaQUAST
 
     Taxonomy:
-      --centrifuge_db [path]        Database for taxonomic binning with centrifuge (default: none). E.g. ftp://ftp.ccb.jhu.edu/pub/infphilo/centrifuge/data/p_compressed+h+v.tar.gz
+      --centrifuge_db [path]        Database for taxonomic binning with centrifuge (default: none). E.g. "ftp://ftp.ccb.jhu.edu/pub/infphilo/centrifuge/data/p_compressed+h+v.tar.gz"
       --skip_krona                  Skip creating a krona plot for taxonomic binning
+      --cat_db [path]               Database for taxonomic classification of metagenome assembled genomes (default: none). E.g. "tbb.bio.uu.nl/bastiaan/CAT_prepare/CAT_prepare_20190108.tar.gz"
 
     Binning options:
       --skip_binning                Skip metagenome binning
@@ -152,6 +153,7 @@ params.skip_quast = false
  */
 params.centrifuge_db = false
 params.skip_krona = false
+params.cat_db = false
 
 /*
  * long read preprocessing options
@@ -185,6 +187,14 @@ if(params.centrifuge_db){
         .set { file_centrifuge_db }
 } else {
     file_centrifuge_db = Channel.from()
+}
+
+if(params.cat_db){
+    Channel
+        .fromPath( "${params.cat_db}", checkIfExists: true )
+        .set { file_cat_db }
+} else {
+    file_cat_db = Channel.from()
 }
 
 if(!params.keep_phix) {
@@ -818,6 +828,7 @@ process metabat {
 
     output:
     set val(assembler), val(sample), file("MetaBAT2/*") into metabat_bins mode flatten
+    set val(assembler), val(sample), file("MetaBAT2/*") into metabat_bins_for_cat mode flatten
     set val(assembler), val(sample), file("MetaBAT2/*"), file(reads) into metabat_bins_quast_bins
 
     when:
@@ -1044,6 +1055,46 @@ process merge_quast_and_busco {
     """
 }
 
+/*
+ * CAT: Bin Annotation Tool (BAT) are pipelines for the taxonomic classification of long DNA sequences and metagenome assembled genomes (MAGs/bins)
+ */
+process cat_db {
+    tag "${database.baseName}"
+
+    input:
+    file(database) from file_cat_db
+
+    output:
+    set val("${database.toString().replace(".tar.gz", "")}"), file("catDB/*") into cat_db
+
+    script:
+    """
+    mkdir catDB
+    tar -xf ${database} -C catDB
+    """
+}
+
+metabat_bins_for_cat
+    .combine(cat_db)
+    .set { cat_input }
+
+process cat {
+    tag "${assembler}-${sample}-${db_name}"
+    publishDir "${params.outdir}/Taxonomy/${assembler}-${sample}", mode: 'copy'
+
+    input:
+    set val(assembler), val(sample), file("bins/*"), val(db_name), file("db/*") from cat_input
+
+    output:
+    file("*ORF2LCA.txt")
+    file("*.ORF2LCA.names.txt")
+
+    script:
+    """
+    CAT bins -b "bins/" -d "${db}" -t "${db}" -n "${task.cpus}" --top 6 -o "${assembler}-${sample}"
+    CAT add_names -i "${assembler}-${sample}_run.ORF2LCA.txt" -o "${assembler}-${sample}.ORF2LCA.names.txt" -t {taxonomy folder}
+    """
+}
 
 /*
  * STEP 4 - MultiQC
