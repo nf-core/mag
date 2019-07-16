@@ -52,7 +52,7 @@ The pipeline has special steps which allow the software versions used to be repo
 - `Project_multiqc_data/`
   - Directory containing parsed statistics from the different tools used in the pipeline
 
-For more information about how to use MultiQC reports, see http://multiqc.info
+For more information about how to use MultiQC reports, see <http://multiqc.info>
 
 ## Megahit
 
@@ -81,25 +81,3 @@ For more information about how to use MultiQC reports, see http://multiqc.info
   - reads mapped against the megahit assembly
 - `bins/sample_X.fa`
   - the putative genome bins retrieved by metabat
-
-## checkm
-
-[checkm](https://github.com/Ecogenomics/CheckM) Assess the quality of microbial genomes recovered from isolates, single cells, and metagenomes.
-
-**output directory: `results/checkm`**
-
-- `sample/`
-  - directory containing the improved bins
-- `sample_stats`
-  - directory containing stats about completeness and contamination of the bins, as well as plots.
-
-## refinem
-
-_(this process is optional)_
-
-[refinem](https://github.com/dparks1134/RefineM) is a companion tool to checkm, that refines and filter incongruent contigs from the genome bins.
-
-**output directory: `results/refinem`**
-
-- `sample.X.fa`
-  - the genome bins, improved by refinem
