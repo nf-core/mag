@@ -49,8 +49,6 @@ def helpMessage() {
       --mean_quality                Mean qualified quality value for keeping read (default: 15)
       --trimming_quality            Trimming quality value for the sliding window (default: 15)
       --keep_phix                   Keep reads similar to the Illumina internal standard PhiX genome (default: false)
-      --phix_reference              Download path for PhiX database
-                                    (default: "ftp://ftp.ncbi.nlm.nih.gov/genomes/genbank/viral/Enterobacteria_phage_phiX174_sensu_lato/all_assembly_versions/GCA_002596845.1_ASM259684v1/GCA_002596845.1_ASM259684v1_genomic.fna.gz")
 
     Long read preprocessing:
       --skip_adapter_trimming       Skip removing adapter sequences from long reads
@@ -58,14 +56,16 @@ def helpMessage() {
       --longreads_keep_percent      Keep this percent of bases (default: 90)
       --longreads_length_weight     The higher the more important is read length when choosing the best reads (default: 10)
       --keep_lambda                 Keep reads similar to the ONT internal standard Escherichia virus Lambda genome (default: false)
-      --lambda_reference            Download path for Escherichia virus Lambda genome
-                                    (default: "ftp://ftp.ncbi.nlm.nih.gov/genomes/genbank/viral/Escherichia_virus_Lambda/all_assembly_versions/GCA_000840245.1_ViralProj14204/GCA_000840245.1_ViralProj14204_genomic.fna.gz")
     
     Assembly:
       --skip_spades                 Skip Illumina-only SPAdes assembly
       --skip_spadeshybrid           Skip SPAdes hybrid assembly (only available when using manifest input)
       --skip_megahit                Skip MEGAHIT assembly
       --skip_quast                  Skip metaQUAST
+
+    Taxonomy:
+      --centrifuge_db [path]        Database for taxonomic binning with centrifuge (default: none). E.g. ftp://ftp.ccb.jhu.edu/pub/infphilo/centrifuge/data/p_compressed+h+v.tar.gz
+      --skip_krona                  Skip creating a krona plot for taxonomic binning
 
     Binning options:
       --skip_binning                Skip metagenome binning
@@ -148,6 +148,12 @@ params.skip_megahit = false
 params.skip_quast = false
 
 /*
+ * taxonomy options
+ */
+params.centrifuge_db = false
+params.skip_krona = false
+
+/*
  * long read preprocessing options
  */
 params.skip_adapter_trimming = false
@@ -171,6 +177,14 @@ if(!params.skip_busco){
         .set { file_busco_db }
 } else {
     Channel.from()
+}
+
+if(params.centrifuge_db){
+    Channel
+        .fromPath( "${params.centrifuge_db}", checkIfExists: true )
+        .set { file_centrifuge_db }
+} else {
+    file_centrifuge_db = Channel.from()
 }
 
 if(!params.keep_phix) {
@@ -518,7 +532,7 @@ if(!params.keep_phix) {
         set val(name), file(reads), file(genome), file(db) from trimmed_reads.combine(phix_db)
 
         output:
-        set val(name), file("*.fastq.gz") into (trimmed_reads_megahit, trimmed_reads_metabat, trimmed_reads_fastqc, trimmed_sr_spadeshybrid, trimmed_reads_spades)
+        set val(name), file("*.fastq.gz") into (trimmed_reads_megahit, trimmed_reads_metabat, trimmed_reads_fastqc, trimmed_sr_spadeshybrid, trimmed_reads_spades, trimmed_reads_centrifuge)
         file("${name}_remove_phix_log.txt")
 
         script:
@@ -540,7 +554,7 @@ if(!params.keep_phix) {
 
     }
 } else {
-    trimmed_reads.into {trimmed_reads_megahit; trimmed_reads_metabat; trimmed_reads_fastqc; trimmed_sr_spadeshybrid; trimmed_reads_spades}
+    trimmed_reads.into {trimmed_reads_megahit; trimmed_reads_metabat; trimmed_reads_fastqc; trimmed_sr_spadeshybrid; trimmed_reads_spades; trimmed_reads_centrifuge}
 }
 
 
@@ -558,6 +572,97 @@ process fastqc_trimmed {
     script:
     """
     fastqc -t "${task.cpus}" -q ${reads}
+    """
+}
+
+/*
+ * STEP - Taxonomic information
+ */
+
+process centrifuge_db_preparation {
+    input:
+    file(db) from file_centrifuge_db
+
+    output:
+    set val("${db.toString().replace(".tar.gz", "")}"), file("*.cf") into centrifuge_database
+
+    script:
+    """
+    tar -xf "${db}"
+    """
+}
+
+trimmed_reads_centrifuge
+    .combine(centrifuge_database)
+    .set { centrifuge_input }
+
+process centrifuge {
+    tag "${name}-${db_name}"
+    publishDir "${params.outdir}/Taxonomy/${name}", mode: 'copy'
+
+    input:
+    set val(name), file(reads), val(db_name), file(db) from centrifuge_input
+
+    output:
+    set val(name), file("kreport.txt") into centrifuge_kreport
+    file("report.txt")
+    file("results.txt")
+
+    script:
+    if ( !params.singleEnd ) {
+    """
+    centrifuge -x "${db_name}" \
+        -p "${task.cpus}" \
+        -1 "${reads[0]}" \
+        -2 "${reads[1]}" \
+        --report-file report.txt \
+        -S results.txt
+    centrifuge-kreport -x "${db_name}" results.txt > kreport.txt
+    """
+    }
+    else {
+    """
+    centrifuge -x "${db_name}" \
+        -p "${task.cpus}" \
+        -U "${reads}" \
+        --report-file report.txt \
+        -S results.txt
+    centrifuge-kreport -x "${db_name}" results.txt > kreport.txt
+    """
+    }
+}
+
+process krona_db {
+    output:
+    file("taxonomy/taxonomy.tab") into file_krona_db
+
+    when:
+    params.centrifuge_db && !params.skip_krona
+
+    script:
+    """
+    ktUpdateTaxonomy.sh taxonomy
+    """
+}
+
+centrifuge_kreport
+    .combine(file_krona_db)
+    .set { krona_input }
+
+process krona {
+    tag "${name}"
+    publishDir "${params.outdir}/Taxonomy/${name}", mode: 'copy'
+
+    input:
+    set val(name), file(kreport), file("taxonomy/taxonomy.tab") from krona_input
+
+    output:
+    file("*.html")
+
+    script:
+    """
+    cat "${kreport}" | cut -f 1,3 > results.krona
+    ktImportTaxonomy results.krona -tax taxonomy
     """
 }
 
