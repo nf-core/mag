@@ -1097,7 +1097,7 @@ process cat {
 
     script:
     """
-    CAT bins -b "bins/" -d database/ -t taxonomy/ -n "${task.cpus}" --top 6 -o "${assembler}-${sample}"
+    CAT bins -b "bins/" -d database/ -t taxonomy/ -n "${task.cpus}" --top 6 -o "${assembler}-${sample}" --I_know_what_Im_doing
     CAT add_names -i "${assembler}-${sample}_run.ORF2LCA.txt" -o "${assembler}-${sample}.ORF2LCA.names.txt" -t {taxonomy folder}
     """
 }
