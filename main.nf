@@ -1089,7 +1089,7 @@ process cat {
     publishDir "${params.outdir}/Taxonomy/${assembler}-${sample}", mode: 'copy'
 
     input:
-    set val(assembler), val(sample), file("bins/*"), val(db_name), file(database), file(taxonomy) from cat_input
+    set val(assembler), val(sample), file("bins/*"), val(db_name), file("database/*"), file("taxonomy/*") from cat_input
 
     output:
     file("*ORF2LCA.txt")
@@ -1097,7 +1097,7 @@ process cat {
 
     script:
     """
-    CAT bins -b "bins/" -d database/ -t taxonomy/ -n "${task.cpus}" --top 6 -o "${assembler}-${sample}" --I_know_what_Im_doing
+    CAT bins -b "bins/" -d database/ -t taxonomy/ -n "${task.cpus}" -s .fa --top 6 -o "${assembler}-${sample}" --I_know_what_Im_doing
     CAT add_names -i "${assembler}-${sample}_run.ORF2LCA.txt" -o "${assembler}-${sample}.ORF2LCA.names.txt" -t {taxonomy folder}
     """
 }
