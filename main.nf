@@ -608,15 +608,17 @@ trimmed_reads_centrifuge
 
 process centrifuge {
     tag "${name}-${db_name}"
-    publishDir "${params.outdir}/Taxonomy/${name}", mode: 'copy'
+    publishDir "${params.outdir}/Taxonomy/${name}", mode: 'copy',
+            saveAs: {filename -> filename.indexOf(".krona") == -1 ? filename : null}
 
     input:
     set val(name), file(reads), val(db_name), file(db) from centrifuge_input
 
     output:
-    set val(name), file("kreport.txt") into centrifuge_kreport
+    set val(name), file("results.krona") into centrifuge_to_krona
     file("report.txt")
     file("results.txt")
+    file("kreport.txt")
 
     script:
     if ( !params.singleEnd ) {
@@ -628,6 +630,7 @@ process centrifuge {
         --report-file report.txt \
         -S results.txt
     centrifuge-kreport -x "${db_name}" results.txt > kreport.txt
+    cat results.txt | cut -f 1,3 > results.krona
     """
     }
     else {
@@ -638,6 +641,7 @@ process centrifuge {
         --report-file report.txt \
         -S results.txt
     centrifuge-kreport -x "${db_name}" results.txt > kreport.txt
+    cat results.txt | cut -f 1,3 > results.krona
     """
     }
 }
@@ -655,7 +659,7 @@ process krona_db {
     """
 }
 
-centrifuge_kreport
+centrifuge_to_krona
     .combine(file_krona_db)
     .set { krona_input }
 
@@ -664,15 +668,14 @@ process krona {
     publishDir "${params.outdir}/Taxonomy/${name}", mode: 'copy'
 
     input:
-    set val(name), file(kreport), file("taxonomy/taxonomy.tab") from krona_input
+    set val(name), file(report), file("taxonomy/taxonomy.tab") from krona_input
 
     output:
     file("*.html")
 
     script:
     """
-    cat "${kreport}" | cut -f 1,3 > results.krona
-    ktImportTaxonomy results.krona -tax taxonomy
+    ktImportTaxonomy "$report" -tax taxonomy
     """
 }
 
