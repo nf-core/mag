@@ -67,6 +67,7 @@ def helpMessage() {
       --centrifuge_db [path]        Database for taxonomic binning with centrifuge (default: none). E.g. "ftp://ftp.ccb.jhu.edu/pub/infphilo/centrifuge/data/p_compressed+h+v.tar.gz"
       --skip_krona                  Skip creating a krona plot for taxonomic binning
       --cat_db [path]               Database for taxonomic classification of metagenome assembled genomes (default: none). E.g. "tbb.bio.uu.nl/bastiaan/CAT_prepare/CAT_prepare_20190108.tar.gz"
+                                    The zipped file needs to contain a folder named "*taxonomy*" and "*CAT_database*" that hold the respective files.
 
     Binning options:
       --skip_binning                Skip metagenome binning
@@ -831,7 +832,7 @@ process metabat {
 
     output:
     set val(assembler), val(sample), file("MetaBAT2/*") into metabat_bins mode flatten
-    set val(assembler), val(sample), file("MetaBAT2/*") into metabat_bins_for_cat mode flatten
+    set val(assembler), val(sample), file("MetaBAT2/*") into metabat_bins_for_cat
     set val(assembler), val(sample), file("MetaBAT2/*"), file(reads) into metabat_bins_quast_bins
 
     when:
@@ -1068,12 +1069,14 @@ process cat_db {
     file(database) from file_cat_db
 
     output:
-    set val("${database.toString().replace(".tar.gz", "")}"), file("catDB/*") into cat_db
+    set val("${database.toString().replace(".tar.gz", "")}"), file("database/*"), file("taxonomy/*") into cat_db
 
     script:
     """
     mkdir catDB
     tar -xf ${database} -C catDB
+    mv `find catDB/ -type d -name "*taxonomy*"` taxonomy/
+    mv `find catDB/ -type d -name "*CAT_database*"` database/
     """
 }
 
@@ -1086,7 +1089,7 @@ process cat {
     publishDir "${params.outdir}/Taxonomy/${assembler}-${sample}", mode: 'copy'
 
     input:
-    set val(assembler), val(sample), file("bins/*"), val(db_name), file("db/*") from cat_input
+    set val(assembler), val(sample), file("bins/*"), val(db_name), file(database), file(taxonomy) from cat_input
 
     output:
     file("*ORF2LCA.txt")
@@ -1094,7 +1097,7 @@ process cat {
 
     script:
     """
-    CAT bins -b "bins/" -d "${db}" -t "${db}" -n "${task.cpus}" --top 6 -o "${assembler}-${sample}"
+    CAT bins -b "bins/" -d database/ -t taxonomy/ -n "${task.cpus}" --top 6 -o "${assembler}-${sample}"
     CAT add_names -i "${assembler}-${sample}_run.ORF2LCA.txt" -o "${assembler}-${sample}.ORF2LCA.names.txt" -t {taxonomy folder}
     """
 }
