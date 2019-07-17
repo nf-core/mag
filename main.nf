@@ -65,6 +65,7 @@ def helpMessage() {
 
     Taxonomy:
       --centrifuge_db [path]        Database for taxonomic binning with centrifuge (default: none). E.g. "ftp://ftp.ccb.jhu.edu/pub/infphilo/centrifuge/data/p_compressed+h+v.tar.gz"
+      --kraken2_db [path]           Database for taxonomic binning with kraken2 (default: none). E.g. "ftp://ftp.ccb.jhu.edu/pub/data/kraken2_dbs/minikraken2_v2_8GB_201904_UPDATE.tgz"
       --skip_krona                  Skip creating a krona plot for taxonomic binning
       --cat_db [path]               Database for taxonomic classification of metagenome assembled genomes (default: none). E.g. "tbb.bio.uu.nl/bastiaan/CAT_prepare/CAT_prepare_20190108.tar.gz"
                                     The zipped file needs to contain a folder named "*taxonomy*" and "*CAT_database*" that hold the respective files.
@@ -153,6 +154,7 @@ params.skip_quast = false
  * taxonomy options
  */
 params.centrifuge_db = false
+params.kraken2_db = false
 params.skip_krona = false
 params.cat_db = false
 
@@ -188,6 +190,14 @@ if(params.centrifuge_db){
         .set { file_centrifuge_db }
 } else {
     file_centrifuge_db = Channel.from()
+}
+
+if(params.kraken2_db){
+    Channel
+        .fromPath( "${params.kraken2_db}", checkIfExists: true )
+        .set { file_kraken2_db }
+} else {
+    file_kraken2_db = Channel.from()
 }
 
 if(params.cat_db){
@@ -543,7 +553,7 @@ if(!params.keep_phix) {
         set val(name), file(reads), file(genome), file(db) from trimmed_reads.combine(phix_db)
 
         output:
-        set val(name), file("*.fastq.gz") into (trimmed_reads_megahit, trimmed_reads_metabat, trimmed_reads_fastqc, trimmed_sr_spadeshybrid, trimmed_reads_spades, trimmed_reads_centrifuge)
+        set val(name), file("*.fastq.gz") into (trimmed_reads_megahit, trimmed_reads_metabat, trimmed_reads_fastqc, trimmed_sr_spadeshybrid, trimmed_reads_spades, trimmed_reads_centrifuge, trimmed_reads_kraken2)
         file("${name}_remove_phix_log.txt")
 
         script:
@@ -609,14 +619,14 @@ trimmed_reads_centrifuge
 
 process centrifuge {
     tag "${name}-${db_name}"
-    publishDir "${params.outdir}/Taxonomy/${name}", mode: 'copy',
+    publishDir "${params.outdir}/Taxonomy/centrifuge/${name}", mode: 'copy',
             saveAs: {filename -> filename.indexOf(".krona") == -1 ? filename : null}
 
     input:
     set val(name), file(reads), val(db_name), file(db) from centrifuge_input
 
     output:
-    set val(name), file("results.krona") into centrifuge_to_krona
+    set val("centrifuge"), val(name), file("results.krona") into centrifuge_to_krona
     file("report.txt")
     file("results.txt")
     file("kreport.txt")
@@ -647,6 +657,65 @@ process centrifuge {
     }
 }
 
+process kraken2_db_preparation {
+    input:
+    file(db) from file_kraken2_db
+
+    output:
+    set val("${db.toString().replace(".tgz", "")}"), file("*") into kraken2_database
+
+    script:
+    """
+    tar -xf "${db}"
+    """
+}
+
+trimmed_reads_kraken2
+    .combine(kraken2_database)
+    .set { kraken2_input }
+
+process kraken2 {
+    tag "${name}-${db_name}"
+    publishDir "${params.outdir}/Taxonomy/kraken2/${name}", mode: 'copy',
+            saveAs: {filename -> filename.indexOf(".krona") == -1 ? filename : null}
+
+    input:
+    set val(name), file(reads), val(db_name), file("database/*") from kraken2_input
+
+    output:
+    set val("kraken2"), val(name), file("results.krona") into kraken2_to_krona
+    file("kraken2.kraken")
+    file("kraken2_report.txt")
+
+    script:
+    if ( !params.singleEnd ) {
+    """
+    kraken2 --use-names \
+        --report-zero-counts \
+        --threads "${task.cpus}" \
+        --db database \
+        --fastq-input \
+        --report kraken2_report.txt \
+        --paired "${reads[0]}" "${reads[1]}" \
+        > kraken2.kraken
+    cat kraken2.kraken | cut -f 2,3 > results.krona
+    """
+    }
+    else {
+    """
+    kraken2 --use-names \
+        --report-zero-counts \
+        --threads "${task.cpus}" \
+        --db database \
+        --fastq-input \
+        --report kraken2_report.txt \
+        "${reads}" \
+        > kraken2.kraken
+    cat kraken2.kraken | cut -f 2,3 > results.krona
+    """
+    }
+}
+
 process krona_db {
     output:
     file("taxonomy/taxonomy.tab") into file_krona_db
@@ -661,15 +730,16 @@ process krona_db {
 }
 
 centrifuge_to_krona
+    .mix(kraken2_to_krona)
     .combine(file_krona_db)
     .set { krona_input }
 
 process krona {
-    tag "${name}"
-    publishDir "${params.outdir}/Taxonomy/${name}", mode: 'copy'
+    tag "${classifier}-${name}"
+    publishDir "${params.outdir}/Taxonomy/${classifier}/${name}", mode: 'copy'
 
     input:
-    set val(name), file(report), file("taxonomy/taxonomy.tab") from krona_input
+    set val(classifier), val(name), file(report), file("taxonomy/taxonomy.tab") from krona_input
 
     output:
     file("*.html")

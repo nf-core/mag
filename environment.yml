@@ -32,3 +32,4 @@ dependencies:
   - spades=3.13.0
   - centrifuge=1.0.4_beta
   - cat=4.6
+  - kraken2=2.0.8_beta
