@@ -662,7 +662,7 @@ process kraken2_db_preparation {
     file(db) from file_kraken2_db
 
     output:
-    set val("${db.toString().replace(".tgz", "")}"), file("*.k2d") into kraken2_database
+    set val("${db.baseName}"), file("${db.baseName}/*.k2d") into kraken2_database
 
     script:
     """
