@@ -181,7 +181,7 @@ if(!params.skip_busco){
         .fromPath( "${params.busco_reference}", checkIfExists: true )
         .set { file_busco_db }
 } else {
-    Channel.from()
+    file_busco_db = Channel.from()
 }
 
 if(params.centrifuge_db){
