@@ -1162,13 +1162,17 @@ process cat {
     set val(assembler), val(sample), file("bins/*"), val(db_name), file("database/*"), file("taxonomy/*") from cat_input
 
     output:
-    file("*ORF2LCA.txt")
+    file("*.ORF2LCA.txt")
     file("*.ORF2LCA.names.txt")
+    file("*.predicted_proteins.faa")
+    file("*.predicted_proteins.gff")
+    file("*.log")
+    file("*.bin2classification.txt")
 
     script:
     """
     CAT bins -b "bins/" -d database/ -t taxonomy/ -n "${task.cpus}" -s .fa --top 6 -o "${assembler}-${sample}" --I_know_what_Im_doing
-    CAT add_names -i "${assembler}-${sample}_run.ORF2LCA.txt" -o "${assembler}-${sample}.ORF2LCA.names.txt" -t {taxonomy folder}
+    CAT add_names -i "${assembler}-${sample}_run.ORF2LCA.txt" -o "${assembler}-${sample}.ORF2LCA.names.txt" -t taxonomy/
     """
 }
 
