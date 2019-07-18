@@ -684,13 +684,12 @@ process kraken2 {
 
     output:
     set val("kraken2"), val(name), file("results.krona") into kraken2_to_krona
-    file("kraken2.kraken")
     file("kraken2_report.txt")
 
     script:
     if ( !params.singleEnd ) {
     """
-    kraken2 --use-names \
+    kraken2 \
         --report-zero-counts \
         --threads "${task.cpus}" \
         --db database \
@@ -703,7 +702,7 @@ process kraken2 {
     }
     else {
     """
-    kraken2 --use-names \
+    kraken2 \
         --report-zero-counts \
         --threads "${task.cpus}" \
         --db database \
