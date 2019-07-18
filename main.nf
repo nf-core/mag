@@ -1155,14 +1155,18 @@ metabat_bins_for_cat
 
 process cat {
     tag "${assembler}-${sample}-${db_name}"
-    publishDir "${params.outdir}/Taxonomy/${assembler}-${sample}", mode: 'copy'
+    publishDir "${params.outdir}/Taxonomy/${assembler}", mode: 'copy',
+    saveAs: {filename ->
+        if (filename.indexOf(".names.txt") > 0) filename
+        else "raw/$filename"
+    }
 
     input:
     set val(assembler), val(sample), file("bins/*"), val(db_name), file("database/*"), file("taxonomy/*") from cat_input
 
     output:
     file("*.ORF2LCA.txt")
-    file("*.ORF2LCA.names.txt")
+    file("*.names.txt")
     file("*.predicted_proteins.faa")
     file("*.predicted_proteins.gff")
     file("*.log")
@@ -1172,6 +1176,7 @@ process cat {
     """
     CAT bins -b "bins/" -d database/ -t taxonomy/ -n "${task.cpus}" -s .fa --top 6 -o "${assembler}-${sample}" --I_know_what_Im_doing
     CAT add_names -i "${assembler}-${sample}.ORF2LCA.txt" -o "${assembler}-${sample}.ORF2LCA.names.txt" -t taxonomy/
+    CAT add_names -i "${assembler}-${sample}.bin2classification.txt" -o "${assembler}-${sample}.bin2classification.names.txt" -t taxonomy/
     """
 }
 
