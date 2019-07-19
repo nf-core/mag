@@ -628,7 +628,6 @@ process centrifuge {
     output:
     set val("centrifuge"), val(name), file("results.krona") into centrifuge_to_krona
     file("report.txt")
-    file("results.txt")
     file("kreport.txt")
 
     script:
