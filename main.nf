@@ -720,7 +720,7 @@ process krona_db {
     file("taxonomy/taxonomy.tab") into file_krona_db
 
     when:
-    params.centrifuge_db && !params.skip_krona
+    ( params.centrifuge_db || params.kraken2_db ) && !params.skip_krona
 
     script:
     """
