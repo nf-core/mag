@@ -807,9 +807,7 @@ process spadeshybrid {
     file("${id}_log.txt")
 
     when:
-    params.manifest
-    !params.singleEnd
-    !params.skip_spadeshybrid
+    params.manifest && !params.singleEnd && !params.skip_spadeshybrid
      
     script:
     def maxmem = "${task.memory.toString().replaceAll(/[\sGB]/,'')}"
@@ -845,8 +843,7 @@ process spades {
     file("${id}_log.txt")
 
     when:
-    !params.singleEnd
-    !params.skip_spades
+    !params.singleEnd && !params.skip_spades
      
     script:
     def maxmem = "${task.memory.toString().replaceAll(/[\sGB]/,'')}"
