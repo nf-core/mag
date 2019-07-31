@@ -21,7 +21,7 @@ dependencies:
   - python=3.6.7
   - r=3.5.1
   - biopython=1.72
-  - krona=2.7
+  - krona=2.7.1
   - conda-forge::r-markdown=0.8
   - r-ggplot2=3.1.0
   - busco=3.0.2
@@ -30,3 +30,6 @@ dependencies:
   - porechop=0.2.3_seqan2.1.1
   - nanolyse=1.1.0
   - spades=3.13.0
+  - centrifuge=1.0.4_beta
+  - cat=4.6
+  - kraken2=2.0.8_beta

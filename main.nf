@@ -49,8 +49,6 @@ def helpMessage() {
       --mean_quality                Mean qualified quality value for keeping read (default: 15)
       --trimming_quality            Trimming quality value for the sliding window (default: 15)
       --keep_phix                   Keep reads similar to the Illumina internal standard PhiX genome (default: false)
-      --phix_reference              Download path for PhiX database
-                                    (default: "ftp://ftp.ncbi.nlm.nih.gov/genomes/genbank/viral/Enterobacteria_phage_phiX174_sensu_lato/all_assembly_versions/GCA_002596845.1_ASM259684v1/GCA_002596845.1_ASM259684v1_genomic.fna.gz")
 
     Long read preprocessing:
       --skip_adapter_trimming       Skip removing adapter sequences from long reads
@@ -58,14 +56,19 @@ def helpMessage() {
       --longreads_keep_percent      Keep this percent of bases (default: 90)
       --longreads_length_weight     The higher the more important is read length when choosing the best reads (default: 10)
       --keep_lambda                 Keep reads similar to the ONT internal standard Escherichia virus Lambda genome (default: false)
-      --lambda_reference            Download path for Escherichia virus Lambda genome
-                                    (default: "ftp://ftp.ncbi.nlm.nih.gov/genomes/genbank/viral/Escherichia_virus_Lambda/all_assembly_versions/GCA_000840245.1_ViralProj14204/GCA_000840245.1_ViralProj14204_genomic.fna.gz")
     
     Assembly:
       --skip_spades                 Skip Illumina-only SPAdes assembly
       --skip_spadeshybrid           Skip SPAdes hybrid assembly (only available when using manifest input)
       --skip_megahit                Skip MEGAHIT assembly
       --skip_quast                  Skip metaQUAST
+
+    Taxonomy:
+      --centrifuge_db [path]        Database for taxonomic binning with centrifuge (default: none). E.g. "ftp://ftp.ccb.jhu.edu/pub/infphilo/centrifuge/data/p_compressed+h+v.tar.gz"
+      --kraken2_db [path]           Database for taxonomic binning with kraken2 (default: none). E.g. "ftp://ftp.ccb.jhu.edu/pub/data/kraken2_dbs/minikraken2_v2_8GB_201904_UPDATE.tgz"
+      --skip_krona                  Skip creating a krona plot for taxonomic binning
+      --cat_db [path]               Database for taxonomic classification of metagenome assembled genomes (default: none). E.g. "tbb.bio.uu.nl/bastiaan/CAT_prepare/CAT_prepare_20190108.tar.gz"
+                                    The zipped file needs to contain a folder named "*taxonomy*" and "*CAT_database*" that hold the respective files.
 
     Binning options:
       --skip_binning                Skip metagenome binning
@@ -148,6 +151,14 @@ params.skip_megahit = false
 params.skip_quast = false
 
 /*
+ * taxonomy options
+ */
+params.centrifuge_db = false
+params.kraken2_db = false
+params.skip_krona = false
+params.cat_db = false
+
+/*
  * long read preprocessing options
  */
 params.skip_adapter_trimming = false
@@ -170,7 +181,31 @@ if(!params.skip_busco){
         .fromPath( "${params.busco_reference}", checkIfExists: true )
         .set { file_busco_db }
 } else {
-    Channel.from()
+    file_busco_db = Channel.from()
+}
+
+if(params.centrifuge_db){
+    Channel
+        .fromPath( "${params.centrifuge_db}", checkIfExists: true )
+        .set { file_centrifuge_db }
+} else {
+    file_centrifuge_db = Channel.from()
+}
+
+if(params.kraken2_db){
+    Channel
+        .fromPath( "${params.kraken2_db}", checkIfExists: true )
+        .set { file_kraken2_db }
+} else {
+    file_kraken2_db = Channel.from()
+}
+
+if(params.cat_db){
+    Channel
+        .fromPath( "${params.cat_db}", checkIfExists: true )
+        .set { file_cat_db }
+} else {
+    file_cat_db = Channel.from()
 }
 
 if(!params.keep_phix) {
@@ -518,7 +553,7 @@ if(!params.keep_phix) {
         set val(name), file(reads), file(genome), file(db) from trimmed_reads.combine(phix_db)
 
         output:
-        set val(name), file("*.fastq.gz") into (trimmed_reads_megahit, trimmed_reads_metabat, trimmed_reads_fastqc, trimmed_sr_spadeshybrid, trimmed_reads_spades)
+        set val(name), file("*.fastq.gz") into (trimmed_reads_megahit, trimmed_reads_metabat, trimmed_reads_fastqc, trimmed_sr_spadeshybrid, trimmed_reads_spades, trimmed_reads_centrifuge, trimmed_reads_kraken2)
         file("${name}_remove_phix_log.txt")
 
         script:
@@ -540,7 +575,7 @@ if(!params.keep_phix) {
 
     }
 } else {
-    trimmed_reads.into {trimmed_reads_megahit; trimmed_reads_metabat; trimmed_reads_fastqc; trimmed_sr_spadeshybrid; trimmed_reads_spades}
+    trimmed_reads.into {trimmed_reads_megahit; trimmed_reads_metabat; trimmed_reads_fastqc; trimmed_sr_spadeshybrid; trimmed_reads_spades; trimmed_reads_centrifuge}
 }
 
 
@@ -558,6 +593,158 @@ process fastqc_trimmed {
     script:
     """
     fastqc -t "${task.cpus}" -q ${reads}
+    """
+}
+
+/*
+ * STEP - Taxonomic information
+ */
+
+process centrifuge_db_preparation {
+    input:
+    file(db) from file_centrifuge_db
+
+    output:
+    set val("${db.toString().replace(".tar.gz", "")}"), file("*.cf") into centrifuge_database
+
+    script:
+    """
+    tar -xf "${db}"
+    """
+}
+
+trimmed_reads_centrifuge
+    .combine(centrifuge_database)
+    .set { centrifuge_input }
+
+process centrifuge {
+    tag "${name}-${db_name}"
+    publishDir "${params.outdir}/Taxonomy/centrifuge/${name}", mode: 'copy',
+            saveAs: {filename -> filename.indexOf(".krona") == -1 ? filename : null}
+
+    input:
+    set val(name), file(reads), val(db_name), file(db) from centrifuge_input
+
+    output:
+    set val("centrifuge"), val(name), file("results.krona") into centrifuge_to_krona
+    file("report.txt")
+    file("kreport.txt")
+
+    script:
+    if ( !params.singleEnd ) {
+    """
+    centrifuge -x "${db_name}" \
+        -p "${task.cpus}" \
+        -1 "${reads[0]}" \
+        -2 "${reads[1]}" \
+        --report-file report.txt \
+        -S results.txt
+    centrifuge-kreport -x "${db_name}" results.txt > kreport.txt
+    cat results.txt | cut -f 1,3 > results.krona
+    """
+    }
+    else {
+    """
+    centrifuge -x "${db_name}" \
+        -p "${task.cpus}" \
+        -U "${reads}" \
+        --report-file report.txt \
+        -S results.txt
+    centrifuge-kreport -x "${db_name}" results.txt > kreport.txt
+    cat results.txt | cut -f 1,3 > results.krona
+    """
+    }
+}
+
+process kraken2_db_preparation {
+    input:
+    file(db) from file_kraken2_db
+
+    output:
+    set val("${db.baseName}"), file("${db.baseName}/*.k2d") into kraken2_database
+
+    script:
+    """
+    tar -xf "${db}"
+    """
+}
+
+trimmed_reads_kraken2
+    .combine(kraken2_database)
+    .set { kraken2_input }
+
+process kraken2 {
+    tag "${name}-${db_name}"
+    publishDir "${params.outdir}/Taxonomy/kraken2/${name}", mode: 'copy',
+            saveAs: {filename -> filename.indexOf(".krona") == -1 ? filename : null}
+
+    input:
+    set val(name), file(reads), val(db_name), file("database/*") from kraken2_input
+
+    output:
+    set val("kraken2"), val(name), file("results.krona") into kraken2_to_krona
+    file("kraken2_report.txt")
+
+    script:
+    if ( !params.singleEnd ) {
+    """
+    kraken2 \
+        --report-zero-counts \
+        --threads "${task.cpus}" \
+        --db database \
+        --fastq-input \
+        --report kraken2_report.txt \
+        --paired "${reads[0]}" "${reads[1]}" \
+        > kraken2.kraken
+    cat kraken2.kraken | cut -f 2,3 > results.krona
+    """
+    }
+    else {
+    """
+    kraken2 \
+        --report-zero-counts \
+        --threads "${task.cpus}" \
+        --db database \
+        --fastq-input \
+        --report kraken2_report.txt \
+        "${reads}" \
+        > kraken2.kraken
+    cat kraken2.kraken | cut -f 2,3 > results.krona
+    """
+    }
+}
+
+process krona_db {
+    output:
+    file("taxonomy/taxonomy.tab") into file_krona_db
+
+    when:
+    ( params.centrifuge_db || params.kraken2_db ) && !params.skip_krona
+
+    script:
+    """
+    ktUpdateTaxonomy.sh taxonomy
+    """
+}
+
+centrifuge_to_krona
+    .mix(kraken2_to_krona)
+    .combine(file_krona_db)
+    .set { krona_input }
+
+process krona {
+    tag "${classifier}-${name}"
+    publishDir "${params.outdir}/Taxonomy/${classifier}/${name}", mode: 'copy'
+
+    input:
+    set val(classifier), val(name), file(report), file("taxonomy/taxonomy.tab") from krona_input
+
+    output:
+    file("*.html")
+
+    script:
+    """
+    ktImportTaxonomy "$report" -tax taxonomy
     """
 }
 
@@ -620,9 +807,7 @@ process spadeshybrid {
     file("${id}_log.txt")
 
     when:
-    params.manifest
-    !params.singleEnd
-    !params.skip_spadeshybrid
+    params.manifest && !params.singleEnd && !params.skip_spadeshybrid
      
     script:
     def maxmem = "${task.memory.toString().replaceAll(/[\sGB]/,'')}"
@@ -658,8 +843,7 @@ process spades {
     file("${id}_log.txt")
 
     when:
-    !params.singleEnd
-    !params.skip_spades
+    !params.singleEnd && !params.skip_spades
      
     script:
     def maxmem = "${task.memory.toString().replaceAll(/[\sGB]/,'')}"
@@ -713,6 +897,7 @@ process metabat {
 
     output:
     set val(assembler), val(sample), file("MetaBAT2/*") into metabat_bins mode flatten
+    set val(assembler), val(sample), file("MetaBAT2/*") into metabat_bins_for_cat
     set val(assembler), val(sample), file("MetaBAT2/*"), file(reads) into metabat_bins_quast_bins
 
     when:
@@ -939,6 +1124,57 @@ process merge_quast_and_busco {
     """
 }
 
+/*
+ * CAT: Bin Annotation Tool (BAT) are pipelines for the taxonomic classification of long DNA sequences and metagenome assembled genomes (MAGs/bins)
+ */
+process cat_db {
+    tag "${database.baseName}"
+
+    input:
+    file(database) from file_cat_db
+
+    output:
+    set val("${database.toString().replace(".tar.gz", "")}"), file("database/*"), file("taxonomy/*") into cat_db
+
+    script:
+    """
+    mkdir catDB
+    tar -xf ${database} -C catDB
+    mv `find catDB/ -type d -name "*taxonomy*"` taxonomy/
+    mv `find catDB/ -type d -name "*CAT_database*"` database/
+    """
+}
+
+metabat_bins_for_cat
+    .combine(cat_db)
+    .set { cat_input }
+
+process cat {
+    tag "${assembler}-${sample}-${db_name}"
+    publishDir "${params.outdir}/Taxonomy/${assembler}", mode: 'copy',
+    saveAs: {filename ->
+        if (filename.indexOf(".names.txt") > 0) filename
+        else "raw/$filename"
+    }
+
+    input:
+    set val(assembler), val(sample), file("bins/*"), val(db_name), file("database/*"), file("taxonomy/*") from cat_input
+
+    output:
+    file("*.ORF2LCA.txt")
+    file("*.names.txt")
+    file("*.predicted_proteins.faa")
+    file("*.predicted_proteins.gff")
+    file("*.log")
+    file("*.bin2classification.txt")
+
+    script:
+    """
+    CAT bins -b "bins/" -d database/ -t taxonomy/ -n "${task.cpus}" -s .fa --top 6 -o "${assembler}-${sample}" --I_know_what_Im_doing
+    CAT add_names -i "${assembler}-${sample}.ORF2LCA.txt" -o "${assembler}-${sample}.ORF2LCA.names.txt" -t taxonomy/
+    CAT add_names -i "${assembler}-${sample}.bin2classification.txt" -o "${assembler}-${sample}.bin2classification.names.txt" -t taxonomy/
+    """
+}
 
 /*
  * STEP 4 - MultiQC
