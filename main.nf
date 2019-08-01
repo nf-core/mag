@@ -984,7 +984,7 @@ process busco {
     script:
     if( workflow.profile.toString().indexOf("conda") == -1) {
         """
-        cp -r /opt/conda/pkgs/augustus-3.3-pl526hcfae127_4/config augustus_config/
+        cp -r /opt/conda/pkgs/augustus*/config augustus_config/
         export AUGUSTUS_CONFIG_PATH=augustus_config
 
         run_BUSCO.py \
