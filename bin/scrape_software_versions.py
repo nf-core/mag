@@ -17,6 +17,10 @@ regexes = {
     'NanoLyse': ['v_nanolyse.txt', r"NanoLyse (\S+)"],
     'SPAdes': ['v_spades.txt', r"SPAdes v(\S+)"],
     'BUSCO': ['v_busco.txt', r"BUSCO (\S+)"],
+    'centrifuge': ['v_centrifuge.txt', r"centrifuge-class version (\S+)"],
+    'Kraken2': ['v_kraken2.txt', r"Kraken version (\S+)-beta"],
+    'Quast': ['v_quast.txt', r"QUAST v(\S+)"],
+    'CAT': ['v_cat.txt', r"CAT v(\S+)"]
 }
 results = OrderedDict()
 results['nf-core/mag'] = '<span style="color:#999999;\">N/A</span>'
@@ -32,7 +36,10 @@ results['porechop'] = '<span style="color:#999999;\">N/A</span>'
 results['NanoLyse'] = '<span style="color:#999999;\">N/A</span>'
 results['SPAdes'] = '<span style="color:#999999;\">N/A</span>'
 results['BUSCO'] = '<span style="color:#999999;\">N/A</span>'
-results['Bandage'] = '<span style="color:#999999;\">N/A</span>'
+results['centrifuge'] = '<span style="color:#999999;\">N/A</span>'
+results['Kraken2'] = '<span style="color:#999999;\">N/A</span>'
+results['CAT'] = '<span style="color:#999999;\">N/A</span>'
+results['Quast'] = '<span style="color:#999999;\">N/A</span>'
 
 # Search each file using its regex
 for k, v in regexes.items():

@@ -15,7 +15,6 @@ Daniel Straub <d4straub@gmail.com>
 
 
 def helpMessage() {
-    // TODO nf-core: Add to this help message with new command line parameters
     log.info nfcoreHeader()
     log.info"""
     Usage:
@@ -272,28 +271,30 @@ log.info nfcoreHeader()
 def summary = [:]
 if(workflow.revision) summary['Pipeline Release'] = workflow.revision
 summary['Run Name']         = custom_runName ?: workflow.runName
-// TODO nf-core: Report custom parameters here
-summary['Reads']            = params.reads
-summary['Fasta Ref']        = params.fasta
-summary['Data Type']        = params.singleEnd ? 'Single-End' : 'Paired-End'
-summary['Max Resources']    = "$params.max_memory memory, $params.max_cpus cpus, $params.max_time time per job"
+summary['Reads']                = params.reads
+summary['Fasta Ref']            = params.fasta
+summary['Data Type']            = params.singleEnd ? 'Single-End' : 'Paired-End'
+if(params.centrifuge_db) summary['Centrifuge Db']   = params.centrifuge_db
+if(params.kraken2_db) summary['Kraken2 Db']         = params.kraken2_db
+if(!params.skip_busco) summary['Busco Reference']   = params.busco_reference 
+summary['Max Resources']        = "$params.max_memory memory, $params.max_cpus cpus, $params.max_time time per job"
 if(workflow.containerEngine) summary['Container'] = "$workflow.containerEngine - $workflow.container"
-summary['Output dir']       = params.outdir
-summary['Launch dir']       = workflow.launchDir
-summary['Working dir']      = workflow.workDir
-summary['Script dir']       = workflow.projectDir
-summary['User']             = workflow.userName
+summary['Output dir']           = params.outdir
+summary['Launch dir']           = workflow.launchDir
+summary['Working dir']          = workflow.workDir
+summary['Script dir']           = workflow.projectDir
+summary['User']                 = workflow.userName
 if(workflow.profile == 'awsbatch'){
-   summary['AWS Region']    = params.awsregion
-   summary['AWS Queue']     = params.awsqueue
+   summary['AWS Region']        = params.awsregion
+   summary['AWS Queue']         = params.awsqueue
 }
-summary['Config Profile'] = workflow.profile
+summary['Config Profile']       = workflow.profile
 if(params.config_profile_description) summary['Config Description'] = params.config_profile_description
 if(params.config_profile_contact)     summary['Config Contact']     = params.config_profile_contact
 if(params.config_profile_url)         summary['Config URL']         = params.config_profile_url
 if(params.email) {
-  summary['E-mail Address']  = params.email
-  summary['MultiQC maxsize'] = params.maxMultiqcEmailFileSize
+  summary['E-mail Address']     = params.email
+  summary['MultiQC maxsize']    = params.maxMultiqcEmailFileSize
 }
 log.info summary.collect { k,v -> "${k.padRight(18)}: $v" }.join("\n")
 log.info "\033[2m----------------------------------------------------\033[0m"
@@ -333,7 +334,6 @@ process get_software_versions {
     file "software_versions.csv"
 
     script:
-    // TODO nf-core: Get all tools to print their version number here
     """
     echo $workflow.manifest.version > v_pipeline.txt
     echo $workflow.manifest.nextflowVersion > v_nextflow.txt
@@ -348,6 +348,10 @@ process get_software_versions {
     NanoLyse --version > v_nanolyse.txt
     spades.py --version > v_spades.txt
     run_BUSCO.py --version > v_busco.txt
+    centrifuge --version > v_centrifuge.txt
+    kraken2 -v > v_kraken2.txt
+    CAT -v > v_cat.txt
+    quast -v > v_quast.txt
 
     scrape_software_versions.py > software_versions_mqc.yaml
     """
@@ -1198,7 +1202,6 @@ process multiqc {
     script:
     rtitle = custom_runName ? "--title \"$custom_runName\"" : ''
     rfilename = custom_runName ? "--filename " + custom_runName.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
-    // TODO nf-core: Specify which MultiQC modules to use with -m for a faster run time
     """
     multiqc -f ${rtitle} ${rfilename} --config ${multiqc_config} .
     """
@@ -1258,7 +1261,6 @@ workflow.onComplete {
     email_fields['summary']['Nextflow Build'] = workflow.nextflow.build
     email_fields['summary']['Nextflow Compile Timestamp'] = workflow.nextflow.timestamp
 
-    // TODO nf-core: If not using MultiQC, strip out this code (including params.maxMultiqcEmailFileSize)
     // On success try attach the multiqc report
     def mqc_report = null
     try {
