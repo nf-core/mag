@@ -3,7 +3,6 @@ from __future__ import print_function
 from collections import OrderedDict
 import re
 
-# TODO nf-core: Add additional regexes for new tools in process get_software_versions
 regexes = {
     'nf-core/mag': ['v_pipeline.txt', r"(\S+)"],
     'Nextflow': ['v_nextflow.txt', r"(\S+)"],
