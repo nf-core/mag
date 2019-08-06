@@ -1,7 +1,5 @@
 # ![mag](https://raw.githubusercontent.com/nf-core/mag/master/docs/images/mag_logo.png)
 
-## nf-core/mag
-
 **Assembly, binning and annotation of metagenomes**.
 
 [![Build Status](https://travis-ci.com/nf-core/mag.svg?branch=master)](https://travis-ci.com/nf-core/mag)
