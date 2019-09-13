@@ -885,24 +885,29 @@ process quast {
     """
 }
 
+// TODO
+// input tests for bowtie2
+// what we need is (i) assemblies, sample, assembler
+// NO NEED FOR READS IN METABAT OUTPUT.
+// // (ii) reads
+// Channel
+//     .from(assembly_spades_to_metabat)
+//     .mix(assembly_megahit_to_metabat)
+//     .mix(assembly_spadeshybrid_to_metabat)
+//     .into { bowtie2_input }
 
 
 /*
  * STEP 3 - Binning
  */
-process metabat {
+process bowtie2 {
     tag "$assembler-$sample"
-    publishDir "${params.outdir}/", mode: 'copy',
-        saveAs: {filename -> (filename.indexOf(".bam") == -1 && filename.indexOf(".fastq.gz") == -1) ? "GenomeBinning/$filename" : null}
 
     input:
     set val(assembler), val(sample), file(assembly), file(reads) from assembly_spades_to_metabat.mix(assembly_megahit_to_metabat).mix(assembly_spadeshybrid_to_metabat)
-    val(min_size) from params.min_contig_size
 
     output:
-    set val(assembler), val(sample), file("MetaBAT2/*") into metabat_bins mode flatten
-    set val(assembler), val(sample), file("MetaBAT2/*") into metabat_bins_for_cat
-    set val(assembler), val(sample), file("MetaBAT2/*"), file(reads) into metabat_bins_quast_bins
+    set val(assembler), val(sample), file(assembly), file(reads), file("${assembler}-${sample}.bam"), file("${assembler}-${sample}.bam.bai") into assembly_mapping_for_metabat
 
     when:
     !params.skip_binning
@@ -916,13 +921,6 @@ process metabat {
             samtools view -@ "${task.cpus}" -bS | \
             samtools sort -@ "${task.cpus}" -o "${name}.bam"
         samtools index "${name}.bam"
-        jgi_summarize_bam_contig_depths --outputDepth depth.txt "${name}.bam"
-        metabat2 -t "${task.cpus}" -i "${assembly}" -a depth.txt -o "MetaBAT2/${name}" -m ${min_size}
-
-        #if bin foolder is empty
-        if [ -z \"\$(ls -A MetaBAT2)\" ]; then 
-            cp ${assembly} MetaBAT2/${assembler}-${assembly}
-        fi
         """
     } else {
         """
@@ -931,16 +929,39 @@ process metabat {
             samtools view -@ "${task.cpus}" -bS | \
             samtools sort -@ "${task.cpus}" -o "${name}.bam"
         samtools index "${name}.bam"
-        jgi_summarize_bam_contig_depths --outputDepth depth.txt "${name}.bam"
-        metabat2 -t "${task.cpus}" -i "${assembly}" -a depth.txt -o "MetaBAT2/${name}" -m ${min_size}
-
-        #if bin foolder is empty
-        if [ -z \"\$(ls -A MetaBAT2)\" ]; then 
-            cp ${assembly} MetaBAT2/${assembler}-${assembly}
-        fi
         """
     }
+}
 
+
+process metabat {
+    tag "$assembler-$sample"
+    publishDir "${params.outdir}/", mode: 'copy',
+        saveAs: {filename -> (filename.indexOf(".bam") == -1 && filename.indexOf(".fastq.gz") == -1) ? "GenomeBinning/$filename" : null}
+
+    input:
+    set val(assembler), val(sample), file(assembly), file(reads), file(bam), file(index) from assembly_mapping_for_metabat
+    val(min_size) from params.min_contig_size
+
+    output:
+    set val(assembler), val(sample), file("MetaBAT2/*") into metabat_bins mode flatten
+    set val(assembler), val(sample), file("MetaBAT2/*") into metabat_bins_for_cat
+    set val(assembler), val(sample), file("MetaBAT2/*"), file(reads) into metabat_bins_quast_bins
+
+    when:
+    !params.skip_binning
+
+    script:
+    def name = "${assembler}-${sample}"
+    """
+    jgi_summarize_bam_contig_depths --outputDepth depth.txt "${bam}"
+    metabat2 -t "${task.cpus}" -i "${assembly}" -a depth.txt -o "MetaBAT2/${name}" -m ${min_size}
+
+    #if bin folder is empty
+    if [ -z \"\$(ls -A MetaBAT2)\" ]; then 
+        cp ${assembly} MetaBAT2/${assembler}-${assembly}
+    fi
+    """
 }
 
 
