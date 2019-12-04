@@ -885,21 +885,16 @@ process quast {
     """
 }
 
-// TODO
-// input tests for bowtie2
-// what we need is (i) assemblies, sample, assembler
-// NO NEED FOR READS IN METABAT OUTPUT.
-// // (ii) reads
-Channel
-    .from(assembly_spades_to_metabat)
-    .mix(assembly_megahit_to_metabat)
-    .mix(assembly_spadeshybrid_to_metabat)
+bowtie2_input = Channel.empty()
+
+assembly_all_to_metabat = assembly_spades_to_metabat.mix(assembly_megahit_to_metabat,assembly_spadeshybrid_to_metabat)
+
+(assembly_all_to_metabat, assembly_all_to_metabat_copy) = assembly_all_to_metabat.into(2)
+
+bowtie2_input = assembly_all_to_metabat
     .combine(trimmed_reads_bowtie2)
-    .dump()
-    .into { test_p; bowtie2_input }
 
-println(test_p)
-
+(bowtie2_input, bowtie2_input_copy) = bowtie2_input.into(2)
 
 /*
  * STEP 3 - Binning
@@ -908,16 +903,16 @@ process bowtie2 {
     tag "$assembler-$sample"
 
     input:
-    set val(assembler), val(sample), file(assembly), val(_), file(reads) from bowtie2_input
+    set val(assembler), val(sample), file(assembly), val(sampleToMap), file(reads) from bowtie2_input
 
     output:
-    set val(assembler), val(sample), file(assembly), file(reads), file("${assembler}-${sample}.bam"), file("${assembler}-${sample}.bam.bai") into assembly_mapping_for_metabat
+    set val(assembler), val(sample), file("${assembler}-${sample}-${sampleToMap}.bam"), file("${assembler}-${sample}-${sampleToMap}.bam.bai") into assembly_mapping_for_metabat
 
     when:
     !params.skip_binning
 
     script:
-    def name = "${assembler}-${sample}"
+    def name = "${assembler}-${sample}-${sampleToMap}"
     if ( !params.singleEnd ) {
         """
         bowtie2-build --threads "${task.cpus}" "${assembly}" ref
@@ -937,6 +932,9 @@ process bowtie2 {
     }
 }
 
+assembly_mapping_for_metabat = assembly_mapping_for_metabat.groupTuple(by:[0,1]).join(assembly_all_to_metabat_copy)
+
+assembly_mapping_for_metabat = assembly_mapping_for_metabat.dump(tag:'assembly_mapping_for_metabat')
 
 process metabat {
     tag "$assembler-$sample"
@@ -944,13 +942,13 @@ process metabat {
         saveAs: {filename -> (filename.indexOf(".bam") == -1 && filename.indexOf(".fastq.gz") == -1) ? "GenomeBinning/$filename" : null}
 
     input:
-    set val(assembler), val(sample), file(assembly), file(reads), file(bam), file(index) from assembly_mapping_for_metabat
+    set val(assembler), val(sample), file(bam), file(index), val(sampleCopy), file(assembly) from assembly_mapping_for_metabat
     val(min_size) from params.min_contig_size
 
     output:
     set val(assembler), val(sample), file("MetaBAT2/*") into metabat_bins mode flatten
     set val(assembler), val(sample), file("MetaBAT2/*") into metabat_bins_for_cat
-    set val(assembler), val(sample), file("MetaBAT2/*"), file(reads) into metabat_bins_quast_bins
+    set val(assembler), val(sample), file("MetaBAT2/*") into metabat_bins_quast_bins
 
     when:
     !params.skip_binning
@@ -958,7 +956,7 @@ process metabat {
     script:
     def name = "${assembler}-${sample}"
     """
-    jgi_summarize_bam_contig_depths --outputDepth depth.txt "${bam}"
+    jgi_summarize_bam_contig_depths --outputDepth depth.txt ${bam}
     metabat2 -t "${task.cpus}" -i "${assembly}" -a depth.txt -o "MetaBAT2/${name}" -m ${min_size}
 
     #if bin folder is empty
@@ -1100,7 +1098,7 @@ process quast_bins {
     publishDir "${params.outdir}/GenomeBinning/QC/", mode: 'copy'
 
     input:
-    set val(assembler), val(sample), file(assembly), file(reads) from metabat_bins_quast_bins
+    set val(assembler), val(sample), file(assembly) from metabat_bins_quast_bins
 
     output:
     file("QUAST/*")
