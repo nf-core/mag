@@ -557,7 +557,7 @@ if(!params.keep_phix) {
         set val(name), file(reads), file(genome), file(db) from trimmed_reads.combine(phix_db)
 
         output:
-        set val(name), file("*.fastq.gz") into (trimmed_reads_megahit, trimmed_reads_metabat, trimmed_reads_fastqc, trimmed_sr_spadeshybrid, trimmed_reads_spades, trimmed_reads_centrifuge, trimmed_reads_kraken2)
+        set val(name), file("*.fastq.gz") into (trimmed_reads_megahit, trimmed_reads_metabat, trimmed_reads_fastqc, trimmed_sr_spadeshybrid, trimmed_reads_spades, trimmed_reads_centrifuge, trimmed_reads_kraken2, trimmed_reads_bowtie2)
         file("${name}_remove_phix_log.txt")
 
         script:
@@ -766,7 +766,7 @@ process megahit {
 
     output:
     set val("MEGAHIT"), val("$name"), file("MEGAHIT/${name}.contigs.fa") into assembly_megahit_to_quast
-    set val("MEGAHIT"), val("$name"), file("MEGAHIT/${name}.contigs.fa"), file(reads) into assembly_megahit_to_metabat
+    set val("MEGAHIT"), val("$name"), file("MEGAHIT/${name}.contigs.fa") into assembly_megahit_to_metabat
     file("MEGAHIT/*.log")
 
     when:
@@ -806,7 +806,7 @@ process spadeshybrid {
     output:
     set id, val("SPAdesHybrid"), file("${id}_graph.gfa") into assembly_graph_spadeshybrid
     set val("SPAdesHybrid"), val("$id"), file("${id}_scaffolds.fasta") into assembly_spadeshybrid_to_quast
-    set val("SPAdesHybrid"), val("$id"), file("${id}_scaffolds.fasta"), file(sr) into assembly_spadeshybrid_to_metabat
+    set val("SPAdesHybrid"), val("$id"), file("${id}_scaffolds.fasta") into assembly_spadeshybrid_to_metabat
     file("${id}_contigs.fasta")
     file("${id}_log.txt")
 
@@ -842,7 +842,7 @@ process spades {
     output:
     set id, val("SPAdes"), file("${id}_graph.gfa") into assembly_graph_spades
     set val("SPAdes"), val("$id"), file("${id}_scaffolds.fasta") into assembly_spades_to_quast
-    set val("SPAdes"), val("$id"), file("${id}_scaffolds.fasta"), file(sr) into assembly_spades_to_metabat
+    set val("SPAdes"), val("$id"), file("${id}_scaffolds.fasta") into assembly_spades_to_metabat
     file("${id}_contigs.fasta")
     file("${id}_log.txt")
 
@@ -890,11 +890,15 @@ process quast {
 // what we need is (i) assemblies, sample, assembler
 // NO NEED FOR READS IN METABAT OUTPUT.
 // // (ii) reads
-// Channel
-//     .from(assembly_spades_to_metabat)
-//     .mix(assembly_megahit_to_metabat)
-//     .mix(assembly_spadeshybrid_to_metabat)
-//     .into { bowtie2_input }
+Channel
+    .from(assembly_spades_to_metabat)
+    .mix(assembly_megahit_to_metabat)
+    .mix(assembly_spadeshybrid_to_metabat)
+    .combine(trimmed_reads_bowtie2)
+    .dump()
+    .into { test_p; bowtie2_input }
+
+println(test_p)
 
 
 /*
@@ -904,7 +908,7 @@ process bowtie2 {
     tag "$assembler-$sample"
 
     input:
-    set val(assembler), val(sample), file(assembly), file(reads) from assembly_spades_to_metabat.mix(assembly_megahit_to_metabat).mix(assembly_spadeshybrid_to_metabat)
+    set val(assembler), val(sample), file(assembly), val(_), file(reads) from bowtie2_input
 
     output:
     set val(assembler), val(sample), file(assembly), file(reads), file("${assembler}-${sample}.bam"), file("${assembler}-${sample}.bam.bai") into assembly_mapping_for_metabat
