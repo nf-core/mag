@@ -90,7 +90,16 @@ More information on the [Centrifuge](https://ccb.jhu.edu/software/centrifuge/) w
 
 ### CAT
 
-<!-- TODO: CAT output -->
+[CAT](https://github.com/dutilh/CAT) is a toolkit for annotating contigs and bins from metagenome-assembled-genomes. The MAG pipeline uses CAT to assign taxonomy to the contigs from megahit and/or SPAdes, and to assign taxonomy to genome bins based on the taxnomy of the contigs
+
+**Output directory: `results/Taxonomy/${assembler}`**
+
+- `*.ORF2LCA.txt`: Tab-delimited files containing the lineage of each contig
+- `*.names.txt`: Taxonomy classification, with names of each lineage levels instead og taxids.
+- `*.predicted_proteins.faa`: predicted protein sequences for each genome bins, in fasta format
+- `*.predicted_proteins.gff`: predicted protein features for each genome bins, in gff format
+- `*.log`: log files.
+- `*.bin2classification.txt`: Taxonomy classification of the genome bins.
 
 ## Assembly
 
