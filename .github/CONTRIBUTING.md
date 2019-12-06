@@ -6,9 +6,7 @@ We try to manage the required tasks for nf-core/mag using GitHub issues, you pro
 
 However, don't be put off by this template - other more general issues and suggestions are welcome! Contributions to the code are even more welcome ;)
 
-> > If you need help using or modifying nf-core/mag then the best place to ask is on the pipeline channel on [Slack](https://nf-co.re/join/slack).
-
-
+> If you need help using or modifying nf-core/mag then the best place to ask is on the pipeline channel on [Slack](https://nf-co.re/join/slack).
 
 ## Contribution workflow
 If you'd like to write some code for nf-core/mag, the standard workflow
@@ -23,7 +21,6 @@ is as follows:
 4. Submit a Pull Request against the `dev` branch and wait for the code to be reviewed and merged.
 
 If you're not used to this workflow with git, you can start with some [basic docs from GitHub](https://help.github.com/articles/fork-a-repo/) or even their [excellent interactive tutorial](https://try.github.io/).
-
 
 ## Tests
 When you create a pull request with changes, [Travis CI](https://travis-ci.org/) will run automatic tests.
