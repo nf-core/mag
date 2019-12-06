@@ -1,4 +1,4 @@
-FROM nfcore/base
+FROM nfcore/base:1.7
 
 LABEL authors="Hadrien Gourlé <hadrien.gourle@slu.se>, Daniel Straub <d4straub@gmail.com>" \
     description="Docker image containing all requirements for nf-core/mag pipeline"
