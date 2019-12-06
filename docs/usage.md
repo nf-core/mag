@@ -191,15 +191,15 @@ You have to specify one of the options below to activate it.
 
 ### `--centrifuge_db`
 
-Database for taxonomic binning with centrifuge (default: none). E.g. "ftp://ftp.ccb.jhu.edu/pub/infphilo/centrifuge/data/p_compressed+h+v.tar.gz"
+Database for taxonomic binning with centrifuge (default: none). E.g. "<ftp://ftp.ccb.jhu.edu/pub/infphilo/centrifuge/data/p_compressed+h+v.tar.gz>"
 
 ### `--kraken2_db`
 
-Database for taxonomic binning with kraken2 (default: none). E.g. "ftp://ftp.ccb.jhu.edu/pub/data/kraken2_dbs/minikraken2_v2_8GB_201904_UPDATE.tgz"
+Database for taxonomic binning with kraken2 (default: none). E.g. "<ftp://ftp.ccb.jhu.edu/pub/data/kraken2_dbs/minikraken2_v2_8GB_201904_UPDATE.tgz>"
 
 ### `--cat_db`
 
-Database for taxonomic classification of metagenome assembled genomes (default: none). E.g. "tbb.bio.uu.nl/bastiaan/CAT*prepare/CAT_prepare_20190108.tar.gz"
+Database for taxonomic classification of metagenome assembled genomes (default: none). E.g. "<tbb.bio.uu.nl/bastiaan/CAT*prepare/CAT_prepare_20190108.tar.gz>"
 The zipped file needs to contain a folder named "\_taxonomy*" and "_CAT_database_" that hold the respective files.
 
 ## Binning options
@@ -210,8 +210,8 @@ Minimum contig size to be considered for binning (default: 1500)
 
 ### `--busco_reference`
 
-Download path for BUSCO database, available databases are listed here: https://busco.ezlab.org/
-(default: https://busco.ezlab.org/datasets/bacteria_odb9.tar.gz)
+Download path for BUSCO database, available databases are listed here: <https://busco.ezlab.org/>
+(default: <https://busco.ezlab.org/datasets/bacteria_odb9.tar.gz>)
 
 ## Job resources
 
