@@ -2,43 +2,43 @@
 
 ## Table of contents
 
-- [Introduction](#general-nextflow-info)
-- [Running the pipeline](#running-the-pipeline)
-- [Updating the pipeline](#updating-the-pipeline)
-- [Reproducibility](#reproducibility)
-- [Main arguments](#main-arguments)
-  - [`-profile`](#-profile-single-dash)
-    - [`docker`](#docker)
-    - [`awsbatch`](#awsbatch)
-    - [`standard`](#standard)
-    - [`none`](#none)
-  - [`--reads`](#--reads)
-  - [`--singleEnd`](#--singleend)
-  - [`--manifest`](#--manifest)
-- [Optional Arguments](#optional-arguments)
-  - [Trimming Options](#trimming-options)
-  - [Trimming Options for long reads](#trimming-options-for-long-reads)
-  - [Taxonomic classification](#taxonomic-classification)
-  - [Binning Options](#binning-options)
-- [Job Resources](#job-resources)
-- [Automatic resubmission](#automatic-resubmission)
-- [Custom resource requests](#custom-resource-requests)
-- [AWS batch specific parameters](#aws-batch-specific-parameters)
-  - [`-awsbatch`](#-awsbatch)
-  - [`--awsqueue`](#--awsqueue)
-  - [`--awsregion`](#--awsregion)
-- [Other command line parameters](#other-command-line-parameters)
-  - [`--outdir`](#--outdir)
-  - [`--email`](#--email)
-  - [`-name`](#-name-single-dash)
-  - [`-resume`](#-resume-single-dash)
-  - [`-c`](#-c-single-dash)
-  - [`--max_memory`](#--max_memory)
-  - [`--max_time`](#--max_time)
-  - [`--max_cpus`](#--max_cpus)
-  - [`--plaintext_emails`](#--plaintext_emails)
-  - [`--sampleLevel`](#--sampleLevel)
-  - [`--multiqc_config`](#--multiqc_config)
+-   [Introduction](#general-nextflow-info)
+-   [Running the pipeline](#running-the-pipeline)
+-   [Updating the pipeline](#updating-the-pipeline)
+-   [Reproducibility](#reproducibility)
+-   [Main arguments](#main-arguments)
+    -   [`-profile`](#-profile-single-dash)
+        -   [`docker`](#docker)
+        -   [`awsbatch`](#awsbatch)
+        -   [`standard`](#standard)
+        -   [`none`](#none)
+    -   [`--reads`](#--reads)
+    -   [`--singleEnd`](#--singleend)
+    -   [`--manifest`](#--manifest)
+-   [Optional Arguments](#optional-arguments)
+    -   [Trimming Options](#trimming-options)
+    -   [Trimming Options for long reads](#trimming-options-for-long-reads)
+    -   [Taxonomic classification](#taxonomic-classification)
+    -   [Binning Options](#binning-options)
+-   [Job Resources](#job-resources)
+-   [Automatic resubmission](#automatic-resubmission)
+-   [Custom resource requests](#custom-resource-requests)
+-   [AWS batch specific parameters](#aws-batch-specific-parameters)
+    -   [`-awsbatch`](#-awsbatch)
+    -   [`--awsqueue`](#--awsqueue)
+    -   [`--awsregion`](#--awsregion)
+-   [Other command line parameters](#other-command-line-parameters)
+    -   [`--outdir`](#--outdir)
+    -   [`--email`](#--email)
+    -   [`-name`](#-name-single-dash)
+    -   [`-resume`](#-resume-single-dash)
+    -   [`-c`](#-c-single-dash)
+    -   [`--max_memory`](#--max_memory)
+    -   [`--max_time`](#--max_time)
+    -   [`--max_cpus`](#--max_cpus)
+    -   [`--plaintext_emails`](#--plaintext_emails)
+    -   [`--sampleLevel`](#--sampleLevel)
+    -   [`--multiqc_config`](#--multiqc_config)
 
 ## General Nextflow info
 
@@ -93,20 +93,20 @@ Use this parameter to choose a configuration profile. Profiles can give configur
 
 If `-profile` is not specified at all the pipeline will be run locally and expects all software to be installed and available on the `PATH`.
 
-- `awsbatch`
-  - A generic configuration profile to be used with AWS Batch.
-- `conda`
-  - A generic configuration profile to be used with [conda](https://conda.io/docs/)
-  - Pulls most software from [Bioconda](https://bioconda.github.io/)
-- `docker`
-  - A generic configuration profile to be used with [Docker](http://docker.com/)
-  - Pulls software from dockerhub: [`nfcore/mag`](http://hub.docker.com/r/nfcore/mag/)
-- `singularity`
-  - A generic configuration profile to be used with [Singularity](http://singularity.lbl.gov/)
-  - Pulls software from DockerHub: [`nfcore/mag`](http://hub.docker.com/r/nfcore/mag/)
-- `test`
-  - A profile with a complete configuration for automated testing
-  - Includes links to test data so needs no other parameters
+-   `awsbatch`
+    -   A generic configuration profile to be used with AWS Batch.
+-   `conda`
+    -   A generic configuration profile to be used with [conda](https://conda.io/docs/)
+    -   Pulls most software from [Bioconda](https://bioconda.github.io/)
+-   `docker`
+    -   A generic configuration profile to be used with [Docker](http://docker.com/)
+    -   Pulls software from dockerhub: [`nfcore/mag`](http://hub.docker.com/r/nfcore/mag/)
+-   `singularity`
+    -   A generic configuration profile to be used with [Singularity](http://singularity.lbl.gov/)
+    -   Pulls software from DockerHub: [`nfcore/mag`](http://hub.docker.com/r/nfcore/mag/)
+-   `test`, `test_hybrid`
+    -   Profiles with a complete configuration for automated testing
+    -   Includes links to test data so needs no other parameters
 
 ### `--reads`
 
