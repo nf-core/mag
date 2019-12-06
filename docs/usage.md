@@ -104,8 +104,8 @@ If `-profile` is not specified at all the pipeline will be run locally and expec
 - `singularity`
   - A generic configuration profile to be used with [Singularity](http://singularity.lbl.gov/)
   - Pulls software from DockerHub: [`nfcore/mag`](http://hub.docker.com/r/nfcore/mag/)
-- `test`
-  - A profile with a complete configuration for automated testing
+- `test`, `test_hybrid`
+  - Profiles with a complete configuration for automated testing
   - Includes links to test data so needs no other parameters
 
 ### `--reads`
