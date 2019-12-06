@@ -6,7 +6,7 @@ We try to manage the required tasks for nf-core/mag using GitHub issues, you pro
 
 However, don't be put off by this template - other more general issues and suggestions are welcome! Contributions to the code are even more welcome ;)
 
-> If you need help using or modifying nf-core/mag then the best place to ask is on the pipeline channel on [Slack](https://nf-core-invite.herokuapp.com/).
+> > If you need help using or modifying nf-core/mag then the best place to ask is on the pipeline channel on [Slack](https://nf-co.re/join/slack).
 
 
 
@@ -44,4 +44,4 @@ If there are any failures then the automated tests fail.
 These tests are run both with the latest available version of Nextflow and also the minimum required version that is stated in the pipeline code.
 
 ## Getting help
-For further information/help, please consult the [nf-core/mag documentation](https://github.com/nf-core/mag#documentation) and don't hesitate to get in touch on the pipeline channel on [Slack](https://nf-core-invite.herokuapp.com/).
+For further information/help, please consult the [nf-core/mag documentation](https://github.com/nf-core/mag#documentation) and don't hesitate to get in touch on the pipeline channel on [Slack](https://nfcore.slack.com/channels/mag).
