@@ -508,23 +508,15 @@ process fastp {
     file("fastp.*")
 
     script:
-    if ( !params.singleEnd ) {
-        """
-        fastp -w "${task.cpus}" -q "${qual}" --cut_by_quality5 \
-            --cut_by_quality3 --cut_mean_quality "${trim_qual}"\
-            --adapter_sequence=${adapter} --adapter_sequence_r2=${adapter_reverse} \
-            -i "${reads[0]}" -I "${reads[1]}" \
-            -o ${name}_trimmed_R1.fastq.gz -O ${name}_trimmed_R2.fastq.gz
-        """
-    }
-    else {
-        """
-        fastp -w "${task.cpus}" -q "${qual}" --cut_by_quality5 \
-            --cut_by_quality3 --cut_mean_quality "${trim_qual}"\
-            --adapter_sequence="${adapter}" --adapter_sequence_r2="${adapter_reverse}" \
-            -i ${reads} -o "${name}_trimmed.fastq.gz"
-        """
-    }
+    def pe_input = params.singleEnd ? '' :  "-I \"${reads[1]}\""
+    def pe_output1 = params.singleEnd ? "-o \"${name}_trimmed.fastq.gz\"" :  "-o \"${name}_trimmed_R1.fastq.gz\""
+    def pe_output2 = params.singleEnd ? '' :  "-O \"${name}_trimmed_R2.fastq.gz\""
+    """
+    fastp -w "${task.cpus}" -q "${qual}" --cut_by_quality5 \
+        --cut_by_quality3 --cut_mean_quality "${trim_qual}"\
+        --adapter_sequence=${adapter} --adapter_sequence_r2=${adapter_reverse} \
+        -i "${reads[0]}" $pe_input $pe_output1 $pe_output2
+    """
 }
 
 /*
@@ -635,29 +627,16 @@ process centrifuge {
     file("kreport.txt")
 
     script:
-    if ( !params.singleEnd ) {
+    def input = params.singleEnd ? "-U \"${reads}\"" :  "-1 \"${reads[0]}\" -2 \"${reads[1]}\""
     """
     centrifuge -x "${db_name}" \
         -p "${task.cpus}" \
-        -1 "${reads[0]}" \
-        -2 "${reads[1]}" \
         --report-file report.txt \
-        -S results.txt
+        -S results.txt \
+        $input
     centrifuge-kreport -x "${db_name}" results.txt > kreport.txt
     cat results.txt | cut -f 1,3 > results.krona
     """
-    }
-    else {
-    """
-    centrifuge -x "${db_name}" \
-        -p "${task.cpus}" \
-        -U "${reads}" \
-        --report-file report.txt \
-        -S results.txt
-    centrifuge-kreport -x "${db_name}" results.txt > kreport.txt
-    cat results.txt | cut -f 1,3 > results.krona
-    """
-    }
 }
 
 process kraken2_db_preparation {
@@ -690,7 +669,7 @@ process kraken2 {
     file("kraken2_report.txt")
 
     script:
-    if ( !params.singleEnd ) {
+    def input = params.singleEnd ? "\"${reads}\"" :  "--paired \"${reads[0]}\" \"${reads[1]}\""
     """
     kraken2 \
         --report-zero-counts \
@@ -698,24 +677,10 @@ process kraken2 {
         --db database \
         --fastq-input \
         --report kraken2_report.txt \
-        --paired "${reads[0]}" "${reads[1]}" \
+        $input \
         > kraken2.kraken
     cat kraken2.kraken | cut -f 2,3 > results.krona
     """
-    }
-    else {
-    """
-    kraken2 \
-        --report-zero-counts \
-        --threads "${task.cpus}" \
-        --db database \
-        --fastq-input \
-        --report kraken2_report.txt \
-        "${reads}" \
-        > kraken2.kraken
-    cat kraken2.kraken | cut -f 2,3 > results.krona
-    """
-    }
 }
 
 process krona_db {
@@ -773,17 +738,10 @@ process megahit {
     !params.skip_megahit
 
     script:
-    if ( !params.singleEnd ) {
+    def input = params.singleEnd ? "-r \"${reads}\"" :  "-1 \"${reads[0]}\" -2 \"${reads[1]}\""
     """
-    megahit -t "${task.cpus}" -1 "${reads[0]}" -2 "${reads[1]}" -o MEGAHIT \
-        --out-prefix "${name}"
+    megahit -t "${task.cpus}" $input -o MEGAHIT --out-prefix "${name}"
     """
-    }
-    else {
-    """
-    megahit -t "${task.cpus}" -r ${reads} -o MEGAHIT --out-prefix "${name}"
-    """
-    }
 }
 
 
@@ -913,23 +871,14 @@ process bowtie2 {
 
     script:
     def name = "${assembler}-${sample}-${sampleToMap}"
-    if ( !params.singleEnd ) {
+    def input = params.singleEnd ? "-U \"${reads}\"" :  "-1 \"${reads[0]}\" -2 \"${reads[1]}\""
         """
         bowtie2-build --threads "${task.cpus}" "${assembly}" ref
-        bowtie2 -p "${task.cpus}" -x ref -1 "${reads[0]}" -2 "${reads[1]}" | \
+        bowtie2 -p "${task.cpus}" -x ref $input | \
             samtools view -@ "${task.cpus}" -bS | \
             samtools sort -@ "${task.cpus}" -o "${name}.bam"
         samtools index "${name}.bam"
         """
-    } else {
-        """
-        bowtie2-build --threads "${task.cpus}" "${assembly}" ref
-        bowtie2 -p "${task.cpus}" -x ref -U ${reads} | \
-            samtools view -@ "${task.cpus}" -bS | \
-            samtools sort -@ "${task.cpus}" -o "${name}.bam"
-        samtools index "${name}.bam"
-        """
-    }
 }
 
 assembly_mapping_for_metabat = assembly_mapping_for_metabat.groupTuple(by:[0,1]).join(assembly_all_to_metabat_copy)
