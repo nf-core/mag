@@ -781,10 +781,10 @@ process spadeshybrid {
         --pe1-2 ${sr[1]} \
         --nanopore ${lr} \
         -o spades
-    cp spades/assembly_graph_with_scaffolds.gfa ${id}_graph.gfa
-    cp spades/scaffolds.fasta ${id}_scaffolds.fasta
-    cp spades/contigs.fasta ${id}_contigs.fasta
-    cp spades/spades.log ${id}_log.txt
+    mv spades/assembly_graph_with_scaffolds.gfa ${id}_graph.gfa
+    mv spades/scaffolds.fasta ${id}_scaffolds.fasta
+    mv spades/contigs.fasta ${id}_contigs.fasta
+    mv spades/spades.log ${id}_log.txt
     """
 }
 
@@ -816,10 +816,10 @@ process spades {
         --pe1-1 ${sr[0]} \
         --pe1-2 ${sr[1]} \
         -o spades
-    cp spades/assembly_graph_with_scaffolds.gfa ${id}_graph.gfa
-    cp spades/scaffolds.fasta ${id}_scaffolds.fasta
-    cp spades/contigs.fasta ${id}_contigs.fasta
-    cp spades/spades.log ${id}_log.txt
+    mv spades/assembly_graph_with_scaffolds.gfa ${id}_graph.gfa
+    mv spades/scaffolds.fasta ${id}_scaffolds.fasta
+    mv spades/contigs.fasta ${id}_contigs.fasta
+    mv spades/spades.log ${id}_log.txt
     """
 }
 
