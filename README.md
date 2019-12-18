@@ -1,16 +1,25 @@
 # ![mag](https://raw.githubusercontent.com/nf-core/mag/master/docs/images/mag_logo.png)
 
-## nf-core/mag
-
 **Assembly, binning and annotation of metagenomes**.
 
 [![Build Status](https://travis-ci.com/nf-core/mag.svg?branch=master)](https://travis-ci.com/nf-core/mag)
-[![Nextflow](https://img.shields.io/badge/nextflow-%E2%89%A50.32.0-brightgreen.svg)](https://www.nextflow.io/)
+[![Nextflow](https://img.shields.io/badge/nextflow-%E2%89%A519.01.0-brightgreen.svg)](https://www.nextflow.io/)
 
 [![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg)](http://bioconda.github.io/)
 [![Docker](https://img.shields.io/docker/automated/nfcore/mag.svg)](https://hub.docker.com/r/nfcore/mag)
 
 ## Introduction
+
+This pipeline is for assembly, binning and annotation of metagenomes.
+It supports both short and long reads, quality trims the reads and adapters with [https://github.com/OpenGene/fastp](fastp) and [https://github.com/rrwick/Porechop](porechop) and performs basic QC with [https://www.bioinformatics.babraham.ac.uk/projects/fastqc/](fastqc).
+
+The pipeline then:
+
+- assigns taxonomy to reads using [https://ccb.jhu.edu/software/centrifuge/](centrifuge) and/or [https://ccb.jhu.edu/software/kraken2/](kraken2)
+- performs assembly using [https://github.com/voutcn/megahit](megahit) and [http://cab.spbu.ru/software/spades/](spades), and checks their quality using [http://quast.sourceforge.net/quast](quast)
+- performs metagenome binning using [https://bitbucket.org/berkeleylab/metabat/src/master/](metabat2), and checks the quality of the genome bins using [https://busco.ezlab.org/](busco)
+
+Furthermore, the pipeline creates various reports in the results directory specified, including a [https://multiqc.info/](multiqc) report summarizing some of the findings and software versions.
 
 The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It comes with docker containers making installation trivial and results highly reproducible.
 
@@ -26,8 +35,6 @@ The nf-core/mag pipeline comes with documentation about the pipeline, found in t
 3. [Running the pipeline](docs/usage.md)
 4. [Output and how to interpret the results](docs/output.md)
 5. [Troubleshooting](https://nf-co.re/usage/troubleshooting)
-
-<!-- TODO nf-core: Add a brief overview of what the pipeline does and how it works -->
 
 ## Credits
 

@@ -15,7 +15,6 @@ Daniel Straub <d4straub@gmail.com>
 
 
 def helpMessage() {
-    // TODO nf-core: Add to this help message with new command line parameters
     log.info nfcoreHeader()
     log.info"""
     Usage:
@@ -272,28 +271,30 @@ log.info nfcoreHeader()
 def summary = [:]
 if(workflow.revision) summary['Pipeline Release'] = workflow.revision
 summary['Run Name']         = custom_runName ?: workflow.runName
-// TODO nf-core: Report custom parameters here
-summary['Reads']            = params.reads
-summary['Fasta Ref']        = params.fasta
-summary['Data Type']        = params.singleEnd ? 'Single-End' : 'Paired-End'
-summary['Max Resources']    = "$params.max_memory memory, $params.max_cpus cpus, $params.max_time time per job"
+summary['Reads']                = params.reads
+summary['Fasta Ref']            = params.fasta
+summary['Data Type']            = params.singleEnd ? 'Single-End' : 'Paired-End'
+if(params.centrifuge_db) summary['Centrifuge Db']   = params.centrifuge_db
+if(params.kraken2_db) summary['Kraken2 Db']         = params.kraken2_db
+if(!params.skip_busco) summary['Busco Reference']   = params.busco_reference 
+summary['Max Resources']        = "$params.max_memory memory, $params.max_cpus cpus, $params.max_time time per job"
 if(workflow.containerEngine) summary['Container'] = "$workflow.containerEngine - $workflow.container"
-summary['Output dir']       = params.outdir
-summary['Launch dir']       = workflow.launchDir
-summary['Working dir']      = workflow.workDir
-summary['Script dir']       = workflow.projectDir
-summary['User']             = workflow.userName
+summary['Output dir']           = params.outdir
+summary['Launch dir']           = workflow.launchDir
+summary['Working dir']          = workflow.workDir
+summary['Script dir']           = workflow.projectDir
+summary['User']                 = workflow.userName
 if(workflow.profile == 'awsbatch'){
-   summary['AWS Region']    = params.awsregion
-   summary['AWS Queue']     = params.awsqueue
+   summary['AWS Region']        = params.awsregion
+   summary['AWS Queue']         = params.awsqueue
 }
-summary['Config Profile'] = workflow.profile
+summary['Config Profile']       = workflow.profile
 if(params.config_profile_description) summary['Config Description'] = params.config_profile_description
 if(params.config_profile_contact)     summary['Config Contact']     = params.config_profile_contact
 if(params.config_profile_url)         summary['Config URL']         = params.config_profile_url
 if(params.email) {
-  summary['E-mail Address']  = params.email
-  summary['MultiQC maxsize'] = params.maxMultiqcEmailFileSize
+  summary['E-mail Address']     = params.email
+  summary['MultiQC maxsize']    = params.maxMultiqcEmailFileSize
 }
 log.info summary.collect { k,v -> "${k.padRight(18)}: $v" }.join("\n")
 log.info "\033[2m----------------------------------------------------\033[0m"
@@ -333,7 +334,6 @@ process get_software_versions {
     file "software_versions.csv"
 
     script:
-    // TODO nf-core: Get all tools to print their version number here
     """
     echo $workflow.manifest.version > v_pipeline.txt
     echo $workflow.manifest.nextflowVersion > v_nextflow.txt
@@ -348,6 +348,10 @@ process get_software_versions {
     NanoLyse --version > v_nanolyse.txt
     spades.py --version > v_spades.txt
     run_BUSCO.py --version > v_busco.txt
+    centrifuge --version > v_centrifuge.txt
+    kraken2 -v > v_kraken2.txt
+    CAT -v > v_cat.txt
+    quast -v > v_quast.txt
 
     scrape_software_versions.py > software_versions_mqc.yaml
     """
@@ -504,23 +508,15 @@ process fastp {
     file("fastp.*")
 
     script:
-    if ( !params.singleEnd ) {
-        """
-        fastp -w "${task.cpus}" -q "${qual}" --cut_by_quality5 \
-            --cut_by_quality3 --cut_mean_quality "${trim_qual}"\
-            --adapter_sequence=${adapter} --adapter_sequence_r2=${adapter_reverse} \
-            -i "${reads[0]}" -I "${reads[1]}" \
-            -o ${name}_trimmed_R1.fastq.gz -O ${name}_trimmed_R2.fastq.gz
-        """
-    }
-    else {
-        """
-        fastp -w "${task.cpus}" -q "${qual}" --cut_by_quality5 \
-            --cut_by_quality3 --cut_mean_quality "${trim_qual}"\
-            --adapter_sequence="${adapter}" --adapter_sequence_r2="${adapter_reverse}" \
-            -i ${reads} -o "${name}_trimmed.fastq.gz"
-        """
-    }
+    def pe_input = params.singleEnd ? '' :  "-I \"${reads[1]}\""
+    def pe_output1 = params.singleEnd ? "-o \"${name}_trimmed.fastq.gz\"" :  "-o \"${name}_trimmed_R1.fastq.gz\""
+    def pe_output2 = params.singleEnd ? '' :  "-O \"${name}_trimmed_R2.fastq.gz\""
+    """
+    fastp -w "${task.cpus}" -q "${qual}" --cut_by_quality5 \
+        --cut_by_quality3 --cut_mean_quality "${trim_qual}"\
+        --adapter_sequence=${adapter} --adapter_sequence_r2=${adapter_reverse} \
+        -i "${reads[0]}" $pe_input $pe_output1 $pe_output2
+    """
 }
 
 /*
@@ -553,7 +549,7 @@ if(!params.keep_phix) {
         set val(name), file(reads), file(genome), file(db) from trimmed_reads.combine(phix_db)
 
         output:
-        set val(name), file("*.fastq.gz") into (trimmed_reads_megahit, trimmed_reads_metabat, trimmed_reads_fastqc, trimmed_sr_spadeshybrid, trimmed_reads_spades, trimmed_reads_centrifuge, trimmed_reads_kraken2)
+        set val(name), file("*.fastq.gz") into (trimmed_reads_megahit, trimmed_reads_metabat, trimmed_reads_fastqc, trimmed_sr_spadeshybrid, trimmed_reads_spades, trimmed_reads_centrifuge, trimmed_reads_kraken2, trimmed_reads_bowtie2)
         file("${name}_remove_phix_log.txt")
 
         script:
@@ -631,29 +627,16 @@ process centrifuge {
     file("kreport.txt")
 
     script:
-    if ( !params.singleEnd ) {
+    def input = params.singleEnd ? "-U \"${reads}\"" :  "-1 \"${reads[0]}\" -2 \"${reads[1]}\""
     """
     centrifuge -x "${db_name}" \
         -p "${task.cpus}" \
-        -1 "${reads[0]}" \
-        -2 "${reads[1]}" \
         --report-file report.txt \
-        -S results.txt
+        -S results.txt \
+        $input
     centrifuge-kreport -x "${db_name}" results.txt > kreport.txt
     cat results.txt | cut -f 1,3 > results.krona
     """
-    }
-    else {
-    """
-    centrifuge -x "${db_name}" \
-        -p "${task.cpus}" \
-        -U "${reads}" \
-        --report-file report.txt \
-        -S results.txt
-    centrifuge-kreport -x "${db_name}" results.txt > kreport.txt
-    cat results.txt | cut -f 1,3 > results.krona
-    """
-    }
 }
 
 process kraken2_db_preparation {
@@ -686,7 +669,7 @@ process kraken2 {
     file("kraken2_report.txt")
 
     script:
-    if ( !params.singleEnd ) {
+    def input = params.singleEnd ? "\"${reads}\"" :  "--paired \"${reads[0]}\" \"${reads[1]}\""
     """
     kraken2 \
         --report-zero-counts \
@@ -694,24 +677,10 @@ process kraken2 {
         --db database \
         --fastq-input \
         --report kraken2_report.txt \
-        --paired "${reads[0]}" "${reads[1]}" \
+        $input \
         > kraken2.kraken
     cat kraken2.kraken | cut -f 2,3 > results.krona
     """
-    }
-    else {
-    """
-    kraken2 \
-        --report-zero-counts \
-        --threads "${task.cpus}" \
-        --db database \
-        --fastq-input \
-        --report kraken2_report.txt \
-        "${reads}" \
-        > kraken2.kraken
-    cat kraken2.kraken | cut -f 2,3 > results.krona
-    """
-    }
 }
 
 process krona_db {
@@ -762,24 +731,17 @@ process megahit {
 
     output:
     set val("MEGAHIT"), val("$name"), file("MEGAHIT/${name}.contigs.fa") into assembly_megahit_to_quast
-    set val("MEGAHIT"), val("$name"), file("MEGAHIT/${name}.contigs.fa"), file(reads) into assembly_megahit_to_metabat
+    set val("MEGAHIT"), val("$name"), file("MEGAHIT/${name}.contigs.fa") into assembly_megahit_to_metabat
     file("MEGAHIT/*.log")
 
     when:
     !params.skip_megahit
 
     script:
-    if ( !params.singleEnd ) {
+    def input = params.singleEnd ? "-r \"${reads}\"" :  "-1 \"${reads[0]}\" -2 \"${reads[1]}\""
     """
-    megahit -t "${task.cpus}" -1 "${reads[0]}" -2 "${reads[1]}" -o MEGAHIT \
-        --out-prefix "${name}"
+    megahit -t "${task.cpus}" $input -o MEGAHIT --out-prefix "${name}"
     """
-    }
-    else {
-    """
-    megahit -t "${task.cpus}" -r ${reads} -o MEGAHIT --out-prefix "${name}"
-    """
-    }
 }
 
 
@@ -802,7 +764,7 @@ process spadeshybrid {
     output:
     set id, val("SPAdesHybrid"), file("${id}_graph.gfa") into assembly_graph_spadeshybrid
     set val("SPAdesHybrid"), val("$id"), file("${id}_scaffolds.fasta") into assembly_spadeshybrid_to_quast
-    set val("SPAdesHybrid"), val("$id"), file("${id}_scaffolds.fasta"), file(sr) into assembly_spadeshybrid_to_metabat
+    set val("SPAdesHybrid"), val("$id"), file("${id}_scaffolds.fasta") into assembly_spadeshybrid_to_metabat
     file("${id}_contigs.fasta")
     file("${id}_log.txt")
 
@@ -819,10 +781,10 @@ process spadeshybrid {
         --pe1-2 ${sr[1]} \
         --nanopore ${lr} \
         -o spades
-    cp spades/assembly_graph_with_scaffolds.gfa ${id}_graph.gfa
-    cp spades/scaffolds.fasta ${id}_scaffolds.fasta
-    cp spades/contigs.fasta ${id}_contigs.fasta
-    cp spades/spades.log ${id}_log.txt
+    mv spades/assembly_graph_with_scaffolds.gfa ${id}_graph.gfa
+    mv spades/scaffolds.fasta ${id}_scaffolds.fasta
+    mv spades/contigs.fasta ${id}_contigs.fasta
+    mv spades/spades.log ${id}_log.txt
     """
 }
 
@@ -838,7 +800,7 @@ process spades {
     output:
     set id, val("SPAdes"), file("${id}_graph.gfa") into assembly_graph_spades
     set val("SPAdes"), val("$id"), file("${id}_scaffolds.fasta") into assembly_spades_to_quast
-    set val("SPAdes"), val("$id"), file("${id}_scaffolds.fasta"), file(sr) into assembly_spades_to_metabat
+    set val("SPAdes"), val("$id"), file("${id}_scaffolds.fasta") into assembly_spades_to_metabat
     file("${id}_contigs.fasta")
     file("${id}_log.txt")
 
@@ -854,10 +816,10 @@ process spades {
         --pe1-1 ${sr[0]} \
         --pe1-2 ${sr[1]} \
         -o spades
-    cp spades/assembly_graph_with_scaffolds.gfa ${id}_graph.gfa
-    cp spades/scaffolds.fasta ${id}_scaffolds.fasta
-    cp spades/contigs.fasta ${id}_contigs.fasta
-    cp spades/spades.log ${id}_log.txt
+    mv spades/assembly_graph_with_scaffolds.gfa ${id}_graph.gfa
+    mv spades/scaffolds.fasta ${id}_scaffolds.fasta
+    mv spades/contigs.fasta ${id}_contigs.fasta
+    mv spades/spades.log ${id}_log.txt
     """
 }
 
@@ -881,62 +843,76 @@ process quast {
     """
 }
 
+bowtie2_input = Channel.empty()
 
+assembly_all_to_metabat = assembly_spades_to_metabat.mix(assembly_megahit_to_metabat,assembly_spadeshybrid_to_metabat)
+
+(assembly_all_to_metabat, assembly_all_to_metabat_copy) = assembly_all_to_metabat.into(2)
+
+bowtie2_input = assembly_all_to_metabat
+    .combine(trimmed_reads_bowtie2)
+
+(bowtie2_input, bowtie2_input_copy) = bowtie2_input.into(2)
 
 /*
  * STEP 3 - Binning
  */
+process bowtie2 {
+    tag "$assembler-$sample"
+
+    input:
+    set val(assembler), val(sample), file(assembly), val(sampleToMap), file(reads) from bowtie2_input
+
+    output:
+    set val(assembler), val(sample), file("${assembler}-${sample}-${sampleToMap}.bam"), file("${assembler}-${sample}-${sampleToMap}.bam.bai") into assembly_mapping_for_metabat
+
+    when:
+    !params.skip_binning
+
+    script:
+    def name = "${assembler}-${sample}-${sampleToMap}"
+    def input = params.singleEnd ? "-U \"${reads}\"" :  "-1 \"${reads[0]}\" -2 \"${reads[1]}\""
+        """
+        bowtie2-build --threads "${task.cpus}" "${assembly}" ref
+        bowtie2 -p "${task.cpus}" -x ref $input | \
+            samtools view -@ "${task.cpus}" -bS | \
+            samtools sort -@ "${task.cpus}" -o "${name}.bam"
+        samtools index "${name}.bam"
+        """
+}
+
+assembly_mapping_for_metabat = assembly_mapping_for_metabat.groupTuple(by:[0,1]).join(assembly_all_to_metabat_copy)
+
+assembly_mapping_for_metabat = assembly_mapping_for_metabat.dump(tag:'assembly_mapping_for_metabat')
+
 process metabat {
     tag "$assembler-$sample"
     publishDir "${params.outdir}/", mode: 'copy',
         saveAs: {filename -> (filename.indexOf(".bam") == -1 && filename.indexOf(".fastq.gz") == -1) ? "GenomeBinning/$filename" : null}
 
     input:
-    set val(assembler), val(sample), file(assembly), file(reads) from assembly_spades_to_metabat.mix(assembly_megahit_to_metabat).mix(assembly_spadeshybrid_to_metabat)
+    set val(assembler), val(sample), file(bam), file(index), val(sampleCopy), file(assembly) from assembly_mapping_for_metabat
     val(min_size) from params.min_contig_size
 
     output:
     set val(assembler), val(sample), file("MetaBAT2/*") into metabat_bins mode flatten
     set val(assembler), val(sample), file("MetaBAT2/*") into metabat_bins_for_cat
-    set val(assembler), val(sample), file("MetaBAT2/*"), file(reads) into metabat_bins_quast_bins
+    set val(assembler), val(sample), file("MetaBAT2/*") into metabat_bins_quast_bins
 
     when:
     !params.skip_binning
 
     script:
     def name = "${assembler}-${sample}"
-    if ( !params.singleEnd ) {
-        """
-        bowtie2-build --threads "${task.cpus}" "${assembly}" ref
-        bowtie2 -p "${task.cpus}" -x ref -1 "${reads[0]}" -2 "${reads[1]}" | \
-            samtools view -@ "${task.cpus}" -bS | \
-            samtools sort -@ "${task.cpus}" -o "${name}.bam"
-        samtools index "${name}.bam"
-        jgi_summarize_bam_contig_depths --outputDepth depth.txt "${name}.bam"
-        metabat2 -t "${task.cpus}" -i "${assembly}" -a depth.txt -o "MetaBAT2/${name}" -m ${min_size}
+    """
+    jgi_summarize_bam_contig_depths --outputDepth depth.txt ${bam}
+    metabat2 -t "${task.cpus}" -i "${assembly}" -a depth.txt -o "MetaBAT2/${name}" -m ${min_size}
 
-        #if bin foolder is empty
-        if [ -z \"\$(ls -A MetaBAT2)\" ]; then 
-            cp ${assembly} MetaBAT2/${assembler}-${assembly}
-        fi
-        """
-    } else {
-        """
-        bowtie2-build --threads "${task.cpus}" "${assembly}" ref
-        bowtie2 -p "${task.cpus}" -x ref -U ${reads} | \
-            samtools view -@ "${task.cpus}" -bS | \
-            samtools sort -@ "${task.cpus}" -o "${name}.bam"
-        samtools index "${name}.bam"
-        jgi_summarize_bam_contig_depths --outputDepth depth.txt "${name}.bam"
-        metabat2 -t "${task.cpus}" -i "${assembly}" -a depth.txt -o "MetaBAT2/${name}" -m ${min_size}
-
-        #if bin foolder is empty
-        if [ -z \"\$(ls -A MetaBAT2)\" ]; then 
-            cp ${assembly} MetaBAT2/${assembler}-${assembly}
-        fi
-        """
-    }
-
+    #if bin folder is empty
+    if [ -z \"\$(ls -A MetaBAT2)\" ]; then 
+        cp ${assembly} MetaBAT2/${assembler}-${assembly}
+    fi
+    """
 }
 
 
@@ -980,7 +956,7 @@ process busco {
     script:
     if( workflow.profile.toString().indexOf("conda") == -1) {
         """
-        cp -r /opt/conda/pkgs/augustus-3.3-pl526hcfae127_4/config augustus_config/
+        cp -r /opt/conda/pkgs/augustus*/config augustus_config/
         export AUGUSTUS_CONFIG_PATH=augustus_config
 
         run_BUSCO.py \
@@ -1071,7 +1047,7 @@ process quast_bins {
     publishDir "${params.outdir}/GenomeBinning/QC/", mode: 'copy'
 
     input:
-    set val(assembler), val(sample), file(assembly), file(reads) from metabat_bins_quast_bins
+    set val(assembler), val(sample), file(assembly) from metabat_bins_quast_bins
 
     output:
     file("QUAST/*")
@@ -1198,7 +1174,6 @@ process multiqc {
     script:
     rtitle = custom_runName ? "--title \"$custom_runName\"" : ''
     rfilename = custom_runName ? "--filename " + custom_runName.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
-    // TODO nf-core: Specify which MultiQC modules to use with -m for a faster run time
     """
     multiqc -f ${rtitle} ${rfilename} --config ${multiqc_config} .
     """
@@ -1258,7 +1233,6 @@ workflow.onComplete {
     email_fields['summary']['Nextflow Build'] = workflow.nextflow.build
     email_fields['summary']['Nextflow Compile Timestamp'] = workflow.nextflow.timestamp
 
-    // TODO nf-core: If not using MultiQC, strip out this code (including params.maxMultiqcEmailFileSize)
     // On success try attach the multiqc report
     def mqc_report = null
     try {

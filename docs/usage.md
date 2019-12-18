@@ -14,8 +14,11 @@
     - [`none`](#none)
   - [`--reads`](#--reads)
   - [`--singleEnd`](#--singleend)
+  - [`--manifest`](#--manifest)
 - [Optional Arguments](#optional-arguments)
   - [Trimming Options](#trimming-options)
+  - [Trimming Options for long reads](#trimming-options-for-long-reads)
+  - [Taxonomic classification](#taxonomic-classification)
   - [Binning Options](#binning-options)
 - [Job Resources](#job-resources)
 - [Automatic resubmission](#automatic-resubmission)
@@ -46,8 +49,6 @@ It is recommended to limit the Nextflow Java virtual machines memory. We recomme
 ```bash
 NXF_OPTS='-Xms1g -Xmx4g'
 ```
-
-<!-- TODO nf-core: Document required command line parameters to run the pipeline-->
 
 ## Running the pipeline
 
@@ -103,11 +104,9 @@ If `-profile` is not specified at all the pipeline will be run locally and expec
 - `singularity`
   - A generic configuration profile to be used with [Singularity](http://singularity.lbl.gov/)
   - Pulls software from DockerHub: [`nfcore/mag`](http://hub.docker.com/r/nfcore/mag/)
-- `test`
-  - A profile with a complete configuration for automated testing
+- `test`, `test_hybrid`
+  - Profiles with a complete configuration for automated testing
   - Includes links to test data so needs no other parameters
-
-<!-- TODO nf-core: Document required command line parameters -->
 
 ### `--reads`
 
@@ -135,53 +134,11 @@ By default, the pipeline expects paired-end data. If you have single-end data, y
 
 It is not possible to run a mixture of single-end and paired-end files in one run.
 
-## Reference genomes
+### `--manifest`
 
-The pipeline config files come bundled with paths to the illumina iGenomes reference index files. If running with docker or AWS, the configuration is set up to use the [AWS-iGenomes](https://ewels.github.io/AWS-iGenomes/) resource.
-
-### `--genome` (using iGenomes)
-
-There are 31 different species supported in the iGenomes references. To run the pipeline, you must specify which to use with the `--genome` flag.
-
-You can find the keys to specify the genomes in the [iGenomes config file](../conf/igenomes.config). Common genomes that are supported are:
-
-- Human
-  - `--genome GRCh37`
-- Mouse
-  - `--genome GRCm38`
-- _Drosophila_
-  - `--genome BDGP6`
-- _S. cerevisiae_
-  - `--genome 'R64-1-1'`
-
-> There are numerous others - check the config file for more.
-
-Note that you can use the same configuration setup to save sets of reference files for your own use, even if they are not part of the iGenomes resource. See the [Nextflow documentation](https://www.nextflow.io/docs/latest/config.html) for instructions on where to save such a file.
-
-The syntax for this reference configuration is as follows:
-
-<!-- TODO nf-core: Update reference genome example according to what is needed -->
-
-```nextflow
-params {
-  genomes {
-    'GRCh37' {
-      fasta   = '<path to the genome fasta file>' // Used if no star index given
-    }
-    // Any number of additional genomes, key is used with --genome
-  }
-}
-```
-
-<!-- TODO nf-core: Describe reference path flags -->
-
-### `--fasta`
-
-If you prefer, you can specify the full path to your reference genome when you run the pipeline:
-
-### `--igenomesIgnore`
-
-Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`.
+The pipeline has support for hybrid (with long and short reads) assembly, with the `--manifest` option.
+The option take a tab-separated file with 4 headerless columns: Sample_Id, Long_Reads, Short_Reads_1, Short_Reads_2
+Only one file path per entry is allowed, and single-end short reads are not supported.
 
 ## Trimming options
 
@@ -201,11 +158,60 @@ Mean qualified quality value for keeping read (default: 15)
 
 Trimming quality value for the sliding window (default: 15)
 
+### `--keep_phix`
+
+Keep reads similar to the Illumina internal standard PhiX genome (default: false)
+
+## Trimming options for long reads
+
+### `--skip_adapter_trimming`
+
+Skip removing adapter sequences from long reads
+
+### `--longreads_min_length`
+
+Discard any read which is shorter than this value (default: 1000)
+
+### `--longreads_keep_percent`
+
+Keep this percent of bases (default: 90)
+
+### `--longreads_length_weight`
+
+The higher the more important is read length when choosing the best reads (default: 10)
+
+### `--keep_lambda`
+
+Keep reads similar to the ONT internal standard Escherichia virus Lambda genome (default: false)
+
+## Taxonomic classification
+
+Taxonomic classification is disabled by default.
+You have to specify one of the options below to activate it.
+
+### `--centrifuge_db`
+
+Database for taxonomic binning with centrifuge (default: none). E.g. "<ftp://ftp.ccb.jhu.edu/pub/infphilo/centrifuge/data/p_compressed+h+v.tar.gz>"
+
+### `--kraken2_db`
+
+Database for taxonomic binning with kraken2 (default: none). E.g. "<ftp://ftp.ccb.jhu.edu/pub/data/kraken2_dbs/minikraken2_v2_8GB_201904_UPDATE.tgz>"
+
+### `--cat_db`
+
+Database for taxonomic classification of metagenome assembled genomes (default: none). E.g. "<tbb.bio.uu.nl/bastiaan/CAT*prepare/CAT_prepare_20190108.tar.gz>"
+The zipped file needs to contain a folder named "\_taxonomy*" and "_CAT_database_" that hold the respective files.
+
 ## Binning options
 
 ### `--min_contig_size`
 
 Minimum contig size to be considered for binning (default: 1500)
+
+### `--busco_reference`
+
+Download path for BUSCO database, available databases are listed here: <https://busco.ezlab.org/>
+(default: <https://busco.ezlab.org/datasets/bacteria_odb9.tar.gz>)
 
 ## Job resources
 
@@ -236,8 +242,6 @@ The AWS region to run your job in. Default is set to `eu-west-1` but can be adju
 Please make sure to also set the `-w/--work-dir` and `--outdir` parameters to a S3 storage bucket of your choice - you'll get an error message notifying you if you didn't.
 
 ## Other command line parameters
-
-<!-- TODO nf-core: Describe any other command line flags here -->
 
 ### `--outdir`
 
