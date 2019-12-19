@@ -3,7 +3,6 @@
 #USAGE: ./combine_tables.py <*.unbinned.fa> <length threshold> <maximal number of sequences> <length threshold to retain contigs>
 
 import pandas as pd
-#from sys import stdout
 from sys import argv
 from Bio import SeqIO
 from Bio.Seq import Seq
@@ -29,7 +28,6 @@ for fasta in fasta_sequences:
     name, sequence = fasta.id, str(fasta.seq)
     length = len(sequence)
     df = df.append({"id":name, "seq":sequence, "length":length}, ignore_index = True)
-print(df)
 
 #sort table by sequence length
 df.sort_values(by=['length'], ascending=False)
@@ -52,5 +50,5 @@ for index, row in df.iterrows():
 
 print("write "+out_base+".pooled.fa")
 SeqIO.write(pooled, out_base+".pooled.fa", "fasta")
-print("write "+out_base+".remaining.fa")
+print("write "+out_base+".fa.remaining")
 SeqIO.write(remaining, out_base+".fa.remaining", "fasta")
