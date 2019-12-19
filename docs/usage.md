@@ -206,12 +206,22 @@ The zipped file needs to contain a folder named "\_taxonomy*" and "_CAT_database
 
 ### `--min_contig_size`
 
-Minimum contig size to be considered for binning (default: 1500)
+Minimum contig size to be considered for binning, for forwarding into downstream analysis (i.e. QUAST and BUSCO) and reporting (default: 1500)
 
 ### `--busco_reference`
 
 Download path for BUSCO database, available databases are listed here: <https://busco.ezlab.org/>
 (default: <https://busco.ezlab.org/datasets/bacteria_odb9.tar.gz>)
+
+### `--min_length_unbinned_contigs`
+
+Minimal length of contigs that are not part of any bin but treated as individual genome (default: 1000000)
+Contigs that do not fulfill the thresholds of `--min_length_unbinned_contigs` and `--max_unbinned_contigs` are pooled for downstream analysis and reporting, except contigs that also do not fullfill `--min_contig_size` are not considered further.
+
+### `--max_unbinned_contigs`
+
+Maximal number of contigs that are not part of any bin but treated as individual genome (default: 100)
+Contigs that do not fulfill the thresholds of `--min_length_unbinned_contigs` and `--max_unbinned_contigs` are pooled for downstream analysis and reporting, except contigs that also do not fullfill `--min_contig_size` are not considered further.
 
 ## Job resources
 
