@@ -71,7 +71,9 @@ def helpMessage() {
 
     Binning options:
       --skip_binning                Skip metagenome binning
-      --min_contig_size             Minimum contig size to be considered for binning (default: 1500)
+      --min_contig_size             Minimum contig size to be considered for binning and for bin quality check (default: 1500)
+      --min_length_unbinned_contigs Minimal length of contigs that are not part of any bin but treated as individual genome (default: 1000000)
+      --max_unbinned_contigs        Maximal number of contigs that are not part of any bin but treated as individual genome (default: 100)
 
     Bin quality check:
       --skip_busco                  Disable bin QC with BUSCO (default: false)
@@ -140,6 +142,8 @@ params.phix_reference = "$baseDir/assets/data/GCA_002596845.1_ASM259684v1_genomi
 params.skip_binning = false
 params.skip_busco = false
 params.min_contig_size = 1500
+params.min_length_unbinned_contigs = 1000000
+params.max_unbinned_contigs = 100
 
 /*
  * assembly options
@@ -893,11 +897,14 @@ process metabat {
     input:
     set val(assembler), val(sample), file(bam), file(index), val(sampleCopy), file(assembly) from assembly_mapping_for_metabat
     val(min_size) from params.min_contig_size
+    val(max_unbinned) from params.max_unbinned_contigs
+    val(min_length_unbinned) from params.min_length_unbinned_contigs
 
     output:
-    set val(assembler), val(sample), file("MetaBAT2/*") into metabat_bins mode flatten
-    set val(assembler), val(sample), file("MetaBAT2/*") into metabat_bins_for_cat
-    set val(assembler), val(sample), file("MetaBAT2/*") into metabat_bins_quast_bins
+    set val(assembler), val(sample), file("MetaBAT2/*.fa") into metabat_bins mode flatten
+    set val(assembler), val(sample), file("MetaBAT2/*.fa") into metabat_bins_for_cat
+    set val(assembler), val(sample), file("MetaBAT2/*.fa") into metabat_bins_quast_bins
+    file("MetaBAT2/*")
 
     when:
     !params.skip_binning
@@ -906,12 +913,12 @@ process metabat {
     def name = "${assembler}-${sample}"
     """
     jgi_summarize_bam_contig_depths --outputDepth depth.txt ${bam}
-    metabat2 -t "${task.cpus}" -i "${assembly}" -a depth.txt -o "MetaBAT2/${name}" -m ${min_size}
+    metabat2 -t "${task.cpus}" -i "${assembly}" -a depth.txt -o "MetaBAT2/${name}" -m ${min_size} --seed 1 --unbinned
 
-    #if bin folder is empty
-    if [ -z \"\$(ls -A MetaBAT2)\" ]; then 
-        cp ${assembly} MetaBAT2/${assembler}-${assembly}
-    fi
+    #save unbinned contigs above thresholds into individual files, dump others in one file
+    split_fasta.py MetaBAT2/${name}.unbinned.fa ${min_length_unbinned} ${max_unbinned} ${min_size}
+    #rename splitted file so that it doesnt end up in following processes
+    mv MetaBAT2/${name}.unbinned.fa ${name}.unbinned.fa
     """
 }
 
