@@ -76,7 +76,7 @@ def helpMessage() {
     Bin quality check:
       --skip_busco                  Disable bin QC with BUSCO (default: false)
       --busco_reference             Download path for BUSCO database, available databases are listed here: https://busco.ezlab.org/
-                                    (default: https://busco.ezlab.org/datasets/bacteria_odb9.tar.gz)
+                                    (default: https://busco-archive.ezlab.org/v3/datasets/bacteria_odb9.tar.gz)
 
     AWSBatch options:
       --awsqueue                    The AWSBatch JobQueue that needs to be set when running on AWSBatch
@@ -100,7 +100,7 @@ params.multiqc_config = "$baseDir/conf/multiqc_config.yaml"
 params.email = false
 params.plaintext_email = false
 params.manifest = false
-params.busco_reference = "https://busco.ezlab.org/datasets/bacteria_odb9.tar.gz"
+params.busco_reference = "https://busco-archive.ezlab.org/v3/datasets/bacteria_odb9.tar.gz"
 
 ch_multiqc_config = Channel.fromPath(params.multiqc_config)
 ch_output_docs = Channel.fromPath("$baseDir/docs/output.md")
