@@ -10,18 +10,18 @@
 
 ## Introduction
 
-This pipeline is for assembly, binning and annotation of metagenomes.
-It supports both short and long reads, quality trims the reads and adapters with [https://github.com/OpenGene/fastp](fastp) and [https://github.com/rrwick/Porechop](porechop) and performs basic QC with [https://www.bioinformatics.babraham.ac.uk/projects/fastqc/](fastqc).
+This pipeline is for assembly, binning, and annotation of metagenomes.
+It supports both short and long reads, quality trims the reads and adapters with [https://github.com/OpenGene/fastp][fastp] and [https://github.com/rrwick/Porechop][porechop], and performs basic QC with [https://www.bioinformatics.babraham.ac.uk/projects/fastqc/][fastqc].
 
 The pipeline then:
 
-- assigns taxonomy to reads using [https://ccb.jhu.edu/software/centrifuge/](centrifuge) and/or [https://ccb.jhu.edu/software/kraken2/](kraken2)
-- performs assembly using [https://github.com/voutcn/megahit](megahit) and [http://cab.spbu.ru/software/spades/](spades), and checks their quality using [http://quast.sourceforge.net/quast](quast)
-- performs metagenome binning using [https://bitbucket.org/berkeleylab/metabat/src/master/](metabat2), and checks the quality of the genome bins using [https://busco.ezlab.org/](busco)
+- assigns taxonomy to reads using [https://ccb.jhu.edu/software/centrifuge/][centrifuge] and/or [https://ccb.jhu.edu/software/kraken2/][kraken2]
+- performs assembly using [https://github.com/voutcn/megahit][megahit] and [http://cab.spbu.ru/software/spades/][spades], and checks their quality using [http://quast.sourceforge.net/quast][quast]
+- performs metagenome binning using [https://bitbucket.org/berkeleylab/metabat/src/master/][metabat2], and checks the quality of the genome bins using [https://busco.ezlab.org/][busco]
 
-Furthermore, the pipeline creates various reports in the results directory specified, including a [https://multiqc.info/](multiqc) report summarizing some of the findings and software versions.
+Furthermore, the pipeline creates various reports in the results directory specified, including a [https://multiqc.info/][multiqc] report summarizing some of the findings and software versions.
 
-The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It comes with docker containers making installation trivial and results highly reproducible.
+The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool that runs tasks across multiple compute infrastructures in a very portable manner. It comes with Docker containers making installation trivial and results highly reproducible.
 
 ## Documentation
 
@@ -41,3 +41,15 @@ The nf-core/mag pipeline comes with documentation about the pipeline, found in t
 This pipeline was written by [Hadrien Gourlé](https://hadriengourle.com) at [SLU](https://slu.se) and Daniel Straub ([@d4straub](https://github.com/d4straub)).
 
 Long read processing was inspired by [caspargross/HybridAssembly](https://github.com/caspargross/HybridAssembly) written by Caspar Gross [@caspargross](https://github.com/caspargross)
+
+[fastp]: https://github.com/OpenGene/fastp
+[porechop]: https://github.com/rrwick/Porechop
+[fastqc]: https://www.bioinformatics.babraham.ac.uk/projects/fastqc
+[centrifuge]: https://ccb.jhu.edu/software/centrifuge
+[kraken2]: https://ccb.jhu.edu/software/kraken2
+[megahit]: https://github.com/voutcn/megahit
+[spades]: https://cab.spbu.ru/software/spades
+[quast]: http://quast.sourceforge.net/quast
+[metabat2]: https://bitbucket.org/berkeleylab/metabat/src/master
+[busco]: https://busco.ezlab.org
+[multiqc]: https://multiqc.info
