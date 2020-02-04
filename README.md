@@ -10,18 +10,18 @@
 
 ## Introduction
 
-This pipeline is for assembly, binning and annotation of metagenomes.
-It supports both short and long reads, quality trims the reads and adapters with [https://github.com/OpenGene/fastp](fastp) and [https://github.com/rrwick/Porechop](porechop) and performs basic QC with [https://www.bioinformatics.babraham.ac.uk/projects/fastqc/](fastqc).
+This pipeline is for assembly, binning, and annotation of metagenomes.
+It supports both short and long reads, quality trims the reads and adapters with [fastp](https://github.com/OpenGene/fastp) and [porechop](https://github.com/rrwick/Porechop), and performs basic QC with [fastqc](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/).
 
 The pipeline then:
 
-- assigns taxonomy to reads using [https://ccb.jhu.edu/software/centrifuge/](centrifuge) and/or [https://ccb.jhu.edu/software/kraken2/](kraken2)
-- performs assembly using [https://github.com/voutcn/megahit](megahit) and [http://cab.spbu.ru/software/spades/](spades), and checks their quality using [http://quast.sourceforge.net/quast](quast)
-- performs metagenome binning using [https://bitbucket.org/berkeleylab/metabat/src/master/](metabat2), and checks the quality of the genome bins using [https://busco.ezlab.org/](busco)
+- assigns taxonomy to reads using [centrifuge](https://ccb.jhu.edu/software/centrifuge/) and/or [kraken2](https://ccb.jhu.edu/software/kraken2/)
+- performs assembly using [megahit](https://github.com/voutcn/megahit) and [spades](http://cab.spbu.ru/software/spades/), and checks their quality using [quast](http://quast.sourceforge.net/quast)
+- performs metagenome binning using [metabat2](https://bitbucket.org/berkeleylab/metabat/src/master/), and checks the quality of the genome bins using [busco](https://busco.ezlab.org/)
 
-Furthermore, the pipeline creates various reports in the results directory specified, including a [https://multiqc.info/](multiqc) report summarizing some of the findings and software versions.
+Furthermore, the pipeline creates various reports in the results directory specified, including a [multiqc](https://multiqc.info/) report summarizing some of the findings and software versions.
 
-The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It comes with docker containers making installation trivial and results highly reproducible.
+The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool that runs tasks across multiple compute infrastructures in a very portable manner. It comes with Docker containers making installation trivial and results highly reproducible.
 
 ## Documentation
 
