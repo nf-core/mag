@@ -2,13 +2,18 @@
 
 ## v1.1.0 - TBD
 
+### Added
+
+- Add social preview image
+
 ### Bugfixes
+
 - Fix links in README
 
 ## v1.0.0 - 2019/12/20
 
 Initial release of nf-core/mag, created with the [nf-core](http://nf-co.re/) template.
-As this release the pipeline will have the following functionailities:
+As this release the pipeline will have the following functionalities:
 
 - short and long reads QC (fastp, porechop, filtlong, fastqc)
 - Lambda and PhiX detection and filtering (bowtie2, nanolyse)
