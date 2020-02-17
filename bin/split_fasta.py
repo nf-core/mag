@@ -20,14 +20,15 @@ min_length_to_retain_contig = int(argv[4])
 out_base = (os.path.splitext(input_file)[0])
 
 # Read file
-fasta_sequences = SeqIO.parse(open(input_file),'fasta')
+with open(input_file) as f:
+    fasta_sequences = SeqIO.parse(f,'fasta')
 
 # make table
-df = pd.DataFrame(columns=['id','seq','length'])
-for fasta in fasta_sequences:
-    name, sequence = fasta.id, str(fasta.seq)
-    length = len(sequence)
-    df = df.append({"id":name, "seq":sequence, "length":length}, ignore_index = True)
+    df = pd.DataFrame(columns=['id','seq','length'])
+    for fasta in fasta_sequences:
+        name, sequence = fasta.id, str(fasta.seq)
+        length = len(sequence)
+        df = df.append({"id":name, "seq":sequence, "length":length}, ignore_index = True)
 
 #sort table by sequence length
 df.sort_values(by=['length'], ascending=False)
