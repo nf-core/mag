@@ -13,7 +13,7 @@
     - [`standard`](#standard)
     - [`none`](#none)
   - [`--reads`](#--reads)
-  - [`--singleEnd`](#--singleend)
+  - [`--single_end`](#--single_end)
   - [`--manifest`](#--manifest)
 - [Optional Arguments](#optional-arguments)
   - [Trimming Options](#trimming-options)
@@ -124,12 +124,12 @@ Please note the following requirements:
 
 If left unspecified, a default pattern is used: `data/*{1,2}.fastq.gz`
 
-### `--singleEnd`
+### `--single_end`
 
-By default, the pipeline expects paired-end data. If you have single-end data, you need to specify `--singleEnd` on the command line when you launch the pipeline. A normal glob pattern, enclosed in quotation marks, can then be used for `--reads`. For example:
+By default, the pipeline expects paired-end data. If you have single-end data, you need to specify `--single_end` on the command line when you launch the pipeline. A normal glob pattern, enclosed in quotation marks, can then be used for `--reads`. For example:
 
 ```bash
---singleEnd --reads '*.fastq'
+--single_end --reads '*.fastq'
 ```
 
 It is not possible to run a mixture of single-end and paired-end files in one run.
@@ -206,12 +206,22 @@ The zipped file needs to contain a folder named "\_taxonomy*" and "_CAT_database
 
 ### `--min_contig_size`
 
-Minimum contig size to be considered for binning (default: 1500)
+Minimum contig size to be considered for binning, for forwarding into downstream analysis (i.e. QUAST and BUSCO) and reporting (default: 1500)
 
 ### `--busco_reference`
 
 Download path for BUSCO database, available databases are listed here: <https://busco.ezlab.org/>
 (default: <https://busco.ezlab.org/datasets/bacteria_odb9.tar.gz>)
+
+### `--min_length_unbinned_contigs`
+
+Minimal length of contigs that are not part of any bin but treated as individual genome (default: 1000000)
+Contigs that do not fulfill the thresholds of `--min_length_unbinned_contigs` and `--max_unbinned_contigs` are pooled for downstream analysis and reporting, except contigs that also do not fullfill `--min_contig_size` are not considered further.
+
+### `--max_unbinned_contigs`
+
+Maximal number of contigs that are not part of any bin but treated as individual genome (default: 100)
+Contigs that do not fulfill the thresholds of `--min_length_unbinned_contigs` and `--max_unbinned_contigs` are pooled for downstream analysis and reporting, except contigs that also do not fullfill `--min_contig_size` are not considered further.
 
 ## Job resources
 

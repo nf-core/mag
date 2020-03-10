@@ -4,6 +4,8 @@
 
 ### Bugfixes
 - Fix links in README
+- Fix MetaBAT2 binning discards unbinned contigs [#27](https://github.com/nf-core/mag/issues/27)
+- Change depreciated parameters: singleEnd -> single_end, igenomesIgnore -> igenomes_ignore
 
 ## v1.0.0 - 2019/12/20
 
