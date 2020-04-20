@@ -2,8 +2,8 @@
 
 **Assembly, binning and annotation of metagenomes**.
 
-[![Build Status](https://travis-ci.com/nf-core/mag.svg?branch=master)](https://travis-ci.com/nf-core/mag)
-[![Nextflow](https://img.shields.io/badge/nextflow-%E2%89%A519.01.0-brightgreen.svg)](https://www.nextflow.io/)
+[![GitHub Actions](https://github.com/nf-core/mag/workflows/nf-core%20CI/badge.svg)](https://github.com/nf-core/mag/workflows/nf-core%20CI/badge.svg)
+[![Nextflow](https://img.shields.io/badge/nextflow-%E2%89%A519.10.0-brightgreen.svg)](https://www.nextflow.io/)
 
 [![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg)](http://bioconda.github.io/)
 [![Docker](https://img.shields.io/docker/automated/nfcore/mag.svg)](https://hub.docker.com/r/nfcore/mag)
