@@ -6,10 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## v1.1.0 - TBD
 
 ### `Fixed`
+
 - Fix links in README
 - Fix MetaBAT2 binning discards unbinned contigs [#27](https://github.com/nf-core/mag/issues/27)
 
 ### `Deprecated`
+
 - Change depreciated parameters: singleEnd -> single_end, igenomesIgnore -> igenomes_ignore
 
 ## v1.0.0 - [date]
@@ -17,6 +19,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 Initial release of nf-core/mag, created with the [nf-core](http://nf-co.re/) template.
 
 ### `Added`
+
 - short and long reads QC (fastp, porechop, filtlong, fastqc)
 - Lambda and PhiX detection and filtering (bowtie2, nanolyse)
 - Taxonomic classification of reads (centrifuge, kraken2)
@@ -24,4 +27,3 @@ Initial release of nf-core/mag, created with the [nf-core](http://nf-co.re/) tem
 - metagenome binning (metabat2)
 - QC of bins (busco, quast)
 - annotation (cat/bat)
-
