@@ -1,17 +1,22 @@
 # nf-core/mag: Changelog
 
+The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
+and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
+
 ## v1.1.0 - TBD
 
-### Bugfixes
+### `Fixed`
 - Fix links in README
 - Fix MetaBAT2 binning discards unbinned contigs [#27](https://github.com/nf-core/mag/issues/27)
+
+### `Deprecated`
 - Change depreciated parameters: singleEnd -> single_end, igenomesIgnore -> igenomes_ignore
 
-## v1.0.0 - 2019/12/20
+## v1.0.0 - [date]
 
 Initial release of nf-core/mag, created with the [nf-core](http://nf-co.re/) template.
-As this release the pipeline will have the following functionailities:
 
+### `Added`
 - short and long reads QC (fastp, porechop, filtlong, fastqc)
 - Lambda and PhiX detection and filtering (bowtie2, nanolyse)
 - Taxonomic classification of reads (centrifuge, kraken2)
@@ -19,3 +24,4 @@ As this release the pipeline will have the following functionailities:
 - metagenome binning (metabat2)
 - QC of bins (busco, quast)
 - annotation (cat/bat)
+
