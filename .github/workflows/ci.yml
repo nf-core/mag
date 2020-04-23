@@ -22,7 +22,10 @@ jobs:
       - name: Pull docker image
         run: |
           docker pull nfcore/mag:dev
-          docker tag nfcore/mag:dev nfcore/mag:1.0.0
+          docker tag nfcore/mag:dev nfcore/mag:dev
       - name: Run pipeline with test data
-          run: |
-            nextflow run ${GITHUB_WORKSPACE} -profile test,docker
+        run: |
+          nextflow run ${GITHUB_WORKSPACE} -profile test,docker
+      - name: Run pipeline with test hybrid data
+        run: |
+          nextflow run ${GITHUB_WORKSPACE} -profile test_hybrid,docker
