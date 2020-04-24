@@ -279,7 +279,7 @@ process get_software_versions {
     script:
     """
     echo $workflow.manifest.version > v_pipeline.txt
-    echo $workflow.manifest.nextflowVersion > v_nextflow.txt
+    echo $workflow.nextflow.version > v_nextflow.txt
     multiqc --version > v_multiqc.txt
     fastqc --version > v_fastqc.txt
     fastp -v 2> v_fastp.txt
