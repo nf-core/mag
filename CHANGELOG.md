@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Change depreciated parameters: singleEnd -> single_end, igenomesIgnore -> igenomes_ignore
 
-## v1.0.0 - [date]
+## v1.0.0 - 2019/12/20
 
 Initial release of nf-core/mag, created with the [nf-core](http://nf-co.re/) template.
 
