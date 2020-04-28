@@ -8,8 +8,8 @@ regexes = {
     'Nextflow': ['v_nextflow.txt', r"(\S+)"],
     'MultiQC': ['v_multiqc.txt', r"multiqc, version (\S+)"],
     'FastQC': ['v_fastqc.txt', r"FastQC v(\S+)"],
-    'Fastp': ['v_fastp.txt', r"fastp (\S+)"],
-    'Megahit': ['v_megahit.txt', r"MEGAHIT v(\S+)"],
+    'fastp': ['v_fastp.txt', r"fastp (\S+)"],
+    'MEGAHIT': ['v_megahit.txt', r"MEGAHIT v(\S+)"],
     'Metabat': ['v_metabat.txt', r"version (\S+)"],
     'NanoPlot': ['v_nanoplot.txt', r"NanoPlot (\S+)"],
     'Filtlong': ['v_filtlong.txt', r"Filtlong v(\S+)"],
@@ -26,31 +26,34 @@ results = OrderedDict()
 results['nf-core/mag'] = '<span style="color:#999999;\">N/A</span>'
 results['Nextflow'] = '<span style="color:#999999;\">N/A</span>'
 results['MultiQC'] = '<span style="color:#999999;\">N/A</span>'
-results['fastqc'] = '<span style="color:#999999;\">N/A</span>'
+results['FastQC'] = '<span style="color:#999999;\">N/A</span>'
 results['fastp'] = '<span style="color:#999999;\">N/A</span>'
-results['megahit'] = '<span style="color:#999999;\">N/A</span>'
-results['metabat'] = '<span style="color:#999999;\">N/A</span>'
+results['MEGAHIT'] = '<span style="color:#999999;\">N/A</span>'
+results['Metabat'] = '<span style="color:#999999;\">N/A</span>'
 results['NanoPlot'] = '<span style="color:#999999;\">N/A</span>'
 results['Filtlong'] = '<span style="color:#999999;\">N/A</span>'
-results['porechop'] = '<span style="color:#999999;\">N/A</span>'
+results['Porechop'] = '<span style="color:#999999;\">N/A</span>'
 results['NanoLyse'] = '<span style="color:#999999;\">N/A</span>'
 results['SPAdes'] = '<span style="color:#999999;\">N/A</span>'
 results['BUSCO'] = '<span style="color:#999999;\">N/A</span>'
-results['centrifuge'] = '<span style="color:#999999;\">N/A</span>'
+results['Centrifuge'] = '<span style="color:#999999;\">N/A</span>'
 results['Kraken2'] = '<span style="color:#999999;\">N/A</span>'
 results['CAT'] = '<span style="color:#999999;\">N/A</span>'
 results['Quast'] = '<span style="color:#999999;\">N/A</span>'
 
 # Search each file using its regex
 for k, v in regexes.items():
-    with open(v[0]) as x:
-        versions = x.read()
-        match = re.search(v[1], versions)
-        if match:
-            results[k] = "v{}".format(match.group(1))
+    try:
+        with open(v[0]) as x:
+            versions = x.read()
+            match = re.search(v[1], versions)
+            if match:
+                results[k] = "v{}".format(match.group(1))
+    except IOError:
+        results[k] = False
 
 # Remove software set to false in results
-for k in results:
+for k in list(results):
     if not results[k]:
         del(results[k])
 
