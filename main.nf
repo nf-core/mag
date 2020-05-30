@@ -1261,13 +1261,19 @@ process multiqc {
     rfilename = custom_runName ? "--filename " + custom_runName.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
     custom_config_file = params.multiqc_config ? "--config $mqc_custom_config" : ''
     read_type = params.single_end ? "--single_end" : ''
-    """
-    # get multiqc parsed data for bowtie 2
-    multiqc -f $rtitle $rfilename $custom_config_file *.bowtie2.log
-    multiqc_to_custom_tsv.py ${read_type}
-    # run multiqc using custom content file instead of original bowtie2 log files
-    multiqc -f $rtitle $rfilename $custom_config_file --ignore "*.bowtie2.log" .
-    """
+    if ( params.host_fasta || params.host_genome ) {
+        """
+        # get multiqc parsed data for bowtie 2
+        multiqc -f $rtitle $rfilename $custom_config_file *.bowtie2.log
+        multiqc_to_custom_tsv.py ${read_type}
+        # run multiqc using custom content file instead of original bowtie2 log files
+        multiqc -f $rtitle $rfilename $custom_config_file --ignore "*.bowtie2.log" .
+        """
+    } else {
+        """
+        multiqc -f $rtitle $rfilename $custom_config_file .
+        """
+    }
 }
 
 /*
