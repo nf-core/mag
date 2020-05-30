@@ -12,7 +12,6 @@ dependencies:
   - conda-forge::pygments=2.5.2
   - bioconda::fastqc=0.11.8
   - bioconda::multiqc=1.9
-  - conda-forge::matplotlib=3.1.1
   - bioconda::fastp=0.20.0
   - bioconda::megahit=1.2.7
   - bioconda::metabat2=2.13
