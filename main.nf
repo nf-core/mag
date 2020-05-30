@@ -654,9 +654,21 @@ process fastqc_trimmed {
     file "*_fastqc.{zip,html}" into fastqc_results_trimmed
 
     script:
-    """
-    fastqc -t "${task.cpus}" -q ${reads}
-    """
+    if ( !params.single_end ) {
+        """
+        fastqc -t "${task.cpus}" -q ${reads}
+        mv *_1_fastqc.html "${name}_R1.trimmed_fastqc.html"
+        mv *_2_fastqc.html "${name}_R2.trimmed_fastqc.html"
+        mv *_1_fastqc.zip "${name}_R1.trimmed_fastqc.zip"
+        mv *_2_fastqc.zip "${name}_R2.trimmed_fastqc.zip"
+        """
+    } else {
+        """
+        fastqc -t "${task.cpus}" -q ${reads}
+        mv *_fastqc.html "${name}.trimmed_fastqc.html"
+        mv *_fastqc.zip "${name}.trimmed_fastqc.zip"
+        """
+    }
 }
 
 /*

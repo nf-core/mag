@@ -9,3 +9,16 @@ report_section_order:
         order: -1001
 
 export_plots: true
+
+top_modules:
+- 'fastqc':
+    name: 'FastQC: raw reads'
+    path_filters_exclude:
+        - '*trimmed_fastqc*'
+- 'fastqc':
+    name: 'FastQC: after preprocessing'
+    info: 'After trimming and, if requested, contamination removal.'
+    path_filters:
+        - '*trimmed_fastqc*'
+- 'busco'
+- 'quast'
