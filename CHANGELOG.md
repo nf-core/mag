@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### `Added`
 
+- Add host read removal with Bowtie 2
+- Add separate MultiQC section for FastQC after preprocessing
 - Add social preview image
 
 ### `Fixed`
