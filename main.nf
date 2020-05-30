@@ -1245,6 +1245,7 @@ process multiqc {
     file (mqc_custom_config) from ch_multiqc_custom_config.collect().ifEmpty([])
     file (fastqc_raw:'fastqc/*') from fastqc_results.collect().ifEmpty([])
     file (fastqc_trimmed:'fastqc/*') from fastqc_results_trimmed.collect().ifEmpty([])
+    file (host_removal) from ch_host_removed_log.collect().ifEmpty([])
     file ('quast*/*') from quast_results.collect().ifEmpty([])
     file ('short_summary_*.txt') from busco_summary_to_multiqc.collect().ifEmpty([])
     file ('software_versions/*') from ch_software_versions_yaml.collect()
@@ -1259,8 +1260,13 @@ process multiqc {
     rtitle = custom_runName ? "--title \"$custom_runName\"" : ''
     rfilename = custom_runName ? "--filename " + custom_runName.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
     custom_config_file = params.multiqc_config ? "--config $mqc_custom_config" : ''
+    read_type = params.single_end ? "--single_end" : ''
     """
-    multiqc -f $rtitle $rfilename $custom_config_file .
+    # get multiqc parsed data for bowtie 2
+    multiqc -f $rtitle $rfilename $custom_config_file *.bowtie2.log
+    multiqc_to_custom_tsv.py ${read_type}
+    # run multiqc using custom content file instead of original bowtie2 log files
+    multiqc -f $rtitle $rfilename $custom_config_file --ignore "*.bowtie2.log" .
     """
 }
 
