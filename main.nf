@@ -528,7 +528,7 @@ process remove_host {
 
     publishDir "${params.outdir}/QC_shortreads/remove_host/", mode: 'copy',
         saveAs: {filename ->
-                    if (filename.indexOf("read_ids.txt") > 0) "$filename"
+                    if (filename.indexOf(".fastq.gz") == -1) "$filename"
                     else null
                 }
 
