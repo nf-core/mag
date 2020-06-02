@@ -26,6 +26,9 @@ jobs:
       - name: Run pipeline with test data
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile test,docker
+      - name: Run pipeline with test data for host read removal using fasta reference sequence
+        run: |
+          nextflow run ${GITHUB_WORKSPACE} -profile test_host_rm,docker
       - name: Run pipeline with test hybrid data
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile test_hybrid,docker
