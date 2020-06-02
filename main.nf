@@ -556,9 +556,6 @@ process remove_host {
                 1> /dev/null \
                 2> ${name}.bowtie2.log
 
-        zcat ${reads[0]} | echo "Read pairs before removal: \$((`wc -l`/4))" >>${name}_remove_host.log
-        zcat ${name}_host_unmapped_1.fastq.gz | echo "Read pairs after removal: \$((`wc -l`/4))" >>${name}_remove_host.log
-
         zcat ${name}_host_mapped_1.fastq.gz | awk '{if(NR%4==1) print substr(\$0, 2)}' > ${name}_host_mapped_1.read_ids.txt
         zcat ${name}_host_mapped_2.fastq.gz | awk '{if(NR%4==1) print substr(\$0, 2)}' > ${name}_host_mapped_2.read_ids.txt
         rm -f ${name}_host_mapped_*.fastq.gz
@@ -573,9 +570,6 @@ process remove_host {
                 --al-gz ${name}_host_mapped.fastq.gz \
                 1> /dev/null \
                 2> ${name}.bowtie2.log
-
-        zcat ${reads[0]} | echo "Reads before removal: \$((`wc -l`/4))" >>${name}_remove_host.log
-        zcat ${name}_host_unmapped.fastq.gz | echo "Reads after removal: \$((`wc -l`/4))" >>${name}_remove_host.log
 
         zcat ${name}_host_mapped.fastq.gz | awk '{if(NR%4==1) print substr(\$0, 2)}' > ${name}_host_mapped.read_ids.txt
         rm -f ${name}_host_mapped.fastq.gz
