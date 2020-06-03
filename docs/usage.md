@@ -13,8 +13,8 @@
   * [`--single_end`](#--single_end)
   * [`--manifest`](#--manifest)
 * [Optional Arguments](#optional-arguments)
-  * [Trimming Options](#trimming-options)
-  * [Trimming Options for long reads](#trimming-options-for-long-reads)
+  * [Quality control](#quality-control)
+  * [Quality control for long reads](#quality-control-for-long-reads)
   * [Taxonomic classification](#taxonomic-classification)
   * [Binning Options](#binning-options)
 * [Job resources](#job-resources)
@@ -151,7 +151,7 @@ The pipeline has support for hybrid (with long and short reads) assembly, with t
 The option take a tab-separated file with 4 headerless columns: Sample_Id, Long_Reads, Short_Reads_1, Short_Reads_2
 Only one file path per entry is allowed, and single-end short reads are not supported.
 
-## Trimming options
+## Quality control
 
 ### `--adapter_forward`
 
@@ -169,11 +169,30 @@ Mean qualified quality value for keeping read (default: 15)
 
 Trimming quality value for the sliding window (default: 15)
 
+### `--host_fasta`
+
+Use this to speficify the full path to a host reference FASTA file to remove host reads with Bowtie 2 (default: none).
+
+### `--host_genome (using iGenomes)`
+
+Alternatively, you can specify an iGenomes reference that should be used for host read removal with Bowtie 2.
+
+The pipeline config files come bundled with paths to the illumina iGenomes reference index files. If running with docker or AWS, the configuration is set up to use the [AWS-iGenomes](https://ewels.github.io/AWS-iGenomes/) resource.
+
+There are 31 different species supported in the iGenomes references. You can specify which genome to use with the `--host_genome` flag.
+You can find the keys to specify the genomes in the [iGenomes config file](../conf/igenomes.config).
+
+When using the `--host_genome` parameter, both the iGenomes FASTA file as well as corresponding, already pre-built Bowtie 2 index files will be used for host read removal.
+
+### `--host_removal_verysensitive`
+
+Use the `--very-sensitive` setting (instead of `--sensitive`) for Bowtie 2 to map reads against host genome (default: false)
+
 ### `--keep_phix`
 
 Keep reads similar to the Illumina internal standard PhiX genome (default: false)
 
-## Trimming options for long reads
+## Quality control for long reads
 
 ### `--skip_adapter_trimming`
 
