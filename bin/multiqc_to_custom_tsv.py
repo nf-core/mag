@@ -73,15 +73,14 @@ def metrics_dict_to_file(FileFieldList,MultiQCDataDir,OutFile,se):
 
     if MetricsDict != {}:
         make_dir(os.path.dirname(OutFile))
-        fout = open(OutFile,'w')
-        if se:
-            fout.write('{}\n'.format('\t'.join(['Sample', 'SE reads not mapped (kept)', 'SE reads mapped (discarded)'])))
-        else:
-            fout.write('{}\n'.format('\t'.join(['Sample', 'PE reads not mapped concordantly (kept)', 'PE reads mapped concordantly (discarded)'])))
-        for k in sorted(MetricsDict.keys()):
-            # write out # not mapped reads and # mapped reads (uniquely + multi mapping reads)
-            fout.write('{}\n'.format('\t'.join([k, str(MetricsDict[k][FieldList[0]]), str(MetricsDict[k][FieldList[1]] + MetricsDict[k][FieldList[2]])])))
-        fout.close()
+        with open(OutFile,'w') as fout:
+            if se:
+                fout.write('{}\n'.format('\t'.join(['Sample', 'SE reads not mapped (kept)', 'SE reads mapped (discarded)'])))
+            else:
+                fout.write('{}\n'.format('\t'.join(['Sample', 'PE reads not mapped concordantly (kept)', 'PE reads mapped concordantly (discarded)'])))
+            for k in sorted(MetricsDict.keys()):
+                # write out # not mapped reads and # mapped reads (uniquely + multi mapping reads)
+                fout.write('{}\n'.format('\t'.join([k, str(MetricsDict[k][FieldList[0]]), str(MetricsDict[k][FieldList[1]] + MetricsDict[k][FieldList[2]])])))
     return MetricsDict
 
 
