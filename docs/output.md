@@ -48,7 +48,7 @@ The pipeline uses bowtie2 to map the reads against PhiX and removes mapped reads
 
 ### Host read removal
 
-The pipeline uses bowtie2 to map the reads against the host reference genome specified with `--host_genome` or `--host_fasta` and removes mapped reads.
+The pipeline uses bowtie2 to map short reads against the host reference genome specified with `--host_genome` or `--host_fasta` and removes mapped reads.
 
 **Output directory: `results/QC_shortreads/remove_host`**
 
@@ -65,6 +65,11 @@ The pipeline uses Nanolyse to map the reads against the Lambda phage and removes
 ### Filtlong and porechop
 
 The pipeline uses filtlong and porechop to perform quality control of the long reads that are eventually provided with the `--manifest` option.
+
+No direct host read removal is performed for long reads.
+However, since within this pipeline filtlong uses a read quality based on k-mer matches to the already filtered short reads, reads not overlapping those short reads might be discarded.
+The lower the parameter `--longreads_length_weight`, the higher the impact of the read qualities for filtering.
+For further documentation see the [filtlong online documentation](https://github.com/rrwick/Filtlong).
 
 **Output directory: `results/QC_longreads/NanoPlot_${sample_name}`**
 

@@ -171,6 +171,12 @@ if(!params.keep_phix) {
 if ( params.host_fasta && params.host_genome) {
     exit 1, "Both host fasta reference and iGenomes genome are specififed to remove host contamination! Invalid combination, please specify either --host_fasta or --host_genome."
 }
+if ( params.manifest && (params.host_fasta || params.host_genome) ) {
+    log.warn "Host read removal is only applied to short reads. Long reads might be filtered indirectly by Filtlong, which is set to use read qualities estimated based on k-mer matches to the short, already filtered reads."
+    if ( params.longreads_length_weight > 1 ) {
+        log.warn "The parameter --longreads_length_weight is ${params.longreads_length_weight}, causing the read length being more important for long read filtering than the read quality. Set --longreads_length_weight to 1 in order to assign equal weights."
+    }
+}
 
 if ( params.host_genome ) {
     // Check if host genome exists in the config file
@@ -219,33 +225,36 @@ if(params.manifest){
             def sr2 = file(row[3], checkIfExists: true)
             [ id, lr, sr1, sr2 ]
             }
-        .into { files_sr; files_all_raw }
-    // prepare input for fastqc
-    files_sr
+        .into { files_all_sr; files_all_lr }
+    // prepare input for preprocessing
+    files_all_sr
         .map { id, lr, sr1, sr2 -> [ id, [ sr1, sr2 ] ] }
         .into { read_files_fastqc; read_files_fastp }
+    files_all_lr
+        .map { id, lr, sr1, sr2 -> [ id, lr ] }
+        .set { files_long_raw }
 } else if(params.readPaths){
-        if(params.single_end){
+    if(params.single_end){
         Channel
             .from(params.readPaths)
             .map { row -> [ row[0], [ file(row[1][0], checkIfExists: true) ] ] }
             .ifEmpty { exit 1, "params.readPaths was empty - no input files supplied" }
             .into { read_files_fastqc; read_files_fastp }
-        files_all_raw = Channel.from()
+        files_long_raw = Channel.from()
     } else {
         Channel
             .from(params.readPaths)
             .map { row -> [ row[0], [ file(row[1][0], checkIfExists: true), file(row[1][1], checkIfExists: true) ] ] }
             .ifEmpty { exit 1, "params.readPaths was empty - no input files supplied" }
             .into { read_files_fastqc; read_files_fastp }
-        files_all_raw = Channel.from()
+        files_long_raw = Channel.from()
     }
  } else {
     Channel
         .fromFilePairs(params.reads, size: params.single_end ? 1 : 2)
         .ifEmpty { exit 1, "Cannot find any reads matching: ${params.reads}\nNB: Path needs to be enclosed in quotes!\nIf this is single-end data, please specify --single_end on the command line." }
         .into { read_files_fastqc; read_files_fastp }
-    files_all_raw = Channel.from()
+    files_long_raw = Channel.from()
 }
 
 // Header log info
@@ -342,120 +351,12 @@ process get_software_versions {
     """
 }
 
-
 /*
- * Trim adapter sequences on long read nanopore files
- */
-if (!params.skip_adapter_trimming) {
-    process porechop { 
-        tag "$id"
-            
-        input:
-        set id, file(lr), sr1, sr2 from files_all_raw
-        
-        output:
-        set id, file("${id}_porechop.fastq"), sr1, sr2 into files_porechop
-        set id, file(lr), val("raw") into files_nanoplot_raw
-        
-        script:
-        """
-        porechop -i ${lr} -t "${task.cpus}" -o ${id}_porechop.fastq
-        """
-    }
-} else {
-    files_all_raw
-        .into{ files_porechop; pre_files_nanoplot_raw }
-    pre_files_nanoplot_raw
-        .map { id, lr, sr1, sr2 -> [ id, lr, "raw" ] }
-        .set { files_nanoplot_raw }
-}
+================================================================================
+                                Preprocessing and QC for short reads
+================================================================================
+*/
 
-/*
- * Remove reads mapping to the lambda genome.
- * TODO: add lambda phage to igenomes.config?
- */
-if (!params.keep_lambda) {
-    Channel
-        .fromPath( "${params.lambda_reference}", checkIfExists: true )
-        .set { file_nanolyse_db }
-    process nanolyse {
-        tag "$id"
-
-        publishDir "${params.outdir}", mode: 'copy',
-            saveAs: {filename -> filename.indexOf(".fastq.gz") == -1 ? "QC_longreads/NanoLyse/$filename" : null}
-            
-        input:
-        set id, file(lr), file(sr1), file(sr2), file(nanolyse_db) from files_porechop.combine(file_nanolyse_db)
-
-        output:
-        set id, file("${id}_nanolyse.fastq.gz"), file(sr1), file(sr2) into files_nanolyse
-        file("${id}_nanolyse_log.txt")
-    
-        script:
-        """
-        cat ${lr} | NanoLyse --reference $nanolyse_db | gzip > ${id}_nanolyse.fastq.gz
-        
-        echo "NanoLyse reference: $params.lambda_reference" >${id}_nanolyse_log.txt
-        cat ${lr} | echo "total reads before NanoLyse: \$((`wc -l`/4))" >>${id}_nanolyse_log.txt
-        zcat ${id}_nanolyse.fastq.gz | echo "total reads after NanoLyse: \$((`wc -l`/4))" >>${id}_nanolyse_log.txt
-        """
-    }
-} else {
-    files_porechop
-        .set{ files_nanolyse }
-}
-
-
-/*
- * Quality filter long reads focus on length instead of quality to improve assembly size
- */
-process filtlong {
-    tag "$id"
-
-    input: 
-    set id, file(lr), file(sr1), file(sr2) from files_nanolyse
-    
-    output:
-    set id, file("${id}_lr_filtlong.fastq.gz") into files_lr_filtered 
-    set id, file("${id}_lr_filtlong.fastq.gz"), val('filtered') into files_nanoplot_filtered    
-
-    script:
-    """
-    filtlong \
-        -1 ${sr1} \
-        -2 ${sr2} \
-        --min_length ${params.longreads_min_length} \
-        --keep_percent ${params.longreads_keep_percent} \
-        --trim \
-        --length_weight ${params.longreads_length_weight} \
-        ${lr} | gzip > ${id}_lr_filtlong.fastq.gz
-    """
-}
-
-/*
- * Quality check for nanopore reads and Quality/Length Plots
- */
-process nanoplot {
-    tag "$id"
-    publishDir "${params.outdir}/QC_longreads/NanoPlot_${id}", mode: 'copy'
-    
-    input:
-    set id, file(lr), type from files_nanoplot_raw.mix(files_nanoplot_filtered)
-
-    output:
-    file '*.png'
-    file '*.html'
-    file '*.txt'
-    
-    script:
-    """
-    NanoPlot -t "${task.cpus}" -p ${type}_  --title ${id}_${type} -c darkblue --fastq ${lr}
-    """
-}
-
-/*
- * STEP 1 - Read trimming and pre/post qc
- */
 process fastqc_raw {
     tag "$name"
     publishDir "${params.outdir}/", mode: 'copy',
@@ -610,7 +511,7 @@ if(!params.keep_phix) {
         set val(name), file(reads), file(genome), file(db) from trimmed_reads.combine(phix_db)
 
         output:
-        set val(name), file("*.fastq.gz") into (trimmed_reads_megahit, trimmed_reads_metabat, trimmed_reads_fastqc, trimmed_sr_spadeshybrid, trimmed_reads_spades, trimmed_reads_centrifuge, trimmed_reads_kraken2, trimmed_reads_bowtie2)
+        set val(name), file("*.fastq.gz") into (trimmed_reads_megahit, trimmed_reads_metabat, trimmed_reads_fastqc, trimmed_sr_spadeshybrid, trimmed_reads_spades, trimmed_reads_centrifuge, trimmed_reads_kraken2, trimmed_reads_bowtie2, trimmed_reads_filtlong)
         file("${name}_remove_phix_log.txt")
 
         script:
@@ -632,9 +533,8 @@ if(!params.keep_phix) {
 
     }
 } else {
-    trimmed_reads.into {trimmed_reads_megahit; trimmed_reads_metabat; trimmed_reads_fastqc; trimmed_sr_spadeshybrid; trimmed_reads_spades; trimmed_reads_centrifuge}
+    trimmed_reads.into {trimmed_reads_megahit; trimmed_reads_metabat; trimmed_reads_fastqc; trimmed_sr_spadeshybrid; trimmed_reads_spades; trimmed_reads_centrifuge; trimmed_reads_filtlong}
 }
-
 
 process fastqc_trimmed {
     tag "$name"
@@ -666,8 +566,132 @@ process fastqc_trimmed {
 }
 
 /*
- * STEP - Taxonomic information
+================================================================================
+                                Preprocessing and QC for long reads
+================================================================================
+*/
+
+/*
+ * Trim adapter sequences on long read nanopore files
  */
+if (!params.skip_adapter_trimming) {
+    process porechop {
+        tag "$id"
+
+        input:
+        set id, file(lr) from files_long_raw
+
+        output:
+        set id, file("${id}_porechop.fastq") into files_porechop
+        set id, file(lr), val("raw") into files_nanoplot_raw
+
+        script:
+        """
+        porechop -i ${lr} -t "${task.cpus}" -o ${id}_porechop.fastq
+        """
+    }
+} else {
+    // TODO fix!
+    files_long_raw
+        .into{ files_porechop; pre_files_nanoplot_raw }
+    pre_files_nanoplot_raw
+        .map { id, lr -> [ id, lr, "raw" ] }
+        .set { files_nanoplot_raw }
+}
+
+/*
+ * Remove reads mapping to the lambda genome.
+ * TODO: add lambda phage to igenomes.config?
+ */
+if (!params.keep_lambda) {
+    Channel
+        .fromPath( "${params.lambda_reference}", checkIfExists: true )
+        .set { file_nanolyse_db }
+    process nanolyse {
+        tag "$id"
+
+        publishDir "${params.outdir}", mode: 'copy',
+            saveAs: {filename -> filename.indexOf(".fastq.gz") == -1 ? "QC_longreads/NanoLyse/$filename" : null}
+
+        input:
+        set id, file(lr), file(nanolyse_db) from files_porechop.combine(file_nanolyse_db)
+
+        output:
+        set id, file("${id}_nanolyse.fastq.gz") into files_nanolyse
+        file("${id}_nanolyse_log.txt")
+
+        script:
+        """
+        cat ${lr} | NanoLyse --reference $nanolyse_db | gzip > ${id}_nanolyse.fastq.gz
+
+        echo "NanoLyse reference: $params.lambda_reference" >${id}_nanolyse_log.txt
+        cat ${lr} | echo "total reads before NanoLyse: \$((`wc -l`/4))" >>${id}_nanolyse_log.txt
+        zcat ${id}_nanolyse.fastq.gz | echo "total reads after NanoLyse: \$((`wc -l`/4))" >>${id}_nanolyse_log.txt
+        """
+    }
+} else {
+    files_porechop
+        .set{ files_nanolyse }
+}
+
+// join long and short (already filtered) reads by sample name
+files_nanolyse
+    .join(trimmed_reads_filtlong)
+    .map{ id, lr, sr -> [ id, lr, sr[0], sr[1] ] }
+    .set{ ch_files_filtlong }
+
+/*
+ * Quality filter long reads focus on length instead of quality to improve assembly size
+ */
+process filtlong {
+    tag "$id"
+
+    input:
+    set id, file(lr), file(sr1), file(sr2) from ch_files_filtlong
+
+    output:
+    set id, file("${id}_lr_filtlong.fastq.gz") into files_lr_filtered
+    set id, file("${id}_lr_filtlong.fastq.gz"), val('filtered') into files_nanoplot_filtered
+
+    script:
+    """
+    filtlong \
+        -1 ${sr1} \
+        -2 ${sr2} \
+        --min_length ${params.longreads_min_length} \
+        --keep_percent ${params.longreads_keep_percent} \
+        --trim \
+        --length_weight ${params.longreads_length_weight} \
+        ${lr} | gzip > ${id}_lr_filtlong.fastq.gz
+    """
+}
+
+/*
+ * Quality check for nanopore reads and Quality/Length Plots
+ */
+process nanoplot {
+    tag "$id"
+    publishDir "${params.outdir}/QC_longreads/NanoPlot_${id}", mode: 'copy'
+
+    input:
+    set id, file(lr), type from files_nanoplot_raw.mix(files_nanoplot_filtered)
+
+    output:
+    file '*.png'
+    file '*.html'
+    file '*.txt'
+
+    script:
+    """
+    NanoPlot -t "${task.cpus}" -p ${type}_  --title ${id}_${type} -c darkblue --fastq ${lr}
+    """
+}
+
+/*
+================================================================================
+                                Taxonomic information
+================================================================================
+*/
 
 process centrifuge_db_preparation {
     input:
@@ -790,10 +814,12 @@ process krona {
     """
 }
 
-
 /*
- * STEP 2 - Assembly
- */
+================================================================================
+                                Assembly
+================================================================================
+*/
+
 process megahit {
     tag "$name"
     publishDir "${params.outdir}/", mode: 'copy',
@@ -928,8 +954,11 @@ bowtie2_input = assembly_all_to_metabat
 (bowtie2_input, bowtie2_input_copy) = bowtie2_input.into(2)
 
 /*
- * STEP 3 - Binning
- */
+================================================================================
+                                Binning
+================================================================================
+*/
+
 process bowtie2 {
     tag "$assembler-$sample"
 
@@ -1229,8 +1258,11 @@ process cat {
 }
 
 /*
- * STEP 4 - MultiQC
- */
+================================================================================
+                                MultiQC
+================================================================================
+*/
+
 process multiqc {
     publishDir "${params.outdir}/MultiQC", mode: 'copy'
 
@@ -1271,7 +1303,7 @@ process multiqc {
 }
 
 /*
- * STEP 5 - Output Description HTML
+ * Output Description HTML
  */
 process output_documentation {
     publishDir "${params.outdir}/pipeline_info", mode: 'copy'

@@ -151,7 +151,7 @@ The pipeline has support for hybrid (with long and short reads) assembly, with t
 The option take a tab-separated file with 4 headerless columns: Sample_Id, Long_Reads, Short_Reads_1, Short_Reads_2
 Only one file path per entry is allowed, and single-end short reads are not supported.
 
-## Quality control
+## Quality control (for short reads)
 
 ### `--adapter_forward`
 
@@ -208,7 +208,10 @@ Keep this percent of bases (default: 90)
 
 ### `--longreads_length_weight`
 
-The higher the more important is read length when choosing the best reads (default: 10)
+The higher the more important is read length when choosing the best reads (default: 10).
+The default value focuses on length instead of quality to improve assembly size.
+In order to assign equal weights to read lengths and read qualities set this parameter to 1.
+This might be useful, for example, to benefit indirectly from the removal of short host reads (causing lower qualities for reads not overlapping filtered short reads).
 
 ### `--keep_lambda`
 
