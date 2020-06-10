@@ -261,15 +261,46 @@ if(params.manifest){
 log.info nfcoreHeader()
 def summary = [:]
 if (workflow.revision) summary['Pipeline Release'] = workflow.revision
-summary['Run Name']         = custom_runName ?: workflow.runName
-summary['Reads']            = params.reads
-summary['Data Type']        = params.single_end ? 'Single-End' : 'Paired-End'
+summary['Run Name'] = custom_runName ?: workflow.runName
+if (params.readPaths) summary['Read paths']     = params.readPaths
+else if (params.manifest) summary['Manifest']   = params.manifest
+else summary['Reads']                           = params.reads
+summary['Data Type']                  = params.single_end ? 'Single-End' : 'Paired-End'
+
+summary['Adapter forward']            = params.adapter_forward
+summary['Adapter reverse']            = params.adapter_reverse
+summary['Mean quality']               = params.mean_quality
+summary['Trimming quality']           = params.trimming_quality
+summary['Keep phix reads']            = params.keep_phix ? 'Yes' : 'No'
 if (params.host_genome) summary['Host Genome']               = params.host_genome
 else if(params.host_fasta) summary['Host Fasta Reference']   = params.host_fasta
-if (params.host_genome || params.host_fasta) summary['Host removal setting']   = params.host_removal_verysensitive ? 'very-sensitive' : 'sensitive'
+if (params.host_genome || params.host_fasta) summary['Host removal setting'] = params.host_removal_verysensitive ? 'very-sensitive' : 'sensitive'
+
+if (params.manifest) {
+    summary['Skip adapter trimming']     = params.skip_adapter_trimming ? 'Yes' : 'No'
+    summary['Keep lambda reads']         = params.keep_lambda ? 'Yes' : 'No'
+    summary['Long reads min length']     = params.longreads_min_length
+    summary['Long reads keep percent']   = params.longreads_keep_percent
+    summary['Long reads length weight']  = params.longreads_length_weight
+}
+
 if(params.centrifuge_db) summary['Centrifuge Db']   = params.centrifuge_db
 if(params.kraken2_db) summary['Kraken2 Db']         = params.kraken2_db
-if(!params.skip_busco) summary['Busco Reference']   = params.busco_reference 
+summary['Skip_krona']       = params.skip_krona ? 'Yes' : 'No'
+
+summary['Skip binning']     = params.skip_binning ? 'Yes' : 'No'
+if (!params.skip_binning) {
+    summary['Min contig size']              = params.min_contig_size
+    summary['Min length unbinned contigs']  = params.min_length_unbinned_contigs
+    summary['Max unbinned contigs']         = params.max_unbinned_contigs
+}
+summary['Skip busco']           = params.skip_busco ? 'Yes' : 'No'
+if(!params.skip_busco) summary['Busco Reference']   = params.busco_reference
+summary['Skip spades']          = params.skip_spades ? 'Yes' : 'No'
+summary['Skip spadeshybrid']    = params.skip_spadeshybrid ? 'Yes' : 'No'
+summary['Skip megahit']         = params.skip_megahit ? 'Yes' : 'No'
+summary['Skip quast']           = params.skip_quast ? 'Yes' : 'No'
+
 summary['Max Resources']    = "$params.max_memory memory, $params.max_cpus cpus, $params.max_time time per job"
 if (workflow.containerEngine) summary['Container'] = "$workflow.containerEngine - $workflow.container"
 summary['Output dir']       = params.outdir
