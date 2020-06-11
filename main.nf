@@ -622,7 +622,6 @@ if (!params.skip_adapter_trimming) {
         """
     }
 } else {
-    // TODO fix!
     files_long_raw
         .into{ files_porechop; pre_files_nanoplot_raw }
     pre_files_nanoplot_raw
