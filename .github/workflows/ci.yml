@@ -32,3 +32,6 @@ jobs:
       - name: Run pipeline with test hybrid data
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile test_hybrid,docker
+      - name: Run pipeline with test hybrid data and host read removal
+        run: |
+          nextflow run ${GITHUB_WORKSPACE} -profile test_hybrid_host_rm,docker
