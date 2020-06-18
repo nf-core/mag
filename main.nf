@@ -52,6 +52,7 @@ def helpMessage() {
       --host_genome [str]                   Name of iGenomes reference for host contamination removal (mutually exclusive with --host_fasta)
       --host_fasta [file]                   Fasta reference file for host contamination removal (mutually exclusive with --host_genome). Potentially masked.
       --host_removal_verysensitive [bool]   Use --very-sensitive setting (instead of --sensitive) for Bowtie 2 to map reads against host genome (default: false)
+      --host_removal_save_ids [bool]        Save read ids of removed host reads (default: false)
       --keep_phix [bool]                    Keep reads similar to the Illumina internal standard PhiX genome (default: false)
 
     Long read preprocessing:
@@ -471,12 +472,13 @@ process remove_host {
     output:
     set val(name), file("${name}_host_unmapped*.fastq.gz") into ch_trimmed_reads_host_removed
     file("${name}.bowtie2.log") into ch_host_removed_log
-    file("${name}_host_mapped*.read_ids.txt") into ch_mapped_read_ids
+    file("${name}_host_mapped*.read_ids.txt") optional true
 
     when: params.host_fasta || params.host_genome
 
     script:
     def sensitivity = params.host_removal_verysensitive ? "--very-sensitive" : "--sensitive"
+    def save_ids = params.host_removal_save_ids ? "Y" : "N"
     if ( !params.single_end ) {
         """
         bowtie2 -p "${task.cpus}" \
@@ -488,8 +490,10 @@ process remove_host {
                 1> /dev/null \
                 2> ${name}.bowtie2.log
 
-        zcat ${name}_host_mapped_1.fastq.gz | awk '{if(NR%4==1) print substr(\$0, 2)}' > ${name}_host_mapped_1.read_ids.txt
-        zcat ${name}_host_mapped_2.fastq.gz | awk '{if(NR%4==1) print substr(\$0, 2)}' > ${name}_host_mapped_2.read_ids.txt
+        if [ ${save_ids} = "Y" ] ; then
+            zcat ${name}_host_mapped_1.fastq.gz | awk '{if(NR%4==1) print substr(\$0, 2)}' | LC_ALL=C sort > ${name}_host_mapped_1.read_ids.txt
+            zcat ${name}_host_mapped_2.fastq.gz | awk '{if(NR%4==1) print substr(\$0, 2)}' | LC_ALL=C sort > ${name}_host_mapped_2.read_ids.txt
+        fi
         rm -f ${name}_host_mapped_*.fastq.gz
         """
     } else {
@@ -503,7 +507,9 @@ process remove_host {
                 1> /dev/null \
                 2> ${name}.bowtie2.log
 
-        zcat ${name}_host_mapped.fastq.gz | awk '{if(NR%4==1) print substr(\$0, 2)}' > ${name}_host_mapped.read_ids.txt
+        if [ ${save_ids} = "Y" ] ; then
+            zcat ${name}_host_mapped.fastq.gz | awk '{if(NR%4==1) print substr(\$0, 2)}' | LC_ALL=C sort > ${name}_host_mapped.read_ids.txt
+        fi
         rm -f ${name}_host_mapped.fastq.gz
         """
     }
