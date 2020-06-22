@@ -18,6 +18,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fix missing MultiQC when `--skip_quast` or `--skip_busco` was specified
 - Fix missing channels when `--keep_phix` is specified
 - Added missing parameters to summary
+- Updated links to minikraken db
+- Fixed kraken2 dp preparation: allow different names for compressed archive file and contained folder as for some minikraken dbs
 
 ### `Deprecated`
 
