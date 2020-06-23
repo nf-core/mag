@@ -228,7 +228,7 @@ Database for taxonomic binning with centrifuge (default: none). E.g. "<ftp://ftp
 
 ### `--kraken2_db`
 
-Database for taxonomic binning with kraken2 (default: none). E.g. "<ftp://ftp.ccb.jhu.edu/pub/data/kraken2_dbs/minikraken2_v2_8GB_201904_UPDATE.tgz>"
+Database for taxonomic binning with kraken2 (default: none). E.g. "<ftp://ftp.ccb.jhu.edu/pub/data/kraken2_dbs/minikraken_8GB_202003.tgz>"
 
 ### `--cat_db`
 

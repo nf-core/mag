@@ -70,7 +70,7 @@ def helpMessage() {
 
     Taxonomy:
       --centrifuge_db [file]                Database for taxonomic binning with centrifuge (default: none). E.g. "ftp://ftp.ccb.jhu.edu/pub/infphilo/centrifuge/data/p_compressed+h+v.tar.gz"
-      --kraken2_db [file]                   Database for taxonomic binning with kraken2 (default: none). E.g. "ftp://ftp.ccb.jhu.edu/pub/data/kraken2_dbs/minikraken2_v2_8GB_201904_UPDATE.tgz"
+      --kraken2_db [file]                   Database for taxonomic binning with kraken2 (default: none). E.g. "ftp://ftp.ccb.jhu.edu/pub/data/kraken2_dbs/minikraken_8GB_202003.tgz"
       --skip_krona [bool]                   Skip creating a krona plot for taxonomic binning
       --cat_db [file]                       Database for taxonomic classification of metagenome assembled genomes (default: none). E.g. "tbb.bio.uu.nl/bastiaan/CAT_prepare/CAT_prepare_20190108.tar.gz"
                                             The zipped file needs to contain a folder named "*taxonomy*" and "*CAT_database*" that hold the respective files.
@@ -777,7 +777,7 @@ process kraken2_db_preparation {
     file(db) from file_kraken2_db
 
     output:
-    set val("${db.baseName}"), file("${db.baseName}/*.k2d") into kraken2_database
+    set val("${db.baseName}"), file("*/*.k2d") into kraken2_database
 
     script:
     """
