@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added missing parameters to summary
 - Updated links to minikraken db
 - Fixed kraken2 dp preparation: allow different names for compressed archive file and contained folder as for some minikraken dbs
+- Update MetaBAT2 to v2.15
 
 ### `Deprecated`
 
