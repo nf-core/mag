@@ -1019,7 +1019,7 @@ process bowtie2 {
         """
 }
 
-assembly_mapping_for_metabat = assembly_mapping_for_metabat.groupTuple(by:[0,1]).join(assembly_all_to_metabat_copy)
+assembly_mapping_for_metabat = assembly_mapping_for_metabat.groupTuple(by:[0,1]).join(assembly_all_to_metabat_copy, by:[0,1])
 
 assembly_mapping_for_metabat = assembly_mapping_for_metabat.dump(tag:'assembly_mapping_for_metabat')
 
@@ -1029,7 +1029,7 @@ process metabat {
         saveAs: {filename -> (filename.indexOf(".bam") == -1 && filename.indexOf(".fastq.gz") == -1) ? "GenomeBinning/$filename" : null}
 
     input:
-    set val(assembler), val(sample), file(bam), file(index), val(sampleCopy), file(assembly) from assembly_mapping_for_metabat
+    set val(assembler), val(sample), file(bam), file(index), file(assembly) from assembly_mapping_for_metabat
     val(min_size) from params.min_contig_size
     val(max_unbinned) from params.max_unbinned_contigs
     val(min_length_unbinned) from params.min_length_unbinned_contigs
