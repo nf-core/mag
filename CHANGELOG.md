@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added missing parameters to summary
 - Updated links to minikraken db
 - Fixed kraken2 dp preparation: allow different names for compressed archive file and contained folder as for some minikraken dbs
+- Fix number of threads used by MetaBAT2 program `jgi_summarize_bam_contig_depths`
 
 ### `Deprecated`
 
