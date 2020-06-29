@@ -14,7 +14,7 @@ dependencies:
   - bioconda::multiqc=1.9
   - bioconda::fastp=0.20.0
   - bioconda::megahit=1.2.7
-  - bioconda::metabat2=2.13
+  - bioconda::metabat2=2.15
   - bioconda::samtools=1.9
   - bioconda::bowtie2=2.3.5
   - bioconda::quast=5.0.2
