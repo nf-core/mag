@@ -1046,7 +1046,7 @@ process metabat {
     script:
     def name = "${assembler}-${sample}"
     """
-    jgi_summarize_bam_contig_depths --outputDepth depth.txt ${bam}
+    OMP_NUM_THREADS=${task.cpus} jgi_summarize_bam_contig_depths --outputDepth depth.txt ${bam}
     metabat2 -t "${task.cpus}" -i "${assembly}" -a depth.txt -o "MetaBAT2/${name}" -m ${min_size} --unbinned
 
     #save unbinned contigs above thresholds into individual files, dump others in one file
