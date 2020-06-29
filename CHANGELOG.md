@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Updated links to minikraken db
 - Fixed kraken2 dp preparation: allow different names for compressed archive file and contained folder as for some minikraken dbs
 - Fixed channel joining for multiple samples causing MetaBAT2 error [#32](https://github.com/nf-core/mag/issues/32)
+- Update MetaBAT2 from v2.13 to v2.15
 
 ### `Deprecated`
 
