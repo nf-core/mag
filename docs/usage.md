@@ -256,6 +256,11 @@ Contigs that do not fulfill the thresholds of `--min_length_unbinned_contigs` an
 Maximal number of contigs that are not part of any bin but treated as individual genome (default: 100)
 Contigs that do not fulfill the thresholds of `--min_length_unbinned_contigs` and `--max_unbinned_contigs` are pooled for downstream analysis and reporting, except contigs that also do not fullfill `--min_contig_size` are not considered further.
 
+### `--metabat_rng_seed`
+
+RNG seed for MetaBAT2. Use postive integer to ensure reproducibility (default: 1).
+Set to 0 to use random seed. 
+
 ## Job resources
 
 ### Automatic resubmission

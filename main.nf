@@ -80,6 +80,7 @@ def helpMessage() {
       --min_contig_size [int]               Minimum contig size to be considered for binning and for bin quality check (default: 1500)
       --min_length_unbinned_contigs [int]   Minimal length of contigs that are not part of any bin but treated as individual genome (default: 1000000)
       --max_unbinned_contigs [int]          Maximal number of contigs that are not part of any bin but treated as individual genome (default: 100)
+      --metabat_rng_seed [int]              RNG seed for MetaBAT2. Use postive integer to ensure reproducibility (default: 1). Set to 0 to use random seed.
 
     Bin quality check:
       --skip_busco [bool]                   Disable bin QC with BUSCO (default: false)
@@ -294,6 +295,7 @@ if (!params.skip_binning) {
     summary['Min contig size']              = params.min_contig_size
     summary['Min length unbinned contigs']  = params.min_length_unbinned_contigs
     summary['Max unbinned contigs']         = params.max_unbinned_contigs
+    summary['MetaBAT2 RNG seed']            = params.metabat_rng_seed
 }
 summary['Skip busco']           = params.skip_busco ? 'Yes' : 'No'
 if(!params.skip_busco) summary['Busco Reference']   = params.busco_reference
@@ -1042,7 +1044,7 @@ process metabat {
     def name = "${assembler}-${sample}"
     """
     OMP_NUM_THREADS=${task.cpus} jgi_summarize_bam_contig_depths --outputDepth depth.txt ${bam}
-    metabat2 -t "${task.cpus}" -i "${assembly}" -a depth.txt -o "MetaBAT2/${name}" -m ${min_size} --unbinned
+    metabat2 -t "${task.cpus}" -i "${assembly}" -a depth.txt -o "MetaBAT2/${name}" -m ${min_size} --unbinned --seed ${params.metabat_rng_seed}
 
     #save unbinned contigs above thresholds into individual files, dump others in one file
     split_fasta.py MetaBAT2/${name}.unbinned.fa ${min_length_unbinned} ${max_unbinned} ${min_size}
