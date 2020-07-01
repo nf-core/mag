@@ -1051,6 +1051,13 @@ process metabat {
 
     #save unbinned contigs above thresholds into individual files, dump others in one file
     split_fasta.py MetaBAT2/${name}.unbinned.fa ${min_length_unbinned} ${max_unbinned} ${min_size}
+
+    mkdir MetaBAT2/discarded
+    mv MetaBAT2/${name}.lowDepth.fa MetaBAT2/discarded/
+    mv MetaBAT2/${name}.tooShort.fa MetaBAT2/discarded/
+    mv MetaBAT2/${name}.unbinned.pooled.fa MetaBAT2/discarded/
+    mv MetaBAT2/${name}.unbinned.remaining.fa MetaBAT2/discarded/
+
     #rename splitted file so that it doesnt end up in following processes
     mv MetaBAT2/${name}.unbinned.fa ${name}.unbinned.fa
     """

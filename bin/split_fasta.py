@@ -51,5 +51,5 @@ for index, row in df.iterrows():
 
 print("write "+out_base+".pooled.fa")
 SeqIO.write(pooled, out_base+".pooled.fa", "fasta")
-print("write "+out_base+".fa.remaining")
-SeqIO.write(remaining, out_base+".fa.remaining", "fasta")
+print("write "+out_base+".remaining.fa")
+SeqIO.write(remaining, out_base+".remaining.fa", "fasta")
