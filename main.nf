@@ -80,12 +80,17 @@ def helpMessage() {
       --min_contig_size [int]               Minimum contig size to be considered for binning and for bin quality check (default: 1500)
       --min_length_unbinned_contigs [int]   Minimal length of contigs that are not part of any bin but treated as individual genome (default: 1000000)
       --max_unbinned_contigs [int]          Maximal number of contigs that are not part of any bin but treated as individual genome (default: 100)
-      --metabat_rng_seed [int]              RNG seed for MetaBAT2. Use postive integer to ensure reproducibility (default: 1). Set to 0 to use random seed.
 
     Bin quality check:
       --skip_busco [bool]                   Disable bin QC with BUSCO (default: false)
       --busco_reference [file]              Download path for BUSCO database, available databases are listed here: https://busco.ezlab.org/
                                             (default: https://busco-archive.ezlab.org/v3/datasets/bacteria_odb9.tar.gz)
+
+    Reproducibility options:
+      --megahit_fix_cpu_1 [bool]            Fix number of CPUs for MEGAHIT to 1. Not increased with retries (default: false)
+      --spades_fix_cpus [int]               Fixed number of CPUs used by SPAdes. Not increased with retries (default: none)
+      --spadeshybrid_fix_cpus [int]         Fixed number of CPUs used by SPAdes hybrid. Not increased with retries (default: none)
+      --metabat_rng_seed [int]              RNG seed for MetaBAT2. Use postive integer to ensure reproducibility (default: 1). Set to 0 to use random seed.
 
     AWSBatch options:
       --awsqueue [str]                      The AWSBatch JobQueue that needs to be set when running on AWSBatch
@@ -125,6 +130,23 @@ if (workflow.profile.contains('awsbatch')) {
 ch_multiqc_config = file("$baseDir/assets/multiqc_config.yaml", checkIfExists: true)
 ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config, checkIfExists: true) : Channel.empty()
 ch_output_docs = file("$baseDir/docs/output.md", checkIfExists: true)
+
+// Check if specified cpus for SPAdes are available
+if ( params.spades_fix_cpus && params.spades_fix_cpus > params.max_cpus )
+    exit 1, "Invalid parameter '--spades_fix_cpus ${params.spades_fix_cpus}', max cpus are '${params.max_cpus}'."
+if ( params.spadeshybrid_fix_cpus && params.spadeshybrid_fix_cpus > params.max_cpus )
+    exit 1, "Invalid parameter '--spadeshybrid_fix_cpus ${params.spadeshybrid_fix_cpus}', max cpus are '${params.max_cpus}'."
+// Check if settings concerning reproducibility of used tools are consistent and print warning if not
+if (params.megahit_fix_cpu_1 || params.spades_fix_cpus || params.spadeshybrid_fix_cpus){
+    if (!params.skip_spades && !params.spades_fix_cpus)
+        log.warn "At least one assembly process is run with a parameter to ensure reproducible results, but SPAdes not. Consider using the parameter '--spades_fix_cpus'."
+    if (params.manifest && !params.skip_spadeshybrid && !params.spadeshybrid_fix_cpus)
+        log.warn "At least one assembly process is run with a parameter to ensure reproducible results, but SPAdes hybrid not. Consider using the parameter '--spadeshybrid_fix_cpus'."
+    if (!params.skip_megahit && !params.megahit_fix_cpu_1)
+        log.warn "At least one assembly process is run with a parameter to ensure reproducible results, but MEGAHIT not. Consider using the parameter '--megahit_fix_cpu_1'."
+    if (!params.skip_binning && params.metabat_rng_seed == 0)
+        log.warn "At least one assembly process is run with a parameter to ensure reproducible results, but for MetaBAT2 a random seed is specified ('--metabat_rng_seed 0'). Consider specifying a positive seed instead."
+}
 
 /*
  * Create a channel for reference databases
@@ -295,7 +317,6 @@ if (!params.skip_binning) {
     summary['Min contig size']              = params.min_contig_size
     summary['Min length unbinned contigs']  = params.min_length_unbinned_contigs
     summary['Max unbinned contigs']         = params.max_unbinned_contigs
-    summary['MetaBAT2 RNG seed']            = params.metabat_rng_seed
 }
 summary['Skip busco']           = params.skip_busco ? 'Yes' : 'No'
 if(!params.skip_busco) summary['Busco Reference']   = params.busco_reference
@@ -303,6 +324,11 @@ summary['Skip spades']          = params.skip_spades ? 'Yes' : 'No'
 summary['Skip spadeshybrid']    = params.skip_spadeshybrid ? 'Yes' : 'No'
 summary['Skip megahit']         = params.skip_megahit ? 'Yes' : 'No'
 summary['Skip quast']           = params.skip_quast ? 'Yes' : 'No'
+
+if (!params.skip_megahit)                                               summary['MEGAHIT fix cpus']         = params.megahit_fix_cpu_1 ? '1' : 'No'
+if (!params.single_end && !params.skip_spades)                          summary['SPAdes fix cpus']          = params.spades_fix_cpus ? params.spades_fix_cpus : 'No'
+if (params.manifest && !params.single_end && !params.skip_spadeshybrid) summary['SPAdes hybrid fix cpus']   = params.spadeshybrid_fix_cpus ? params.spadeshybrid_fix_cpus : 'No'
+if (!params.skip_binning)                                               summary['MetaBAT2 RNG seed']        = params.metabat_rng_seed
 
 summary['Max Resources']    = "$params.max_memory memory, $params.max_cpus cpus, $params.max_time time per job"
 if (workflow.containerEngine) summary['Container'] = "$workflow.containerEngine - $workflow.container"
@@ -317,9 +343,10 @@ if (workflow.profile.contains('awsbatch')) {
     summary['AWS CLI']      = params.awscli
 }
 summary['Config Profile'] = workflow.profile
-if (params.config_profile_description) summary['Config Description'] = params.config_profile_description
-if (params.config_profile_contact)     summary['Config Contact']     = params.config_profile_contact
-if (params.config_profile_url)         summary['Config URL']         = params.config_profile_url
+if (params.config_profile_description) summary['Config Profile Description'] = params.config_profile_description
+if (params.config_profile_contact)     summary['Config Profile Contact']     = params.config_profile_contact
+if (params.config_profile_url)         summary['Config Profile URL']         = params.config_profile_url
+summary['Config Files'] = workflow.configFiles.join(', ')
 if (params.email || params.email_on_fail) {
     summary['E-mail Address']    = params.email
     summary['E-mail on failure'] = params.email_on_fail
@@ -875,9 +902,12 @@ process megahit {
 
     script:
     def input = params.single_end ? "-r \"${reads}\"" :  "-1 \"${reads[0]}\" -2 \"${reads[1]}\""
-    """
-    megahit -t "${task.cpus}" $input -o MEGAHIT --out-prefix "${name}"
-    """
+    if ( !params.megahit_fix_cpu_1 || task.cpus == 1 )
+        """
+        megahit -t "${task.cpus}" $input -o MEGAHIT --out-prefix "${name}"
+        """
+    else
+        error "ERROR: '--megahit_fix_cpu_1' was specified, but not succesfully applied. Likely this is caused by changed process properties in a custom config file."
 }
 
 
@@ -908,19 +938,22 @@ process spadeshybrid {
      
     script:
     def maxmem = "${task.memory.toString().replaceAll(/[\sGB]/,'')}"
-    """
-    metaspades.py \
-        --threads "${task.cpus}" \
-        --memory "$maxmem" \
-        --pe1-1 ${sr[0]} \
-        --pe1-2 ${sr[1]} \
-        --nanopore ${lr} \
-        -o spades
-    mv spades/assembly_graph_with_scaffolds.gfa ${id}_graph.gfa
-    mv spades/scaffolds.fasta ${id}_scaffolds.fasta
-    mv spades/contigs.fasta ${id}_contigs.fasta
-    mv spades/spades.log ${id}_log.txt
-    """
+    if ( !params.spadeshyrid_fix_cpus || task.cpus == params.spadeshybrid_fix_cpus )
+        """
+        metaspades.py \
+            --threads "${task.cpus}" \
+            --memory "$maxmem" \
+            --pe1-1 ${sr[0]} \
+            --pe1-2 ${sr[1]} \
+            --nanopore ${lr} \
+            -o spades
+        mv spades/assembly_graph_with_scaffolds.gfa ${id}_graph.gfa
+        mv spades/scaffolds.fasta ${id}_scaffolds.fasta
+        mv spades/contigs.fasta ${id}_contigs.fasta
+        mv spades/spades.log ${id}_log.txt
+        """
+    else
+        error "ERROR: '--spadeshyrid_fix_cpus' was specified, but not succesfully applied. Likely this is caused by changed process properties in a custom config file."
 }
 
 
@@ -930,7 +963,7 @@ process spades {
         saveAs: {filename -> filename.indexOf(".fastq.gz") == -1 ? "Assembly/SPAdes/$filename" : null}
 
     input:
-    set id, file(sr) from trimmed_reads_spades  
+    set id, file(sr) from trimmed_reads_spades
 
     output:
     set id, val("SPAdes"), file("${id}_graph.gfa") into assembly_graph_spades
@@ -943,18 +976,21 @@ process spades {
      
     script:
     def maxmem = "${task.memory.toString().replaceAll(/[\sGB]/,'')}"
-    """
-    metaspades.py \
-        --threads "${task.cpus}" \
-        --memory "$maxmem" \
-        --pe1-1 ${sr[0]} \
-        --pe1-2 ${sr[1]} \
-        -o spades
-    mv spades/assembly_graph_with_scaffolds.gfa ${id}_graph.gfa
-    mv spades/scaffolds.fasta ${id}_scaffolds.fasta
-    mv spades/contigs.fasta ${id}_contigs.fasta
-    mv spades/spades.log ${id}_log.txt
-    """
+    if ( !params.spades_fix_cpus || task.cpus == params.spades_fix_cpus )
+        """
+        metaspades.py \
+            --threads "${task.cpus}" \
+            --memory "$maxmem" \
+            --pe1-1 ${sr[0]} \
+            --pe1-2 ${sr[1]} \
+            -o spades
+        mv spades/assembly_graph_with_scaffolds.gfa ${id}_graph.gfa
+        mv spades/scaffolds.fasta ${id}_scaffolds.fasta
+        mv spades/contigs.fasta ${id}_contigs.fasta
+        mv spades/spades.log ${id}_log.txt
+        """
+    else
+        error "ERROR: '--spades_fix_cpus' was specified, but not succesfully applied. Likely this is caused by changed process properties in a custom config file."
 }
 
 

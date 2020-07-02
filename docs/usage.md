@@ -86,6 +86,13 @@ First, go to the [nf-core/mag releases page](https://github.com/nf-core/mag/rele
 
 This version number will be logged in reports when you run the pipeline, so that you'll know what you used when you look back in the future.
 
+Additionally, to ensure reproducible results from the individual tools there are a few aspects to be aware of.
+SPAdes is designed to be deterministic for a given number of threads. Thus to reproduce the results, just make sure to use the same number of threads when re-running the pipeline.
+To ensure reproducible results from MEGAHIT, run MEGAHIT single threaded by specifying `cpus = 1` for this process.
+
+MetaBAT2 is run by default with a fixed seed within this pipeline.
+
+
 ## Main arguments
 
 ### `-profile`
