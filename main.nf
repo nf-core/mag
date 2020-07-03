@@ -865,8 +865,7 @@ process megahit {
     set val(name), file(reads) from trimmed_reads_megahit
 
     output:
-    set val("MEGAHIT"), val("$name"), file("MEGAHIT/${name}.contigs.fa") into assembly_megahit_to_quast
-    set val("MEGAHIT"), val("$name"), file("MEGAHIT/${name}.contigs.fa") into assembly_megahit_to_metabat
+    set val("MEGAHIT"), val("$name"), file("MEGAHIT/${name}.contigs.fa") into (assembly_megahit_to_quast, assembly_megahit_to_metabat)
     file("MEGAHIT/*.log")
 
     when:
@@ -898,8 +897,7 @@ process spadeshybrid {
 
     output:
     set id, val("SPAdesHybrid"), file("${id}_graph.gfa") into assembly_graph_spadeshybrid
-    set val("SPAdesHybrid"), val("$id"), file("${id}_scaffolds.fasta") into assembly_spadeshybrid_to_quast
-    set val("SPAdesHybrid"), val("$id"), file("${id}_scaffolds.fasta") into assembly_spadeshybrid_to_metabat
+    set val("SPAdesHybrid"), val("$id"), file("${id}_scaffolds.fasta") into (assembly_spadeshybrid_to_quast, assembly_spadeshybrid_to_metabat)
     file("${id}_contigs.fasta")
     file("${id}_log.txt")
 
@@ -934,8 +932,7 @@ process spades {
 
     output:
     set id, val("SPAdes"), file("${id}_graph.gfa") into assembly_graph_spades
-    set val("SPAdes"), val("$id"), file("${id}_scaffolds.fasta") into assembly_spades_to_quast
-    set val("SPAdes"), val("$id"), file("${id}_scaffolds.fasta") into assembly_spades_to_metabat
+    set val("SPAdes"), val("$id"), file("${id}_scaffolds.fasta") into (assembly_spades_to_quast, assembly_spades_to_metabat)
     file("${id}_contigs.fasta")
     file("${id}_log.txt")
 
@@ -1035,10 +1032,8 @@ process metabat {
     val(min_length_unbinned) from params.min_length_unbinned_contigs
 
     output:
-    set val(assembler), val(sample), file("MetaBAT2/*.fa") into metabat_bins mode flatten
-    set val(assembler), val(sample), file("MetaBAT2/*.fa") into metabat_bins_for_cat
-    set val(assembler), val(sample), file("MetaBAT2/*.fa") into metabat_bins_quast_bins
-    file("MetaBAT2/*")
+    set val(assembler), val(sample), file("MetaBAT2/*.fa") into (metabat_bins, metabat_bins_for_cat, metabat_bins_quast_bins)
+    file("MetaBAT2/discarded/*")
 
     when:
     !params.skip_binning
@@ -1063,7 +1058,6 @@ process metabat {
     """
 }
 
-
 process busco_download_db {
     tag "${database.baseName}"
 
@@ -1081,6 +1075,10 @@ process busco_download_db {
 }
 
 metabat_bins
+    .flatMap { it -> def list = []
+                     for (c in it[2]){ list << [ it[0], it[1], c] }
+                     list
+    }
     .combine(busco_db)
     .set { metabat_db_busco }
 
@@ -1198,7 +1196,7 @@ process quast_bins {
     set val(assembler), val(sample), file(assembly) from metabat_bins_quast_bins
 
     output:
-    file("QUAST/*")
+    file("QUAST/*/*")
     file("QUAST/*-quast_summary.tsv") into quast_bin_summaries
 
     when:
