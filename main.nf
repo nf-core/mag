@@ -1075,10 +1075,7 @@ process busco_download_db {
 }
 
 metabat_bins
-    .flatMap { it -> def list = []
-                     for (c in it[2]){ list << [ it[0], it[1], c] }
-                     list
-    }
+    .transpose()
     .combine(busco_db)
     .set { metabat_db_busco }
 
