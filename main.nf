@@ -1193,7 +1193,7 @@ process quast_bins {
     set val(assembler), val(sample), file(assembly) from metabat_bins_quast_bins
 
     output:
-    file("QUAST/*/*")
+    path("QUAST/*") type('dir')
     file("QUAST/*-quast_summary.tsv") into quast_bin_summaries
 
     when:
@@ -1203,7 +1203,7 @@ process quast_bins {
     """
     ASSEMBLIES=\$(echo \"$assembly\" | sed 's/[][]//g')
     IFS=', ' read -r -a assemblies <<< \"\$ASSEMBLIES\"
-    
+
     for assembly in \"\${assemblies[@]}\"; do
         metaquast.py --threads "${task.cpus}" --max-ref-number 0 --rna-finding --gene-finding -l "\${assembly}" "\${assembly}" -o "QUAST/\${assembly}"
         if ! [ -f "QUAST/${assembler}-${sample}-quast_summary.tsv" ]; then 
@@ -1211,7 +1211,7 @@ process quast_bins {
         else
             tail -n +2 "QUAST/\${assembly}/transposed_report.tsv" >> "QUAST/${assembler}-${sample}-quast_summary.tsv"
         fi
-    done    
+    done
     """
 }
 
