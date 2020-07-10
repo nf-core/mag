@@ -86,12 +86,10 @@ First, go to the [nf-core/mag releases page](https://github.com/nf-core/mag/rele
 
 This version number will be logged in reports when you run the pipeline, so that you'll know what you used when you look back in the future.
 
-Additionally, to ensure reproducible results from the individual tools there are a few aspects to be aware of.
-SPAdes is designed to be deterministic for a given number of threads. Thus to reproduce the results, just make sure to use the same number of threads when re-running the pipeline.
-To ensure reproducible results from MEGAHIT, run MEGAHIT single threaded by specifying `cpus = 1` for this process.
+Additionally, to enable also reproducible results from the individual assembly tools this pipeline provides extra parameters. SPAdes is designed to be deterministic for a given number of threads. To generate reproducible results set the number of cpus with `--spades_fix_cpus` or `--spadeshybrid_fix_cpus`. This will overwrite the number of cpus specified in the `base.config` file and additionally ensure that it is not increased in case of retries for individual samples. MEGAHIT only generates reproducible results when run single-threaded.
+You can fix this by using the prameter `--megahit_fix_cpu_1`. In both cases, do not specify the number of cpus for these processes in additional custom config files, this would result in an error.
 
-MetaBAT2 is run by default with a fixed seed within this pipeline.
-
+MetaBAT2 is run by default with a fixed seed within this pipeline, thus producing reproducible results.
 
 ## Main arguments
 
@@ -242,6 +240,20 @@ Database for taxonomic binning with kraken2 (default: none). E.g. "<ftp://ftp.cc
 Database for taxonomic classification of metagenome assembled genomes (default: none). E.g. "<tbb.bio.uu.nl/bastiaan/CAT*prepare/CAT_prepare_20190108.tar.gz>"
 The zipped file needs to contain a folder named "\_taxonomy*" and "_CAT_database_" that hold the respective files.
 
+## Assembly options
+
+### `--megahit_fix_cpu_1`
+
+Fix number of CPUs for MEGAHIT to 1. Not increased with retries (default: false). See also [Reproducibility](#reproducibility).
+
+### `--spades_fix_cpus`
+
+Fixed number of CPUs used by SPAdes. Not increased with retries (default: none).
+
+### `--spadeshybrid_fix_cpus`
+
+Fixed number of CPUs used by SPAdes hybrid. Not increased with retries (default: none).
+
 ## Binning options
 
 ### `--min_contig_size`
@@ -266,7 +278,7 @@ Contigs that do not fulfill the thresholds of `--min_length_unbinned_contigs` an
 ### `--metabat_rng_seed`
 
 RNG seed for MetaBAT2. Use postive integer to ensure reproducibility (default: 1).
-Set to 0 to use random seed. 
+Set to 0 to use random seed.
 
 ## Job resources
 
