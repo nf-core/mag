@@ -859,7 +859,10 @@ process krona {
 process megahit {
     tag "$name"
     publishDir "${params.outdir}/", mode: 'copy',
-        saveAs: {filename -> filename.indexOf(".fastq.gz") == -1 ? "Assembly/$filename" : null}
+        saveAs: {filename -> 
+          if (filename.indexOf(".gz") == -1 && filename.indexOf(".contigs.fa") == -1 ) "Assembly/$filename"
+          else if (filename.indexOf(".contigs.fa.gz") >0) "Assembly/$filename"
+          else null}
 
     input:
     set val(name), file(reads) from trimmed_reads_megahit
@@ -867,6 +870,7 @@ process megahit {
     output:
     set val("MEGAHIT"), val("$name"), file("MEGAHIT/${name}.contigs.fa") into (assembly_megahit_to_quast, assembly_megahit_to_metabat)
     file("MEGAHIT/*.log")
+    file("MEGAHIT/${name}.contigs.fa.gz")
 
     when:
     !params.skip_megahit
@@ -875,6 +879,7 @@ process megahit {
     def input = params.single_end ? "-r \"${reads}\"" :  "-1 \"${reads[0]}\" -2 \"${reads[1]}\""
     """
     megahit -t "${task.cpus}" $input -o MEGAHIT --out-prefix "${name}"
+    gzip -c "MEGAHIT/${name}.contigs.fa" > "MEGAHIT/${name}.contigs.fa.gz"
     """
 }
 
@@ -890,16 +895,20 @@ process megahit {
 process spadeshybrid {
     tag "$id"
     publishDir "${params.outdir}/", mode: 'copy', pattern: "${id}*",
-        saveAs: {filename -> filename.indexOf(".fastq.gz") == -1 ? "Assembly/SPAdesHybrid/$filename" : null}
+        saveAs: {filename -> 
+          if (filename.indexOf(".fastq.gz") == -1  && filename.indexOf("_scaffolds.fasta") == -1) "Assembly/SPAdesHybrid/$filename"
+          else if (filename.indexOf("_scaffolds.fasta.gz") > 0) "Assembly/SPAdesHybrid/$filename"
+          else null}
 
     input:
     set id, file(lr), file(sr) from files_pre_spadeshybrid  
 
     output:
-    set id, val("SPAdesHybrid"), file("${id}_graph.gfa") into assembly_graph_spadeshybrid
     set val("SPAdesHybrid"), val("$id"), file("${id}_scaffolds.fasta") into (assembly_spadeshybrid_to_quast, assembly_spadeshybrid_to_metabat)
-    file("${id}_contigs.fasta")
     file("${id}_log.txt")
+    file("${id}_contigs.fasta.gz")
+    file("${id}_scaffolds.fasta.gz")
+    file("${id}_graph.gfa.gz")
 
     when:
     params.manifest && !params.single_end && !params.skip_spadeshybrid
@@ -918,6 +927,9 @@ process spadeshybrid {
     mv spades/scaffolds.fasta ${id}_scaffolds.fasta
     mv spades/contigs.fasta ${id}_contigs.fasta
     mv spades/spades.log ${id}_log.txt
+    gzip "${id}_contigs.fasta" > "${id}_contigs.fasta.gz"
+    gzip "${id}_graph.gfa" > "${id}_graph.gfa.gz"
+    gzip -c "${id}_scaffolds.fasta" > "${id}_scaffolds.fasta.gz"
     """
 }
 
@@ -925,16 +937,19 @@ process spadeshybrid {
 process spades {
     tag "$id"
     publishDir "${params.outdir}/", mode: 'copy', pattern: "${id}*",
-        saveAs: {filename -> filename.indexOf(".fastq.gz") == -1 ? "Assembly/SPAdes/$filename" : null}
-
+        saveAs: {filename -> 
+          if (filename.indexOf(".fastq.gz") == -1  && filename.indexOf("_scaffolds.fasta") == -1) "Assembly/SPAdes/$filename"
+          else if (filename.indexOf("_scaffolds.fasta.gz") > 0) "Assembly/SPAdes/$filename"
+          else null}
     input:
     set id, file(sr) from trimmed_reads_spades  
 
     output:
-    set id, val("SPAdes"), file("${id}_graph.gfa") into assembly_graph_spades
     set val("SPAdes"), val("$id"), file("${id}_scaffolds.fasta") into (assembly_spades_to_quast, assembly_spades_to_metabat)
-    file("${id}_contigs.fasta")
     file("${id}_log.txt")
+    file("${id}_contigs.fasta.gz")
+    file("${id}_scaffolds.fasta.gz")
+    file("${id}_graph.gfa.gz")
 
     when:
     !params.single_end && !params.skip_spades
@@ -952,6 +967,9 @@ process spades {
     mv spades/scaffolds.fasta ${id}_scaffolds.fasta
     mv spades/contigs.fasta ${id}_contigs.fasta
     mv spades/spades.log ${id}_log.txt
+    gzip "${id}_contigs.fasta" > "${id}_contigs.fasta.gz"
+    gzip "${id}_graph.gfa" > "${id}_graph.gfa.gz"
+    gzip -c "${id}_scaffolds.fasta" > "${id}_scaffolds.fasta.gz"
     """
 }
 
