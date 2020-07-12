@@ -1034,6 +1034,7 @@ process metabat {
     output:
     set val(assembler), val(sample), file("MetaBAT2/*.fa") into (metabat_bins, metabat_bins_for_cat, metabat_bins_quast_bins)
     file("MetaBAT2/discarded/*")
+    file("${assembler}-${assembly}-depth.txt.gz")
 
     when:
     !params.skip_binning
@@ -1042,6 +1043,7 @@ process metabat {
     def name = "${assembler}-${sample}"
     """
     OMP_NUM_THREADS=${task.cpus} jgi_summarize_bam_contig_depths --outputDepth depth.txt ${bam}
+    gzip -c depth.txt > "${assembler}-${assembly}-depth.txt.gz"
     metabat2 -t "${task.cpus}" -i "${assembly}" -a depth.txt -o "MetaBAT2/${name}" -m ${min_size} --unbinned
 
     #save unbinned contigs above thresholds into individual files, dump others in one file
