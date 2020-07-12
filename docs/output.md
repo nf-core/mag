@@ -123,7 +123,7 @@ Trimmed (short) reads are assembled with both megahit and SPAdes. Hybrid assembl
 
 **Output directory: `results/MEGAHIT`**
 
-- `${sample}.contigs.fasta`: metagenome assembly in fasta format
+- `${sample}.contigs.fasta.gz`: compressed metagenome assembly in fasta format
 - `${sample}_QC/`: directory containing QUAST files
 
 ### SPAdes
@@ -132,7 +132,9 @@ Trimmed (short) reads are assembled with both megahit and SPAdes. Hybrid assembl
 
 **Output directory: `results/SPAdes`**
 
-- `${sample}_contigs.fasta`: metagenome assembly in fasta format
+- `${sample}_scaffolds.fasta.gz`: compressed assembled scaffolds in fasta format
+- `${sample}_graph.gfa.gz`: compressed assembly graph in gfa format
+- `${sample}_contigs.fasta.gz`: compressed assembled contigs in fasta format
 - `${sample}_QC/`: directory containing QUAST files
 
 ### SPAdesHybrid
@@ -141,7 +143,9 @@ SPAdesHybrid is a part of the SPAdes software and is used when the user provides
 
 **Output directory: `results/SPAdesHybrid`**
 
-- `${sample}_contigs.fasta`: metagenome assembly in fasta format
+- `${sample}_scaffolds.fasta.gz`: compressed assembled scaffolds in fasta format
+- `${sample}_graph.gfa.gz`: compressed assembly graph in gfa format
+- `${sample}_contigs.fasta.gz`: compressed assembled contigs in fasta format
 - `${sample}_QC/`: directory containing QUAST files
 
 ### Quast
