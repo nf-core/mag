@@ -123,7 +123,7 @@ Trimmed (short) reads are assembled with both megahit and SPAdes. Hybrid assembl
 
 **Output directory: `results/MEGAHIT`**
 
-- `${sample}.contigs.fasta.gz`: compressed metagenome assembly in fasta format
+- `${sample}.contigs.fa.gz`: compressed metagenome assembly in fasta format
 - `${sample}_QC/`: directory containing QUAST files
 
 ### SPAdes
