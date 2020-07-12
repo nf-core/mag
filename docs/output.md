@@ -7,24 +7,23 @@ This document describes the output produced by the pipeline. Most of the plots a
 The pipeline is built using [Nextflow](https://www.nextflow.io/)
 and processes data using the following steps:
 
-- [Quality trimming and QC](#quality-trimming-and-qc) of input reads
+- [Quality control](#quality-control) of input reads - trimming and contaminant removal
 - [Taxonomic classification](#taxonomic-classification) of trimmed reads
 - [Assembly](#assembly) of trimmed reads
 - [Binning](#binning) of assembled contigs
 - [MultiQC](#multiqc) - aggregate report, describing results of the whole pipeline
 
-## Quality trimming and QC
+## Quality control
 
 These steps trim away the adapter sequences present in input reads, trims away bad quality bases and sicard reads that are too short.
-It also removes sequencing controls, such as PhiX or the Lambda phage, as well as runs FastQC for visualising the general quality metrics of the sequencing runs before and after trimming.
+It also removes host contaminants and sequencing controls, such as PhiX or the Lambda phage.
+FastQC is run for visualising the general quality metrics of the sequencing runs before and after trimming.
 
 ### FastQC
 
 [FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) gives general quality metrics about your reads. It provides information about the quality score distribution across your reads, the per base sequence content (%T/A/G/C). You get information about adapter contamination and other overrepresented sequences.
 
 For further reading and documentation see the [FastQC help](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/).
-
-> **NB:** The FastQC plots displayed in the MultiQC report shows both _untrimmed_ and _trimmed_ reads.
 
 **Output directory: `results/QC_shortreads/fastqc`**
 
@@ -47,6 +46,14 @@ The pipeline uses bowtie2 to map the reads against PhiX and removes mapped reads
 
 - Contains a brief log file indicating how many reads have been removed.
 
+### Host read removal
+
+The pipeline uses bowtie2 to map short reads against the host reference genome specified with `--host_genome` or `--host_fasta` and removes mapped reads.
+
+**Output directory: `results/QC_shortreads/remove_host`**
+
+- Contains the bowtie2 log file indicating how many reads have been mapped as well as a file listing the read ids of discarded reads.
+
 ### keep_lambda
 
 The pipeline uses Nanolyse to map the reads against the Lambda phage and removes mapped reads.
@@ -58,6 +65,11 @@ The pipeline uses Nanolyse to map the reads against the Lambda phage and removes
 ### Filtlong and porechop
 
 The pipeline uses filtlong and porechop to perform quality control of the long reads that are eventually provided with the `--manifest` option.
+
+No direct host read removal is performed for long reads.
+However, since within this pipeline filtlong uses a read quality based on k-mer matches to the already filtered short reads, reads not overlapping those short reads might be discarded.
+The lower the parameter `--longreads_length_weight`, the higher the impact of the read qualities for filtering.
+For further documentation see the [filtlong online documentation](https://github.com/rrwick/Filtlong).
 
 **Output directory: `results/QC_longreads/NanoPlot_${sample_name}`**
 
