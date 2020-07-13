@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed channel joining for multiple samples causing MetaBAT2 error [#32](https://github.com/nf-core/mag/issues/32)
 - Update MetaBAT2 from v2.13 to v2.15
 - Fix number of threads used by MetaBAT2 program `jgi_summarize_bam_contig_depths`
+- Fix SPAdes memory conversion issue [#70](https://github.com/nf-core/mag/pull/70)
 
 ### `Deprecated`
 
