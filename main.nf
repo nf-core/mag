@@ -860,8 +860,7 @@ process megahit {
     tag "$name"
     publishDir "${params.outdir}/", mode: 'copy',
         saveAs: {filename -> 
-          if (filename.indexOf(".gz") == -1 && filename.indexOf(".contigs.fa") == -1 ) "Assembly/$filename"
-          else if (filename.indexOf(".contigs.fa.gz") >0) "Assembly/$filename"
+          if (filename.indexOf(".log") > 0 || filename.indexOf(".contigs.fa.gz") > 0 ) "Assembly/$filename"
           else null}
 
     input:
