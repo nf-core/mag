@@ -895,8 +895,7 @@ process spadeshybrid {
     tag "$id"
     publishDir "${params.outdir}/", mode: 'copy', pattern: "${id}*",
         saveAs: {filename -> 
-          if (filename.indexOf(".fastq.gz") == -1  && filename.indexOf("_scaffolds.fasta") == -1) "Assembly/SPAdesHybrid/$filename"
-          else if (filename.indexOf("_scaffolds.fasta.gz") > 0) "Assembly/SPAdesHybrid/$filename"
+          if (filename.indexOf(".log") > 0 || filename.indexOf("_scaffolds.fasta.gz") > 0 || filename.indexOf("_graph.gfa.gz") > 0 || filename.indexOf("_contigs.fasta.gz") > 0 ) "Assembly/SPAdesHybrid/$filename"
           else null}
 
     input:
@@ -937,8 +936,7 @@ process spades {
     tag "$id"
     publishDir "${params.outdir}/", mode: 'copy', pattern: "${id}*",
         saveAs: {filename -> 
-          if (filename.indexOf(".fastq.gz") == -1  && filename.indexOf("_scaffolds.fasta") == -1) "Assembly/SPAdes/$filename"
-          else if (filename.indexOf("_scaffolds.fasta.gz") > 0) "Assembly/SPAdes/$filename"
+          if (filename.indexOf(".log") > 0 || filename.indexOf("_scaffolds.fasta.gz") > 0 || filename.indexOf("_graph.gfa.gz") > 0 || filename.indexOf("_contigs.fasta.gz") > 0 ) "Assembly/SPAdes/$filename"
           else null}
     input:
     set id, file(sr) from trimmed_reads_spades  
