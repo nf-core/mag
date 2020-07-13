@@ -2,45 +2,46 @@
 
 ## Table of contents
 
-- [Introduction](#general-nextflow-info)
-- [Running the pipeline](#running-the-pipeline)
-- [Updating the pipeline](#updating-the-pipeline)
-- [Reproducibility](#reproducibility)
-- [Main arguments](#main-arguments)
-  - [`-profile`](#-profile-single-dash)
-    - [`docker`](#docker)
-    - [`awsbatch`](#awsbatch)
-    - [`standard`](#standard)
-    - [`none`](#none)
-  - [`--reads`](#--reads)
-  - [`--singleEnd`](#--singleend)
-  - [`--manifest`](#--manifest)
-- [Optional Arguments](#optional-arguments)
-  - [Trimming Options](#trimming-options)
-  - [Trimming Options for long reads](#trimming-options-for-long-reads)
-  - [Taxonomic classification](#taxonomic-classification)
-  - [Binning Options](#binning-options)
-- [Job Resources](#job-resources)
-- [Automatic resubmission](#automatic-resubmission)
-- [Custom resource requests](#custom-resource-requests)
-- [AWS batch specific parameters](#aws-batch-specific-parameters)
-  - [`-awsbatch`](#-awsbatch)
-  - [`--awsqueue`](#--awsqueue)
-  - [`--awsregion`](#--awsregion)
-- [Other command line parameters](#other-command-line-parameters)
-  - [`--outdir`](#--outdir)
-  - [`--email`](#--email)
-  - [`-name`](#-name-single-dash)
-  - [`-resume`](#-resume-single-dash)
-  - [`-c`](#-c-single-dash)
-  - [`--max_memory`](#--max_memory)
-  - [`--max_time`](#--max_time)
-  - [`--max_cpus`](#--max_cpus)
-  - [`--plaintext_emails`](#--plaintext_emails)
-  - [`--sampleLevel`](#--sampleLevel)
-  - [`--multiqc_config`](#--multiqc_config)
+* [Table of contents](#table-of-contents)
+* [Introduction](#introduction)
+* [Running the pipeline](#running-the-pipeline)
+  * [Updating the pipeline](#updating-the-pipeline)
+  * [Reproducibility](#reproducibility)
+* [Main arguments](#main-arguments)
+  * [`-profile`](#-profile)
+  * [`--reads`](#--reads)
+  * [`--single_end`](#--single_end)
+  * [`--manifest`](#--manifest)
+* [Optional Arguments](#optional-arguments)
+  * [Quality control](#quality-control)
+  * [Quality control for long reads](#quality-control-for-long-reads)
+  * [Taxonomic classification](#taxonomic-classification)
+  * [Binning Options](#binning-options)
+* [Job resources](#job-resources)
+  * [Automatic resubmission](#automatic-resubmission)
+  * [Custom resource requests](#custom-resource-requests)
+* [AWS Batch specific parameters](#aws-batch-specific-parameters)
+  * [`--awsqueue`](#--awsqueue)
+  * [`--awsregion`](#--awsregion)
+  * [`--awscli`](#--awscli)
+* [Other command line parameters](#other-command-line-parameters)
+  * [`--outdir`](#--outdir)
+  * [`--email`](#--email)
+  * [`--email_on_fail`](#--email_on_fail)
+  * [`--max_multiqc_email_size`](#--max_multiqc_email_size)
+  * [`-name`](#-name)
+  * [`-resume`](#-resume)
+  * [`-c`](#-c)
+  * [`--custom_config_version`](#--custom_config_version)
+  * [`--custom_config_base`](#--custom_config_base)
+  * [`--max_memory`](#--max_memory)
+  * [`--max_time`](#--max_time)
+  * [`--max_cpus`](#--max_cpus)
+  * [`--plaintext_email`](#--plaintext_email)
+  * [`--monochrome_logs`](#--monochrome_logs)
+  * [`--multiqc_config`](#--multiqc_config)
 
-## General Nextflow info
+## Introduction
 
 Nextflow handles job submissions on SLURM or other environments, and supervises running the jobs. Thus the Nextflow process must run until the pipeline is finished. We recommend that you put the process running in the background through `screen` / `tmux` or similar tool. Alternatively you can run nextflow within a cluster job submitted your job scheduler.
 
@@ -89,24 +90,34 @@ This version number will be logged in reports when you run the pipeline, so that
 
 ### `-profile`
 
-Use this parameter to choose a configuration profile. Profiles can give configuration presets for different compute environments. Note that multiple profiles can be loaded, for example: `-profile docker` - the order of arguments is important!
+Use this parameter to choose a configuration profile. Profiles can give configuration presets for different compute environments.
 
-If `-profile` is not specified at all the pipeline will be run locally and expects all software to be installed and available on the `PATH`.
+Several generic profiles are bundled with the pipeline which instruct the pipeline to use software packaged using different methods (Docker, Singularity, Conda) - see below.
 
-- `awsbatch`
-  - A generic configuration profile to be used with AWS Batch.
-- `conda`
-  - A generic configuration profile to be used with [conda](https://conda.io/docs/)
-  - Pulls most software from [Bioconda](https://bioconda.github.io/)
-- `docker`
-  - A generic configuration profile to be used with [Docker](http://docker.com/)
-  - Pulls software from dockerhub: [`nfcore/mag`](http://hub.docker.com/r/nfcore/mag/)
-- `singularity`
-  - A generic configuration profile to be used with [Singularity](http://singularity.lbl.gov/)
-  - Pulls software from DockerHub: [`nfcore/mag`](http://hub.docker.com/r/nfcore/mag/)
-- `test`, `test_hybrid`
-  - Profiles with a complete configuration for automated testing
-  - Includes links to test data so needs no other parameters
+> We highly recommend the use of Docker or Singularity containers for full pipeline reproducibility, however when this is not possible, Conda is also supported.
+
+The pipeline also dynamically loads configurations from [https://github.com/nf-core/configs](https://github.com/nf-core/configs) when it runs, making multiple config profiles for various institutional clusters available at run time. For more information and to see if your system is available in these configs please see the [nf-core/configs documentation](https://github.com/nf-core/configs#documentation).
+
+Note that multiple profiles can be loaded, for example: `-profile test,docker` - the order of arguments is important!
+They are loaded in sequence, so later profiles can overwrite earlier profiles.
+
+If `-profile` is not specified, the pipeline will run locally and expect all software to be installed and available on the `PATH`. This is _not_ recommended.
+
+* `docker`
+  * A generic configuration profile to be used with [Docker](http://docker.com/)
+  * Pulls software from dockerhub: [`nfcore/mag`](http://hub.docker.com/r/nfcore/mag/)
+* `singularity`
+  * A generic configuration profile to be used with [Singularity](http://singularity.lbl.gov/)
+  * Pulls software from DockerHub: [`nfcore/mag`](http://hub.docker.com/r/nfcore/mag/)
+* `conda`
+  * Please only use Conda as a last resort i.e. when it's not possible to run the pipeline with Docker or Singularity.
+  * A generic configuration profile to be used with [Conda](https://conda.io/docs/)
+  * Pulls most software from [Bioconda](https://bioconda.github.io/)
+* `test`, `test_hybrid`
+  * Profiles with a complete configuration for automated testing
+  * Includes links to test data so needs no other parameters
+
+<!-- TODO nf-core: Document required command line parameters -->
 
 ### `--reads`
 
@@ -124,12 +135,12 @@ Please note the following requirements:
 
 If left unspecified, a default pattern is used: `data/*{1,2}.fastq.gz`
 
-### `--singleEnd`
+### `--single_end`
 
-By default, the pipeline expects paired-end data. If you have single-end data, you need to specify `--singleEnd` on the command line when you launch the pipeline. A normal glob pattern, enclosed in quotation marks, can then be used for `--reads`. For example:
+By default, the pipeline expects paired-end data. If you have single-end data, you need to specify `--single_end` on the command line when you launch the pipeline. A normal glob pattern, enclosed in quotation marks, can then be used for `--reads`. For example:
 
 ```bash
---singleEnd --reads '*.fastq'
+--single_end --reads '*.fastq'
 ```
 
 It is not possible to run a mixture of single-end and paired-end files in one run.
@@ -140,7 +151,7 @@ The pipeline has support for hybrid (with long and short reads) assembly, with t
 The option take a tab-separated file with 4 headerless columns: Sample_Id, Long_Reads, Short_Reads_1, Short_Reads_2
 Only one file path per entry is allowed, and single-end short reads are not supported.
 
-## Trimming options
+## Quality control (for short reads)
 
 ### `--adapter_forward`
 
@@ -158,11 +169,30 @@ Mean qualified quality value for keeping read (default: 15)
 
 Trimming quality value for the sliding window (default: 15)
 
+### `--host_fasta`
+
+Use this to speficify the full path to a host reference FASTA file to remove host reads with Bowtie 2 (default: none).
+
+### `--host_genome (using iGenomes)`
+
+Alternatively, you can specify an iGenomes reference that should be used for host read removal with Bowtie 2.
+
+The pipeline config files come bundled with paths to the illumina iGenomes reference index files. If running with docker or AWS, the configuration is set up to use the [AWS-iGenomes](https://ewels.github.io/AWS-iGenomes/) resource.
+
+There are 31 different species supported in the iGenomes references. You can specify which genome to use with the `--host_genome` flag.
+You can find the keys to specify the genomes in the [iGenomes config file](../conf/igenomes.config).
+
+When using the `--host_genome` parameter, both the iGenomes FASTA file as well as corresponding, already pre-built Bowtie 2 index files will be used for host read removal.
+
+### `--host_removal_verysensitive`
+
+Use the `--very-sensitive` setting (instead of `--sensitive`) for Bowtie 2 to map reads against host genome (default: false)
+
 ### `--keep_phix`
 
 Keep reads similar to the Illumina internal standard PhiX genome (default: false)
 
-## Trimming options for long reads
+## Quality control for long reads
 
 ### `--skip_adapter_trimming`
 
@@ -178,7 +208,10 @@ Keep this percent of bases (default: 90)
 
 ### `--longreads_length_weight`
 
-The higher the more important is read length when choosing the best reads (default: 10)
+The higher the more important is read length when choosing the best reads (default: 10).
+The default value focuses on length instead of quality to improve assembly size.
+In order to assign equal weights to read lengths and read qualities set this parameter to 1.
+This might be useful, for example, to benefit indirectly from the removal of short host reads (causing lower qualities for reads not overlapping filtered short reads).
 
 ### `--keep_lambda`
 
@@ -195,7 +228,7 @@ Database for taxonomic binning with centrifuge (default: none). E.g. "<ftp://ftp
 
 ### `--kraken2_db`
 
-Database for taxonomic binning with kraken2 (default: none). E.g. "<ftp://ftp.ccb.jhu.edu/pub/data/kraken2_dbs/minikraken2_v2_8GB_201904_UPDATE.tgz>"
+Database for taxonomic binning with kraken2 (default: none). E.g. "<ftp://ftp.ccb.jhu.edu/pub/data/kraken2_dbs/minikraken_8GB_202003.tgz>"
 
 ### `--cat_db`
 
@@ -206,12 +239,22 @@ The zipped file needs to contain a folder named "\_taxonomy*" and "_CAT_database
 
 ### `--min_contig_size`
 
-Minimum contig size to be considered for binning (default: 1500)
+Minimum contig size to be considered for binning, for forwarding into downstream analysis (i.e. QUAST and BUSCO) and reporting (default: 1500)
 
 ### `--busco_reference`
 
 Download path for BUSCO database, available databases are listed here: <https://busco.ezlab.org/>
 (default: <https://busco.ezlab.org/datasets/bacteria_odb9.tar.gz>)
+
+### `--min_length_unbinned_contigs`
+
+Minimal length of contigs that are not part of any bin but treated as individual genome (default: 1000000)
+Contigs that do not fulfill the thresholds of `--min_length_unbinned_contigs` and `--max_unbinned_contigs` are pooled for downstream analysis and reporting, except contigs that also do not fullfill `--min_contig_size` are not considered further.
+
+### `--max_unbinned_contigs`
+
+Maximal number of contigs that are not part of any bin but treated as individual genome (default: 100)
+Contigs that do not fulfill the thresholds of `--min_length_unbinned_contigs` and `--max_unbinned_contigs` are pooled for downstream analysis and reporting, except contigs that also do not fullfill `--min_contig_size` are not considered further.
 
 ## Job resources
 
@@ -225,11 +268,11 @@ Wherever process-specific requirements are set in the pipeline, the default valu
 
 If you are likely to be running `nf-core` pipelines regularly it may be a good idea to request that your custom config file is uploaded to the `nf-core/configs` git repository. Before you do this please can you test that the config file works with your pipeline of choice using the `-c` parameter (see definition below). You can then create a pull request to the `nf-core/configs` repository with the addition of your config file, associated documentation file (see examples in [`nf-core/configs/docs`](https://github.com/nf-core/configs/tree/master/docs)), and amending [`nfcore_custom.config`](https://github.com/nf-core/configs/blob/master/nfcore_custom.config) to include your custom profile.
 
-If you have any questions or issues please send us a message on [Slack](https://nf-core-invite.herokuapp.com/).
+If you have any questions or issues please send us a message on [Slack](https://nf-co.re/join/slack).
 
 ## AWS Batch specific parameters
 
-Running the pipeline on AWS Batch requires a couple of specific parameters to be set according to your AWS Batch configuration. Please use the `-awsbatch` profile and then specify all of the following parameters.
+Running the pipeline on AWS Batch requires a couple of specific parameters to be set according to your AWS Batch configuration. Please use [`-profile awsbatch`](https://github.com/nf-core/configs/blob/master/conf/awsbatch.config) and then specify all of the following parameters.
 
 ### `--awsqueue`
 
@@ -237,7 +280,11 @@ The JobQueue that you intend to use on AWS Batch.
 
 ### `--awsregion`
 
-The AWS region to run your job in. Default is set to `eu-west-1` but can be adjusted to your needs.
+The AWS region in which to run your job. Default is set to `eu-west-1` but can be adjusted to your needs.
+
+### `--awscli`
+
+The [AWS CLI](https://www.nextflow.io/docs/latest/awscloud.html#aws-cli-installation) path in your custom AMI. Default: `/home/ec2-user/miniconda/bin/aws`.
 
 Please make sure to also set the `-w/--work-dir` and `--outdir` parameters to a S3 storage bucket of your choice - you'll get an error message notifying you if you didn't.
 
@@ -250,6 +297,14 @@ The output directory where the results will be saved.
 ### `--email`
 
 Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits. If set in your user config file (`~/.nextflow/config`) then you don't need to specify this on the command line for every run.
+
+### `--email_on_fail`
+
+This works exactly as with `--email`, except emails are only sent if the workflow is not successful.
+
+### `--max_multiqc_email_size`
+
+Threshold size for MultiQC report to be attached in notification email. If file generated by pipeline exceeds the threshold, it will not be attached (Default: 25MB).
 
 ### `-name`
 
@@ -277,7 +332,7 @@ Note - you can use this to override pipeline defaults.
 
 ### `--custom_config_version`
 
-Provide git commit id for custom Institutional configs hosted at `nf-core/configs`. This was implemented for reproducibility purposes. Default is set to `master`.
+Provide git commit id for custom Institutional configs hosted at `nf-core/configs`. This was implemented for reproducibility purposes. Default: `master`.
 
 ```bash
 ## Download and use config file with following git commid id

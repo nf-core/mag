@@ -1,34 +1,36 @@
 # You can use this file to create a conda environment for this pipeline:
 #   conda env create -f environment.yml
-name: nf-core-mag-1.0.0
+name: nf-core-mag-1.1.0dev
 channels:
   - conda-forge
   - bioconda
   - defaults
 dependencies:
-  - fastqc=0.11.8
-  - multiqc=1.7
-  - matplotlib=3.1.1
-  - fastp=0.20.0
-  - megahit=1.2.7
-  - metabat2=2.13
-  - samtools=1.9
-  - bowtie2=2.3.5
-  - quast=5.0.2
-  - prodigal=2.6.3
-  - diamond=0.9.24 # 0.9.25 conflicts with Busco over boost
-  - python=3.6.7 # 3.7.x conflicts with Nanolyse
-  - r=3.6
-  - biopython=1.74
-  - krona=2.7.1
+  - conda-forge::python=3.6.7 # 3.7.x conflicts with Nanolyse
+  - conda-forge::markdown=3.1.1
+  - conda-forge::pymdown-extensions=6.0
+  - conda-forge::pygments=2.5.2
+  - bioconda::fastqc=0.11.8
+  - bioconda::multiqc=1.9
+  - bioconda::fastp=0.20.0
+  - bioconda::megahit=1.2.7
+  - bioconda::metabat2=2.15
+  - bioconda::samtools=1.9
+  - bioconda::bowtie2=2.3.5
+  - bioconda::quast=5.0.2
+  - bioconda::prodigal=2.6.3
+  - bioconda::diamond=0.9.24 # 0.9.25 conflicts with Busco over boost
+  - conda-forge::r=3.6
+  - conda-forge::biopython=1.74
+  - bioconda::krona=2.7.1
   - conda-forge::r-markdown=1.0
-  - r-ggplot2=3.2.0
-  - busco=3.0.2
-  - nanoplot=1.26.3
-  - filtlong=0.2.0
-  - porechop=0.2.3_seqan2.1.1
-  - nanolyse=1.1.0
-  - spades=3.13.1
-  - centrifuge=1.0.4_beta
-  - cat=4.6
-  - kraken2=2.0.8_beta
+  - conda-forge::r-ggplot2=3.2.0
+  - bioconda::busco=3.0.2
+  - bioconda::nanoplot=1.26.3
+  - bioconda::filtlong=0.2.0
+  - bioconda::porechop=0.2.3_seqan2.1.1
+  - bioconda::nanolyse=1.1.0
+  - bioconda::spades=3.13.1
+  - bioconda::centrifuge=1.0.4_beta
+  - bioconda::cat=4.6
+  - bioconda::kraken2=2.0.8_beta
