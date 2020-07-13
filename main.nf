@@ -927,8 +927,8 @@ process spadeshybrid {
     mv spades/scaffolds.fasta ${id}_scaffolds.fasta
     mv spades/contigs.fasta ${id}_contigs.fasta
     mv spades/spades.log ${id}_log.txt
-    gzip "${id}_contigs.fasta" > "${id}_contigs.fasta.gz"
-    gzip "${id}_graph.gfa" > "${id}_graph.gfa.gz"
+    gzip "${id}_contigs.fasta"
+    gzip "${id}_graph.gfa"
     gzip -c "${id}_scaffolds.fasta" > "${id}_scaffolds.fasta.gz"
     """
 }
@@ -967,8 +967,8 @@ process spades {
     mv spades/scaffolds.fasta ${id}_scaffolds.fasta
     mv spades/contigs.fasta ${id}_contigs.fasta
     mv spades/spades.log ${id}_log.txt
-    gzip "${id}_contigs.fasta" > "${id}_contigs.fasta.gz"
-    gzip "${id}_graph.gfa" > "${id}_graph.gfa.gz"
+    gzip "${id}_contigs.fasta"
+    gzip "${id}_graph.gfa"
     gzip -c "${id}_scaffolds.fasta" > "${id}_scaffolds.fasta.gz"
     """
 }
