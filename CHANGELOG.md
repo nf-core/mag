@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Update MetaBAT2 from v2.13 to v2.15
 - Fix number of threads used by MetaBAT2 program `jgi_summarize_bam_contig_depths`
 - No more ignoring errors in SPAdes assembly
+- No more ignoring of BUSCO errors
 
 ### `Deprecated`
 
