@@ -944,12 +944,12 @@ process spadeshybrid {
     params.manifest && !params.single_end && !params.skip_spadeshybrid
      
     script:
-    def maxmem = "${task.memory.toString().replaceAll(/[\sGB]/,'')}"
+    maxmem = task.memory.toGiga()
     if ( !params.spadeshyrid_fix_cpus || task.cpus == params.spadeshybrid_fix_cpus )
         """
         metaspades.py \
             --threads "${task.cpus}" \
-            --memory "$maxmem" \
+            --memory $maxmem \
             --pe1-1 ${sr[0]} \
             --pe1-2 ${sr[1]} \
             --nanopore ${lr} \
@@ -987,12 +987,12 @@ process spades {
     !params.single_end && !params.skip_spades
      
     script:
-    def maxmem = "${task.memory.toString().replaceAll(/[\sGB]/,'')}"
+    maxmem = task.memory.toGiga()
     if ( !params.spades_fix_cpus || task.cpus == params.spades_fix_cpus )
         """
         metaspades.py \
             --threads "${task.cpus}" \
-            --memory "$maxmem" \
+            --memory $maxmem \
             --pe1-1 ${sr[0]} \
             --pe1-2 ${sr[1]} \
             -o spades
