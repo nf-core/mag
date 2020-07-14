@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fix number of threads used by MetaBAT2 program `jgi_summarize_bam_contig_depths`
 - Fix SPAdes memory conversion issue [#70](https://github.com/nf-core/mag/pull/70)
 - No more ignoring errors in SPAdes assembly
+- No more ignoring of BUSCO errors
 
 ### `Deprecated`
 
