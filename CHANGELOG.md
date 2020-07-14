@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add host read removal with Bowtie 2 and according custom section to MultiQC
 - Add separate MultiQC section for FastQC after preprocessing
 - Add social preview image
+- Export depth.txt.gz into result folder
 - Compress assembly files
 - Add MetaBAT2 RNG seed parameter `--metabat_rng_seed` and set the default to 1 which ensures reproducible binning results
 - Add parameters `--megahit_fix_cpu_1`, `--spades_fix_cpus` and `--spadeshybrid_fix_cpus` to ensure reproducible results from assembly tools
