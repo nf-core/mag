@@ -157,7 +157,7 @@ SPAdesHybrid is a part of the [SPAdes](http://cab.spbu.ru/software/spades/) soft
 
 ### Metagenome QC with QUAST
 
-[QUAST](http://cab.spbu.ru/software/quast/) is a tool that evaluates metagenome assemblies by computing various metrics. The QUAST output is also included in the multiqc report, as well as in the assembly directories themselves.
+[QUAST](http://cab.spbu.ru/software/quast/) is a tool that evaluates metagenome assemblies by computing various metrics. The QUAST output is also included in the MultiQC report, as well as in the assembly directories themselves.
 
 **Output directory: `results/Assembly/[assembler]/[sample]_QC`**
 
