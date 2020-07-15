@@ -28,7 +28,7 @@ For further reading and documentation see the [FastQC help](http://www.bioinform
 **Output directory: `results/QC_shortreads/fastqc`**
 
 - `[sample]_[1/2]_fastqc.html`: FastQC report, containing quality metrics for your untrimmed raw fastq files
-- `[sample]_unmapped_[1/2]_fastqc.html`: FastQC report, containing quality metrics for filtered read files
+- `[sample]_R[1/2].trimmed_fastqc.html`: FastQC report, containing quality metrics for trimmed and, if specified, filtered read files
 
 ### fastp
 
