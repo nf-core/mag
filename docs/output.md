@@ -32,7 +32,7 @@ For further reading and documentation see the [FastQC help](http://www.bioinform
 
 ### fastp
 
-[fastp](https://github.com/OpenGene/fastp) is a all-in-one fastq preprocessor for read/adapter trimming and quality control. It is used in this pipeline for trimming adapter sequences and discard low-quality reads. Output is in the results folder and part of the MultiQC report.
+[fastp](https://github.com/OpenGene/fastp) is a all-in-one fastq preprocessor for read/adapter trimming and quality control. It is used in this pipeline for trimming adapter sequences and discard low-quality reads. Its output is in the results folder and part of the MultiQC report.
 
 **Output directory: `results/QC_shortreads/fastp/[sample]`**
 
