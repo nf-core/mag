@@ -216,7 +216,7 @@ Files in these two folders contain all contigs of an assembly.
 
 [BUSCO](https://busco-archive.ezlab.org/v3/) is a tool used to assess the completeness of a genome assembly. It is run on all the genome bins and high quality contigs obtained by MetaBAT2.
 
-**output directory: `results/GenomeBinning/QC/BUSCO`**
+**Output directory: `results/GenomeBinning/QC/BUSCO`**
 
 - `[assembler]-[bin]_busco_log.txt`: BUSCO log file
 - `[assembler]-[bin]_busco.fna`: Nucleotide sequence of all identified BUSCOs
