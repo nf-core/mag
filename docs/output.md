@@ -210,7 +210,7 @@ Files in these two folders contain all contigs of an assembly.
 **Output directory: `results/GenomeBinning/QC`**
 
 - `quast_summary.tsv`: QUAST output for all bins summarized
-- `quast_and_busco_summary.tsv`; Summary of BUSCO and QUAST results
+- `quast_and_busco_summary.tsv`: Summary of BUSCO and QUAST results
 
 ### QC for metagenome assembled genomes with BUSCO
 
