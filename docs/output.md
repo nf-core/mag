@@ -199,7 +199,7 @@ Files in these two folders contain all contigs of an assembly.
 
 ### QC for metagenome assembled genomes with QUAST
 
-[QUAST](http://cab.spbu.ru/software/quast/) is a tool that evaluates genome assemblies by computing various metrics. The QUAST output is also included in the multiqc report, as well as in the assembly directories themselves.
+[QUAST](http://cab.spbu.ru/software/quast/) is a tool that evaluates genome assemblies by computing various metrics. The QUAST output is also included in the MultiQC report, as well as in the assembly directories themselves.
 
 **Output directory: `results/GenomeBinning/QC/QUAST/[assembler]-[bin]`**
 
