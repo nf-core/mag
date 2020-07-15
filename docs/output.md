@@ -49,7 +49,7 @@ The pipeline uses bowtie2 to map the reads against PhiX and removes mapped reads
 
 ### Host read removal
 
-The pipeline uses bowtie2 to map short reads against the host reference genome specified with `--host_genome` or `--host_fasta` and removes mapped reads.
+The pipeline uses bowtie2 to map short reads against the host reference genome specified with `--host_genome` or `--host_fasta` and removes mapped reads. The information about discarded and retained reads is also included in the MultiQC report.
 
 **Output directory: `results/QC_shortreads/remove_host`**
 
