@@ -237,7 +237,7 @@ Database for taxonomic binning with kraken2 (default: none). E.g. "<ftp://ftp.cc
 
 ### `--cat_db`
 
-Database for taxonomic classification of metagenome assembled genomes (default: none). E.g. "<tbb.bio.uu.nl/bastiaan/CAT*prepare/CAT_prepare_20190108.tar.gz>"
+Database for taxonomic classification of metagenome assembled genomes (default: none). E.g. "<http://tbb.bio.uu.nl/bastiaan/CAT_prepare/CAT_prepare_20200618.tar.gz>"
 The zipped file needs to contain a folder named "\_taxonomy*" and "_CAT_database_" that hold the respective files.
 
 ## Assembly options
