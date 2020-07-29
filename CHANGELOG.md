@@ -35,6 +35,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - No more ignoring errors in SPAdes assembly
 - No more ignoring of BUSCO errors
 - Improved output documentation
+- Fixed grouping of BUSCO summaries for BUSCO plot
 
 ### `Deprecated`
 
