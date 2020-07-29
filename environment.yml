@@ -25,7 +25,7 @@ dependencies:
   - bioconda::krona=2.7.1
   - conda-forge::r-markdown=1.0
   - conda-forge::r-ggplot2=3.2.0
-  - bioconda::busco=3.0.2
+  - bioconda::busco=4.0.6
   - bioconda::nanoplot=1.26.3
   - bioconda::filtlong=0.2.0
   - bioconda::porechop=0.2.3_seqan2.1.1
