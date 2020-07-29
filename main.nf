@@ -1113,7 +1113,7 @@ process metabat {
     """
 }
 
-process busco_download_db {
+process busco_db_preparation {
     tag "${database.baseName}"
 
     input:
