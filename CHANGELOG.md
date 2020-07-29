@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add MetaBAT2 RNG seed parameter `--metabat_rng_seed` and set the default to 1 which ensures reproducible binning results
 - Add parameters `--megahit_fix_cpu_1`, `--spades_fix_cpus` and `--spadeshybrid_fix_cpus` to ensure reproducible results from assembly tools
 
+### `Changed`
+
+- Update BUSCO from version `3.0.2` to `4.0.6`
+
 ### `Fixed`
 
 - Fix links in README
