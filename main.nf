@@ -526,8 +526,8 @@ process remove_host {
                 2> ${name}.bowtie2.log
 
         if [ ${save_ids} = "Y" ] ; then
-            zcat ${name}_host_mapped_1.fastq.gz | awk '{if(NR%4==1) print substr(\$0, 2)}' | LC_ALL=C sort > ${name}_host_mapped_1.read_ids.txt
-            zcat ${name}_host_mapped_2.fastq.gz | awk '{if(NR%4==1) print substr(\$0, 2)}' | LC_ALL=C sort > ${name}_host_mapped_2.read_ids.txt
+            gunzip -c ${name}_host_mapped_1.fastq.gz | awk '{if(NR%4==1) print substr(\$0, 2)}' | LC_ALL=C sort > ${name}_host_mapped_1.read_ids.txt
+            gunzip -c ${name}_host_mapped_2.fastq.gz | awk '{if(NR%4==1) print substr(\$0, 2)}' | LC_ALL=C sort > ${name}_host_mapped_2.read_ids.txt
         fi
         rm -f ${name}_host_mapped_*.fastq.gz
         """
@@ -543,7 +543,7 @@ process remove_host {
                 2> ${name}.bowtie2.log
 
         if [ ${save_ids} = "Y" ] ; then
-            zcat ${name}_host_mapped.fastq.gz | awk '{if(NR%4==1) print substr(\$0, 2)}' | LC_ALL=C sort > ${name}_host_mapped.read_ids.txt
+            gunzip -c ${name}_host_mapped.fastq.gz | awk '{if(NR%4==1) print substr(\$0, 2)}' | LC_ALL=C sort > ${name}_host_mapped.read_ids.txt
         fi
         rm -f ${name}_host_mapped.fastq.gz
         """
@@ -591,15 +591,15 @@ if(!params.keep_phix) {
             """
             bowtie2 -p "${task.cpus}" -x ref -1 "${reads[0]}" -2 "${reads[1]}" --un-conc-gz ${name}_phix_unmapped_%.fastq.gz
             echo "Bowtie2 reference: ${genome}" >${name}_remove_phix_log.txt
-            zcat ${reads[0]} | echo "Read pairs before removal: \$((`wc -l`/4))" >>${name}_remove_phix_log.txt
-            zcat ${name}_phix_unmapped_1.fastq.gz | echo "Read pairs after removal: \$((`wc -l`/4))" >>${name}_remove_phix_log.txt
+            gunzip -c ${reads[0]} | echo "Read pairs before removal: \$((`wc -l`/4))" >>${name}_remove_phix_log.txt
+            gunzip -c ${name}_phix_unmapped_1.fastq.gz | echo "Read pairs after removal: \$((`wc -l`/4))" >>${name}_remove_phix_log.txt
             """
         } else {
             """
             bowtie2 -p "${task.cpus}" -x ref -U ${reads}  --un-gz ${name}_phix_unmapped.fastq.gz
             echo "Bowtie2 reference: ${genome}" >${name}_remove_phix_log.txt
-            zcat ${reads[0]} | echo "Reads before removal: \$((`wc -l`/4))" >>${name}_remove_phix_log.txt
-            zcat ${name}_phix_unmapped.fastq.gz | echo "Reads after removal: \$((`wc -l`/4))" >>${name}_remove_phix_log.txt
+            gunzip -c ${reads[0]} | echo "Reads before removal: \$((`wc -l`/4))" >>${name}_remove_phix_log.txt
+            gunzip -c ${name}_phix_unmapped.fastq.gz | echo "Reads after removal: \$((`wc -l`/4))" >>${name}_remove_phix_log.txt
             """
         }
 
@@ -697,7 +697,7 @@ if (!params.keep_lambda) {
 
         echo "NanoLyse reference: $params.lambda_reference" >${id}_nanolyse_log.txt
         cat ${lr} | echo "total reads before NanoLyse: \$((`wc -l`/4))" >>${id}_nanolyse_log.txt
-        zcat ${id}_nanolyse.fastq.gz | echo "total reads after NanoLyse: \$((`wc -l`/4))" >>${id}_nanolyse_log.txt
+        gunzip -c ${id}_nanolyse.fastq.gz | echo "total reads after NanoLyse: \$((`wc -l`/4))" >>${id}_nanolyse_log.txt
         """
     }
 } else {
