@@ -28,7 +28,7 @@ FastQC is run for visualising the general quality metrics of the sequencing runs
 
 For further reading and documentation see the [FastQC help pages](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/).
 
-**Output directory: `results/QC_shortreads/fastqc`**
+**Output directory: `QC_shortreads/fastqc`**
 
 - `[sample]_R[1/2]_fastqc.html`: FastQC report, containing quality metrics for your untrimmed raw fastq files
 - `[sample]_R[1/2].trimmed_fastqc.html`: FastQC report, containing quality metrics for trimmed and, if specified, filtered read files
@@ -37,7 +37,7 @@ For further reading and documentation see the [FastQC help pages](http://www.bio
 
 [fastp](https://github.com/OpenGene/fastp) is a all-in-one fastq preprocessor for read/adapter trimming and quality control. It is used in this pipeline for trimming adapter sequences and discard low-quality reads. Its output is in the results folder and part of the MultiQC report.
 
-**Output directory: `results/QC_shortreads/fastp/[sample]`**
+**Output directory: `QC_shortreads/fastp/[sample]`**
 
 - `fastp.html`: Interactive report
 - `fastp.json`: Report in json format
@@ -46,7 +46,7 @@ For further reading and documentation see the [FastQC help pages](http://www.bio
 
 The pipeline uses bowtie2 to map the reads against PhiX and removes mapped reads.
 
-**Output directory: `results/QC_shortreads/remove_phix`**
+**Output directory: `QC_shortreads/remove_phix`**
 
 - `[sample]_remove_phix_log.txt`: Contains a brief log file indicating how many reads have been retained.
 
@@ -54,7 +54,7 @@ The pipeline uses bowtie2 to map the reads against PhiX and removes mapped reads
 
 The pipeline uses bowtie2 to map short reads against the host reference genome specified with `--host_genome` or `--host_fasta` and removes mapped reads. The information about discarded and retained reads is also included in the MultiQC report.
 
-**Output directory: `results/QC_shortreads/remove_host`**
+**Output directory: `QC_shortreads/remove_host`**
 
 - `[sample].bowtie2.log`: Contains the bowtie2 log file indicating how many reads have been mapped as well as a file listing the read ids of discarded reads.
 
@@ -62,7 +62,7 @@ The pipeline uses bowtie2 to map short reads against the host reference genome s
 
 The pipeline uses Nanolyse to map the reads against the Lambda phage and removes mapped reads.
 
-**Output directory: `results/QC_longreads/NanoLyse`**
+**Output directory: `QC_longreads/NanoLyse`**
 
 - `[sample]_nanolyse_log.txt`: Contains a brief log file indicating how many reads have been retained.
 
@@ -79,7 +79,7 @@ For further documentation see the [filtlong online documentation](https://github
 
 NanoPlot is used to calculate various metrics and plots about the quality and length distribution of long reads. For more information about NanoPlot see the [online documentation](https://github.com/wdecoster/NanoPlot).
 
-**Output directory: `results/QC_longreads/NanoPlot_[sample]`**
+**Output directory: `QC_longreads/NanoPlot_[sample]`**
 
 - `raw_*.[png/html/txt]`: Plots and reports for raw data
 - `filtered_*.[png/html/txt]`: Plots and reports for filtered data
@@ -90,7 +90,7 @@ NanoPlot is used to calculate various metrics and plots about the quality and le
 
 Kraken2 classifies reads using a k-mer based approach as well as assigns taxonomy using a Lowest Common Ancestor (LCA) algorithm.
 
-**Output directory: `results/Taxonomy/kraken2/[sample]`**
+**Output directory: `Taxonomy/kraken2/[sample]`**
 
 - `kraken2.report`: Classification in the Kraken report format. See the [kraken manual](http://ccb.jhu.edu/software/kraken/MANUAL.html#sample-reports) for more details
 - `taxonomy.krona.html`: Interactive pie chart produced by [KronaTools](https://github.com/marbl/Krona/wiki)
@@ -101,7 +101,7 @@ Centrifuge is commonly used for the classification of DNA sequences from microbi
 
 More information on the [Centrifuge](https://ccb.jhu.edu/software/centrifuge/) website
 
-**Output directory: `results/Taxonomy/centrifuge/[sample]`**
+**Output directory: `Taxonomy/centrifuge/[sample]`**
 
 - `report.txt`: Tab-delimited result file. See the [centrifuge manual](https://ccb.jhu.edu/software/centrifuge/manual.shtml#centrifuge-classification-output) for information about the fields
 - `kreport.txt`: Classification in the Kraken report format. See the [kraken manual](http://ccb.jhu.edu/software/kraken/MANUAL.html#sample-reports) for more details
@@ -111,7 +111,7 @@ More information on the [Centrifuge](https://ccb.jhu.edu/software/centrifuge/) w
 
 [CAT](https://github.com/dutilh/CAT) is a toolkit for annotating contigs and bins from metagenome-assembled-genomes. The MAG pipeline uses CAT to assign taxonomy to the contigs from megahit and/or SPAdes, and to assign taxonomy to genome bins based on the taxnomy of the contigs.
 
-**Output directory: `results/Taxonomy/[assembler]`**
+**Output directory: `Taxonomy/[assembler]`**
 
 - `[assembler]-[sample].ORF2LCA.txt`: Tab-delimited files containing the lineage of each contig
 - `[assembler]-[sample].names.txt`: Taxonomy classification, with names of each lineage levels instead og taxids
@@ -128,7 +128,7 @@ Trimmed (short) reads are assembled with both megahit and SPAdes. Hybrid assembl
 
 [MEGAHIT](https://github.com/voutcn/megahit) is a single node assembler for large and complex metagenomics short reads.
 
-**Output directory: `results/Assembly/MEGAHIT`**
+**Output directory: `Assembly/MEGAHIT`**
 
 - `[sample].contigs.fa.gz`: Compressed metagenome assembly in fasta format
 - `[sample].log`: Log file
@@ -138,7 +138,7 @@ Trimmed (short) reads are assembled with both megahit and SPAdes. Hybrid assembl
 
 [SPAdes](http://cab.spbu.ru/software/spades/) was originally a single genome assembler that later added support for assembling metagenomes.
 
-**Output directory: `results/Assembly/SPAdes`**
+**Output directory: `Assembly/SPAdes`**
 
 - `[sample]_scaffolds.fasta.gz`: Compressed assembled scaffolds in fasta format
 - `[sample]_graph.gfa.gz`: Compressed assembly graph in gfa format
@@ -150,7 +150,7 @@ Trimmed (short) reads are assembled with both megahit and SPAdes. Hybrid assembl
 
 SPAdesHybrid is a part of the [SPAdes](http://cab.spbu.ru/software/spades/) software and is used when the user provides both long and short reads.
 
-**Output directory: `results/Assembly/SPAdesHybrid`**
+**Output directory: `Assembly/SPAdesHybrid`**
 
 - `[sample]_scaffolds.fasta.gz`: Compressed assembled scaffolds in fasta format
 - `[sample]_graph.gfa.gz`: Compressed assembly graph in gfa format
@@ -162,7 +162,7 @@ SPAdesHybrid is a part of the [SPAdes](http://cab.spbu.ru/software/spades/) soft
 
 [QUAST](http://cab.spbu.ru/software/quast/) is a tool that evaluates metagenome assemblies by computing various metrics. The QUAST output is also included in the MultiQC report, as well as in the assembly directories themselves.
 
-**Output directory: `results/Assembly/[assembler]/[sample]_QC`**
+**Output directory: `Assembly/[assembler]/[sample]_QC`**
 
 - `report.*`: QUAST report in various formats, such as html, txt, tsv or tex
 - `quast.log`: QUAST log file
@@ -174,7 +174,7 @@ SPAdesHybrid is a part of the [SPAdes](http://cab.spbu.ru/software/spades/) soft
 
 Sequencing depth per contig and sample is generated by `jgi_summarize_bam_contig_depths --outputDepth`. The values correspond to `(sum of exactely aligned bases) / ((contig length)-2*75)`. For example, for two reads aligned exactly with `10` and `9` bases on a 1000 bp long contig the depth is calculated by `(10+9)/(1000-2*75)` (1000bp length of contig minus 75bp from each end, which is excluded).
 
-**Output directory: `results/GenomeBinning`**
+**Output directory: `GenomeBinning`**
 
 - `[assembler]-[sample]-depth.txt.gz`: Sequencing depth for each contig and sample, only for short reads.
 
@@ -182,14 +182,14 @@ Sequencing depth per contig and sample is generated by `jgi_summarize_bam_contig
 
 [MetaBAT2](https://bitbucket.org/berkeleylab/metabat) recovers genome bins (that is, contigs/scaffolds that all belongs to a same organism) from metagenome assemblies.
 
-**Output directory: `results/GenomeBinning/MetaBAT2`**
+**Output directory: `GenomeBinning/MetaBAT2`**
 
 - `[assembler]-[sample].*.fa`: Genome bins retrieved from input assembly
 - `[assembler]-[sample].unbinned.*.fa`: Contigs that were not binned with other contigs but considered interesting. By default, these are at least 1 Mbp (`--min_length_unbinned_contigs`) in length and at most the 100 longest contigs (`--max_unbinned_contigs`) are reported
 
 All the files and contigs in this folder will be assessed by QUAST and BUSCO.
 
-**Output directory: `results/GenomeBinning/MetaBAT2/discarded`**
+**Output directory: `GenomeBinning/MetaBAT2/discarded`**
 
 - `*.lowDepth.fa`: Low depth contigs that are filtered by MetaBat2
 - `*.tooShort.fa`: Too short contigs that are filtered by MetaBat2
@@ -204,13 +204,13 @@ Files in these two folders contain all contigs of an assembly.
 
 [QUAST](http://cab.spbu.ru/software/quast/) is a tool that evaluates genome assemblies by computing various metrics. The QUAST output is also included in the MultiQC report, as well as in the assembly directories themselves.
 
-**Output directory: `results/GenomeBinning/QC/QUAST/[assembler]-[bin]`**
+**Output directory: `GenomeBinning/QC/QUAST/[assembler]-[bin]`**
 
 - `report.*`: QUAST report in various formats, such as html, txt, tsv or tex
 - `quast.log`: QUAST log file
 - `predicted_genes/[assembler]-[sample].rna.gff`: Contig positions for rRNA genes in gff version 3 format
 
-**Output directory: `results/GenomeBinning/QC`**
+**Output directory: `GenomeBinning/QC`**
 
 - `quast_summary.tsv`: QUAST output for all bins summarized
 - `quast_and_busco_summary.tsv`: Summary of BUSCO and QUAST results
@@ -219,13 +219,13 @@ Files in these two folders contain all contigs of an assembly.
 
 [BUSCO](https://busco-archive.ezlab.org/v3/) is a tool used to assess the completeness of a genome assembly. It is run on all the genome bins and high quality contigs obtained by MetaBAT2.
 
-**Output directory: `results/GenomeBinning/QC/BUSCO`**
+**Output directory: `GenomeBinning/QC/BUSCO`**
 
 - `[assembler]-[bin]_busco_log.txt`: BUSCO log file
 - `[assembler]-[bin]_busco.fna`: Nucleotide sequence of all identified BUSCOs
 - `[assembler]-[bin]_busco.faa`: Aminoacid sequence of all identified BUSCOs
 
-**Output directory: `results/GenomeBinning/QC`**
+**Output directory: `GenomeBinning/QC`**
 
 - `busco_summary.txt`: A summary table of the BUSCO results, with % of marker genes found
 - `quast_and_busco_summary.tsv`; Summary of BUSCO and QUAST results
