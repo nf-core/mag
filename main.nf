@@ -621,10 +621,10 @@ process fastqc_trimmed {
     if ( !params.single_end ) {
         """
         fastqc -t "${task.cpus}" -q ${reads}
-        mv *_1_fastqc.html "${name}_R1.trimmed_fastqc.html"
-        mv *_2_fastqc.html "${name}_R2.trimmed_fastqc.html"
-        mv *_1_fastqc.zip "${name}_R1.trimmed_fastqc.zip"
-        mv *_2_fastqc.zip "${name}_R2.trimmed_fastqc.zip"
+        mv *1_fastqc.html "${name}_R1.trimmed_fastqc.html"
+        mv *2_fastqc.html "${name}_R2.trimmed_fastqc.html"
+        mv *1_fastqc.zip "${name}_R1.trimmed_fastqc.zip"
+        mv *2_fastqc.zip "${name}_R2.trimmed_fastqc.zip"
         """
     } else {
         """
