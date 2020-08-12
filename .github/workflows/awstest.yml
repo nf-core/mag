@@ -37,4 +37,4 @@ jobs:
           --job-name nf-core-mag \
           --job-queue $AWS_JOB_QUEUE \
           --job-definition $AWS_JOB_DEFINITION \
-          --container-overrides '{"command": ["nf-core/mag", "-r '"${GITHUB_SHA}"' -profile test --outdir s3://'"${AWS_S3_BUCKET}"'/mag/results-'"${GITHUB_SHA}"' -w s3://'"${AWS_S3_BUCKET}"'/mag/work-'"${GITHUB_SHA}"' -with-tower"], "environment": [{"name": "TOWER_ACCESS_TOKEN", "value": "'"$TOWER_ACCESS_TOKEN"'"}]}'mag/work-'"${GITHUB_SHA}"' -with-tower"], "environment": [{"name": "TOWER_ACCESS_TOKEN", "value": "'"$TOWER_ACCESS_TOKEN"'"}]}'
+          --container-overrides '{"command": ["nf-core/mag", "-r '"${GITHUB_SHA}"' -profile test --outdir s3://'"${AWS_S3_BUCKET}"'/mag/results-'"${GITHUB_SHA}"' -w s3://'"${AWS_S3_BUCKET}"'/mag/work-'"${GITHUB_SHA}"' -with-tower"], "environment": [{"name": "TOWER_ACCESS_TOKEN", "value": "'"$TOWER_ACCESS_TOKEN"'"}]}'
