@@ -17,9 +17,9 @@ It supports both short and long reads, quality trims the reads and adapters with
 
 The pipeline then:
 
-- assigns taxonomy to reads using [centrifuge](https://ccb.jhu.edu/software/centrifuge/) and/or [kraken2](https://ccb.jhu.edu/software/kraken2/)
-- performs assembly using [megahit](https://github.com/voutcn/megahit) and [spades](http://cab.spbu.ru/software/spades/), and checks their quality using [quast](http://quast.sourceforge.net/quast)
-- performs metagenome binning using [metabat2](https://bitbucket.org/berkeleylab/metabat/src/master/), and checks the quality of the genome bins using [busco](https://busco.ezlab.org/)
+* assigns taxonomy to reads using [centrifuge](https://ccb.jhu.edu/software/centrifuge/) and/or [kraken2](https://ccb.jhu.edu/software/kraken2/)
+* performs assembly using [megahit](https://github.com/voutcn/megahit) and [spades](http://cab.spbu.ru/software/spades/), and checks their quality using [quast](http://quast.sourceforge.net/quast)
+* performs metagenome binning using [metabat2](https://bitbucket.org/berkeleylab/metabat/src/master/), and checks the quality of the genome bins using [busco](https://busco.ezlab.org/)
 
 Furthermore, the pipeline creates various reports in the results directory specified, including a [multiqc](https://multiqc.info/) report summarizing some of the findings and software versions.
 
@@ -55,9 +55,9 @@ The nf-core/mag pipeline comes with documentation about the pipeline which you c
 
 1. [Installation](https://nf-co.re/usage/installation)
 2. Pipeline configuration
-   - [Local installation](https://nf-co.re/usage/local_installation)
-   - [Adding your own system config](https://nf-co.re/usage/adding_own_config)
-   - [Reference genomes](https://nf-co.re/usage/reference_genomes)
+   * [Local installation](https://nf-co.re/usage/local_installation)
+   * [Adding your own system config](https://nf-co.re/usage/adding_own_config)
+   * [Reference genomes](https://nf-co.re/usage/reference_genomes)
 3. [Running the pipeline](docs/usage.md)
 4. [Output and how to interpret the results](docs/output.md)
 5. [Troubleshooting](https://nf-co.re/usage/troubleshooting)

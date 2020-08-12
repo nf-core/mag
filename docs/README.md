@@ -15,6 +15,6 @@ Additional pages are:
 
 * [Installation](https://nf-co.re/usage/installation)
 * Pipeline configuration
-   - [Local installation](https://nf-co.re/usage/local_installation)
-   - [Adding your own system config](https://nf-co.re/usage/adding_own_config)
+   * [Local installation](https://nf-co.re/usage/local_installation)
+   * [Adding your own system config](https://nf-co.re/usage/adding_own_config)
 * [Troubleshooting](https://nf-co.re/usage/troubleshooting)

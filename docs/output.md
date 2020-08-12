@@ -9,12 +9,12 @@ The directories listed below will be created in the results directory after the 
 The pipeline is built using [Nextflow](https://www.nextflow.io/)
 and processes data using the following steps:
 
-- [Quality control](#quality-control) of input reads - trimming and contaminant removal
-- [Taxonomic classification](#taxonomic-classification) of trimmed reads
-- [Assembly](#assembly) of trimmed reads
-- [Binning](#binning) of assembled contigs
-- [MultiQC](#multiqc) - aggregate report, describing results of the whole pipeline
-- [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
+* [Quality control](#quality-control) of input reads - trimming and contaminant removal
+* [Taxonomic classification](#taxonomic-classification) of trimmed reads
+* [Assembly](#assembly) of trimmed reads
+* [Binning](#binning) of assembled contigs
+* [MultiQC](#multiqc) - aggregate report, describing results of the whole pipeline
+* [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
 
 ## Quality control
 
@@ -30,8 +30,8 @@ For further reading and documentation see the [FastQC help pages](http://www.bio
 
 **Output directory: `QC_shortreads/fastqc`**
 
-- `[sample]_R[1/2]_fastqc.html`: FastQC report, containing quality metrics for your untrimmed raw fastq files
-- `[sample]_R[1/2].trimmed_fastqc.html`: FastQC report, containing quality metrics for trimmed and, if specified, filtered read files
+* `[sample]_R[1/2]_fastqc.html`: FastQC report, containing quality metrics for your untrimmed raw fastq files
+* `[sample]_R[1/2].trimmed_fastqc.html`: FastQC report, containing quality metrics for trimmed and, if specified, filtered read files
 
 ### fastp
 
@@ -39,8 +39,8 @@ For further reading and documentation see the [FastQC help pages](http://www.bio
 
 **Output directory: `QC_shortreads/fastp/[sample]`**
 
-- `fastp.html`: Interactive report
-- `fastp.json`: Report in json format
+* `fastp.html`: Interactive report
+* `fastp.json`: Report in json format
 
 ### Remove PhiX sequences from short reads
 
@@ -48,7 +48,7 @@ The pipeline uses bowtie2 to map the reads against PhiX and removes mapped reads
 
 **Output directory: `QC_shortreads/remove_phix`**
 
-- `[sample]_remove_phix_log.txt`: Contains a brief log file indicating how many reads have been retained.
+* `[sample]_remove_phix_log.txt`: Contains a brief log file indicating how many reads have been retained.
 
 ### Host read removal
 
@@ -56,7 +56,7 @@ The pipeline uses bowtie2 to map short reads against the host reference genome s
 
 **Output directory: `QC_shortreads/remove_host`**
 
-- `[sample].bowtie2.log`: Contains the bowtie2 log file indicating how many reads have been mapped as well as a file listing the read ids of discarded reads.
+* `[sample].bowtie2.log`: Contains the bowtie2 log file indicating how many reads have been mapped as well as a file listing the read ids of discarded reads.
 
 ### Remove Phage Lambda sequences from long reads
 
@@ -64,7 +64,7 @@ The pipeline uses Nanolyse to map the reads against the Lambda phage and removes
 
 **Output directory: `QC_longreads/NanoLyse`**
 
-- `[sample]_nanolyse_log.txt`: Contains a brief log file indicating how many reads have been retained.
+* `[sample]_nanolyse_log.txt`: Contains a brief log file indicating how many reads have been retained.
 
 ### Filtlong and porechop
 
@@ -81,8 +81,8 @@ NanoPlot is used to calculate various metrics and plots about the quality and le
 
 **Output directory: `QC_longreads/NanoPlot_[sample]`**
 
-- `raw_*.[png/html/txt]`: Plots and reports for raw data
-- `filtered_*.[png/html/txt]`: Plots and reports for filtered data
+* `raw_*.[png/html/txt]`: Plots and reports for raw data
+* `filtered_*.[png/html/txt]`: Plots and reports for filtered data
 
 ## Taxonomic Classification
 
@@ -92,8 +92,8 @@ Kraken2 classifies reads using a k-mer based approach as well as assigns taxonom
 
 **Output directory: `Taxonomy/kraken2/[sample]`**
 
-- `kraken2.report`: Classification in the Kraken report format. See the [kraken manual](http://ccb.jhu.edu/software/kraken/MANUAL.html#sample-reports) for more details
-- `taxonomy.krona.html`: Interactive pie chart produced by [KronaTools](https://github.com/marbl/Krona/wiki)
+* `kraken2.report`: Classification in the Kraken report format. See the [kraken manual](http://ccb.jhu.edu/software/kraken/MANUAL.html#sample-reports) for more details
+* `taxonomy.krona.html`: Interactive pie chart produced by [KronaTools](https://github.com/marbl/Krona/wiki)
 
 ### Centrifuge
 
@@ -103,9 +103,9 @@ More information on the [Centrifuge](https://ccb.jhu.edu/software/centrifuge/) w
 
 **Output directory: `Taxonomy/centrifuge/[sample]`**
 
-- `report.txt`: Tab-delimited result file. See the [centrifuge manual](https://ccb.jhu.edu/software/centrifuge/manual.shtml#centrifuge-classification-output) for information about the fields
-- `kreport.txt`: Classification in the Kraken report format. See the [kraken manual](http://ccb.jhu.edu/software/kraken/MANUAL.html#sample-reports) for more details
-- `taxonomy.krona.html`: Interactive pie chart produced by [KronaTools](https://github.com/marbl/Krona/wiki)
+* `report.txt`: Tab-delimited result file. See the [centrifuge manual](https://ccb.jhu.edu/software/centrifuge/manual.shtml#centrifuge-classification-output) for information about the fields
+* `kreport.txt`: Classification in the Kraken report format. See the [kraken manual](http://ccb.jhu.edu/software/kraken/MANUAL.html#sample-reports) for more details
+* `taxonomy.krona.html`: Interactive pie chart produced by [KronaTools](https://github.com/marbl/Krona/wiki)
 
 ### CAT
 
@@ -113,12 +113,12 @@ More information on the [Centrifuge](https://ccb.jhu.edu/software/centrifuge/) w
 
 **Output directory: `Taxonomy/[assembler]`**
 
-- `[assembler]-[sample].ORF2LCA.txt`: Tab-delimited files containing the lineage of each contig
-- `[assembler]-[sample].names.txt`: Taxonomy classification, with names of each lineage levels instead og taxids
-- `[assembler]-[sample].predicted_proteins.faa`: predicted protein sequences for each genome bins, in fasta format
-- `[assembler]-[sample].predicted_proteins.gff`: predicted protein features for each genome bins, in gff format
-- `[assembler]-[sample].log`: Log files
-- `[assembler]-[sample].bin2classification.txt`: Taxonomy classification of the genome bins
+* `[assembler]-[sample].ORF2LCA.txt`: Tab-delimited files containing the lineage of each contig
+* `[assembler]-[sample].names.txt`: Taxonomy classification, with names of each lineage levels instead og taxids
+* `[assembler]-[sample].predicted_proteins.faa`: predicted protein sequences for each genome bins, in fasta format
+* `[assembler]-[sample].predicted_proteins.gff`: predicted protein features for each genome bins, in gff format
+* `[assembler]-[sample].log`: Log files
+* `[assembler]-[sample].bin2classification.txt`: Taxonomy classification of the genome bins
 
 ## Assembly
 
@@ -130,9 +130,9 @@ Trimmed (short) reads are assembled with both megahit and SPAdes. Hybrid assembl
 
 **Output directory: `Assembly/MEGAHIT`**
 
-- `[sample].contigs.fa.gz`: Compressed metagenome assembly in fasta format
-- `[sample].log`: Log file
-- `[sample]_QC/`: Directory containing QUAST files
+* `[sample].contigs.fa.gz`: Compressed metagenome assembly in fasta format
+* `[sample].log`: Log file
+* `[sample]_QC/`: Directory containing QUAST files
 
 ### SPAdes
 
@@ -140,11 +140,11 @@ Trimmed (short) reads are assembled with both megahit and SPAdes. Hybrid assembl
 
 **Output directory: `Assembly/SPAdes`**
 
-- `[sample]_scaffolds.fasta.gz`: Compressed assembled scaffolds in fasta format
-- `[sample]_graph.gfa.gz`: Compressed assembly graph in gfa format
-- `[sample]_contigs.fasta.gz`: Compressed assembled contigs in fasta format
-- `[sample]_log.txt`: Log file
-- `[sample]_QC/`: Directory containing QUAST files
+* `[sample]_scaffolds.fasta.gz`: Compressed assembled scaffolds in fasta format
+* `[sample]_graph.gfa.gz`: Compressed assembly graph in gfa format
+* `[sample]_contigs.fasta.gz`: Compressed assembled contigs in fasta format
+* `[sample]_log.txt`: Log file
+* `[sample]_QC/`: Directory containing QUAST files
 
 ### SPAdesHybrid
 
@@ -152,11 +152,11 @@ SPAdesHybrid is a part of the [SPAdes](http://cab.spbu.ru/software/spades/) soft
 
 **Output directory: `Assembly/SPAdesHybrid`**
 
-- `[sample]_scaffolds.fasta.gz`: Compressed assembled scaffolds in fasta format
-- `[sample]_graph.gfa.gz`: Compressed assembly graph in gfa format
-- `[sample]_contigs.fasta.gz`: Compressed assembled contigs in fasta format
-- `[sample]_log.txt`: Log file
-- `[sample]_QC/`: Directory containing QUAST files
+* `[sample]_scaffolds.fasta.gz`: Compressed assembled scaffolds in fasta format
+* `[sample]_graph.gfa.gz`: Compressed assembly graph in gfa format
+* `[sample]_contigs.fasta.gz`: Compressed assembled contigs in fasta format
+* `[sample]_log.txt`: Log file
+* `[sample]_QC/`: Directory containing QUAST files
 
 ### Metagenome QC with QUAST
 
@@ -164,9 +164,9 @@ SPAdesHybrid is a part of the [SPAdes](http://cab.spbu.ru/software/spades/) soft
 
 **Output directory: `Assembly/[assembler]/[sample]_QC`**
 
-- `report.*`: QUAST report in various formats, such as html, txt, tsv or tex
-- `quast.log`: QUAST log file
-- `predicted_genes/[assembler]-[sample].rna.gff`: Contig positions for rRNA genes in gff version 3 format
+* `report.*`: QUAST report in various formats, such as html, txt, tsv or tex
+* `quast.log`: QUAST log file
+* `predicted_genes/[assembler]-[sample].rna.gff`: Contig positions for rRNA genes in gff version 3 format
 
 ## Binning
 
@@ -176,7 +176,7 @@ Sequencing depth per contig and sample is generated by `jgi_summarize_bam_contig
 
 **Output directory: `GenomeBinning`**
 
-- `[assembler]-[sample]-depth.txt.gz`: Sequencing depth for each contig and sample, only for short reads.
+* `[assembler]-[sample]-depth.txt.gz`: Sequencing depth for each contig and sample, only for short reads.
 
 ### MetaBAT2
 
@@ -184,17 +184,17 @@ Sequencing depth per contig and sample is generated by `jgi_summarize_bam_contig
 
 **Output directory: `GenomeBinning/MetaBAT2`**
 
-- `[assembler]-[sample].*.fa`: Genome bins retrieved from input assembly
-- `[assembler]-[sample].unbinned.*.fa`: Contigs that were not binned with other contigs but considered interesting. By default, these are at least 1 Mbp (`--min_length_unbinned_contigs`) in length and at most the 100 longest contigs (`--max_unbinned_contigs`) are reported
+* `[assembler]-[sample].*.fa`: Genome bins retrieved from input assembly
+* `[assembler]-[sample].unbinned.*.fa`: Contigs that were not binned with other contigs but considered interesting. By default, these are at least 1 Mbp (`--min_length_unbinned_contigs`) in length and at most the 100 longest contigs (`--max_unbinned_contigs`) are reported
 
 All the files and contigs in this folder will be assessed by QUAST and BUSCO.
 
 **Output directory: `GenomeBinning/MetaBAT2/discarded`**
 
-- `*.lowDepth.fa`: Low depth contigs that are filtered by MetaBat2
-- `*.tooShort.fa`: Too short contigs that are filtered by MetaBat2
-- `*.unbinned.pooled.fa`: Pooled unbinned contigs equal or above `--min_contig_size`, by default 1500 bp.
-- `*.unbinned.remaining.fa`: Remaining unbinned contigs below `--min_contig_size`, by default 1500 bp, but not in any other file.
+* `*.lowDepth.fa`: Low depth contigs that are filtered by MetaBat2
+* `*.tooShort.fa`: Too short contigs that are filtered by MetaBat2
+* `*.unbinned.pooled.fa`: Pooled unbinned contigs equal or above `--min_contig_size`, by default 1500 bp.
+* `*.unbinned.remaining.fa`: Remaining unbinned contigs below `--min_contig_size`, by default 1500 bp, but not in any other file.
 
 All the files in this folder contain small and/or unbinned contigs that are not further processed.
 
@@ -206,14 +206,14 @@ Files in these two folders contain all contigs of an assembly.
 
 **Output directory: `GenomeBinning/QC/QUAST/[assembler]-[bin]`**
 
-- `report.*`: QUAST report in various formats, such as html, txt, tsv or tex
-- `quast.log`: QUAST log file
-- `predicted_genes/[assembler]-[sample].rna.gff`: Contig positions for rRNA genes in gff version 3 format
+* `report.*`: QUAST report in various formats, such as html, txt, tsv or tex
+* `quast.log`: QUAST log file
+* `predicted_genes/[assembler]-[sample].rna.gff`: Contig positions for rRNA genes in gff version 3 format
 
 **Output directory: `GenomeBinning/QC`**
 
-- `quast_summary.tsv`: QUAST output for all bins summarized
-- `quast_and_busco_summary.tsv`: Summary of BUSCO and QUAST results
+* `quast_summary.tsv`: QUAST output for all bins summarized
+* `quast_and_busco_summary.tsv`: Summary of BUSCO and QUAST results
 
 ### QC for metagenome assembled genomes with BUSCO
 
@@ -221,14 +221,14 @@ Files in these two folders contain all contigs of an assembly.
 
 **Output directory: `GenomeBinning/QC/BUSCO`**
 
-- `[assembler]-[bin]_busco_log.txt`: BUSCO log file
-- `[assembler]-[bin]_busco.fna`: Nucleotide sequence of all identified BUSCOs
-- `[assembler]-[bin]_busco.faa`: Aminoacid sequence of all identified BUSCOs
+* `[assembler]-[bin]_busco_log.txt`: BUSCO log file
+* `[assembler]-[bin]_busco.fna`: Nucleotide sequence of all identified BUSCOs
+* `[assembler]-[bin]_busco.faa`: Aminoacid sequence of all identified BUSCOs
 
 **Output directory: `GenomeBinning/QC`**
 
-- `busco_summary.txt`: A summary table of the BUSCO results, with % of marker genes found
-- `quast_and_busco_summary.tsv`; Summary of BUSCO and QUAST results
+* `busco_summary.txt`: A summary table of the BUSCO results, with % of marker genes found
+* `quast_and_busco_summary.tsv`; Summary of BUSCO and QUAST results
 
 ## MultiQC
 
