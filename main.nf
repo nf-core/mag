@@ -290,9 +290,9 @@ log.info nfcoreHeader()
 def summary = [:]
 if (workflow.revision) summary['Pipeline Release'] = workflow.revision
 summary['Run Name'] = custom_runName ?: workflow.runName
-if (params.readPaths) summary['Read paths']     = params.input_paths
+if (params.input_paths) summary['Input paths']     = params.input_paths
 else if (params.manifest) summary['Manifest']   = params.manifest
-else summary['Reads']                           = params.input
+else summary['Input']                           = params.input
 summary['Data Type']                  = params.single_end ? 'Single-End' : 'Paired-End'
 
 summary['Adapter forward']            = params.adapter_forward
