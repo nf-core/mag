@@ -300,6 +300,7 @@ summary['Adapter reverse']            = params.adapter_reverse
 summary['Mean quality']               = params.mean_quality
 summary['Trimming quality']           = params.trimming_quality
 summary['Keep phix reads']            = params.keep_phix ? 'Yes' : 'No'
+if (!params.keep_phix) summary['PhiX reference']               = params.phix_reference
 if (params.host_genome) summary['Host Genome']               = params.host_genome
 else if(params.host_fasta) summary['Host Fasta Reference']   = params.host_fasta
 if (params.host_genome || params.host_fasta) summary['Host removal setting'] = params.host_removal_verysensitive ? 'very-sensitive' : 'sensitive'
@@ -307,6 +308,7 @@ if (params.host_genome || params.host_fasta) summary['Host removal setting'] = p
 if (params.manifest) {
     summary['Skip adapter trimming']     = params.skip_adapter_trimming ? 'Yes' : 'No'
     summary['Keep lambda reads']         = params.keep_lambda ? 'Yes' : 'No'
+    if (!params.keep_lambda) summary['Lambda reference']               = params.lambda_reference
     summary['Long reads min length']     = params.longreads_min_length
     summary['Long reads keep percent']   = params.longreads_keep_percent
     summary['Long reads length weight']  = params.longreads_length_weight
