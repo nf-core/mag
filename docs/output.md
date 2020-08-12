@@ -14,7 +14,7 @@ and processes data using the following steps:
 - [Assembly](#assembly) of trimmed reads
 - [Binning](#binning) of assembled contigs
 - [MultiQC](#multiqc) - aggregate report, describing results of the whole pipeline
-* [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
+- [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
 
 ## Quality control
 
@@ -240,7 +240,7 @@ For more information about how to use MultiQC reports, see [https://multiqc.info
 
 **Output files:**
 
-* `multiqc/`  
+* `multiqc/`
   * `multiqc_report.html`: a standalone HTML file that can be viewed in your web browser.
   * `multiqc_data/`: directory containing parsed statistics from the different tools used in the pipeline.
   * `multiqc_plots/`: directory containing static images from the report in various formats.
