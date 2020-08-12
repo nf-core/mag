@@ -266,7 +266,7 @@ if(params.manifest){
         Channel
             .from(params.input_paths)
             .map { row -> [ row[0], [ file(row[1][0], checkIfExists: true) ] ] }
-            .ifEmpty { exit 1, "params.input_path was empty - no input files supplied" }
+            .ifEmpty { exit 1, "params.input_paths was empty - no input files supplied" }
             .into { read_files_fastqc; read_files_fastp }
         files_long_raw = Channel.from()
     } else {
