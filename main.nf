@@ -949,7 +949,7 @@ process spadeshybrid {
      
     script:
     maxmem = task.memory.toGiga()
-    if ( !params.spadeshyrid_fix_cpus || task.cpus == params.spadeshybrid_fix_cpus )
+    if ( !params.spadeshybrid_fix_cpus || task.cpus == params.spadeshybrid_fix_cpus )
         """
         metaspades.py \
             --threads "${task.cpus}" \
@@ -967,7 +967,7 @@ process spadeshybrid {
         gzip -c "${id}_scaffolds.fasta" > "${id}_scaffolds.fasta.gz"
         """
     else
-        error "ERROR: '--spadeshyrid_fix_cpus' was specified, but not succesfully applied. Likely this is caused by changed process properties in a custom config file."
+        error "ERROR: '--spadeshybrid_fix_cpus' was specified, but not succesfully applied. Likely this is caused by changed process properties in a custom config file."
 }
 
 
