@@ -1,0 +1,493 @@
+{
+    "$schema": "https://json-schema.org/draft-07/schema",
+    "$id": "https://raw.githubusercontent.com/nf-core/mag/master/nextflow_schema.json",
+    "title": "nf-core/mag pipeline parameters",
+    "description": "Assembly, binning and annotation of metagenomes",
+    "type": "object",
+    "definitions": {
+        "input_output_options": {
+            "title": "Input/output options",
+            "type": "object",
+            "fa_icon": "fas fa-terminal",
+            "description": "Define where the pipeline should find input data and save output data.",
+            "properties": {
+                "input": {
+                    "type": "string",
+                    "fa_icon": "fas fa-dna",
+                    "description": "Input FastQ files. Either this or the `--manifest` parameter is required.",
+                    "help_text": "Use this to specify the location of your input FastQ files. For example:\n\n```bash\n--input 'path/to/data/sample_*_{1,2}.fastq'\n```\n\nPlease note the following requirements:\n\n1. The path must be enclosed in quotes\n2. The path must have at least one `*` wildcard character\n3. When using the pipeline with paired end data, the path must use `{1,2}` notation to specify read pairs.\n\nIf left unspecified, a default pattern is used: `data/*{1,2}.fastq.gz`"
+                },
+                "manifest": {
+                    "type": "string",
+                    "description": "Manifest file, required for hybrid assembly with metaSPAdes. Alternative to `--input`.",
+                    "help_text": "Has 4 headerless columns (tab separated): Sample_Id, Long_Reads, Short_Reads_1, Short_Reads_2\n"
+                },
+                "single_end": {
+                    "type": "boolean",
+                    "description": "Specifies that the input is single-end reads.",
+                    "fa_icon": "fas fa-align-center",
+                    "help_text": "By default, the pipeline expects paired-end data. If you have single-end data, you need to specify `--single_end` on the command line when you launch the pipeline. A normal glob pattern, enclosed in quotation marks, can then be used for `--input`. For example:\n\n```bash\n--single_end --input '*.fastq'\n```\n\nIt is not possible to run a mixture of single-end and paired-end files in one run."
+                },
+                "outdir": {
+                    "type": "string",
+                    "description": "The output directory where the results will be saved.",
+                    "default": "./results",
+                    "fa_icon": "fas fa-folder-open"
+                },
+                "email": {
+                    "type": "string",
+                    "description": "Email address for completion summary.",
+                    "fa_icon": "fas fa-envelope",
+                    "help_text": "Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits. If set in your user config file (`~/.nextflow/config`) then you don't need to specify this on the command line for every run.",
+                    "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$"
+                }
+            }
+        },
+        "reference_genome_options": {
+            "title": "Reference genome options",
+            "type": "object",
+            "fa_icon": "fas fa-dna",
+            "description": "Options for the reference genome indices used to align reads.",
+            "properties": {
+                "igenomes_base": {
+                    "type": "string",
+                    "description": "Directory / URL base for iGenomes references.",
+                    "default": "s3://ngi-igenomes/igenomes/",
+                    "fa_icon": "fas fa-cloud-download-alt",
+                    "hidden": true
+                },
+                "igenomes_ignore": {
+                    "type": "boolean",
+                    "description": "Do not load the iGenomes reference config.",
+                    "fa_icon": "fas fa-ban",
+                    "hidden": true,
+                    "help_text": "Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`."
+                }
+            }
+        },
+        "generic_options": {
+            "title": "Generic options",
+            "type": "object",
+            "fa_icon": "fas fa-file-import",
+            "description": "Less common options for the pipeline, typically set in a config file.",
+            "help_text": "These options are common to all nf-core pipelines and allow you to customise some of the core preferences for how the pipeline runs.\n\nTypically these options would be set in a Nextflow config file loaded for all pipeline runs, such as `~/.nextflow/config`.",
+            "properties": {
+                "help": {
+                    "type": "boolean",
+                    "description": "Display help text.",
+                    "hidden": true,
+                    "fa_icon": "fas fa-question-circle"
+                },
+                "publish_dir_mode": {
+                    "type": "string",
+                    "default": "copy",
+                    "hidden": true,
+                    "description": "Method used to save pipeline results to output directory.",
+                    "help_text": "The Nextflow `publishDir` option specifies which intermediate files should be saved to the output directory. This option tells the pipeline what method should be used to move these files. See [Nextflow docs](https://www.nextflow.io/docs/latest/process.html#publishdir) for details.",
+                    "fa_icon": "fas fa-copy",
+                    "enum": [
+                        "symlink",
+                        "rellink",
+                        "link",
+                        "copy",
+                        "copyNoFollow",
+                        "mov"
+                    ]
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Workflow name.",
+                    "fa_icon": "fas fa-fingerprint",
+                    "hidden": true,
+                    "help_text": "A custom name for the pipeline run. Unlike the core nextflow `-name` option with one hyphen this parameter can be reused multiple times, for example if using `-resume`. Passed through to steps such as MultiQC and used for things like report filenames and titles."
+                },
+                "email_on_fail": {
+                    "type": "string",
+                    "description": "Email address for completion summary, only when pipeline fails.",
+                    "fa_icon": "fas fa-exclamation-triangle",
+                    "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$",
+                    "hidden": true,
+                    "help_text": "This works exactly as with `--email`, except emails are only sent if the workflow is not successful."
+                },
+                "plaintext_email": {
+                    "type": "boolean",
+                    "description": "Send plain-text email instead of HTML.",
+                    "fa_icon": "fas fa-remove-format",
+                    "hidden": true,
+                    "help_text": "Set to receive plain-text e-mails instead of HTML formatted."
+                },
+                "max_multiqc_email_size": {
+                    "type": "string",
+                    "description": "File size limit when attaching MultiQC reports to summary emails.",
+                    "default": "25.MB",
+                    "fa_icon": "fas fa-file-upload",
+                    "hidden": true,
+                    "help_text": "If file generated by pipeline exceeds the threshold, it will not be attached."
+                },
+                "monochrome_logs": {
+                    "type": "boolean",
+                    "description": "Do not use coloured log outputs.",
+                    "fa_icon": "fas fa-palette",
+                    "hidden": true,
+                    "help_text": "Set to disable colourful command line output and live life in monochrome."
+                },
+                "multiqc_config": {
+                    "type": "string",
+                    "description": "Custom config file to supply to MultiQC.",
+                    "fa_icon": "fas fa-cog",
+                    "hidden": true
+                },
+                "tracedir": {
+                    "type": "string",
+                    "description": "Directory to keep pipeline Nextflow logs and reports.",
+                    "default": "${params.outdir}/pipeline_info",
+                    "fa_icon": "fas fa-cogs",
+                    "hidden": true
+                }
+            }
+        },
+        "max_job_request_options": {
+            "title": "Max job request options",
+            "type": "object",
+            "fa_icon": "fab fa-acquisitions-incorporated",
+            "description": "Set the top limit for requested resources for any single job.",
+            "help_text": "If you are running on a smaller system, a pipeline step requesting more resources than are available may cause the Nextflow to stop the run with an error. These options allow you to cap the maximum resources requested by any single job so that the pipeline will run on your system.\n\nNote that you can not _increase_ the resources requested by any job using these options. For that you will need your own configuration file. See [the nf-core website](https://nf-co.re/usage/configuration) for details.",
+            "properties": {
+                "max_cpus": {
+                    "type": "integer",
+                    "description": "Maximum number of CPUs that can be requested    for any single job.",
+                    "default": 16,
+                    "fa_icon": "fas fa-microchip",
+                    "hidden": true,
+                    "help_text": "Use to set an upper-limit for the CPU requirement for each process. Should be an integer e.g. `--max_cpus 1`"
+                },
+                "max_memory": {
+                    "type": "string",
+                    "description": "Maximum amount of memory that can be requested for any single job.",
+                    "default": "128.GB",
+                    "fa_icon": "fas fa-memory",
+                    "hidden": true,
+                    "help_text": "Use to set an upper-limit for the memory requirement for each process. Should be a string in the format integer-unit e.g. `--max_memory '8.GB'`"
+                },
+                "max_time": {
+                    "type": "string",
+                    "description": "Maximum amount of time that can be requested for any single job.",
+                    "default": "240.h",
+                    "fa_icon": "far fa-clock",
+                    "hidden": true,
+                    "help_text": "Use to set an upper-limit for the time requirement for each process. Should be a string in the format integer-unit e.g. `--max_time '2.h'`"
+                }
+            }
+        },
+        "institutional_config_options": {
+            "title": "Institutional config options",
+            "type": "object",
+            "fa_icon": "fas fa-university",
+            "description": "Parameters used to describe centralised config profiles. These should not be edited.",
+            "help_text": "The centralised nf-core configuration profiles use a handful of pipeline parameters to describe themselves. This information is then printed to the Nextflow log when you run a pipeline. You should not need to change these values when you run a pipeline.",
+            "properties": {
+                "custom_config_version": {
+                    "type": "string",
+                    "description": "Git commit id for Institutional configs.",
+                    "default": "master",
+                    "hidden": true,
+                    "fa_icon": "fas fa-users-cog",
+                    "help_text": "Provide git commit id for custom Institutional configs hosted at `nf-core/configs`. This was implemented for reproducibility purposes. Default: `master`.\n\n```bash\n## Download and use config file with following git commit id\n--custom_config_version d52db660777c4bf36546ddb188ec530c3ada1b96\n```"
+                },
+                "custom_config_base": {
+                    "type": "string",
+                    "description": "Base directory for Institutional configs.",
+                    "default": "https://raw.githubusercontent.com/nf-core/configs/master",
+                    "hidden": true,
+                    "help_text": "If you're running offline, nextflow will not be able to fetch the institutional config files from the internet. If you don't need them, then this is not a problem. If you do need them, you should download the files from the repo and tell nextflow where to find them with the `custom_config_base` option. For example:\n\n```bash\n## Download and unzip the config files\ncd /path/to/my/configs\nwget https://github.com/nf-core/configs/archive/master.zip\nunzip master.zip\n\n## Run the pipeline\ncd /path/to/my/data\nnextflow run /path/to/pipeline/ --custom_config_base /path/to/my/configs/configs-master/\n```\n\n> Note that the nf-core/tools helper package has a `download` command to download all required pipeline files + singularity containers + institutional configs in one go for you, to make this process easier.",
+                    "fa_icon": "fas fa-users-cog"
+                },
+                "hostnames": {
+                    "type": "string",
+                    "description": "Institutional configs hostname.",
+                    "hidden": true,
+                    "fa_icon": "fas fa-users-cog"
+                },
+                "config_profile_description": {
+                    "type": "string",
+                    "description": "Institutional config description.",
+                    "hidden": true,
+                    "fa_icon": "fas fa-users-cog"
+                },
+                "config_profile_contact": {
+                    "type": "string",
+                    "description": "Institutional config contact information.",
+                    "hidden": true,
+                    "fa_icon": "fas fa-users-cog"
+                },
+                "config_profile_url": {
+                    "type": "string",
+                    "description": "Institutional config URL link.",
+                    "hidden": true,
+                    "fa_icon": "fas fa-users-cog"
+                }
+            }
+        },
+        "reproducibility_options": {
+            "title": "Reproducibility options",
+            "type": "object",
+            "description": "Use these parameters to also enable reproducible results from the individual assembly and binning tools .",
+            "default": "",
+            "properties": {
+                "megahit_fix_cpu_1": {
+                    "type": "boolean",
+                    "description": "Fix number of CPUs for MEGAHIT to 1. Not increased with retries.",
+                    "help_text": "MEGAHIT only generates reproducible results when run single-threaded. \n\nWhen using this parameter do not change the number of CPUs for the `megahit` process with a custom config file. This would result in an error.\n\nDefault: The number of CPUs is specified in the `base.config` file, and increased with each retry."
+                },
+                "spades_fix_cpus": {
+                    "type": "integer",
+                    "description": "Fix number of CPUs used by SPAdes. Not increased with retries.",
+                    "help_text": "SPAdes is designed to be deterministic for a given number of threads. To generate reproducible results fix the number of CPUs using this parameter.\n\nWhen using this parameter do not change the number of CPUs for the `spades` process with a custom config file. This would result in an error.\n\nDefault: The number of CPUs is specified in the `base.config` file, and increased with each retry."
+                },
+                "spadeshybrid_fix_cpus": {
+                    "type": "integer",
+                    "description": "Fix number of CPUs used by SPAdes hybrid. Not increased with retries.",
+                    "help_text": "SPAdes is designed to be deterministic for a given number of threads. To generate reproducible results fix the number of CPUs using this parameter.\n\nWhen using this parameter do not change the number of CPUs for the `spadeshybrid` process with a custom config file. This would result in an error.\n\nDefault: The number of CPUs is specified in the `base.config` file, and increased with each retry."
+                },
+                "metabat_rng_seed": {
+                    "type": "integer",
+                    "default": 1,
+                    "description": "RNG seed for MetaBAT2.",
+                    "help_text": "MetaBAT2 is run by default with a fixed seed within this pipeline, thus producing reproducible results. You can set it also to any other positive integer to ensure reproducibility. Set the parameter to 0 to use a random seed."
+                }
+            },
+            "help_text": ""
+        },
+        "quality_control_for_short_reads_options": {
+            "title": "Quality control for short reads options",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "adapter_forward": {
+                    "type": "string",
+                    "default": "AGATCGGAAGAGCACACGTCTGAACTCCAGTCA",
+                    "description": "Sequence of 3' adapter to remove in the forward reads."
+                },
+                "adapter_reverse": {
+                    "type": "string",
+                    "default": "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT",
+                    "description": "Sequence of 3' adapter to remove in the reverse reads."
+                },
+                "mean_quality": {
+                    "type": "integer",
+                    "default": 15,
+                    "description": "Mean qualified quality value for keeping read."
+                },
+                "trimming_quality": {
+                    "type": "integer",
+                    "default": 15,
+                    "description": "Trimming quality value for the sliding window."
+                },
+                "host_genome": {
+                    "type": "string",
+                    "help_text": "This parameter is mutually exclusive with `--host_genome`. Host read removal is done with Bowtie2. \nBoth the iGenomes FASTA file as well as corresponding, already pre-built Bowtie 2 index files will be used.",
+                    "description": "Name of iGenomes reference for host contamination removal."
+                },
+                "host_fasta": {
+                    "type": "string",
+                    "description": "Fasta reference file for host contamination removal.",
+                    "help_text": "This parameter is mutually exclusive with `--host_fasta`. The reference can be masked. Host read removal is done with Bowtie2."
+                },
+                "host_removal_verysensitive": {
+                    "type": "boolean",
+                    "description": "Use the `--very-sensitive` instead of the`--sensitive`setting for Bowtie 2 to map reads against the host genome."
+                },
+                "host_removal_save_ids": {
+                    "type": "boolean",
+                    "description": "Save the read IDs of removed host reads."
+                },
+                "keep_phix": {
+                    "type": "boolean",
+                    "description": "Keep reads similar to the Illumina internal standard PhiX genome."
+                },
+                "phix_reference": {
+                    "type": "string",
+                    "default": "${baseDir}/assets/data/GCA_002596845.1_ASM259684v1_genomic.fna.gz",
+                    "description": "Genome reference used to remove Illumina PhiX contaminant reads.",
+                    "hidden": true
+                }
+            }
+        },
+        "quality_control_for_long_reads_options": {
+            "title": "Quality control for long reads options",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "skip_adapter_trimming": {
+                    "type": "boolean",
+                    "description": "Skip removing adapter sequences from long reads."
+                },
+                "longreads_min_length": {
+                    "type": "integer",
+                    "default": 1000,
+                    "description": "Discard any read which is shorter than this value."
+                },
+                "longreads_keep_percent": {
+                    "type": "integer",
+                    "default": 90,
+                    "description": "Keep this percent of bases."
+                },
+                "longreads_length_weight": {
+                    "type": "integer",
+                    "default": 10,
+                    "description": "The higher the more important is read length when choosing the best reads.",
+                    "help_text": "The default value focuses on length instead of quality to improve assembly size.\nIn order to assign equal weights to read lengths and read qualities set this parameter to 1.\nThis might be useful, for example, to benefit indirectly from the removal of short host reads (causing lower qualities for reads not overlapping filtered short reads)."
+                },
+                "keep_lambda": {
+                    "type": "boolean",
+                    "description": "Keep reads similar to the ONT internal standard Escherichia virus Lambda genome."
+                },
+                "lambda_reference": {
+                    "type": "string",
+                    "default": "${baseDir}/assets/data/GCA_000840245.1_ViralProj14204_genomic.fna.gz",
+                    "hidden": true,
+                    "description": "Genome reference used to remove ONT Lambda contaminant reads."
+                }
+            }
+        },
+        "taxonomic_profiling_options": {
+            "title": "Taxonomic profiling options",
+            "type": "object",
+            "description": "Taxonomic classification is disabled by default. You have to specify one of the options below to activate it.",
+            "default": "",
+            "properties": {
+                "centrifuge_db": {
+                    "type": "string",
+                    "description": "Database for taxonomic binning with centrifuge.",
+                    "help_text": "E.g. \"ftp://ftp.ccb.jhu.edu/pub/infphilo/centrifuge/data/p_compressed+h+v.tar.gz\"."
+                },
+                "kraken2_db": {
+                    "type": "string",
+                    "description": "Database for taxonomic binning with kraken2.",
+                    "help_text": "E.g. \"ftp://ftp.ccb.jhu.edu/pub/data/kraken2_dbs/minikraken_8GB_202003.tgz\"."
+                },
+                "skip_krona": {
+                    "type": "boolean",
+                    "description": "Skip creating a krona plot for taxonomic binning."
+                },
+                "cat_db": {
+                    "type": "string",
+                    "description": "Database for taxonomic classification of metagenome assembled genomes.",
+                    "help_text": "E.g. \"http://tbb.bio.uu.nl/bastiaan/CAT_prepare/CAT_prepare_20200618.tar.gz\".\nThe zipped file needs to contain a folder named \"*taxonomy*\" and \"*CAT_database*\" that hold the respective files."
+                }
+            }
+        },
+        "assembly_options": {
+            "title": "Assembly options",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "skip_spades": {
+                    "type": "boolean",
+                    "description": "Skip Illumina-only SPAdes assembly."
+                },
+                "skip_spadeshybrid": {
+                    "type": "boolean",
+                    "description": "Skip SPAdes hybrid assembly (only available when using manifest input)."
+                },
+                "skip_megahit": {
+                    "type": "boolean",
+                    "description": "Skip MEGAHIT assembly."
+                },
+                "skip_quast": {
+                    "type": "boolean",
+                    "description": "Skip metaQUAST."
+                }
+            }
+        },
+        "binning_options": {
+            "title": "Binning options",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "skip_binning": {
+                    "type": "boolean",
+                    "description": "Skip metagenome binning."
+                },
+                "min_contig_size": {
+                    "type": "integer",
+                    "default": 1500,
+                    "description": "Minimum contig size to be considered for binning and for bin quality check.",
+                    "help_text": "For forwarding into downstream analysis, i.e. QUAST and BUSCO, and reporting."
+                },
+                "min_length_unbinned_contigs": {
+                    "type": "integer",
+                    "default": 1000000,
+                    "description": "Minimal length of contigs that are not part of any bin but treated as individual genome.",
+                    "help_text": "Contigs that do not fulfill the thresholds of `--min_length_unbinned_contigs` and `--max_unbinned_contigs` are pooled for downstream analysis and reporting, except contigs that also do not fullfill `--min_contig_size` are not considered further."
+                },
+                "max_unbinned_contigs": {
+                    "type": "integer",
+                    "default": 100,
+                    "description": "Maximal number of contigs that are not part of any bin but treated as individual genome.",
+                    "help_text": "Contigs that do not fulfill the thresholds of `--min_length_unbinned_contigs` and `--max_unbinned_contigs` are pooled for downstream analysis and reporting, except contigs that also do not fullfill `--min_contig_size` are not considered further."
+                }
+            }
+        },
+        "bin_quality_check_options": {
+            "title": "Bin quality check options",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "skip_busco": {
+                    "type": "boolean",
+                    "description": "Disable bin QC with BUSCO."
+                },
+                "busco_reference": {
+                    "type": "string",
+                    "default": "https://busco-archive.ezlab.org/v3/datasets/bacteria_odb9.tar.gz",
+                    "description": "Download path for BUSCO database.",
+                    "help_text": "Available databases are listed here: https://busco.ezlab.org/. "
+                }
+            }
+        }
+    },
+    "allOf": [
+        {
+            "$ref": "#/definitions/input_output_options"
+        },
+        {
+            "$ref": "#/definitions/reference_genome_options"
+        },
+        {
+            "$ref": "#/definitions/generic_options"
+        },
+        {
+            "$ref": "#/definitions/max_job_request_options"
+        },
+        {
+            "$ref": "#/definitions/institutional_config_options"
+        },
+        {
+            "$ref": "#/definitions/reproducibility_options"
+        },
+        {
+            "$ref": "#/definitions/quality_control_for_short_reads_options"
+        },
+        {
+            "$ref": "#/definitions/quality_control_for_long_reads_options"
+        },
+        {
+            "$ref": "#/definitions/taxonomic_profiling_options"
+        },
+        {
+            "$ref": "#/definitions/assembly_options"
+        },
+        {
+            "$ref": "#/definitions/binning_options"
+        },
+        {
+            "$ref": "#/definitions/bin_quality_check_options"
+        }
+    ]
+}
