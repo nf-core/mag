@@ -37,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - No more ignoring errors in SPAdes assembly
 - No more ignoring of BUSCO errors
 - Improved output documentation
+- Fix missing bin names in MultiQC BUSCO section [#96](https://github.com/nf-core/mag/pull/96)
 
 ### `Deprecated`
 
