@@ -1372,7 +1372,7 @@ process multiqc {
     file (fastqc_trimmed:'fastqc/*') from fastqc_results_trimmed.collect().ifEmpty([])
     file (host_removal) from ch_host_removed_log.collect().ifEmpty([])
     file ('quast*/*') from quast_results.collect().ifEmpty([])
-    file ('short_summary_*.txt') from busco_summary_to_multiqc.collect().ifEmpty([])
+    file (short_summary) from busco_summary_to_multiqc.collect().ifEmpty([])
     file ('software_versions/*') from ch_software_versions_yaml.collect()
     file workflow_summary from ch_workflow_summary.collectFile(name: "workflow_summary_mqc.yaml")
 
