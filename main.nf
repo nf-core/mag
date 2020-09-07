@@ -910,9 +910,10 @@ process megahit {
 
     script:
     def input = params.single_end ? "-r \"${reads}\"" :  "-1 \"${reads[0]}\" -2 \"${reads[1]}\""
+    mem = task.memory.toBytes()
     if ( !params.megahit_fix_cpu_1 || task.cpus == 1 )
         """
-        megahit -t "${task.cpus}" $input -o MEGAHIT --out-prefix "${name}"
+        megahit -t "${task.cpus}" -m $mem $input -o MEGAHIT --out-prefix "${name}"
         gzip -c "MEGAHIT/${name}.contigs.fa" > "MEGAHIT/${name}.contigs.fa.gz"
         """
     else
