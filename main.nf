@@ -843,7 +843,6 @@ process kraken2 {
         --report-zero-counts \
         --threads "${task.cpus}" \
         --db database \
-        --fastq-input \
         --report kraken2_report.txt \
         $input \
         > kraken2.kraken
