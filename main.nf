@@ -814,9 +814,13 @@ process kraken2_db_preparation {
     output:
     set val("${db.baseName}"), file("*/*.k2d") into kraken2_database
 
+    // mkdir tmp
+    // mkdir $db.baseName
+    // mv \$(find tmp -name "*.k2d") $db.baseName
+    // rm -rf tmp
     script:
     """
-    tar -xf "${db}"
+    tar -xf $db
     """
 }
 
