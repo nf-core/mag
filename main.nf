@@ -584,22 +584,33 @@ if(!params.keep_phix) {
 
         output:
         set val(name), file("*.fastq.gz") into (trimmed_reads_megahit, trimmed_reads_metabat, trimmed_reads_fastqc, trimmed_sr_spadeshybrid, trimmed_reads_spades, trimmed_reads_centrifuge, trimmed_reads_kraken2, trimmed_reads_bowtie2, trimmed_reads_filtlong)
-        file("${name}_remove_phix_log.txt")
+        file("${name}_remove_phix.log")
 
         script:
         if ( !params.single_end ) {
             """
-            bowtie2 -p "${task.cpus}" -x ref -1 "${reads[0]}" -2 "${reads[1]}" --un-conc-gz ${name}_phix_unmapped_%.fastq.gz
-            echo "Bowtie2 reference: ${genome}" >${name}_remove_phix_log.txt
-            gunzip -c ${reads[0]} | echo "Read pairs before removal: \$((`wc -l`/4))" >>${name}_remove_phix_log.txt
-            gunzip -c ${name}_phix_unmapped_1.fastq.gz | echo "Read pairs after removal: \$((`wc -l`/4))" >>${name}_remove_phix_log.txt
+            bowtie2 -p "${task.cpus}" \
+                    -x ref \
+                    -1 "${reads[0]}" \
+                    -2 "${reads[1]}" \
+                    --un-conc-gz ${name}_phix_unmapped_%.fastq.gz \
+                    1> /dev/null \
+                    2> ${name}.bowtie2.log
+            echo "Bowtie2 reference: ${genome}" >${name}_remove_phix.log
+            gunzip -c ${reads[0]} | echo "Read pairs before removal: \$((`wc -l`/4))" >>${name}_remove_phix.log
+            gunzip -c ${name}_phix_unmapped_1.fastq.gz | echo "Read pairs after removal: \$((`wc -l`/4))" >>${name}_remove_phix.log
             """
         } else {
             """
-            bowtie2 -p "${task.cpus}" -x ref -U ${reads}  --un-gz ${name}_phix_unmapped.fastq.gz
-            echo "Bowtie2 reference: ${genome}" >${name}_remove_phix_log.txt
-            gunzip -c ${reads[0]} | echo "Reads before removal: \$((`wc -l`/4))" >>${name}_remove_phix_log.txt
-            gunzip -c ${name}_phix_unmapped.fastq.gz | echo "Reads after removal: \$((`wc -l`/4))" >>${name}_remove_phix_log.txt
+            bowtie2 -p "${task.cpus}" \
+                    -x ref \
+                    -U ${reads} \
+                    --un-gz ${name}_phix_unmapped.fastq.gz \
+                    1> /dev/null \
+                    2> ${name}.bowtie2.log
+            echo "Bowtie2 reference: ${genome}" >${name}_remove_phix.log
+            gunzip -c ${reads[0]} | echo "Reads before removal: \$((`wc -l`/4))" >>${name}_remove_phix.log
+            gunzip -c ${name}_phix_unmapped.fastq.gz | echo "Reads after removal: \$((`wc -l`/4))" >>${name}_remove_phix.log
             """
         }
 
