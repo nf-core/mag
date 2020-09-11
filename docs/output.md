@@ -64,7 +64,7 @@ The pipeline uses Nanolyse to map the reads against the Lambda phage and removes
 
 **Output directory: `QC_longreads/NanoLyse`**
 
-* `[sample]_nanolyse_log.txt`: Contains a brief log file indicating how many reads have been retained.
+* `[sample]_nanolyse.log`: Contains a brief log file indicating how many reads have been retained.
 
 ### Filtlong and porechop
 
@@ -143,7 +143,7 @@ Trimmed (short) reads are assembled with both megahit and SPAdes. Hybrid assembl
 * `[sample]_scaffolds.fasta.gz`: Compressed assembled scaffolds in fasta format
 * `[sample]_graph.gfa.gz`: Compressed assembly graph in gfa format
 * `[sample]_contigs.fasta.gz`: Compressed assembled contigs in fasta format
-* `[sample]_log.txt`: Log file
+* `[sample].log`: Log file
 * `[sample]_QC/`: Directory containing QUAST files
 
 ### SPAdesHybrid
@@ -155,7 +155,7 @@ SPAdesHybrid is a part of the [SPAdes](http://cab.spbu.ru/software/spades/) soft
 * `[sample]_scaffolds.fasta.gz`: Compressed assembled scaffolds in fasta format
 * `[sample]_graph.gfa.gz`: Compressed assembly graph in gfa format
 * `[sample]_contigs.fasta.gz`: Compressed assembled contigs in fasta format
-* `[sample]_log.txt`: Log file
+* `[sample].log`: Log file
 * `[sample]_QC/`: Directory containing QUAST files
 
 ### Metagenome QC with QUAST
@@ -221,7 +221,7 @@ Files in these two folders contain all contigs of an assembly.
 
 **Output directory: `GenomeBinning/QC/BUSCO`**
 
-* `[assembler]-[bin]_busco_log.txt`: BUSCO log file
+* `[assembler]-[bin]_busco.log`: BUSCO log file
 * `[assembler]-[bin]_busco.fna`: Nucleotide sequence of all identified BUSCOs
 * `[assembler]-[bin]_busco.faa`: Aminoacid sequence of all identified BUSCOs
 

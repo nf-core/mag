@@ -700,15 +700,15 @@ if (!params.keep_lambda) {
 
         output:
         set id, file("${id}_nanolyse.fastq.gz") into files_nanolyse
-        file("${id}_nanolyse_log.txt")
+        file("${id}_nanolyse.log")
 
         script:
         """
         cat ${lr} | NanoLyse --reference $nanolyse_db | gzip > ${id}_nanolyse.fastq.gz
 
-        echo "NanoLyse reference: $params.lambda_reference" >${id}_nanolyse_log.txt
-        cat ${lr} | echo "total reads before NanoLyse: \$((`wc -l`/4))" >>${id}_nanolyse_log.txt
-        gunzip -c ${id}_nanolyse.fastq.gz | echo "total reads after NanoLyse: \$((`wc -l`/4))" >>${id}_nanolyse_log.txt
+        echo "NanoLyse reference: $params.lambda_reference" >${id}_nanolyse.log
+        cat ${lr} | echo "total reads before NanoLyse: \$((`wc -l`/4))" >>${id}_nanolyse.log
+        gunzip -c ${id}_nanolyse.fastq.gz | echo "total reads after NanoLyse: \$((`wc -l`/4))" >>${id}_nanolyse.log
         """
     }
 } else {
@@ -952,7 +952,7 @@ process spadeshybrid {
 
     output:
     set val("SPAdesHybrid"), val("$id"), file("${id}_scaffolds.fasta") into (assembly_spadeshybrid_to_quast, assembly_spadeshybrid_to_metabat)
-    file("${id}_log.txt")
+    file("${id}.log")
     file("${id}_contigs.fasta.gz")
     file("${id}_scaffolds.fasta.gz")
     file("${id}_graph.gfa.gz")
@@ -974,7 +974,7 @@ process spadeshybrid {
         mv spades/assembly_graph_with_scaffolds.gfa ${id}_graph.gfa
         mv spades/scaffolds.fasta ${id}_scaffolds.fasta
         mv spades/contigs.fasta ${id}_contigs.fasta
-        mv spades/spades.log ${id}_log.txt
+        mv spades/spades.log ${id}.log
         gzip "${id}_contigs.fasta"
         gzip "${id}_graph.gfa"
         gzip -c "${id}_scaffolds.fasta" > "${id}_scaffolds.fasta.gz"
@@ -995,7 +995,7 @@ process spades {
 
     output:
     set val("SPAdes"), val("$id"), file("${id}_scaffolds.fasta") into (assembly_spades_to_quast, assembly_spades_to_metabat)
-    file("${id}_log.txt")
+    file("${id}.log")
     file("${id}_contigs.fasta.gz")
     file("${id}_scaffolds.fasta.gz")
     file("${id}_graph.gfa.gz")
@@ -1016,7 +1016,7 @@ process spades {
         mv spades/assembly_graph_with_scaffolds.gfa ${id}_graph.gfa
         mv spades/scaffolds.fasta ${id}_scaffolds.fasta
         mv spades/contigs.fasta ${id}_contigs.fasta
-        mv spades/spades.log ${id}_log.txt
+        mv spades/spades.log ${id}.log
         gzip "${id}_contigs.fasta"
         gzip "${id}_graph.gfa"
         gzip -c "${id}_scaffolds.fasta" > "${id}_scaffolds.fasta.gz"
@@ -1164,7 +1164,7 @@ process busco {
     output:
     file("short_summary_${assembly}.txt") into (busco_summary_to_multiqc, busco_summary_to_plot)
     val("$assembler-$sample") into busco_assembler_sample_to_plot
-    file("${assembly}_busco_log.txt")
+    file("${assembly}_busco.log")
     file("${assembly}_buscos.faa")
     file("${assembly}_buscos.fna")
 
@@ -1181,7 +1181,7 @@ process busco {
             --blast_single_core \
             --mode genome \
             --out ${assembly} \
-            >${assembly}_busco_log.txt
+            >${assembly}_busco.log
         cp run_${assembly}/short_summary_${assembly}.txt short_summary_${assembly}.txt
 
         for f in run_${assembly}/single_copy_busco_sequences/*faa; do 
@@ -1202,7 +1202,7 @@ process busco {
             --blast_single_core \
             --mode genome \
             --out ${assembly} \
-            >${assembly}_busco_log.txt
+            >${assembly}_busco.log
         cp run_${assembly}/short_summary_${assembly}.txt short_summary_${assembly}.txt
 
         for f in run_${assembly}/single_copy_busco_sequences/*faa; do 
