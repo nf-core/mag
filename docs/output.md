@@ -48,7 +48,7 @@ The pipeline uses bowtie2 to map the reads against PhiX and removes mapped reads
 
 **Output directory: `QC_shortreads/remove_phix`**
 
-* `[sample]_remove_phix_log.txt`: Contains a brief log file indicating how many reads have been retained.
+* `[sample]_remove_phix.log`: Contains a brief log file indicating how many reads have been retained.
 
 ### Host read removal
 
