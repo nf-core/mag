@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Update to new nf-core 1.10.2 `TEMPLATE` [#88](https://github.com/nf-core/mag/pull/88)
 - `--reads` is now removed, use `--input` instead [#88](https://github.com/nf-core/mag/pull/88)
+- Prevented PhiX alignments from being stored in work directory [#101](https://github.com/nf-core/mag/pull/101)
 
 ### `Fixed`
 
