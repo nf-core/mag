@@ -452,7 +452,7 @@
                 "save_busco_reference": {
                     "type": "boolean",
                     "description": "Save BUSCO reference.",
-                    "help_text": "Useful to allow reproducibility, as BUSCO datasets are frequently updated and old version do not always remain accessible."
+                    "help_text": "Useful to allow reproducibility, as BUSCO datasets are frequently updated and old versions do not always remain accessible."
                 }
             }
         }

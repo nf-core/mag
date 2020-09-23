@@ -225,6 +225,12 @@ Files in these two folders contain all contigs of an assembly.
 * `[assembler]-[bin]_busco.fna`: Nucleotide sequence of all identified BUSCOs
 * `[assembler]-[bin]_busco.faa`: Aminoacid sequence of all identified BUSCOs
 
+If the parameter `--save_busco_reference` is set the used BUSCO reference is stored.
+
+**Output directory: `GenomeBinning/QC/BUSCO/reference`**
+
+* `*.tar.gz`: BUSCO reference file
+
 **Output directory: `GenomeBinning/QC`**
 
 * `busco_summary.txt`: A summary table of the BUSCO results, with % of marker genes found
