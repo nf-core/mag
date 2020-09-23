@@ -87,6 +87,7 @@ def helpMessage() {
       --skip_busco [bool]                   Disable bin QC with BUSCO (default: false)
       --busco_reference [file]              Download path for BUSCO database, available databases are listed here: https://busco.ezlab.org/
                                             (default: https://busco-data.ezlab.org/v4/data/lineages/bacteria_odb10.2020-03-06.tar.gz)
+      --save_busco_reference [bool]         Save BUSCO reference. Useful to allow reproducibility, as BUSCO datasets are frequently updated and old version do not always remain accessible.
 
     Reproducibility options:
       --megahit_fix_cpu_1 [bool]            Fix number of CPUs for MEGAHIT to 1. Not increased with retries (default: false)
@@ -1132,12 +1133,15 @@ process metabat {
 
 process busco_download_db {
     tag "${database.baseName}"
+    publishDir "${params.outdir}/GenomeBinning/QC/BUSCO/", mode: params.publish_dir_mode,
+        saveAs: {filename -> (params.save_busco_reference && filename.indexOf(".tar.gz") > 0) ? "reference/$filename" : null}
 
     input:
     file(database) from file_busco_db
 
     output:
     file("buscodb/*") into busco_db
+    file(database)
 
     script:
     """
