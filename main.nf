@@ -86,7 +86,7 @@ def helpMessage() {
     Bin quality check:
       --skip_busco [bool]                   Disable bin QC with BUSCO (default: false)
       --busco_reference [file]              Download path for BUSCO database, available databases are listed here: https://busco.ezlab.org/
-                                            (default: https://busco-archive.ezlab.org/v3/datasets/bacteria_odb9.tar.gz)
+                                            (default: https://busco-data.ezlab.org/v4/data/lineages/bacteria_odb10.2020-03-06.tar.gz)
 
     Reproducibility options:
       --megahit_fix_cpu_1 [bool]            Fix number of CPUs for MEGAHIT to 1. Not increased with retries (default: false)
