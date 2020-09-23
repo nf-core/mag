@@ -1281,7 +1281,7 @@ process quast_bins {
     publishDir "${params.outdir}/GenomeBinning/QC/", mode: params.publish_dir_mode
 
     input:
-    set val(assembler), val(sample), file(assembly) from metabat_bins_quast_bins
+    set val(assembler), val(sample), file(bins) from metabat_bins_quast_bins
 
     output:
     path("QUAST/*") type('dir')
@@ -1292,15 +1292,15 @@ process quast_bins {
 
     script:
     """
-    ASSEMBLIES=\$(echo \"$assembly\" | sed 's/[][]//g')
-    IFS=', ' read -r -a assemblies <<< \"\$ASSEMBLIES\"
+    BINS=\$(echo \"$bins\" | sed 's/[][]//g')
+    IFS=', ' read -r -a bins <<< \"\$BINS\"
 
-    for assembly in \"\${assemblies[@]}\"; do
-        metaquast.py --threads "${task.cpus}" --max-ref-number 0 --rna-finding --gene-finding -l "\${assembly}" "\${assembly}" -o "QUAST/\${assembly}"
+    for bin in \"\${bins[@]}\"; do
+        metaquast.py --threads "${task.cpus}" --max-ref-number 0 --rna-finding --gene-finding -l "\${bin}" "\${bin}" -o "QUAST/\${bin}"
         if ! [ -f "QUAST/${assembler}-${sample}-quast_summary.tsv" ]; then 
-            cp "QUAST/\${assembly}/transposed_report.tsv" "QUAST/${assembler}-${sample}-quast_summary.tsv"
+            cp "QUAST/\${bin}/transposed_report.tsv" "QUAST/${assembler}-${sample}-quast_summary.tsv"
         else
-            tail -n +2 "QUAST/\${assembly}/transposed_report.tsv" >> "QUAST/${assembler}-${sample}-quast_summary.tsv"
+            tail -n +2 "QUAST/\${bin}/transposed_report.tsv" >> "QUAST/${assembler}-${sample}-quast_summary.tsv"
         fi
     done
     """
