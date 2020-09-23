@@ -19,13 +19,12 @@ dependencies:
   - bioconda::bowtie2=2.3.5
   - bioconda::quast=5.0.2
   - bioconda::prodigal=2.6.3
-  - bioconda::diamond=0.9.24 # 0.9.25 conflicts with Busco over boost
+  - bioconda::diamond=0.9.24 # 0.9.25 conflicted with Busco over boost
   - conda-forge::r=3.6
   - conda-forge::biopython=1.74
   - bioconda::krona=2.7.1
   - conda-forge::r-markdown=1.0
   - conda-forge::r-ggplot2=3.2.0
-  - bioconda::busco=3.0.2
   - bioconda::nanoplot=1.26.3
   - bioconda::filtlong=0.2.0
   - bioconda::porechop=0.2.3_seqan2.1.1
