@@ -448,6 +448,11 @@
                     "default": "https://busco-data.ezlab.org/v4/data/lineages/bacteria_odb10.2020-03-06.tar.gz",
                     "description": "Download path for BUSCO database.",
                     "help_text": "Available databases are listed here: https://busco.ezlab.org/."
+                },
+                "save_busco_reference": {
+                    "type": "boolean",
+                    "description": "Save BUSCO reference.",
+                    "help_text": "Useful to allow reproducibility, as BUSCO datasets are frequently updated and old version do not always remain accessible."
                 }
             }
         }
