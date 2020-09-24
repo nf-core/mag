@@ -1168,8 +1168,8 @@ process busco {
     output:
     set val(assembler), val(sample), file("short_summary.specific.*.${bin}.txt") into (ch_busco_multiqc, ch_busco_to_summary, ch_busco_plot)
     file("${bin}_busco.log")
-    file("${bin}_buscos.faa") optional true
-    file("${bin}_buscos.fna") optional true
+    file("${bin}_buscos.faa.gz") optional true
+    file("${bin}_buscos.fna.gz") optional true
 
     script:
     if( workflow.profile.toString().indexOf("conda") == -1)
@@ -1214,11 +1214,11 @@ process busco {
     cp BUSCO/short_summary.specific.\${db_name}.BUSCO.txt short_summary.specific.\${db_name}.${bin}.txt
 
     for f in BUSCO/run_\${db_name}/busco_sequences/single_copy_busco_sequences/*faa; do
-        cat BUSCO/run_\${db_name}/busco_sequences/single_copy_busco_sequences/*faa >${bin}_buscos.faa
+        cat BUSCO/run_\${db_name}/busco_sequences/single_copy_busco_sequences/*faa | gzip >${bin}_buscos.faa.gz
         break
     done
     for f in BUSCO/run_\${db_name}/busco_sequences/single_copy_busco_sequences/*fna; do
-        cat BUSCO/run_\${db_name}/busco_sequences/single_copy_busco_sequences/*fna >${bin}_buscos.fna
+        cat BUSCO/run_\${db_name}/busco_sequences/single_copy_busco_sequences/*fna | gzip >${bin}_buscos.fna.gz
         break
     done
     """
