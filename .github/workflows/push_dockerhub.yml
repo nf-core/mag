@@ -38,3 +38,21 @@ jobs:
           docker push nfcore/mag:latest
           docker tag nfcore/mag:latest nfcore/mag:${{ github.event.release.tag_name }}
           docker push nfcore/mag:${{ github.event.release.tag_name }}
+
+      - name: Build new docker image for BUSCO
+        run: docker build --no-cache ./containers/busco/ -t nfcore/magbusco:latest
+
+      - name: Push Docker image for BUSCO to DockerHub (dev)
+        if: ${{ github.event_name == 'push' }}
+        run: |
+          echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+          docker tag nfcore/magbusco:latest nfcore/magbusco:dev
+          docker push nfcore/magbusco:dev
+
+      - name: Push Docker image for BUSCO to DockerHub (release)
+        if: ${{ github.event_name == 'release' }}
+        run: |
+          echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+          docker push nfcore/magbusco:latest
+          docker tag nfcore/magbusco:latest nfcore/magbusco:${{ github.event.release.tag_name }}
+          docker push nfcore/magbusco:${{ github.event.release.tag_name }}
