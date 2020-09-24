@@ -1131,7 +1131,7 @@ process metabat {
     """
 }
 
-process busco_download_db {
+process busco_db_preparation {
     tag "${database.baseName}"
     publishDir "${params.outdir}/GenomeBinning/QC/BUSCO/", mode: params.publish_dir_mode,
         saveAs: {filename -> (params.save_busco_reference && filename.indexOf(".tar.gz") > 0) ? "reference/$filename" : null}
