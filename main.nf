@@ -384,12 +384,27 @@ Channel.from(summary.collect{ [it.key, it.value] })
 /*
  * Parse software version numbers
  */
+
+process get_busco_version {
+
+    output:
+    file "v_busco.txt" into ch_busco_version
+
+    script:
+    """
+    busco --version > v_busco.txt
+    """
+}
+
 process get_software_versions {
     publishDir "${params.outdir}/pipeline_info", mode: params.publish_dir_mode,
         saveAs: { filename ->
                       if (filename.indexOf(".csv") > 0) filename
                       else null
                 }
+
+    input:
+    file(busco_version) from ch_busco_version
 
     output:
     file 'software_versions_mqc.yaml' into ch_software_versions_yaml
@@ -409,7 +424,6 @@ process get_software_versions {
     porechop --version > v_porechop.txt
     NanoLyse --version > v_nanolyse.txt
     spades.py --version > v_spades.txt
-    run_BUSCO.py --version > v_busco.txt
     centrifuge --version > v_centrifuge.txt
     kraken2 -v > v_kraken2.txt
     CAT -v > v_cat.txt
