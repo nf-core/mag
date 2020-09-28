@@ -86,7 +86,8 @@ def helpMessage() {
     Bin quality check:
       --skip_busco [bool]                   Disable bin QC with BUSCO (default: false)
       --busco_reference [file]              Download path for BUSCO database, available databases are listed here: https://busco.ezlab.org/
-                                            (default: https://busco-archive.ezlab.org/v3/datasets/bacteria_odb9.tar.gz)
+                                            (default: https://busco-data.ezlab.org/v4/data/lineages/bacteria_odb10.2020-03-06.tar.gz)
+      --save_busco_reference [bool]         Save BUSCO reference. Useful to allow reproducibility, as BUSCO datasets are frequently updated and old versions do not always remain accessible.
 
     Reproducibility options:
       --megahit_fix_cpu_1 [bool]            Fix number of CPUs for MEGAHIT to 1. Not increased with retries (default: false)
@@ -383,12 +384,27 @@ Channel.from(summary.collect{ [it.key, it.value] })
 /*
  * Parse software version numbers
  */
+
+process get_busco_version {
+
+    output:
+    file "v_busco.txt" into ch_busco_version
+
+    script:
+    """
+    busco --version > v_busco.txt
+    """
+}
+
 process get_software_versions {
     publishDir "${params.outdir}/pipeline_info", mode: params.publish_dir_mode,
         saveAs: { filename ->
                       if (filename.indexOf(".csv") > 0) filename
                       else null
                 }
+
+    input:
+    file(busco_version) from ch_busco_version
 
     output:
     file 'software_versions_mqc.yaml' into ch_software_versions_yaml
@@ -408,7 +424,6 @@ process get_software_versions {
     porechop --version > v_porechop.txt
     NanoLyse --version > v_nanolyse.txt
     spades.py --version > v_spades.txt
-    run_BUSCO.py --version > v_busco.txt
     centrifuge --version > v_centrifuge.txt
     kraken2 -v > v_kraken2.txt
     CAT -v > v_cat.txt
@@ -1130,14 +1145,17 @@ process metabat {
     """
 }
 
-process busco_download_db {
+process busco_db_preparation {
     tag "${database.baseName}"
+    publishDir "${params.outdir}/GenomeBinning/QC/BUSCO/", mode: params.publish_dir_mode,
+        saveAs: {filename -> (params.save_busco_reference && filename.indexOf(".tar.gz") > 0) ? "reference/$filename" : null}
 
     input:
     file(database) from file_busco_db
 
     output:
-    set val("${database.toString().replace(".tar.gz", "")}"), file("buscodb/*") into busco_db
+    file("buscodb/*") into busco_db
+    file(database)
 
     script:
     """
@@ -1155,114 +1173,133 @@ metabat_bins
  * BUSCO: Quantitative measures for the assessment of genome assembly
  */
 process busco {
-    tag "${assembly}"
+    tag "${bin}"
     publishDir "${params.outdir}/GenomeBinning/QC/BUSCO/", mode: params.publish_dir_mode
 
     input:
-    set val(assembler), val(sample), file(assembly), val(db_name), file(db) from metabat_db_busco
+    set val(assembler), val(sample), file(bin), file(db) from metabat_db_busco
 
     output:
-    file("short_summary_${assembly}.txt") into (busco_summary_to_multiqc, busco_summary_to_plot)
-    val("$assembler-$sample") into busco_assembler_sample_to_plot
-    file("${assembly}_busco.log")
-    file("${assembly}_buscos.faa")
-    file("${assembly}_buscos.fna")
+    set val(assembler), val(sample), file("short_summary.specific.*.${bin}.txt") into (ch_busco_multiqc, ch_busco_to_summary, ch_busco_plot)
+    file("${bin}_busco.log")
+    file("${bin}_buscos.faa.gz") optional true
+    file("${bin}_buscos.fna.gz") optional true
 
     script:
-    if( workflow.profile.toString().indexOf("conda") == -1) {
-        """
+    if( workflow.profile.toString().indexOf("conda") == -1)
+        cp_augustus_config = "Y"
+    else
+        cp_augustus_config = "N"
+
+    """
+    # get path to custom config file for busco (already configured during conda installation)
+    busco_path="\$(which busco)"
+    config_file="\${busco_path%bin/busco}share/busco/config.ini"
+
+    # ensure augustus has write access to config directory
+    if [ ${cp_augustus_config} = "Y" ] ; then
         cp -r /opt/conda/pkgs/augustus*/config augustus_config/
         export AUGUSTUS_CONFIG_PATH=augustus_config
+    fi
 
-        run_BUSCO.py \
-            --in ${assembly} \
-            --lineage_path $db_name \
-            --cpu "${task.cpus}" \
-            --blast_single_core \
-            --mode genome \
-            --out ${assembly} \
-            >${assembly}_busco.log
-        cp run_${assembly}/short_summary_${assembly}.txt short_summary_${assembly}.txt
+    # place db in extra folder to ensure BUSCO recognizes it as path (instead of downloading it)
+    mkdir dataset
+    mv ${db} dataset/
 
-        for f in run_${assembly}/single_copy_busco_sequences/*faa; do 
-            [ -e "\$f" ] && cat run_${assembly}/single_copy_busco_sequences/*faa >${assembly}_buscos.faa || touch ${assembly}_buscos.faa
-            break
-        done
-        for f in run_${assembly}/single_copy_busco_sequences/*fna; do 
-            [ -e "\$f" ] && cat run_${assembly}/single_copy_busco_sequences/*fna >${assembly}_buscos.fna || touch ${assembly}_buscos.fna
-            break
-        done
-        """
-    } else {
-        """
-        run_BUSCO.py \
-            --in ${assembly} \
-            --lineage_path $db_name \
-            --cpu "${task.cpus}" \
-            --blast_single_core \
-            --mode genome \
-            --out ${assembly} \
-            >${assembly}_busco.log
-        cp run_${assembly}/short_summary_${assembly}.txt short_summary_${assembly}.txt
+    busco --lineage_dataset dataset/${db} \
+        --mode genome \
+        --in ${bin} \
+        --config \${config_file} \
+        --cpu "${task.cpus}" \
+        --out "BUSCO" > ${bin}_busco.log
 
-        for f in run_${assembly}/single_copy_busco_sequences/*faa; do 
-            [ -e "\$f" ] && cat run_${assembly}/single_copy_busco_sequences/*faa >${assembly}_buscos.faa || touch ${assembly}_buscos.faa
-            break
-        done
-        for f in run_${assembly}/single_copy_busco_sequences/*fna; do 
-            [ -e "\$f" ] && cat run_${assembly}/single_copy_busco_sequences/*fna >${assembly}_buscos.fna || touch ${assembly}_buscos.fna
-            break
-        done
-        """
-    }
+    # get used db name
+    # (set nullgob: if pattern matches no files, expand to a null string rather than to itself)
+    shopt -s nullglob
+    summaries=(BUSCO/short_summary.specific.*.BUSCO.txt)
+    if [ \${#summaries[@]} -ne 1 ]; then
+        echo "ERROR: none or multiple 'BUSCO/short_summary.specific.*.BUSCO.txt' files found. Expected one."
+        exit 1
+    fi
+    [[ \$summaries =~ BUSCO/short_summary.specific.(.*).BUSCO.txt ]];
+    db_name="\${BASH_REMATCH[1]}"
+    echo "Used database: \${db_name}"
+
+    cp BUSCO/short_summary.specific.\${db_name}.BUSCO.txt short_summary.specific.\${db_name}.${bin}.txt
+
+    for f in BUSCO/run_\${db_name}/busco_sequences/single_copy_busco_sequences/*faa; do
+        cat BUSCO/run_\${db_name}/busco_sequences/single_copy_busco_sequences/*faa | gzip >${bin}_buscos.faa.gz
+        break
+    done
+    for f in BUSCO/run_\${db_name}/busco_sequences/single_copy_busco_sequences/*fna; do
+        cat BUSCO/run_\${db_name}/busco_sequences/single_copy_busco_sequences/*fna | gzip >${bin}_buscos.fna.gz
+        break
+    done
+    """
 }
 
+// preprare channels for downstream processes
+ch_busco_multiqc = ch_busco_multiqc.map{it[2]}
+ch_busco_to_summary = ch_busco_to_summary.map{it[2]}
 
-process busco_plot { 
+// group by assembler and sample for plotting
+ch_busco_plot = ch_busco_plot.groupTuple(by: [0,1])
+
+process busco_plot {
+    tag "$assembler-$sample"
+    publishDir "${params.outdir}/GenomeBinning/QC/BUSCO/", mode: params.publish_dir_mode
+
+    input:
+    set val(assembler), val(sample), file(summaries) from ch_busco_plot
+
+    output:
+    file("${assembler}-${sample}-busco_figure.png")
+    file("${assembler}-${sample}-busco_figure.R")
+    file("${assembler}-${sample}-busco_summary.txt")
+
+    script:
+    def name = "${assembler}-${sample}"
+    """
+    # replace dots in bin names within summary file names by underscores
+    # currently (BUSCO v4.1.3) generate_plot.py does not allow further dots
+    for sum in ${summaries}; do
+        [[ \${sum} =~ short_summary.(.*).${name}.(.*).txt ]];
+        db_name=\${BASH_REMATCH[1]}
+        bin="${name}.\${BASH_REMATCH[2]}"
+        bin_new="\${bin//./_}"
+        mv \${sum} short_summary.\${db_name}.\${bin_new}.txt
+    done
+    generate_plot.py --working_directory .
+
+    mv busco_figure.png ${assembler}-${sample}-busco_figure.png
+    mv busco_figure.R ${assembler}-${sample}-busco_figure.R
+
+    summary_busco.py short_summary.*.txt > ${assembler}-${sample}-busco_summary.txt
+    """
+}
+
+process busco_summary {
     publishDir "${params.outdir}/GenomeBinning/QC/", mode: params.publish_dir_mode
 
     input:
-    file(summaries) from busco_summary_to_plot.collect()
-    val(assemblersample) from busco_assembler_sample_to_plot.collect()
+    file("short_summary.*.txt") from ch_busco_to_summary.collect()
 
     output:
-    file("*busco_figure.png")
-    file("BUSCO/*busco_figure.R")
-    file("BUSCO/*busco_summary.txt")
     file("busco_summary.txt") into busco_summary
 
     script:
-    def assemblersampleunique = assemblersample.unique()
     """
-    #for each assembler and sample:
-    assemblersample=\$(echo \"$assemblersampleunique\" | sed 's/[][]//g')
-    IFS=', ' read -r -a assemblersamples <<< \"\$assemblersample\"
-
-    mkdir BUSCO
-
-    for name in \"\${assemblersamples[@]}\"; do
-        mkdir \${name}
-        cp short_summary_\${name}* \${name}/
-        generate_plot.py --working_directory \${name}
-        
-        cp \${name}/busco_figure.png \${name}-busco_figure.png
-        cp \${name}/busco_figure.R \${name}-busco_figure.R
-
-        summary_busco.py \${name}/short_summary_*.txt >BUSCO/\${name}-busco_summary.txt
-    done
-
-    cp *-busco_figure.R BUSCO/
-
-    summary_busco.py short_summary_*.txt >busco_summary.txt
+    summary_busco.py short_summary.*.txt > busco_summary.txt
     """
 }
+
 
 process quast_bins {
     tag "$assembler-$sample"
     publishDir "${params.outdir}/GenomeBinning/QC/", mode: params.publish_dir_mode
 
     input:
-    set val(assembler), val(sample), file(assembly) from metabat_bins_quast_bins
+    set val(assembler), val(sample), file(bins) from metabat_bins_quast_bins
 
     output:
     path("QUAST/*") type('dir')
@@ -1273,15 +1310,15 @@ process quast_bins {
 
     script:
     """
-    ASSEMBLIES=\$(echo \"$assembly\" | sed 's/[][]//g')
-    IFS=', ' read -r -a assemblies <<< \"\$ASSEMBLIES\"
+    BINS=\$(echo \"$bins\" | sed 's/[][]//g')
+    IFS=', ' read -r -a bins <<< \"\$BINS\"
 
-    for assembly in \"\${assemblies[@]}\"; do
-        metaquast.py --threads "${task.cpus}" --max-ref-number 0 --rna-finding --gene-finding -l "\${assembly}" "\${assembly}" -o "QUAST/\${assembly}"
+    for bin in \"\${bins[@]}\"; do
+        metaquast.py --threads "${task.cpus}" --max-ref-number 0 --rna-finding --gene-finding -l "\${bin}" "\${bin}" -o "QUAST/\${bin}"
         if ! [ -f "QUAST/${assembler}-${sample}-quast_summary.tsv" ]; then 
-            cp "QUAST/\${assembly}/transposed_report.tsv" "QUAST/${assembler}-${sample}-quast_summary.tsv"
+            cp "QUAST/\${bin}/transposed_report.tsv" "QUAST/${assembler}-${sample}-quast_summary.tsv"
         else
-            tail -n +2 "QUAST/\${assembly}/transposed_report.tsv" >> "QUAST/${assembler}-${sample}-quast_summary.tsv"
+            tail -n +2 "QUAST/\${bin}/transposed_report.tsv" >> "QUAST/${assembler}-${sample}-quast_summary.tsv"
         fi
     done
     """
@@ -1383,7 +1420,7 @@ process multiqc {
     file (fastqc_trimmed:'fastqc/*') from fastqc_results_trimmed.collect().ifEmpty([])
     file (host_removal) from ch_host_removed_log.collect().ifEmpty([])
     file ('quast*/*') from quast_results.collect().ifEmpty([])
-    file (short_summary) from busco_summary_to_multiqc.collect().ifEmpty([])
+    file (short_summary) from ch_busco_multiqc.collect().ifEmpty([])
     file ('software_versions/*') from ch_software_versions_yaml.collect()
     file workflow_summary from ch_workflow_summary.collectFile(name: "workflow_summary_mqc.yaml")
 
