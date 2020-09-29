@@ -70,14 +70,14 @@ Long read processing was inspired by [caspargross/HybridAssembly](https://github
 
 Many thanks to the additional contributors who have helped out and/or provided suggestions:
 
-* (Alexander Peltzer)[https://github.com/apeltzer]
-* (Phil Ewels)[https://github.com/ewels]
-* (Gisela Gabernet)[https://github.com/ggabernet]
-* (Harshil Patel)[https://github.com/drpatelh]
-* (Johannes Alneberg)[https://github.com/alneberg]
-* (Maxime Borry)[https://github.com/maxibor]
-* (Maxime Garcia)[https://github.com/MaxUlysse]
-* (Michael L Heuer)[https://github.com/heuermh]
+* [Alexander Peltzer](https://github.com/apeltzer)
+* [Phil Ewels](https://github.com/ewels)
+* [Gisela Gabernet](https://github.com/ggabernet)
+* [Harshil Patel](https://github.com/drpatelh)
+* [Johannes Alneberg](https://github.com/alneberg)
+* [Maxime Borry](https://github.com/maxibor)
+* [Maxime Garcia](https://github.com/MaxUlysse)
+* [Michael L Heuer](https://github.com/heuermh)
 
 ## Contributions and Support
 
