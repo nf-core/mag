@@ -53,15 +53,6 @@ See [usage docs](docs/usage.md) for all of the available options when running th
 
 The nf-core/mag pipeline comes with documentation about the pipeline which you can read at [https://nf-core/mag/docs](https://nf-core/mag/docs) or find in the [`docs/` directory](docs).
 
-1. [Installation](https://nf-co.re/usage/installation)
-2. Pipeline configuration
-   * [Local installation](https://nf-co.re/usage/local_installation)
-   * [Adding your own system config](https://nf-co.re/usage/adding_own_config)
-   * [Reference genomes](https://nf-co.re/usage/reference_genomes)
-3. [Running the pipeline](docs/usage.md)
-4. [Output and how to interpret the results](docs/output.md)
-5. [Troubleshooting](https://nf-co.re/usage/troubleshooting)
-
 ## Credits
 
 nf-core/mag was written by [Hadrien Gourlé](https://hadriengourle.com) at [SLU](https://slu.se), [Daniel Straub](https://github.com/d4straub) and [Sabrina Krakau](https://github.com/skrakau) at the [Quantitative Biology Center (QBiC)](http://qbic.life).
