@@ -68,6 +68,17 @@ nf-core/mag was written by [Hadrien Gourlé](https://hadriengourle.com) at [SLU]
 
 Long read processing was inspired by [caspargross/HybridAssembly](https://github.com/caspargross/HybridAssembly) written by Caspar Gross [@caspargross](https://github.com/caspargross)
 
+Many thanks to the additional contributors who have helped out and/or provided suggestions:
+
+* (Alexander Peltzer)[https://github.com/apeltzer]
+* (Phil Ewels)[https://github.com/ewels]
+* (Gisela Gabernet)[https://github.com/ggabernet]
+* (Harshil Patel)[https://github.com/drpatelh]
+* (Johannes Alneberg)[https://github.com/alneberg]
+* (Maxime Borry)[https://github.com/maxibor]
+* (Maxime Garcia)[https://github.com/MaxUlysse]
+* (Michael L Heuer)[https://github.com/heuermh]
+
 ## Contributions and Support
 
 If you would like to contribute to this pipeline, please see the [contributing guidelines](.github/CONTRIBUTING.md).
