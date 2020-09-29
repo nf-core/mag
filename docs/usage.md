@@ -21,7 +21,7 @@ results         # Finished results (configurable, see below)
 # Other nextflow hidden files, eg. history of pipeline runs and old logs.
 ```
 
-See the (nf-core/mag website documentation)[https://nf-co.re/mag/usage] for more information about pipeline specific parameters.
+See the [nf-core/mag website documentation](https://nf-co.re/mag/usage#usage) for more information about pipeline specific parameters.
 
 ### Updating the pipeline
 
