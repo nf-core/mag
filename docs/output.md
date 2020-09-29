@@ -92,7 +92,7 @@ Kraken2 classifies reads using a k-mer based approach as well as assigns taxonom
 
 **Output directory: `Taxonomy/kraken2/[sample]`**
 
-* `kraken2.report`: Classification in the Kraken report format. See the [kraken manual](http://ccb.jhu.edu/software/kraken/MANUAL.html#sample-reports) for more details
+* `kraken2.report`: Classification in the Kraken report format. See the [kraken2 manual](https://github.com/DerrickWood/kraken2/wiki/Manual#output-formats) for more details
 * `taxonomy.krona.html`: Interactive pie chart produced by [KronaTools](https://github.com/marbl/Krona/wiki)
 
 ### Centrifuge
@@ -104,7 +104,7 @@ More information on the [Centrifuge](https://ccb.jhu.edu/software/centrifuge/) w
 **Output directory: `Taxonomy/centrifuge/[sample]`**
 
 * `report.txt`: Tab-delimited result file. See the [centrifuge manual](https://ccb.jhu.edu/software/centrifuge/manual.shtml#centrifuge-classification-output) for information about the fields
-* `kreport.txt`: Classification in the Kraken report format. See the [kraken manual](http://ccb.jhu.edu/software/kraken/MANUAL.html#sample-reports) for more details
+* `kreport.txt`: Classification in the Kraken report format. See the [kraken2 manual](https://github.com/DerrickWood/kraken2/wiki/Manual#output-formats) for more details
 * `taxonomy.krona.html`: Interactive pie chart produced by [KronaTools](https://github.com/marbl/Krona/wiki)
 
 ### CAT
