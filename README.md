@@ -51,7 +51,7 @@ See [usage docs](docs/usage.md) for all of the available options when running th
 
 ## Documentation
 
-The nf-core/mag pipeline comes with documentation about the pipeline which you can read at [https://nf-core/mag/docs](https://nf-core/mag/docs) or find in the [`docs/` directory](docs).
+The nf-core/mag pipeline comes with documentation about the pipeline which you can read at [https://nf-co.re/mag](https://nf-co.re/mag) or find in the [`docs/` directory](docs).
 
 ## Credits
 
