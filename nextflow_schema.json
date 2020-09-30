@@ -375,7 +375,7 @@
                 "cat_db": {
                     "type": "string",
                     "description": "Database for taxonomic classification of metagenome assembled genomes.",
-                    "help_text": "E.g. \"http://tbb.bio.uu.nl/bastiaan/CAT_prepare/CAT_prepare_20200618.tar.gz\".\nThe zipped file needs to contain a folder named \"*taxonomy*\" and \"*CAT_database*\" that hold the respective files."
+                    "help_text": "E.g. \"http://tbb.bio.uu.nl/bastiaan/CAT_prepare/CAT_prepare_20200304.tar.gz\".\nThe zipped file needs to contain a folder named \"*taxonomy*\" and \"*CAT_database*\" that hold the respective files."
                 }
             }
         },
