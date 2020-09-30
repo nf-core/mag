@@ -217,7 +217,7 @@ Files in these two folders contain all contigs of an assembly.
 
 ### QC for metagenome assembled genomes with BUSCO
 
-[BUSCO](https://busco-archive.ezlab.org/v3/) is a tool used to assess the completeness of a genome assembly. It is run on all the genome bins and high quality contigs obtained by MetaBAT2.
+[BUSCO](https://busco.ezlab.org/) is a tool used to assess the completeness of a genome assembly. It is run on all the genome bins and high quality contigs obtained by MetaBAT2.
 
 **Output directory: `GenomeBinning/QC/BUSCO`**
 
