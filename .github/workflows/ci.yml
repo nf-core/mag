@@ -34,13 +34,13 @@ jobs:
 
       - name: Build new docker image
         if: env.GIT_DIFF
-        run: docker build --no-cache . -t nfcore/mag:dev
+        run: docker build --no-cache . -t nfcore/mag:1.1.0
 
       - name: Pull docker image
         if: ${{ !env.GIT_DIFF }}
         run: |
           docker pull nfcore/mag:dev
-          docker tag nfcore/mag:dev nfcore/mag:dev
+          docker tag nfcore/mag:dev nfcore/mag:1.1.0
 
       - name: Check if BUSCO Dockerfile or Conda environment changed
         uses: technote-space/get-diff-action@v1
@@ -51,13 +51,13 @@ jobs:
 
       - name: Build new docker image for BUSCO
         if: env.GIT_DIFF
-        run: docker build --no-cache ./containers/busco/ -t nfcore/magbusco:dev
+        run: docker build --no-cache ./containers/busco/ -t nfcore/magbusco:1.1.0
 
       - name: Pull docker image for BUSCO
         if: ${{ !env.GIT_DIFF }}
         run: |
           docker pull nfcore/magbusco:dev
-          docker tag nfcore/magbusco:dev nfcore/magbusco:dev
+          docker tag nfcore/magbusco:dev nfcore/magbusco:1.1.0
 
       - name: Install Nextflow
         run: |
