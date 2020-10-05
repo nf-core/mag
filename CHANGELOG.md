@@ -24,7 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#88](https://github.com/nf-core/mag/pull/88) - Update to new nf-core 1.10.2 `TEMPLATE`
 - [#88](https://github.com/nf-core/mag/pull/88) - `--reads` is now removed, use `--input` instead
 - [#101](https://github.com/nf-core/mag/pull/101) - Prevented PhiX alignments from being stored in work directory [#97](https://github.com/nf-core/mag/issues/97)
-- [#104](https://github.com/nf-core/mag/pull/104) - Update `BUSCO` from `v3.0.2` to `v4.1.3`
+- [#104](https://github.com/nf-core/mag/pull/104), [#111](https://github.com/nf-core/mag/pull/111) - Update `BUSCO` from `v3.0.2` to `v4.1.4`
 
 ### `Fixed`
 
