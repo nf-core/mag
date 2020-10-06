@@ -1,0 +1,78 @@
+name: nf-core CI
+# This workflow runs the pipeline with the minimal test dataset to check that it completes without any syntax errors
+on:
+  push:
+    branches:
+      - dev
+  pull_request:
+  release:
+    types: [published]
+
+jobs:
+  test:
+    name: Run workflow tests
+    # Only run on push if this is the nf-core dev branch (merged PRs)
+    if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/mag') }}
+    runs-on: ubuntu-latest
+    env:
+      NXF_VER: ${{ matrix.nxf_ver }}
+      NXF_ANSI_LOG: false
+    strategy:
+      matrix:
+        # Nextflow versions: check pipeline minimum and current latest
+        nxf_ver: ['19.10.0', '']
+    steps:
+      - name: Check out pipeline code
+        uses: actions/checkout@v2
+
+      - name: Check if Dockerfile or Conda environment changed
+        uses: technote-space/get-diff-action@v1
+        with:
+          PREFIX_FILTER: |
+            Dockerfile
+            environment.yml
+
+      - name: Build new docker image
+        if: env.GIT_DIFF
+        run: docker build --no-cache . -t nfcore/mag:1.1.0
+
+      - name: Pull docker image
+        if: ${{ !env.GIT_DIFF }}
+        run: |
+          docker pull nfcore/mag:dev
+          docker tag nfcore/mag:dev nfcore/mag:1.1.0
+
+      - name: Check if BUSCO Dockerfile or Conda environment changed
+        uses: technote-space/get-diff-action@v1
+        with:
+          PREFIX_FILTER: |
+            containers/busco/Dockerfile
+            containers/busco/environment.yml
+
+      - name: Build new docker image for BUSCO
+        if: env.GIT_DIFF
+        run: docker build --no-cache ./containers/busco/ -t nfcore/magbusco:1.1.0
+
+      - name: Pull docker image for BUSCO
+        if: ${{ !env.GIT_DIFF }}
+        run: |
+          docker pull nfcore/magbusco:dev
+          docker tag nfcore/magbusco:dev nfcore/magbusco:1.1.0
+
+      - name: Install Nextflow
+        run: |
+          wget -qO- get.nextflow.io | bash
+          sudo mv nextflow /usr/local/bin/
+
+      - name: Run pipeline with test data
+        run: |
+          nextflow run ${GITHUB_WORKSPACE} -profile test,docker
+      - name: Run pipeline with test data for host read removal using fasta reference sequence
+        run: |
+          nextflow run ${GITHUB_WORKSPACE} -profile test_host_rm,docker
+      - name: Run pipeline with test hybrid data
+        run: |
+          nextflow run ${GITHUB_WORKSPACE} -profile test_hybrid,docker
+      - name: Run pipeline with test hybrid data and host read removal
+        run: |
+          nextflow run ${GITHUB_WORKSPACE} -profile test_hybrid_host_rm,docker
