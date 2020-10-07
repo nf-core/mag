@@ -8,6 +8,7 @@
 
 [![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg)](https://bioconda.github.io/)
 [![Docker](https://img.shields.io/docker/automated/nfcore/mag.svg)](https://hub.docker.com/r/nfcore/mag)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4068515.svg)](https://doi.org/10.5281/zenodo.4068515)
 [![Get help on Slack](http://img.shields.io/badge/slack-nf--core%20%23mag-4A154B?logo=slack)](https://nfcore.slack.com/channels/mag)
 
 ## Introduction
