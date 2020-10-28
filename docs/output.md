@@ -259,7 +259,7 @@ If the parameter `--save_busco_reference` is set the used BUSCO reference is sto
 
 **Output files:**
 
-*  `GenomeBinning/QC/`
+* `GenomeBinning/QC/`
   * `busco_summary.txt`: A summary table of the BUSCO results, with % of marker genes found
   * `quast_and_busco_summary.tsv`; Summary of BUSCO and QUAST results
 
