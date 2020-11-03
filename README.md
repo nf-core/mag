@@ -16,7 +16,7 @@
 This pipeline is for assembly, binning, and annotation of metagenomes.
 
 <p align="center">
-    <img src="docs/images/mag_workflow.png" alt="nf-core/mag workflow overview" width="60%"
+    <img src="docs/images/mag_workflow.png" alt="nf-core/mag workflow overview" width="60%">
 </p>
 
 The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It comes with docker containers making installation trivial and results highly reproducible.
