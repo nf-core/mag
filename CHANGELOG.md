@@ -7,11 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
+- [#124](https://github.com/nf-core/mag/pull/124) - Add worfklow overview figure to `README`
+
 ### `Changed`
 
 - [#123](https://github.com/nf-core/mag/pull/123) - Update to new nf-core 1.11 `TEMPLATE`
 
 ### `Fixed`
+
+- [#124](https://github.com/nf-core/mag/pull/124) - Fix description of `CAT` process in `output.md`
 
 ## v1.1.0 - 2020/10/06
 
