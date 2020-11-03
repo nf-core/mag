@@ -123,7 +123,7 @@ More information on the [Centrifuge](https://ccb.jhu.edu/software/centrifuge/) w
 
 ### CAT
 
-[CAT](https://github.com/dutilh/CAT) is a toolkit for annotating contigs and bins from metagenome-assembled-genomes. The MAG pipeline uses CAT to assign taxonomy to the contigs from megahit and/or SPAdes, and to assign taxonomy to genome bins based on the taxnomy of the contigs.
+[CAT](https://github.com/dutilh/CAT) is a toolkit for annotating contigs and bins from metagenome-assembled-genomes. The MAG pipeline uses CAT to assign taxonomy to genome bins based on the taxnomy of the contigs.
 
 **Output files:**
 
