@@ -3,6 +3,23 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.1.1 - 2019/11/10
+
+### `Added`
+
+- [#121](https://github.com/nf-core/mag/pull/121) - Add full-size test
+- [#124](https://github.com/nf-core/mag/pull/124) - Add worfklow overview figure to `README`
+
+### `Changed`
+
+- [#123](https://github.com/nf-core/mag/pull/123) - Update to new nf-core 1.11 `TEMPLATE`
+
+### `Fixed`
+
+- [#118](https://github.com/nf-core/mag/pull/118) - Fix `seaborn` to `v0.10.1` to avoid `nanoplot` error
+- [#120](https://github.com/nf-core/mag/pull/120) - Fix link to CAT database in help message
+- [#124](https://github.com/nf-core/mag/pull/124) - Fix description of `CAT` process in `output.md`
+
 ## v1.1.0 - 2020/10/06
 
 ### `Added`

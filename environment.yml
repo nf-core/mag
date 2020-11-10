@@ -1,6 +1,6 @@
 # You can use this file to create a conda environment for this pipeline:
 #   conda env create -f environment.yml
-name: nf-core-mag-1.1.0
+name: nf-core-mag-1.1.1
 channels:
   - conda-forge
   - bioconda
@@ -26,6 +26,7 @@ dependencies:
   - conda-forge::r-markdown=1.0
   - conda-forge::r-ggplot2=3.2.0
   - bioconda::nanoplot=1.26.3
+  - conda-forge::seaborn=0.10.1 # 0.11.0 causes AttributeError with nanoplot (https://github.com/wdecoster/NanoPlot/issues/201)
   - bioconda::filtlong=0.2.0
   - bioconda::porechop=0.2.3_seqan2.1.1
   - bioconda::nanolyse=1.1.0
