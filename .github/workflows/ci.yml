@@ -26,38 +26,38 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Check if Dockerfile or Conda environment changed
-        uses: technote-space/get-diff-action@v1
+        uses: technote-space/get-diff-action@v4
         with:
-          PREFIX_FILTER: |
+          FILES: |
             Dockerfile
             environment.yml
 
       - name: Build new docker image
-        if: env.GIT_DIFF
-        run: docker build --no-cache . -t nfcore/mag:1.1.1
+        if: env.MATCHED_FILES
+        run: docker build --no-cache . -t nfcore/mag:dev
 
       - name: Pull docker image
-        if: ${{ !env.GIT_DIFF }}
+        if: ${{ !env.MATCHED_FILES }}
         run: |
           docker pull nfcore/mag:dev
-          docker tag nfcore/mag:dev nfcore/mag:1.1.1
+          docker tag nfcore/mag:dev nfcore/mag:dev
 
       - name: Check if BUSCO Dockerfile or Conda environment changed
-        uses: technote-space/get-diff-action@v1
+        uses: technote-space/get-diff-action@v4
         with:
-          PREFIX_FILTER: |
+          FILES: |
             containers/busco/Dockerfile
             containers/busco/environment.yml
 
       - name: Build new docker image for BUSCO
-        if: env.GIT_DIFF
-        run: docker build --no-cache ./containers/busco/ -t nfcore/magbusco:1.1.1
+        if: env.MATCHED_FILES
+        run: docker build --no-cache ./containers/busco/ -t nfcore/magbusco:dev
 
       - name: Pull docker image for BUSCO
-        if: ${{ !env.GIT_DIFF }}
+        if: ${{ !env.MATCHED_FILES }}
         run: |
           docker pull nfcore/magbusco:dev
-          docker tag nfcore/magbusco:dev nfcore/magbusco:1.1.1
+          docker tag nfcore/magbusco:dev nfcore/magbusco:dev
 
       - name: Install Nextflow
         run: |
