@@ -33,11 +33,11 @@ jobs:
             environment.yml
 
       - name: Build new docker image
-        if: env.GIT_DIFF
+        if: env.MATCHED_FILES
         run: docker build --no-cache . -t nfcore/mag:dev
 
       - name: Pull docker image
-        if: ${{ !env.GIT_DIFF }}
+        if: ${{ !env.MATCHED_FILES }}
         run: |
           docker pull nfcore/mag:dev
           docker tag nfcore/mag:dev nfcore/mag:dev
@@ -50,11 +50,11 @@ jobs:
             containers/busco/environment.yml
 
       - name: Build new docker image for BUSCO
-        if: env.GIT_DIFF
+        if: env.MATCHED_FILES
         run: docker build --no-cache ./containers/busco/ -t nfcore/magbusco:dev
 
       - name: Pull docker image for BUSCO
-        if: ${{ !env.GIT_DIFF }}
+        if: ${{ !env.MATCHED_FILES }}
         run: |
           docker pull nfcore/magbusco:dev
           docker tag nfcore/magbusco:dev nfcore/magbusco:dev
