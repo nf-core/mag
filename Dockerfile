@@ -1,4 +1,4 @@
-FROM nfcore/base:1.11
+FROM nfcore/base:1.12
 LABEL authors="No author provided" \
       description="Docker image containing all software requirements for the nf-core/mag pipeline"
 
