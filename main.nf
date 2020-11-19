@@ -280,8 +280,8 @@ if(params.manifest){
     }
  } else {
     Channel
-        .fromFilePairs(params.reads, size: params.single_end ? 1 : 2)
-        .ifEmpty { exit 1, "Cannot find any reads matching: ${params.reads}\nNB: Path needs to be enclosed in quotes!\nIf this is single-end data, please specify --single_end on the command line." }
+        .fromFilePairs(params.input, size: params.single_end ? 1 : 2)
+        .ifEmpty { exit 1, "Cannot find any reads matching: ${params.input}\nNB: Path needs to be enclosed in quotes!\nIf this is single-end data, please specify --single_end on the command line." }
         .into { read_files_fastqc; read_files_fastp }
     files_long_raw = Channel.from()
 }

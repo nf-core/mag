@@ -22,6 +22,11 @@
                     "description": "Manifest file, required for hybrid assembly with metaSPAdes. Alternative to `--input`.",
                     "help_text": "Has 4 headerless columns (tab separated): Sample_Id, Long_Reads, Short_Reads_1, Short_Reads_2\n"
                 },
+                "input_paths": {
+                    "type": "string",
+                    "description": "Paths to input FastQ files for tests.",
+                    "hidden": true
+                },
                 "single_end": {
                     "type": "boolean",
                     "description": "Specifies that the input is single-end reads.",
