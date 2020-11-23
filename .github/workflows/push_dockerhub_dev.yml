@@ -26,3 +26,11 @@ jobs:
         run: |
           echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
           docker push nfcore/mag:dev
+
+      - name: Build new docker image for BUSCO
+        run: docker build --no-cache ./containers/busco/ -t nfcore/magbusco:dev
+
+      - name: Push Docker image for BUSCO to DockerHub (dev)
+        run: |
+          echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+          docker push nfcore/magbusco:dev
