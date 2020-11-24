@@ -5,6 +5,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v1.2.0dev - [date]
 
+### `Changed`
+
+- [#135](https://github.com/nf-core/mag/pull/135) - Update to nf-core 1.12 `TEMPLATE`
+
 ### `Fixed`
 
 - [#133](https://github.com/nf-core/mag/pull/133) - Fixed processing of `--input` parameter
