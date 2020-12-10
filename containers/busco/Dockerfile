@@ -1,4 +1,4 @@
-FROM nfcore/base:1.12
+FROM nfcore/base:1.12.1
 LABEL authors="Hadrien Gourlé <hadrien.gourle@slu.se>, Daniel Straub <d4straub@gmail.com>, Sabrina Krakau <sabrinakrakau@gmail.com>" \
       description="Docker image containing BUSCO requirements for the nf-core/mag pipeline"
 
@@ -11,10 +11,10 @@ RUN apt-get update
 RUN apt-get install -y libxt6
 
 # Add conda installation dir to PATH (instead of doing 'conda activate')
-ENV PATH /opt/conda/envs/nf-core-mag-busco-1.1.2/bin:$PATH
+ENV PATH /opt/conda/envs/nf-core-mag-busco-1.2.0dev/bin:$PATH
 
 # Dump the details of the installed packages to a file for posterity
-RUN conda env export --name nf-core-mag-busco-1.1.2 > nf-core-mag-busco-1.1.2.yml
+RUN conda env export --name nf-core-mag-busco-1.2.0dev > nf-core-mag-busco-1.2.0dev.yml
 
 # Instruct R processes to use these empty files instead of clashing with a local version
 RUN touch .Rprofile
