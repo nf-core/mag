@@ -956,21 +956,21 @@ ch_long_reads_spadeshybrid
     .set { ch_reads_spadeshybrid }
 
 process spadeshybrid {
-    tag "$id"
-    publishDir "${params.outdir}/", mode: params.publish_dir_mode, pattern: "${id}*",
+    tag "$name"
+    publishDir "${params.outdir}/", mode: params.publish_dir_mode, pattern: "${name}*",
         saveAs: {filename -> 
           if (filename.indexOf(".log") > 0 || filename.indexOf("_scaffolds.fasta.gz") > 0 || filename.indexOf("_graph.gfa.gz") > 0 || filename.indexOf("_contigs.fasta.gz") > 0 ) "Assembly/SPAdesHybrid/$filename"
           else null}
 
     input:
-    set id, file(lr), file(sr) from ch_reads_spadeshybrid
+    set val(name), file(lr), file(sr) from ch_reads_spadeshybrid
 
     output:
-    set val("SPAdesHybrid"), val("$id"), file("${id}_scaffolds.fasta") into (ch_spadeshybrid_to_quast, ch_spadeshybrid_to_metabat)
-    file("${id}.log")
-    file("${id}_contigs.fasta.gz")
-    file("${id}_scaffolds.fasta.gz")
-    file("${id}_graph.gfa.gz")
+    set val("SPAdesHybrid"), val(name), file("${name}_scaffolds.fasta") into (ch_spadeshybrid_to_quast, ch_spadeshybrid_to_metabat)
+    file("${name}.log")
+    file("${name}_contigs.fasta.gz")
+    file("${name}_scaffolds.fasta.gz")
+    file("${name}_graph.gfa.gz")
 
     when:
     params.manifest && !params.single_end && !params.skip_spadeshybrid
@@ -986,13 +986,13 @@ process spadeshybrid {
             --pe1-2 ${sr[1]} \
             --nanopore ${lr} \
             -o spades
-        mv spades/assembly_graph_with_scaffolds.gfa ${id}_graph.gfa
-        mv spades/scaffolds.fasta ${id}_scaffolds.fasta
-        mv spades/contigs.fasta ${id}_contigs.fasta
-        mv spades/spades.log ${id}.log
-        gzip "${id}_contigs.fasta"
-        gzip "${id}_graph.gfa"
-        gzip -c "${id}_scaffolds.fasta" > "${id}_scaffolds.fasta.gz"
+        mv spades/assembly_graph_with_scaffolds.gfa ${name}_graph.gfa
+        mv spades/scaffolds.fasta ${name}_scaffolds.fasta
+        mv spades/contigs.fasta ${name}_contigs.fasta
+        mv spades/spades.log ${name}.log
+        gzip "${name}_contigs.fasta"
+        gzip "${name}_graph.gfa"
+        gzip -c "${name}_scaffolds.fasta" > "${name}_scaffolds.fasta.gz"
         """
     else
         error "ERROR: '--spadeshybrid_fix_cpus' was specified, but not succesfully applied. Likely this is caused by changed process properties in a custom config file."
@@ -1000,20 +1000,20 @@ process spadeshybrid {
 
 
 process spades {
-    tag "$id"
-    publishDir "${params.outdir}/", mode: params.publish_dir_mode, pattern: "${id}*",
+    tag "$name"
+    publishDir "${params.outdir}/", mode: params.publish_dir_mode, pattern: "${name}*",
         saveAs: {filename -> 
           if (filename.indexOf(".log") > 0 || filename.indexOf("_scaffolds.fasta.gz") > 0 || filename.indexOf("_graph.gfa.gz") > 0 || filename.indexOf("_contigs.fasta.gz") > 0 ) "Assembly/SPAdes/$filename"
           else null}
     input:
-    set id, file(sr) from ch_reads_spades
+    set val(name), file(sr) from ch_reads_spades
 
     output:
-    set val("SPAdes"), val("$id"), file("${id}_scaffolds.fasta") into (ch_spades_to_quast, ch_spades_to_metabat)
-    file("${id}.log")
-    file("${id}_contigs.fasta.gz")
-    file("${id}_scaffolds.fasta.gz")
-    file("${id}_graph.gfa.gz")
+    set val("SPAdes"), val(name), file("${name}_scaffolds.fasta") into (ch_spades_to_quast, ch_spades_to_metabat)
+    file("${name}.log")
+    file("${name}_contigs.fasta.gz")
+    file("${name}_scaffolds.fasta.gz")
+    file("${name}_graph.gfa.gz")
 
     when:
     !params.single_end && !params.skip_spades
@@ -1028,13 +1028,13 @@ process spades {
             --pe1-1 ${sr[0]} \
             --pe1-2 ${sr[1]} \
             -o spades
-        mv spades/assembly_graph_with_scaffolds.gfa ${id}_graph.gfa
-        mv spades/scaffolds.fasta ${id}_scaffolds.fasta
-        mv spades/contigs.fasta ${id}_contigs.fasta
-        mv spades/spades.log ${id}.log
-        gzip "${id}_contigs.fasta"
-        gzip "${id}_graph.gfa"
-        gzip -c "${id}_scaffolds.fasta" > "${id}_scaffolds.fasta.gz"
+        mv spades/assembly_graph_with_scaffolds.gfa ${name}_graph.gfa
+        mv spades/scaffolds.fasta ${name}_scaffolds.fasta
+        mv spades/contigs.fasta ${name}_contigs.fasta
+        mv spades/spades.log ${name}.log
+        gzip "${name}_contigs.fasta"
+        gzip "${name}_graph.gfa"
+        gzip -c "${name}_scaffolds.fasta" > "${name}_scaffolds.fasta.gz"
         """
     else
         error "ERROR: '--spades_fix_cpus' was specified, but not succesfully applied. Likely this is caused by changed process properties in a custom config file."
