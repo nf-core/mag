@@ -13,7 +13,7 @@
 
 ## Introduction
 
-This pipeline is for assembly, binning, and annotation of metagenomes.
+**nf-core/mag** is a bioinformatics best-practise analysis pipeline for assembly, binning, and annotation of metagenomes.
 
 <p align="center">
     <img src="docs/images/mag_workflow.png" alt="nf-core/mag workflow overview" width="60%">
@@ -43,19 +43,21 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
 
 See [usage docs](https://nf-co.re/mag/usage) for all of the available options when running the pipeline.
 
+## Pipeline Summary
+
+By default, the pipeline currently performs the following: it supports both short and long reads, quality trims the reads and adapters with [fastp](https://github.com/OpenGene/fastp) and [Porechop](https://github.com/rrwick/Porechop), and performs basic QC with [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/).
+The pipeline then:
+
+* assigns taxonomy to reads using [Centrifuge](https://ccb.jhu.edu/software/centrifuge/) and/or [Kraken2](https://github.com/DerrickWood/kraken2/wiki)
+* performs assembly using [MEGAHIT](https://github.com/voutcn/megahit) and [SPAdes](http://cab.spbu.ru/software/spades/), and checks their quality using [Quast](http://quast.sourceforge.net/quast)
+* performs metagenome binning using [MetaBAT2](https://bitbucket.org/berkeleylab/metabat/src/master/), and checks the quality of the genome bins using [Busco](https://busco.ezlab.org/)
+* assigns taxonomy to bins using [CAT](https://github.com/dutilh/CAT)
+
+Furthermore, the pipeline creates various reports in the results directory specified, including a [MultiQC](https://multiqc.info/) report summarizing some of the findings and software versions.
+
 ## Documentation
 
 The nf-core/mag pipeline comes with documentation about the pipeline: [usage](https://nf-co.re/mag/usage) and [output](https://nf-co.re/mag/output).
-
-In short, it supports both short and long reads, quality trims the reads and adapters with [fastp](https://github.com/OpenGene/fastp) and [porechop](https://github.com/rrwick/Porechop), and performs basic QC with [fastqc](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/).
-The pipeline then:
-
-* assigns taxonomy to reads using [centrifuge](https://ccb.jhu.edu/software/centrifuge/) and/or [kraken2](https://github.com/DerrickWood/kraken2/wiki)
-* performs assembly using [megahit](https://github.com/voutcn/megahit) and [spades](http://cab.spbu.ru/software/spades/), and checks their quality using [quast](http://quast.sourceforge.net/quast)
-* performs metagenome binning using [metabat2](https://bitbucket.org/berkeleylab/metabat/src/master/), and checks the quality of the genome bins using [busco](https://busco.ezlab.org/)
-* assigns taxonomy to bins using [CAT](https://github.com/dutilh/CAT)
-
-Furthermore, the pipeline creates various reports in the results directory specified, including a [multiqc](https://multiqc.info/) report summarizing some of the findings and software versions.
 
 ## Credits
 
@@ -74,13 +76,15 @@ Many thanks to the additional contributors who have helped out and/or provided s
 * [Maxime Garcia](https://github.com/MaxUlysse)
 * [Michael L Heuer](https://github.com/heuermh)
 
+<!-- TODO nf-core: If applicable, make list of people who have also contributed -->
+
 ## Contributions and Support
 
 If you would like to contribute to this pipeline, please see the [contributing guidelines](.github/CONTRIBUTING.md).
 
 For further information or help, don't hesitate to get in touch on the [Slack `#mag` channel](https://nfcore.slack.com/channels/mag) (you can join with [this invite](https://nf-co.re/join/slack)).
 
-## Citation
+## Citations
 
 If you use nf-core/mag for your analysis, please cite it using the following doi: [10.5281/zenodo.3589527](https://doi.org/10.5281/zenodo.3589527)
 
@@ -92,3 +96,5 @@ You can cite the `nf-core` publication as follows:
 >
 > _Nat Biotechnol._ 2020 Feb 13. doi: [10.1038/s41587-020-0439-x](https://dx.doi.org/10.1038/s41587-020-0439-x).
 > ReadCube: [Full Access Link](https://rdcu.be/b1GjZ)
+
+<!-- TODO nf-core: Add bibliography of tools and data used in your pipeline -->
