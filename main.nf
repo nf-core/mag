@@ -1042,21 +1042,21 @@ process spades {
 
 
 process quast {
-    tag "$assembler-$sample"
+    tag "$assembler-$name"
     publishDir "${params.outdir}/Assembly/$assembler", mode: params.publish_dir_mode
 
     input:
-    set val(assembler), val(sample), file(assembly) from ch_spades_to_quast.mix(ch_megahit_to_quast).mix(ch_spadeshybrid_to_quast)
+    set val(assembler), val(name), file(assembly) from ch_spades_to_quast.mix(ch_megahit_to_quast).mix(ch_spadeshybrid_to_quast)
 
     output:
-    file("${sample}_QC/*") into ch_quast_results
+    file("${name}_QC/*") into ch_quast_results
 
     when:
     !params.skip_quast
 
     script:
     """
-    metaquast.py --threads "${task.cpus}" --rna-finding --max-ref-number 0 -l "${assembler}-${sample}" "${assembly}" -o "${sample}_QC"
+    metaquast.py --threads "${task.cpus}" --rna-finding --max-ref-number 0 -l "${assembler}-${name}" "${assembly}" -o "${name}_QC"
     """
 }
 
@@ -1078,19 +1078,19 @@ ch_bowtie2_input = ch_assembly_all_to_metabat
 */
 
 process bowtie2 {
-    tag "$assembler-$sample"
+    tag "$assembler-$name"
 
     input:
-    set val(assembler), val(sample), file(assembly), val(sampleToMap), file(reads) from ch_bowtie2_input
+    set val(assembler), val(name), file(assembly), val(sampleToMap), file(reads) from ch_bowtie2_input
 
     output:
-    set val(assembler), val(sample), file("${assembler}-${sample}-${sampleToMap}.bam"), file("${assembler}-${sample}-${sampleToMap}.bam.bai") into ch_assembly_mapping_for_metabat
+    set val(assembler), val(name), file("${assembler}-${name}-${sampleToMap}.bam"), file("${assembler}-${name}-${sampleToMap}.bam.bai") into ch_assembly_mapping_for_metabat
 
     when:
     !params.skip_binning
 
     script:
-    def name = "${assembler}-${sample}-${sampleToMap}"
+    def name = "${assembler}-${name}-${sampleToMap}"
     def input = params.single_end ? "-U \"${reads}\"" :  "-1 \"${reads[0]}\" -2 \"${reads[1]}\""
         """
         bowtie2-build --threads "${task.cpus}" "${assembly}" ref
@@ -1106,18 +1106,18 @@ ch_assembly_mapping_for_metabat = ch_assembly_mapping_for_metabat.groupTuple(by:
 ch_assembly_mapping_for_metabat = ch_assembly_mapping_for_metabat.dump(tag:'assembly_mapping_for_metabat')
 
 process metabat {
-    tag "$assembler-$sample"
+    tag "$assembler-$name"
     publishDir "${params.outdir}/", mode: params.publish_dir_mode,
         saveAs: {filename -> (filename.indexOf(".bam") == -1 && filename.indexOf(".fastq.gz") == -1) ? "GenomeBinning/$filename" : null}
 
     input:
-    set val(assembler), val(sample), file(bam), file(index), file(assembly) from ch_assembly_mapping_for_metabat
+    set val(assembler), val(name), file(bam), file(index), file(assembly) from ch_assembly_mapping_for_metabat
     val(min_size) from params.min_contig_size
     val(max_unbinned) from params.max_unbinned_contigs
     val(min_length_unbinned) from params.min_length_unbinned_contigs
 
     output:
-    set val(assembler), val(sample), file("MetaBAT2/*.fa") into (ch_metabat_bins, ch_metabat_bins_for_cat, ch_metabat_bins_quast)
+    set val(assembler), val(name), file("MetaBAT2/*.fa") into (ch_metabat_bins, ch_metabat_bins_for_cat, ch_metabat_bins_quast)
     file("MetaBAT2/discarded/*")
     file("${assembler}-${assembly}-depth.txt.gz")
 
@@ -1125,23 +1125,22 @@ process metabat {
     !params.skip_binning
 
     script:
-    def name = "${assembler}-${sample}"
     """
     OMP_NUM_THREADS=${task.cpus} jgi_summarize_bam_contig_depths --outputDepth depth.txt ${bam}
     gzip -c depth.txt > "${assembler}-${assembly}-depth.txt.gz"
-    metabat2 -t "${task.cpus}" -i "${assembly}" -a depth.txt -o "MetaBAT2/${name}" -m ${min_size} --unbinned --seed ${params.metabat_rng_seed}
+    metabat2 -t "${task.cpus}" -i "${assembly}" -a depth.txt -o "MetaBAT2/${assembler}-${name}" -m ${min_size} --unbinned --seed ${params.metabat_rng_seed}
 
     #save unbinned contigs above thresholds into individual files, dump others in one file
-    split_fasta.py MetaBAT2/${name}.unbinned.fa ${min_length_unbinned} ${max_unbinned} ${min_size}
+    split_fasta.py "MetaBAT2/${assembler}-${name}.unbinned.fa" ${min_length_unbinned} ${max_unbinned} ${min_size}
 
     mkdir MetaBAT2/discarded
-    mv MetaBAT2/${name}.lowDepth.fa MetaBAT2/discarded/
-    mv MetaBAT2/${name}.tooShort.fa MetaBAT2/discarded/
-    mv MetaBAT2/${name}.unbinned.pooled.fa MetaBAT2/discarded/
-    mv MetaBAT2/${name}.unbinned.remaining.fa MetaBAT2/discarded/
+    mv "MetaBAT2/${assembler}-${name}.lowDepth.fa" MetaBAT2/discarded/
+    mv "MetaBAT2/${assembler}-${name}.tooShort.fa" MetaBAT2/discarded/
+    mv "MetaBAT2/${assembler}-${name}.unbinned.pooled.fa" MetaBAT2/discarded/
+    mv "MetaBAT2/${assembler}-${name}.unbinned.remaining.fa" MetaBAT2/discarded/
 
     #rename splitted file so that it doesnt end up in following processes
-    mv MetaBAT2/${name}.unbinned.fa ${name}.unbinned.fa
+    mv "MetaBAT2/${assembler}-${name}.unbinned.fa" "${assembler}-${name}.unbinned.fa"
     """
 }
 
@@ -1177,10 +1176,10 @@ process busco {
     publishDir "${params.outdir}/GenomeBinning/QC/BUSCO/", mode: params.publish_dir_mode
 
     input:
-    set val(assembler), val(sample), file(bin), file(db) from ch_busco_input
+    set val(assembler), val(name), file(bin), file(db) from ch_busco_input
 
     output:
-    set val(assembler), val(sample), file("short_summary.specific.*.${bin}.txt") into (ch_busco_multiqc, ch_busco_to_summary, ch_busco_plot)
+    set val(assembler), val(name), file("short_summary.specific.*.${bin}.txt") into (ch_busco_multiqc, ch_busco_to_summary, ch_busco_plot)
     file("${bin}_busco.log")
     file("${bin}_buscos.faa.gz") optional true
     file("${bin}_buscos.fna.gz") optional true
@@ -1242,39 +1241,38 @@ process busco {
 ch_busco_multiqc = ch_busco_multiqc.map{it[2]}
 ch_busco_to_summary = ch_busco_to_summary.map{it[2]}
 
-// group by assembler and sample for plotting
+// group by assembler and sample name for plotting
 ch_busco_plot = ch_busco_plot.groupTuple(by: [0,1])
 
 process busco_plot {
-    tag "$assembler-$sample"
+    tag "$assembler-$name"
     publishDir "${params.outdir}/GenomeBinning/QC/BUSCO/", mode: params.publish_dir_mode
 
     input:
-    set val(assembler), val(sample), file(summaries) from ch_busco_plot
+    set val(assembler), val(name), file(summaries) from ch_busco_plot
 
     output:
-    file("${assembler}-${sample}-busco_figure.png")
-    file("${assembler}-${sample}-busco_figure.R")
-    file("${assembler}-${sample}-busco_summary.txt")
+    file("${assembler}-${name}-busco_figure.png")
+    file("${assembler}-${name}-busco_figure.R")
+    file("${assembler}-${name}-busco_summary.txt")
 
     script:
-    def name = "${assembler}-${sample}"
     """
     # replace dots in bin names within summary file names by underscores
     # currently (BUSCO v4.1.3) generate_plot.py does not allow further dots
     for sum in ${summaries}; do
-        [[ \${sum} =~ short_summary.(.*).${name}.(.*).txt ]];
+        [[ \${sum} =~ short_summary.(.*).${assembler}-${name}.(.*).txt ]];
         db_name=\${BASH_REMATCH[1]}
-        bin="${name}.\${BASH_REMATCH[2]}"
+        bin="${assembler}-${name}.\${BASH_REMATCH[2]}"
         bin_new="\${bin//./_}"
         mv \${sum} short_summary.\${db_name}.\${bin_new}.txt
     done
     generate_plot.py --working_directory .
 
-    mv busco_figure.png ${assembler}-${sample}-busco_figure.png
-    mv busco_figure.R ${assembler}-${sample}-busco_figure.R
+    mv busco_figure.png ${assembler}-${name}-busco_figure.png
+    mv busco_figure.R ${assembler}-${name}-busco_figure.R
 
-    summary_busco.py short_summary.*.txt > ${assembler}-${sample}-busco_summary.txt
+    summary_busco.py short_summary.*.txt > ${assembler}-${name}-busco_summary.txt
     """
 }
 
@@ -1295,11 +1293,11 @@ process busco_summary {
 
 
 process quast_bins {
-    tag "$assembler-$sample"
+    tag "$assembler-$name"
     publishDir "${params.outdir}/GenomeBinning/QC/", mode: params.publish_dir_mode
 
     input:
-    set val(assembler), val(sample), file(bins) from ch_metabat_bins_quast
+    set val(assembler), val(name), file(bins) from ch_metabat_bins_quast
 
     output:
     path("QUAST/*") type('dir')
@@ -1315,10 +1313,10 @@ process quast_bins {
 
     for bin in \"\${bins[@]}\"; do
         metaquast.py --threads "${task.cpus}" --max-ref-number 0 --rna-finding --gene-finding -l "\${bin}" "\${bin}" -o "QUAST/\${bin}"
-        if ! [ -f "QUAST/${assembler}-${sample}-quast_summary.tsv" ]; then 
-            cp "QUAST/\${bin}/transposed_report.tsv" "QUAST/${assembler}-${sample}-quast_summary.tsv"
+        if ! [ -f "QUAST/${assembler}-${name}-quast_summary.tsv" ]; then
+            cp "QUAST/\${bin}/transposed_report.tsv" "QUAST/${assembler}-${name}-quast_summary.tsv"
         else
-            tail -n +2 "QUAST/\${bin}/transposed_report.tsv" >> "QUAST/${assembler}-${sample}-quast_summary.tsv"
+            tail -n +2 "QUAST/\${bin}/transposed_report.tsv" >> "QUAST/${assembler}-${name}-quast_summary.tsv"
         fi
     done
     """
@@ -1378,7 +1376,7 @@ ch_metabat_bins_for_cat
     .set { ch_cat_input }
 
 process cat {
-    tag "${assembler}-${sample}-${db_name}"
+    tag "${assembler}-${name}-${db_name}"
     publishDir "${params.outdir}/Taxonomy/${assembler}", mode: params.publish_dir_mode,
     saveAs: {filename ->
         if (filename.indexOf(".names.txt") > 0) filename
@@ -1386,7 +1384,7 @@ process cat {
     }
 
     input:
-    set val(assembler), val(sample), file("bins/*"), val(db_name), file("database/*"), file("taxonomy/*") from ch_cat_input
+    set val(assembler), val(name), file("bins/*"), val(db_name), file("database/*"), file("taxonomy/*") from ch_cat_input
 
     output:
     file("*.ORF2LCA.txt")
@@ -1398,9 +1396,9 @@ process cat {
 
     script:
     """
-    CAT bins -b "bins/" -d database/ -t taxonomy/ -n "${task.cpus}" -s .fa --top 6 -o "${assembler}-${sample}" --I_know_what_Im_doing
-    CAT add_names -i "${assembler}-${sample}.ORF2LCA.txt" -o "${assembler}-${sample}.ORF2LCA.names.txt" -t taxonomy/
-    CAT add_names -i "${assembler}-${sample}.bin2classification.txt" -o "${assembler}-${sample}.bin2classification.names.txt" -t taxonomy/
+    CAT bins -b "bins/" -d database/ -t taxonomy/ -n "${task.cpus}" -s .fa --top 6 -o "${assembler}-${name}" --I_know_what_Im_doing
+    CAT add_names -i "${assembler}-${name}.ORF2LCA.txt" -o "${assembler}-${name}.ORF2LCA.names.txt" -t taxonomy/
+    CAT add_names -i "${assembler}-${name}.bin2classification.txt" -o "${assembler}-${name}.bin2classification.names.txt" -t taxonomy/
     """
 }
 
