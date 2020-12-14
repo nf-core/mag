@@ -674,25 +674,25 @@ process fastqc_trimmed {
  */
 if (!params.skip_adapter_trimming) {
     process porechop {
-        tag "$id"
+        tag "$name"
 
         input:
-        set id, file(lr) from ch_long_reads_raw
+        set val(name), file(lr) from ch_long_reads_raw
 
         output:
-        set id, file("${id}_porechop.fastq") into ch_porechop_reads
-        set id, file(lr), val("raw") into ch_raw_reads_nanoplot
+        set val(name), file("${name}_porechop.fastq") into ch_porechop_reads
+        set val(name), file(lr), val("raw") into ch_raw_reads_nanoplot
 
         script:
         """
-        porechop -i ${lr} -t "${task.cpus}" -o ${id}_porechop.fastq
+        porechop -i ${lr} -t "${task.cpus}" -o ${name}_porechop.fastq
         """
     }
 } else {
     ch_long_reads_raw
         .into{ ch_porechop_reads; ch_raw_reads_pre_nanoplot }
     ch_raw_reads_pre_nanoplot
-        .map { id, lr -> [ id, lr, "raw" ] }
+        .map { name, lr -> [ name, lr, "raw" ] }
         .set { ch_raw_reads_nanoplot }
 }
 
@@ -705,25 +705,25 @@ if (!params.keep_lambda) {
         .fromPath( "${params.lambda_reference}", checkIfExists: true )
         .set { ch_nanolyse_db }
     process nanolyse {
-        tag "$id"
+        tag "$name"
 
         publishDir "${params.outdir}", mode: params.publish_dir_mode,
             saveAs: {filename -> filename.indexOf(".fastq.gz") == -1 ? "QC_longreads/NanoLyse/$filename" : null}
 
         input:
-        set id, file(lr), file(nanolyse_db) from ch_porechop_reads.combine(ch_nanolyse_db)
+        set val(name), file(lr), file(nanolyse_db) from ch_porechop_reads.combine(ch_nanolyse_db)
 
         output:
-        set id, file("${id}_nanolyse.fastq.gz") into ch_nanolyse_reads
-        file("${id}_nanolyse.log")
+        set val(name), file("${name}_nanolyse.fastq.gz") into ch_nanolyse_reads
+        file("${name}_nanolyse.log")
 
         script:
         """
-        cat ${lr} | NanoLyse --reference $nanolyse_db | gzip > ${id}_nanolyse.fastq.gz
+        cat ${lr} | NanoLyse --reference $nanolyse_db | gzip > ${name}_nanolyse.fastq.gz
 
-        echo "NanoLyse reference: $params.lambda_reference" >${id}_nanolyse.log
-        cat ${lr} | echo "total reads before NanoLyse: \$((`wc -l`/4))" >>${id}_nanolyse.log
-        gunzip -c ${id}_nanolyse.fastq.gz | echo "total reads after NanoLyse: \$((`wc -l`/4))" >>${id}_nanolyse.log
+        echo "NanoLyse reference: $params.lambda_reference" >${name}_nanolyse.log
+        cat ${lr} | echo "total reads before NanoLyse: \$((`wc -l`/4))" >>${name}_nanolyse.log
+        gunzip -c ${name}_nanolyse.fastq.gz | echo "total reads after NanoLyse: \$((`wc -l`/4))" >>${name}_nanolyse.log
         """
     }
 } else {
@@ -734,21 +734,21 @@ if (!params.keep_lambda) {
 // join long and short (already filtered) reads by sample name
 ch_nanolyse_reads
     .join(ch_short_reads_filtlong)
-    .map{ id, lr, sr -> [ id, lr, sr[0], sr[1] ] }
+    .map{ name, lr, sr -> [ name, lr, sr[0], sr[1] ] }
     .set{ ch_reads_filtlong }
 
 /*
  * Quality filter long reads focus on length instead of quality to improve assembly size
  */
 process filtlong {
-    tag "$id"
+    tag "$name"
 
     input:
-    set id, file(lr), file(sr1), file(sr2) from ch_reads_filtlong
+    set val(name), file(lr), file(sr1), file(sr2) from ch_reads_filtlong
 
     output:
-    set id, file("${id}_lr_filtlong.fastq.gz") into ch_long_reads_spadeshybrid
-    set id, file("${id}_lr_filtlong.fastq.gz"), val('filtered') into ch_reads_filtered_nanoplot
+    set val(name), file("${name}_lr_filtlong.fastq.gz") into ch_long_reads_spadeshybrid
+    set val(name), file("${name}_lr_filtlong.fastq.gz"), val('filtered') into ch_reads_filtered_nanoplot
 
     script:
     """
@@ -759,7 +759,7 @@ process filtlong {
         --keep_percent ${params.longreads_keep_percent} \
         --trim \
         --length_weight ${params.longreads_length_weight} \
-        ${lr} | gzip > ${id}_lr_filtlong.fastq.gz
+        ${lr} | gzip > ${name}_lr_filtlong.fastq.gz
     """
 }
 
@@ -767,11 +767,11 @@ process filtlong {
  * Quality check for nanopore reads and Quality/Length Plots
  */
 process nanoplot {
-    tag "$id"
-    publishDir "${params.outdir}/QC_longreads/NanoPlot_${id}", mode: params.publish_dir_mode
+    tag "$name"
+    publishDir "${params.outdir}/QC_longreads/NanoPlot_${name}", mode: params.publish_dir_mode
 
     input:
-    set id, file(lr), type from ch_raw_reads_nanoplot.mix(ch_reads_filtered_nanoplot)
+    set val(name), file(lr), val(type) from ch_raw_reads_nanoplot.mix(ch_reads_filtered_nanoplot)
 
     output:
     file '*.png'
@@ -780,7 +780,7 @@ process nanoplot {
 
     script:
     """
-    NanoPlot -t "${task.cpus}" -p ${type}_  --title ${id}_${type} -c darkblue --fastq ${lr}
+    NanoPlot -t "${task.cpus}" -p ${type}_  --title ${name}_${type} -c darkblue --fastq ${lr}
     """
 }
 
