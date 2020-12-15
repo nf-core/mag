@@ -22,17 +22,13 @@ def helpMessage() {
     The typical command for running the pipeline is as follows:
 
     nextflow run nf-core/mag --input '*_R{1,2}.fastq.gz' -profile docker
-    nextflow run nf-core/mag --manifest 'manifest.tsv' -profile docker
+    nextflow run nf-core/mag --input 'manifest.tsv' -profile docker
 
     Mandatory arguments:
-      --input [file]                  Path to input data (must be surrounded with quotes)
-      -profile [str]                  Configuration profile to use. Can use multiple (comma separated)
-                                      Available: conda, docker, singularity, test, awsbatch, <institute> and more
-
-    Hybrid assembly:
-      --manifest [file]                     Path to manifest file (must be surrounded with quotes), required for hybrid assembly with metaSPAdes
-                                            Has 4 headerless columns (tab separated): Sample_Id, Long_Reads, Short_Reads_1, Short_Reads_2
-                                            Only one file path per entry allowed
+      --input [file]                        Path to short reads input data (must be surrounded with quotes). Alternatively, path to TSV manifest file required for hybrid assembly with metaSPAdes.
+                                            Has 4 or 5 headerless columns (tab separated): Sample_Id, Group_Id, Short_Reads_1, Short_Reads_2 [, Long_Reads]. The latter requires a '.tsv' suffix.
+      -profile [str]                        Configuration profile to use. Can use multiple (comma separated)
+                                            Available: conda, docker, singularity, test, awsbatch, <institute> and more
 
     Options:
       --genome [str]                        Name of iGenomes reference
@@ -66,7 +62,7 @@ def helpMessage() {
 
     Assembly:
       --skip_spades [bool]                  Skip Illumina-only SPAdes assembly
-      --skip_spadeshybrid [bool]            Skip SPAdes hybrid assembly (only available when using manifest input)
+      --skip_spadeshybrid [bool]            Skip SPAdes hybrid assembly
       --skip_megahit [bool]                 Skip MEGAHIT assembly
       --skip_quast [bool]                   Skip metaQUAST
 
@@ -136,6 +132,70 @@ ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multi
 ch_output_docs = file("$projectDir/docs/output.md", checkIfExists: true)
 ch_output_docs_images = file("$projectDir/docs/images/", checkIfExists: true)
 
+/*
+ * Create a channel for input read files
+ */
+
+if (params.manifest) exit 1, "The parameter `--manifest` is deprecated.\n\tPlease use the `--input` parameter instead and mind the new format specifications."
+
+hybrid = false
+if(hasExtension(params.input, "tsv")){
+    // extracts read files from TSV and distribute into channels
+    Channel
+        .from(file(params.input))
+        .ifEmpty {exit 1, log.info "Cannot find path file ${tsvFile}"}
+        .splitCsv(sep:'\t')
+        .map { row ->
+                if (row.size() == 5) {
+                    def name = row[0]
+                    def grp = row[1]
+                    def sr1 = file(row[2], checkIfExists: true)
+                    def sr2 = file(row[3], checkIfExists: true)
+                    def lr = file(row[4], checkIfExists: true)
+                    hybrid = true
+                    return [ name, grp, sr1, sr2, lr ]}
+                else if (row.size() == 4) {
+                    def name = row[0]
+                    def grp = row[1]
+                    def sr1 = file(row[2], checkIfExists: true)
+                    def sr2 = file(row[3], checkIfExists: true)
+                    return [ name, grp, sr1, sr2 ]}
+                else {
+                    exit 1, "Input TSV file contains row with ${row.size()} column(s). Expects 4 or 5."
+                }
+            }
+        .into { ch_all_files_sr; ch_all_files_lr }
+    // prepare input for preprocessing
+    ch_all_files_sr
+        .map { row -> [ row[0], [ row[2], row[3] ] ] }
+        .into { ch_raw_short_reads_fastqc; ch_raw_short_reads_fastp }
+    ch_all_files_lr
+        .map { row -> if (row.size() == 5) [ row[0], row[4] ] }
+        .set { ch_raw_long_reads }
+} else if(params.input_paths){
+    if(params.single_end){
+        Channel
+            .from(params.input_paths)
+            .map { row -> [ row[0], [ file(row[1][0], checkIfExists: true) ] ] }
+            .ifEmpty { exit 1, "params.input_paths was empty - no input files supplied" }
+            .into { ch_raw_short_reads_fastqc; ch_raw_short_reads_fastp }
+        ch_raw_long_reads = Channel.from()
+    } else {
+        Channel
+            .from(params.input_paths)
+            .map { row -> [ row[0], [ file(row[1][0], checkIfExists: true), file(row[1][1], checkIfExists: true) ] ] }
+            .ifEmpty { exit 1, "params.input_paths was empty - no input files supplied" }
+            .into { ch_raw_short_reads_fastqc; ch_raw_short_reads_fastp }
+        ch_raw_long_reads = Channel.from()
+    }
+ } else {
+    Channel
+        .fromFilePairs(params.input, size: params.single_end ? 1 : 2)
+        .ifEmpty { exit 1, "Cannot find any reads matching: ${params.input}\nNB: Path needs to be enclosed in quotes!\nIf this is single-end data, please specify --single_end on the command line." }
+        .into { ch_raw_short_reads_fastqc; ch_raw_short_reads_fastp }
+    ch_raw_long_reads = Channel.from()
+}
+
 // Check if specified cpus for SPAdes are available
 if ( params.spades_fix_cpus && params.spades_fix_cpus > params.max_cpus )
     exit 1, "Invalid parameter '--spades_fix_cpus ${params.spades_fix_cpus}', max cpus are '${params.max_cpus}'."
@@ -145,7 +205,7 @@ if ( params.spadeshybrid_fix_cpus && params.spadeshybrid_fix_cpus > params.max_c
 if (params.megahit_fix_cpu_1 || params.spades_fix_cpus || params.spadeshybrid_fix_cpus){
     if (!params.skip_spades && !params.spades_fix_cpus)
         log.warn "At least one assembly process is run with a parameter to ensure reproducible results, but SPAdes not. Consider using the parameter '--spades_fix_cpus'."
-    if (params.manifest && !params.skip_spadeshybrid && !params.spadeshybrid_fix_cpus)
+    if (hybrid && !params.skip_spadeshybrid && !params.spadeshybrid_fix_cpus)
         log.warn "At least one assembly process is run with a parameter to ensure reproducible results, but SPAdes hybrid not. Consider using the parameter '--spadeshybrid_fix_cpus'."
     if (!params.skip_megahit && !params.megahit_fix_cpu_1)
         log.warn "At least one assembly process is run with a parameter to ensure reproducible results, but MEGAHIT not. Consider using the parameter '--megahit_fix_cpu_1'."
@@ -200,7 +260,7 @@ if(!params.keep_phix) {
 if ( params.host_fasta && params.host_genome) {
     exit 1, "Both host fasta reference and iGenomes genome are specififed to remove host contamination! Invalid combination, please specify either --host_fasta or --host_genome."
 }
-if ( params.manifest && (params.host_fasta || params.host_genome) ) {
+if ( hybrid && (params.host_fasta || params.host_genome) ) {
     log.warn "Host read removal is only applied to short reads. Long reads might be filtered indirectly by Filtlong, which is set to use read qualities estimated based on k-mer matches to the short, already filtered reads."
     if ( params.longreads_length_weight > 1 ) {
         log.warn "The parameter --longreads_length_weight is ${params.longreads_length_weight}, causing the read length being more important for long read filtering than the read quality. Set --longreads_length_weight to 1 in order to assign equal weights."
@@ -236,55 +296,7 @@ if ( params.host_genome ) {
     ch_host_fasta = Channel.empty()
 }
 
-/*
- * Create a channel for input read files
- */
 
-if(params.manifest){
-    manifestFile = file(params.manifest)
-    // extracts read files from TSV and distribute into channels
-    Channel
-        .from(manifestFile)
-        .ifEmpty {exit 1, log.info "Cannot find path file ${tsvFile}"}
-        .splitCsv(sep:'\t')
-        .map { row ->
-            def id = row[0]
-            def lr = file(row[1], checkIfExists: true)
-            def sr1 = file(row[2], checkIfExists: true)
-            def sr2 = file(row[3], checkIfExists: true)
-            [ id, lr, sr1, sr2 ]
-            }
-        .into { ch_all_files_sr; ch_all_files_lr }
-    // prepare input for preprocessing
-    ch_all_files_sr
-        .map { id, lr, sr1, sr2 -> [ id, [ sr1, sr2 ] ] }
-        .into { ch_raw_short_reads_fastqc; ch_raw_short_reads_fastp }
-    ch_all_files_lr
-        .map { id, lr, sr1, sr2 -> [ id, lr ] }
-        .set { ch_raw_long_reads }
-} else if(params.input_paths){
-    if(params.single_end){
-        Channel
-            .from(params.input_paths)
-            .map { row -> [ row[0], [ file(row[1][0], checkIfExists: true) ] ] }
-            .ifEmpty { exit 1, "params.input_paths was empty - no input files supplied" }
-            .into { ch_raw_short_reads_fastqc; ch_raw_short_reads_fastp }
-        ch_raw_long_reads = Channel.from()
-    } else {
-        Channel
-            .from(params.input_paths)
-            .map { row -> [ row[0], [ file(row[1][0], checkIfExists: true), file(row[1][1], checkIfExists: true) ] ] }
-            .ifEmpty { exit 1, "params.input_paths was empty - no input files supplied" }
-            .into { ch_raw_short_reads_fastqc; ch_raw_short_reads_fastp }
-        ch_raw_long_reads = Channel.from()
-    }
- } else {
-    Channel
-        .fromFilePairs(params.input, size: params.single_end ? 1 : 2)
-        .ifEmpty { exit 1, "Cannot find any reads matching: ${params.input}\nNB: Path needs to be enclosed in quotes!\nIf this is single-end data, please specify --single_end on the command line." }
-        .into { ch_raw_short_reads_fastqc; ch_raw_short_reads_fastp }
-    ch_raw_long_reads = Channel.from()
-}
 
 // Header log info
 log.info nfcoreHeader()
@@ -292,7 +304,6 @@ def summary = [:]
 if (workflow.revision) summary['Pipeline Release'] = workflow.revision
 summary['Run Name'] = custom_runName ?: workflow.runName
 if (params.input_paths) summary['Input paths']     = params.input_paths
-else if (params.manifest) summary['Manifest']   = params.manifest
 else summary['Input']                           = params.input
 summary['Data Type']                  = params.single_end ? 'Single-End' : 'Paired-End'
 
@@ -306,7 +317,7 @@ if (params.host_genome) summary['Host Genome']               = params.host_genom
 else if(params.host_fasta) summary['Host Fasta Reference']   = params.host_fasta
 if (params.host_genome || params.host_fasta) summary['Host removal setting'] = params.host_removal_verysensitive ? 'very-sensitive' : 'sensitive'
 
-if (params.manifest) {
+if (hybrid) {
     summary['Skip adapter trimming']     = params.skip_adapter_trimming ? 'Yes' : 'No'
     summary['Keep lambda reads']         = params.keep_lambda ? 'Yes' : 'No'
     if (!params.keep_lambda) summary['Lambda reference']               = params.lambda_reference
@@ -334,7 +345,7 @@ summary['Skip quast']           = params.skip_quast ? 'Yes' : 'No'
 
 if (!params.skip_megahit)                                               summary['MEGAHIT fix cpus']         = params.megahit_fix_cpu_1 ? '1' : 'No'
 if (!params.single_end && !params.skip_spades)                          summary['SPAdes fix cpus']          = params.spades_fix_cpus ? params.spades_fix_cpus : 'No'
-if (params.manifest && !params.single_end && !params.skip_spadeshybrid) summary['SPAdes hybrid fix cpus']   = params.spadeshybrid_fix_cpus ? params.spadeshybrid_fix_cpus : 'No'
+if (hybrid && !params.single_end && !params.skip_spadeshybrid) summary['SPAdes hybrid fix cpus']   = params.spadeshybrid_fix_cpus ? params.spadeshybrid_fix_cpus : 'No'
 if (!params.skip_binning)                                               summary['MetaBAT2 RNG seed']        = params.metabat_rng_seed
 
 summary['Max Resources']    = "$params.max_memory memory, $params.max_cpus cpus, $params.max_time time per job"
@@ -973,7 +984,7 @@ process spadeshybrid {
     file("${name}_graph.gfa.gz")
 
     when:
-    params.manifest && !params.single_end && !params.skip_spadeshybrid
+    hybrid && !params.single_end && !params.skip_spadeshybrid
      
     script:
     maxmem = task.memory.toGiga()
@@ -1627,4 +1638,9 @@ def checkHostname() {
             }
         }
     }
+}
+
+// Check file extension
+def hasExtension(it, extension) {
+    it.toString().toLowerCase().endsWith(extension.toLowerCase())
 }
