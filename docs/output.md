@@ -79,7 +79,7 @@ The pipeline uses Nanolyse to map the reads against the Lambda phage and removes
 
 ### Filtlong and porechop
 
-The pipeline uses filtlong and porechop to perform quality control of the long reads that are eventually provided with the `--manifest` option.
+The pipeline uses filtlong and porechop to perform quality control of the long reads that are eventually provided with the TSV input file.
 
 No direct host read removal is performed for long reads.
 However, since within this pipeline filtlong uses a read quality based on k-mer matches to the already filtered short reads, reads not overlapping those short reads might be discarded.
