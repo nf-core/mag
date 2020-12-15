@@ -248,19 +248,30 @@ if(params.manifest){
         .ifEmpty {exit 1, log.info "Cannot find path file ${tsvFile}"}
         .splitCsv(sep:'\t')
         .map { row ->
-            def id = row[0]
-            def lr = file(row[1], checkIfExists: true)
-            def sr1 = file(row[2], checkIfExists: true)
-            def sr2 = file(row[3], checkIfExists: true)
-            [ id, lr, sr1, sr2 ]
+                if (row.size() == 5) {
+                    def name = row[0]
+                    def grp = row[1]
+                    def sr1 = file(row[2], checkIfExists: true)
+                    def sr2 = file(row[3], checkIfExists: true)
+                    def lr = file(row[4], checkIfExists: true)
+                    return [ name, grp, sr1, sr2, lr ]}
+                else if (row.size() == 4) {
+                    def name = row[0]
+                    def grp = row[1]
+                    def sr1 = file(row[2], checkIfExists: true)
+                    def sr2 = file(row[3], checkIfExists: true)
+                    return [ name, grp, sr1, sr2 ]}
+                else {
+                    exit 1, "Input manifest contains row with ${row.size()} column(s). Expects 4 or 5."
+                }
             }
         .into { ch_all_files_sr; ch_all_files_lr }
     // prepare input for preprocessing
     ch_all_files_sr
-        .map { id, lr, sr1, sr2 -> [ id, [ sr1, sr2 ] ] }
+        .map { row -> [ row[0], [ row[2], row[3] ] ] }
         .into { ch_raw_short_reads_fastqc; ch_raw_short_reads_fastp }
     ch_all_files_lr
-        .map { id, lr, sr1, sr2 -> [ id, lr ] }
+        .map { row -> if (row.size() == 5) [ row[0], row[4] ] }
         .set { ch_raw_long_reads }
 } else if(params.input_paths){
     if(params.single_end){
