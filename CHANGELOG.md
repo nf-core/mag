@@ -5,6 +5,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v1.2.0dev - [date]
 
+### `Changed`
+
+- [#143](https://github.com/nf-core/mag/pull/143) - Changed format of manifest file, has to be handed over via `--input` parameter as well now
+
+### `Deprecated`
+
+- [#143](https://github.com/nf-core/mag/pull/143) - Change depreciated parameters: `--manifest` -> `--input`
+
 ## v1.1.2 - 2020/11/24
 
 ### `Changed`
