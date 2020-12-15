@@ -135,6 +135,9 @@ ch_output_docs_images = file("$projectDir/docs/images/", checkIfExists: true)
 /*
  * Create a channel for input read files
  */
+
+if (params.manifest) exit 1, "The parameter `--manifest` is deprecated.\n\tPlease use the `--input` parameter instead and mind the new format specifications."
+
 hybrid = false
 if(hasExtension(params.input, "tsv")){
     // extracts read files from TSV and distribute into channels
