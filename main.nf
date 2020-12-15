@@ -258,32 +258,32 @@ if(params.manifest){
     // prepare input for preprocessing
     ch_all_files_sr
         .map { id, lr, sr1, sr2 -> [ id, [ sr1, sr2 ] ] }
-        .into { ch_raw_reads_fastqc; ch_raw_reads_fastp }
+        .into { ch_raw_short_reads_fastqc; ch_raw_short_reads_fastp }
     ch_all_files_lr
         .map { id, lr, sr1, sr2 -> [ id, lr ] }
-        .set { ch_long_reads_raw }
+        .set { ch_raw_long_reads }
 } else if(params.input_paths){
     if(params.single_end){
         Channel
             .from(params.input_paths)
             .map { row -> [ row[0], [ file(row[1][0], checkIfExists: true) ] ] }
             .ifEmpty { exit 1, "params.input_paths was empty - no input files supplied" }
-            .into { ch_raw_reads_fastqc; ch_raw_reads_fastp }
-        ch_long_reads_raw = Channel.from()
+            .into { ch_raw_short_reads_fastqc; ch_raw_short_reads_fastp }
+        ch_raw_long_reads = Channel.from()
     } else {
         Channel
             .from(params.input_paths)
             .map { row -> [ row[0], [ file(row[1][0], checkIfExists: true), file(row[1][1], checkIfExists: true) ] ] }
             .ifEmpty { exit 1, "params.input_paths was empty - no input files supplied" }
-            .into { ch_raw_reads_fastqc; ch_raw_reads_fastp }
-        ch_long_reads_raw = Channel.from()
+            .into { ch_raw_short_reads_fastqc; ch_raw_short_reads_fastp }
+        ch_raw_long_reads = Channel.from()
     }
  } else {
     Channel
         .fromFilePairs(params.input, size: params.single_end ? 1 : 2)
         .ifEmpty { exit 1, "Cannot find any reads matching: ${params.input}\nNB: Path needs to be enclosed in quotes!\nIf this is single-end data, please specify --single_end on the command line." }
-        .into { ch_raw_reads_fastqc; ch_raw_reads_fastp }
-    ch_long_reads_raw = Channel.from()
+        .into { ch_raw_short_reads_fastqc; ch_raw_short_reads_fastp }
+    ch_raw_long_reads = Channel.from()
 }
 
 // Header log info
@@ -445,7 +445,7 @@ process fastqc_raw {
         saveAs: {filename -> filename.indexOf(".zip") == -1 ? "QC_shortreads/fastqc/$filename" : null}
 
     input:
-    set val(name), file(reads) from ch_raw_reads_fastqc
+    set val(name), file(reads) from ch_raw_short_reads_fastqc
 
     output:
     file "*_fastqc.{zip,html}" into ch_fastqc_results
@@ -462,14 +462,14 @@ process fastp {
         saveAs: {filename -> filename.indexOf(".fastq.gz") == -1 ? "QC_shortreads/fastp/$name/$filename" : null}
 
     input:
-    set val(name), file(reads) from ch_raw_reads_fastp
+    set val(name), file(reads) from ch_raw_short_reads_fastp
     val adapter from params.adapter_forward
     val adapter_reverse from params.adapter_reverse
     val qual from params.mean_quality
     val trim_qual from params.trimming_quality
 
     output:
-    set val(name), file("${name}_trimmed*.fastq.gz") into ch_trimmed_reads
+    set val(name), file("${name}_trimmed*.fastq.gz") into ch_trimmed_short_reads
     file("fastp.*")
 
     script:
@@ -487,7 +487,7 @@ process fastp {
 /*
  * Remove host read contamination
  */
-(ch_trimmed_reads, ch_trimmed_reads_remove_host) = ch_trimmed_reads.into(2)
+(ch_trimmed_short_reads, ch_trimmed_short_reads_remove_host) = ch_trimmed_short_reads.into(2)
 
 process host_bowtie2index {
     tag "${genome}"
@@ -516,11 +516,11 @@ process remove_host {
                 }
 
     input:
-    set val(name), file(reads) from ch_trimmed_reads_remove_host
+    set val(name), file(reads) from ch_trimmed_short_reads_remove_host
     file(index) from ch_host_bowtie2index
 
     output:
-    set val(name), file("${name}_host_unmapped*.fastq.gz") into ch_trimmed_reads_host_removed
+    set val(name), file("${name}_host_unmapped*.fastq.gz") into ch_host_removed_short_reads
     file("${name}.bowtie2.log") into ch_host_removed_log
     file("${name}_host_mapped*.read_ids.txt") optional true
 
@@ -565,8 +565,8 @@ process remove_host {
     }
 }
 
-if ( params.host_fasta || params.host_genome ) ch_trimmed_reads = ch_trimmed_reads_host_removed
-else ch_trimmed_reads_remove_host.close()
+if ( params.host_fasta || params.host_genome ) ch_trimmed_short_reads = ch_host_removed_short_reads
+else ch_trimmed_short_reads_remove_host.close()
 
 /*
  * Remove PhiX contamination from Illumina reads
@@ -595,10 +595,10 @@ if(!params.keep_phix) {
             saveAs: {filename -> filename.indexOf(".fastq.gz") == -1 ? "QC_shortreads/remove_phix/$filename" : null}
 
         input:
-        set val(name), file(reads), file(genome), file(db) from ch_trimmed_reads.combine(ch_phix_db)
+        set val(name), file(reads), file(genome), file(db) from ch_trimmed_short_reads.combine(ch_phix_db)
 
         output:
-        set val(name), file("*.fastq.gz") into (ch_reads_megahit, ch_trimmed_reads_metabat, ch_trimmed_reads_fastqc, ch_short_reads_spadeshybrid, ch_reads_spades, ch_reads_centrifuge, ch_trimmed_reads_kraken2, ch_reads_bowtie2, ch_short_reads_filtlong)
+        set val(name), file("*.fastq.gz") into (ch_short_reads_megahit, ch_short_reads_metabat, ch_short_reads_fastqc, ch_short_reads_spadeshybrid, ch_short_reads_spades, ch_short_reads_centrifuge, ch_short_reads_kraken2, ch_short_reads_bowtie2, ch_short_reads_filtlong)
         file("${name}_remove_phix.log")
 
         script:
@@ -631,7 +631,7 @@ if(!params.keep_phix) {
 
     }
 } else {
-    ch_trimmed_reads.into {ch_reads_megahit; ch_trimmed_reads_metabat; ch_trimmed_reads_fastqc; ch_short_reads_spadeshybrid; ch_reads_spades; ch_reads_centrifuge; ch_trimmed_reads_kraken2; ch_reads_bowtie2; ch_short_reads_filtlong}
+    ch_trimmed_short_reads.into {ch_short_reads_megahit; ch_short_reads_metabat; ch_short_reads_fastqc; ch_short_reads_spadeshybrid; ch_short_reads_spades; ch_short_reads_centrifuge; ch_short_reads_kraken2; ch_short_reads_bowtie2; ch_short_reads_filtlong}
 }
 
 process fastqc_trimmed {
@@ -640,7 +640,7 @@ process fastqc_trimmed {
         saveAs: {filename -> filename.indexOf(".zip") == -1 ? "QC_shortreads/fastqc/$filename" : null}
 
     input:
-    set val(name), file(reads) from ch_trimmed_reads_fastqc
+    set val(name), file(reads) from ch_short_reads_fastqc
 
     output:
     file "*_fastqc.{zip,html}" into ch_fastqc_results_trimmed
@@ -677,11 +677,11 @@ if (!params.skip_adapter_trimming) {
         tag "$name"
 
         input:
-        set val(name), file(lr) from ch_long_reads_raw
+        set val(name), file(lr) from ch_raw_long_reads
 
         output:
-        set val(name), file("${name}_porechop.fastq") into ch_porechop_reads
-        set val(name), file(lr), val("raw") into ch_raw_reads_nanoplot
+        set val(name), file("${name}_porechop.fastq") into ch_porechop_long_reads
+        set val(name), file(lr), val("raw") into ch_raw_long_reads_nanoplot
 
         script:
         """
@@ -689,11 +689,11 @@ if (!params.skip_adapter_trimming) {
         """
     }
 } else {
-    ch_long_reads_raw
-        .into{ ch_porechop_reads; ch_raw_reads_pre_nanoplot }
-    ch_raw_reads_pre_nanoplot
+    ch_raw_long_reads
+        .into{ ch_porechop_long_reads; ch_raw_long_reads_pre_nanoplot }
+    ch_raw_long_reads_pre_nanoplot
         .map { name, lr -> [ name, lr, "raw" ] }
-        .set { ch_raw_reads_nanoplot }
+        .set { ch_raw_long_reads_nanoplot }
 }
 
 /*
@@ -711,10 +711,10 @@ if (!params.keep_lambda) {
             saveAs: {filename -> filename.indexOf(".fastq.gz") == -1 ? "QC_longreads/NanoLyse/$filename" : null}
 
         input:
-        set val(name), file(lr), file(nanolyse_db) from ch_porechop_reads.combine(ch_nanolyse_db)
+        set val(name), file(lr), file(nanolyse_db) from ch_porechop_long_reads.combine(ch_nanolyse_db)
 
         output:
-        set val(name), file("${name}_nanolyse.fastq.gz") into ch_nanolyse_reads
+        set val(name), file("${name}_nanolyse.fastq.gz") into ch_nanolyse_long_reads
         file("${name}_nanolyse.log")
 
         script:
@@ -727,15 +727,15 @@ if (!params.keep_lambda) {
         """
     }
 } else {
-    ch_porechop_reads
-        .set{ ch_nanolyse_reads }
+    ch_porechop_long_reads
+        .set{ ch_nanolyse_long_reads }
 }
 
 // join long and short (already filtered) reads by sample name
-ch_nanolyse_reads
+ch_nanolyse_long_reads
     .join(ch_short_reads_filtlong)
     .map{ name, lr, sr -> [ name, lr, sr[0], sr[1] ] }
-    .set{ ch_reads_filtlong }
+    .set{ ch_long_reads_filtlong }
 
 /*
  * Quality filter long reads focus on length instead of quality to improve assembly size
@@ -744,11 +744,11 @@ process filtlong {
     tag "$name"
 
     input:
-    set val(name), file(lr), file(sr1), file(sr2) from ch_reads_filtlong
+    set val(name), file(lr), file(sr1), file(sr2) from ch_long_reads_filtlong
 
     output:
     set val(name), file("${name}_lr_filtlong.fastq.gz") into ch_long_reads_spadeshybrid
-    set val(name), file("${name}_lr_filtlong.fastq.gz"), val('filtered') into ch_reads_filtered_nanoplot
+    set val(name), file("${name}_lr_filtlong.fastq.gz"), val('filtered') into ch_filtered_long_reads_nanoplot
 
     script:
     """
@@ -771,7 +771,7 @@ process nanoplot {
     publishDir "${params.outdir}/QC_longreads/NanoPlot_${name}", mode: params.publish_dir_mode
 
     input:
-    set val(name), file(lr), val(type) from ch_raw_reads_nanoplot.mix(ch_reads_filtered_nanoplot)
+    set val(name), file(lr), val(type) from ch_raw_long_reads_nanoplot.mix(ch_filtered_long_reads_nanoplot)
 
     output:
     file '*.png'
@@ -803,7 +803,7 @@ process centrifuge_db_preparation {
     """
 }
 
-ch_reads_centrifuge
+ch_short_reads_centrifuge
     .combine(ch_centrifuge_db)
     .set { ch_centrifuge_input }
 
@@ -846,7 +846,7 @@ process kraken2_db_preparation {
     """
 }
 
-ch_trimmed_reads_kraken2
+ch_short_reads_kraken2
     .combine(ch_kraken2_db)
     .set { ch_kraken2_input }
 
@@ -924,7 +924,7 @@ process megahit {
           else null}
 
     input:
-    set val(name), file(reads) from ch_reads_megahit
+    set val(name), file(reads) from ch_short_reads_megahit
 
     output:
     set val("MEGAHIT"), val("$name"), file("MEGAHIT/${name}.contigs.fa") into (ch_megahit_to_quast, ch_megahit_to_metabat)
@@ -953,7 +953,7 @@ process megahit {
 
 ch_long_reads_spadeshybrid
     .combine(ch_short_reads_spadeshybrid, by: 0)
-    .set { ch_reads_spadeshybrid }
+    .set { ch_short_reads_spadeshybrid }
 
 process spadeshybrid {
     tag "$name"
@@ -963,7 +963,7 @@ process spadeshybrid {
           else null}
 
     input:
-    set val(name), file(lr), file(sr) from ch_reads_spadeshybrid
+    set val(name), file(lr), file(sr) from ch_short_reads_spadeshybrid
 
     output:
     set val("SPAdesHybrid"), val(name), file("${name}_scaffolds.fasta") into (ch_spadeshybrid_to_quast, ch_spadeshybrid_to_metabat)
@@ -1006,7 +1006,7 @@ process spades {
           if (filename.indexOf(".log") > 0 || filename.indexOf("_scaffolds.fasta.gz") > 0 || filename.indexOf("_graph.gfa.gz") > 0 || filename.indexOf("_contigs.fasta.gz") > 0 ) "Assembly/SPAdes/$filename"
           else null}
     input:
-    set val(name), file(sr) from ch_reads_spades
+    set val(name), file(sr) from ch_short_reads_spades
 
     output:
     set val("SPAdes"), val(name), file("${name}_scaffolds.fasta") into (ch_spades_to_quast, ch_spades_to_metabat)
@@ -1067,7 +1067,7 @@ ch_assembly_all_to_metabat = ch_spades_to_metabat.mix(ch_megahit_to_metabat,ch_s
 (ch_assembly_all_to_metabat, ch_assembly_all_to_metabat_copy) = ch_assembly_all_to_metabat.into(2)
 
 ch_bowtie2_input = ch_assembly_all_to_metabat
-    .combine(ch_reads_bowtie2)
+    .combine(ch_short_reads_bowtie2)
 
 (ch_bowtie2_input, ch_bowtie2_input_copy) = ch_bowtie2_input.into(2)
 
