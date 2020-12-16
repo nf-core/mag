@@ -164,11 +164,11 @@ if(hasExtension(params.input, "tsv")){
                     exit 1, "Input TSV file contains row with ${row.size()} column(s). Expects 4 or 5."
                 }
             }
-        .into { ch_all_files_sr; ch_all_files_lr }
+        .into { ch_sample_validate; ch_all_files_sr; ch_all_files_lr }
     // prepare input for preprocessing
     ch_all_files_sr
         .map { row -> [ row[0], [ row[2], row[3] ] ] }
-        .into { ch_raw_short_reads }
+        .set { ch_raw_short_reads }
     ch_all_files_lr
         .map { row -> if (row.size() == 5) [ row[0], row[4] ] }
         .set { ch_raw_long_reads }
@@ -178,14 +178,14 @@ if(hasExtension(params.input, "tsv")){
             .from(params.input_paths)
             .map { row -> [ row[0], [ file(row[1][0], checkIfExists: true) ] ] }
             .ifEmpty { exit 1, "params.input_paths was empty - no input files supplied" }
-            .into { ch_raw_short_reads }
+            .into { ch_sample_validate; ch_raw_short_reads }
         ch_raw_long_reads = Channel.from()
     } else {
         Channel
             .from(params.input_paths)
             .map { row -> [ row[0], [ file(row[1][0], checkIfExists: true), file(row[1][1], checkIfExists: true) ] ] }
             .ifEmpty { exit 1, "params.input_paths was empty - no input files supplied" }
-            .into { ch_raw_short_reads }
+            .into { ch_sample_validate; ch_raw_short_reads }
         ch_raw_long_reads = Channel.from()
     }
  } else {
@@ -195,6 +195,12 @@ if(hasExtension(params.input, "tsv")){
         .into { ch_raw_short_reads_fastqc; ch_raw_short_reads_fastp }
     ch_raw_long_reads = Channel.from()
 }
+
+// Ensure sample IDs are unique
+ch_sample_validate
+    .map { row -> row[0] }
+    .toList()
+    .map{ ids -> if( ids.size() != ids.unique().size() ) {exit 1, "ERROR: input contains duplicated sample IDs!" } }
 
 // Check if specified cpus for SPAdes are available
 if ( params.spades_fix_cpus && params.spades_fix_cpus > params.max_cpus )
