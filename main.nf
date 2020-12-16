@@ -75,6 +75,7 @@ def helpMessage() {
                                             The zipped file needs to contain a folder named "*taxonomy*" and "*CAT_database*" that hold the respective files.
 
     Binning options:
+      --binning_map_mode [str]              Defines assembly mapping strategy for binning, 'all_vs_all', 'all_in_group' or 'separate' (default: 'all_vs_all').
       --skip_binning [bool]                 Skip metagenome binning
       --min_contig_size [int]               Minimum contig size to be considered for binning and for bin quality check (default: 1500)
       --min_length_unbinned_contigs [int]   Minimal length of contigs that are not part of any bin but treated as individual genome (default: 1000000)
@@ -340,6 +341,7 @@ summary['Skip_krona']       = params.skip_krona ? 'Yes' : 'No'
 
 summary['Skip binning']     = params.skip_binning ? 'Yes' : 'No'
 if (!params.skip_binning) {
+    summary['Binning mapping mode']         = params.binning_map_mode
     summary['Min contig size']              = params.min_contig_size
     summary['Min length unbinned contigs']  = params.min_length_unbinned_contigs
     summary['Max unbinned contigs']         = params.max_unbinned_contigs
@@ -1190,22 +1192,34 @@ process quast {
     """
 }
 
-ch_bowtie2_input = Channel.empty()
-
 ch_assembly_all_to_metabat = ch_spades_to_metabat.mix(ch_megahit_to_metabat,ch_spadeshybrid_to_metabat)
-
 (ch_assembly_all_to_metabat, ch_assembly_all_to_metabat_copy) = ch_assembly_all_to_metabat.into(2)
-
-ch_bowtie2_input = ch_assembly_all_to_metabat
-    .combine(ch_short_reads_bowtie2)
-
-(ch_bowtie2_input, ch_bowtie2_input_copy) = ch_bowtie2_input.into(2)
 
 /*
 ================================================================================
                                 Binning
 ================================================================================
 */
+
+// combine assemblies with sample reads for binning depending on specified mapping mode
+// add dummy to allow combining by index
+ch_short_reads_bowtie2 = ch_short_reads_bowtie2.map{ name, grp, reads -> ["dummy", name, grp, reads] }
+ch_bowtie2_input = Channel.empty()
+if (params.binning_map_mode == 'all_vs_all'){
+    ch_bowtie2_input = ch_assembly_all_to_metabat
+        .combine(ch_short_reads_bowtie2)
+        .map{ assembler, name, grp, assembly, dummy, samplename, samplegrp, reads -> [assembler, name, grp, assembly, samplename, samplegrp, reads] }
+} else if (params.binning_map_mode == 'all_in_group'){
+    ch_bowtie2_input = ch_assembly_all_to_metabat
+        .combine(ch_short_reads_bowtie2, by: 2)     // combine assemblies with reads of samples from same group
+        .map{ grp, assembler, name, assembly, dummy, samplename, reads -> [assembler, name, grp, assembly, samplename, grp, reads] }
+} else {
+    ch_bowtie2_input = ch_assembly_all_to_metabat
+        .combine(ch_short_reads_bowtie2, by: 1)     // combine assemblies (not co-assembled) with reads from own sample
+        .map{ name, assembler, grp, assembly, dummy, samplegrp, reads -> [assembler, name, grp, assembly, name, samplegrp, reads] }
+}
+(ch_bowtie2_input, ch_bowtie2_input_copy) = ch_bowtie2_input.into(2)
+
 
 process bowtie2 {
     tag "$assembler-$name"
