@@ -205,6 +205,10 @@ ch_sample_validate
     .toList()
     .map{ ids -> if( ids.size() != ids.unique().size() ) {exit 1, "ERROR: input contains duplicated sample IDs!" } }
 
+// Check if binning mapping mode is valid
+if (params.coassemble_group && params.binning_map_mode == 'separate')
+    exit 1, "Invalid combination of parameter '--binning_map_mode separate' and parameter '--coassemble_group'. Select either 'all_vs_all' or 'all_in_group' mapping mode when performing group-wise co-assembly."
+
 // Check if specified cpus for SPAdes are available
 if ( params.spades_fix_cpus && params.spades_fix_cpus > params.max_cpus )
     exit 1, "Invalid parameter '--spades_fix_cpus ${params.spades_fix_cpus}', max cpus are '${params.max_cpus}'."
