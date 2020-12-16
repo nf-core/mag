@@ -385,6 +385,10 @@
             "description": "",
             "default": "",
             "properties": {
+                "coassemble_group": {
+                    "type": "boolean",
+                    "description": "Co-assemble samples within one group, instead of assembling each sample separately."
+                },
                 "skip_spades": {
                     "type": "boolean",
                     "description": "Skip Illumina-only SPAdes assembly."
