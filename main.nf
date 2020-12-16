@@ -168,7 +168,7 @@ if(hasExtension(params.input, "tsv")){
     // prepare input for preprocessing
     ch_all_files_sr
         .map { row -> [ row[0], [ row[2], row[3] ] ] }
-        .into { ch_raw_short_reads_fastqc; ch_raw_short_reads_fastp }
+        .into { ch_raw_short_reads }
     ch_all_files_lr
         .map { row -> if (row.size() == 5) [ row[0], row[4] ] }
         .set { ch_raw_long_reads }
@@ -178,14 +178,14 @@ if(hasExtension(params.input, "tsv")){
             .from(params.input_paths)
             .map { row -> [ row[0], [ file(row[1][0], checkIfExists: true) ] ] }
             .ifEmpty { exit 1, "params.input_paths was empty - no input files supplied" }
-            .into { ch_raw_short_reads_fastqc; ch_raw_short_reads_fastp }
+            .into { ch_raw_short_reads }
         ch_raw_long_reads = Channel.from()
     } else {
         Channel
             .from(params.input_paths)
             .map { row -> [ row[0], [ file(row[1][0], checkIfExists: true), file(row[1][1], checkIfExists: true) ] ] }
             .ifEmpty { exit 1, "params.input_paths was empty - no input files supplied" }
-            .into { ch_raw_short_reads_fastqc; ch_raw_short_reads_fastp }
+            .into { ch_raw_short_reads }
         ch_raw_long_reads = Channel.from()
     }
  } else {
@@ -442,6 +442,28 @@ process get_software_versions {
 
     scrape_software_versions.py > software_versions_mqc.yaml
     """
+}
+
+// required for FastQC and MultiQC: to ensure consistent naming for reports using sample IDs and allow non-unique file basenames with TSV input
+process rename_short_read_fastqs {
+    tag "$name"
+
+    input:
+    set val(name), file(reads) from ch_raw_short_reads
+
+    output:
+    set val(name), path("*.fastq.gz", includeInputs: true) into (ch_raw_short_reads_fastqc, ch_raw_short_reads_fastp)
+
+    script:
+    if ( !params.single_end )
+        """
+        [ -f "${name}_R1.fastq.gz" ] || ln -s "${reads[0]}" "${name}_R1.fastq.gz"
+        [ -f "${name}_R2.fastq.gz" ] || ln -s "${reads[1]}" "${name}_R2.fastq.gz"
+        """
+    else
+        """
+        [ -f "${name}.fastq.gz" ] || ln -s "${reads}" "${name}.fastq.gz"
+        """
 }
 
 /*
