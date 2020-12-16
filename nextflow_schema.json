@@ -413,6 +413,11 @@
             "description": "",
             "default": "",
             "properties": {
+                "binning_map_mode": {
+                    "type": "string",
+                    "default": "all_vs_all",
+                    "description": "Defines assembly mapping strategy for binning, 'all_vs_all', 'all_in_group' or 'separate'."
+                },
                 "skip_binning": {
                     "type": "boolean",
                     "description": "Skip metagenome binning."
@@ -459,6 +464,18 @@
                     "help_text": "Useful to allow reproducibility, as BUSCO datasets are frequently updated and old versions do not always remain accessible."
                 }
             }
+        },
+        "deprecated": {
+            "title": "Deprecated",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "manifest": {
+                    "type": "string",
+                    "hidden": true
+                }
+            }
         }
     },
     "allOf": [
@@ -497,6 +514,9 @@
         },
         {
             "$ref": "#/definitions/bin_quality_check_options"
+        },
+        {
+            "$ref": "#/definitions/deprecated"
         }
     ]
 }
