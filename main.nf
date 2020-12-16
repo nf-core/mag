@@ -61,6 +61,7 @@ def helpMessage() {
       --keep_lambda [bool]                  Keep reads similar to the ONT internal standard Escherichia virus Lambda genome (default: false)
 
     Assembly:
+      --coassemble_group [bool]             Co-assemble samples within one group, instead of assembling each sample separately (default: false)
       --skip_spades [bool]                  Skip Illumina-only SPAdes assembly
       --skip_spadeshybrid [bool]            Skip SPAdes hybrid assembly
       --skip_megahit [bool]                 Skip MEGAHIT assembly
@@ -345,6 +346,7 @@ if (!params.skip_binning) {
 }
 summary['Skip busco']           = params.skip_busco ? 'Yes' : 'No'
 if(!params.skip_busco) summary['Busco Reference']   = params.busco_reference
+summary['Co-assemble group']    = params.coassemble_group ? 'Yes' : 'No'
 summary['Skip spades']          = params.skip_spades ? 'Yes' : 'No'
 summary['Skip spadeshybrid']    = params.skip_spadeshybrid ? 'Yes' : 'No'
 summary['Skip megahit']         = params.skip_megahit ? 'Yes' : 'No'
