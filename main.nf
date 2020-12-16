@@ -983,19 +983,19 @@ if (params.coassemble_group) {
         set val(name), val(grp), file(reads1), file(reads2) from ch_grouped_short_reads
 
         output:
-        set val(name), val(grp), file("pooled_${grp}*.fastq.gz") into (ch_short_reads_spadeshybrid, ch_short_reads_spades)
+        set val(name), val(grp), file("pooled_group${grp}*.fastq.gz") into (ch_short_reads_spadeshybrid, ch_short_reads_spades)
 
         script:
         if ( !params.single_end ) {
             """
             echo "Pooling samples: ${name}"
-            cat ${reads1} > pooled_${grp}_R1.fastq.gz
-            cat ${reads2} > pooled_${grp}_R2.fastq.gz
+            cat ${reads1} > "pooled_group${grp}_R1.fastq.gz"
+            cat ${reads2} > "pooled_group${grp}_R2.fastq.gz"
             """
         } else {
             """
             echo "Pooling samples: ${name}"
-            cat ${reads1} > pooled_${grp}.fastq.gz
+            cat ${reads1} > "pooled_group${grp}.fastq.gz"
             """
         }
     }
@@ -1016,12 +1016,12 @@ if (params.coassemble_group) {
         set val(name), val(grp), file(reads) from ch_grouped_long_reads
 
         output:
-        set val(name), val(grp), file("pooled_${grp}_lr.fastq.gz") into (ch_long_reads_spadeshybrid)
+        set val(name), val(grp), file("pooled_group${grp}_lr.fastq.gz") into (ch_long_reads_spadeshybrid)
 
         script:
         """
         echo "Pooling samples: ${name}"
-        cat ${reads} > pooled_${grp}_lr.fastq.gz
+        cat ${reads} > "pooled_group${grp}_lr.fastq.gz"
         """
     }
 } else {
