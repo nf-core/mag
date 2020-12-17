@@ -458,17 +458,23 @@ process rename_short_read_fastqs {
     set val(name), file(reads) from ch_raw_short_reads
 
     output:
-    set val(name), path("*.fastq.gz", includeInputs: true) into (ch_raw_short_reads_fastqc, ch_raw_short_reads_fastp)
+    set val(name), path("${name}{_R1,_R2,}.fastq.gz", includeInputs: true) into (ch_raw_short_reads_fastqc, ch_raw_short_reads_fastp)
 
     script:
     if ( !params.single_end )
         """
-        [ -f "${name}_R1.fastq.gz" ] || ln -s "${reads[0]}" "${name}_R1.fastq.gz"
-        [ -f "${name}_R2.fastq.gz" ] || ln -s "${reads[1]}" "${name}_R2.fastq.gz"
+        if ! [ -f "${name}_R1.fastq.gz" ]; then
+            ln -s "${reads[0]}" "${name}_R1.fastq.gz"
+        fi
+        if ! [ -f "${name}_R2.fastq.gz" ]; then
+            ln -s "${reads[1]}" "${name}_R2.fastq.gz"
+        fi
         """
     else
         """
-        [ -f "${name}.fastq.gz" ] || ln -s "${reads}" "${name}.fastq.gz"
+        if ! [ -f "${name}.fastq.gz" ]; then
+            ln -s "${reads}" "${name}.fastq.gz"
+        fi
         """
 }
 
