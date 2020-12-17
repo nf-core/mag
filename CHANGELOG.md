@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Changed`
 
 - [#143](https://github.com/nf-core/mag/pull/143) - Changed format of manifest file, has to be handed over via `--input` parameter as well now
+- [#145](https://github.com/nf-core/mag/pull/145) - When using TSV input files, uses sample IDs now for `FastQC` instead of basenames of original read files. Allows non-unique file basenames.
 
 ### `Deprecated`
 
