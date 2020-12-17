@@ -196,8 +196,9 @@ if(hasExtension(params.input, "tsv")){
     Channel
         .fromFilePairs(params.input, size: params.single_end ? 1 : 2)
         .ifEmpty { exit 1, "Cannot find any reads matching: ${params.input}\nNB: Path needs to be enclosed in quotes!\nIf this is single-end data, please specify --single_end on the command line." }
-        .map { row -> [ row[0], 0, row[1] ] } // TODO test
-        .into { ch_raw_short_reads_fastqc; ch_raw_short_reads_fastp }
+        .map { row -> [ row[0], 0, row[1] ] }
+        .set { ch_raw_short_reads }
+    ch_sample_validate = Channel.empty()
     ch_raw_long_reads = Channel.from()
 }
 
@@ -464,31 +465,35 @@ process get_software_versions {
 }
 
 // required for FastQC and MultiQC: to ensure consistent naming for reports using sample IDs and allow non-unique file basenames with TSV input
-process rename_short_read_fastqs {
-    tag "$name"
+if (hasExtension(params.input, "tsv") || params.input_paths){
+    process rename_short_read_fastqs {
+        tag "$name"
 
-    input:
-    set val(name), val(grp), file(reads) from ch_raw_short_reads
+        input:
+        set val(name), val(grp), file(reads) from ch_raw_short_reads
 
-    output:
-    set val(name), val(grp), path("${name}{_R1,_R2,}.fastq.gz", includeInputs: true) into (ch_raw_short_reads_fastqc, ch_raw_short_reads_fastp)
+        output:
+        set val(name), val(grp), path("${name}{_R1,_R2,}.fastq.gz", includeInputs: true) into (ch_raw_short_reads_fastqc, ch_raw_short_reads_fastp)
 
-    script:
-    if ( !params.single_end )
-        """
-        if ! [ -f "${name}_R1.fastq.gz" ]; then
-            ln -s "${reads[0]}" "${name}_R1.fastq.gz"
-        fi
-        if ! [ -f "${name}_R2.fastq.gz" ]; then
-            ln -s "${reads[1]}" "${name}_R2.fastq.gz"
-        fi
-        """
-    else
-        """
-        if ! [ -f "${name}.fastq.gz" ]; then
-            ln -s "${reads}" "${name}.fastq.gz"
-        fi
-        """
+        script:
+        if ( !params.single_end )
+            """
+            if ! [ -f "${name}_R1.fastq.gz" ]; then
+                ln -s "${reads[0]}" "${name}_R1.fastq.gz"
+            fi
+            if ! [ -f "${name}_R2.fastq.gz" ]; then
+                ln -s "${reads[1]}" "${name}_R2.fastq.gz"
+            fi
+            """
+        else
+            """
+            if ! [ -f "${name}.fastq.gz" ]; then
+                ln -s "${reads}" "${name}.fastq.gz"
+            fi
+            """
+    }
+} else {
+    (ch_raw_short_reads_fastqc, ch_raw_short_reads_fastp) = ch_raw_short_reads.into(2)
 }
 
 /*
