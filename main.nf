@@ -985,11 +985,9 @@ if (params.coassemble_group) {
     // group and set group as new name
     ch_short_reads_assembly
         .groupTuple(by: 1)
-        .view()
         .map { names, grp, reads ->
                 if (!params.single_end) [ "group$grp", grp, reads.collect { it[0] }, reads.collect { it[1] } ]
                 else [ "group$grp", grp, reads.collect { it[0] }, [] ] }
-        .view()
         .into { ch_short_reads_megahit; ch_grouped_short_reads }
 
     // pool short reads for SPAdes assembly
@@ -1020,9 +1018,7 @@ if (params.coassemble_group) {
     // long reads
     ch_long_reads_assembly
         .groupTuple(by: 1)
-        .view()
         .map { names, grp, reads -> [ "group$grp", grp, reads.collect { it } ] }
-        .view()
         .set { ch_grouped_long_reads }
 
     // pool long reads for SPAdes assembly
@@ -1046,17 +1042,13 @@ if (params.coassemble_group) {
         .into { ch_short_reads_pre_megahit; ch_short_reads_spadeshybrid; ch_short_reads_spades}
 
     ch_short_reads_pre_megahit
-        .view()
         .map { name, grp, reads ->
                 if (!params.single_end) [ name, grp, [reads[0]], [reads[1]] ]
                 else [ name, grp, [reads[0]], [] ] }
-        .view()
         .set { ch_short_reads_megahit }
 
     ch_long_reads_assembly
-        .view()
         .map { name, grp, reads -> [ name, grp, [reads] ] }
-        .view()
         .set { ch_long_reads_spadeshybrid }
 }
 
