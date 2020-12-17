@@ -415,8 +415,9 @@
             "properties": {
                 "binning_map_mode": {
                     "type": "string",
-                    "default": "all_vs_all",
-                    "description": "Defines assembly mapping strategy for binning, 'all_vs_all', 'all_in_group' or 'separate'."
+                    "default": "all",
+                    "description": "Defines mapping strategy to compute co-abundances for binning, i.e. which samples will be mapped against assembly.",
+                    "help_text": "Available: 'all', 'group' or 'own'. Note that 'own' cannot be specififed in combination with --coassemble_group."
                 },
                 "skip_binning": {
                     "type": "boolean",

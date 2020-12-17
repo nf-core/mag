@@ -75,7 +75,9 @@ def helpMessage() {
                                             The zipped file needs to contain a folder named "*taxonomy*" and "*CAT_database*" that hold the respective files.
 
     Binning options:
-      --binning_map_mode [str]              Defines assembly mapping strategy for binning, 'all_vs_all', 'all_in_group' or 'separate' (default: 'all_vs_all').
+      --binning_map_mode [str]              Defines mapping strategy to compute co-abundances for binning, i.e. which samples will be mapped against assembly
+                                            Available: 'all', 'group' or 'own' (default: 'all')
+                                            Note that 'own' cannot be specififed in combination with --coassemble_group
       --skip_binning [bool]                 Skip metagenome binning
       --min_contig_size [int]               Minimum contig size to be considered for binning and for bin quality check (default: 1500)
       --min_length_unbinned_contigs [int]   Minimal length of contigs that are not part of any bin but treated as individual genome (default: 1000000)
@@ -206,10 +208,10 @@ ch_sample_validate
     .map{ ids -> if( ids.size() != ids.unique().size() ) {exit 1, "ERROR: input contains duplicated sample IDs!" } }
 
 // Check if binning mapping mode is valid
-if (params.binning_map_mode != 'all_vs_all' && params.binning_map_mode != 'all_in_group' && params.binning_map_mode != 'separate')
-    exit 1, "Invalid parameter '--binning_map_mode ${params.binning_map_mode}'. Valid values are 'all_vs_all', 'all_in_group' or 'separate'."
-if (params.coassemble_group && params.binning_map_mode == 'separate')
-    exit 1, "Invalid combination of parameter '--binning_map_mode separate' and parameter '--coassemble_group'. Select either 'all_vs_all' or 'all_in_group' mapping mode when performing group-wise co-assembly."
+if (params.binning_map_mode != 'all' && params.binning_map_mode != 'group' && params.binning_map_mode != 'own')
+    exit 1, "Invalid parameter '--binning_map_mode ${params.binning_map_mode}'. Valid values are 'all', 'group' or 'own'."
+if (params.coassemble_group && params.binning_map_mode == 'own')
+    exit 1, "Invalid combination of parameter '--binning_map_mode own' and parameter '--coassemble_group'. Select either 'all' or 'group' mapping mode when performing group-wise co-assembly."
 
 // Check if specified cpus for SPAdes are available
 if ( params.spades_fix_cpus && params.spades_fix_cpus > params.max_cpus )
@@ -1211,11 +1213,11 @@ ch_assembly_all_to_metabat = ch_spades_to_metabat.mix(ch_megahit_to_metabat,ch_s
 // add dummy to allow combining by index
 ch_short_reads_bowtie2 = ch_short_reads_bowtie2.map{ name, grp, reads -> ["dummy", name, grp, reads] }
 ch_bowtie2_input = Channel.empty()
-if (params.binning_map_mode == 'all_vs_all'){
+if (params.binning_map_mode == 'all'){
     ch_bowtie2_input = ch_assembly_all_to_metabat
         .combine(ch_short_reads_bowtie2)
         .map{ assembler, name, grp, assembly, dummy, samplename, samplegrp, reads -> [assembler, name, grp, assembly, samplename, samplegrp, reads] }
-} else if (params.binning_map_mode == 'all_in_group'){
+} else if (params.binning_map_mode == 'group'){
     ch_bowtie2_input = ch_assembly_all_to_metabat
         .combine(ch_short_reads_bowtie2, by: 2)     // combine assemblies with reads of samples from same group
         .map{ grp, assembler, name, assembly, dummy, samplename, reads -> [assembler, name, grp, assembly, samplename, grp, reads] }
