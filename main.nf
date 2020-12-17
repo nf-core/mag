@@ -183,14 +183,14 @@ if(hasExtension(params.input, "tsv")){
             .map { row -> [ row[0], 0, [ file(row[1][0], checkIfExists: true) ] ] }
             .ifEmpty { exit 1, "params.input_paths was empty - no input files supplied" }
             .into { ch_sample_validate; ch_raw_short_reads }
-        ch_raw_long_reads = Channel.from()
+        ch_raw_long_reads = Channel.empty()
     } else {
         Channel
             .from(params.input_paths)
             .map { row -> [ row[0], 0, [ file(row[1][0], checkIfExists: true), file(row[1][1], checkIfExists: true) ] ] }
             .ifEmpty { exit 1, "params.input_paths was empty - no input files supplied" }
             .into { ch_sample_validate; ch_raw_short_reads }
-        ch_raw_long_reads = Channel.from()
+        ch_raw_long_reads = Channel.empty()
     }
  } else {
     Channel
@@ -199,7 +199,7 @@ if(hasExtension(params.input, "tsv")){
         .map { row -> [ row[0], 0, row[1] ] }
         .set { ch_raw_short_reads }
     ch_sample_validate = Channel.empty()
-    ch_raw_long_reads = Channel.from()
+    ch_raw_long_reads = Channel.empty()
 }
 
 // Ensure sample IDs are unique
@@ -239,7 +239,7 @@ if(!params.skip_busco){
         .fromPath( "${params.busco_reference}", checkIfExists: true )
         .set { ch_busco_db_file }
 } else {
-    ch_busco_db_file = Channel.from()
+    ch_busco_db_file = Channel.empty()
 }
 
 if(params.centrifuge_db){
@@ -247,7 +247,7 @@ if(params.centrifuge_db){
         .fromPath( "${params.centrifuge_db}", checkIfExists: true )
         .set { ch_centrifuge_db_file }
 } else {
-    ch_centrifuge_db_file = Channel.from()
+    ch_centrifuge_db_file = Channel.empty()
 }
 
 if(params.kraken2_db){
@@ -255,7 +255,7 @@ if(params.kraken2_db){
         .fromPath( "${params.kraken2_db}", checkIfExists: true )
         .set { ch_kraken2_db_file }
 } else {
-    ch_kraken2_db_file = Channel.from()
+    ch_kraken2_db_file = Channel.empty()
 }
 
 if(params.cat_db){
@@ -263,7 +263,7 @@ if(params.cat_db){
         .fromPath( "${params.cat_db}", checkIfExists: true )
         .set { ch_cat_db_file }
 } else {
-    ch_cat_db_file = Channel.from()
+    ch_cat_db_file = Channel.empty()
 }
 
 if(!params.keep_phix) {
