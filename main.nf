@@ -1220,7 +1220,7 @@ ch_short_reads_bowtie2 = ch_short_reads_bowtie2.map{ name, grp, reads -> ["dummy
 ch_bowtie2_input = Channel.empty()
 if (params.binning_map_mode == 'all'){
     ch_bowtie2_input = ch_assembly_all_to_metabat
-        .combine(ch_short_reads_bowtie2)
+        .combine(ch_short_reads_bowtie2)            // combine assemblies with reads of all samples
         .map{ assembler, name, grp, assembly, dummy, samplename, samplegrp, reads -> [assembler, name, grp, assembly, samplename, samplegrp, reads] }
 } else if (params.binning_map_mode == 'group'){
     ch_bowtie2_input = ch_assembly_all_to_metabat
