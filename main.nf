@@ -1003,13 +1003,11 @@ if (params.coassemble_group) {
         script:
         if ( !params.single_end ) {
             """
-            echo "Pooling samples: ${name}"
             cat ${reads1} > "pooled_group${group}_R1.fastq.gz"
             cat ${reads2} > "pooled_group${group}_R2.fastq.gz"
             """
         } else {
             """
-            echo "Pooling samples: ${name}"
             cat ${reads1} > "pooled_group${group}.fastq.gz"
             """
         }
@@ -1033,7 +1031,6 @@ if (params.coassemble_group) {
 
         script:
         """
-        echo "Pooling samples: ${name}"
         cat ${reads} > "pooled_group${group}_lr.fastq.gz"
         """
     }
