@@ -152,18 +152,18 @@ if(hasExtension(params.input, "tsv")){
         .map { row ->
                 if (row.size() == 5) {
                     def name = row[0]
-                    def grp = row[1]
+                    def group = row[1]
                     def sr1 = file(row[2], checkIfExists: true)
                     def sr2 = file(row[3], checkIfExists: true)
                     def lr = file(row[4], checkIfExists: true)
                     hybrid = true
-                    return [ name, grp, sr1, sr2, lr ]}
+                    return [ name, group, sr1, sr2, lr ]}
                 else if (row.size() == 4) {
                     def name = row[0]
-                    def grp = row[1]
+                    def group = row[1]
                     def sr1 = file(row[2], checkIfExists: true)
                     def sr2 = file(row[3], checkIfExists: true)
-                    return [ name, grp, sr1, sr2 ]}
+                    return [ name, group, sr1, sr2 ]}
                 else {
                     exit 1, "Input TSV file contains row with ${row.size()} column(s). Expects 4 or 5."
                 }
@@ -470,10 +470,10 @@ if (hasExtension(params.input, "tsv") || params.input_paths){
         tag "$name"
 
         input:
-        set val(name), val(grp), file(reads) from ch_raw_short_reads
+        set val(name), val(group), file(reads) from ch_raw_short_reads
 
         output:
-        set val(name), val(grp), path("${name}{_R1,_R2,}.fastq.gz", includeInputs: true) into (ch_raw_short_reads_fastqc, ch_raw_short_reads_fastp)
+        set val(name), val(group), path("${name}{_R1,_R2,}.fastq.gz", includeInputs: true) into (ch_raw_short_reads_fastqc, ch_raw_short_reads_fastp)
 
         script:
         if ( !params.single_end )
@@ -508,7 +508,7 @@ process fastqc_raw {
         saveAs: {filename -> filename.indexOf(".zip") == -1 ? "QC_shortreads/fastqc/$filename" : null}
 
     input:
-    set val(name), val(grp), file(reads) from ch_raw_short_reads_fastqc
+    set val(name), val(group), file(reads) from ch_raw_short_reads_fastqc
 
     output:
     file "*_fastqc.{zip,html}" into ch_fastqc_results
@@ -525,14 +525,14 @@ process fastp {
         saveAs: {filename -> filename.indexOf(".fastq.gz") == -1 ? "QC_shortreads/fastp/$name/$filename" : null}
 
     input:
-    set val(name), val(grp), file(reads) from ch_raw_short_reads_fastp
+    set val(name), val(group), file(reads) from ch_raw_short_reads_fastp
     val adapter from params.adapter_forward
     val adapter_reverse from params.adapter_reverse
     val qual from params.mean_quality
     val trim_qual from params.trimming_quality
 
     output:
-    set val(name), val(grp), file("${name}_trimmed*.fastq.gz") into ch_trimmed_short_reads
+    set val(name), val(group), file("${name}_trimmed*.fastq.gz") into ch_trimmed_short_reads
     file("fastp.*")
 
     script:
@@ -579,11 +579,11 @@ process remove_host {
                 }
 
     input:
-    set val(name), val(grp), file(reads) from ch_trimmed_short_reads_remove_host
+    set val(name), val(group), file(reads) from ch_trimmed_short_reads_remove_host
     file(index) from ch_host_bowtie2index
 
     output:
-    set val(name), val(grp), file("${name}_host_unmapped*.fastq.gz") into ch_host_removed_short_reads
+    set val(name), val(group), file("${name}_host_unmapped*.fastq.gz") into ch_host_removed_short_reads
     file("${name}.bowtie2.log") into ch_host_removed_log
     file("${name}_host_mapped*.read_ids.txt") optional true
 
@@ -658,10 +658,10 @@ if(!params.keep_phix) {
             saveAs: {filename -> filename.indexOf(".fastq.gz") == -1 ? "QC_shortreads/remove_phix/$filename" : null}
 
         input:
-        set val(name), val(grp), file(reads), file(genome), file(db) from ch_trimmed_short_reads.combine(ch_phix_db)
+        set val(name), val(group), file(reads), file(genome), file(db) from ch_trimmed_short_reads.combine(ch_phix_db)
 
         output:
-        set val(name), val(grp), file("*.fastq.gz") into (ch_short_reads_assembly, ch_short_reads_metabat, ch_short_reads_fastqc, ch_short_reads_centrifuge, ch_short_reads_kraken2, ch_short_reads_bowtie2, ch_short_reads_filtlong)
+        set val(name), val(group), file("*.fastq.gz") into (ch_short_reads_assembly, ch_short_reads_metabat, ch_short_reads_fastqc, ch_short_reads_centrifuge, ch_short_reads_kraken2, ch_short_reads_bowtie2, ch_short_reads_filtlong)
         file("${name}_remove_phix.log")
 
         script:
@@ -703,7 +703,7 @@ process fastqc_trimmed {
         saveAs: {filename -> filename.indexOf(".zip") == -1 ? "QC_shortreads/fastqc/$filename" : null}
 
     input:
-    set val(name), val(grp), file(reads) from ch_short_reads_fastqc
+    set val(name), val(group), file(reads) from ch_short_reads_fastqc
 
     output:
     file "*_fastqc.{zip,html}" into ch_fastqc_results_trimmed
@@ -740,11 +740,11 @@ if (!params.skip_adapter_trimming) {
         tag "$name"
 
         input:
-        set val(name), val(grp), file(lr) from ch_raw_long_reads
+        set val(name), val(group), file(lr) from ch_raw_long_reads
 
         output:
-        set val(name), val(grp), file("${name}_porechop.fastq") into ch_porechop_long_reads
-        set val(name), val(grp), file(lr), val("raw") into ch_raw_long_reads_nanoplot
+        set val(name), val(group), file("${name}_porechop.fastq") into ch_porechop_long_reads
+        set val(name), val(group), file(lr), val("raw") into ch_raw_long_reads_nanoplot
 
         script:
         """
@@ -755,7 +755,7 @@ if (!params.skip_adapter_trimming) {
     ch_raw_long_reads
         .into{ ch_porechop_long_reads; ch_raw_long_reads_pre_nanoplot }
     ch_raw_long_reads_pre_nanoplot
-        .map { name, grp, lr -> [ name, grp, lr, "raw" ] }
+        .map { name, group, lr -> [ name, group, lr, "raw" ] }
         .set { ch_raw_long_reads_nanoplot }
 }
 
@@ -774,10 +774,10 @@ if (!params.keep_lambda) {
             saveAs: {filename -> filename.indexOf(".fastq.gz") == -1 ? "QC_longreads/NanoLyse/$filename" : null}
 
         input:
-        set val(name), val(grp), file(lr), file(nanolyse_db) from ch_porechop_long_reads.combine(ch_nanolyse_db)
+        set val(name), val(group), file(lr), file(nanolyse_db) from ch_porechop_long_reads.combine(ch_nanolyse_db)
 
         output:
-        set val(name), val(grp), file("${name}_nanolyse.fastq.gz") into ch_nanolyse_long_reads
+        set val(name), val(group), file("${name}_nanolyse.fastq.gz") into ch_nanolyse_long_reads
         file("${name}_nanolyse.log")
 
         script:
@@ -797,7 +797,7 @@ if (!params.keep_lambda) {
 // join long and short (already filtered) reads by sample name
 ch_nanolyse_long_reads
     .join(ch_short_reads_filtlong, by: [0,1])
-    .map{ name, grp, lr, sr -> [ name, grp, lr, sr[0], sr[1] ] }
+    .map{ name, group, lr, sr -> [ name, group, lr, sr[0], sr[1] ] }
     .set{ ch_reads_filtlong }
 
 /*
@@ -807,11 +807,11 @@ process filtlong {
     tag "$name"
 
     input:
-    set val(name), val(grp), file(lr), file(sr1), file(sr2) from ch_reads_filtlong
+    set val(name), val(group), file(lr), file(sr1), file(sr2) from ch_reads_filtlong
 
     output:
-    set val(name), val(grp), file("${name}_lr_filtlong.fastq.gz") into ch_long_reads_assembly
-    set val(name), val(grp), file("${name}_lr_filtlong.fastq.gz"), val('filtered') into ch_filtered_long_reads_nanoplot
+    set val(name), val(group), file("${name}_lr_filtlong.fastq.gz") into ch_long_reads_assembly
+    set val(name), val(group), file("${name}_lr_filtlong.fastq.gz"), val('filtered') into ch_filtered_long_reads_nanoplot
 
     script:
     """
@@ -834,7 +834,7 @@ process nanoplot {
     publishDir "${params.outdir}/QC_longreads/NanoPlot_${name}", mode: params.publish_dir_mode
 
     input:
-    set val(name), val(grp), file(lr), val(type) from ch_raw_long_reads_nanoplot.mix(ch_filtered_long_reads_nanoplot)
+    set val(name), val(group), file(lr), val(type) from ch_raw_long_reads_nanoplot.mix(ch_filtered_long_reads_nanoplot)
 
     output:
     file '*.png'
@@ -876,7 +876,7 @@ process centrifuge {
             saveAs: {filename -> filename.indexOf(".krona") == -1 ? filename : null}
 
     input:
-    set val(name), val(grp), file(reads), val(db_name), file(db) from ch_centrifuge_input
+    set val(name), val(group), file(reads), val(db_name), file(db) from ch_centrifuge_input
 
     output:
     set val("centrifuge"), val(name), file("results.krona") into ch_centrifuge_to_krona
@@ -919,7 +919,7 @@ process kraken2 {
             saveAs: {filename -> filename.indexOf(".krona") == -1 ? filename : null}
 
     input:
-    set val(name), val(grp), file(reads), val(db_name), file("database/*") from ch_kraken2_input
+    set val(name), val(group), file(reads), val(db_name), file("database/*") from ch_kraken2_input
 
     output:
     set val("kraken2"), val(name), file("results.krona") into ch_kraken2_to_krona
@@ -985,9 +985,9 @@ if (params.coassemble_group) {
     // group and set group as new name
     ch_short_reads_assembly
         .groupTuple(by: 1)
-        .map { names, grp, reads ->
-                if (!params.single_end) [ "group$grp", grp, reads.collect { it[0] }, reads.collect { it[1] } ]
-                else [ "group$grp", grp, reads.collect { it[0] }, [] ] }
+        .map { names, group, reads ->
+                if (!params.single_end) [ "group$group", group, reads.collect { it[0] }, reads.collect { it[1] } ]
+                else [ "group$group", group, reads.collect { it[0] }, [] ] }
         .into { ch_short_reads_megahit; ch_grouped_short_reads }
 
     // pool short reads for SPAdes assembly
@@ -995,22 +995,22 @@ if (params.coassemble_group) {
         tag "$name"
 
         input:
-        set val(name), val(grp), file(reads1), file(reads2) from ch_grouped_short_reads
+        set val(name), val(group), file(reads1), file(reads2) from ch_grouped_short_reads
 
         output:
-        set val(name), val(grp), file("pooled_group${grp}*.fastq.gz") into (ch_short_reads_spadeshybrid, ch_short_reads_spades)
+        set val(name), val(group), file("pooled_group${group}*.fastq.gz") into (ch_short_reads_spadeshybrid, ch_short_reads_spades)
 
         script:
         if ( !params.single_end ) {
             """
             echo "Pooling samples: ${name}"
-            cat ${reads1} > "pooled_group${grp}_R1.fastq.gz"
-            cat ${reads2} > "pooled_group${grp}_R2.fastq.gz"
+            cat ${reads1} > "pooled_group${group}_R1.fastq.gz"
+            cat ${reads2} > "pooled_group${group}_R2.fastq.gz"
             """
         } else {
             """
             echo "Pooling samples: ${name}"
-            cat ${reads1} > "pooled_group${grp}.fastq.gz"
+            cat ${reads1} > "pooled_group${group}.fastq.gz"
             """
         }
     }
@@ -1018,7 +1018,7 @@ if (params.coassemble_group) {
     // long reads
     ch_long_reads_assembly
         .groupTuple(by: 1)
-        .map { names, grp, reads -> [ "group$grp", grp, reads.collect { it } ] }
+        .map { names, group, reads -> [ "group$group", group, reads.collect { it } ] }
         .set { ch_grouped_long_reads }
 
     // pool long reads for SPAdes assembly
@@ -1026,15 +1026,15 @@ if (params.coassemble_group) {
         tag "$name"
 
         input:
-        set val(name), val(grp), file(reads) from ch_grouped_long_reads
+        set val(name), val(group), file(reads) from ch_grouped_long_reads
 
         output:
-        set val(name), val(grp), file("pooled_group${grp}_lr.fastq.gz") into (ch_long_reads_spadeshybrid)
+        set val(name), val(group), file("pooled_group${group}_lr.fastq.gz") into (ch_long_reads_spadeshybrid)
 
         script:
         """
         echo "Pooling samples: ${name}"
-        cat ${reads} > "pooled_group${grp}_lr.fastq.gz"
+        cat ${reads} > "pooled_group${group}_lr.fastq.gz"
         """
     }
 } else {
@@ -1042,13 +1042,13 @@ if (params.coassemble_group) {
         .into { ch_short_reads_pre_megahit; ch_short_reads_spadeshybrid; ch_short_reads_spades}
 
     ch_short_reads_pre_megahit
-        .map { name, grp, reads ->
-                if (!params.single_end) [ name, grp, [reads[0]], [reads[1]] ]
-                else [ name, grp, [reads[0]], [] ] }
+        .map { name, group, reads ->
+                if (!params.single_end) [ name, group, [reads[0]], [reads[1]] ]
+                else [ name, group, [reads[0]], [] ] }
         .set { ch_short_reads_megahit }
 
     ch_long_reads_assembly
-        .map { name, grp, reads -> [ name, grp, [reads] ] }
+        .map { name, group, reads -> [ name, group, [reads] ] }
         .set { ch_long_reads_spadeshybrid }
 }
 
@@ -1061,10 +1061,10 @@ process megahit {
           else null}
 
     input:
-    set val(name), val(grp), file(reads1), file(reads2) from ch_short_reads_megahit
+    set val(name), val(group), file(reads1), file(reads2) from ch_short_reads_megahit
 
     output:
-    set val("MEGAHIT"), val(name), val(grp), file("MEGAHIT/${name}.contigs.fa") into (ch_megahit_to_quast, ch_megahit_to_metabat)
+    set val("MEGAHIT"), val(name), val(group), file("MEGAHIT/${name}.contigs.fa") into (ch_megahit_to_quast, ch_megahit_to_metabat)
     file("MEGAHIT/*.log")
     file("MEGAHIT/${name}.contigs.fa.gz")
 
@@ -1100,10 +1100,10 @@ process spadeshybrid {
           else null}
 
     input:
-    set val(name), val(grp), file(lr), file(sr) from ch_reads_spadeshybrid
+    set val(name), val(group), file(lr), file(sr) from ch_reads_spadeshybrid
 
     output:
-    set val("SPAdesHybrid"), val(name), val(grp), file("${name}_scaffolds.fasta") into (ch_spadeshybrid_to_quast, ch_spadeshybrid_to_metabat)
+    set val("SPAdesHybrid"), val(name), val(group), file("${name}_scaffolds.fasta") into (ch_spadeshybrid_to_quast, ch_spadeshybrid_to_metabat)
     file("${name}.log")
     file("${name}_contigs.fasta.gz")
     file("${name}_scaffolds.fasta.gz")
@@ -1143,10 +1143,10 @@ process spades {
           if (filename.indexOf(".log") > 0 || filename.indexOf("_scaffolds.fasta.gz") > 0 || filename.indexOf("_graph.gfa.gz") > 0 || filename.indexOf("_contigs.fasta.gz") > 0 ) "Assembly/SPAdes/$filename"
           else null}
     input:
-    set val(name), val(grp), file(sr) from ch_short_reads_spades
+    set val(name), val(group), file(sr) from ch_short_reads_spades
 
     output:
-    set val("SPAdes"), val(name), val(grp), file("${name}_scaffolds.fasta") into (ch_spades_to_quast, ch_spades_to_metabat)
+    set val("SPAdes"), val(name), val(group), file("${name}_scaffolds.fasta") into (ch_spades_to_quast, ch_spades_to_metabat)
     file("${name}.log")
     file("${name}_contigs.fasta.gz")
     file("${name}_scaffolds.fasta.gz")
@@ -1183,7 +1183,7 @@ process quast {
     publishDir "${params.outdir}/Assembly/$assembler", mode: params.publish_dir_mode
 
     input:
-    set val(assembler), val(name), val(grp), file(assembly) from ch_spades_to_quast.mix(ch_megahit_to_quast).mix(ch_spadeshybrid_to_quast)
+    set val(assembler), val(name), val(group), file(assembly) from ch_spades_to_quast.mix(ch_megahit_to_quast).mix(ch_spadeshybrid_to_quast)
 
     output:
     file("${name}_QC/*") into ch_quast_results
@@ -1208,20 +1208,20 @@ ch_assembly_all_to_metabat = ch_spades_to_metabat.mix(ch_megahit_to_metabat,ch_s
 
 // combine assemblies with sample reads for binning depending on specified mapping mode
 // add dummy to allow combining by index
-ch_short_reads_bowtie2 = ch_short_reads_bowtie2.map{ name, grp, reads -> ["dummy", name, grp, reads] }
+ch_short_reads_bowtie2 = ch_short_reads_bowtie2.map{ name, group, reads -> ["dummy", name, group, reads] }
 ch_bowtie2_input = Channel.empty()
 if (params.binning_map_mode == 'all'){
     ch_bowtie2_input = ch_assembly_all_to_metabat
         .combine(ch_short_reads_bowtie2)            // combine assemblies with reads of all samples
-        .map{ assembler, name, grp, assembly, dummy, samplename, samplegrp, reads -> [assembler, name, grp, assembly, samplename, samplegrp, reads] }
+        .map{ assembler, name, group, assembly, dummy, samplename, samplegroup, reads -> [assembler, name, group, assembly, samplename, samplegroup, reads] }
 } else if (params.binning_map_mode == 'group'){
     ch_bowtie2_input = ch_assembly_all_to_metabat
         .combine(ch_short_reads_bowtie2, by: 2)     // combine assemblies with reads of samples from same group
-        .map{ grp, assembler, name, assembly, dummy, samplename, reads -> [assembler, name, grp, assembly, samplename, grp, reads] }
+        .map{ group, assembler, name, assembly, dummy, samplename, reads -> [assembler, name, group, assembly, samplename, group, reads] }
 } else {
     ch_bowtie2_input = ch_assembly_all_to_metabat
         .combine(ch_short_reads_bowtie2, by: 1)     // combine assemblies (not co-assembled) with reads from own sample
-        .map{ name, assembler, grp, assembly, dummy, samplegrp, reads -> [assembler, name, grp, assembly, name, samplegrp, reads] }
+        .map{ name, assembler, group, assembly, dummy, samplegroup, reads -> [assembler, name, group, assembly, name, samplegroup, reads] }
 }
 (ch_bowtie2_input, ch_bowtie2_input_copy) = ch_bowtie2_input.into(2)
 
@@ -1230,7 +1230,7 @@ process bowtie2 {
     tag "$assembler-$name"
 
     input:
-    set val(assembler), val(name), val(grp), file(assembly), val(sampleToMap), val(sampleGrp), file(reads) from ch_bowtie2_input
+    set val(assembler), val(name), val(group), file(assembly), val(sampleToMap), val(sampleGroup), file(reads) from ch_bowtie2_input
 
     output:
     set val(assembler), val(name), file("${assembler}-${name}-${sampleToMap}.bam"), file("${assembler}-${name}-${sampleToMap}.bam.bai") into ch_assembly_mapping_for_metabat
@@ -1260,7 +1260,7 @@ process metabat {
         saveAs: {filename -> (filename.indexOf(".bam") == -1 && filename.indexOf(".fastq.gz") == -1) ? "GenomeBinning/$filename" : null}
 
     input:
-    set val(assembler), val(name), file(bam), file(index), val(grp), file(assembly) from ch_assembly_mapping_for_metabat
+    set val(assembler), val(name), file(bam), file(index), val(group), file(assembly) from ch_assembly_mapping_for_metabat
     val(min_size) from params.min_contig_size
     val(max_unbinned) from params.max_unbinned_contigs
     val(min_length_unbinned) from params.min_length_unbinned_contigs
