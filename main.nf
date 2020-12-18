@@ -987,7 +987,7 @@ if (params.coassemble_group) {
         .groupTuple(by: 1)
         .map { names, group, reads ->
                 if (!params.single_end) [ "group$group", group, reads.collect { it[0] }, reads.collect { it[1] } ]
-                else [ "group$group", group, reads.collect { it[0] }, [] ] }
+                else [ "group$group", group, reads.collect { it }, [] ] }
         .into { ch_short_reads_megahit; ch_grouped_short_reads }
 
     // pool short reads for SPAdes assembly
@@ -1041,7 +1041,7 @@ if (params.coassemble_group) {
     ch_short_reads_pre_megahit
         .map { name, group, reads ->
                 if (!params.single_end) [ name, group, [reads[0]], [reads[1]] ]
-                else [ name, group, [reads[0]], [] ] }
+                else [ name, group, [reads], [] ] }
         .set { ch_short_reads_megahit }
 
     ch_long_reads_assembly
