@@ -209,7 +209,7 @@ ch_sample_validate
     .map{ ids -> if( ids.size() != ids.unique().size() ) {exit 1, "ERROR: input contains duplicated sample IDs!" } }
 
 // Check if binning mapping mode is valid
-if (params.binning_map_mode != 'all' && params.binning_map_mode != 'group' && params.binning_map_mode != 'own')
+if (!['all','group','own'].contains(params.binning_map_mode))
     exit 1, "Invalid parameter '--binning_map_mode ${params.binning_map_mode}'. Valid values are 'all', 'group' or 'own'."
 if (params.coassemble_group && params.binning_map_mode == 'own')
     exit 1, "Invalid combination of parameter '--binning_map_mode own' and parameter '--coassemble_group'. Select either 'all' or 'group' mapping mode when performing group-wise co-assembly."
