@@ -415,7 +415,7 @@
             "properties": {
                 "binning_map_mode": {
                     "type": "string",
-                    "default": "all",
+                    "default": "group",
                     "description": "Defines mapping strategy to compute co-abundances for binning, i.e. which samples will be mapped against assembly.",
                     "help_text": "Available: 'all', 'group' or 'own'. Note that 'own' cannot be specififed in combination with --coassemble_group."
                 },
