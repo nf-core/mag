@@ -416,8 +416,8 @@
                 "binning_map_mode": {
                     "type": "string",
                     "default": "group",
-                    "description": "Defines mapping strategy to compute co-abundances for binning, i.e. which samples will be mapped against assembly.",
-                    "help_text": "Available: 'all', 'group' or 'own'. Note that 'own' cannot be specififed in combination with --coassemble_group."
+                    "description": "Defines mapping strategy to compute co-abundances for binning, i.e. which samples will be mapped against the assembly.",
+                    "help_text": "Available: `all`, `group` or `own`. Note that `own` cannot be specified in combination with `--coassemble_group`.\n\nNote that specifying `all` without additionally specifying `--coassemble_group` results in `n^2` mapping processes for each assembly method, where `n` is the number of samples."
                 },
                 "skip_binning": {
                     "type": "boolean",

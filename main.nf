@@ -75,7 +75,7 @@ def helpMessage() {
                                             The zipped file needs to contain a folder named "*taxonomy*" and "*CAT_database*" that hold the respective files.
 
     Binning options:
-      --binning_map_mode [str]              Defines mapping strategy to compute co-abundances for binning, i.e. which samples will be mapped against assembly
+      --binning_map_mode [str]              Defines mapping strategy to compute co-abundances for binning, i.e. which samples will be mapped against the assembly
                                             Available: 'all', 'group' or 'own' (default: 'group')
                                             Note that 'own' cannot be specififed in combination with --coassemble_group
       --skip_binning [bool]                 Skip metagenome binning
