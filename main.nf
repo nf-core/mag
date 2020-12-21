@@ -25,8 +25,8 @@ def helpMessage() {
     nextflow run nf-core/mag --input 'manifest.tsv' -profile docker
 
     Mandatory arguments:
-      --input [file]                        Path to short reads input data (must be surrounded with quotes). Alternatively, path to TSV manifest file required for hybrid assembly with metaSPAdes.
-                                            Has 4 or 5 headerless columns (tab separated): Sample_Id, Group_Id, Short_Reads_1, Short_Reads_2 [, Long_Reads]. The latter requires a '.tsv' suffix.
+      --input [file]                        Path to short reads input data (must be surrounded with quotes). All files will get assigned the same group id (by default only used to compute co-abundances for binning).
+                                            Alternatively, path to TSV manifest file (requires a '.tsv' suffix). Allows to assign different groups and including long reads for hybrid assembly with metaSPAdes. Has 4 or 5 headerless columns (tab separated): Sample_Id, Group_Id, Short_Reads_1, Short_Reads_2 [, Long_Reads].
       -profile [str]                        Configuration profile to use. Can use multiple (comma separated)
                                             Available: conda, docker, singularity, test, awsbatch, <institute> and more
 
