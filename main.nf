@@ -1000,6 +1000,9 @@ if (params.coassemble_group) {
         output:
         set val(name), val(group), file("pooled_group${group}*.fastq.gz") into (ch_short_reads_spadeshybrid, ch_short_reads_spades)
 
+        when:
+        !params.single_end && (!params.skip_spades || !params.skip_spadeshybrid)
+
         script:
         if ( !params.single_end ) {
             """
@@ -1028,6 +1031,9 @@ if (params.coassemble_group) {
 
         output:
         set val(name), val(group), file("pooled_group${group}_lr.fastq.gz") into (ch_long_reads_spadeshybrid)
+
+        when:
+        !params.single_end && !params.skip_spadeshybrid
 
         script:
         """
