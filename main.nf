@@ -219,6 +219,11 @@ if (params.megahit_fix_cpu_1 || params.spades_fix_cpus || params.spadeshybrid_fi
         log.warn "At least one assembly process is run with a parameter to ensure reproducible results, but for MetaBAT2 a random seed is specified ('--metabat_rng_seed 0'). Consider specifying a positive seed instead."
 }
 
+// Check if SPAdes and singl_end
+if ( (!params.skip_spades || !params.skip_spadeshybrid) && params.single_end) {
+    log.warn "metaSPAdes does not support single-end data. SPAdes will be skipped."
+}
+
 /*
  * Create a channel for reference databases
  */
