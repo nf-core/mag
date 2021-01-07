@@ -5,6 +5,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v1.2.0dev - [date]
 
+### `Added`
+
+- [#146](https://github.com/nf-core/mag/pull/146) - Add `--coassemble_group` parameter to allow group-wise co-assembly
+- [#146](https://github.com/nf-core/mag/pull/146) - Add `--binning_map_mode` parameter allowing different mapping strategies for binning (`all`, `group`, `own`)
+
 ### `Changed`
 
 - [#143](https://github.com/nf-core/mag/pull/143) - Changed format of manifest file, has to be handed over via `--input` parameter as well now
