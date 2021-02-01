@@ -62,6 +62,8 @@ def helpMessage() {
 
     Assembly:
       --coassemble_group [bool]             Co-assemble samples within one group, instead of assembling each sample separately (default: false)
+      --spades_options [string]             Additional custom options for SPAdes, e.g. "-k 21,33,55,77" or from https://github.com/ablab/spades#advanced-options
+      --megahit_options [string]            Additional custom options for MEGAHIT, e.g. "--presets meta-large" or from https://github.com/voutcn/megahit#advanced-usage
       --skip_spades [bool]                  Skip Illumina-only SPAdes assembly
       --skip_spadeshybrid [bool]            Skip SPAdes hybrid assembly
       --skip_megahit [bool]                 Skip MEGAHIT assembly
@@ -351,6 +353,10 @@ if (hybrid) {
 
 if(params.centrifuge_db) summary['Centrifuge Db']   = params.centrifuge_db
 if(params.kraken2_db) summary['Kraken2 Db']         = params.kraken2_db
+
+if (params.spades_options != "") summary['SPAdes options']             = params.spades_options
+if (params.megahit_options != "") summary['MEGAHIT options']            = params.megahit_options
+
 summary['Skip_krona']       = params.skip_krona ? 'Yes' : 'No'
 
 summary['Skip binning']     = params.skip_binning ? 'Yes' : 'No'
@@ -1084,7 +1090,7 @@ process megahit {
     mem = task.memory.toBytes()
     if ( !params.megahit_fix_cpu_1 || task.cpus == 1 )
         """
-        megahit -t "${task.cpus}" -m $mem $input -o MEGAHIT --out-prefix "${name}"
+        megahit ${params.megahit_options} -t "${task.cpus}" -m $mem $input -o MEGAHIT --out-prefix "${name}"
         gzip -c "MEGAHIT/${name}.contigs.fa" > "MEGAHIT/${name}.contigs.fa.gz"
         """
     else
@@ -1125,6 +1131,7 @@ process spadeshybrid {
     if ( !params.spadeshybrid_fix_cpus || task.cpus == params.spadeshybrid_fix_cpus )
         """
         metaspades.py \
+            ${params.spades_options} \
             --threads "${task.cpus}" \
             --memory $maxmem \
             --pe1-1 ${sr[0]} \
@@ -1168,6 +1175,7 @@ process spades {
     if ( !params.spades_fix_cpus || task.cpus == params.spades_fix_cpus )
         """
         metaspades.py \
+            ${params.spades_options} \
             --threads "${task.cpus}" \
             --memory $maxmem \
             --pe1-1 ${sr[0]} \
@@ -1236,27 +1244,35 @@ if (params.binning_map_mode == 'all'){
 
 process bowtie2 {
     tag "$assembler-$name"
+    publishDir "${params.outdir}/Assembly/${assembler}/${name}_QC", mode: params.publish_dir_mode,
+        saveAs: {filename -> filename.indexOf(".bowtie2-log") > 0 ? filename : null}
 
     input:
     set val(assembler), val(name), val(group), file(assembly), val(sampleToMap), val(sampleGroup), file(reads) from ch_bowtie2_input
 
     output:
     set val(assembler), val(name), file("${assembler}-${name}-${sampleToMap}.bam"), file("${assembler}-${name}-${sampleToMap}.bam.bai") into ch_assembly_mapping_for_metabat
+    set val(assembler), val(name), val(sampleToMap), file("*.bowtie2-log") into ch_assembly_mapping_stats
 
     when:
     !params.skip_binning
 
     script:
-    def name = "${assembler}-${name}-${sampleToMap}"
+    def NAME = "${assembler}-${name}-${sampleToMap}"
     def input = params.single_end ? "-U \"${reads}\"" :  "-1 \"${reads[0]}\" -2 \"${reads[1]}\""
         """
         bowtie2-build --threads "${task.cpus}" "${assembly}" ref
-        bowtie2 -p "${task.cpus}" -x ref $input | \
+        bowtie2 -p "${task.cpus}" -x ref $input 2>"${NAME}.bowtie2-log" | \
             samtools view -@ "${task.cpus}" -bS | \
-            samtools sort -@ "${task.cpus}" -o "${name}.bam"
-        samtools index "${name}.bam"
+            samtools sort -@ "${task.cpus}" -o "${NAME}.bam"
+        samtools index "${NAME}.bam"
+        if [ ${NAME} = "${assembler}-${name}-${name}" ] ; then
+            mv "${NAME}.bowtie2-log" "${assembler}-${name}.bowtie2-log"
+        fi
         """
 }
+
+ch_assembly_mapping_stats_for_multiqc = ch_assembly_mapping_stats.map { assembler, name, sampleToMap ,file -> if (name == sampleToMap) {return [ file ]} }
 
 ch_assembly_mapping_for_metabat = ch_assembly_mapping_for_metabat.groupTuple(by:[0,1]).join(ch_assembly_all_to_metabat_copy, by:[0,1])
 
@@ -1575,6 +1591,7 @@ process multiqc {
     file (fastqc_trimmed:'fastqc/*') from ch_fastqc_results_trimmed.collect().ifEmpty([])
     file (host_removal) from ch_host_removed_log.collect().ifEmpty([])
     file ('quast*/*') from ch_quast_results.collect().ifEmpty([])
+    file ('bowtie2log/*') from ch_assembly_mapping_stats_for_multiqc.collect().ifEmpty([])
     file (short_summary) from ch_busco_multiqc.collect().ifEmpty([])
     file ('software_versions/*') from ch_software_versions_yaml.collect()
     file workflow_summary from ch_workflow_summary.collectFile(name: "workflow_summary_mqc.yaml")

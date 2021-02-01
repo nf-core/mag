@@ -389,6 +389,18 @@
                     "type": "boolean",
                     "description": "Co-assemble samples within one group, instead of assembling each sample separately."
                 },
+                "spades_options": {
+                    "type": "string",
+                    "description": "Additional custom options for SPAdes.",
+                    "help_text": "An example is adjusting k-mers (\"-k 21,33,55,77\") or adding [advanced options](https://github.com/ablab/spades#advanced-options).",
+                    "default": "\"\""
+                },
+                "megahit_options": {
+                    "type": "string",
+                    "default": "\"\"",
+                    "description": "Additional custom options for MEGAHIT.",
+                    "help_text": "An example is adjusting presets (e.g. \"--presets meta-large\"), k-mers (e.g. \"-k 21,33,55,77\") or adding other [advanced options](https://github.com/voutcn/megahit#advanced-usage). For example, increase the minimum k-mer in the event of an error message such as \"Too many vertices in the unitig graph, you may increase the kmer size to remove tons of erroneous kmers.\" in the MEGAHIT log file."
+                },
                 "skip_spades": {
                     "type": "boolean",
                     "description": "Skip Illumina-only SPAdes assembly."
