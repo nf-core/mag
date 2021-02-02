@@ -169,7 +169,6 @@ Trimmed (short) reads are assembled with both megahit and SPAdes. Hybrid assembl
   * `[sample/group]_QC/SPAdes-[sample].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the sample that the metagenome was assembled from, only present if `--coassemble_group` is not set.
   * `[sample/group]_QC/SPAdes-[sample/group]-[sampleToMap].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the respective sample ("sampleToMap").
 
-
 ### SPAdesHybrid
 
 SPAdesHybrid is a part of the [SPAdes](http://cab.spbu.ru/software/spades/) software and is used when the user provides both long and short reads.
