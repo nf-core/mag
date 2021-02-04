@@ -17,13 +17,13 @@ top_modules:
 - 'fastqc':
     name: 'FastQC: raw reads'
     path_filters_exclude:
-        - '*trimmed_fastqc*'
+        - '*trimmed*'
 - custom_content
 - 'fastqc':
     name: 'FastQC: after preprocessing'
     info: 'After trimming and, if requested, contamination removal.'
     path_filters:
-        - '*trimmed_fastqc*'
+        - '*trimmed*'
 - 'busco'
 - 'quast'
 
