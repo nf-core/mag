@@ -51,13 +51,13 @@ jobs:
 
       - name: Build new docker image for BUSCO
         if: env.MATCHED_FILES
-        run: docker build --no-cache ./containers/busco/ -t nfcore/magbusco:dev
+        run: docker build --no-cache ./containers/busco/ -t nfcore/magbusco:1.2.0
 
       - name: Pull docker image for BUSCO
         if: ${{ !env.MATCHED_FILES }}
         run: |
           docker pull nfcore/magbusco:dev
-          docker tag nfcore/magbusco:dev nfcore/magbusco:dev
+          docker tag nfcore/magbusco:dev nfcore/magbusco:1.2.0
 
       - name: Install Nextflow
         env:
