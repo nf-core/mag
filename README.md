@@ -82,8 +82,6 @@ Many thanks to the additional contributors who have helped out and/or provided s
 * [Maxime Garcia](https://github.com/MaxUlysse)
 * [Michael L Heuer](https://github.com/heuermh)
 
-<!-- TODO nf-core: If applicable, make list of people who have also contributed -->
-
 ## Contributions and Support
 
 If you would like to contribute to this pipeline, please see the [contributing guidelines](.github/CONTRIBUTING.md).
