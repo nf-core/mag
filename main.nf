@@ -1442,10 +1442,10 @@ process busco_plot {
     done
     generate_plot.py --working_directory .
 
-    mv busco_figure.png ${assembler}-${name}-busco_figure.png
-    mv busco_figure.R ${assembler}-${name}-busco_figure.R
+    mv busco_figure.png "${assembler}-${name}-busco_figure.png"
+    mv busco_figure.R "${assembler}-${name}-busco_figure.R"
 
-    summary_busco.py short_summary.*.txt > ${assembler}-${name}-busco_summary.txt
+    summary_busco.py short_summary.*.txt > "${assembler}-${name}-busco_summary.txt"
     """
 }
 
