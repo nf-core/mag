@@ -997,8 +997,8 @@ if (params.coassemble_group) {
     ch_short_reads_assembly
         .groupTuple(by: 1)
         .map { names, group, reads ->
-                if (!params.single_end) [ "group$group", group, reads.collect { it[0] }, reads.collect { it[1] } ]
-                else [ "group$group", group, reads.collect { it }, [] ] }
+                if (!params.single_end) [ "group-$group", group, reads.collect { it[0] }, reads.collect { it[1] } ]
+                else [ "group-$group", group, reads.collect { it }, [] ] }
         .into { ch_short_reads_megahit; ch_grouped_short_reads }
 
     // pool short reads for SPAdes assembly
@@ -1009,7 +1009,7 @@ if (params.coassemble_group) {
         set val(name), val(group), file(reads1), file(reads2) from ch_grouped_short_reads
 
         output:
-        set val(name), val(group), file("pooled_group${group}*.fastq.gz") into (ch_short_reads_spadeshybrid, ch_short_reads_spades)
+        set val(name), val(group), file("pooled_${name}*.fastq.gz") into (ch_short_reads_spadeshybrid, ch_short_reads_spades)
 
         when:
         !params.single_end && (!params.skip_spades || !params.skip_spadeshybrid)
@@ -1017,12 +1017,12 @@ if (params.coassemble_group) {
         script:
         if ( !params.single_end ) {
             """
-            cat ${reads1} > "pooled_group${group}_R1.fastq.gz"
-            cat ${reads2} > "pooled_group${group}_R2.fastq.gz"
+            cat ${reads1} > "pooled_${name}_R1.fastq.gz"
+            cat ${reads2} > "pooled_${name}_R2.fastq.gz"
             """
         } else {
             """
-            cat ${reads1} > "pooled_group${group}.fastq.gz"
+            cat ${reads1} > "pooled_${name}.fastq.gz"
             """
         }
     }
@@ -1030,7 +1030,7 @@ if (params.coassemble_group) {
     // long reads
     ch_long_reads_assembly
         .groupTuple(by: 1)
-        .map { names, group, reads -> [ "group$group", group, reads.collect { it } ] }
+        .map { names, group, reads -> [ "group-$group", group, reads.collect { it } ] }
         .set { ch_grouped_long_reads }
 
     // pool long reads for SPAdes assembly
@@ -1041,14 +1041,14 @@ if (params.coassemble_group) {
         set val(name), val(group), file(reads) from ch_grouped_long_reads
 
         output:
-        set val(name), val(group), file("pooled_group${group}_lr.fastq.gz") into (ch_long_reads_spadeshybrid)
+        set val(name), val(group), file("pooled_${name}_lr.fastq.gz") into (ch_long_reads_spadeshybrid)
 
         when:
         !params.single_end && !params.skip_spadeshybrid
 
         script:
         """
-        cat ${reads} > "pooled_group${group}_lr.fastq.gz"
+        cat ${reads} > "pooled_${name}_lr.fastq.gz"
         """
     }
 } else {
@@ -1442,10 +1442,10 @@ process busco_plot {
     done
     generate_plot.py --working_directory .
 
-    mv busco_figure.png ${assembler}-${name}-busco_figure.png
-    mv busco_figure.R ${assembler}-${name}-busco_figure.R
+    mv busco_figure.png "${assembler}-${name}-busco_figure.png"
+    mv busco_figure.R "${assembler}-${name}-busco_figure.R"
 
-    summary_busco.py short_summary.*.txt > ${assembler}-${name}-busco_summary.txt
+    summary_busco.py short_summary.*.txt > "${assembler}-${name}-busco_summary.txt"
     """
 }
 
