@@ -41,6 +41,13 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
     nextflow run nf-core/mag -profile <docker/singularity/podman/conda/institute> --input '*_R{1,2}.fastq.gz'
     ```
 
+    or
+
+    ```bash
+    nextflow run nf-core/mag -profile <docker/singularity/podman/conda/institute> --input 'manifest.tsv'
+    ```
+
+
 See [usage docs](https://nf-co.re/mag/usage) and [parameter docs](https://nf-co.re/mag/parameters) for all of the available options when running the pipeline.
 
 ## Pipeline Summary
