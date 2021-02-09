@@ -22,7 +22,7 @@ and processes data using the following steps:
 * [MultiQC](#multiqc) - aggregate report, describing results of the whole pipeline
 * [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
 
-Note that when specifying the parameter `--coassemble_group`, for the corresponding output filenames/directories of the assembly or downsteam processes the group ID, or more precicely the term `group[group_id]`, will be used instead of the sample ID.
+Note that when specifying the parameter `--coassemble_group`, for the corresponding output filenames/directories of the assembly or downsteam processes the group ID, or more precisely the term `group[group_id]`, will be used instead of the sample ID.
 
 ## Quality control
 
