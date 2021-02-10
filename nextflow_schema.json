@@ -14,13 +14,8 @@
                 "input": {
                     "type": "string",
                     "fa_icon": "fas fa-dna",
-                    "description": "Input FastQ files. Either this or the `--manifest` parameter is required.",
-                    "help_text": "Use this to specify the location of your input FastQ files. For example:\n\n```bash\n--input 'path/to/data/sample_*_{1,2}.fastq'\n```\n\nPlease note the following requirements:\n\n1. The path must be enclosed in quotes\n2. The path must have at least one `*` wildcard character\n3. When using the pipeline with paired end data, the path must use `{1,2}` notation to specify read pairs.\n\nIf left unspecified, a default pattern is used: `data/*{1,2}.fastq.gz`"
-                },
-                "manifest": {
-                    "type": "string",
-                    "description": "Manifest file, required for hybrid assembly with metaSPAdes. Alternative to `--input`.",
-                    "help_text": "Has 4 headerless columns (tab separated): Sample_Id, Long_Reads, Short_Reads_1, Short_Reads_2\n"
+                    "description": "Input FastQ files or TSV file.",
+                    "help_text": "Use this to specify the location of your input FastQ files. For example:\n\n```bash\n--input 'path/to/data/sample_*_{1,2}.fastq'\n```\n\nAll files will get assigned the same group ID (by default only used to compute co-abundances for binning). Please note the following requirements:\n\n1. The path must be enclosed in quotes\n2. The path must have at least one `*` wildcard character\n3. When using the pipeline with paired end data, the path must use `{1,2}` notation to specify read pairs.\n\nIf left unspecified, a default pattern is used: `data/*{1,2}.fastq.gz`. \n\nAlternatively, to assign different groups or to include long reads for hybrid assembly with metaSPAdes, you can specify a TSV input file (requires a '.tsv' suffix) with 4 or 5 headerless columns: Sample_Id, Group_Id, Short_Reads_1, Short_Reads_2 [, Long_Reads]."
                 },
                 "input_paths": {
                     "type": "string",
@@ -390,13 +385,29 @@
             "description": "",
             "default": "",
             "properties": {
+                "coassemble_group": {
+                    "type": "boolean",
+                    "description": "Co-assemble samples within one group, instead of assembling each sample separately."
+                },
+                "spades_options": {
+                    "type": "string",
+                    "description": "Additional custom options for SPAdes.",
+                    "help_text": "An example is adjusting k-mers (\"-k 21,33,55,77\") or adding [advanced options](https://github.com/ablab/spades#advanced-options). But not -t, -m, -o or --out-prefix, because these are already in use.",
+                    "default": "\"\""
+                },
+                "megahit_options": {
+                    "type": "string",
+                    "default": "\"\"",
+                    "description": "Additional custom options for MEGAHIT.",
+                    "help_text": "An example is adjusting presets (e.g. \"--presets meta-large\"), k-mers (e.g. \"-k 21,33,55,77\") or adding other [advanced options](https://github.com/voutcn/megahit#advanced-usage). For example, increase the minimum k-mer in the event of an error message such as \"Too many vertices in the unitig graph, you may increase the kmer size to remove tons of erroneous kmers.\" in the MEGAHIT log file. But not --threads, --memory, -o or input read files, because these are already in use."
+                },
                 "skip_spades": {
                     "type": "boolean",
                     "description": "Skip Illumina-only SPAdes assembly."
                 },
                 "skip_spadeshybrid": {
                     "type": "boolean",
-                    "description": "Skip SPAdes hybrid assembly (only available when using manifest input)."
+                    "description": "Skip SPAdes hybrid assembly."
                 },
                 "skip_megahit": {
                     "type": "boolean",
@@ -414,6 +425,12 @@
             "description": "",
             "default": "",
             "properties": {
+                "binning_map_mode": {
+                    "type": "string",
+                    "default": "group",
+                    "description": "Defines mapping strategy to compute co-abundances for binning, i.e. which samples will be mapped against the assembly.",
+                    "help_text": "Available: `all`, `group` or `own`. Note that `own` cannot be specified in combination with `--coassemble_group`.\n\nNote that specifying `all` without additionally specifying `--coassemble_group` results in `n^2` mapping processes for each assembly method, where `n` is the number of samples."
+                },
                 "skip_binning": {
                     "type": "boolean",
                     "description": "Skip metagenome binning."
@@ -460,6 +477,18 @@
                     "help_text": "Useful to allow reproducibility, as BUSCO datasets are frequently updated and old versions do not always remain accessible."
                 }
             }
+        },
+        "deprecated": {
+            "title": "Deprecated",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "manifest": {
+                    "type": "string",
+                    "hidden": true
+                }
+            }
         }
     },
     "allOf": [
@@ -498,6 +527,9 @@
         },
         {
             "$ref": "#/definitions/bin_quality_check_options"
+        },
+        {
+            "$ref": "#/definitions/deprecated"
         }
     ]
 }

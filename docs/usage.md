@@ -135,3 +135,52 @@ We recommend adding the following line to your environment to limit this (typica
 ```bash
 NXF_OPTS='-Xms1g -Xmx4g'
 ```
+
+## Input specifications
+
+The input data can be passed to nf-core/mag in two possible ways using the `--input` parameter.
+
+### Direct FASTQ input (short reads only)
+
+The easiest way is to specify directly the path (with wildcards) to your input FASTQ files. For example:
+
+```bash
+--input 'path/to/data/sample_*_R{1,2}.fastq.gz'
+```
+
+This input method only works with short read data and will assign all files to the same group. By default, this group information is only used to compute co-abundances for the binning step, but not for group-wise co-assembly (see the parameter docs for [`--coassemble_group`](https://nf-co.re/mag/parameters#coassemble_group) and [`--binning_map_mode`](https://nf-co.re/mag/parameters#binning_map_mode) for more information about how this group information can be used).
+
+Please note the following additional requirements:
+
+* Files names must be unique
+* Valid file extensions: `.fastq.gz`, `.fastq`, `.fq.gz`, `.fq`
+* The path must be enclosed in quotes
+* The path must have at least one `*` wildcard character
+* When using the pipeline with paired end data, the path must use `{1,2}` notation to specify read pairs
+* To run single-end data you must additionally specify `--single_end`
+* If left unspecified, a default pattern is used: `data/*{1,2}.fastq.gz`
+
+### TSV input file
+
+Alternatively, to assign different groups or to include long reads for hybrid assembly with metaSPAdes, you can specify a TSV input file that contains the paths to your FASTQ files and additional metadata.
+
+This TSV file should contain the following columns:
+
+`Sample_ID  Group_ID  Short_Reads_R1  Short_Reads_R2  [Long_Reads]`
+
+The path to the long reads is optional. A valid example could look like the following:
+
+| | | | | |
+|-|-|-|-|-|
+| sample1 | 0 | data/sample1_R1.fastq.gz | data/sample1_R2.fastq.gz | data/sample1.fastq.gz |
+| sample2 | 0 | data/sample2_R1.fastq.gz | data/sample2_R2.fastq.gz | data/sample2.fastq.gz |
+| sample3 | 1 | data/sample3_R1.fastq.gz | data/sample3_R2.fastq.gz | |
+
+Please note the following requirements:
+
+* 4 or 5 tab seperated columns
+* Valid file extension: `.tsv`
+* No header
+* Sample IDs must be unique
+
+Again, by default, the group information is only used to compute co-abundances for the binning step, but not for group-wise co-assembly (see the parameter docs for [`--coassemble_group`](https://nf-co.re/mag/parameters#coassemble_group) and [`--binning_map_mode`](https://nf-co.re/mag/parameters#binning_map_mode) for more information about how this group information can be used).
