@@ -289,7 +289,7 @@ workflow {
     ================================================================================
     */
     // required for FastQC and MultiQC: to ensure consistent naming for reports using sample IDs and allow non-unique file basenames with TSV input
-    if (hasExtension(params.input, "tsv") || params.input_paths){
+    if (hasExtension(params.input, "tsv")){
         RENAME_FASTQS (
             INPUT_CHECK.out.short_reads
         )
