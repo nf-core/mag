@@ -542,7 +542,8 @@ workflow {
         ch_bowtie2_assembly_multiqc = BOWTIE2_ASSEMBLY.out.log.map { assembler, assembly_id, reads_id, log -> if (assembly_id == reads_id) {return [ log ]} }
         // group mappings for one assembly
         ch_grouped_mappings = BOWTIE2_ASSEMBLY.out.mappings
-            .groupTuple(by:[0,1,2]) // TODO groupTuple meta? effect?
+            .groupTuple(by:[0,1]) // TODO groupTuple meta? effect?
+            .map { assembler, assembly_id, assembly, bams, bais -> [assembler, assembly_id, assembly[0], bams, bais] }     // multiple symlinks to the same assembly -> use first
 
         METABAT2 ( ch_grouped_mappings )
         // TODO out meta !
