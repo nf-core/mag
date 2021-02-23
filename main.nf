@@ -23,7 +23,7 @@ nextflow.enable.dsl = 2
 def json_schema = "$projectDir/nextflow_schema.json"
 if (params.help) {
     // TODO nf-core: Update typical command used to run pipeline
-    def command = "nextflow run nf-core/mag --input 'manifest.tsv' -profile docker"
+    def command = "nextflow run nf-core/mag --input 'manifest.csv' -profile docker"
     // nextflow run nf-core/mag --input '*_R{1,2}.fastq.gz' -profile docker
     log.info Schema.params_help(workflow, params, json_schema, command)
     exit 0
