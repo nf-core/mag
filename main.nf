@@ -30,13 +30,6 @@ if (params.help) {
 }
 
 ////////////////////////////////////////////////////
-/* --        GENOME PARAMETER VALUES           -- */
-////////////////////////////////////////////////////
-
-// params.fasta = Checks.get_genome_attribute(params, 'fasta')
-// TODO check what should be done here!
-
-////////////////////////////////////////////////////
 /* --         PRINT PARAMETER SUMMARY          -- */
 ////////////////////////////////////////////////////
 
@@ -116,9 +109,6 @@ Checks.aws_batch(workflow, params)
 
 // Check the hostnames against configured profiles
 Checks.hostname(workflow, params, log)
-
-// Check genome key exists if provided
-Checks.genome_exists(params, log)
 
 ////////////////////////////////////////////////////
 /* --          VALIDATE INPUTS                 -- */
