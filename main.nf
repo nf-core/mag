@@ -44,6 +44,65 @@ def summary_params = Schema.params_summary_map(workflow, params, json_schema)
 log.info Schema.params_summary_log(workflow, params, json_schema)
 
 ////////////////////////////////////////////////////
+/* -- IMPORT MODULES / SUBWORKFLOWS / FUNCTIONS-- */
+////////////////////////////////////////////////////
+
+// Don't overwrite global params.modules, create a copy instead and use that within the main script.
+def modules = params.modules.clone()
+
+def multiqc_options   = modules['multiqc']
+multiqc_options.args += params.multiqc_title ? " --title \"$params.multiqc_title\"" : ''
+
+// Local: Modules
+include { GET_SOFTWARE_VERSIONS                   } from './modules/local/process/get_software_versions'       addParams( options: [publish_files : ['csv':'']]    )
+include { RENAME_FASTQS                           } from './modules/local/process/rename_fastqs'               addParams( options: [:]                             )
+include { FASTP                                   } from './modules/local/process/fastp'                       addParams( options: modules['fastp']                )
+include { BOWTIE2_INDEX as BOWTIE2_INDEX_HOST     } from './modules/local/process/bowtie2_index'               addParams( options: [:]                             )
+include { BOWTIE2_REMOVAL as BOWTIE2_REMOVAL_HOST } from './modules/local/process/bowtie2_removal'             addParams( options: modules['bowtie2_removal_host'] )
+include { BOWTIE2_INDEX as BOWTIE2_INDEX_PHIX     } from './modules/local/process/bowtie2_index'               addParams( options: [:]                             )
+include { BOWTIE2_REMOVAL as BOWTIE2_REMOVAL_PHIX } from './modules/local/process/bowtie2_removal'             addParams( options: modules['bowtie2_removal_phix'] )
+include { PORECHOP                                } from './modules/local/process/porechop'                    addParams( options: [:]                             )
+include { NANOLYSE                                } from './modules/local/process/nanolyse'                    addParams( options: modules['nanolyse']             )
+include { FILTLONG                                } from './modules/local/process/filtlong'                    addParams( options: [:]                             )
+include { NANOPLOT as NANOPLOT_RAW                } from './modules/local/process/nanoplot'                    addParams( options: modules['nanoplot_raw']         )
+include { NANOPLOT as NANOPLOT_FILTERED           } from './modules/local/process/nanoplot'                    addParams( options: modules['nanoplot_filtered']    )
+include { CENTRIFUGE_DB_PREPARATION               } from './modules/local/process/centrifuge_db_preparation'   addParams( options: [:]                             )
+include { CENTRIFUGE                              } from './modules/local/process/centrifuge'                  addParams( options: modules['centrifuge']           )
+include { KRAKEN2_DB_PREPARATION                  } from './modules/local/process/kraken2_db_preparation'      addParams( options: [:]                             )
+include { KRAKEN2                                 } from './modules/local/process/kraken2'                     addParams( options: modules['kraken2']              )
+include { KRONA_DB                                } from './modules/local/process/krona_db'                    addParams( options: [:]                             )
+include { KRONA                                   } from './modules/local/process/krona'                       addParams( options: modules['krona']                )
+include { POOL_SINGLE_READS                       } from './modules/local/process/pool_single_reads'           addParams( options: [:]                             )
+include { POOL_PAIRED_READS                       } from './modules/local/process/pool_paired_reads'           addParams( options: [:]                             )
+include { MEGAHIT                                 } from './modules/local/process/megahit'                     addParams( options: modules['megahit']              )
+include { SPADES                                  } from './modules/local/process/spades'                      addParams( options: modules['spades']               )
+include { SPADESHYBRID                            } from './modules/local/process/spadeshybrid'                addParams( options: modules['spadeshybrid']         )
+include { QUAST                                   } from './modules/local/process/quast'                       addParams( options: modules['quast']                )
+include { BOWTIE2_INDEX_ASSEMBLY                  } from './modules/local/process/bowtie2_index_assembly'      addParams( options: [:]                             )
+include { BOWTIE2_ASSEMBLY                        } from './modules/local/process/bowtie2_assembly'            addParams( options: modules['bowtie2_assembly']     )
+include { METABAT2                                } from './modules/local/process/metabat2'                    addParams( options: modules['metabat2']             )
+include { BUSCO_DB_PREPARATION                    } from './modules/local/process/busco_db_preparation'        addParams( options: modules['busco_db_preparation'] )
+include { BUSCO                                   } from './modules/local/process/busco'                       addParams( options: modules['busco']                )
+include { BUSCO_PLOT                              } from './modules/local/process/busco_plot'                  addParams( options: modules['busco_plot']           )
+include { BUSCO_SUMMARY                           } from './modules/local/process/busco_summary'               addParams( options: modules['busco_summary']        )
+include { QUAST_BINS                              } from './modules/local/process/quast_bins'                  addParams( options: modules['quast_bins']           )
+include { MERGE_QUAST_AND_BUSCO                   } from './modules/local/process/merge_quast_and_busco'       addParams( options: modules['merge_quast_and_busco'])
+include { CAT_DB                                  } from './modules/local/process/cat_db'                      addParams( options: [:]                             )
+include { CAT                                     } from './modules/local/process/cat'                         addParams( options: modules['cat']                  )
+include { MULTIQC                                 } from './modules/local/process/multiqc'                     addParams( options: multiqc_options                 )
+
+// Local: Functions
+include {
+    hasExtension
+} from './modules/local/process/functions'
+
+// Local: Sub-workflows
+
+// nf-core/modules: Modules
+include { FASTQC as FASTQC_RAW     } from './modules/nf-core/software/fastqc/main'              addParams( options: modules['fastqc_raw']            )
+include { FASTQC as FASTQC_TRIMMED } from './modules/nf-core/software/fastqc/main'              addParams( options: modules['fastqc_trimmed']        )
+
+////////////////////////////////////////////////////
 /* --          PARAMETER CHECKS                -- */
 ////////////////////////////////////////////////////
 
@@ -72,8 +131,78 @@ for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true
 if (params.manifest) exit 1, "The parameter `--manifest` is deprecated.\n\tPlease use the `--input` parameter instead and mind the new format specifications."
 
 // Check mandatory parameters
-if (params.input) { ch_input = file(params.input) } else { exit 1, 'Input samplesheet not specified!' }
-// add option for direct FASTQ files 
+if (!params.input) exit 1, 'Input samplesheet not specified!'
+
+hybrid = false
+if(hasExtension(params.input, "csv")){
+    // extracts read files from samplesheet CSV and distribute into channels
+    Channel
+        .from(file(params.input))
+        .splitCsv(header: true)
+        .map { row ->
+                if (row.size() == 5) {
+                    def id = row.sample
+                    def group = row.group
+                    def sr1 = row.short_reads_1 ? file(row.short_reads_1, checkIfExists: true) : false
+                    def sr2 = row.short_reads_2 ? file(row.short_reads_2, checkIfExists: true) : false
+                    def lr = row.long_reads ? file(row.long_reads, checkIfExists: true) : false
+                    if (lr) hybrid = true
+                    // Check if given combination is valid
+                    if (!sr1) exit 1, "Invalid input samplesheet: short_reads_1 can not be empty."
+                    if (!sr2 && lr) exit 1, "Invalid input samplesheet: invalid combination of single-end short reads and long reads provided! SPAdes does not support single-end data and thus hybrid assembly cannot be performed."
+                    if (!sr2 && !params.single_end) exit 1, "Invalid input samplesheet: single-end short reads provided, but command line parameter `--single_end` is false. Note that either only single-end or only paired-end reads must provided."
+                    if (sr2 && params.single_end) exit 1, "Invalid input samplesheet: paired-end short reads provided, but command line parameter `--single_end` is true. Note that either only single-end or only paired-end reads must provided."
+                    return [ id, group, sr1, sr2, lr ]
+                } else {
+                    exit 1, "Input samplesheet contains row with ${row.size()} column(s). Expects 5."
+                }
+            }
+        .set { ch_input_rows }
+    // separate short and long reads
+    ch_input_rows
+        .map { id, group, sr1, sr2, lr ->
+                    def meta = [:]
+                    meta.id           = id
+                    meta.group        = group
+                    meta.single_end   = params.single_end
+                    if (params.single_end) 
+                        return [ meta, [ sr1] ]
+                    else 
+                        return [ meta, [ sr1, sr2 ] ]
+            }
+        .set { ch_raw_short_reads }
+    ch_input_rows
+        .map { id, group, sr1, sr2, lr ->
+                    if (lr) {
+                        def meta = [:]
+                        meta.id           = id
+                        meta.group        = group
+                        return [ meta, lr ]
+                    }
+            }
+        .set { ch_raw_long_reads }
+} else {
+    Channel
+        .fromFilePairs(params.input, size: params.single_end ? 1 : 2)
+        .ifEmpty { exit 1, "Cannot find any reads matching: ${params.input}\nNB: Path needs to be enclosed in quotes!\nIf this is single-end data, please specify --single_end on the command line." }
+        .map { row -> 
+                    def meta = [:]
+                    meta.id           = row[0]
+                    meta.group        = 0
+                    meta.single_end   = params.single_end
+                    return [ meta, row[1] ]
+            }
+        .set { ch_raw_short_reads }
+    ch_input_rows = Channel.empty()
+    ch_raw_long_reads = Channel.empty()
+}
+
+// Ensure sample IDs are unique
+ch_input_rows
+    .map { id, group, sr1, sr2, lr -> id }
+    .toList()
+    .map { ids -> if( ids.size() != ids.unique().size() ) {exit 1, "ERROR: input samplesheet contains duplicated sample IDs!" } }
+
 
 // Check if binning mapping mode is valid
 if (!['all','group','own'].contains(params.binning_map_mode))
@@ -90,16 +219,15 @@ if ( params.spadeshybrid_fix_cpus && params.spadeshybrid_fix_cpus > params.max_c
 if (params.megahit_fix_cpu_1 || params.spades_fix_cpus || params.spadeshybrid_fix_cpus){
     if (!params.skip_spades && !params.spades_fix_cpus)
         log.warn "At least one assembly process is run with a parameter to ensure reproducible results, but SPAdes not. Consider using the parameter '--spades_fix_cpus'."
-    // TODO
-    // if (hybrid && !params.skip_spadeshybrid && !params.spadeshybrid_fix_cpus)
-    //     log.warn "At least one assembly process is run with a parameter to ensure reproducible results, but SPAdes hybrid not. Consider using the parameter '--spadeshybrid_fix_cpus'."
+    if (hybrid && !params.skip_spadeshybrid && !params.spadeshybrid_fix_cpus)
+        log.warn "At least one assembly process is run with a parameter to ensure reproducible results, but SPAdes hybrid not. Consider using the parameter '--spadeshybrid_fix_cpus'."
     if (!params.skip_megahit && !params.megahit_fix_cpu_1)
         log.warn "At least one assembly process is run with a parameter to ensure reproducible results, but MEGAHIT not. Consider using the parameter '--megahit_fix_cpu_1'."
     if (!params.skip_binning && params.metabat_rng_seed == 0)
         log.warn "At least one assembly process is run with a parameter to ensure reproducible results, but for MetaBAT2 a random seed is specified ('--metabat_rng_seed 0'). Consider specifying a positive seed instead."
 }
 
-// Check if SPAdes and singl_end
+// Check if SPAdes and single_end
 if ( (!params.skip_spades || !params.skip_spadeshybrid) && params.single_end) {
     log.warn "metaSPAdes does not support single-end data. SPAdes will be skipped."
 }
@@ -158,13 +286,12 @@ if (!params.keep_lambda) {
 if ( params.host_fasta && params.host_genome) {
     exit 1, "Both host fasta reference and iGenomes genome are specififed to remove host contamination! Invalid combination, please specify either --host_fasta or --host_genome."
 }
-// TODO
-// if ( hybrid && (params.host_fasta || params.host_genome) ) {
-//     log.warn "Host read removal is only applied to short reads. Long reads might be filtered indirectly by Filtlong, which is set to use read qualities estimated based on k-mer matches to the short, already filtered reads."
-//     if ( params.longreads_length_weight > 1 ) {
-//         log.warn "The parameter --longreads_length_weight is ${params.longreads_length_weight}, causing the read length being more important for long read filtering than the read quality. Set --longreads_length_weight to 1 in order to assign equal weights."
-//     }
-// }
+if ( hybrid && (params.host_fasta || params.host_genome) ) {
+    log.warn "Host read removal is only applied to short reads. Long reads might be filtered indirectly by Filtlong, which is set to use read qualities estimated based on k-mer matches to the short, already filtered reads."
+    if ( params.longreads_length_weight > 1 ) {
+        log.warn "The parameter --longreads_length_weight is ${params.longreads_length_weight}, causing the read length being more important for long read filtering than the read quality. Set --longreads_length_weight to 1 in order to assign equal weights."
+    }
+}
 
 if ( params.host_genome ) {
     // Check if host genome exists in the config file
@@ -202,65 +329,6 @@ if ( params.host_genome ) {
 ch_multiqc_config        = file("$projectDir/assets/multiqc_config.yaml", checkIfExists: true)
 ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
 
-////////////////////////////////////////////////////
-/* -- IMPORT MODULES / SUBWORKFLOWS / FUNCTIONS-- */
-////////////////////////////////////////////////////
-
-// Don't overwrite global params.modules, create a copy instead and use that within the main script.
-def modules = params.modules.clone()
-
-def multiqc_options   = modules['multiqc']
-multiqc_options.args += params.multiqc_title ? " --title \"$params.multiqc_title\"" : ''
-
-// Local: Modules
-include { GET_SOFTWARE_VERSIONS                   } from './modules/local/process/get_software_versions'       addParams( options: [publish_files : ['csv':'']]    )
-include { RENAME_FASTQS                           } from './modules/local/process/rename_fastqs'               addParams( options: [:]                             )
-include { FASTP                                   } from './modules/local/process/fastp'                       addParams( options: modules['fastp']                )
-include { BOWTIE2_INDEX as BOWTIE2_INDEX_HOST     } from './modules/local/process/bowtie2_index'               addParams( options: [:]                             )
-include { BOWTIE2_REMOVAL as BOWTIE2_REMOVAL_HOST } from './modules/local/process/bowtie2_removal'             addParams( options: modules['bowtie2_removal_host'] )
-include { BOWTIE2_INDEX as BOWTIE2_INDEX_PHIX     } from './modules/local/process/bowtie2_index'               addParams( options: [:]                             )
-include { BOWTIE2_REMOVAL as BOWTIE2_REMOVAL_PHIX } from './modules/local/process/bowtie2_removal'             addParams( options: modules['bowtie2_removal_phix'] )
-include { PORECHOP                                } from './modules/local/process/porechop'                    addParams( options: [:]                             )
-include { NANOLYSE                                } from './modules/local/process/nanolyse'                    addParams( options: modules['nanolyse']             )
-include { FILTLONG                                } from './modules/local/process/filtlong'                    addParams( options: [:]                             )
-include { NANOPLOT as NANOPLOT_RAW                } from './modules/local/process/nanoplot'                    addParams( options: modules['nanoplot_raw']         )
-include { NANOPLOT as NANOPLOT_FILTERED           } from './modules/local/process/nanoplot'                    addParams( options: modules['nanoplot_filtered']    )
-include { CENTRIFUGE_DB_PREPARATION               } from './modules/local/process/centrifuge_db_preparation'   addParams( options: [:]                             )
-include { CENTRIFUGE                              } from './modules/local/process/centrifuge'                  addParams( options: modules['centrifuge']           )
-include { KRAKEN2_DB_PREPARATION                  } from './modules/local/process/kraken2_db_preparation'      addParams( options: [:]                             )
-include { KRAKEN2                                 } from './modules/local/process/kraken2'                     addParams( options: modules['kraken2']              )
-include { KRONA_DB                                } from './modules/local/process/krona_db'                    addParams( options: [:]                             )
-include { KRONA                                   } from './modules/local/process/krona'                       addParams( options: modules['krona']                )
-include { POOL_SINGLE_READS                       } from './modules/local/process/pool_single_reads'           addParams( options: [:]                             )
-include { POOL_PAIRED_READS                       } from './modules/local/process/pool_paired_reads'           addParams( options: [:]                             )
-include { MEGAHIT                                 } from './modules/local/process/megahit'                     addParams( options: modules['megahit']              )
-include { SPADES                                  } from './modules/local/process/spades'                      addParams( options: modules['spades']               )
-include { SPADESHYBRID                            } from './modules/local/process/spadeshybrid'                addParams( options: modules['spadeshybrid']         )
-include { QUAST                                   } from './modules/local/process/quast'                       addParams( options: modules['quast']                )
-include { BOWTIE2_INDEX_ASSEMBLY                  } from './modules/local/process/bowtie2_index_assembly'      addParams( options: [:]                             )
-include { BOWTIE2_ASSEMBLY                        } from './modules/local/process/bowtie2_assembly'            addParams( options: modules['bowtie2_assembly']     )
-include { METABAT2                                } from './modules/local/process/metabat2'                    addParams( options: modules['metabat2']             )
-include { BUSCO_DB_PREPARATION                    } from './modules/local/process/busco_db_preparation'        addParams( options: modules['busco_db_preparation'] )
-include { BUSCO                                   } from './modules/local/process/busco'                       addParams( options: modules['busco']                )
-include { BUSCO_PLOT                              } from './modules/local/process/busco_plot'                  addParams( options: modules['busco_plot']           )
-include { BUSCO_SUMMARY                           } from './modules/local/process/busco_summary'               addParams( options: modules['busco_summary']        )
-include { QUAST_BINS                              } from './modules/local/process/quast_bins'                  addParams( options: modules['quast_bins']           )
-include { MERGE_QUAST_AND_BUSCO                   } from './modules/local/process/merge_quast_and_busco'       addParams( options: modules['merge_quast_and_busco'])
-include { CAT_DB                                  } from './modules/local/process/cat_db'                      addParams( options: [:]                             )
-include { CAT                                     } from './modules/local/process/cat'                         addParams( options: modules['cat']                  )
-include { MULTIQC                                 } from './modules/local/process/multiqc'                     addParams( options: multiqc_options                 )
-
-// Local: Functions
-include {
-    hasExtension
-} from './modules/local/process/functions'
-
-// Local: Sub-workflows
-include { INPUT_CHECK              } from './modules/local/subworkflow/input_check'             addParams( options: [:]                              )
-
-// nf-core/modules: Modules
-include { FASTQC as FASTQC_RAW     } from './modules/nf-core/software/fastqc/main'              addParams( options: modules['fastqc_raw']            )
-include { FASTQC as FASTQC_TRIMMED } from './modules/nf-core/software/fastqc/main'              addParams( options: modules['fastqc_trimmed']        )
 
 ////////////////////////////////////////////////////
 /* --           RUN MAIN WORKFLOW              -- */
@@ -272,15 +340,6 @@ def multiqc_report = []
 workflow {
 
     ch_software_versions = Channel.empty()
-
-    /*
-     * SUBWORKFLOW: Read in samplesheet, validate and stage input files
-     */     // TODO do as before without python script!?
-    INPUT_CHECK (
-        ch_input
-    )
-    ch_raw_short_reads = INPUT_CHECK.out.short_reads
-    ch_raw_long_reads  = INPUT_CHECK.out.long_reads
     // TODO do we still need hybrid boolean value here?
 
     /*
