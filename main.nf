@@ -125,7 +125,7 @@ Checks.genome_exists(params, log)
 ////////////////////////////////////////////////////
 
 // Check input path parameters to see if they exist
-checkPathParamList = [ params.input, params.multiqc_config, params.fasta, params.phix_reference, params.host_fasta, params.centrifuge_db, params.kraken2_db, params.cat_db, params.lambda_reference, params.busco_reference ]
+checkPathParamList = [ params.input, params.multiqc_config, params.phix_reference, params.host_fasta, params.centrifuge_db, params.kraken2_db, params.cat_db, params.lambda_reference, params.busco_reference ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
 if (params.manifest) exit 1, "The parameter `--manifest` is deprecated.\n\tPlease use the `--input` parameter instead and mind the new format specifications."
