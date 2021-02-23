@@ -203,6 +203,9 @@ ch_input_rows
     .toList()
     .map { ids -> if( ids.size() != ids.unique().size() ) {exit 1, "ERROR: input samplesheet contains duplicated sample IDs!" } }
 
+////////////////////////////////////////////////////
+/* --     MORE PARAMETER CHECKS                -- */
+////////////////////////////////////////////////////
 
 // Check if binning mapping mode is valid
 if (!['all','group','own'].contains(params.binning_map_mode))
@@ -232,10 +235,49 @@ if ( (!params.skip_spades || !params.skip_spadeshybrid) && params.single_end) {
     log.warn "metaSPAdes does not support single-end data. SPAdes will be skipped."
 }
 
-/*
- * Create a channel for reference databases
- */
-// TODO move somewhere else?
+// Check if parameters for host contamination removal are valid and create channels
+if ( params.host_fasta && params.host_genome) {
+    exit 1, "Both host fasta reference and iGenomes genome are specififed to remove host contamination! Invalid combination, please specify either --host_fasta or --host_genome."
+}
+if ( hybrid && (params.host_fasta || params.host_genome) ) {
+    log.warn "Host read removal is only applied to short reads. Long reads might be filtered indirectly by Filtlong, which is set to use read qualities estimated based on k-mer matches to the short, already filtered reads."
+    if ( params.longreads_length_weight > 1 ) {
+        log.warn "The parameter --longreads_length_weight is ${params.longreads_length_weight}, causing the read length being more important for long read filtering than the read quality. Set --longreads_length_weight to 1 in order to assign equal weights."
+    }
+}
+if ( params.host_genome ) {
+    // Check if host genome exists in the config file
+    if ( !params.genomes.containsKey(params.host_genome) ) {
+        exit 1, "The provided host genome '${params.host_genome}' is not available in the iGenomes file. Currently the available genomes are ${params.genomes.keySet().join(", ")}"
+    } else {
+        host_fasta = params.genomes[params.host_genome].fasta ?: false
+        if ( !host_fasta ) {
+            exit 1, "No fasta file specified for the host genome ${params.host_genome}!"
+        }
+        Channel
+            .value(file( "${host_fasta}" ))
+            .set { ch_host_fasta }
+
+        host_bowtie2index = params.genomes[params.host_genome].bowtie2 ?: false
+        if ( !host_bowtie2index ) {
+            exit 1, "No Bowtie 2 index file specified for the host genome ${params.host_genome}!"
+        }
+        Channel
+            .value(file( "${host_bowtie2index}/*" ))
+            .set { ch_host_bowtie2index }
+    }
+} else if ( params.host_fasta ) {
+    Channel
+        .value(file( "${params.host_fasta}" ))
+        .set { ch_host_fasta }
+} else {
+    ch_host_fasta = Channel.empty()
+}
+
+////////////////////////////////////////////////////
+/* --  Create channel for reference databases  -- */
+////////////////////////////////////////////////////
+
 if(!params.skip_busco){
     Channel
         .fromPath( "${params.busco_reference}" )
@@ -280,55 +322,12 @@ if (!params.keep_lambda) {
         .set { ch_nanolyse_db }
 } 
 
-/*
- * Check if parameters for host contamination removal are valid and create channels
- */
-if ( params.host_fasta && params.host_genome) {
-    exit 1, "Both host fasta reference and iGenomes genome are specififed to remove host contamination! Invalid combination, please specify either --host_fasta or --host_genome."
-}
-if ( hybrid && (params.host_fasta || params.host_genome) ) {
-    log.warn "Host read removal is only applied to short reads. Long reads might be filtered indirectly by Filtlong, which is set to use read qualities estimated based on k-mer matches to the short, already filtered reads."
-    if ( params.longreads_length_weight > 1 ) {
-        log.warn "The parameter --longreads_length_weight is ${params.longreads_length_weight}, causing the read length being more important for long read filtering than the read quality. Set --longreads_length_weight to 1 in order to assign equal weights."
-    }
-}
-
-if ( params.host_genome ) {
-    // Check if host genome exists in the config file
-    if ( !params.genomes.containsKey(params.host_genome) ) {
-        exit 1, "The provided host genome '${params.host_genome}' is not available in the iGenomes file. Currently the available genomes are ${params.genomes.keySet().join(", ")}"
-    } else {
-        host_fasta = params.genomes[params.host_genome].fasta ?: false
-        if ( !host_fasta ) {
-            exit 1, "No fasta file specified for the host genome ${params.host_genome}!"
-        }
-        Channel
-            .value(file( "${host_fasta}" ))
-            .set { ch_host_fasta }
-
-        host_bowtie2index = params.genomes[params.host_genome].bowtie2 ?: false
-        if ( !host_bowtie2index ) {
-            exit 1, "No Bowtie 2 index file specified for the host genome ${params.host_genome}!"
-        }
-        Channel
-            .value(file( "${host_bowtie2index}/*" ))
-            .set { ch_host_bowtie2index }
-    }
-} else if ( params.host_fasta ) {
-    Channel
-        .value(file( "${params.host_fasta}" ))
-        .set { ch_host_fasta }
-} else {
-    ch_host_fasta = Channel.empty()
-}
-
 ////////////////////////////////////////////////////
 /* --          CONFIG FILES                    -- */
 ////////////////////////////////////////////////////
 
 ch_multiqc_config        = file("$projectDir/assets/multiqc_config.yaml", checkIfExists: true)
 ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
-
 
 ////////////////////////////////////////////////////
 /* --           RUN MAIN WORKFLOW              -- */
