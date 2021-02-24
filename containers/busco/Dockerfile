@@ -11,10 +11,10 @@ RUN apt-get update
 RUN apt-get install -y libxt6
 
 # Add conda installation dir to PATH (instead of doing 'conda activate')
-ENV PATH /opt/conda/envs/nf-core-mag-busco-1.2.0/bin:$PATH
+ENV PATH /opt/conda/envs/nf-core-mag-busco-1.3.0dev/bin:$PATH
 
 # Dump the details of the installed packages to a file for posterity
-RUN conda env export --name nf-core-mag-busco-1.2.0 > nf-core-mag-busco-1.2.0.yml
+RUN conda env export --name nf-core-mag-busco-1.3.0dev > nf-core-mag-busco-1.3.0dev.yml
 
 # Instruct R processes to use these empty files instead of clashing with a local version
 RUN touch .Rprofile
