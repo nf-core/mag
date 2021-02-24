@@ -9,7 +9,7 @@ process BOWTIE2_ASSEMBLY {
 
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:"assembler/${assembly_id}_QC") }
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:"${assembler}/${assembly_id}_QC") }
 
     conda (params.enable_conda ? "bioconda::bowtie2=2.4.2=py38h1c8e9b9_1 bioconda::samtools=1.11=h6270b1f_0 conda-forge::pigz=2.3.4=hed695b0_1" : null)  // TODO ?
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
@@ -35,7 +35,7 @@ process BOWTIE2_ASSEMBLY {
     bowtie2 -p "${task.cpus}" -x \$INDEX $input 2> "${name}.bowtie2.log" | \
         samtools view -@ "${task.cpus}" -bS | \
         samtools sort -@ "${task.cpus}" -o "${name}.bam"
-        samtools index "${name}.bam"
+    samtools index "${name}.bam"
 
     if [ ${name} = "${assembler}-${assembly_id}-${assembly_id}" ] ; then
         mv "${name}.bowtie2.log" "${assembler}-${assembly_id}.bowtie2.log"

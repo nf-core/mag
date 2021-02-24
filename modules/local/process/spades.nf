@@ -33,6 +33,7 @@ process SPADES {
     if ( !params.spades_fix_cpus || task.cpus == params.spades_fix_cpus )
         """
         metaspades.py \
+            ${params.spades_options} \
             --threads "${task.cpus}" \
             --memory $maxmem \
             --pe1-1 ${reads[0]} \

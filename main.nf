@@ -475,7 +475,7 @@ workflow {
             .groupTuple(by: 0)
             .map { group, metas, reads ->
                     def meta = [:]
-                    meta.id          = "group$group"
+                    meta.id          = "group-$group"
                     meta.group       = group
                     meta.single_end  = params.single_end   // TODO only if single-end is global!
                     if (!params.single_end) [ meta, reads.collect { it[0] }, reads.collect { it[1] } ]
@@ -499,7 +499,7 @@ workflow {
             .groupTuple(by: 0)
             .map { group, metas, reads ->
                 def meta = [:]
-                meta.id          = "group$group"
+                meta.id          = "group-$group"
                 meta.group       = group
                 [ meta, reads.collect { it } ]
             }
