@@ -35,15 +35,13 @@ process BUSCO {
         cp_augustus_config = "N"
 
     """
-    R --version
-
     # get path to custom config file for busco (already configured during conda installation)
     busco_path="\$(which busco)"
     config_file="\${busco_path%bin/busco}share/busco/config.ini"
 
     # ensure augustus has write access to config directory
     if [ ${cp_augustus_config} = "Y" ] ; then
-        cp -r $AUGUSTUS_CONFIG_PATH augustus_config/
+        cp -r /usr/local/config/ augustus_config/
         export AUGUSTUS_CONFIG_PATH=augustus_config
     fi
 
