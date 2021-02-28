@@ -13,9 +13,9 @@ process BUSCO {
 
     conda (params.enable_conda ? "bioconda::busco=4.1.4" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/busco:4.1.4--py_1"
+        container "https://depot.galaxyproject.org/singularity/busco:4.1.4--py_2"
     } else {
-        container "quay.io/biocontainers/busco:4.1.4--py_1"
+        container "quay.io/biocontainers/busco:4.1.4--py_2"
     }
 
     input:
