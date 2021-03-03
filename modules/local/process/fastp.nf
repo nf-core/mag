@@ -43,7 +43,6 @@ process FASTP {
           -i "${reads[0]}" $pe_input \
           $pe_output1 $pe_output2
 
-    fastp -v 2> ${software}.version.txt
-    cat ${software}.version.txt
+    echo \$(fastp --version 2>&1) | sed 's/fastp //' > ${software}.version.txt
     """
 }

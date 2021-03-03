@@ -25,14 +25,18 @@ process MEGAHIT {
     tuple val("MEGAHIT"), val(meta), path("MEGAHIT/${meta.id}.contigs.fa"), emit: assembly
     file("MEGAHIT/*.log")
     file("MEGAHIT/${meta.id}.contigs.fa.gz")
+    path '*.version.txt'                                                  , emit: version
 
     script:
+    def software = getSoftwareName(task.process)
     def input = params.single_end ? "-r \"" + reads1.join(",") + "\"" : "-1 \"" + reads1.join(",") + "\" -2 \"" + reads2.join(",") + "\""
     mem = task.memory.toBytes()
     if ( !params.megahit_fix_cpu_1 || task.cpus == 1 )
         """
         megahit ${params.megahit_options} -t "${task.cpus}" -m $mem $input -o MEGAHIT --out-prefix "${meta.id}"
         gzip -c "MEGAHIT/${meta.id}.contigs.fa" > "MEGAHIT/${meta.id}.contigs.fa.gz"
+
+        megahit --version | sed "s/MEGAHIT v//" > ${software}.version.txt
         """
     else
         error "ERROR: '--megahit_fix_cpu_1' was specified, but not succesfully applied. Likely this is caused by changed process properties in a custom config file."

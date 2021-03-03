@@ -23,10 +23,13 @@ process KRONA {
     path  "taxonomy/taxonomy.tab"
 
     output:
-    path  "*.html"
+    path "*.html"
+    path '*.version.txt', emit: version
 
     script:
+    def software = getSoftwareName(task.process)
     """
     ktImportTaxonomy "$report" -tax taxonomy
+    echo \$(ktImportTaxonomy 2>&1) | sed 's/^.*KronaTools //; s/ - ktImportTaxonomy.*//' > ${software}.version.txt
     """
 }

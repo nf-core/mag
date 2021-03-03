@@ -22,10 +22,13 @@ process QUAST {
     tuple val(assembler), val(meta), path(assembly)
 
     output:
-    file("${meta.id}_QC/*")
+    path "${meta.id}_QC/*" , emit: qc
+    path '*.version.txt'   , emit: version
 
     script:
+    def software = getSoftwareName(task.process)
     """
     metaquast.py --threads "${task.cpus}" --rna-finding --max-ref-number 0 -l "${assembler}-${meta.id}" "${assembly}" -o "${meta.id}_QC"
+    metaquast.py --version | sed "s/QUAST v//; s/ (MetaQUAST mode)//" > ${software}.version.txt
     """
 }

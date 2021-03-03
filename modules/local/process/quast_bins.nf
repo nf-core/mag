@@ -24,8 +24,10 @@ process QUAST_BINS {
     output:
     path "QUAST/*", type: 'dir'
     path "QUAST/*-quast_summary.tsv", emit: quast_bin_summaries
+    path '*.version.txt'            , emit: version
 
     script:
+    def software = getSoftwareName(task.process)
     """
     BINS=\$(echo \"$bins\" | sed 's/[][]//g')
     IFS=', ' read -r -a bins <<< \"\$BINS\"
@@ -37,5 +39,7 @@ process QUAST_BINS {
             tail -n +2 "QUAST/\${bin}/transposed_report.tsv" >> "QUAST/${assembler}-${name}-quast_summary.tsv"
         fi
     done
+
+    metaquast.py --version | sed "s/QUAST v//; s/ (MetaQUAST mode)//" > ${software}_bins.version.txt
     """
 }

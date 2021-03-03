@@ -25,8 +25,10 @@ process KRAKEN2 {
     output:
     tuple val("kraken2"), val(meta), path("results.krona"), emit: results_for_krona
     path  "kraken2_report.txt"
+    path  '*.version.txt'                                  , emit: version
 
     script:
+    def software = getSoftwareName(task.process)
     def input = meta.single_end ? "\"${reads}\"" :  "--paired \"${reads[0]}\" \"${reads[1]}\""
     """
     kraken2 \
@@ -37,5 +39,7 @@ process KRAKEN2 {
         $input \
         > kraken2.kraken
     cat kraken2.kraken | cut -f 2,3 > results.krona
+
+    echo \$(kraken2 --version 2>&1) | sed 's/Kraken version //; s/ Copyright.*//' > ${software}.version.txt
     """
 }

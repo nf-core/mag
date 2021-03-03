@@ -41,6 +41,6 @@ process BOWTIE2_ASSEMBLY {
         mv "${name}.bowtie2.log" "${assembler}-${assembly_id}.bowtie2.log"
     fi
 
-    echo \$(bowtie2 --version 2>&1) | sed 's/^.*bowtie2-align-s version //; s/ .*\$//' > ${software}.version.txt
+    echo \$(bowtie2 --version 2>&1) | sed 's/^.*bowtie2-align-s version //; s/ .*\$//' > ${software}_assembly.version.txt
     """
 }

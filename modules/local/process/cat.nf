@@ -29,8 +29,10 @@ process CAT {
     path("raw/*.predicted_proteins.gff")
     path("raw/*.log")
     path("raw/*.bin2classification.txt")
+    path '*.version.txt'                , emit: version
 
     script:
+    def software = getSoftwareName(task.process)
     """
     CAT bins -b "bins/" -d database/ -t taxonomy/ -n "${task.cpus}" -s .fa --top 6 -o "${assembler}-${name}" --I_know_what_Im_doing
     CAT add_names -i "${assembler}-${name}.ORF2LCA.txt" -o "${assembler}-${name}.ORF2LCA.names.txt" -t taxonomy/
@@ -41,5 +43,7 @@ process CAT {
     mv "*.predicted_proteins.gff" raw/
     mv "*.log" raw/
     mv "*.bin2classification.txt" raw/
+
+    CAT --version | sed "s/CAT v//; s/(.*//" > ${software}.version.txt
     """
 }

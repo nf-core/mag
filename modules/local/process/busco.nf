@@ -27,8 +27,10 @@ process BUSCO {
     path("${bin}_busco.log")
     path("${bin}_buscos.faa.gz") optional true
     path("${bin}_buscos.fna.gz") optional true
+    path '*.version.txt'                                                        , emit: version
 
     script:
+    def software = getSoftwareName(task.process)
     if( workflow.profile.toString().indexOf("conda") == -1)
         cp_augustus_config = "Y"
     else
@@ -78,5 +80,8 @@ process BUSCO {
         cat BUSCO/run_\${db_name}/busco_sequences/single_copy_busco_sequences/*fna | gzip >${bin}_buscos.fna.gz
         break
     done
+
+    busco --version
+    busco --version | sed "s/BUSCO //" > ${software}.version.txt
     """
 }

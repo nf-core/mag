@@ -22,11 +22,13 @@ process NANOPLOT {
     tuple val(meta), path(reads)
 
     output:
-    file '*.png'
-    file '*.html'
-    file '*.txt'
+    path '*.png'
+    path '*.html'
+    path '*.txt'
+    path '*.version.txt', emit: version
 
     script:
+    def software = getSoftwareName(task.process)
     def prefix = options.suffix ? "-p ${options.suffix}_" : ''
     def title  = options.suffix ? "${meta.id}_${options.suffix}" : "${meta.id}"
     """
@@ -35,5 +37,6 @@ process NANOPLOT {
              --title ${title} \
              -c darkblue \
              --fastq ${reads}
+    NanoPlot --version | sed -e "s/NanoPlot //g" > ${software}.version.txt
     """
 }

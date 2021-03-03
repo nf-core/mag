@@ -24,13 +24,17 @@ process NANOLYSE {
 
     output:
     tuple val(meta), path("${meta.id}_nanolyse.fastq.gz"), emit: reads
-    path  "${meta.id}_nanolyse.log"
+    path  "${meta.id}_nanolyse.log"                      , emit: log
+    path '*.version.txt'                                 , emit: version
 
     script:
+    def software = getSoftwareName(task.process)
     """
     cat ${reads} | NanoLyse --reference $nanolyse_db | gzip > ${meta.id}_nanolyse.fastq.gz
     echo "NanoLyse reference: $params.lambda_reference" >${meta.id}_nanolyse.log
     cat ${reads} | echo "total reads before NanoLyse: \$((`wc -l`/4))" >>${meta.id}_nanolyse.log
     gunzip -c ${meta.id}_nanolyse.fastq.gz | echo "total reads after NanoLyse: \$((`wc -l`/4))" >> ${meta.id}_nanolyse.log
+
+    NanoLyse --version | sed -e "s/NanoLyse //g" > ${software}.version.txt
     """
 }

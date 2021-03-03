@@ -396,13 +396,15 @@ workflow {
     NANOPLOT_RAW (
         ch_raw_long_reads
     )
+    ch_software_versions = ch_software_versions.mix(NANOPLOT_RAW.out.version.first().ifEmpty(null))
 
     ch_long_reads = ch_raw_long_reads
     if (!params.skip_adapter_trimming) {
         PORECHOP (
             ch_raw_long_reads
         )
-        ch_long_reads = PORECHOP.out
+        ch_long_reads = PORECHOP.out.reads
+        ch_software_versions = ch_software_versions.mix(PORECHOP.out.version.first().ifEmpty(null))
     }
 
     if (!params.keep_lambda) {
@@ -411,6 +413,7 @@ workflow {
             ch_nanolyse_db
         )
         ch_long_reads = NANOLYSE.out.reads
+        ch_software_versions = ch_software_versions.mix(NANOLYSE.out.version.first().ifEmpty(null))
     }
 
     // join long and short reads by sample name
@@ -427,7 +430,8 @@ workflow {
     FILTLONG (
         ch_short_and_long_reads
     )
-    ch_long_reads = FILTLONG.out
+    ch_long_reads = FILTLONG.out.reads
+    ch_software_versions = ch_software_versions.mix(FILTLONG.out.version.first().ifEmpty(null))
 
     NANOPLOT_FILTERED (
         ch_long_reads
@@ -443,6 +447,7 @@ workflow {
         ch_short_reads,
         CENTRIFUGE_DB_PREPARATION.out.collect()
     )
+    ch_software_versions = ch_software_versions.mix(CENTRIFUGE.out.version.first().ifEmpty(null))
 
     KRAKEN2_DB_PREPARATION (
         ch_kraken2_db_file
@@ -451,6 +456,7 @@ workflow {
         ch_short_reads,
         KRAKEN2_DB_PREPARATION.out.collect()
     )
+    ch_software_versions = ch_software_versions.mix(KRAKEN2.out.version.first().ifEmpty(null))
 
     if (( params.centrifuge_db || params.kraken2_db ) && !params.skip_krona){
         KRONA_DB ()
@@ -458,6 +464,7 @@ workflow {
             CENTRIFUGE.out.results_for_krona.mix(KRAKEN2.out.results_for_krona),
             KRONA_DB.out.collect()
         )
+        ch_software_versions = ch_software_versions.mix(KRONA.out.version.first().ifEmpty(null))
     }
 
     /*
@@ -527,11 +534,13 @@ workflow {
     if (!params.skip_megahit){
         MEGAHIT ( ch_short_reads_grouped )
         ch_assemblies = ch_assemblies.mix(MEGAHIT.out.assembly)
+        ch_software_versions = ch_software_versions.mix(MEGAHIT.out.version.first().ifEmpty(null))
     }
 
     if (!params.single_end && !params.skip_spades){
         SPADES ( ch_short_reads_spades )
         ch_assemblies = ch_assemblies.mix(SPADES.out.assembly)
+        ch_software_versions = ch_software_versions.mix(SPADES.out.version.first().ifEmpty(null))
     }
 
     if (!params.single_end && !params.skip_spadeshybrid){
@@ -545,12 +554,14 @@ workflow {
             .set { ch_reads_spadeshybrid }
         SPADESHYBRID ( ch_reads_spadeshybrid )
         ch_assemblies = ch_assemblies.mix(SPADESHYBRID.out.assembly)
+        ch_software_versions = ch_software_versions.mix(SPADESHYBRID.out.version.first().ifEmpty(null))
     }
 
     ch_quast_multiqc = Channel.empty()
     if (!params.skip_quast){
         QUAST ( ch_assemblies )
-        ch_quast_multiqc = QUAST.out
+        ch_quast_multiqc = QUAST.out.qc
+        ch_software_versions = ch_software_versions.mix(QUAST.out.version.first().ifEmpty(null))
     }
 
     /*
@@ -586,6 +597,7 @@ workflow {
         }
         // TODO use already meta?
         BOWTIE2_ASSEMBLY ( ch_bowtie2_input )
+        ch_software_versions = ch_software_versions.mix(BOWTIE2_ASSEMBLY.out.version.first().ifEmpty(null))
         ch_bowtie2_assembly_multiqc = BOWTIE2_ASSEMBLY.out.log.map { assembler, assembly_id, reads_id, log -> if (assembly_id == reads_id) {return [ log ]} }
         // group mappings for one assembly
         ch_grouped_mappings = BOWTIE2_ASSEMBLY.out.mappings
@@ -593,6 +605,7 @@ workflow {
             .map { assembler, assembly_id, assembly, bams, bais -> [assembler, assembly_id, assembly[0], bams, bais] }     // multiple symlinks to the same assembly -> use first
 
         METABAT2 ( ch_grouped_mappings )
+        ch_software_versions = ch_software_versions.mix(METABAT2.out.version.first().ifEmpty(null))
         // TODO out meta !
         /*
         * BUSCO: Quantitative measures for the assessment of genome assembly
@@ -603,6 +616,7 @@ workflow {
             BUSCO_DB_PREPARATION.out.db.collect()
         )
         ch_busco_multiqc = BUSCO.out.summary.map{it[2]}
+        ch_software_versions = ch_software_versions.mix(BUSCO.out.version.first().ifEmpty(null))
         // group by assembler and sample name for plotting
         BUSCO_PLOT ( BUSCO.out.summary.groupTuple(by: [0,1]) )
         BUSCO_SUMMARY ( BUSCO.out.summary.map{it[2]}.collect() )
@@ -611,6 +625,7 @@ workflow {
 
         if (!params.skip_quast){
             QUAST_BINS ( METABAT2.out.bins )
+            ch_software_versions = ch_software_versions.mix(QUAST_BINS.out.version.first().ifEmpty(null))
             MERGE_QUAST_AND_BUSCO (
                 QUAST_BINS.out.quast_bin_summaries.collect(),
                 BUSCO_SUMMARY.out
@@ -625,6 +640,7 @@ workflow {
             METABAT2.out.bins,
             CAT_DB.out.collect()
         )
+        ch_software_versions = ch_software_versions.mix(CAT.out.version.first().ifEmpty(null))
     }
 
     /*
@@ -657,7 +673,7 @@ workflow {
             ch_busco_multiqc.collect().ifEmpty([])
         )
         multiqc_report       = MULTIQC.out.report.toList()
-        ch_software_versions = ch_software_versions.mix(MULTIQC.out.version.ifEmpty(null))
+        //ch_software_versions = ch_software_versions.mix(MULTIQC.out.version.ifEmpty(null)) // TODO ?
     }
 }
 

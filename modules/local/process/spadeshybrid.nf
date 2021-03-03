@@ -27,8 +27,10 @@ process SPADESHYBRID {
     file("${meta.id}_contigs.fasta.gz")
     file("${meta.id}_scaffolds.fasta.gz")
     file("${meta.id}_graph.gfa.gz")
+    path '*.version.txt'                                                    , emit: version
 
     script:
+    def software = getSoftwareName(task.process)
     maxmem = task.memory.toGiga()
     if ( !params.spadeshybrid_fix_cpus || task.cpus == params.spadeshybrid_fix_cpus )
         """
@@ -47,6 +49,8 @@ process SPADESHYBRID {
         gzip "${meta.id}_contigs.fasta"
         gzip "${meta.id}_graph.gfa"
         gzip -c "${meta.id}_scaffolds.fasta" > "${meta.id}_scaffolds.fasta.gz"
+
+        metaspades.py --version | sed "s/SPAdes v//; s/ \\[.*//" > ${software}.version.txt
         """
     else
         error "ERROR: '--spadeshybrid_fix_cpus' was specified, but not succesfully applied. Likely this is caused by changed process properties in a custom config file."

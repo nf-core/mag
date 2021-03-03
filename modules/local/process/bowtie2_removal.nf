@@ -51,7 +51,7 @@ process BOWTIE2_REMOVAL {
         fi
         rm -f ${prefix}.mapped_*.fastq.gz
 
-        bowtie2 --version > ${software}.version.txt
+        echo \$(bowtie2 --version 2>&1) | sed 's/^.*bowtie2-align-s version //; s/ .*\$//' > ${software}.version.txt
         """
     } else {
         """
@@ -68,7 +68,7 @@ process BOWTIE2_REMOVAL {
         fi
         rm -f ${prefix}.mapped.fastq.gz
 
-        bowtie2 --version > ${software}.version.txt
+        echo \$(bowtie2 --version 2>&1) | sed 's/^.*bowtie2-align-s version //; s/ .*\$//' > ${software}.version.txt
         """
     }
 }

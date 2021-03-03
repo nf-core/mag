@@ -18,9 +18,11 @@ process FILTLONG {
     tuple val(meta), path(long_reads), path(short_reads_1), path(short_reads_2)
 
     output:
-    tuple val(meta), path("${meta.id}_lr_filtlong.fastq.gz")
+    tuple val(meta), path("${meta.id}_lr_filtlong.fastq.gz"), emit: reads
+    path '*.version.txt'                                    , emit: version
 
     script:
+    def software = getSoftwareName(task.process)
     """
     filtlong \
         -1 ${short_reads_1} \
@@ -30,6 +32,8 @@ process FILTLONG {
         --trim \
         --length_weight ${params.longreads_length_weight} \
         ${long_reads} | gzip > ${meta.id}_lr_filtlong.fastq.gz
+
+    filtlong --version | sed -e "s/Filtlong v//g" > ${software}.version.txt
     """
 }
 

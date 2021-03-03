@@ -26,8 +26,10 @@ process METABAT2 {
     tuple val(assembler), val(name), path("MetaBAT2/*.fa"), emit: bins
     path "${assembler}-${assembly}-depth.txt.gz"
     path "MetaBAT2/discarded/*"
+    path '*.version.txt'                                  , emit: version
 
     script:
+    def software = getSoftwareName(task.process)
     """
     OMP_NUM_THREADS=${task.cpus} jgi_summarize_bam_contig_depths --outputDepth depth.txt ${bam}
     gzip -c depth.txt > "${assembler}-${assembly}-depth.txt.gz"
@@ -44,5 +46,7 @@ process METABAT2 {
 
     # mv splitted file so that it doesnt end up in following processes
     mv "MetaBAT2/${assembler}-${name}.unbinned.fa" "${assembler}-${name}.unbinned.fa"
+
+    echo \$(metabat2 --help 2>&1) | sed "s/^.*version 2\\://; s/ (Bioconda.*//" > ${software}.version.txt
     """
 }
