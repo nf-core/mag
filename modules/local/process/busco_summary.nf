@@ -18,10 +18,10 @@ process BUSCO_SUMMARY {
     }
 
     input:
-    file("short_summary.*.txt")
+    path "short_summary.*.txt"
 
     output:
-    file("busco_summary.txt")
+    path "busco_summary.txt"
 
     script:
     """

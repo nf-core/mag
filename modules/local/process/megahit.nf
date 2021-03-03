@@ -23,8 +23,8 @@ process MEGAHIT {
 
     output:
     tuple val("MEGAHIT"), val(meta), path("MEGAHIT/${meta.id}.contigs.fa"), emit: assembly
-    file("MEGAHIT/*.log")
-    file("MEGAHIT/${meta.id}.contigs.fa.gz")
+    path "MEGAHIT/*.log"
+    path "MEGAHIT/${meta.id}.contigs.fa.gz"
     path '*.version.txt'                                                  , emit: version
 
     script:

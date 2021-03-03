@@ -23,10 +23,10 @@ process SPADESHYBRID {
 
     output:
     tuple val("SPAdesHybrid"), val(meta), path("${meta.id}_scaffolds.fasta"), emit: assembly
-    file("${meta.id}.log")
-    file("${meta.id}_contigs.fasta.gz")
-    file("${meta.id}_scaffolds.fasta.gz")
-    file("${meta.id}_graph.gfa.gz")
+    path "${meta.id}.log"
+    path "${meta.id}_contigs.fasta.gz"
+    path "${meta.id}_scaffolds.fasta.gz"
+    path "${meta.id}_graph.gfa.gz"
     path '*.version.txt'                                                    , emit: version
 
     script:
