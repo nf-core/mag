@@ -329,7 +329,6 @@ def multiqc_report = []
 workflow {
 
     ch_software_versions = Channel.empty()
-    // TODO do we still need hybrid boolean value here?
 
     /*
     ================================================================================
