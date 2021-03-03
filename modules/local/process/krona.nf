@@ -13,9 +13,9 @@ process KRONA {
 
     conda (params.enable_conda ? "bioconda::krona=2.7.1" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/krona:2.7.1--pl526_4"
+        container "https://depot.galaxyproject.org/singularity/krona:2.7.1--pl526_5"
     } else {
-        container "quay.io/biocontainers/krona:2.7.1--pl526_4"
+        container "quay.io/biocontainers/krona:2.7.1--pl526_5"
     }
 
     input:
