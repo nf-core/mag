@@ -84,7 +84,7 @@ include {
 } from './modules/local/process/functions'
 
 // Local: Sub-workflows
-include { BUSCO_QC            } from './modules/local/subworkflow/busco'              addParams( busco_db_options: modules['busco_db_preparation'], busco_options: modules['busco'], busco_plot_options: modules['busco_plot'], busco_summary_options: modules['busco_summary'])
+include { BUSCO_QC            } from './modules/local/subworkflow/busco_qc'              addParams( busco_db_options: modules['busco_db_preparation'], busco_options: modules['busco'], busco_plot_options: modules['busco_plot'], busco_summary_options: modules['busco_summary'])
 include { METABAT2_BINNING    } from './modules/local/subworkflow/metabat2_binning'   addParams( bowtie2_index_options: [:], bowtie2_align_options: modules['bowtie2_assembly'], metabat2_options: modules['metabat2'])
 
 // nf-core/modules: Modules
