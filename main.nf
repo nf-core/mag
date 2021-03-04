@@ -71,9 +71,6 @@ include { MEGAHIT                                 } from './modules/local/proces
 include { SPADES                                  } from './modules/local/process/spades'                      addParams( options: modules['spades']               )
 include { SPADESHYBRID                            } from './modules/local/process/spadeshybrid'                addParams( options: modules['spadeshybrid']         )
 include { QUAST                                   } from './modules/local/process/quast'                       addParams( options: modules['quast']                )
-include { BOWTIE2_INDEX_ASSEMBLY                  } from './modules/local/process/bowtie2_index_assembly'      addParams( options: [:]                             )
-include { BOWTIE2_ASSEMBLY                        } from './modules/local/process/bowtie2_assembly'            addParams( options: modules['bowtie2_assembly']     )
-include { METABAT2                                } from './modules/local/process/metabat2'                    addParams( options: modules['metabat2']             )
 include { QUAST_BINS                              } from './modules/local/process/quast_bins'                  addParams( options: modules['quast_bins']           )
 include { MERGE_QUAST_AND_BUSCO                   } from './modules/local/process/merge_quast_and_busco'       addParams( options: modules['merge_quast_and_busco'])
 include { CAT_DB                                  } from './modules/local/process/cat_db'                      addParams( options: [:]                             )
@@ -86,8 +83,8 @@ include {
 } from './modules/local/process/functions'
 
 // Local: Sub-workflows
-include { BUSCO_QC    } from './modules/local/subworkflow/busco'         addParams( busco_db_options: modules['busco_db_preparation'], busco_options: modules['busco'], busco_plot_options: modules['busco_plot'], busco_summary_options: modules['busco_summary'])
-
+include { BUSCO_QC            } from './modules/local/subworkflow/busco'              addParams( busco_db_options: modules['busco_db_preparation'], busco_options: modules['busco'], busco_plot_options: modules['busco_plot'], busco_summary_options: modules['busco_summary'])
+include { METABAT2_BINNING    } from './modules/local/subworkflow/metabat2_binning'   addParams( bowtie2_index_options: [:], bowtie2_align_options: modules['bowtie2_assembly'], metabat2_options: modules['metabat2'])
 
 // nf-core/modules: Modules
 include { FASTQC as FASTQC_RAW     } from './modules/nf-core/software/fastqc/main'              addParams( options: modules['fastqc_raw']            )
@@ -570,53 +567,26 @@ workflow {
     ch_bowtie2_assembly_multiqc = Channel.empty()
     ch_busco_multiqc            = Channel.empty()
     if (!params.skip_binning){
-        // build bowtie2 index for all assemblies
-        BOWTIE2_INDEX_ASSEMBLY ( ch_assemblies )
 
-        // combine assemblies with sample reads for binning depending on specified mapping mode
-        // add dummy to allow combining by index
-        ch_short_reads_bowtie2 = ch_short_reads.map{ meta, reads -> ["dummy", meta.id, meta.group, reads] }
-        //ch_bowtie2_input = Channel.empty()
-        if (params.binning_map_mode == 'all'){
-            ch_bowtie2_input = BOWTIE2_INDEX_ASSEMBLY.out.assembly_index
-                .combine(ch_short_reads_bowtie2)            // combine assemblies with reads of all samples
-                .map{ assembler, assembly_meta, assembly, index, dummy, reads_id, reads_group, reads -> [assembler, assembly_meta.id, assembly, index, reads_id, reads] }
-        } else if (params.binning_map_mode == 'group'){
-            ch_bowtie2_input = BOWTIE2_INDEX_ASSEMBLY.out.assembly_index
-                .map { assembler, meta, assembly, index -> [assembler, meta.id, meta.group, assembly, index] }
-                .combine(ch_short_reads_bowtie2, by: 2)     // combine assemblies with reads of samples from same group
-                .map{ group, assembler, assembly_id, assembly, index, dummy, reads_id, reads -> [assembler, assembly_id, assembly, index, reads_id, reads] }
-        } else {
-            ch_bowtie2_input = BOWTIE2_INDEX_ASSEMBLY.out.assembly_index
-                .map { assembler, meta, assembly, index -> [assembler, meta.id, meta.group, assembly, index] }
-                .combine(ch_short_reads_bowtie2, by: 1)     // combine assemblies (not co-assembled) with reads from own sample
-                .map{ name, assembler, assembly_group, assembly, index, dummy, reads_group, reads -> [assembler, name, assembly, index, name, reads] }
-        }
-        // TODO use already meta?
-        BOWTIE2_ASSEMBLY ( ch_bowtie2_input )
-        ch_software_versions = ch_software_versions.mix(BOWTIE2_ASSEMBLY.out.version.first().ifEmpty(null))
-        ch_bowtie2_assembly_multiqc = BOWTIE2_ASSEMBLY.out.log.map { assembler, assembly_id, reads_id, log -> if (assembly_id == reads_id) {return [ log ]} }
-        // group mappings for one assembly
-        ch_grouped_mappings = BOWTIE2_ASSEMBLY.out.mappings
-            .groupTuple(by:[0,1]) // TODO groupTuple meta? effect?
-            .map { assembler, assembly_id, assembly, bams, bais -> [assembler, assembly_id, assembly[0], bams, bais] }     // multiple symlinks to the same assembly -> use first
-
-        METABAT2 ( ch_grouped_mappings )
-        ch_software_versions = ch_software_versions.mix(METABAT2.out.version.first().ifEmpty(null))
-        // TODO out meta !
+        METABAT2_BINNING (
+            ch_assemblies,
+            ch_short_reads
+        )
+        ch_software_versions = ch_software_versions.mix(METABAT2_BINNING.out.bowtie2_version.first().ifEmpty(null))
+        ch_software_versions = ch_software_versions.mix(METABAT2_BINNING.out.metabat2_version.first().ifEmpty(null))
 
         /*
         * BUSCO subworkflow: Quantitative measures for the assessment of genome assembly
         */
         BUSCO_QC (
             ch_busco_db_file,
-            METABAT2.out.bins.transpose()
+            METABAT2_BINNING.out.bins.transpose()
         )
         ch_busco_multiqc = BUSCO_QC.out.multiqc
         ch_software_versions = ch_software_versions.mix(BUSCO_QC.out.version.first().ifEmpty(null))
 
         if (!params.skip_quast){
-            QUAST_BINS ( METABAT2.out.bins )
+            QUAST_BINS ( METABAT2_BINNING.out.bins )
             ch_software_versions = ch_software_versions.mix(QUAST_BINS.out.version.first().ifEmpty(null))
             MERGE_QUAST_AND_BUSCO (
                 QUAST_BINS.out.quast_bin_summaries.collect(),
@@ -629,7 +599,7 @@ workflow {
          */
         CAT_DB ( ch_cat_db_file )
         CAT ( 
-            METABAT2.out.bins,
+            METABAT2_BINNING.out.bins,
             CAT_DB.out.collect()
         )
         ch_software_versions = ch_software_versions.mix(CAT.out.version.first().ifEmpty(null))
