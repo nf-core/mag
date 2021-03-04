@@ -67,6 +67,7 @@ include { KRONA_DB                                } from './modules/local/proces
 include { KRONA                                   } from './modules/local/process/krona'                       addParams( options: modules['krona']                )
 include { POOL_SINGLE_READS                       } from './modules/local/process/pool_single_reads'           addParams( options: [:]                             )
 include { POOL_PAIRED_READS                       } from './modules/local/process/pool_paired_reads'           addParams( options: [:]                             )
+include { POOL_SINGLE_READS as POOL_LONG_READS    } from './modules/local/process/pool_single_reads'           addParams( options: [:]                             )
 include { MEGAHIT                                 } from './modules/local/process/megahit'                     addParams( options: modules['megahit']              )
 include { SPADES                                  } from './modules/local/process/spades'                      addParams( options: modules['spades']               )
 include { SPADESHYBRID                            } from './modules/local/process/spadeshybrid'                addParams( options: modules['spadeshybrid']         )
@@ -467,7 +468,7 @@ workflow {
     ================================================================================
     */
 
-    // Co-assembly: prepare grouping for MEGAHIT and pool reads for SPAdes
+    // Co-assembly: prepare grouping for MEGAHIT and for pooling for SPAdes
     if (params.coassemble_group) {
         // short reads
         // group and set group as new id
@@ -478,21 +479,11 @@ workflow {
                     def meta = [:]
                     meta.id          = "group-$group"
                     meta.group       = group
-                    meta.single_end  = params.single_end   // TODO only if single-end is global!
+                    meta.single_end  = params.single_end
                     if (!params.single_end) [ meta, reads.collect { it[0] }, reads.collect { it[1] } ]
                     else [ meta, reads.collect { it }, [] ]
             }
             .set { ch_short_reads_grouped }
-
-        if (!params.single_end && (!params.skip_spades || !params.skip_spadeshybrid)){
-            if (params.single_end){
-                POOL_SINGLE_READS ( ch_short_reads_grouped )
-                ch_short_reads_spades = POOL_SINGLE_READS.out
-            } else {
-                POOL_PAIRED_READS ( ch_short_reads_grouped )
-                ch_short_reads_spades = POOL_PAIRED_READS.out
-            }
-        }
         // long reads
         // group and set group as new id
         ch_long_reads
@@ -505,30 +496,44 @@ workflow {
                 [ meta, reads.collect { it } ]
             }
             .set { ch_long_reads_grouped }
-
-        if (!params.single_end && !params.skip_spadeshybrid){
-            POOL_SINGLE_READS ( ch_long_reads_grouped )
-            ch_long_reads_spades = POOL_SINGLE_READS.out
-        }
     } else {
         ch_short_reads
             .map { meta, reads ->
                     if (!params.single_end){ [ meta, [reads[0]], [reads[1]] ] }
                     else [ meta, [reads], [] ] }
             .set { ch_short_reads_grouped }
-
-        ch_short_reads_spades = ch_short_reads
-
-        ch_long_reads
-            .map { meta, reads -> [ meta, [reads] ] }
-            .set { ch_long_reads_spades }
     }
+
     // TODO think about channel naming!
     ch_assemblies = Channel.empty()
     if (!params.skip_megahit){
         MEGAHIT ( ch_short_reads_grouped )
         ch_assemblies = ch_assemblies.mix(MEGAHIT.out.assembly)
         ch_software_versions = ch_software_versions.mix(MEGAHIT.out.version.first().ifEmpty(null))
+    }
+
+    // Co-assembly: pool reads for SPAdes
+    if (params.coassemble_group) {
+        // short reads
+        if (!params.single_end && (!params.skip_spades || !params.skip_spadeshybrid)){
+            if (params.single_end){
+                POOL_SINGLE_READS ( ch_short_reads_grouped )
+                ch_short_reads_spades = POOL_SINGLE_READS.out
+            } else {
+                POOL_PAIRED_READS ( ch_short_reads_grouped )
+                ch_short_reads_spades = POOL_PAIRED_READS.out
+            }
+        }
+        // long reads
+        if (!params.single_end && !params.skip_spadeshybrid){
+            POOL_LONG_READS ( ch_long_reads_grouped )
+            ch_long_reads_spades = POOL_LONG_READS.out
+        }
+    } else {
+        ch_short_reads_spades = ch_short_reads
+        ch_long_reads
+            .map { meta, reads -> [ meta, [reads] ] }
+            .set { ch_long_reads_spades }
     }
 
     if (!params.single_end && !params.skip_spades){
