@@ -6,10 +6,6 @@ def options    = initOptions(params.options)
 
 process BOWTIE2_INDEX {
     tag "$fasta"
-    label 'process_high'
-    publishDir "${params.outdir}",
-        mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:'') }
 
     conda (params.enable_conda ? 'bioconda::bowtie2=2.4.2' : null) // TODO use previous version, update tools separately!!!
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
