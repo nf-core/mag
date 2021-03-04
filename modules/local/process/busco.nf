@@ -81,7 +81,6 @@ process BUSCO {
         break
     done
 
-    busco --version
     busco --version | sed "s/BUSCO //" > ${software}.version.txt
     """
 }

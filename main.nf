@@ -74,10 +74,6 @@ include { QUAST                                   } from './modules/local/proces
 include { BOWTIE2_INDEX_ASSEMBLY                  } from './modules/local/process/bowtie2_index_assembly'      addParams( options: [:]                             )
 include { BOWTIE2_ASSEMBLY                        } from './modules/local/process/bowtie2_assembly'            addParams( options: modules['bowtie2_assembly']     )
 include { METABAT2                                } from './modules/local/process/metabat2'                    addParams( options: modules['metabat2']             )
-include { BUSCO_DB_PREPARATION                    } from './modules/local/process/busco_db_preparation'        addParams( options: modules['busco_db_preparation'] )
-include { BUSCO                                   } from './modules/local/process/busco'                       addParams( options: modules['busco']                )
-include { BUSCO_PLOT                              } from './modules/local/process/busco_plot'                  addParams( options: modules['busco_plot']           )
-include { BUSCO_SUMMARY                           } from './modules/local/process/busco_summary'               addParams( options: modules['busco_summary']        )
 include { QUAST_BINS                              } from './modules/local/process/quast_bins'                  addParams( options: modules['quast_bins']           )
 include { MERGE_QUAST_AND_BUSCO                   } from './modules/local/process/merge_quast_and_busco'       addParams( options: modules['merge_quast_and_busco'])
 include { CAT_DB                                  } from './modules/local/process/cat_db'                      addParams( options: [:]                             )
@@ -90,6 +86,8 @@ include {
 } from './modules/local/process/functions'
 
 // Local: Sub-workflows
+include { BUSCO_QC    } from './modules/local/subworkflow/busco'         addParams( busco_db_options: modules['busco_db_preparation'], busco_options: modules['busco'], busco_plot_options: modules['busco_plot'], busco_summary_options: modules['busco_summary'])
+
 
 // nf-core/modules: Modules
 include { FASTQC as FASTQC_RAW     } from './modules/nf-core/software/fastqc/main'              addParams( options: modules['fastqc_raw']            )
@@ -606,28 +604,23 @@ workflow {
         METABAT2 ( ch_grouped_mappings )
         ch_software_versions = ch_software_versions.mix(METABAT2.out.version.first().ifEmpty(null))
         // TODO out meta !
-        /*
-        * BUSCO: Quantitative measures for the assessment of genome assembly
-        */
-        BUSCO_DB_PREPARATION ( ch_busco_db_file )
-        BUSCO (
-            METABAT2.out.bins.transpose(),
-            BUSCO_DB_PREPARATION.out.db.collect()
-        )
-        ch_busco_multiqc = BUSCO.out.summary.map{it[2]}
-        ch_software_versions = ch_software_versions.mix(BUSCO.out.version.first().ifEmpty(null))
-        // group by assembler and sample name for plotting
-        BUSCO_PLOT ( BUSCO.out.summary.groupTuple(by: [0,1]) )
-        BUSCO_SUMMARY ( BUSCO.out.summary.map{it[2]}.collect() )
 
-        // TODO make subworkflow for busco?
+        /*
+        * BUSCO subworkflow: Quantitative measures for the assessment of genome assembly
+        */
+        BUSCO_QC (
+            ch_busco_db_file,
+            METABAT2.out.bins.transpose()
+        )
+        ch_busco_multiqc = BUSCO_QC.out.multiqc
+        ch_software_versions = ch_software_versions.mix(BUSCO_QC.out.version.first().ifEmpty(null))
 
         if (!params.skip_quast){
             QUAST_BINS ( METABAT2.out.bins )
             ch_software_versions = ch_software_versions.mix(QUAST_BINS.out.version.first().ifEmpty(null))
             MERGE_QUAST_AND_BUSCO (
                 QUAST_BINS.out.quast_bin_summaries.collect(),
-                BUSCO_SUMMARY.out
+                BUSCO_QC.out.summary
             )
         }
 
