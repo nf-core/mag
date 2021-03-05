@@ -5,11 +5,11 @@ params.options = [:]
 def options    = initOptions(params.options)
 
 process BOWTIE2_ASSEMBLY {
-    tag "${assembler}-${assembly_id}"
+    tag "${assembly_meta.assembler}-${assembly_meta.id}-${reads_meta.id}"
 
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:"${assembler}/${assembly_id}_QC") }
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:"${assembly_meta.assembler}/${assembly_meta.id}_QC") }
 
     conda (params.enable_conda ? "bioconda::bowtie2=2.4.2=py38h1c8e9b9_1 bioconda::samtools=1.11=h6270b1f_0 conda-forge::pigz=2.3.4=hed695b0_1" : null)  // TODO ?
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
@@ -19,16 +19,16 @@ process BOWTIE2_ASSEMBLY {
     }
 
     input:
-    tuple val(assembler), val(assembly_id), path(assembly), path(index), val(reads_id), path(reads)
+    tuple val(assembly_meta), path(assembly), path(index), val(reads_meta), path(reads)
 
     output:
-    tuple val(assembler), val(assembly_id), path(assembly), path("${assembler}-${assembly_id}-${reads_id}.bam"), path("${assembler}-${assembly_id}-${reads_id}.bam.bai"), emit: mappings
-    tuple val(assembler), val(assembly_id), val(reads_id), path("*.bowtie2.log")                                                                                        , emit: log
-    path '*.version.txt'                                                                                                                                                , emit: version
+    tuple val(assembly_meta), path(assembly), path("${assembly_meta.assembler}-${assembly_meta.id}-${reads_meta.id}.bam"), path("${assembly_meta.assembler}-${assembly_meta.id}-${reads_meta.id}.bam.bai"), emit: mappings
+    tuple val(assembly_meta), val(reads_meta), path("*.bowtie2.log")                                                                                                                                      , emit: log
+    path '*.version.txt'                                                                                                                                                                                  , emit: version
 
     script:
     def software = getSoftwareName(task.process)
-    def name = "${assembler}-${assembly_id}-${reads_id}"
+    def name = "${assembly_meta.assembler}-${assembly_meta.id}-${reads_meta.id}"
     def input = params.single_end ? "-U \"${reads}\"" :  "-1 \"${reads[0]}\" -2 \"${reads[1]}\""
     """
     INDEX=`find -L ./ -name "*.rev.1.bt2" | sed 's/.rev.1.bt2//'`
@@ -37,8 +37,8 @@ process BOWTIE2_ASSEMBLY {
         samtools sort -@ "${task.cpus}" -o "${name}.bam"
     samtools index "${name}.bam"
 
-    if [ ${name} = "${assembler}-${assembly_id}-${assembly_id}" ] ; then
-        mv "${name}.bowtie2.log" "${assembler}-${assembly_id}.bowtie2.log"
+    if [ ${name} = "${assembly_meta.assembler}-${assembly_meta.id}-${assembly_meta.id}" ] ; then
+        mv "${name}.bowtie2.log" "${assembly_meta.assembler}-${assembly_meta.id}.bowtie2.log"
     fi
 
     echo \$(bowtie2 --version 2>&1) | sed 's/^.*bowtie2-align-s version //; s/ .*\$//' > ${software}_assembly.version.txt

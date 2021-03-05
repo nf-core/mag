@@ -15,7 +15,7 @@ include { BUSCO_SUMMARY                           } from '../process/busco_summa
 workflow BUSCO_QC {
     take:
     busco_db_file           // channel: path
-    bins                    // channel: [ val(assembler), val(name), path(bin) ]
+    bins                    // channel: [ val(meta), path(bin) ]
 
     main:
     BUSCO_DB_PREPARATION ( busco_db_file )
@@ -25,11 +25,11 @@ workflow BUSCO_QC {
     )
 
     // group by assembler and sample name for plotting
-    BUSCO_PLOT ( BUSCO.out.summary.groupTuple(by: [0,1]) )
-    BUSCO_SUMMARY ( BUSCO.out.summary.map{it[2]}.collect() )
+    BUSCO_PLOT ( BUSCO.out.summary.groupTuple(by: 0) )
+    BUSCO_SUMMARY ( BUSCO.out.summary.map{it[1]}.collect() )
 
     emit:
     summary = BUSCO_SUMMARY.out
-    multiqc = BUSCO.out.summary.map{it[2]}
+    multiqc = BUSCO.out.summary.map{it[1]}
     version = BUSCO.out.version
 }

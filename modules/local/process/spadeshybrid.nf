@@ -22,12 +22,12 @@ process SPADESHYBRID {
     tuple val(meta), path(long_reads), path(short_reads)
 
     output:
-    tuple val("SPAdesHybrid"), val(meta), path("${meta.id}_scaffolds.fasta"), emit: assembly
+    tuple val(meta), path("${meta.id}_scaffolds.fasta"), emit: assembly
     path "${meta.id}.log"
     path "${meta.id}_contigs.fasta.gz"
     path "${meta.id}_scaffolds.fasta.gz"
     path "${meta.id}_graph.gfa.gz"
-    path '*.version.txt'                                                    , emit: version
+    path '*.version.txt'                               , emit: version
 
     script:
     def software = getSoftwareName(task.process)

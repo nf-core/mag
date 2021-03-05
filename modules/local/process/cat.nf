@@ -5,11 +5,11 @@ params.options = [:]
 def options    = initOptions(params.options)
 
 process CAT {
-    tag "${assembler}-${name}-${db_name}"
+    tag "${meta.assembler}-${meta.id}-${db_name}"
 
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:assembler) }
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.assembler) }
 
     conda (params.enable_conda ? "bioconda::cat=4.6" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
@@ -19,7 +19,7 @@ process CAT {
     }
 
     input:
-    tuple val(assembler), val(name), path("bins/*")
+    tuple val(meta), path("bins/*")
     tuple val(db_name), path("database/*"), path("taxonomy/*")
 
     output:
@@ -34,9 +34,9 @@ process CAT {
     script:
     def software = getSoftwareName(task.process)
     """
-    CAT bins -b "bins/" -d database/ -t taxonomy/ -n "${task.cpus}" -s .fa --top 6 -o "${assembler}-${name}" --I_know_what_Im_doing
-    CAT add_names -i "${assembler}-${name}.ORF2LCA.txt" -o "${assembler}-${name}.ORF2LCA.names.txt" -t taxonomy/
-    CAT add_names -i "${assembler}-${name}.bin2classification.txt" -o "${assembler}-${name}.bin2classification.names.txt" -t taxonomy/
+    CAT bins -b "bins/" -d database/ -t taxonomy/ -n "${task.cpus}" -s .fa --top 6 -o "${meta.assembler}-${meta.id}" --I_know_what_Im_doing
+    CAT add_names -i "${meta.assembler}-${meta.id}.ORF2LCA.txt" -o "${meta.assembler}-${meta.id}.ORF2LCA.names.txt" -t taxonomy/
+    CAT add_names -i "${meta.assembler}-${meta.id}.bin2classification.txt" -o "${meta.assembler}-${meta.id}.bin2classification.names.txt" -t taxonomy/
     mkdir raw
     mv "*.ORF2LCA.txt" raw/
     mv "*.predicted_proteins.faa" raw/

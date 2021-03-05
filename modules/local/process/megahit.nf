@@ -22,10 +22,10 @@ process MEGAHIT {
     tuple val(meta), path(reads1), path(reads2)
 
     output:
-    tuple val("MEGAHIT"), val(meta), path("MEGAHIT/${meta.id}.contigs.fa"), emit: assembly
+    tuple val(meta), path("MEGAHIT/${meta.id}.contigs.fa"), emit: assembly
     path "MEGAHIT/*.log"
     path "MEGAHIT/${meta.id}.contigs.fa.gz"
-    path '*.version.txt'                                                  , emit: version
+    path '*.version.txt'                                  , emit: version
 
     script:
     def software = getSoftwareName(task.process)

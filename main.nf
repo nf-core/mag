@@ -84,8 +84,8 @@ include {
 } from './modules/local/process/functions'
 
 // Local: Sub-workflows
+include { METABAT2_BINNING    } from './modules/local/subworkflow/metabat2_binning'      addParams( bowtie2_index_options: [:], bowtie2_align_options: modules['bowtie2_assembly'], metabat2_options: modules['metabat2'])
 include { BUSCO_QC            } from './modules/local/subworkflow/busco_qc'              addParams( busco_db_options: modules['busco_db_preparation'], busco_options: modules['busco'], busco_plot_options: modules['busco_plot'], busco_summary_options: modules['busco_summary'])
-include { METABAT2_BINNING    } from './modules/local/subworkflow/metabat2_binning'   addParams( bowtie2_index_options: [:], bowtie2_align_options: modules['bowtie2_assembly'], metabat2_options: modules['metabat2'])
 
 // nf-core/modules: Modules
 include { FASTQC as FASTQC_RAW     } from './modules/nf-core/software/fastqc/main'              addParams( options: modules['fastqc_raw']            )
@@ -508,7 +508,14 @@ workflow {
     ch_assemblies = Channel.empty()
     if (!params.skip_megahit){
         MEGAHIT ( ch_short_reads_grouped )
-        ch_assemblies = ch_assemblies.mix(MEGAHIT.out.assembly)
+        MEGAHIT.out.assembly
+            .map { meta, assembly ->
+                def meta_new = meta
+                meta_new.assembler  = "MEGAHIT"
+                [ meta_new, assembly ]
+            }
+            .set { ch_megahit_assemblies }
+        ch_assemblies = ch_assemblies.mix(ch_megahit_assemblies)
         ch_software_versions = ch_software_versions.mix(MEGAHIT.out.version.first().ifEmpty(null))
     }
 
@@ -538,7 +545,14 @@ workflow {
 
     if (!params.single_end && !params.skip_spades){
         SPADES ( ch_short_reads_spades )
-        ch_assemblies = ch_assemblies.mix(SPADES.out.assembly)
+        SPADES.out.assembly
+            .map { meta, assembly ->
+                def meta_new = meta
+                meta_new.assembler  = "SPAdes"
+                [ meta_new, assembly ]
+            }
+            .set { ch_spades_assemblies }
+        ch_assemblies = ch_assemblies.mix(ch_spades_assemblies)
         ch_software_versions = ch_software_versions.mix(SPADES.out.version.first().ifEmpty(null))
     }
 
@@ -552,7 +566,14 @@ workflow {
             .map { id, meta_long, long_reads, meta_short, short_reads -> [ meta_short, long_reads, short_reads ] }
             .set { ch_reads_spadeshybrid }
         SPADESHYBRID ( ch_reads_spadeshybrid )
-        ch_assemblies = ch_assemblies.mix(SPADESHYBRID.out.assembly)
+        SPADESHYBRID.out.assembly
+            .map { meta, assembly ->
+                def meta_new = meta
+                meta_new.assembler  = "SPAdesHybrid"
+                [ meta_new, assembly ]
+            }
+            .set { ch_spadeshybrid_assemblies }
+        ch_assemblies = ch_assemblies.mix(ch_spadeshybrid_assemblies)
         ch_software_versions = ch_software_versions.mix(SPADESHYBRID.out.version.first().ifEmpty(null))
     }
 

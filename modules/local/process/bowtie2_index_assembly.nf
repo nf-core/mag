@@ -5,7 +5,7 @@ params.options = [:]
 def options    = initOptions(params.options)
 
 process BOWTIE2_INDEX_ASSEMBLY {
-    tag "${assembler}-${meta.id}"
+    tag "${meta.assembler}-${meta.id}"
 
     conda (params.enable_conda ? 'bioconda::bowtie2=2.4.2' : null) // TODO use previous version, update tools separately!!!
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
@@ -15,12 +15,11 @@ process BOWTIE2_INDEX_ASSEMBLY {
     }
 
     input:
-    tuple val(assembler), val(meta), path(assembly)
-    // TODO maybe add to nf-core modules with tuple val(meta), path(assembly) ?
+    tuple val(meta), path(assembly)
 
     output:
-    tuple val(assembler), val(meta), path(assembly), path('bt2_index_base*'), emit: assembly_index
-    path '*.version.txt'                                                    , emit: version
+    tuple val(meta), path(assembly), path('bt2_index_base*'), emit: assembly_index
+    path '*.version.txt'                                    , emit: version
 
     script:
     def software  = getSoftwareName(task.process)

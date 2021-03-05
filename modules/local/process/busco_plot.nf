@@ -5,7 +5,7 @@ params.options = [:]
 def options    = initOptions(params.options)
 
 process BUSCO_PLOT {
-    tag "$assembler-$name"
+    tag "${meta.assembler}-${meta.id}"
 
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
@@ -19,29 +19,29 @@ process BUSCO_PLOT {
     }
 
     input:
-    tuple val(assembler), val(name), path(summaries)
+    tuple val(meta), path(summaries)
 
     output:
-    path("${assembler}-${name}-busco_figure.png")
-    path("${assembler}-${name}-busco_figure.R")
-    path("${assembler}-${name}-busco_summary.txt")
+    path("${meta.assembler}-${meta.id}-busco_figure.png")
+    path("${meta.assembler}-${meta.id}-busco_figure.R")
+    path("${meta.assembler}-${meta.id}-busco_summary.txt")
 
     script:
     """
     # replace dots in bin names within summary file names by underscores
     # currently (BUSCO v4.1.3) generate_plot.py does not allow further dots
     for sum in ${summaries}; do
-        [[ \${sum} =~ short_summary.(.*).${assembler}-${name}.(.*).txt ]];
+        [[ \${sum} =~ short_summary.(.*).${meta.assembler}-${meta.id}.(.*).txt ]];
         db_name=\${BASH_REMATCH[1]}
-        bin="${assembler}-${name}.\${BASH_REMATCH[2]}"
+        bin="${meta.assembler}-${meta.id}.\${BASH_REMATCH[2]}"
         bin_new="\${bin//./_}"
         mv \${sum} short_summary.\${db_name}.\${bin_new}.txt
     done
     generate_plot.py --working_directory .
 
-    mv busco_figure.png "${assembler}-${name}-busco_figure.png"
-    mv busco_figure.R "${assembler}-${name}-busco_figure.R"
+    mv busco_figure.png "${meta.assembler}-${meta.id}-busco_figure.png"
+    mv busco_figure.R "${meta.assembler}-${meta.id}-busco_figure.R"
 
-    summary_busco.py short_summary.*.txt > "${assembler}-${name}-busco_summary.txt"
+    summary_busco.py short_summary.*.txt > "${meta.assembler}-${meta.id}-busco_summary.txt"
     """
 }

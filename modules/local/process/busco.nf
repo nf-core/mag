@@ -19,15 +19,15 @@ process BUSCO {
     }
 
     input:
-    tuple val(assembler), val(name), path(bin)
+    tuple val(meta), path(bin)
     path(db)
 
     output:
-    tuple val(assembler), val(name), path("short_summary.specific.*.${bin}.txt"), emit: summary
+    tuple val(meta), path("short_summary.specific.*.${bin}.txt"), emit: summary
     path("${bin}_busco.log")
     path("${bin}_buscos.faa.gz") optional true
     path("${bin}_buscos.fna.gz") optional true
-    path '*.version.txt'                                                        , emit: version
+    path '*.version.txt'                                        , emit: version
 
     script:
     def software = getSoftwareName(task.process)
