@@ -510,7 +510,7 @@ workflow {
         MEGAHIT ( ch_short_reads_grouped )
         MEGAHIT.out.assembly
             .map { meta, assembly ->
-                def meta_new = meta
+                def meta_new = meta.clone()
                 meta_new.assembler  = "MEGAHIT"
                 [ meta_new, assembly ]
             }
@@ -547,7 +547,7 @@ workflow {
         SPADES ( ch_short_reads_spades )
         SPADES.out.assembly
             .map { meta, assembly ->
-                def meta_new = meta
+                def meta_new = meta.clone()
                 meta_new.assembler  = "SPAdes"
                 [ meta_new, assembly ]
             }
@@ -568,7 +568,7 @@ workflow {
         SPADESHYBRID ( ch_reads_spadeshybrid )
         SPADESHYBRID.out.assembly
             .map { meta, assembly ->
-                def meta_new = meta
+                def meta_new = meta.clone()
                 meta_new.assembler  = "SPAdesHybrid"
                 [ meta_new, assembly ]
             }
