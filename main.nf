@@ -577,6 +577,7 @@ workflow {
             ch_assemblies,
             ch_short_reads
         )
+        ch_bowtie2_assembly_multiqc = METABAT2_BINNING.out.bowtie2_assembly_multiqc
         ch_software_versions = ch_software_versions.mix(METABAT2_BINNING.out.bowtie2_version.first().ifEmpty(null))
         ch_software_versions = ch_software_versions.mix(METABAT2_BINNING.out.metabat2_version.first().ifEmpty(null))
 
