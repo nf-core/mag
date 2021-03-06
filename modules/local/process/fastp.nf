@@ -37,6 +37,8 @@ process FASTP {
     """
     fastp -w ${task.cpus} \
           -q ${params.mean_quality} \
+          --cut_by_quality5 \
+          --cut_by_quality3 \
           --cut_mean_quality ${params.trimming_quality} \
           --adapter_sequence=${params.adapter_forward} \
           --adapter_sequence_r2=${params.adapter_reverse} \
