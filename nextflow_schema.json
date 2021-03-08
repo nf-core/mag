@@ -89,13 +89,6 @@
                         "move"
                     ]
                 },
-                "name": {
-                    "type": "string",
-                    "description": "Workflow name.",
-                    "fa_icon": "fas fa-fingerprint",
-                    "hidden": true,
-                    "help_text": "A custom name for the pipeline run. Unlike the core nextflow `-name` option with one hyphen this parameter can be reused multiple times, for example if using `-resume`. Passed through to steps such as MultiQC and used for things like report filenames and titles."
-                },
                 "email_on_fail": {
                     "type": "string",
                     "description": "Email address for completion summary, only when pipeline fails.",
@@ -126,11 +119,19 @@
                     "hidden": true,
                     "help_text": "Set to disable colourful command line output and live life in monochrome."
                 },
+                "skip_multiqc": {
+                    "type": "string"
+                },
                 "multiqc_config": {
                     "type": "string",
                     "description": "Custom config file to supply to MultiQC.",
                     "fa_icon": "fas fa-cog",
                     "hidden": true
+                },
+                "multiqc_title": {
+                    "type": "string",
+                    "description": "MultiQC report title. Printed as page header, used for filename if not otherwise specified.",
+                    "fa_icon": "fas fa-file-signature"
                 },
                 "tracedir": {
                     "type": "string",
@@ -138,6 +139,19 @@
                     "default": "${params.outdir}/pipeline_info",
                     "fa_icon": "fas fa-cogs",
                     "hidden": true
+                },
+                "enable_conda": {
+                    "type": "boolean",
+                    "description": "Run this workflow with Conda. You can also use '-profile conda' instead of providing this parameter.",
+                    "hidden": true,
+                    "fa_icon": "fas fa-bacon"
+                },
+                "singularity_pull_docker_container": {
+                    "type": "boolean",
+                    "description": "Instead of directly downloading Singularity images for use with Singularity, force the workflow to pull and convert Docker containers instead.",
+                    "hidden": true,
+                    "fa_icon": "fas fa-toolbox",
+                    "help_text": "This may be useful for example if you are unable to directly pull Singularity containers to run the pipeline due to http/https proxy issues."
                 }
             }
         },
