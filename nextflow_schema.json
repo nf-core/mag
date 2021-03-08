@@ -14,8 +14,8 @@
                 "input": {
                     "type": "string",
                     "fa_icon": "fas fa-dna",
-                    "description": "Input FastQ files or TSV file.",
-                    "help_text": "Use this to specify the location of your input FastQ files. For example:\n\n```bash\n--input 'path/to/data/sample_*_{1,2}.fastq'\n```\n\nAll files will get assigned the same group ID (by default only used to compute co-abundances for binning). Please note the following requirements:\n\n1. The path must be enclosed in quotes\n2. The path must have at least one `*` wildcard character\n3. When using the pipeline with paired end data, the path must use `{1,2}` notation to specify read pairs.\n\nIf left unspecified, a default pattern is used: `data/*{1,2}.fastq.gz`. \n\nAlternatively, to assign different groups or to include long reads for hybrid assembly with metaSPAdes, you can specify a TSV input file (requires a '.tsv' suffix) with 4 or 5 headerless columns: Sample_Id, Group_Id, Short_Reads_1, Short_Reads_2 [, Long_Reads]."
+                    "description": "Input FastQ files or CSV samplesheet file.",
+                    "help_text": "Use this to specify the location of your input FastQ files. For example:\n\n```bash\n--input 'path/to/data/sample_*_{1,2}.fastq'\n``` \n\nAlternatively, to assign different groups or to include long reads for hybrid assembly with metaSPAdes, you can specify a CSV samplesheet input file with 5 columns and the following header: sample,group,short_reads_1,short_reads_2,long_reads. See [usage docs](https://nf-co.re/mag/usage#input-specifications)."
                 },
                 "single_end": {
                     "type": "boolean",
