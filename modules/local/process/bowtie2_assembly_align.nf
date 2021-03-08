@@ -4,7 +4,7 @@ include { initOptions; saveFiles; getSoftwareName } from './functions'
 params.options = [:]
 def options    = initOptions(params.options)
 
-process BOWTIE2_ASSEMBLY {
+process BOWTIE2_ASSEMBLY_ALIGN {
     tag "${assembly_meta.assembler}-${assembly_meta.id}-${reads_meta.id}"
 
     publishDir "${params.outdir}",

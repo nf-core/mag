@@ -4,7 +4,7 @@ include { initOptions; saveFiles; getSoftwareName } from './functions'
 params.options = [:]
 def options    = initOptions(params.options)
 
-process BOWTIE2_INDEX {
+process BOWTIE2_REMOVAL_BUILD {
     tag "$fasta"
 
     conda (params.enable_conda ? 'bioconda::bowtie2=2.4.2' : null) // TODO use previous version, update tools separately!!!
@@ -26,6 +26,6 @@ process BOWTIE2_INDEX {
     """
     mkdir bowtie
     bowtie2-build --threads $task.cpus $fasta "bt2_index_base"
-    bowtie2 --version > ${software}.version.txt
+    bowtie2 --version > ${software}_removal.version.txt
     """
 }

@@ -47,36 +47,36 @@ def multiqc_options   = modules['multiqc']
 multiqc_options.args += params.multiqc_title ? " --title \"$params.multiqc_title\"" : ''
 
 // Local: Modules
-include { GET_SOFTWARE_VERSIONS                   } from './modules/local/process/get_software_versions'       addParams( options: [publish_files : ['csv':'']]    )
-include { RENAME_FASTQS                           } from './modules/local/process/rename_fastqs'               addParams( options: [:]                             )
-include { FASTP                                   } from './modules/local/process/fastp'                       addParams( options: modules['fastp']                )
-include { BOWTIE2_INDEX as BOWTIE2_INDEX_HOST     } from './modules/local/process/bowtie2_index'               addParams( options: [:]                             )
-include { BOWTIE2_REMOVAL as BOWTIE2_REMOVAL_HOST } from './modules/local/process/bowtie2_removal'             addParams( options: modules['bowtie2_removal_host'] )
-include { BOWTIE2_INDEX as BOWTIE2_INDEX_PHIX     } from './modules/local/process/bowtie2_index'               addParams( options: [:]                             )
-include { BOWTIE2_REMOVAL as BOWTIE2_REMOVAL_PHIX } from './modules/local/process/bowtie2_removal'             addParams( options: modules['bowtie2_removal_phix'] )
-include { PORECHOP                                } from './modules/local/process/porechop'                    addParams( options: [:]                             )
-include { NANOLYSE                                } from './modules/local/process/nanolyse'                    addParams( options: modules['nanolyse']             )
-include { FILTLONG                                } from './modules/local/process/filtlong'                    addParams( options: [:]                             )
-include { NANOPLOT as NANOPLOT_RAW                } from './modules/local/process/nanoplot'                    addParams( options: modules['nanoplot_raw']         )
-include { NANOPLOT as NANOPLOT_FILTERED           } from './modules/local/process/nanoplot'                    addParams( options: modules['nanoplot_filtered']    )
-include { CENTRIFUGE_DB_PREPARATION               } from './modules/local/process/centrifuge_db_preparation'   addParams( options: [:]                             )
-include { CENTRIFUGE                              } from './modules/local/process/centrifuge'                  addParams( options: modules['centrifuge']           )
-include { KRAKEN2_DB_PREPARATION                  } from './modules/local/process/kraken2_db_preparation'      addParams( options: [:]                             )
-include { KRAKEN2                                 } from './modules/local/process/kraken2'                     addParams( options: modules['kraken2']              )
-include { KRONA_DB                                } from './modules/local/process/krona_db'                    addParams( options: [:]                             )
-include { KRONA                                   } from './modules/local/process/krona'                       addParams( options: modules['krona']                )
-include { POOL_SINGLE_READS                       } from './modules/local/process/pool_single_reads'           addParams( options: [:]                             )
-include { POOL_PAIRED_READS                       } from './modules/local/process/pool_paired_reads'           addParams( options: [:]                             )
-include { POOL_SINGLE_READS as POOL_LONG_READS    } from './modules/local/process/pool_single_reads'           addParams( options: [:]                             )
-include { MEGAHIT                                 } from './modules/local/process/megahit'                     addParams( options: modules['megahit']              )
-include { SPADES                                  } from './modules/local/process/spades'                      addParams( options: modules['spades']               )
-include { SPADESHYBRID                            } from './modules/local/process/spadeshybrid'                addParams( options: modules['spadeshybrid']         )
-include { QUAST                                   } from './modules/local/process/quast'                       addParams( options: modules['quast']                )
-include { QUAST_BINS                              } from './modules/local/process/quast_bins'                  addParams( options: modules['quast_bins']           )
-include { MERGE_QUAST_AND_BUSCO                   } from './modules/local/process/merge_quast_and_busco'       addParams( options: modules['merge_quast_and_busco'])
-include { CAT_DB                                  } from './modules/local/process/cat_db'                      addParams( options: [:]                             )
-include { CAT                                     } from './modules/local/process/cat'                         addParams( options: modules['cat']                  )
-include { MULTIQC                                 } from './modules/local/process/multiqc'                     addParams( options: multiqc_options                 )
+include { GET_SOFTWARE_VERSIONS                               } from './modules/local/process/get_software_versions'       addParams( options: [publish_files : ['csv':'']]          )
+include { RENAME_FASTQS                                       } from './modules/local/process/rename_fastqs'               addParams( options: [:]                                   )
+include { FASTP                                               } from './modules/local/process/fastp'                       addParams( options: modules['fastp']                      )
+include { BOWTIE2_REMOVAL_BUILD as BOWTIE2_HOST_REMOVAL_BUILD } from './modules/local/process/bowtie2_removal_build'       addParams( options: [:]                                   )
+include { BOWTIE2_REMOVAL_ALIGN as BOWTIE2_HOST_REMOVAL_ALIGN } from './modules/local/process/bowtie2_removal_align'       addParams( options: modules['bowtie2_host_removal_align'] )
+include { BOWTIE2_REMOVAL_BUILD as BOWTIE2_PHIX_REMOVAL_BUILD } from './modules/local/process/bowtie2_removal_build'       addParams( options: [:]                                   )
+include { BOWTIE2_REMOVAL_ALIGN as BOWTIE2_PHIX_REMOVAL_ALIGN } from './modules/local/process/bowtie2_removal_align'       addParams( options: modules['bowtie2_phix_removal_align'] )
+include { PORECHOP                                            } from './modules/local/process/porechop'                    addParams( options: [:]                                   )
+include { NANOLYSE                                            } from './modules/local/process/nanolyse'                    addParams( options: modules['nanolyse']                   )
+include { FILTLONG                                            } from './modules/local/process/filtlong'                    addParams( options: [:]                                   )
+include { NANOPLOT as NANOPLOT_RAW                            } from './modules/local/process/nanoplot'                    addParams( options: modules['nanoplot_raw']               )
+include { NANOPLOT as NANOPLOT_FILTERED                       } from './modules/local/process/nanoplot'                    addParams( options: modules['nanoplot_filtered']          )
+include { CENTRIFUGE_DB_PREPARATION                           } from './modules/local/process/centrifuge_db_preparation'   addParams( options: [:]                                   )
+include { CENTRIFUGE                                          } from './modules/local/process/centrifuge'                  addParams( options: modules['centrifuge']                 )
+include { KRAKEN2_DB_PREPARATION                              } from './modules/local/process/kraken2_db_preparation'      addParams( options: [:]                                   )
+include { KRAKEN2                                             } from './modules/local/process/kraken2'                     addParams( options: modules['kraken2']                    )
+include { KRONA_DB                                            } from './modules/local/process/krona_db'                    addParams( options: [:]                                   )
+include { KRONA                                               } from './modules/local/process/krona'                       addParams( options: modules['krona']                      )
+include { POOL_SINGLE_READS                                   } from './modules/local/process/pool_single_reads'           addParams( options: [:]                                   )
+include { POOL_PAIRED_READS                                   } from './modules/local/process/pool_paired_reads'           addParams( options: [:]                                   )
+include { POOL_SINGLE_READS as POOL_LONG_READS                } from './modules/local/process/pool_single_reads'           addParams( options: [:]                                   )
+include { MEGAHIT                                             } from './modules/local/process/megahit'                     addParams( options: modules['megahit']                    )
+include { SPADES                                              } from './modules/local/process/spades'                      addParams( options: modules['spades']                     )
+include { SPADESHYBRID                                        } from './modules/local/process/spadeshybrid'                addParams( options: modules['spadeshybrid']               )
+include { QUAST                                               } from './modules/local/process/quast'                       addParams( options: modules['quast']                      )
+include { QUAST_BINS                                          } from './modules/local/process/quast_bins'                  addParams( options: modules['quast_bins']                 )
+include { MERGE_QUAST_AND_BUSCO                               } from './modules/local/process/merge_quast_and_busco'       addParams( options: modules['merge_quast_and_busco']      )
+include { CAT_DB                                              } from './modules/local/process/cat_db'                      addParams( options: [:]                                   )
+include { CAT                                                 } from './modules/local/process/cat'                         addParams( options: modules['cat']                        )
+include { MULTIQC                                             } from './modules/local/process/multiqc'                     addParams( options: multiqc_options                       )
 
 // Local: Functions
 include {
@@ -84,7 +84,7 @@ include {
 } from './modules/local/process/functions'
 
 // Local: Sub-workflows
-include { METABAT2_BINNING    } from './modules/local/subworkflow/metabat2_binning'      addParams( bowtie2_index_options: [:], bowtie2_align_options: modules['bowtie2_assembly'], metabat2_options: modules['metabat2'])
+include { METABAT2_BINNING    } from './modules/local/subworkflow/metabat2_binning'      addParams( bowtie2_build_options: [:], bowtie2_align_options: modules['bowtie2_assembly_align'], metabat2_options: modules['metabat2']                                                   )
 include { BUSCO_QC            } from './modules/local/subworkflow/busco_qc'              addParams( busco_db_options: modules['busco_db_preparation'], busco_options: modules['busco'], busco_plot_options: modules['busco_plot'], busco_summary_options: modules['busco_summary'])
 
 // nf-core/modules: Modules
@@ -351,31 +351,31 @@ workflow {
     ch_software_versions = ch_software_versions.mix(FASTP.out.version.first().ifEmpty(null))
 
     if (params.host_fasta){
-        BOWTIE2_INDEX_HOST (
+        BOWTIE2_HOST_REMOVAL_BUILD (
             ch_host_fasta
         )
-        ch_host_bowtie2index = BOWTIE2_INDEX_HOST.out.index.collect()
+        ch_host_bowtie2index = BOWTIE2_HOST_REMOVAL_BUILD.out.index.collect()
     }
     ch_bowtie2_removal_host_multiqc = Channel.empty()
     if (params.host_fasta || params.host_genome){
-        BOWTIE2_REMOVAL_HOST (
+        BOWTIE2_HOST_REMOVAL_ALIGN (
             ch_short_reads,
             ch_host_bowtie2index
         )
-        ch_short_reads = BOWTIE2_REMOVAL_HOST.out.reads
-        ch_bowtie2_removal_host_multiqc = BOWTIE2_REMOVAL_HOST.out.log
-        ch_software_versions = ch_software_versions.mix(BOWTIE2_REMOVAL_HOST.out.version.first().ifEmpty(null))
+        ch_short_reads = BOWTIE2_HOST_REMOVAL_ALIGN.out.reads
+        ch_bowtie2_removal_host_multiqc = BOWTIE2_HOST_REMOVAL_ALIGN.out.log
+        ch_software_versions = ch_software_versions.mix(BOWTIE2_HOST_REMOVAL_ALIGN.out.version.first().ifEmpty(null))
     }
 
     if(!params.keep_phix) {
-        BOWTIE2_INDEX_PHIX (
+        BOWTIE2_PHIX_REMOVAL_BUILD (
             ch_phix_db_file
         )
-        BOWTIE2_REMOVAL_PHIX (
+        BOWTIE2_PHIX_REMOVAL_ALIGN (
             ch_short_reads,
-            BOWTIE2_INDEX_PHIX.out.index.collect()  // TODO why is ch_phix_db_file not value channel?
+            BOWTIE2_PHIX_REMOVAL_BUILD.out.index.collect()  // TODO why is ch_phix_db_file not value channel?
         )
-        ch_short_reads = BOWTIE2_REMOVAL_PHIX.out.reads
+        ch_short_reads = BOWTIE2_PHIX_REMOVAL_ALIGN.out.reads
         // TODO currently no. of reads before and after removal not given out! -> MultiQC as well?
     }
 

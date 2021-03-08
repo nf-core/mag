@@ -7,7 +7,7 @@ def options    = initOptions(params.options)
 /*
  * Bowtie2 for read removal
  */
-process BOWTIE2_REMOVAL {
+process BOWTIE2_REMOVAL_ALIGN {
     tag "${meta.id}-${options.suffix}"
     publishDir "${params.outdir}/",
         mode: params.publish_dir_mode,

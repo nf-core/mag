@@ -4,7 +4,7 @@ include { initOptions; saveFiles; getSoftwareName } from './functions'
 params.options = [:]
 def options    = initOptions(params.options)
 
-process BOWTIE2_INDEX_ASSEMBLY {
+process BOWTIE2_ASSEMBLY_BUILD {
     tag "${meta.assembler}-${meta.id}"
 
     conda (params.enable_conda ? 'bioconda::bowtie2=2.4.2' : null) // TODO use previous version, update tools separately!!!
