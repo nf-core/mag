@@ -7,7 +7,7 @@ def options    = initOptions(params.options)
 process BOWTIE2_ASSEMBLY_BUILD {
     tag "${meta.assembler}-${meta.id}"
 
-    conda (params.enable_conda ? 'bioconda::bowtie2=2.4.2' : null) // TODO use previous version, update tools separately!!!
+    conda (params.enable_conda ? 'bioconda::bowtie2=2.4.2' : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
         container 'https://depot.galaxyproject.org/singularity/bowtie2:2.4.2--py38h1c8e9b9_1'
     } else {

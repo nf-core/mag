@@ -8,7 +8,7 @@ process CAT_DB {
     tag "${database.baseName}"
 
     // TODO change container? to what -> slack ?
-    conda (params.enable_conda ? "conda-forge::sed=4.7=h1bed415_1000" : null)
+    conda (params.enable_conda ? "conda-forge::sed=4.7" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
         container "https://containers.biocontainers.pro/s3/SingImgsRepo/biocontainers/v1.2.0_cv1/biocontainers_v1.2.0_cv1.img"
     } else {
