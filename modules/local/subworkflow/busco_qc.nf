@@ -21,7 +21,7 @@ workflow BUSCO_QC {
     BUSCO_DB_PREPARATION ( busco_db_file )
     BUSCO (
         bins,
-        BUSCO_DB_PREPARATION.out.db.collect()
+        BUSCO_DB_PREPARATION.out.db
     )
 
     // group by assembler and sample name for plotting

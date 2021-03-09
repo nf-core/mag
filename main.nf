@@ -265,7 +265,7 @@ if ( params.host_genome ) {
 
 if(!params.skip_busco){
     Channel
-        .fromPath( "${params.busco_reference}" )
+        .value(file( "${params.busco_reference}" ))
         .set { ch_busco_db_file }
 } else {
     ch_busco_db_file = Channel.empty()
@@ -273,7 +273,7 @@ if(!params.skip_busco){
 
 if(params.centrifuge_db){
     Channel
-        .fromPath( "${params.centrifuge_db}" )
+        .value(file( "${params.centrifuge_db}" ))
         .set { ch_centrifuge_db_file }
 } else {
     ch_centrifuge_db_file = Channel.empty()
@@ -281,7 +281,7 @@ if(params.centrifuge_db){
 
 if(params.kraken2_db){
     Channel
-        .fromPath( "${params.kraken2_db}" )
+        .value(file( "${params.kraken2_db}" ))
         .set { ch_kraken2_db_file }
 } else {
     ch_kraken2_db_file = Channel.empty()
@@ -289,7 +289,7 @@ if(params.kraken2_db){
 
 if(params.cat_db){
     Channel
-        .fromPath( "${params.cat_db}" )
+        .value(file( "${params.cat_db}" ))
         .set { ch_cat_db_file }
 } else {
     ch_cat_db_file = Channel.empty()
@@ -297,13 +297,13 @@ if(params.cat_db){
 
 if(!params.keep_phix) {
     Channel
-        .fromPath( "${params.phix_reference}" )
+        .value(file( "${params.phix_reference}" ))
         .set { ch_phix_db_file }
 }
 
 if (!params.keep_lambda) {
     Channel
-        .fromPath( "${params.lambda_reference}" )
+        .value(file( "${params.lambda_reference}" ))
         .set { ch_nanolyse_db }
 } 
 
@@ -353,7 +353,7 @@ workflow {
         BOWTIE2_HOST_REMOVAL_BUILD (
             ch_host_fasta
         )
-        ch_host_bowtie2index = BOWTIE2_HOST_REMOVAL_BUILD.out.index.collect()
+        ch_host_bowtie2index = BOWTIE2_HOST_REMOVAL_BUILD.out.index
     }
     ch_bowtie2_removal_host_multiqc = Channel.empty()
     if (params.host_fasta || params.host_genome){
@@ -372,7 +372,7 @@ workflow {
         )
         BOWTIE2_PHIX_REMOVAL_ALIGN (
             ch_short_reads,
-            BOWTIE2_PHIX_REMOVAL_BUILD.out.index.collect()  // TODO why is ch_phix_db_file not value channel?
+            BOWTIE2_PHIX_REMOVAL_BUILD.out.index
         )
         ch_short_reads = BOWTIE2_PHIX_REMOVAL_ALIGN.out.reads
     }
@@ -438,7 +438,7 @@ workflow {
     CENTRIFUGE_DB_PREPARATION ( ch_centrifuge_db_file )
     CENTRIFUGE (
         ch_short_reads,
-        CENTRIFUGE_DB_PREPARATION.out.collect()
+        CENTRIFUGE_DB_PREPARATION.out
     )
     ch_software_versions = ch_software_versions.mix(CENTRIFUGE.out.version.first().ifEmpty(null))
 
@@ -447,7 +447,7 @@ workflow {
     )
     KRAKEN2 (
         ch_short_reads,
-        KRAKEN2_DB_PREPARATION.out.collect()
+        KRAKEN2_DB_PREPARATION.out
     )
     ch_software_versions = ch_software_versions.mix(KRAKEN2.out.version.first().ifEmpty(null))
 
@@ -624,7 +624,7 @@ workflow {
         CAT_DB ( ch_cat_db_file )
         CAT ( 
             METABAT2_BINNING.out.bins,
-            CAT_DB.out.collect()
+            CAT_DB.out
         )
         ch_software_versions = ch_software_versions.mix(CAT.out.version.first().ifEmpty(null))
     }
