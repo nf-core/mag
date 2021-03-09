@@ -375,7 +375,6 @@ workflow {
             BOWTIE2_PHIX_REMOVAL_BUILD.out.index.collect()  // TODO why is ch_phix_db_file not value channel?
         )
         ch_short_reads = BOWTIE2_PHIX_REMOVAL_ALIGN.out.reads
-        // TODO currently no. of reads before and after removal not given out! -> MultiQC as well?
     }
 
     FASTQC_TRIMMED (
@@ -417,7 +416,7 @@ workflow {
 
     ch_long_reads
         .map { meta, lr -> [ meta.id, meta, lr ] }
-        .join(ch_short_reads_tmp, by: 0)            // TODO join by meta.id ?
+        .join(ch_short_reads_tmp, by: 0)
         .map { id, meta_lr, lr, meta_sr, sr -> [ meta_lr, lr, sr[0], sr[1] ] }  // should not occur for single-end, since SPAdes (hybrid) does not support single-end
         .set{ ch_short_and_long_reads }
 
@@ -503,7 +502,6 @@ workflow {
             .set { ch_short_reads_grouped }
     }
 
-    // TODO think about channel naming!
     ch_assemblies = Channel.empty()
     if (!params.skip_megahit){
         MEGAHIT ( ch_short_reads_grouped )
