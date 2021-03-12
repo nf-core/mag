@@ -47,7 +47,6 @@ multiqc_options.args += params.multiqc_title ? " --title \"$params.multiqc_title
 
 // Local: Modules
 include { GET_SOFTWARE_VERSIONS                               } from './modules/local/get_software_versions'       addParams( options: [publish_files : ['csv':'']]          )
-include { RENAME_FASTQS                                       } from './modules/local/rename_fastqs'               addParams( options: [:]                                   )
 include { BOWTIE2_REMOVAL_BUILD as BOWTIE2_HOST_REMOVAL_BUILD } from './modules/local/bowtie2_removal_build'       addParams( options: [:]                                   )
 include { BOWTIE2_REMOVAL_ALIGN as BOWTIE2_HOST_REMOVAL_ALIGN } from './modules/local/bowtie2_removal_align'       addParams( options: modules['bowtie2_host_removal_align'] )
 include { BOWTIE2_REMOVAL_BUILD as BOWTIE2_PHIX_REMOVAL_BUILD } from './modules/local/bowtie2_removal_build'       addParams( options: [:]                                   )
@@ -331,13 +330,6 @@ workflow {
                                     Preprocessing and QC for short reads
     ================================================================================
     */
-    // required for FastQC and MultiQC: to ensure consistent naming for reports using sample IDs and allow non-unique file basenames with TSV input
-    if (hasExtension(params.input, "tsv")){
-        RENAME_FASTQS (
-            INPUT_CHECK.out.short_reads
-        )
-        ch_raw_short_reads = RENAME_FASTQS.out
-    }
 
     FASTQC_RAW (
         ch_raw_short_reads
