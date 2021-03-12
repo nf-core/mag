@@ -48,7 +48,6 @@ multiqc_options.args += params.multiqc_title ? " --title \"$params.multiqc_title
 // Local: Modules
 include { GET_SOFTWARE_VERSIONS                               } from './modules/local/get_software_versions'       addParams( options: [publish_files : ['csv':'']]          )
 include { RENAME_FASTQS                                       } from './modules/local/rename_fastqs'               addParams( options: [:]                                   )
-include { FASTP                                               } from './modules/local/fastp'                       addParams( options: modules['fastp']                      )
 include { BOWTIE2_REMOVAL_BUILD as BOWTIE2_HOST_REMOVAL_BUILD } from './modules/local/bowtie2_removal_build'       addParams( options: [:]                                   )
 include { BOWTIE2_REMOVAL_ALIGN as BOWTIE2_HOST_REMOVAL_ALIGN } from './modules/local/bowtie2_removal_align'       addParams( options: modules['bowtie2_host_removal_align'] )
 include { BOWTIE2_REMOVAL_BUILD as BOWTIE2_PHIX_REMOVAL_BUILD } from './modules/local/bowtie2_removal_build'       addParams( options: [:]                                   )
@@ -89,6 +88,8 @@ include { BUSCO_QC            } from './subworkflows/local/busco_qc'            
 // nf-core/modules: Modules
 include { FASTQC as FASTQC_RAW     } from './modules/nf-core/software/fastqc/main'              addParams( options: modules['fastqc_raw']            )
 include { FASTQC as FASTQC_TRIMMED } from './modules/nf-core/software/fastqc/main'              addParams( options: modules['fastqc_trimmed']        )
+include { FASTP                    } from './modules/nf-core/software/fastp/main'               addParams( options: modules['fastp']            )
+
 
 ////////////////////////////////////////////////////
 /* --          PARAMETER CHECKS                -- */
