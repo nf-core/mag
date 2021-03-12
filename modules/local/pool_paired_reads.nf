@@ -15,7 +15,7 @@ process POOL_PAIRED_READS {
 
     script:
     """
-    cat ${reads1} > "pooled_${meta.id}_R1.fastq.gz"
-    cat ${reads2} > "pooled_${meta.id}_R2.fastq.gz"
+    cat ${reads1} > "pooled_${meta.id}_1.fastq.gz"
+    cat ${reads2} > "pooled_${meta.id}_2.fastq.gz"
     """
 }
