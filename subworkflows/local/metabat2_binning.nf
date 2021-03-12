@@ -6,9 +6,9 @@ params.bowtie2_build_options = [:]
 params.bowtie2_align_options = [:]
 params.metabat2_options      = [:]
 
-include { BOWTIE2_ASSEMBLY_BUILD    } from '../process/bowtie2_assembly_build'   addParams( options: params.bowtie2_build_options )
-include { BOWTIE2_ASSEMBLY_ALIGN    } from '../process/bowtie2_assembly_align'   addParams( options: params.bowtie2_align_options )
-include { METABAT2                  } from '../process/metabat2'                 addParams( options: params.metabat2_options      )
+include { BOWTIE2_ASSEMBLY_BUILD    } from '../../modules/local/bowtie2_assembly_build'   addParams( options: params.bowtie2_build_options )
+include { BOWTIE2_ASSEMBLY_ALIGN    } from '../../modules/local/bowtie2_assembly_align'   addParams( options: params.bowtie2_align_options )
+include { METABAT2                  } from '../../modules/local/metabat2'                 addParams( options: params.metabat2_options      )
 
 workflow METABAT2_BINNING {
     take:

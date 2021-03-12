@@ -7,10 +7,10 @@ params.busco_options         = [:]
 params.busco_plot_options    = [:]
 params.busco_summary_options = [:]
 
-include { BUSCO_DB_PREPARATION                    } from '../process/busco_db_preparation'        addParams( options: params.busco_db_options      )
-include { BUSCO                                   } from '../process/busco'                       addParams( options: params.busco_options         )
-include { BUSCO_PLOT                              } from '../process/busco_plot'                  addParams( options: params.busco_plot_options    )
-include { BUSCO_SUMMARY                           } from '../process/busco_summary'               addParams( options: params.busco_summary_options )
+include { BUSCO_DB_PREPARATION                    } from '../../modules/local/busco_db_preparation'        addParams( options: params.busco_db_options      )
+include { BUSCO                                   } from '../../modules/local/busco'                       addParams( options: params.busco_options         )
+include { BUSCO_PLOT                              } from '../../modules/local/busco_plot'                  addParams( options: params.busco_plot_options    )
+include { BUSCO_SUMMARY                           } from '../../modules/local/busco_summary'               addParams( options: params.busco_summary_options )
 
 workflow BUSCO_QC {
     take:
