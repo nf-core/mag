@@ -2,7 +2,7 @@
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
 params.options = [:]
-def options    = initOptions(params.options)
+options    = initOptions(params.options)
 
 process BOWTIE2_ASSEMBLY_BUILD {
     tag "${meta.assembler}-${meta.id}"

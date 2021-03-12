@@ -2,7 +2,7 @@
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
 params.options = [:]
-def options    = initOptions(params.options)
+options    = initOptions(params.options)
 
 process BUSCO_DB_PREPARATION {
     tag "${database.baseName}"

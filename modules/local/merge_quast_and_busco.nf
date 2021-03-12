@@ -2,7 +2,7 @@
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
 params.options = [:]
-def options    = initOptions(params.options)
+options    = initOptions(params.options)
 
 process MERGE_QUAST_AND_BUSCO {
 
