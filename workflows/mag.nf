@@ -11,7 +11,7 @@ params.summary_params = [:]
 include { hasExtension } from '../modules/local/functions'
 
 // Check input path parameters to see if they exist
-def checkPathParamList = [ params.input, params.multiqc_config, params.phix_reference, params.host_fasta, params.centrifuge_db, params.kraken2_db, params.cat_db, params.lambda_reference, params.busco_reference ]
+def checkPathParamList = [ params.input, params.multiqc_config, params.phix_reference, params.host_fasta, params.centrifuge_db, params.kraken2_db, params.cat_db, params.gtdb, params.lambda_reference, params.busco_reference ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
 // Check mandatory parameters
@@ -80,6 +80,8 @@ include { QUAST_BINS                                          } from '../modules
 include { MERGE_QUAST_AND_BUSCO                               } from '../modules/local/merge_quast_and_busco'       addParams( options: modules['merge_quast_and_busco']      )
 include { CAT_DB                                              } from '../modules/local/cat_db'
 include { CAT                                                 } from '../modules/local/cat'                         addParams( options: modules['cat']                        )
+include { GTDBTK_DB_PREPARATION                               } from '../modules/local/gtdbtk_db_preparation'       addParams( options: [:]                                   )
+include { GTDBTK_CLASSIFY                                     } from '../modules/local/gtdbtk_classify'             addParams( options: [:]                                   )
 include { MULTIQC                                             } from '../modules/local/multiqc'                     addParams( options: multiqc_options                       )
 
 // Local: Sub-workflows
@@ -163,7 +165,15 @@ if (!params.keep_lambda) {
     Channel
         .value(file( "${params.lambda_reference}" ))
         .set { ch_nanolyse_db }
-} 
+}
+
+if (params.gtdb) {
+    Channel
+        .value(file( "${params.gtdb}" ))
+        .set { ch_gtdb }
+} else {
+    ch_gtdb = Channel.empty()
+}
 
 ////////////////////////////////////////////////////
 /* --           RUN MAIN WORKFLOW              -- */
@@ -489,6 +499,19 @@ workflow MAG {
             CAT_DB.out.db
         )
         ch_software_versions = ch_software_versions.mix(CAT.out.version.first().ifEmpty(null))
+
+        /*
+         * GTDB-tk: taxonomic classifications using GTDB reference
+         */
+        if ( params.gtdb ){
+            // TODO apply only to medium & high quality MAGs (>=50% complete, <=10% contamination)?
+            GTDBTK_DB_PREPARATION ( ch_gtdb )
+            GTDBTK_CLASSIFY (
+                METABAT2_BINNING.out.bins,
+                GTDBTK_DB_PREPARATION.out
+            )
+            ch_software_versions = ch_software_versions.mix(GTDBTK_CLASSIFY.out.version.first().ifEmpty(null))
+        }
     }
 
     /*
