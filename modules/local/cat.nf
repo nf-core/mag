@@ -11,11 +11,11 @@ process CAT {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.assembler) }
 
-    conda (params.enable_conda ? "bioconda::cat=4.6" : null)
+    conda (params.enable_conda ? "bioconda::cat=4.6 bioconda::diamond=2.0.6" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/cat:4.6--0"
+        container "https://depot.galaxyproject.org/singularity/mulled-v2-75e2a26f10cbf3629edf2d1600db3fed5ebe6e04:eae321284604f7dabbdf121e3070bda907b91266-0"
     } else {
-        container "quay.io/biocontainers/cat:4.6--0"
+        container "quay.io/biocontainers/mulled-v2-75e2a26f10cbf3629edf2d1600db3fed5ebe6e04:eae321284604f7dabbdf121e3070bda907b91266-0"
     }
 
     input:
@@ -38,11 +38,7 @@ process CAT {
     CAT add_names -i "${meta.assembler}-${meta.id}.ORF2LCA.txt" -o "${meta.assembler}-${meta.id}.ORF2LCA.names.txt" -t taxonomy/
     CAT add_names -i "${meta.assembler}-${meta.id}.bin2classification.txt" -o "${meta.assembler}-${meta.id}.bin2classification.names.txt" -t taxonomy/
     mkdir raw
-    mv "*.ORF2LCA.txt" raw/
-    mv "*.predicted_proteins.faa" raw/
-    mv "*.predicted_proteins.gff" raw/
-    mv "*.log" raw/
-    mv "*.bin2classification.txt" raw/
+    mv *.ORF2LCA.txt *.predicted_proteins.faa *.predicted_proteins.gff *.log *.bin2classification.txt raw/
 
     CAT --version | sed "s/CAT v//; s/(.*//" > ${software}.version.txt
     """
