@@ -24,7 +24,7 @@ def json_schema = "$projectDir/nextflow_schema.json"
 if (params.help) {
     def command = "nextflow run nf-core/mag --input 'samplesheet.csv' -profile docker"
     // nextflow run nf-core/mag --input '*_R{1,2}.fastq.gz' -profile docker
-    log.info Schema.params_help(workflow, params, json_schema, command)
+    log.info NfcoreSchema.params_help(workflow, params, json_schema, command)
     exit 0
 }
 
@@ -32,8 +32,8 @@ if (params.help) {
 /* --         PRINT PARAMETER SUMMARY          -- */
 ////////////////////////////////////////////////////
 
-def summary_params = Schema.params_summary_map(workflow, params, json_schema)
-log.info Schema.params_summary_log(workflow, params, json_schema)
+def summary_params = NfcoreSchema.params_summary_map(workflow, params, json_schema)
+log.info NfcoreSchema.params_summary_log(workflow, params, json_schema)
 
 ////////////////////////////////////////////////////
 /* -- IMPORT MODULES / SUBWORKFLOWS / FUNCTIONS-- */
@@ -633,7 +633,7 @@ workflow {
      * MultiQC
      */
     if (!params.skip_multiqc) {
-        workflow_summary    = Schema.params_summary_multiqc(workflow, summary_params)
+        workflow_summary    = CustomSchema.params_summary_multiqc(workflow, summary_params)
         ch_workflow_summary = Channel.value(workflow_summary)
 
         ch_multiqc_files = Channel.empty()
