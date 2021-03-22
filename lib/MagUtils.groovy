@@ -4,7 +4,7 @@
 
 import groovy.json.JsonSlurper
 
-class CustomSchema {
+class MagUtils {
     static String params_summary_multiqc(workflow, summary) {
         String summary_section = ''
         for (group in summary.keySet()) {

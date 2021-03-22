@@ -633,7 +633,7 @@ workflow {
      * MultiQC
      */
     if (!params.skip_multiqc) {
-        workflow_summary    = CustomSchema.params_summary_multiqc(workflow, summary_params)
+        workflow_summary    = MagUtils.params_summary_multiqc(workflow, summary_params)
         ch_workflow_summary = Channel.value(workflow_summary)
 
         ch_multiqc_files = Channel.empty()
