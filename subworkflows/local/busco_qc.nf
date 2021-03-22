@@ -29,7 +29,7 @@ workflow BUSCO_QC {
     BUSCO_SUMMARY ( BUSCO.out.summary.map{it[1]}.collect() )
 
     emit:
-    summary = BUSCO_SUMMARY.out
+    summary = BUSCO_SUMMARY.out.summary
     multiqc = BUSCO.out.summary.map{it[1]}
     version = BUSCO.out.version
 }

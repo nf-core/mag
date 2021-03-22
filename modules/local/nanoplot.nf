@@ -22,9 +22,9 @@ process NANOPLOT {
     tuple val(meta), path(reads)
 
     output:
-    path '*.png'
-    path '*.html'
-    path '*.txt'
+    path '*.png'        , emit: png
+    path '*.html'       , emit: html
+    path '*.txt'        , emit: txt
     path '*.version.txt', emit: version
 
     script:

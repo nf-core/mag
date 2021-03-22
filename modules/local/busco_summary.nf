@@ -21,7 +21,7 @@ process BUSCO_SUMMARY {
     path "short_summary.*.txt"
 
     output:
-    path "busco_summary.txt"
+    path "busco_summary.txt", emit: summary
 
     script:
     """

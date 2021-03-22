@@ -431,7 +431,7 @@ workflow {
     CENTRIFUGE_DB_PREPARATION ( ch_centrifuge_db_file )
     CENTRIFUGE (
         ch_short_reads,
-        CENTRIFUGE_DB_PREPARATION.out
+        CENTRIFUGE_DB_PREPARATION.out.db
     )
     ch_software_versions = ch_software_versions.mix(CENTRIFUGE.out.version.first().ifEmpty(null))
 
@@ -440,7 +440,7 @@ workflow {
     )
     KRAKEN2 (
         ch_short_reads,
-        KRAKEN2_DB_PREPARATION.out
+        KRAKEN2_DB_PREPARATION.out.db
     )
     ch_software_versions = ch_software_versions.mix(KRAKEN2.out.version.first().ifEmpty(null))
 
@@ -515,16 +515,16 @@ workflow {
         if (!params.single_end && (!params.skip_spades || !params.skip_spadeshybrid)){
             if (params.single_end){
                 POOL_SINGLE_READS ( ch_short_reads_grouped )
-                ch_short_reads_spades = POOL_SINGLE_READS.out
+                ch_short_reads_spades = POOL_SINGLE_READS.out.reads
             } else {
                 POOL_PAIRED_READS ( ch_short_reads_grouped )
-                ch_short_reads_spades = POOL_PAIRED_READS.out
+                ch_short_reads_spades = POOL_PAIRED_READS.out.reads
             }
         }
         // long reads
         if (!params.single_end && !params.skip_spadeshybrid){
             POOL_LONG_READS ( ch_long_reads_grouped )
-            ch_long_reads_spades = POOL_LONG_READS.out
+            ch_long_reads_spades = POOL_LONG_READS.out.reads
         }
     } else {
         ch_short_reads_spades = ch_short_reads
@@ -617,7 +617,7 @@ workflow {
         CAT_DB ( ch_cat_db_file )
         CAT ( 
             METABAT2_BINNING.out.bins,
-            CAT_DB.out
+            CAT_DB.out.db
         )
         ch_software_versions = ch_software_versions.mix(CAT.out.version.first().ifEmpty(null))
     }

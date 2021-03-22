@@ -24,8 +24,8 @@ process CENTRIFUGE {
 
     output:
     tuple val("centrifuge"), val(meta), path("results.krona"), emit: results_for_krona
-    path "report.txt"
-    path "kreport.txt"
+    path "report.txt"                                        , emit: report
+    path "kreport.txt"                                       , emit: kreport
     path '*.version.txt'                                     , emit: version
 
     script:

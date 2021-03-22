@@ -22,8 +22,8 @@ process MERGE_QUAST_AND_BUSCO {
     path(busco_sum)
 
     output:
-    path("quast_and_busco_summary.tsv")
-    path("quast_summary.tsv")
+    path("quast_and_busco_summary.tsv"), emit: quast_and_busco
+    path("quast_summary.tsv")          , emit: quast
 
     script:
     """

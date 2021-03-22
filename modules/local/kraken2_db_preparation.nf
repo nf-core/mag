@@ -16,7 +16,7 @@ process KRAKEN2_DB_PREPARATION {
     path db
 
     output:
-    tuple val("${db.baseName}"), path("*/*.k2d")
+    tuple val("${db.baseName}"), path("*/*.k2d"), emit: db
 
     script:
     """

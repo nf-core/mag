@@ -24,8 +24,8 @@ process KRAKEN2 {
 
     output:
     tuple val("kraken2"), val(meta), path("results.krona"), emit: results_for_krona
-    path  "kraken2_report.txt"
-    path  '*.version.txt'                                  , emit: version
+    path  "kraken2_report.txt"                            , emit: report
+    path  '*.version.txt'                                 , emit: version
 
     script:
     def software = getSoftwareName(task.process)

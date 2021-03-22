@@ -23,8 +23,8 @@ process METABAT2 {
 
     output:
     tuple val(meta), path("MetaBAT2/*.fa")            , emit: bins
-    path "${meta.assembler}-${assembly}-depth.txt.gz"
-    path "MetaBAT2/discarded/*"
+    path "${meta.assembler}-${assembly}-depth.txt.gz" , emit: depths
+    path "MetaBAT2/discarded/*"                       , emit: discarded
     path '*.version.txt'                              , emit: version
 
     script:

@@ -18,7 +18,7 @@ process CAT_DB {
     path(database)
 
     output:
-    tuple val("${database.toString().replace(".tar.gz", "")}"), path("database/*"), path("taxonomy/*")
+    tuple val("${database.toString().replace(".tar.gz", "")}"), path("database/*"), path("taxonomy/*"), emit: db
 
     script:
     """

@@ -23,7 +23,7 @@ process KRONA {
     path  "taxonomy/taxonomy.tab"
 
     output:
-    path "*.html"
+    path "*.html"       , emit: html
     path '*.version.txt', emit: version
 
     script:

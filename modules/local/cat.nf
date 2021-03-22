@@ -23,12 +23,12 @@ process CAT {
     tuple val(db_name), path("database/*"), path("taxonomy/*")
 
     output:
-    path("*.names.txt")
-    path("raw/*.ORF2LCA.txt")
-    path("raw/*.predicted_proteins.faa")
-    path("raw/*.predicted_proteins.gff")
-    path("raw/*.log")
-    path("raw/*.bin2classification.txt")
+    path("*.names.txt")                 , emit: tax_classification
+    path("raw/*.ORF2LCA.txt")           , emit: orf2lca
+    path("raw/*.predicted_proteins.faa"), emit: faa
+    path("raw/*.predicted_proteins.gff"), emit: gff
+    path("raw/*.log")                   , emit: log
+    path("raw/*.bin2classification.txt"), emit: tax_classification_taxids
     path '*.version.txt'                , emit: version
 
     script:

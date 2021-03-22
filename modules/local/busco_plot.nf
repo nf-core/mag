@@ -22,9 +22,9 @@ process BUSCO_PLOT {
     tuple val(meta), path(summaries)
 
     output:
-    path("${meta.assembler}-${meta.id}-busco_figure.png")
-    path("${meta.assembler}-${meta.id}-busco_figure.R")
-    path("${meta.assembler}-${meta.id}-busco_summary.txt")
+    path("${meta.assembler}-${meta.id}-busco_figure.png") , emit: png
+    path("${meta.assembler}-${meta.id}-busco_figure.R")   , emit: rscript
+    path("${meta.assembler}-${meta.id}-busco_summary.txt"), emit: summary
     path '*.version.txt'                                  , emit: version
 
     script:

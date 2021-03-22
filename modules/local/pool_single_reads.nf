@@ -18,7 +18,7 @@ process POOL_SINGLE_READS {
     tuple val(meta), path(reads)
 
     output:
-    tuple val(meta), path("pooled_${meta.id}.fastq.gz")
+    tuple val(meta), path("pooled_${meta.id}.fastq.gz"), emit: reads
 
     script:
     """
