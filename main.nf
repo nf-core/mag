@@ -47,31 +47,31 @@ multiqc_options.args += params.multiqc_title ? " --title \"$params.multiqc_title
 
 // Local: Modules
 include { GET_SOFTWARE_VERSIONS                               } from './modules/local/get_software_versions'       addParams( options: [publish_files : ['csv':'']]          )
-include { BOWTIE2_REMOVAL_BUILD as BOWTIE2_HOST_REMOVAL_BUILD } from './modules/local/bowtie2_removal_build'       addParams( options: [:]                                   )
+include { BOWTIE2_REMOVAL_BUILD as BOWTIE2_HOST_REMOVAL_BUILD } from './modules/local/bowtie2_removal_build'
 include { BOWTIE2_REMOVAL_ALIGN as BOWTIE2_HOST_REMOVAL_ALIGN } from './modules/local/bowtie2_removal_align'       addParams( options: modules['bowtie2_host_removal_align'] )
-include { BOWTIE2_REMOVAL_BUILD as BOWTIE2_PHIX_REMOVAL_BUILD } from './modules/local/bowtie2_removal_build'       addParams( options: [:]                                   )
+include { BOWTIE2_REMOVAL_BUILD as BOWTIE2_PHIX_REMOVAL_BUILD } from './modules/local/bowtie2_removal_build'
 include { BOWTIE2_REMOVAL_ALIGN as BOWTIE2_PHIX_REMOVAL_ALIGN } from './modules/local/bowtie2_removal_align'       addParams( options: modules['bowtie2_phix_removal_align'] )
-include { PORECHOP                                            } from './modules/local/porechop'                    addParams( options: [:]                                   )
+include { PORECHOP                                            } from './modules/local/porechop'
 include { NANOLYSE                                            } from './modules/local/nanolyse'                    addParams( options: modules['nanolyse']                   )
-include { FILTLONG                                            } from './modules/local/filtlong'                    addParams( options: [:]                                   )
+include { FILTLONG                                            } from './modules/local/filtlong'
 include { NANOPLOT as NANOPLOT_RAW                            } from './modules/local/nanoplot'                    addParams( options: modules['nanoplot_raw']               )
 include { NANOPLOT as NANOPLOT_FILTERED                       } from './modules/local/nanoplot'                    addParams( options: modules['nanoplot_filtered']          )
-include { CENTRIFUGE_DB_PREPARATION                           } from './modules/local/centrifuge_db_preparation'   addParams( options: [:]                                   )
+include { CENTRIFUGE_DB_PREPARATION                           } from './modules/local/centrifuge_db_preparation'
 include { CENTRIFUGE                                          } from './modules/local/centrifuge'                  addParams( options: modules['centrifuge']                 )
-include { KRAKEN2_DB_PREPARATION                              } from './modules/local/kraken2_db_preparation'      addParams( options: [:]                                   )
+include { KRAKEN2_DB_PREPARATION                              } from './modules/local/kraken2_db_preparation' 
 include { KRAKEN2                                             } from './modules/local/kraken2'                     addParams( options: modules['kraken2']                    )
-include { KRONA_DB                                            } from './modules/local/krona_db'                    addParams( options: [:]                                   )
+include { KRONA_DB                                            } from './modules/local/krona_db'
 include { KRONA                                               } from './modules/local/krona'                       addParams( options: modules['krona']                      )
-include { POOL_SINGLE_READS                                   } from './modules/local/pool_single_reads'           addParams( options: [:]                                   )
-include { POOL_PAIRED_READS                                   } from './modules/local/pool_paired_reads'           addParams( options: [:]                                   )
-include { POOL_SINGLE_READS as POOL_LONG_READS                } from './modules/local/pool_single_reads'           addParams( options: [:]                                   )
+include { POOL_SINGLE_READS                                   } from './modules/local/pool_single_reads'
+include { POOL_PAIRED_READS                                   } from './modules/local/pool_paired_reads'
+include { POOL_SINGLE_READS as POOL_LONG_READS                } from './modules/local/pool_single_reads'
 include { MEGAHIT                                             } from './modules/local/megahit'                     addParams( options: modules['megahit']                    )
 include { SPADES                                              } from './modules/local/spades'                      addParams( options: modules['spades']                     )
 include { SPADESHYBRID                                        } from './modules/local/spadeshybrid'                addParams( options: modules['spadeshybrid']               )
 include { QUAST                                               } from './modules/local/quast'                       addParams( options: modules['quast']                      )
 include { QUAST_BINS                                          } from './modules/local/quast_bins'                  addParams( options: modules['quast_bins']                 )
 include { MERGE_QUAST_AND_BUSCO                               } from './modules/local/merge_quast_and_busco'       addParams( options: modules['merge_quast_and_busco']      )
-include { CAT_DB                                              } from './modules/local/cat_db'                      addParams( options: [:]                                   )
+include { CAT_DB                                              } from './modules/local/cat_db'
 include { CAT                                                 } from './modules/local/cat'                         addParams( options: modules['cat']                        )
 include { MULTIQC                                             } from './modules/local/multiqc'                     addParams( options: multiqc_options                       )
 
@@ -81,7 +81,7 @@ include {
 } from './modules/local/functions'
 
 // Local: Sub-workflows
-include { METABAT2_BINNING    } from './subworkflows/local/metabat2_binning'      addParams( bowtie2_build_options: [:], bowtie2_align_options: modules['bowtie2_assembly_align'], metabat2_options: modules['metabat2']                                                   )
+include { METABAT2_BINNING    } from './subworkflows/local/metabat2_binning'      addParams( bowtie2_align_options: modules['bowtie2_assembly_align'], metabat2_options: modules['metabat2']                                                   )
 include { BUSCO_QC            } from './subworkflows/local/busco_qc'              addParams( busco_db_options: modules['busco_db_preparation'], busco_options: modules['busco'], busco_plot_options: modules['busco_plot'], busco_summary_options: modules['busco_summary'])
 
 // nf-core/modules: Modules
