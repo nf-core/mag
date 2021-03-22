@@ -32,9 +32,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#143](https://github.com/nf-core/mag/pull/143) - TSV `--input` file allows now also entries containing only short reads
 - [#145](https://github.com/nf-core/mag/pull/145) - When using TSV input files, uses sample IDs now for `FastQC` instead of basenames of original read files. Allows non-unique file basenames.
 
-### `Deprecated`
+### `Removed`
 
-- [#143](https://github.com/nf-core/mag/pull/143) - Change depreciated parameters: `--manifest` -> `--input`
+- [#143](https://github.com/nf-core/mag/pull/143) - Change parameter: `--manifest` -> `--input`
 
 ## v1.1.2 - 2020/11/24
 

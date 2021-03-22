@@ -482,18 +482,6 @@
                     "help_text": "Useful to allow reproducibility, as BUSCO datasets are frequently updated and old versions do not always remain accessible."
                 }
             }
-        },
-        "deprecated": {
-            "title": "Deprecated",
-            "type": "object",
-            "description": "",
-            "default": "",
-            "properties": {
-                "manifest": {
-                    "type": "string",
-                    "hidden": true
-                }
-            }
         }
     },
     "allOf": [
@@ -532,9 +520,6 @@
         },
         {
             "$ref": "#/definitions/bin_quality_check_options"
-        },
-        {
-            "$ref": "#/definitions/deprecated"
         }
     ]
 }
