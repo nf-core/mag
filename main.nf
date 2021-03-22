@@ -143,15 +143,15 @@ if (params.coassemble_group && params.binning_map_mode == 'own')
     exit 1, "Invalid combination of parameter '--binning_map_mode own' and parameter '--coassemble_group'. Select either 'all' or 'group' mapping mode when performing group-wise co-assembly."
 
 // Check if specified cpus for SPAdes are available
-if ( params.spades_fix_cpus && params.spades_fix_cpus > params.max_cpus )
+if ( params.spades_fix_cpus > params.max_cpus )
     exit 1, "Invalid parameter '--spades_fix_cpus ${params.spades_fix_cpus}', max cpus are '${params.max_cpus}'."
-if ( params.spadeshybrid_fix_cpus && params.spadeshybrid_fix_cpus > params.max_cpus )
+if ( params.spadeshybrid_fix_cpus > params.max_cpus )
     exit 1, "Invalid parameter '--spadeshybrid_fix_cpus ${params.spadeshybrid_fix_cpus}', max cpus are '${params.max_cpus}'."
 // Check if settings concerning reproducibility of used tools are consistent and print warning if not
-if (params.megahit_fix_cpu_1 || params.spades_fix_cpus || params.spadeshybrid_fix_cpus){
-    if (!params.skip_spades && !params.spades_fix_cpus)
+if (params.megahit_fix_cpu_1 || params.spades_fix_cpus != -1 || params.spadeshybrid_fix_cpus != -1){
+    if (!params.skip_spades && params.spades_fix_cpus == -1)
         log.warn "At least one assembly process is run with a parameter to ensure reproducible results, but SPAdes not. Consider using the parameter '--spades_fix_cpus'."
-    if (hybrid && !params.skip_spadeshybrid && !params.spadeshybrid_fix_cpus)
+    if (hybrid && params.skip_spadeshybrid && params.spadeshybrid_fix_cpus == -1)
         log.warn "At least one assembly process is run with a parameter to ensure reproducible results, but SPAdes hybrid not. Consider using the parameter '--spadeshybrid_fix_cpus'."
     if (!params.skip_megahit && !params.megahit_fix_cpu_1)
         log.warn "At least one assembly process is run with a parameter to ensure reproducible results, but MEGAHIT not. Consider using the parameter '--megahit_fix_cpu_1'."

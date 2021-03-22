@@ -250,13 +250,15 @@
                 },
                 "spades_fix_cpus": {
                     "type": "integer",
+                    "default": -1,
                     "description": "Fix number of CPUs used by SPAdes. Not increased with retries.",
-                    "help_text": "SPAdes is designed to be deterministic for a given number of threads. To generate reproducible results fix the number of CPUs using this parameter.\n\nWhen using this parameter do not change the number of CPUs for the `spades` process with a custom config file. This would result in an error.\n\nDefault: The number of CPUs is specified in the `base.config` file, and increased with each retry."
+                    "help_text": "SPAdes is designed to be deterministic for a given number of threads. To generate reproducible results fix the number of CPUs using this parameter.\n\nWhen using this parameter do not change the number of CPUs for the `spades` process with a custom config file. This would result in an error.\n\nDefault: -1 (the number of CPUs is specified in the `base.config` or in a custom config file, and increased with each retry)."
                 },
                 "spadeshybrid_fix_cpus": {
                     "type": "integer",
+                    "default": -1,
                     "description": "Fix number of CPUs used by SPAdes hybrid. Not increased with retries.",
-                    "help_text": "SPAdes is designed to be deterministic for a given number of threads. To generate reproducible results fix the number of CPUs using this parameter.\n\nWhen using this parameter do not change the number of CPUs for the `spadeshybrid` process with a custom config file. This would result in an error.\n\nDefault: The number of CPUs is specified in the `base.config` file, and increased with each retry."
+                    "help_text": "SPAdes is designed to be deterministic for a given number of threads. To generate reproducible results fix the number of CPUs using this parameter.\n\nWhen using this parameter do not change the number of CPUs for the `spadeshybrid` process with a custom config file. This would result in an error.\n\nDefault: -1 (the number of CPUs is specified in the `base.config` or in a custom config file, and increased with each retry)."
                 },
                 "metabat_rng_seed": {
                     "type": "integer",

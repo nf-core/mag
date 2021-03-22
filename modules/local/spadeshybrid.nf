@@ -32,7 +32,7 @@ process SPADESHYBRID {
     script:
     def software = getSoftwareName(task.process)
     maxmem = task.memory.toGiga()
-    if ( !params.spadeshybrid_fix_cpus || task.cpus == params.spadeshybrid_fix_cpus )
+    if ( params.spadeshybrid_fix_cpus == -1 || task.cpus == params.spadeshybrid_fix_cpus )
         """
         metaspades.py \
             ${params.spades_options} \
