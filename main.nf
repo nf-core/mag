@@ -448,7 +448,7 @@ workflow {
         KRONA_DB ()
         KRONA (
             CENTRIFUGE.out.results_for_krona.mix(KRAKEN2.out.results_for_krona),
-            KRONA_DB.out.collect()
+            KRONA_DB.out.db.collect()
         )
         ch_software_versions = ch_software_versions.mix(KRONA.out.version.first().ifEmpty(null))
     }

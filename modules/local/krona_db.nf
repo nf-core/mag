@@ -14,10 +14,13 @@ process KRONA_DB {
     }
 
     output:
-    path("taxonomy/taxonomy.tab")
+    path("taxonomy/taxonomy.tab"), emit: db
+    path '*.version.txt'         , emit: version
 
     script:
+    def software = getSoftwareName(task.process)
     """
     ktUpdateTaxonomy.sh taxonomy
+    echo \$(ktImportTaxonomy 2>&1) | sed 's/^.*KronaTools //; s/ - ktImportTaxonomy.*//' > ${software}.version.txt
     """
 }
