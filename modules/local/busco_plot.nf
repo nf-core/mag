@@ -25,8 +25,10 @@ process BUSCO_PLOT {
     path("${meta.assembler}-${meta.id}-busco_figure.png")
     path("${meta.assembler}-${meta.id}-busco_figure.R")
     path("${meta.assembler}-${meta.id}-busco_summary.txt")
+    path '*.version.txt'                                  , emit: version
 
     script:
+    def software = getSoftwareName(task.process)
     """
     # replace dots in bin names within summary file names by underscores
     # currently (BUSCO v4.1.3) generate_plot.py does not allow further dots
@@ -43,5 +45,7 @@ process BUSCO_PLOT {
     mv busco_figure.R "${meta.assembler}-${meta.id}-busco_figure.R"
 
     summary_busco.py short_summary.*.txt > "${meta.assembler}-${meta.id}-busco_summary.txt"
+
+    busco --version | sed "s/BUSCO //" > ${software}.version.txt
     """
 }
