@@ -23,7 +23,7 @@ process METABAT2 {
 
     output:
     tuple val(meta), path("MetaBAT2/*.fa")            , emit: bins
-    path "${meta.assembler}-${assembly}-depth.txt.gz" , emit: depths
+    path "${meta.assembler}-${meta.id}-depth.txt.gz"  , emit: depths
     path "MetaBAT2/discarded/*"                       , emit: discarded
     path '*.version.txt'                              , emit: version
 
@@ -31,20 +31,23 @@ process METABAT2 {
     def software = getSoftwareName(task.process)
     """
     OMP_NUM_THREADS=${task.cpus} jgi_summarize_bam_contig_depths --outputDepth depth.txt ${bam}
-    gzip -c depth.txt > "${meta.assembler}-${assembly}-depth.txt.gz"
     metabat2 -t "${task.cpus}" -i "${assembly}" -a depth.txt -o "MetaBAT2/${meta.assembler}-${meta.id}" -m ${params.min_contig_size} --unbinned --seed ${params.metabat_rng_seed}
+
+    gzip depth.txt
+    mv depth.txt.gz "${meta.assembler}-${meta.id}-depth.txt.gz"
 
     # save unbinned contigs above thresholds into individual files, dump others in one file
     split_fasta.py "MetaBAT2/${meta.assembler}-${meta.id}.unbinned.fa" ${params.min_length_unbinned_contigs} ${params.max_unbinned_contigs} ${params.min_contig_size}
 
-    mkdir MetaBAT2/discarded
-    mv "MetaBAT2/${meta.assembler}-${meta.id}.lowDepth.fa" MetaBAT2/discarded/
-    mv "MetaBAT2/${meta.assembler}-${meta.id}.tooShort.fa" MetaBAT2/discarded/
-    mv "MetaBAT2/${meta.assembler}-${meta.id}.unbinned.pooled.fa" MetaBAT2/discarded/
-    mv "MetaBAT2/${meta.assembler}-${meta.id}.unbinned.remaining.fa" MetaBAT2/discarded/
+    # delete splitted file so that it doesnt end up in following processes
+    rm "MetaBAT2/${meta.assembler}-${meta.id}.unbinned.fa"
 
-    # mv splitted file so that it doesnt end up in following processes
-    mv "MetaBAT2/${meta.assembler}-${meta.id}.unbinned.fa" "${meta.assembler}-${meta.id}.unbinned.fa"
+    mkdir MetaBAT2/discarded
+    gzip "MetaBAT2/${meta.assembler}-${meta.id}.lowDepth.fa" \
+         "MetaBAT2/${meta.assembler}-${meta.id}.tooShort.fa" \
+         "MetaBAT2/${meta.assembler}-${meta.id}.unbinned.pooled.fa" \
+         "MetaBAT2/${meta.assembler}-${meta.id}.unbinned.remaining.fa"
+    mv "MetaBAT2/${meta.assembler}-${meta.id}".*.fa.gz MetaBAT2/discarded/
 
     echo \$(metabat2 --help 2>&1) | sed "s/^.*version 2\\://; s/ (Bioconda.*//" > ${software}.version.txt
     """
