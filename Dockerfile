@@ -1,5 +1,5 @@
-FROM nfcore/base:1.13.1
-LABEL authors="No author provided" \
+FROM nfcore/base:1.13.2
+LABEL authors="Hadrien Gourlé, Daniel Straub, Sabrina Krakau" \
       description="Docker image containing all software requirements for the nf-core/mag pipeline"
 
 # Install the conda environment

@@ -58,7 +58,7 @@ The nf-core/mag pipeline comes with documentation about the pipeline: [usage](ht
 
 ## Credits
 
-nf-core/mag was originally written by No author provided.
+nf-core/mag was originally written by Hadrien Gourlé, Daniel Straub, Sabrina Krakau.
 
 We thank the following people for their extensive assistance in the development
 of this pipeline:
