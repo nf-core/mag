@@ -160,27 +160,39 @@ Please note the following additional requirements:
 * To run single-end data you must additionally specify `--single_end`
 * If left unspecified, a default pattern is used: `data/*{1,2}.fastq.gz`
 
-### TSV input file
+### Samplesheet input file
 
-Alternatively, to assign different groups or to include long reads for hybrid assembly with metaSPAdes, you can specify a TSV input file that contains the paths to your FASTQ files and additional metadata.
+Alternatively, to assign different groups or to include long reads for hybrid assembly with metaSPAdes, you can specify a CSV samplesheet input file that contains the paths to your FASTQ files and additional metadata.
 
-This TSV file should contain the following columns:
+This CSV file should contain the following columns:
 
-`Sample_ID  Group_ID  Short_Reads_R1  Short_Reads_R2  [Long_Reads]`
+`sample,group,short_reads_1,short_reads_2,long_reads`
 
-The path to the long reads is optional. A valid example could look like the following:
+The path to `long_reads` and `short_reads_2` is optional. Valid examples could look like the following:
 
-| | | | | |
-|-|-|-|-|-|
-| sample1 | 0 | data/sample1_R1.fastq.gz | data/sample1_R2.fastq.gz | data/sample1.fastq.gz |
-| sample2 | 0 | data/sample2_R1.fastq.gz | data/sample2_R2.fastq.gz | data/sample2.fastq.gz |
-| sample3 | 1 | data/sample3_R1.fastq.gz | data/sample3_R2.fastq.gz | |
+```bash
+sample,group,short_reads_1,short_reads_2,long_reads
+sample1,0,data/sample1_R1.fastq.gz,data/sample1_R2.fastq.gz,data/sample1.fastq.gz
+sample2,0,data/sample2_R1.fastq.gz,data/sample2_R2.fastq.gz,data/sample2.fastq.gz
+sample3,1,data/sample3_R1.fastq.gz,data/sample3_R2.fastq.gz,
+```
+
+or
+
+```bash
+sample,group,short_reads_1,short_reads_2,long_reads
+sample1,0,data/sample1.fastq.gz,,
+sample2,0,data/sample2.fastq.gz,,
+```
 
 Please note the following requirements:
 
-* 4 or 5 tab seperated columns
-* Valid file extension: `.tsv`
-* No header
+* 5 comma-seperated columns
+* Valid file extension: `.csv`
+* Must contain the header `sample,group,short_reads_1,short_reads_2,long_reads`
 * Sample IDs must be unique
+* `long_reads` can only be provided in combination with paired-end short read data
+* Within one samplesheet either only single-end or only paired-end reads can be specified
+* If single-end reads are specified, the command line parameter `--single_end` must be specified as well
 
 Again, by default, the group information is only used to compute co-abundances for the binning step, but not for group-wise co-assembly (see the parameter docs for [`--coassemble_group`](https://nf-co.re/mag/parameters#coassemble_group) and [`--binning_map_mode`](https://nf-co.re/mag/parameters#binning_map_mode) for more information about how this group information can be used).

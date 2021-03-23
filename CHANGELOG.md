@@ -5,6 +5,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v1.3.0dev - [date]
 
+### `Added`
+
+### `Changed`
+
+- [#162](https://github.com/nf-core/mag/pull/162) - Switch to DSL2
+- [#162](https://github.com/nf-core/mag/pull/162) - Changed `--input` file format from `TSV` to `CSV` format, requires header now
+- [#162](https://github.com/nf-core/mag/pull/162) - Update `README.md`, `docs/usage.md` and `docs/output.md`
+- [#162](https://github.com/nf-core/mag/pull/162) - Update `FastP` from version `0.20.0` to `0.20.1`
+- [#162](https://github.com/nf-core/mag/pull/162) - Update `Bowtie2` from version `2.3.5` to `2.4.2`
+- [#162](https://github.com/nf-core/mag/pull/162) - Update `FastQC` from version `0.11.8` to `0.11.9`
+
 ## v1.2.0 - 2020/02/10
 
 ### `Added`
@@ -21,9 +32,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#143](https://github.com/nf-core/mag/pull/143) - TSV `--input` file allows now also entries containing only short reads
 - [#145](https://github.com/nf-core/mag/pull/145) - When using TSV input files, uses sample IDs now for `FastQC` instead of basenames of original read files. Allows non-unique file basenames.
 
-### `Deprecated`
+### `Removed`
 
-- [#143](https://github.com/nf-core/mag/pull/143) - Change depreciated parameters: `--manifest` -> `--input`
+- [#143](https://github.com/nf-core/mag/pull/143) - Change parameter: `--manifest` -> `--input`
 
 ## v1.1.2 - 2020/11/24
 

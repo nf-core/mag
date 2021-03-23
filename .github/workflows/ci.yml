@@ -20,44 +20,10 @@ jobs:
     strategy:
       matrix:
         # Nextflow versions: check pipeline minimum and current latest
-        nxf_ver: ['20.04.0', '']
+        nxf_ver: ['20.10.0', '']
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
-
-      - name: Check if Dockerfile or Conda environment changed
-        uses: technote-space/get-diff-action@v4
-        with:
-          FILES: |
-            Dockerfile
-            environment.yml
-
-      - name: Build new docker image
-        if: env.MATCHED_FILES
-        run: docker build --no-cache . -t nfcore/mag:dev
-
-      - name: Pull docker image
-        if: ${{ !env.MATCHED_FILES }}
-        run: |
-          docker pull nfcore/mag:dev
-          docker tag nfcore/mag:dev nfcore/mag:dev
-
-      - name: Check if BUSCO Dockerfile or Conda environment changed
-        uses: technote-space/get-diff-action@v4
-        with:
-          FILES: |
-            containers/busco/Dockerfile
-            containers/busco/environment.yml
-
-      - name: Build new docker image for BUSCO
-        if: env.MATCHED_FILES
-        run: docker build --no-cache ./containers/busco/ -t nfcore/magbusco:dev
-
-      - name: Pull docker image for BUSCO
-        if: ${{ !env.MATCHED_FILES }}
-        run: |
-          docker pull nfcore/magbusco:dev
-          docker tag nfcore/magbusco:dev nfcore/magbusco:dev
 
       - name: Install Nextflow
         env:
@@ -69,12 +35,31 @@ jobs:
       - name: Run pipeline with test data
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile test,docker
-      - name: Run pipeline with test data for host read removal using fasta reference sequence
+
+
+  profiles:
+    name: Run workflow profile
+    # Only run on push if this is the nf-core dev branch (merged PRs)
+    if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/mag') }}
+    runs-on: ubuntu-latest
+    env:
+      NXF_VER: '20.10.0'
+      NXF_ANSI_LOG: false
+    strategy:
+      matrix:
+        # Run remaining test profiles with minimum nextflow version
+        profile: [test_host_rm, test_hybrid, test_hybrid_host_rm]
+    steps:
+      - name: Check out pipeline code
+        uses: actions/checkout@v2
+
+      - name: Install Nextflow
+        env:
+          CAPSULE_LOG: none
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test_host_rm,docker
-      - name: Run pipeline with test hybrid data
+          wget -qO- get.nextflow.io | bash
+          sudo mv nextflow /usr/local/bin/
+
+      - name: Run pipeline with ${{ matrix.profile }} test profile
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test_hybrid,docker
-      - name: Run pipeline with test hybrid data and host read removal
-        run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test_hybrid_host_rm,docker
+          nextflow run ${GITHUB_WORKSPACE} -profile ${{ matrix.profile }},docker
