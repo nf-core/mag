@@ -221,10 +221,10 @@ All the files and contigs in this folder will be assessed by QUAST and BUSCO.
 **Output files:**
 
 * `GenomeBinning/MetaBAT2/discarded/`
-  * `*.lowDepth.fa`: Low depth contigs that are filtered by MetaBat2
-  * `*.tooShort.fa`: Too short contigs that are filtered by MetaBat2
-  * `*.unbinned.pooled.fa`: Pooled unbinned contigs equal or above `--min_contig_size`, by default 1500 bp.
-  * `*.unbinned.remaining.fa`: Remaining unbinned contigs below `--min_contig_size`, by default 1500 bp, but not in any other file.
+  * `*.lowDepth.fa.gz`: Low depth contigs that are filtered by MetaBat2
+  * `*.tooShort.fa.gz`: Too short contigs that are filtered by MetaBat2
+  * `*.unbinned.pooled.fa.gz`: Pooled unbinned contigs equal or above `--min_contig_size`, by default 1500 bp.
+  * `*.unbinned.remaining.fa.gz`: Remaining unbinned contigs below `--min_contig_size`, by default 1500 bp, but not in any other file.
 
 All the files in this folder contain small and/or unbinned contigs that are not further processed.
 
