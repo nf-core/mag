@@ -39,15 +39,15 @@ process METABAT2 {
     # save unbinned contigs above thresholds into individual files, dump others in one file
     split_fasta.py "MetaBAT2/${meta.assembler}-${meta.id}.unbinned.fa" ${params.min_length_unbinned_contigs} ${params.max_unbinned_contigs} ${params.min_contig_size}
 
+    # delete splitted file so that it doesnt end up in following processes
+    rm "MetaBAT2/${meta.assembler}-${meta.id}.unbinned.fa"
+
     mkdir MetaBAT2/discarded
     gzip "MetaBAT2/${meta.assembler}-${meta.id}.lowDepth.fa" \
          "MetaBAT2/${meta.assembler}-${meta.id}.tooShort.fa" \
          "MetaBAT2/${meta.assembler}-${meta.id}.unbinned.pooled.fa" \
          "MetaBAT2/${meta.assembler}-${meta.id}.unbinned.remaining.fa"
     mv "MetaBAT2/${meta.assembler}-${meta.id}".*.fa.gz MetaBAT2/discarded/
-
-    # mv splitted file so that it doesnt end up in following processes
-    mv "MetaBAT2/${meta.assembler}-${meta.id}.unbinned.fa" "${meta.assembler}-${meta.id}.unbinned.fa"
 
     echo \$(metabat2 --help 2>&1) | sed "s/^.*version 2\\://; s/ (Bioconda.*//" > ${software}.version.txt
     """
