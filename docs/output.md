@@ -152,7 +152,7 @@ Trimmed (short) reads are assembled with both megahit and SPAdes. Hybrid assembl
   * `[sample/group].log`: Log file
   * `[sample/group]_QC/`: Directory containing QUAST files and Bowtie2 mapping logs
   * `[sample/group]_QC/MEGAHIT-[sample].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the sample that the metagenome was assembled from, only present if `--coassemble_group` is not set.
-  * `[sample/group]_QC/MEGAHIT-[sample/group]-[sampleToMap].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the respective sample ("sampleToMap").
+  * `[sample/group]_QC/MEGAHIT-[sample/group]-[sampleToMap].bowtie2.log` and/or `[sample]_QC/MEGAHIT-[sample].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the respective sample ("sampleToMap").
 
 ### SPAdes
 
@@ -167,7 +167,7 @@ Trimmed (short) reads are assembled with both megahit and SPAdes. Hybrid assembl
   * `[sample/group].log`: Log file
   * `[sample/group]_QC/`: Directory containing QUAST files and Bowtie2 mapping logs
   * `[sample/group]_QC/SPAdes-[sample].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the sample that the metagenome was assembled from, only present if `--coassemble_group` is not set.
-  * `[sample/group]_QC/SPAdes-[sample/group]-[sampleToMap].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the respective sample ("sampleToMap").
+  * `[sample/group]_QC/SPAdes-[sample/group]-[sampleToMap].bowtie2.log` and/or `[sample]_QC/SPAdes-[sample].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the respective sample ("sampleToMap").
 
 ### SPAdesHybrid
 
@@ -182,7 +182,7 @@ SPAdesHybrid is a part of the [SPAdes](http://cab.spbu.ru/software/spades/) soft
   * `[sample/group].log`: Log file
   * `[sample/group]_QC/`: Directory containing QUAST files and Bowtie2 mapping logs
   * `[sample/group]_QC/SPAdesHybrid-[sample].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the sample that the metagenome was assembled from, only present if `--coassemble_group` is not set.
-  * `[sample/group]_QC/SPAdesHybrid-[sample/group]-[sampleToMap].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the respective sample ("sampleToMap").
+  * `[sample/group]_QC/SPAdesHybrid-[sample/group]-[sampleToMap].bowtie2.log` and/or `[sample]_QC/SPAdesHybrid-[sample].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the respective sample ("sampleToMap").
 
 ### Metagenome QC with QUAST
 
@@ -255,8 +255,8 @@ Files in these two folders contain all contigs of an assembly.
 
 * `GenomeBinning/QC/BUSCO/`
   * `[assembler]-[bin]_busco.log`: BUSCO log file
-  * `[assembler]-[bin]_busco.fna`: Nucleotide sequence of all identified BUSCOs
-  * `[assembler]-[bin]_busco.faa`: Aminoacid sequence of all identified BUSCOs
+  * `[assembler]-[bin]_buscos.fna.gz`: Nucleotide sequence of all identified BUSCOs
+  * `[assembler]-[bin]_buscos.faa.gz`: Aminoacid sequence of all identified BUSCOs
 
 If the parameter `--save_busco_reference` is set the used BUSCO reference is stored.
 
