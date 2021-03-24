@@ -7,6 +7,10 @@ options    = initOptions(params.options)
 process GTDBTK_CLASSIFY {
     tag "${meta.assembler}-${meta.id}"
 
+    publishDir "${params.outdir}",
+        mode: params.publish_dir_mode,
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:"${meta.assembler}/${meta.id}") }
+
     conda (params.enable_conda ? "conda-forge::gtdbtk=1.4.1" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
         container "https://depot.galaxyproject.org/singularity/gtdbtk:1.4.1--py_1"
@@ -19,8 +23,15 @@ process GTDBTK_CLASSIFY {
     tuple val(db_name), path("database/*")
 
     output:
-    tuple val(meta), path("classify/*"), emit: taxonomy
-    path '*.version.txt'               , emit: version
+    path 'classify/gtdbtk.*.summary.tsv'        , emit: summary
+    path 'classify/gtdbtk.*.classify.tree'      , emit: tree
+    path 'classify/gtdbtk.*.markers_summary.tsv', emit: markers
+    path 'classify/gtdbtk.*.msa.fasta'          , emit: msa
+    path 'classify/gtdbtk.*.user_msa.fasta'     , emit: user_msa
+    path 'classify/gtdbtk.*.filtered.tsv'       , emit: filtered
+    path 'classify/gtdbtk.log'                  , emit: log
+    path 'classify/gtdbtk.warnings.log'         , emit: warnings
+    path '*.version.txt'                        , emit: version
 
     script:
     def software = getSoftwareName(task.process)
