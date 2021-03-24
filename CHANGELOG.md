@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#162](https://github.com/nf-core/mag/pull/162) - Update `Bowtie2` from version `2.3.5` to `2.4.2`
 - [#162](https://github.com/nf-core/mag/pull/162) - Update `FastQC` from version `0.11.8` to `0.11.9`
 - [#172](https://github.com/nf-core/mag/pull/172) - Compressed discarded MetaBAT2 output files
+- [#176](https://github.com/nf-core/mag/pull/176) - Update CAT DB link
 
 ### `Fixed`
 
