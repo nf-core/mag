@@ -11,11 +11,11 @@ process BUSCO {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:'') }
 
-    conda (params.enable_conda ? "bioconda::busco=4.1.4" : null)
+    conda (params.enable_conda ? "bioconda::busco=5.1.0" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/busco:4.1.4--py_2"
+        container "https://depot.galaxyproject.org/singularity/busco:5.1.0--py_1"
     } else {
-        container "quay.io/biocontainers/busco:4.1.4--py_2"
+        container "quay.io/biocontainers/busco:5.1.0--py_1"
     }
 
     input:
@@ -37,10 +37,6 @@ process BUSCO {
         cp_augustus_config = "N"
 
     """
-    # get path to custom config file for busco (already configured during conda installation)
-    busco_path="\$(which busco)"
-    config_file="\${busco_path%bin/busco}share/busco/config.ini"
-
     # ensure augustus has write access to config directory
     if [ ${cp_augustus_config} = "Y" ] ; then
         cp -r /usr/local/config/ augustus_config/
@@ -54,7 +50,6 @@ process BUSCO {
     busco --lineage_dataset dataset/${db} \
         --mode genome \
         --in ${bin} \
-        --config \${config_file} \
         --cpu "${task.cpus}" \
         --out "BUSCO" > ${bin}_busco.log
 

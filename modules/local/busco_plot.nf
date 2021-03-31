@@ -11,11 +11,11 @@ process BUSCO_PLOT {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:'') }
 
-    conda (params.enable_conda ? "bioconda::busco=4.1.4" : null)
+    conda (params.enable_conda ? "bioconda::busco=5.1.0" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/busco:4.1.4--py_2"
+        container "https://depot.galaxyproject.org/singularity/busco:5.1.0--py_1"
     } else {
-        container "quay.io/biocontainers/busco:4.1.4--py_2"
+        container "quay.io/biocontainers/busco:5.1.0--py_1"
     }
 
     input:
@@ -31,7 +31,7 @@ process BUSCO_PLOT {
     def software = getSoftwareName(task.process)
     """
     # replace dots in bin names within summary file names by underscores
-    # currently (BUSCO v4.1.3) generate_plot.py does not allow further dots
+    # currently (BUSCO v5.1.0) generate_plot.py does not allow further dots
     for sum in ${summaries}; do
         [[ \${sum} =~ short_summary.(.*).${meta.assembler}-${meta.id}.(.*).txt ]];
         db_name=\${BASH_REMATCH[1]}
