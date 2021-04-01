@@ -15,13 +15,20 @@ include { BUSCO_SUMMARY                           } from '../../modules/local/bu
 workflow BUSCO_QC {
     take:
     busco_db_file           // channel: path
+    busco_download_folder
     bins                    // channel: [ val(meta), path(bin) ]
 
     main:
-    BUSCO_DB_PREPARATION ( busco_db_file )
+    if (params.busco_reference){
+        BUSCO_DB_PREPARATION ( busco_db_file )
+        ch_busco_db = BUSCO_DB_PREPARATION.out.db
+    } else {
+        ch_busco_db = Channel.empty()
+    }
     BUSCO (
         bins,
-        BUSCO_DB_PREPARATION.out.db
+        ch_busco_db.collect().ifEmpty([]),
+        busco_download_folder.collect().ifEmpty([])
     )
 
     // group by assembler and sample name for plotting

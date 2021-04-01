@@ -207,13 +207,23 @@ if ( params.host_genome ) {
 /* --  Create channel for reference databases  -- */
 ////////////////////////////////////////////////////
 
-if(!params.skip_busco){
+if(params.busco_reference){ //!params.skip_busco){ // TODO remove param?
     Channel
         .value(file( "${params.busco_reference}" ))
         .set { ch_busco_db_file }
 } else {
     ch_busco_db_file = Channel.empty()
 }
+if (params.busco_download_path) {
+    Channel
+        .value(file( "${params.busco_download_path}" ))
+        .set { ch_busco_download_folder }
+} else {
+    ch_busco_download_folder = Channel.empty()
+}
+// TODO check if both specified -> error!
+// TODO add auto-lineage param
+// TODO if offline mode and no busco_download_path -> error
 
 if(params.centrifuge_db){
     Channel
@@ -548,6 +558,7 @@ workflow {
         */
         BUSCO_QC (
             ch_busco_db_file,
+            ch_busco_download_folder,
             METABAT2_BINNING.out.bins.transpose()
         )
         ch_busco_multiqc = BUSCO_QC.out.multiqc

@@ -21,6 +21,7 @@ process BUSCO {
     input:
     tuple val(meta), path(bin)
     path(db)
+    path(download_folder)
 
     output:
     tuple val(meta), path("short_summary.specific.*.${bin}.txt"), emit: summary
@@ -36,6 +37,12 @@ process BUSCO {
     else
         cp_augustus_config = "N"
 
+    if (params.busco_reference)
+        p = "--lineage_dataset dataset/${db}"
+    else if (params.busco_download_path)
+        p = "--auto-lineage --offline --download_path ${params.busco_download_path}"
+    else
+        p = "--auto-lineage"
     """
     # ensure augustus has write access to config directory
     if [ ${cp_augustus_config} = "Y" ] ; then
@@ -44,10 +51,12 @@ process BUSCO {
     fi
 
     # place db in extra folder to ensure BUSCO recognizes it as path (instead of downloading it)
-    mkdir dataset
-    mv ${db} dataset/
+    if [ ${params.busco_reference} != "false" ] ; then
+        mkdir dataset
+        mv ${db} dataset/
+    fi
 
-    busco --lineage_dataset dataset/${db} \
+    busco ${p} \
         --mode genome \
         --in ${bin} \
         --cpu "${task.cpus}" \
