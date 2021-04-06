@@ -273,7 +273,8 @@ ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multi
 ////////////////////////////////////////////////////
 
 // Info required for completion email and summary
-def multiqc_report = []
+def multiqc_report    = []
+def busco_failed_bins = []
 
 workflow {
 
@@ -563,6 +564,11 @@ workflow {
         )
         ch_busco_multiqc = BUSCO_QC.out.multiqc
         ch_software_versions = ch_software_versions.mix(BUSCO_QC.out.version.first().ifEmpty(null))
+        // process information if BUSCO analysis failed for individual bins due to no matching genes
+        BUSCO_QC.out
+            .failed_bins
+            .splitText()
+            .map { bin -> if (!bin.contains(".unbinned.")) busco_failed_bins.add(bin) }
 
         if (!params.skip_quast){
             QUAST_BINS ( METABAT2_BINNING.out.bins )
@@ -623,8 +629,8 @@ workflow {
 ////////////////////////////////////////////////////
 
 workflow.onComplete {
-    Completion.email(workflow, params, summary_params, projectDir, log, multiqc_report)
-    Completion.summary(workflow, params, log)
+    Completion.email(workflow, params, summary_params, projectDir, log, multiqc_report, busco_failed_bins)
+    Completion.summary(workflow, params, log, busco_failed_bins)
 }
 
 ////////////////////////////////////////////////////

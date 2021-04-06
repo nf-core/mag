@@ -24,11 +24,12 @@ process BUSCO {
     path(download_folder)
 
     output:
-    tuple val(meta), path("short_summary.specific.*.${bin}.txt"), emit: summary
+    tuple val(meta), path("short_summary.specific.*.${bin}.txt"), optional:true , emit: summary
     path("${bin}_busco.log")
-    path("${bin}_buscos.faa.gz") optional true
-    path("${bin}_buscos.fna.gz") optional true
-    path '*.version.txt'                                        , emit: version
+    path("${bin}_buscos.faa.gz"), optional:true
+    path("${bin}_buscos.fna.gz"), optional:true
+    tuple val(meta), path("${bin}_busco.no_genes_found.txt"), optional:true     , emit: failed_bins
+    path '*.version.txt'                                                        , emit: version
 
     script:
     def software = getSoftwareName(task.process)
@@ -56,34 +57,43 @@ process BUSCO {
         mv ${db} dataset/
     fi
 
-    busco ${p} \
+    if busco ${p} \
         --mode genome \
         --in ${bin} \
         --cpu "${task.cpus}" \
-        --out "BUSCO" > ${bin}_busco.log
+        --out "BUSCO" > ${bin}_busco.log 2> ${bin}_busco.err; then
 
-    # get used db name
-    # (set nullgob: if pattern matches no files, expand to a null string rather than to itself)
-    shopt -s nullglob
-    summaries=(BUSCO/short_summary.specific.*.BUSCO.txt)
-    if [ \${#summaries[@]} -ne 1 ]; then
-        echo "ERROR: none or multiple 'BUSCO/short_summary.specific.*.BUSCO.txt' files found. Expected one."
-        exit 1
+        # get used db name
+        # (set nullgob: if pattern matches no files, expand to a null string rather than to itself)
+        shopt -s nullglob
+        summaries=(BUSCO/short_summary.specific.*.BUSCO.txt)
+        if [ \${#summaries[@]} -ne 1 ]; then
+            echo "ERROR: none or multiple 'BUSCO/short_summary.specific.*.BUSCO.txt' files found. Expected one."
+            exit 1
+        fi
+        [[ \$summaries =~ BUSCO/short_summary.specific.(.*).BUSCO.txt ]];
+        db_name="\${BASH_REMATCH[1]}"
+        echo "Used database: \${db_name}"
+
+        cp BUSCO/short_summary.specific.\${db_name}.BUSCO.txt short_summary.specific.\${db_name}.${bin}.txt
+
+        for f in BUSCO/run_\${db_name}/busco_sequences/single_copy_busco_sequences/*faa; do
+            cat BUSCO/run_\${db_name}/busco_sequences/single_copy_busco_sequences/*faa | gzip >${bin}_buscos.faa.gz
+            break
+        done
+        for f in BUSCO/run_\${db_name}/busco_sequences/single_copy_busco_sequences/*fna; do
+            cat BUSCO/run_\${db_name}/busco_sequences/single_copy_busco_sequences/*fna | gzip >${bin}_buscos.fna.gz
+            break
+        done
+
+    elif grep -qe "ERROR:\tNo genes were recognized by BUSCO" ${bin}_busco.err; then
+        echo "ERROR: No genes were recognized by BUSCO! (see also ${bin}_busco.err)"
+        echo "${bin}" > "${bin}_busco.no_genes_found.txt"
+    else
+        echo "ERROR: exit code not 0, but not due to no genes recognized by BUSCO!"
+        #exit 1
+        echo "${bin}" > "${bin}_busco.no_genes_found.txt"
     fi
-    [[ \$summaries =~ BUSCO/short_summary.specific.(.*).BUSCO.txt ]];
-    db_name="\${BASH_REMATCH[1]}"
-    echo "Used database: \${db_name}"
-
-    cp BUSCO/short_summary.specific.\${db_name}.BUSCO.txt short_summary.specific.\${db_name}.${bin}.txt
-
-    for f in BUSCO/run_\${db_name}/busco_sequences/single_copy_busco_sequences/*faa; do
-        cat BUSCO/run_\${db_name}/busco_sequences/single_copy_busco_sequences/*faa | gzip >${bin}_buscos.faa.gz
-        break
-    done
-    for f in BUSCO/run_\${db_name}/busco_sequences/single_copy_busco_sequences/*fna; do
-        cat BUSCO/run_\${db_name}/busco_sequences/single_copy_busco_sequences/*fna | gzip >${bin}_buscos.fna.gz
-        break
-    done
 
     busco --version | sed "s/BUSCO //" > ${software}.version.txt
     """

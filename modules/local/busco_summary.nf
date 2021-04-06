@@ -18,13 +18,17 @@ process BUSCO_SUMMARY {
     }
 
     input:
-    path "short_summary.*.txt"
+    path(summaries)
+    path(failed_bins)
 
     output:
     path "busco_summary.txt", emit: summary
 
     script:
+    def s = summaries.size() > 0 ? "-s ${summaries}" : ""
+    def f = failed_bins.size() > 0 ? "-f ${failed_bins}" : ""
     """
-    summary_busco.py short_summary.*.txt > busco_summary.txt
+    summary_busco.py $s $f > busco_summary.txt
     """
 }
+

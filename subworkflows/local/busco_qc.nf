@@ -31,12 +31,28 @@ workflow BUSCO_QC {
         busco_download_folder.collect().ifEmpty([])
     )
 
-    // group by assembler and sample name for plotting
-    BUSCO_PLOT ( BUSCO.out.summary.groupTuple(by: 0) )
-    BUSCO_SUMMARY ( BUSCO.out.summary.map{it[1]}.collect() )
+    // group by assembler and sample name for plotting, join with files for failed bins and reformat
+    BUSCO.out.summary.groupTuple(by: 0)
+        .join(BUSCO.out.failed_bins.groupTuple(by: 0), remainder: true)
+        .map { meta, summaries, failed_bins ->
+                    if (summaries == null) [meta, [], failed_bins]
+                    else if (failed_bins == null) [meta, summaries, []]
+                    else [meta, summaries, failed_bins]
+        }
+        .set { ch_results_busco_plot }
+
+    BUSCO_PLOT (
+        ch_results_busco_plot
+    )
+
+    BUSCO_SUMMARY (
+        BUSCO.out.summary.map{it[1]}.collect(),
+        BUSCO.out.failed_bins.map{it[1]}.collect()
+    )
 
     emit:
-    summary = BUSCO_SUMMARY.out.summary
-    multiqc = BUSCO.out.summary.map{it[1]}
-    version = BUSCO.out.version
+    summary     = BUSCO_SUMMARY.out.summary
+    failed_bins = BUSCO.out.failed_bins.map{it[1]}
+    multiqc     = BUSCO.out.summary.map{it[1]}
+    version     = BUSCO.out.version
 }

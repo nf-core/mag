@@ -3,10 +3,13 @@
  */
 
 class Completion {
-    static void email(workflow, params, summary_params, projectDir, log, multiqc_report=[]) {
+    static void email(workflow, params, summary_params, projectDir, log, multiqc_report=[], busco_failed_bins = []) {
 
         // Set up the e-mail variables
         def subject = "[$workflow.manifest.name] Successful: $workflow.runName"
+        if (busco_failed_bins.size() > 0) {
+            subject = "[$workflow.manifest.name] Partially successful: For ${busco_failed_bins.size()} bin(s) the Busco analysis failed because no genes where found: $workflow.runName"
+        }
         if (!workflow.success) {
             subject = "[$workflow.manifest.name] FAILED: $workflow.runName"
         }
@@ -40,6 +43,7 @@ class Completion {
         email_fields['commandLine']  = workflow.commandLine
         email_fields['projectDir']   = workflow.projectDir
         email_fields['summary']      = summary << misc_fields
+        email_fields['busco_failed_bins'] = busco_failed_bins
         
         // On success try attach the multiqc report
         def mqc_report = null
@@ -111,8 +115,17 @@ class Completion {
         output_tf.withWriter { w -> w << email_txt }
     }
 
-    static void summary(workflow, params, log) {
+    static void summary(workflow, params, log, busco_failed_bins) {
         Map colors = Headers.log_colours(params.monochrome_logs)
+
+        if (busco_failed_bins.size() > 0) {
+            def failed_bins = ''
+            for (bin in busco_failed_bins) {
+                failed_bins += "    ${bin}\n"
+            }
+            log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} For ${busco_failed_bins.size()} bin(s) the Busco analysis failed because no genes where found:\n${failed_bins}${colors.reset}-"
+        }
+
         if (workflow.success) {
             if (workflow.stats.ignoredCount == 0) {
                 log.info "-${colors.purple}[$workflow.manifest.name]${colors.green} Pipeline completed successfully${colors.reset}-"
