@@ -203,11 +203,21 @@ if ( params.host_genome ) {
     ch_host_fasta = Channel.empty()
 }
 
+if (params.skip_busco && params.busco_reference){
+    exit 1, "Both --skip_busco and --busco_reference are specififed! Invalid combination, please specify either --skip_busco or --busco_reference."
+}
+if (params.skip_busco && params.busco_download_path){
+    exit 1, "Both --skip_busco and --busco_download_path are specififed! Invalid combination, please specify either --skip_busco or --busco_download_path."
+}
+if (params.busco_reference && params.busco_download_path){
+    exit 1, "Both --busco_reference and --busco_download_path are specififed! Invalid combination, please specify either --busco_reference or --busco_download_path."
+}
+
 ////////////////////////////////////////////////////
 /* --  Create channel for reference databases  -- */
 ////////////////////////////////////////////////////
 
-if(params.busco_reference){ //!params.skip_busco){ // TODO remove param?
+if(params.busco_reference){
     Channel
         .value(file( "${params.busco_reference}" ))
         .set { ch_busco_db_file }
@@ -221,9 +231,6 @@ if (params.busco_download_path) {
 } else {
     ch_busco_download_folder = Channel.empty()
 }
-// TODO check if both specified -> error!
-// TODO add auto-lineage param
-// TODO if offline mode and no busco_download_path -> error
 
 if(params.centrifuge_db){
     Channel
