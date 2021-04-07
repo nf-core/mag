@@ -203,15 +203,18 @@ if ( params.host_genome ) {
     ch_host_fasta = Channel.empty()
 }
 
-if (params.skip_busco && params.busco_reference){
-    exit 1, "Both --skip_busco and --busco_reference are specififed! Invalid combination, please specify either --skip_busco or --busco_reference."
+if (params.skip_busco){
+    if (params.busco_reference)
+        exit 1, "Both --skip_busco and --busco_reference are specififed! Invalid combination, please specify either --skip_busco or --busco_reference."
+    if (params.busco_download_path)
+        exit 1, "Both --skip_busco and --busco_download_path are specififed! Invalid combination, please specify either --skip_busco or --busco_download_path."
+    if (params.busco_auto_lineage_prok)
+        exit 1, "Both --skip_busco and --busco_auto_lineage_prok are specififed! Invalid combination, please specify either --skip_busco or --busco_auto_lineage_prok."
 }
-if (params.skip_busco && params.busco_download_path){
-    exit 1, "Both --skip_busco and --busco_download_path are specififed! Invalid combination, please specify either --skip_busco or --busco_download_path."
-}
-if (params.busco_reference && params.busco_download_path){
+if (params.busco_reference && params.busco_download_path)
     exit 1, "Both --busco_reference and --busco_download_path are specififed! Invalid combination, please specify either --busco_reference or --busco_download_path."
-}
+if (params.busco_auto_lineage_prok && params.busco_reference)
+    exit 1, "Both --busco_auto_lineage_prok and --busco_reference are specififed! Invalid combination, please specify either --busco_auto_lineage_prok or --busco_reference."
 
 ////////////////////////////////////////////////////
 /* --  Create channel for reference databases  -- */

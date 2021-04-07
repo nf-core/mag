@@ -38,12 +38,16 @@ process BUSCO {
     else
         cp_augustus_config = "N"
 
-    if (params.busco_reference)
+    if (params.busco_reference){
         p = "--lineage_dataset dataset/${db}"
-    else if (params.busco_download_path)
-        p = "--auto-lineage --offline --download_path ${download_folder}"
-    else
-        p = "--auto-lineage"
+    } else {
+        if (params.busco_auto_lineage_prok)
+            p = "--auto-lineage-prok"
+        else
+            p = "--auto-lineage"
+        if (params.busco_download_path)
+            p += " --offline --download_path ${download_folder}"
+    }
     """
     # ensure augustus has write access to config directory
     if [ ${cp_augustus_config} = "Y" ] ; then
