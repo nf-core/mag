@@ -41,7 +41,7 @@ process BUSCO {
     if (params.busco_reference)
         p = "--lineage_dataset dataset/${db}"
     else if (params.busco_download_path)
-        p = "--auto-lineage --offline --download_path ${params.busco_download_path}"
+        p = "--auto-lineage --offline --download_path ${download_folder}"
     else
         p = "--auto-lineage"
     """
