@@ -15,7 +15,7 @@ include { BUSCO_SUMMARY                           } from '../../modules/local/bu
 workflow BUSCO_QC {
     take:
     busco_db_file           // channel: path
-    busco_download_folder
+    busco_download_folder   // channel: path
     bins                    // channel: [ val(meta), path(bin) ]
 
     main:
