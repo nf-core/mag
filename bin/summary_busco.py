@@ -5,7 +5,7 @@
 import re
 import sys
 import argparse
-
+import os.path
 
 def parse_args(args=None):
     parser = argparse.ArgumentParser()
@@ -35,10 +35,13 @@ def main(args=None):
             with open(FILE) as x:
                 results = []
                 TEXT = x.read()
-                for REGEX in regexes:
+                for index, REGEX in enumerate(regexes):
                     match = re.search(REGEX, TEXT)
                     if match:
-                        results.append(match.group(1))
+                        if index == 0:
+                            results.append(os.path.basename(match.group(1)))
+                        else:
+                            results.append(match.group(1))
                 print("\t".join(results))
 
     # Add entries for bins with failed analysis
