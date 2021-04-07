@@ -83,7 +83,7 @@ include {
 // Local: Sub-workflows
 include { INPUT_CHECK         } from './subworkflows/local/input_check'
 include { METABAT2_BINNING    } from './subworkflows/local/metabat2_binning'      addParams( bowtie2_align_options: modules['bowtie2_assembly_align'], metabat2_options: modules['metabat2']                                                   )
-include { BUSCO_QC            } from './subworkflows/local/busco_qc'              addParams( busco_db_options: modules['busco_db_preparation'], busco_options: modules['busco'], busco_plot_options: modules['busco_plot'], busco_summary_options: modules['busco_summary'])
+include { BUSCO_QC            } from './subworkflows/local/busco_qc'              addParams( busco_db_options: modules['busco_db_preparation'], busco_options: modules['busco'], busco_save_download_options: modules['busco_save_download'], busco_plot_options: modules['busco_plot'], busco_summary_options: modules['busco_summary'])
 
 // nf-core/modules: Modules
 include { FASTQC as FASTQC_RAW     } from './modules/nf-core/software/fastqc/main'              addParams( options: modules['fastqc_raw']            )
