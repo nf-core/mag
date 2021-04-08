@@ -54,8 +54,8 @@ workflow BUSCO_QC {
     )
 
     BUSCO_SUMMARY (
-        BUSCO.out.summary.map{it[1]}.collect(),
-        BUSCO.out.failed_bins.map{it[1]}.collect()
+        BUSCO.out.summary.map{it[1]}.collect().ifEmpty([]),
+        BUSCO.out.failed_bins.map{it[1]}.collect().ifEmpty([])
     )
 
     emit:
