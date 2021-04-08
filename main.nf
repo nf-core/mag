@@ -553,6 +553,7 @@ workflow {
     */
 
     ch_bowtie2_assembly_multiqc = Channel.empty()
+    ch_busco_summary            = Channel.empty()
     ch_busco_multiqc            = Channel.empty()
     if (!params.skip_binning){
 
@@ -564,28 +565,31 @@ workflow {
         ch_software_versions = ch_software_versions.mix(METABAT2_BINNING.out.bowtie2_version.first().ifEmpty(null))
         ch_software_versions = ch_software_versions.mix(METABAT2_BINNING.out.metabat2_version.first().ifEmpty(null))
 
-        /*
-        * BUSCO subworkflow: Quantitative measures for the assessment of genome assembly
-        */
-        BUSCO_QC (
-            ch_busco_db_file,
-            ch_busco_download_folder,
-            METABAT2_BINNING.out.bins.transpose()
-        )
-        ch_busco_multiqc = BUSCO_QC.out.multiqc
-        ch_software_versions = ch_software_versions.mix(BUSCO_QC.out.version.first().ifEmpty(null))
-        // process information if BUSCO analysis failed for individual bins due to no matching genes
-        BUSCO_QC.out
-            .failed_bins
-            .splitText()
-            .map { bin -> if (!bin.contains(".unbinned.")) busco_failed_bins.add(bin) }
+        if (!params.skip_busco){
+            /*
+            * BUSCO subworkflow: Quantitative measures for the assessment of genome assembly
+            */
+            BUSCO_QC (
+                ch_busco_db_file,
+                ch_busco_download_folder,
+                METABAT2_BINNING.out.bins.transpose()
+            )
+            ch_busco_summary = BUSCO_QC.out.summary
+            ch_busco_multiqc = BUSCO_QC.out.multiqc
+            ch_software_versions = ch_software_versions.mix(BUSCO_QC.out.version.first().ifEmpty(null))
+            // process information if BUSCO analysis failed for individual bins due to no matching genes
+            BUSCO_QC.out
+                .failed_bins
+                .splitText()
+                .map { bin -> if (!bin.contains(".unbinned.")) busco_failed_bins.add(bin) }
+        }
 
         if (!params.skip_quast){
             QUAST_BINS ( METABAT2_BINNING.out.bins )
             ch_software_versions = ch_software_versions.mix(QUAST_BINS.out.version.first().ifEmpty(null))
             MERGE_QUAST_AND_BUSCO (
                 QUAST_BINS.out.quast_bin_summaries.collect(),
-                BUSCO_QC.out.summary
+                ch_busco_summary
             )
         }
 
