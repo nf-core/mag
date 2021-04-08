@@ -8,7 +8,7 @@ class Completion {
         // Set up the e-mail variables
         def subject = "[$workflow.manifest.name] Successful: $workflow.runName"
         if (busco_failed_bins.size() > 0) {
-            subject = "[$workflow.manifest.name] Partially successful: For ${busco_failed_bins.size()} bin(s) the Busco analysis failed because no genes where found: $workflow.runName"
+            subject = "[$workflow.manifest.name] Partially successful: For ${busco_failed_bins.size()} bin(s) the BUSCO analysis failed because no genes where found or placements failed: $workflow.runName"
         }
         if (!workflow.success) {
             subject = "[$workflow.manifest.name] FAILED: $workflow.runName"
@@ -123,7 +123,7 @@ class Completion {
             for (bin in busco_failed_bins) {
                 failed_bins += "    ${bin}\n"
             }
-            log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} For ${busco_failed_bins.size()} bin(s) the Busco analysis failed because no genes where found:\n${failed_bins}${colors.reset}-"
+            log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} For ${busco_failed_bins.size()} bin(s) the BUSCO analysis failed because no genes where found or placements failed:\n${failed_bins}See ${params.outdir}/GenomeBinning/QC/BUSCO/[bin]_busco.err for further information.${colors.reset}-"
         }
 
         if (workflow.success) {

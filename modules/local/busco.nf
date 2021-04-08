@@ -27,9 +27,10 @@ process BUSCO {
     tuple val(meta), path("short_summary.specific.*.${bin}.txt"), optional:true , emit: summary
     path('busco_downloads/'), optional:true                                     , emit: busco_downloads
     path("${bin}_busco.log")
+    path("${bin}_busco.err")
     path("${bin}_buscos.faa.gz"), optional:true
     path("${bin}_buscos.fna.gz"), optional:true
-    tuple val(meta), path("${bin}_busco.no_genes_found.txt"), optional:true     , emit: failed_bins
+    tuple val(meta), path("${bin}_busco.failed_bins.txt"), optional:true        , emit: failed_bins
     path '*.version.txt'                                                        , emit: version
 
     script:
@@ -91,13 +92,12 @@ process BUSCO {
             break
         done
 
-    elif grep -qe "ERROR:\tNo genes were recognized by BUSCO" ${bin}_busco.err; then
-        echo "ERROR: No genes were recognized by BUSCO! (see also ${bin}_busco.err)"
-        echo "${bin}" > "${bin}_busco.no_genes_found.txt"
+    elif grep -qe "ERROR:\tNo genes were recognized by BUSCO" ${bin}_busco.err || grep -qe "ERROR:\tPlacements failed" ${bin}_busco.err ; then
+        echo "WARNING: BUSCO analysis failed due to no recognized genes or failed placements! See also ${bin}_busco.err."
+        echo "${bin}" > "${bin}_busco.failed_bins.txt"
     else
-        echo "ERROR: exit code not 0, but not due to no genes recognized by BUSCO!"
-        #exit 1
-        echo "${bin}" > "${bin}_busco.no_genes_found.txt"
+        echo "ERROR: BUSCO analysis failed for some unknown reason! See also ${bin}_busco.err." >&2
+        exit 1
     fi
 
     busco --version | sed "s/BUSCO //" > ${software}.version.txt
