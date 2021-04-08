@@ -40,6 +40,11 @@ process BUSCO {
     else
         cp_augustus_config = "N"
 
+    if (params.busco_reference)
+        lineage_dataset_provided = "Y"
+    else
+        lineage_dataset_provided = "N"
+
     if (params.busco_reference){
         p = "--lineage_dataset dataset/${db}"
     } else {
@@ -58,7 +63,7 @@ process BUSCO {
     fi
 
     # place db in extra folder to ensure BUSCO recognizes it as path (instead of downloading it)
-    if [ ${params.busco_reference} != "false" ] ; then
+    if [ ${lineage_dataset_provided} = "Y" ] ; then
         mkdir dataset
         mv ${db} dataset/
     fi
