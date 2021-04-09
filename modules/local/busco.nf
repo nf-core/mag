@@ -30,7 +30,7 @@ process BUSCO {
     path("${bin}_busco.err")
     path("${bin}_buscos.faa.gz"), optional:true
     path("${bin}_buscos.fna.gz"), optional:true
-    tuple val(meta), path("${bin}_busco.failed_bins.txt"), optional:true        , emit: failed_bins
+    tuple val(meta), path("${bin}_busco.failed_bin.txt"), optional:true        , emit: failed_bin
     path '*.version.txt'                                                        , emit: version
 
     script:
@@ -98,12 +98,12 @@ process BUSCO {
         # report bin as failed to allow consistent warnings within the pipeline for both settings
         if [ ${lineage_dataset_provided} = "Y" ] && grep -qe "WARNING:\tBUSCO did not find any match." ${bin}_busco.log ; then
             echo "WARNING: BUSCO could not find any genes for the provided lineage dataset! See also ${bin}_busco.log."
-            echo "${bin}" > "${bin}_busco.failed_bins.txt"
+            echo "${bin}" > "${bin}_busco.failed_bin.txt"
         fi
 
     elif grep -qe "ERROR:\tNo genes were recognized by BUSCO" ${bin}_busco.err || grep -qe "ERROR:\tPlacements failed" ${bin}_busco.err ; then
         echo "WARNING: BUSCO analysis failed due to no recognized genes or failed placements! See also ${bin}_busco.err."
-        echo "${bin}" > "${bin}_busco.failed_bins.txt"
+        echo "${bin}" > "${bin}_busco.failed_bin.txt"
     else
         echo "ERROR: BUSCO analysis failed for some unknown reason! See also ${bin}_busco.err." >&2
         exit 1

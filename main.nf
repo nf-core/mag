@@ -579,7 +579,7 @@ workflow {
             ch_software_versions = ch_software_versions.mix(BUSCO_QC.out.version.first().ifEmpty(null))
             // process information if BUSCO analysis failed for individual bins due to no matching genes
             BUSCO_QC.out
-                .failed_bins
+                .failed_bin
                 .splitText()
                 .map { bin -> if (!bin.contains(".unbinned.")) busco_failed_bins.add(bin) }
         }
