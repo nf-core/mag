@@ -26,7 +26,9 @@ process BUSCO_SUMMARY {
 
     script:
     def s = summaries.size() > 0 ? "-s ${summaries}" : ""
-    def f = failed_bins.size() > 0 ? "-f ${failed_bins}" : ""
+    def f = ""
+    if (!params.busco_reference && failed_bins.size() > 0)
+        f = "-f ${failed_bins}"
     """
     summary_busco.py $s $f > busco_summary.txt
     """

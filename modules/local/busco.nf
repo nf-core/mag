@@ -94,6 +94,13 @@ process BUSCO {
             break
         done
 
+        # if lineage dataset is provided, BUSCO analysis does not fail in case no genes can be found as when using the auto selection setting
+        # report bin as failed to allow consistent warnings within the pipeline for both settings
+        if [ ${lineage_dataset_provided} = "Y" ] && grep -qe "WARNING:\tBUSCO did not find any match." ${bin}_busco.log ; then
+            echo "WARNING: BUSCO could not find any genes for the provided lineage dataset! See also ${bin}_busco.log."
+            echo "${bin}" > "${bin}_busco.failed_bins.txt"
+        fi
+
     elif grep -qe "ERROR:\tNo genes were recognized by BUSCO" ${bin}_busco.err || grep -qe "ERROR:\tPlacements failed" ${bin}_busco.err ; then
         echo "WARNING: BUSCO analysis failed due to no recognized genes or failed placements! See also ${bin}_busco.err."
         echo "${bin}" > "${bin}_busco.failed_bins.txt"

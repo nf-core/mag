@@ -123,7 +123,10 @@ class Completion {
             for (bin in busco_failed_bins) {
                 failed_bins += "    ${bin}\n"
             }
-            log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} For ${busco_failed_bins.size()} bin(s) the BUSCO analysis failed because no genes where found or placements failed:\n${failed_bins}See ${params.outdir}/GenomeBinning/QC/BUSCO/[bin]_busco.err for further information.${colors.reset}-"
+            if (!params.busco_reference)
+                log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} For ${busco_failed_bins.size()} bin(s) the BUSCO analysis failed because no genes where found or placements failed:\n${failed_bins}See ${params.outdir}/GenomeBinning/QC/BUSCO/[bin]_busco.err for further information.${colors.reset}-"
+            else
+                log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} For ${busco_failed_bins.size()} bin(s) BUSCO did not find any matching genes:\n${failed_bins}See ${params.outdir}/GenomeBinning/QC/BUSCO/[bin]_busco.log for further information.${colors.reset}-"
         }
 
         if (workflow.success) {
