@@ -35,23 +35,20 @@ process BUSCO {
 
     script:
     def software = getSoftwareName(task.process)
-    if( workflow.profile.toString().indexOf("conda") == -1)
-        cp_augustus_config = "Y"
-    else
+    def cp_augustus_config = "Y"
+    if( workflow.profile.toString().indexOf("conda") != -1)
         cp_augustus_config = "N"
 
+    def lineage_dataset_provided = "N"
     if (params.busco_reference)
         lineage_dataset_provided = "Y"
-    else
-        lineage_dataset_provided = "N"
 
+    def p = "--auto-lineage"
     if (params.busco_reference){
         p = "--lineage_dataset dataset/${db}"
     } else {
         if (params.busco_auto_lineage_prok)
             p = "--auto-lineage-prok"
-        else
-            p = "--auto-lineage"
         if (params.busco_download_path)
             p += " --offline --download_path ${download_folder}"
     }
