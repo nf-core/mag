@@ -20,12 +20,12 @@ def main(args=None):
     if not args.summaries and not args.failed_bins:
         sys.exit("Either --summaries or --failed_bins must be specified!")
 
-    # "# Summarized benchmarking in BUSCO notation for file MEGAHIT-testset1.contigs.fa"
+    # "# Summarized benchmarking in BUSCO notation for file /path/to/MEGAHIT-testset1.contigs.fa"
     # "	C:0.0%[S:0.0%,D:0.0%],F:0.0%,M:100.0%,n:148"
 
-    regexes = [r"# Summarized benchmarking in BUSCO notation for file (\S+)", r"	C:(\S+)%\[S:",
+    regexes = [r"# Summarized benchmarking in BUSCO notation for file (\S+)", r"# The lineage dataset is: (\S+) \(", r"	C:(\S+)%\[S:",
             r"%\[S:(\S+)%,D:", r"%,D:(\S+)%\],F:", r"%\],F:(\S+)%,M:", r"%,M:(\S+)%,n:", r"%,n:(\S+)"]
-    columns = ["GenomeBin", "%Complete", "%Complete and single-copy",
+    columns = ["GenomeBin", "Lineage dataset", "%Complete", "%Complete and single-copy",
             "%Complete and duplicated", "%Fragmented", "%Missing", "Total number"]
 
     # Search each summary file using its regex
@@ -49,7 +49,7 @@ def main(args=None):
         for FILE in args.failed_bins:
             with open(FILE) as x:
                 failed_bin = x.readline().split('\n')[0]
-                print(failed_bin, "0.0%", "0.0%", "0.0%", "0.0%", "100.0%", "NA", sep='\t')
+                print(failed_bin, "NA", "0.0%", "0.0%", "0.0%", "0.0%", "100.0%", "NA", sep='\t')
 
 
 if __name__ == "__main__":
