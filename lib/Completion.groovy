@@ -139,7 +139,7 @@ class Completion {
                 if (count_no_genes > 0)
                     log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} For ${count_no_genes} bin(s) the BUSCO analysis failed because no BUSCO genes could be found:\n${failed_bins_no_genes}See ${params.outdir}/GenomeBinning/QC/BUSCO/[bin]_busco.err and ${params.outdir}/GenomeBinning/QC/BUSCO/[bin]_busco.log for further information.${colors.reset}-"
                 if (count_placements_failed > 0)
-                    log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} For ${count_placements_failed} bin(s) the BUSCO analysis failed due to failed placements:\n${failed_bins_placements_failed}See ${params.outdir}/GenomeBinning/QC/BUSCO/[bin]_busco.err and ${params.outdir}/GenomeBinning/QC/BUSCO/[bin]_busco.log for further information.${colors.reset}-"
+                    log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} For ${count_placements_failed} bin(s) the BUSCO analysis failed due to failed placements:\n${failed_bins_placements_failed}See ${params.outdir}/GenomeBinning/QC/BUSCO/[bin]_busco.err and ${params.outdir}/GenomeBinning/QC/BUSCO/[bin]_busco.log for further information. Results for selected domain are still used.${colors.reset}-"
             }
         }
 
