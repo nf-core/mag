@@ -23,7 +23,7 @@ process BUSCO_SUMMARY {
     path(failed_bins)
 
     output:
-    path "busco_summary.txt", emit: summary
+    path "busco_summary.tsv", emit: summary
 
     script:
     def auto = params.busco_reference ? "" : "-a"
@@ -33,7 +33,7 @@ process BUSCO_SUMMARY {
     if (!params.busco_reference && failed_bins.size() > 0)
         f = "-f ${failed_bins}"
     """
-    summary_busco.py $auto $ss $sd $f -o busco_summary.txt
+    summary_busco.py $auto $ss $sd $f -o busco_summary.tsv
     """
 }
 
