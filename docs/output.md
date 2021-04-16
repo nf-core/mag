@@ -255,8 +255,8 @@ Files in these two folders contain all contigs of an assembly.
 
 * `GenomeBinning/QC/BUSCO/`
   * `[assembler]-[bin]_busco.log`: BUSCO log file
-  * `[assembler]-[bin]_buscos.fna.gz`: Nucleotide sequence of all identified BUSCOs
-  * `[assembler]-[bin]_buscos.faa.gz`: Aminoacid sequence of all identified BUSCOs
+  * `[assembler]-[bin]_buscos.[lineage].fna.gz`: Nucleotide sequence of all identified BUSCOs for used lineage(s)
+  * `[assembler]-[bin]_buscos.[lineage].faa.gz`: Aminoacid sequence of all identified BUSCOs for used lineages(s)
 
 If the parameter `--save_busco_reference` is set the used BUSCO reference is stored.
 

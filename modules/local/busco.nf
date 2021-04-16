@@ -29,8 +29,8 @@ process BUSCO {
     path('busco_downloads/')                                            , optional:true , emit: busco_downloads
     path("${bin}_busco.log")
     path("${bin}_busco.err")
-    path("${bin}_buscos.faa.gz")                                        , optional:true
-    path("${bin}_buscos.fna.gz")                                        , optional:true
+    path("${bin}_buscos.*.faa.gz")                                      , optional:true
+    path("${bin}_buscos.*.fna.gz")                                      , optional:true
     tuple val(meta), path("${bin}_busco.failed_bin.txt")                , optional:true , emit: failed_bin
     path '*.version.txt'                                                                , emit: version
 
@@ -106,6 +106,15 @@ process BUSCO {
                 echo "Used generic lineage dataset: \${db_name_gen}"
                 cp BUSCO/short_summary.generic.\${db_name_gen}.BUSCO.txt short_summary.domain.\${db_name_gen}.${bin}.txt
 
+                for f in BUSCO/run_\${db_name_gen}/busco_sequences/single_copy_busco_sequences/*faa; do
+                    cat BUSCO/run_\${db_name_gen}/busco_sequences/single_copy_busco_sequences/*faa | gzip >${bin}_buscos.\${db_name_gen}.faa.gz
+                    break
+                done
+                for f in BUSCO/run_\${db_name_gen}/busco_sequences/single_copy_busco_sequences/*fna; do
+                    cat BUSCO/run_\${db_name_gen}/busco_sequences/single_copy_busco_sequences/*fna | gzip >${bin}_buscos.\${db_name_gen}.fna.gz
+                    break
+                done
+
             elif egrep -q \$'INFO:\t\\S+ selected' ${bin}_busco.log && egrep -q \$'INFO:\tNot enough markers were placed on the tree \\([0-9]*\\). Root lineage \\S+ is kept' ${bin}_busco.log ; then
                 echo "Domain could be selected by BUSCO, but no more specific lineage (specific lineage == domain)."
                 cp BUSCO/short_summary.specific.\${db_name_spec}.BUSCO.txt short_summary.domain.\${db_name_spec}.${bin}.txt
@@ -119,13 +128,12 @@ process BUSCO {
             fi
         fi
 
-        # TODO output also domain busco sequences (if applicable)?
         for f in BUSCO/run_\${db_name_spec}/busco_sequences/single_copy_busco_sequences/*faa; do
-            cat BUSCO/run_\${db_name_spec}/busco_sequences/single_copy_busco_sequences/*faa | gzip >${bin}_buscos.faa.gz
+            cat BUSCO/run_\${db_name_spec}/busco_sequences/single_copy_busco_sequences/*faa | gzip >${bin}_buscos.\${db_name_spec}.faa.gz
             break
         done
         for f in BUSCO/run_\${db_name_spec}/busco_sequences/single_copy_busco_sequences/*fna; do
-            cat BUSCO/run_\${db_name_spec}/busco_sequences/single_copy_busco_sequences/*fna | gzip >${bin}_buscos.fna.gz
+            cat BUSCO/run_\${db_name_spec}/busco_sequences/single_copy_busco_sequences/*fna | gzip >${bin}_buscos.\${db_name_spec}.fna.gz
             break
         done
 
@@ -142,6 +150,15 @@ process BUSCO {
         db_name_gen="\${BASH_REMATCH[1]}"
         echo "Used generic lineage dataset: \${db_name_gen}"
         cp BUSCO/auto_lineage/run_\${db_name_gen}/short_summary.txt short_summary.domain.\${db_name_gen}.${bin}.txt
+
+        for f in BUSCO/auto_lineage/run_\${db_name_gen}/busco_sequences/single_copy_busco_sequences/*faa; do
+            cat BUSCO/auto_lineage/run_\${db_name_gen}/busco_sequences/single_copy_busco_sequences/*faa | gzip >${bin}_buscos.\${db_name_gen}.faa.gz
+            break
+        done
+        for f in BUSCO/auto_lineage/run_\${db_name_gen}/busco_sequences/single_copy_busco_sequences/*fna; do
+            cat BUSCO/auto_lineage/run_\${db_name_gen}/busco_sequences/single_copy_busco_sequences/*fna | gzip >${bin}_buscos.\${db_name_gen}.fna.gz
+            break
+        done
 
     else
         echo "ERROR: BUSCO analysis failed for some unknown reason! See also ${bin}_busco.err." >&2
