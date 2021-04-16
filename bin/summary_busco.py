@@ -110,12 +110,15 @@ def main(args=None):
     if args.failed_bins:
         for file in args.failed_bins:
             with open(file) as infile:
-                failed_bin = infile.readline().split('\n')[0]
-                if args.auto:
-                    results = [failed_bin, "NA", "0.0%", "0.0%", "0.0%", "0.0%", "100.0%", "NA", "NA", "0.0%", "0.0%", "0.0%", "0.0%", "100.0%", "NA"]
-                else:
-                    results = [failed_bin, "NA", "0.0%", "0.0%", "0.0%", "0.0%", "100.0%", "NA"]
-                failed.append(results)
+                line = infile.readline()
+                # in case of failed placements domain summary was used and specific part will be filled with NAs when merging
+                if re.split(r'[\t\n]', line)[1] != "Placements failed":
+                    failed_bin = re.split(r'[\t\n]', line)[0]
+                    if args.auto:
+                        results = [failed_bin, "NA", "0.0%", "0.0%", "0.0%", "0.0%", "100.0%", "NA", "NA", "0.0%", "0.0%", "0.0%", "0.0%", "100.0%", "NA"]
+                    else:
+                        results = [failed_bin, "NA", "0.0%", "0.0%", "0.0%", "0.0%", "100.0%", "NA"]
+                    failed.append(results)
     df_failed = pd.DataFrame(failed, columns=columns)
 
     # merge results
@@ -127,7 +130,7 @@ def main(args=None):
         df_final = df_specific\
             .append(df_failed)
 
-    df_final.to_csv(args.out, sep="\t", index=False)
+    df_final.to_csv(args.out, sep="\t", na_rep='NA', index=False)
 
 
 if __name__ == "__main__":

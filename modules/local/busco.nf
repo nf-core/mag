@@ -90,7 +90,7 @@ process BUSCO {
             # report bin as failed to allow consistent warnings within the pipeline for both settings
             if egrep -q \$'WARNING:\tBUSCO did not find any match.' ${bin}_busco.log ; then
                 echo "WARNING: BUSCO could not find any genes for the provided lineage dataset! See also ${bin}_busco.log."
-                echo "${bin}" > "${bin}_busco.failed_bin.txt"
+                echo -e "${bin}\tNo genes" > "${bin}_busco.failed_bin.txt"
             fi
         else
             # auto lineage selection
@@ -129,9 +129,20 @@ process BUSCO {
             break
         done
 
-    elif egrep -q \$'ERROR:\tNo genes were recognized by BUSCO' ${bin}_busco.err || egrep -q \$'ERROR:\tPlacements failed' ${bin}_busco.err ; then
-        echo "WARNING: BUSCO analysis failed due to no recognized genes or failed placements! See also ${bin}_busco.err."
-        echo "${bin}" > "${bin}_busco.failed_bin.txt"
+    elif egrep -q \$'ERROR:\tNo genes were recognized by BUSCO' ${bin}_busco.err ; then
+        echo "WARNING: BUSCO analysis failed due to no recognized genes! See also ${bin}_busco.err."
+        echo -e "${bin}\tNo genes" > "${bin}_busco.failed_bin.txt"
+
+    elif egrep -q \$'INFO:\t\\S+ selected' ${bin}_busco.log && egrep -q \$'ERROR:\tPlacements failed' ${bin}_busco.err ; then
+        echo "WARNING: BUSCO analysis failed due to failed placements! See also ${bin}_busco.err. Still using results for selected generic lineage dataset."
+        echo -e "${bin}\tPlacements failed" > "${bin}_busco.failed_bin.txt"
+
+        message=\$(egrep \$'INFO:\t\\S+ selected' ${bin}_busco.log)
+        [[ \$message =~ INFO:[[:space:]]([_[:alnum:]]+)[[:space:]]selected ]];
+        db_name_gen="\${BASH_REMATCH[1]}"
+        echo "Used generic lineage dataset: \${db_name_gen}"
+        cp BUSCO/auto_lineage/run_\${db_name_gen}/short_summary.txt short_summary.domain.\${db_name_gen}.${bin}.txt
+
     else
         echo "ERROR: BUSCO analysis failed for some unknown reason! See also ${bin}_busco.err." >&2
         exit 1
