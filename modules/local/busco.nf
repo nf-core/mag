@@ -24,14 +24,15 @@ process BUSCO {
     path(download_folder)
 
     output:
-    tuple val(meta), path("short_summary.specific.*.${bin}.txt"), optional:true , emit: summary
-    path('busco_downloads/'), optional:true                                     , emit: busco_downloads
+    tuple val(meta), path("short_summary.domain.*.${bin}.txt")          , optional:true , emit: summary_domain
+    tuple val(meta), path("short_summary.specific_lineage.*.${bin}.txt"), optional:true , emit: summary_specific
+    path('busco_downloads/')                                            , optional:true , emit: busco_downloads
     path("${bin}_busco.log")
     path("${bin}_busco.err")
-    path("${bin}_buscos.faa.gz"), optional:true
-    path("${bin}_buscos.fna.gz"), optional:true
-    tuple val(meta), path("${bin}_busco.failed_bin.txt"), optional:true        , emit: failed_bin
-    path '*.version.txt'                                                        , emit: version
+    path("${bin}_buscos.faa.gz")                                        , optional:true
+    path("${bin}_buscos.fna.gz")                                        , optional:true
+    tuple val(meta), path("${bin}_busco.failed_bin.txt")                , optional:true , emit: failed_bin
+    path '*.version.txt'                                                                , emit: version
 
     script:
     def software = getSoftwareName(task.process)
@@ -71,7 +72,7 @@ process BUSCO {
         --cpu "${task.cpus}" \
         --out "BUSCO" > ${bin}_busco.log 2> ${bin}_busco.err; then
 
-        # get used db name
+        # get name of used specific lineage dataset
         # (set nullgob: if pattern matches no files, expand to a null string rather than to itself)
         shopt -s nullglob
         summaries=(BUSCO/short_summary.specific.*.BUSCO.txt)
@@ -80,28 +81,55 @@ process BUSCO {
             exit 1
         fi
         [[ \$summaries =~ BUSCO/short_summary.specific.(.*).BUSCO.txt ]];
-        db_name="\${BASH_REMATCH[1]}"
-        echo "Used database: \${db_name}"
+        db_name_spec="\${BASH_REMATCH[1]}"
+        echo "Used specific lineage dataset: \${db_name_spec}"
+        cp BUSCO/short_summary.specific.\${db_name_spec}.BUSCO.txt short_summary.specific_lineage.\${db_name_spec}.${bin}.txt
 
-        cp BUSCO/short_summary.specific.\${db_name}.BUSCO.txt short_summary.specific.\${db_name}.${bin}.txt
+        if [ ${lineage_dataset_provided} = "Y" ]; then
+            # if lineage dataset is provided, BUSCO analysis does not fail in case no genes can be found as when using the auto selection setting
+            # report bin as failed to allow consistent warnings within the pipeline for both settings
+            if egrep -q \$'WARNING:\tBUSCO did not find any match.' ${bin}_busco.log ; then
+                echo "WARNING: BUSCO could not find any genes for the provided lineage dataset! See also ${bin}_busco.log."
+                echo "${bin}" > "${bin}_busco.failed_bin.txt"
+            fi
+        else
+            # auto lineage selection
+            if egrep -q \$'INFO:\t\\S+ selected' ${bin}_busco.log && egrep -q \$'INFO:\tLineage \\S+ is selected, supported by ' ${bin}_busco.log ; then
+                echo "Domain and specific lineage could be selected by BUSCO."
+                summaries_gen=(BUSCO/short_summary.generic.*.BUSCO.txt)
+                if [ \${#summaries_gen[@]} -ne 1 ]; then
+                    echo "ERROR: none or multiple 'BUSCO/short_summary.generic.*.BUSCO.txt' files found. Expected one."
+                    exit 1
+                fi
+                [[ \$summaries_gen =~ BUSCO/short_summary.generic.(.*).BUSCO.txt ]];
+                db_name_gen="\${BASH_REMATCH[1]}"
+                echo "Used generic lineage dataset: \${db_name_gen}"
+                cp BUSCO/short_summary.generic.\${db_name_gen}.BUSCO.txt short_summary.domain.\${db_name_gen}.${bin}.txt
 
-        for f in BUSCO/run_\${db_name}/busco_sequences/single_copy_busco_sequences/*faa; do
-            cat BUSCO/run_\${db_name}/busco_sequences/single_copy_busco_sequences/*faa | gzip >${bin}_buscos.faa.gz
-            break
-        done
-        for f in BUSCO/run_\${db_name}/busco_sequences/single_copy_busco_sequences/*fna; do
-            cat BUSCO/run_\${db_name}/busco_sequences/single_copy_busco_sequences/*fna | gzip >${bin}_buscos.fna.gz
-            break
-        done
+            elif egrep -q \$'INFO:\t\\S+ selected' ${bin}_busco.log && egrep -q \$'INFO:\tNot enough markers were placed on the tree \\([0-9]*\\). Root lineage \\S+ is kept' ${bin}_busco.log ; then
+                echo "Domain could be selected by BUSCO, but no more specific lineage (specific lineage == domain)."
+                cp BUSCO/short_summary.specific.\${db_name_spec}.BUSCO.txt short_summary.domain.\${db_name_spec}.${bin}.txt
 
-        # if lineage dataset is provided, BUSCO analysis does not fail in case no genes can be found as when using the auto selection setting
-        # report bin as failed to allow consistent warnings within the pipeline for both settings
-        if [ ${lineage_dataset_provided} = "Y" ] && grep -qe "WARNING:\tBUSCO did not find any match." ${bin}_busco.log ; then
-            echo "WARNING: BUSCO could not find any genes for the provided lineage dataset! See also ${bin}_busco.log."
-            echo "${bin}" > "${bin}_busco.failed_bin.txt"
+            elif egrep -q \$'INFO:\t\\S+ selected' ${bin}_busco.log && egrep -q \$'INFO:\tRunning virus detection pipeline' ${bin}_busco.log ; then
+                # TODO double-check if selected dataset is not one of bacteria_*, archaea_*, eukaryota_*?
+                echo "Domain could not be selected by BUSCO, but virus dataset was selected."
+            else
+                echo "ERROR: Some not expected case occurred! See ${bin}_busco.log." >&2
+                exit 1
+            fi
         fi
 
-    elif grep -qe "ERROR:\tNo genes were recognized by BUSCO" ${bin}_busco.err || grep -qe "ERROR:\tPlacements failed" ${bin}_busco.err ; then
+        # TODO output also domain busco sequences (if applicable)?
+        for f in BUSCO/run_\${db_name_spec}/busco_sequences/single_copy_busco_sequences/*faa; do
+            cat BUSCO/run_\${db_name_spec}/busco_sequences/single_copy_busco_sequences/*faa | gzip >${bin}_buscos.faa.gz
+            break
+        done
+        for f in BUSCO/run_\${db_name_spec}/busco_sequences/single_copy_busco_sequences/*fna; do
+            cat BUSCO/run_\${db_name_spec}/busco_sequences/single_copy_busco_sequences/*fna | gzip >${bin}_buscos.fna.gz
+            break
+        done
+
+    elif egrep -q \$'ERROR:\tNo genes were recognized by BUSCO' ${bin}_busco.err || egrep -q \$'ERROR:\tPlacements failed' ${bin}_busco.err ; then
         echo "WARNING: BUSCO analysis failed due to no recognized genes or failed placements! See also ${bin}_busco.err."
         echo "${bin}" > "${bin}_busco.failed_bin.txt"
     else

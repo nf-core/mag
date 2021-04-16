@@ -38,29 +38,24 @@ workflow BUSCO_QC {
             BUSCO.out.busco_downloads.first()
         )
     }
+    // group by assembler and sample name for plotting
+    // note: failed bins and bins with no domain, i.e. with viral lineages selected, will not be represented in these plots
+    ch_results_busco_plot = BUSCO.out.summary_specific.groupTuple(by: 0)
+    if (!params.busco_reference){
+        ch_results_busco_plot = ch_results_busco_plot.mix(BUSCO.out.summary_domain.groupTuple(by: 0))
+    }
+    BUSCO_PLOT ( ch_results_busco_plot )
 
-    // group by assembler and sample name for plotting, join with files for failed bins and reformat
-    BUSCO.out.summary.groupTuple(by: 0)
-        .join(BUSCO.out.failed_bin.groupTuple(by: 0), remainder: true)
-        .map { meta, summaries, failed_bins ->
-                    if (summaries == null) [meta, [], failed_bins]
-                    else if (failed_bins == null) [meta, summaries, []]
-                    else [meta, summaries, failed_bins]
-        }
-        .set { ch_results_busco_plot }
-
-    BUSCO_PLOT (
-        ch_results_busco_plot
-    )
-
+    // TODO generate sample wise summaries here with BUSCO_SUMMARY as well?
     BUSCO_SUMMARY (
-        BUSCO.out.summary.map{it[1]}.collect().ifEmpty([]),
+        BUSCO.out.summary_domain.map{it[1]}.collect().ifEmpty([]),
+        BUSCO.out.summary_specific.map{it[1]}.collect().ifEmpty([]),
         BUSCO.out.failed_bin.map{it[1]}.collect().ifEmpty([])
     )
 
     emit:
     summary     = BUSCO_SUMMARY.out.summary
-    failed_bin = BUSCO.out.failed_bin.map{it[1]}
-    multiqc     = BUSCO.out.summary.map{it[1]}
+    failed_bin  = BUSCO.out.failed_bin.map{it[1]}
+    multiqc     = BUSCO.out.summary_domain.map{it[1]}
     version     = BUSCO.out.version
 }
