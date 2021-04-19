@@ -94,7 +94,14 @@ process BUSCO {
             fi
         else
             # auto lineage selection
-            if egrep -q \$'INFO:\t\\S+ selected' ${bin}_busco.log && egrep -q \$'INFO:\tLineage \\S+ is selected, supported by ' ${bin}_busco.log ; then
+            if { egrep -q \$'INFO:\t\\S+ selected' ${bin}_busco.log \
+                 && egrep -q \$'INFO:\tLineage \\S+ is selected, supported by ' ${bin}_busco.log ; } || \
+               { egrep -q \$'INFO:\t\\S+ selected' ${bin}_busco.log \
+                 && egrep -q \$'INFO:\tThe results from the Prodigal gene predictor indicate that your data belongs to the mollicutes clade. Testing subclades...' ${bin}_busco.log \
+                 && egrep -q \$'INFO:\tUsing local lineages directory ' ${bin}_busco.log ; }; then
+                # the second statement is necessary, because certain mollicute clades use a different genetic code, are not part of the BUSCO placement tree, are tested separately
+                # and cause different log messages
+
                 echo "Domain and specific lineage could be selected by BUSCO."
                 summaries_gen=(BUSCO/short_summary.generic.*.BUSCO.txt)
                 if [ \${#summaries_gen[@]} -ne 1 ]; then
