@@ -133,7 +133,7 @@ def main(args=None):
         df_final = df_specific\
             .append(df_failed)
 
-    df_final.to_csv(args.out, sep="\t", na_rep='NA', index=False)
+    df_final.to_csv(args.out, sep="\t", index=False)
 
 
 if __name__ == "__main__":
