@@ -66,6 +66,9 @@ process BUSCO {
         mv ${db} dataset/
     fi
 
+    # set nullgob: if pattern matches no files, expand to a null string rather than to itself
+    shopt -s nullglob
+
     if busco ${p} \
         --mode genome \
         --in ${bin} \
@@ -73,8 +76,6 @@ process BUSCO {
         --out "BUSCO" > ${bin}_busco.log 2> ${bin}_busco.err; then
 
         # get name of used specific lineage dataset
-        # (set nullgob: if pattern matches no files, expand to a null string rather than to itself)
-        shopt -s nullglob
         summaries=(BUSCO/short_summary.specific.*.BUSCO.txt)
         if [ \${#summaries[@]} -ne 1 ]; then
             echo "ERROR: none or multiple 'BUSCO/short_summary.specific.*.BUSCO.txt' files found. Expected one."
