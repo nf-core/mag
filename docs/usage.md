@@ -48,7 +48,7 @@ You can fix this by using the prameter `--megahit_fix_cpu_1`. In both cases, do 
 
 MetaBAT2 is run by default with a fixed seed within this pipeline, thus producing reproducible results.
 
-To allow also reproducible bin QC with BUSCO, the parameter `--save_busco_reference` can be used to store the reference database. This may be useful since BUSCO datasets are frequently updated and old versions do not always remain accessible.
+To allow also reproducible bin QC with BUSCO, the parameter `--save_busco_reference` can be used. This is used to store the by BUSCO downloaded datasets when run using it's automated lineage selection mode (default) without `--busco_download_path` or to store the via `--busco_reference` provided reference database. This may be useful since BUSCO datasets are frequently updated and old versions do not always remain (easily) accessible.
 
 ## Core Nextflow arguments
 
