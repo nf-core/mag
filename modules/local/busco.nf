@@ -84,9 +84,10 @@ process BUSCO {
         [[ \$summaries =~ BUSCO/short_summary.specific.(.*).BUSCO.txt ]];
         db_name_spec="\${BASH_REMATCH[1]}"
         echo "Used specific lineage dataset: \${db_name_spec}"
-        cp BUSCO/short_summary.specific.\${db_name_spec}.BUSCO.txt short_summary.specific_lineage.\${db_name_spec}.${bin}.txt
 
         if [ ${lineage_dataset_provided} = "Y" ]; then
+            cp BUSCO/short_summary.specific.\${db_name_spec}.BUSCO.txt short_summary.specific_lineage.\${db_name_spec}.${bin}.txt
+
             # if lineage dataset is provided, BUSCO analysis does not fail in case no genes can be found as when using the auto selection setting
             # report bin as failed to allow consistent warnings within the pipeline for both settings
             if egrep -q \$'WARNING:\tBUSCO did not find any match.' ${bin}_busco.log ; then
@@ -102,8 +103,9 @@ process BUSCO {
                  && egrep -q \$'INFO:\tUsing local lineages directory ' ${bin}_busco.log ; }; then
                 # the second statement is necessary, because certain mollicute clades use a different genetic code, are not part of the BUSCO placement tree, are tested separately
                 # and cause different log messages
-
                 echo "Domain and specific lineage could be selected by BUSCO."
+                cp BUSCO/short_summary.specific.\${db_name_spec}.BUSCO.txt short_summary.specific_lineage.\${db_name_spec}.${bin}.txt
+
                 summaries_gen=(BUSCO/short_summary.generic.*.BUSCO.txt)
                 if [ \${#summaries_gen[@]} -ne 1 ]; then
                     echo "ERROR: none or multiple 'BUSCO/short_summary.generic.*.BUSCO.txt' files found. Expected one."
@@ -124,12 +126,13 @@ process BUSCO {
                 done
 
             elif egrep -q \$'INFO:\t\\S+ selected' ${bin}_busco.log && egrep -q \$'INFO:\tNot enough markers were placed on the tree \\([0-9]*\\). Root lineage \\S+ is kept' ${bin}_busco.log ; then
-                echo "Domain could be selected by BUSCO, but no more specific lineage (specific lineage == domain)."
+                echo "Domain could be selected by BUSCO, but no more specific lineage."
                 cp BUSCO/short_summary.specific.\${db_name_spec}.BUSCO.txt short_summary.domain.\${db_name_spec}.${bin}.txt
 
             elif egrep -q \$'INFO:\t\\S+ selected' ${bin}_busco.log && egrep -q \$'INFO:\tRunning virus detection pipeline' ${bin}_busco.log ; then
                 # TODO double-check if selected dataset is not one of bacteria_*, archaea_*, eukaryota_*?
                 echo "Domain could not be selected by BUSCO, but virus dataset was selected."
+                cp BUSCO/short_summary.specific.\${db_name_spec}.BUSCO.txt short_summary.specific_lineage.\${db_name_spec}.${bin}.txt
             else
                 echo "ERROR: Some not expected case occurred! See ${bin}_busco.log." >&2
                 exit 1

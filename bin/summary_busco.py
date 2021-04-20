@@ -115,7 +115,7 @@ def main(args=None):
                 if re.split(r'[\t\n]', line)[1] != "Placements failed":
                     failed_bin = re.split(r'[\t\n]', line)[0]
                     if args.auto:
-                        results = [failed_bin, "NA", "0.0", "0.0", "0.0", "0.0", "100.0", "NA", "NA", "0.0", "0.0", "0.0", "0.0", "100.0", "NA"]
+                        results = [failed_bin, "NA", "0.0", "0.0", "0.0", "0.0", "100.0", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA"]
                     else:
                         results = [failed_bin, "NA", "0.0", "0.0", "0.0", "0.0", "100.0", "NA"]
                     failed.append(results)
