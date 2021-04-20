@@ -26,7 +26,7 @@ process BUSCO {
     output:
     tuple val(meta), path("short_summary.domain.*.${bin}.txt")          , optional:true , emit: summary_domain
     tuple val(meta), path("short_summary.specific_lineage.*.${bin}.txt"), optional:true , emit: summary_specific
-    tuple env(most_spec_db), path('busco_downloads/')                  , optional:true , emit: busco_downloads
+    tuple env(most_spec_db), path('busco_downloads/')                   , optional:true , emit: busco_downloads
     path("${bin}_busco.log")
     path("${bin}_busco.err")
     path("${bin}_buscos.*.faa.gz")                                      , optional:true

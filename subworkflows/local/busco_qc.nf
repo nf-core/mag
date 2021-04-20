@@ -45,7 +45,6 @@ workflow BUSCO_QC {
     }
     BUSCO_PLOT ( ch_results_busco_plot )
 
-    // TODO generate sample wise summaries here with BUSCO_SUMMARY as well?
     BUSCO_SUMMARY (
         BUSCO.out.summary_domain.map{it[1]}.collect().ifEmpty([]),
         BUSCO.out.summary_specific.map{it[1]}.collect().ifEmpty([]),
