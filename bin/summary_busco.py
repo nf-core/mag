@@ -115,9 +115,9 @@ def main(args=None):
                 if re.split(r'[\t\n]', line)[1] != "Placements failed":
                     failed_bin = re.split(r'[\t\n]', line)[0]
                     if args.auto:
-                        results = [failed_bin, "NA", "0.0", "0.0", "0.0", "0.0", "100.0", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA"]
+                        results = [failed_bin, pd.NA, "0.0", "0.0", "0.0", "0.0", "100.0", pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA]
                     else:
-                        results = [failed_bin, "NA", "0.0", "0.0", "0.0", "0.0", "100.0", "NA"]
+                        results = [failed_bin, pd.NA, "0.0", "0.0", "0.0", "0.0", "100.0", pd.NA]
                     failed.append(results)
     df_failed = pd.DataFrame(failed, columns=columns)
 
@@ -126,6 +126,9 @@ def main(args=None):
         df_final = df_domain\
             .merge(df_specific, on="GenomeBin", how='outer')\
             .append(df_failed)
+        # check if 'Domain' is 'NA', but 'Specific lineage dataset' given -> 'Viruses'
+        df_final.loc[pd.isna(df_final['Domain']) & pd.notna(df_final['Specific lineage dataset']), 'Domain'] = "Viruses"
+
     else:
         df_final = df_specific\
             .append(df_failed)
