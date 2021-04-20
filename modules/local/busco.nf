@@ -26,7 +26,7 @@ process BUSCO {
     output:
     tuple val(meta), path("short_summary.domain.*.${bin}.txt")          , optional:true , emit: summary_domain
     tuple val(meta), path("short_summary.specific_lineage.*.${bin}.txt"), optional:true , emit: summary_specific
-    path('busco_downloads/')                                            , optional:true , emit: busco_downloads
+    tuple env(most_spec_db), path('busco_downloads/')                  , optional:true , emit: busco_downloads
     path("${bin}_busco.log")
     path("${bin}_busco.err")
     path("${bin}_buscos.*.faa.gz")                                      , optional:true
@@ -69,6 +69,9 @@ process BUSCO {
     # set nullgob: if pattern matches no files, expand to a null string rather than to itself
     shopt -s nullglob
 
+    # only used for saving busco downloads
+    most_spec_db="NA"
+
     if busco ${p} \
         --mode genome \
         --in ${bin} \
@@ -83,6 +86,7 @@ process BUSCO {
         fi
         [[ \$summaries =~ BUSCO/short_summary.specific.(.*).BUSCO.txt ]];
         db_name_spec="\${BASH_REMATCH[1]}"
+        most_spec_db=\${db_name_spec}
         echo "Used specific lineage dataset: \${db_name_spec}"
 
         if [ ${lineage_dataset_provided} = "Y" ]; then
@@ -159,6 +163,7 @@ process BUSCO {
         message=\$(egrep \$'INFO:\t\\S+ selected' ${bin}_busco.log)
         [[ \$message =~ INFO:[[:space:]]([_[:alnum:]]+)[[:space:]]selected ]];
         db_name_gen="\${BASH_REMATCH[1]}"
+        most_spec_db=\${db_name_gen}
         echo "Used generic lineage dataset: \${db_name_gen}"
         cp BUSCO/auto_lineage/run_\${db_name_gen}/short_summary.txt short_summary.domain.\${db_name_gen}.${bin}.txt
 

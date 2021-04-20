@@ -34,9 +34,8 @@ workflow BUSCO_QC {
     )
     if (params.save_busco_reference){
         // publish files downloaded by Busco
-        BUSCO_SAVE_DOWNLOAD (
-            BUSCO.out.busco_downloads.first()
-        )
+        ch_downloads = BUSCO.out.busco_downloads.groupTuple().map{lin,downloads -> downloads[0]}.toSortedList().flatten()
+        BUSCO_SAVE_DOWNLOAD ( ch_downloads )
     }
     // group by assembler and sample name for plotting
     // note: failed bins and bins with no domain, i.e. with viral lineages selected, will not be represented in these plots
