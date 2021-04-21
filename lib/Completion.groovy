@@ -134,12 +134,12 @@ class Completion {
                 }
             }
             if (params.busco_reference)
-                log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} For ${busco_failed_bins.size()} bin(s) BUSCO did not find any matching genes:\n${failed_bins_no_genes}See ${params.outdir}/GenomeBinning/QC/BUSCO/[bin]_busco.log for further information.${colors.reset}-"
+                log.info "-${colors.purple}[$workflow.manifest.name]${colors.yellow} For ${busco_failed_bins.size()} bin(s) BUSCO did not find any matching genes:\n${failed_bins_no_genes}See ${params.outdir}/GenomeBinning/QC/BUSCO/[bin]_busco.log for further information.${colors.reset}-"
             else {
                 if (count_no_genes > 0)
-                    log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} For ${count_no_genes} bin(s) the BUSCO analysis failed because no BUSCO genes could be found:\n${failed_bins_no_genes}See ${params.outdir}/GenomeBinning/QC/BUSCO/[bin]_busco.err and ${params.outdir}/GenomeBinning/QC/BUSCO/[bin]_busco.log for further information.${colors.reset}-"
+                    log.info "-${colors.purple}[$workflow.manifest.name]${colors.yellow} For ${count_no_genes} bin(s) the BUSCO analysis failed because no BUSCO genes could be found:\n${failed_bins_no_genes}See ${params.outdir}/GenomeBinning/QC/BUSCO/[bin]_busco.err and ${params.outdir}/GenomeBinning/QC/BUSCO/[bin]_busco.log for further information.${colors.reset}-"
                 if (count_placements_failed > 0)
-                    log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} For ${count_placements_failed} bin(s) the BUSCO analysis using automated lineage selection failed due to failed placements:\n${failed_bins_placements_failed}See ${params.outdir}/GenomeBinning/QC/BUSCO/[bin]_busco.err and ${params.outdir}/GenomeBinning/QC/BUSCO/[bin]_busco.log for further information. Results for selected domain are still used.${colors.reset}-"
+                    log.info "-${colors.purple}[$workflow.manifest.name]${colors.yellow} For ${count_placements_failed} bin(s) the BUSCO analysis using automated lineage selection failed due to failed placements:\n${failed_bins_placements_failed}See ${params.outdir}/GenomeBinning/QC/BUSCO/[bin]_busco.err and ${params.outdir}/GenomeBinning/QC/BUSCO/[bin]_busco.log for further information. Results for selected domain are still used.${colors.reset}-"
             }
         }
 
