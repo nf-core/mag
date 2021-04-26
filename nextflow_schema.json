@@ -478,7 +478,7 @@
                 "busco_download_path": {
                     "type": "string",
                     "description": "Path to local folder containing already downloaded and unpacked lineage datasets.",
-                    "help_text": "If provided, BUSCO analysis will be run in offline mode. Data can be downloaded from https://busco-data.ezlab.org/v5/data/. Run in combination with automated lineage selection."
+                    "help_text": "If provided, BUSCO analysis will be run in offline mode. Data can be downloaded from https://busco-data.ezlab.org/v5/data/ (files still need to be unpacked manually). Run in combination with automated lineage selection."
                 },
                 "busco_auto_lineage_prok": {
                     "type": "boolean",
