@@ -266,7 +266,7 @@ If the parameter `--save_busco_reference` is set, additionally the used BUSCO li
 **Output files:**
 
 * `GenomeBinning/QC/BUSCO/`
-  * `busco_downloads/`: All files and lineage datasets downloaded by BUSCO when run in automated lineage selection mode. Can be used to reproduce analysis (with the same parameters and assuming the pipeline was run using settings for reproducibility, see the [nf-core/mag website documentation](https://nf-co.re/mag/usage#reproducibility)).
+  * `busco_downloads/`: All files and lineage datasets downloaded by BUSCO when run in automated lineage selection mode. (Can currently not be used to reproduce analysis, see the [nf-core/mag website documentation](https://nf-co.re/mag/usage#reproducibility) how to achieve reproducible BUSCO results).
   * `reference/*.tar.gz`: BUSCO reference lineage dataset that was provided via `--busco_reference`.
 
 Besides the reference files or output files created by BUSCO, the following summary files will be generated:
