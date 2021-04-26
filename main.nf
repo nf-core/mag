@@ -83,7 +83,7 @@ include {
 // Local: Sub-workflows
 include { INPUT_CHECK         } from './subworkflows/local/input_check'
 include { METABAT2_BINNING    } from './subworkflows/local/metabat2_binning'      addParams( bowtie2_align_options: modules['bowtie2_assembly_align'], metabat2_options: modules['metabat2']                                                   )
-include { BUSCO_QC            } from './subworkflows/local/busco_qc'              addParams( busco_db_options: modules['busco_db_preparation'], busco_options: modules['busco'], busco_plot_options: modules['busco_plot'], busco_summary_options: modules['busco_summary'])
+include { BUSCO_QC            } from './subworkflows/local/busco_qc'              addParams( busco_db_options: modules['busco_db_preparation'], busco_options: modules['busco'], busco_save_download_options: modules['busco_save_download'], busco_plot_options: modules['busco_plot'], busco_summary_options: modules['busco_summary'])
 
 // nf-core/modules: Modules
 include { FASTQC as FASTQC_RAW     } from './modules/nf-core/software/fastqc/main'              addParams( options: modules['fastqc_raw']            )
@@ -203,16 +203,36 @@ if ( params.host_genome ) {
     ch_host_fasta = Channel.empty()
 }
 
+if (params.skip_busco){
+    if (params.busco_reference)
+        exit 1, "Both --skip_busco and --busco_reference are specififed! Invalid combination, please specify either --skip_busco or --busco_reference."
+    if (params.busco_download_path)
+        exit 1, "Both --skip_busco and --busco_download_path are specififed! Invalid combination, please specify either --skip_busco or --busco_download_path."
+    if (params.busco_auto_lineage_prok)
+        exit 1, "Both --skip_busco and --busco_auto_lineage_prok are specififed! Invalid combination, please specify either --skip_busco or --busco_auto_lineage_prok."
+}
+if (params.busco_reference && params.busco_download_path)
+    exit 1, "Both --busco_reference and --busco_download_path are specififed! Invalid combination, please specify either --busco_reference or --busco_download_path."
+if (params.busco_auto_lineage_prok && params.busco_reference)
+    exit 1, "Both --busco_auto_lineage_prok and --busco_reference are specififed! Invalid combination, please specify either --busco_auto_lineage_prok or --busco_reference."
+
 ////////////////////////////////////////////////////
 /* --  Create channel for reference databases  -- */
 ////////////////////////////////////////////////////
 
-if(!params.skip_busco){
+if(params.busco_reference){
     Channel
         .value(file( "${params.busco_reference}" ))
         .set { ch_busco_db_file }
 } else {
     ch_busco_db_file = Channel.empty()
+}
+if (params.busco_download_path) {
+    Channel
+        .value(file( "${params.busco_download_path}" ))
+        .set { ch_busco_download_folder }
+} else {
+    ch_busco_download_folder = Channel.empty()
 }
 
 if(params.centrifuge_db){
@@ -263,7 +283,8 @@ ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multi
 ////////////////////////////////////////////////////
 
 // Info required for completion email and summary
-def multiqc_report = []
+def multiqc_report    = []
+def busco_failed_bins = [:]
 
 workflow {
 
@@ -532,6 +553,7 @@ workflow {
     */
 
     ch_bowtie2_assembly_multiqc = Channel.empty()
+    ch_busco_summary            = Channel.empty()
     ch_busco_multiqc            = Channel.empty()
     if (!params.skip_binning){
 
@@ -543,22 +565,31 @@ workflow {
         ch_software_versions = ch_software_versions.mix(METABAT2_BINNING.out.bowtie2_version.first().ifEmpty(null))
         ch_software_versions = ch_software_versions.mix(METABAT2_BINNING.out.metabat2_version.first().ifEmpty(null))
 
-        /*
-        * BUSCO subworkflow: Quantitative measures for the assessment of genome assembly
-        */
-        BUSCO_QC (
-            ch_busco_db_file,
-            METABAT2_BINNING.out.bins.transpose()
-        )
-        ch_busco_multiqc = BUSCO_QC.out.multiqc
-        ch_software_versions = ch_software_versions.mix(BUSCO_QC.out.version.first().ifEmpty(null))
+        if (!params.skip_busco){
+            /*
+            * BUSCO subworkflow: Quantitative measures for the assessment of genome assembly
+            */
+            BUSCO_QC (
+                ch_busco_db_file,
+                ch_busco_download_folder,
+                METABAT2_BINNING.out.bins.transpose()
+            )
+            ch_busco_summary = BUSCO_QC.out.summary
+            ch_busco_multiqc = BUSCO_QC.out.multiqc
+            ch_software_versions = ch_software_versions.mix(BUSCO_QC.out.version.first().ifEmpty(null))
+            // process information if BUSCO analysis failed for individual bins due to no matching genes
+            BUSCO_QC.out
+                .failed_bin
+                .splitCsv(sep: '\t')
+                .map { bin, error -> if (!bin.contains(".unbinned.")) busco_failed_bins[bin] = error }
+        }
 
         if (!params.skip_quast){
             QUAST_BINS ( METABAT2_BINNING.out.bins )
             ch_software_versions = ch_software_versions.mix(QUAST_BINS.out.version.first().ifEmpty(null))
             MERGE_QUAST_AND_BUSCO (
                 QUAST_BINS.out.quast_bin_summaries.collect(),
-                BUSCO_QC.out.summary
+                ch_busco_summary
             )
         }
 
@@ -612,8 +643,8 @@ workflow {
 ////////////////////////////////////////////////////
 
 workflow.onComplete {
-    Completion.email(workflow, params, summary_params, projectDir, log, multiqc_report)
-    Completion.summary(workflow, params, log)
+    Completion.email(workflow, params, summary_params, projectDir, log, multiqc_report, busco_failed_bins)
+    Completion.summary(workflow, params, log, busco_failed_bins)
 }
 
 ////////////////////////////////////////////////////

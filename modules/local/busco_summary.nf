@@ -10,21 +10,30 @@ process BUSCO_SUMMARY {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:'') }
 
-    conda (params.enable_conda ? "conda-forge::python:3.6.7" : null)
+    conda (params.enable_conda ? "conda-forge::pandas=1.1.5" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/python:3.6.7"
+        container "https://depot.galaxyproject.org/singularity/pandas:1.1.5"
     } else {
-        container "quay.io/biocontainers/python:3.6.7"
+        container "quay.io/biocontainers/pandas:1.1.5"
     }
 
     input:
-    path "short_summary.*.txt"
+    path(summaries_domain)
+    path(summaries_specific)
+    path(failed_bins)
 
     output:
-    path "busco_summary.txt", emit: summary
+    path "busco_summary.tsv", emit: summary
 
     script:
+    def auto = params.busco_reference ? "" : "-a"
+    def ss = summaries_specific.size() > 0 ? "-ss ${summaries_specific}" : ""
+    def sd = summaries_domain.size() > 0 ? "-sd ${summaries_domain}" : ""
+    def f = ""
+    if (!params.busco_reference && failed_bins.size() > 0)
+        f = "-f ${failed_bins}"
     """
-    summary_busco.py short_summary.*.txt > busco_summary.txt
+    summary_busco.py $auto $ss $sd $f -o busco_summary.tsv
     """
 }
+

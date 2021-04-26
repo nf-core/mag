@@ -23,7 +23,8 @@ top_modules:
     info: 'After trimming and, if requested, contamination removal.'
     path_filters:
         - '*trimmed*'
-- 'busco'
+- 'busco':
+    info: 'assesses genome assembly and annotation completeness with Benchmarking Universal Single-Copy Orthologs. In case BUSCO''s automated lineage selection was used, only generic results for the selected domain are shown and only for genome bins and kept, unbinned contigs for which the BUSCO analysis was successfull, i.e. not for contigs for which no BUSCO genes could be found. Bins for which a specific virus lineage was selected are also not shown.'
 - 'quast'
 
 

@@ -472,13 +472,21 @@
                 },
                 "busco_reference": {
                     "type": "string",
-                    "default": "https://busco-data.ezlab.org/v4/data/lineages/bacteria_odb10.2020-03-06.tar.gz",
-                    "description": "Download path for BUSCO database.",
-                    "help_text": "Available databases are listed here: https://busco.ezlab.org/."
+                    "description": "Download path for BUSCO lineage dataset, instead of using automated lineage selection.",
+                    "help_text": "E.g. https://busco-data.ezlab.org/v5/data/lineages/bacteria_odb10.2020-03-06.tar.gz. Available databases are listed here: https://busco-data.ezlab.org/v5/data/lineages/."
+                },
+                "busco_download_path": {
+                    "type": "string",
+                    "description": "Path to local folder containing already downloaded and unpacked lineage datasets.",
+                    "help_text": "If provided, BUSCO analysis will be run in offline mode. Data can be downloaded from https://busco-data.ezlab.org/v5/data/ (files still need to be unpacked manually). Run in combination with automated lineage selection."
+                },
+                "busco_auto_lineage_prok": {
+                    "type": "boolean",
+                    "description": "Run BUSCO with automated lineage selection, but ignoring eukaryotes (saves runtime)."
                 },
                 "save_busco_reference": {
                     "type": "boolean",
-                    "description": "Save BUSCO reference.",
+                    "description": "Save the used BUSCO lineage datasets provided via --busco_reference or downloaded when not using --busco_reference or --busco_download_path.",
                     "help_text": "Useful to allow reproducibility, as BUSCO datasets are frequently updated and old versions do not always remain accessible."
                 }
             }
