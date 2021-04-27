@@ -20,42 +20,32 @@ nextflow.enable.dsl = 2
 /* --               PRINT HELP                 -- */
 ////////////////////////////////////////////////////
 
+log.info Utils.logo(workflow, params.monochrome_logs)
+
 def json_schema = "$projectDir/nextflow_schema.json"
 if (params.help) {
     def command = "nextflow run nf-core/mag --input 'samplesheet.csv' -profile docker"
     // nextflow run nf-core/mag --input '*_R{1,2}.fastq.gz' -profile docker
-    log.info NfcoreSchema.params_help(workflow, params, json_schema, command)
+    log.info NfcoreSchema.paramsHelp(workflow, params, json_schema, command)
+    log.info Workflow.citation(workflow)
+    log.info Utils.dashedLine(params.monochrome_logs)
     exit 0
 }
-
-////////////////////////////////////////////////////
-/* --         VALIDATE PARAMETERS              -- */
-////////////////////////////////////////////////////+
-if (params.validate_params) {
-    NfcoreSchema.validateParameters(params, json_schema, log)
-}
-
-////////////////////////////////////////////////////
-/* --          PARAMETER CHECKS                -- */
-////////////////////////////////////////////////////
-
-// Check that conda channels are set-up correctly
-if (params.enable_conda) {
-    Checks.check_conda_channels(log)
-}
-
-// Check AWS batch settings
-Checks.aws_batch(workflow, params)
-
-// Check the hostnames against configured profiles
-Checks.hostname(workflow, params, log)
 
 ////////////////////////////////////////////////////
 /* --         PRINT PARAMETER SUMMARY          -- */
 ////////////////////////////////////////////////////
 
-def summary_params = NfcoreSchema.params_summary_map(workflow, params, json_schema)
-log.info NfcoreSchema.params_summary_log(workflow, params, json_schema)
+def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params, json_schema)
+log.info NfcoreSchema.paramsSummaryLog(workflow, params, json_schema)
+log.info Workflow.citation(workflow)
+log.info Utils.dashedLine(params.monochrome_logs)
+
+////////////////////////////////////////////////////
+/* --         VALIDATE PARAMETERS              -- */
+////////////////////////////////////////////////////
+
+Workflow.validateMainParams(workflow, params, json_schema, log)
 
 ////////////////////////////////////////////////////
 /* --            RUN WORKFLOW(S)               -- */

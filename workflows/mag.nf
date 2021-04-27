@@ -8,12 +8,32 @@ params.summary_params = [:]
 /* --          VALIDATE INPUTS                 -- */
 ////////////////////////////////////////////////////
 
+include { hasExtension } from '../modules/local/functions'
+
 // Check input path parameters to see if they exist
-checkPathParamList = [ params.input, params.multiqc_config, params.phix_reference, params.host_fasta, params.centrifuge_db, params.kraken2_db, params.cat_db, params.lambda_reference, params.busco_reference ]
+def checkPathParamList = [ params.input, params.multiqc_config, params.phix_reference, params.host_fasta, params.centrifuge_db, params.kraken2_db, params.cat_db, params.lambda_reference, params.busco_reference ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
 // Check mandatory parameters
 if (!params.input) exit 1, 'Input samplesheet not specified!'
+
+// Validate input parameters
+def hybrid = false
+if(hasExtension(params.input, "csv")){
+    // just check if long reads are provided
+    Channel
+        .from(file(params.input))
+        .splitCsv(header: true)
+        .map { row ->
+                if (row.size() == 5) {
+                    if (row.long_reads) hybrid = true
+                } else {
+                    log.error "Input samplesheet contains row with ${row.size()} column(s). Expects 5."
+                    System.exit(1)
+                }
+            }
+}
+Workflow.validateWorkflowParams(params, log, hybrid)
 
 ////////////////////////////////////////////////////
 /* --          CONFIG FILES                    -- */
@@ -62,11 +82,6 @@ include { CAT_DB                                              } from '../modules
 include { CAT                                                 } from '../modules/local/cat'                         addParams( options: modules['cat']                        )
 include { MULTIQC                                             } from '../modules/local/multiqc'                     addParams( options: multiqc_options                       )
 
-// Local: Functions
-include {
-    hasExtension
-} from '../modules/local/functions'
-
 // Local: Sub-workflows
 include { INPUT_CHECK         } from '../subworkflows/local/input_check'
 include { METABAT2_BINNING    } from '../subworkflows/local/metabat2_binning'      addParams( bowtie2_align_options: modules['bowtie2_assembly_align'], metabat2_options: modules['metabat2']                                                   )
@@ -78,83 +93,19 @@ include { FASTQC as FASTQC_TRIMMED } from '../modules/nf-core/software/fastqc/ma
 include { FASTP                    } from '../modules/nf-core/software/fastp/main'               addParams( options: modules['fastp']            )
 
 ////////////////////////////////////////////////////
-/* --     PARAMETER CHECKS                -- */
+/* --  Create channel for reference databases  -- */
 ////////////////////////////////////////////////////
 
-hybrid = false
-if(hasExtension(params.input, "csv")){
-    // just check if long reads are provided
-    Channel
-        .from(file(params.input))
-        .splitCsv(header: true)
-        .map { row ->
-                if (row.size() == 5) {
-                    if (row.long_reads) hybrid = true
-                } else {
-                    exit 1, "Input samplesheet contains row with ${row.size()} column(s). Expects 5."
-                }
-            }
-}
-
-// Check if binning mapping mode is valid
-if (!['all','group','own'].contains(params.binning_map_mode))
-    exit 1, "Invalid parameter '--binning_map_mode ${params.binning_map_mode}'. Valid values are 'all', 'group' or 'own'."
-if (params.coassemble_group && params.binning_map_mode == 'own')
-    exit 1, "Invalid combination of parameter '--binning_map_mode own' and parameter '--coassemble_group'. Select either 'all' or 'group' mapping mode when performing group-wise co-assembly."
-
-// Check if specified cpus for SPAdes are available
-if ( params.spades_fix_cpus > params.max_cpus )
-    exit 1, "Invalid parameter '--spades_fix_cpus ${params.spades_fix_cpus}', max cpus are '${params.max_cpus}'."
-if ( params.spadeshybrid_fix_cpus > params.max_cpus )
-    exit 1, "Invalid parameter '--spadeshybrid_fix_cpus ${params.spadeshybrid_fix_cpus}', max cpus are '${params.max_cpus}'."
-// Check if settings concerning reproducibility of used tools are consistent and print warning if not
-if (params.megahit_fix_cpu_1 || params.spades_fix_cpus != -1 || params.spadeshybrid_fix_cpus != -1){
-    if (!params.skip_spades && params.spades_fix_cpus == -1)
-        log.warn "At least one assembly process is run with a parameter to ensure reproducible results, but SPAdes not. Consider using the parameter '--spades_fix_cpus'."
-    if (hybrid && params.skip_spadeshybrid && params.spadeshybrid_fix_cpus == -1)
-        log.warn "At least one assembly process is run with a parameter to ensure reproducible results, but SPAdes hybrid not. Consider using the parameter '--spadeshybrid_fix_cpus'."
-    if (!params.skip_megahit && !params.megahit_fix_cpu_1)
-        log.warn "At least one assembly process is run with a parameter to ensure reproducible results, but MEGAHIT not. Consider using the parameter '--megahit_fix_cpu_1'."
-    if (!params.skip_binning && params.metabat_rng_seed == 0)
-        log.warn "At least one assembly process is run with a parameter to ensure reproducible results, but for MetaBAT2 a random seed is specified ('--metabat_rng_seed 0'). Consider specifying a positive seed instead."
-}
-
-// Check if SPAdes and single_end
-if ( (!params.skip_spades || !params.skip_spadeshybrid) && params.single_end) {
-    log.warn "metaSPAdes does not support single-end data. SPAdes will be skipped."
-}
-
-// Check if parameters for host contamination removal are valid and create channels
-if ( params.host_fasta && params.host_genome) {
-    exit 1, "Both host fasta reference and iGenomes genome are specififed to remove host contamination! Invalid combination, please specify either --host_fasta or --host_genome."
-}
-if ( hybrid && (params.host_fasta || params.host_genome) ) {
-    log.warn "Host read removal is only applied to short reads. Long reads might be filtered indirectly by Filtlong, which is set to use read qualities estimated based on k-mer matches to the short, already filtered reads."
-    if ( params.longreads_length_weight > 1 ) {
-        log.warn "The parameter --longreads_length_weight is ${params.longreads_length_weight}, causing the read length being more important for long read filtering than the read quality. Set --longreads_length_weight to 1 in order to assign equal weights."
-    }
-}
 if ( params.host_genome ) {
-    // Check if host genome exists in the config file
-    if ( !params.genomes.containsKey(params.host_genome) ) {
-        exit 1, "The provided host genome '${params.host_genome}' is not available in the iGenomes file. Currently the available genomes are ${params.genomes.keySet().join(", ")}"
-    } else {
-        host_fasta = params.genomes[params.host_genome].fasta ?: false
-        if ( !host_fasta ) {
-            exit 1, "No fasta file specified for the host genome ${params.host_genome}!"
-        }
-        Channel
-            .value(file( "${host_fasta}" ))
-            .set { ch_host_fasta }
+    host_fasta = params.genomes[params.host_genome].fasta ?: false
+    Channel
+        .value(file( "${host_fasta}" ))
+        .set { ch_host_fasta }
 
-        host_bowtie2index = params.genomes[params.host_genome].bowtie2 ?: false
-        if ( !host_bowtie2index ) {
-            exit 1, "No Bowtie 2 index file specified for the host genome ${params.host_genome}!"
-        }
-        Channel
-            .value(file( "${host_bowtie2index}/*" ))
-            .set { ch_host_bowtie2index }
-    }
+    host_bowtie2index = params.genomes[params.host_genome].bowtie2 ?: false
+    Channel
+        .value(file( "${host_bowtie2index}/*" ))
+        .set { ch_host_bowtie2index }
 } else if ( params.host_fasta ) {
     Channel
         .value(file( "${params.host_fasta}" ))
@@ -162,23 +113,6 @@ if ( params.host_genome ) {
 } else {
     ch_host_fasta = Channel.empty()
 }
-
-if (params.skip_busco){
-    if (params.busco_reference)
-        exit 1, "Both --skip_busco and --busco_reference are specififed! Invalid combination, please specify either --skip_busco or --busco_reference."
-    if (params.busco_download_path)
-        exit 1, "Both --skip_busco and --busco_download_path are specififed! Invalid combination, please specify either --skip_busco or --busco_download_path."
-    if (params.busco_auto_lineage_prok)
-        exit 1, "Both --skip_busco and --busco_auto_lineage_prok are specififed! Invalid combination, please specify either --skip_busco or --busco_auto_lineage_prok."
-}
-if (params.busco_reference && params.busco_download_path)
-    exit 1, "Both --busco_reference and --busco_download_path are specififed! Invalid combination, please specify either --busco_reference or --busco_download_path."
-if (params.busco_auto_lineage_prok && params.busco_reference)
-    exit 1, "Both --busco_auto_lineage_prok and --busco_reference are specififed! Invalid combination, please specify either --busco_auto_lineage_prok or --busco_reference."
-
-////////////////////////////////////////////////////
-/* --  Create channel for reference databases  -- */
-////////////////////////////////////////////////////
 
 if(params.busco_reference){
     Channel
@@ -568,7 +502,7 @@ workflow MAG {
      * MultiQC
      */
     if (!params.skip_multiqc) {
-        workflow_summary    = MagUtils.params_summary_multiqc(workflow, params.summary_params)
+        workflow_summary    = Workflow.paramsSummaryMultiqc(workflow, params.summary_params)
         ch_workflow_summary = Channel.value(workflow_summary)
 
         ch_multiqc_files = Channel.empty()
