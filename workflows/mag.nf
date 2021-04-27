@@ -5,6 +5,17 @@
 params.summary_params = [:]
 
 ////////////////////////////////////////////////////
+/* --          VALIDATE INPUTS                 -- */
+////////////////////////////////////////////////////
+
+// Check input path parameters to see if they exist
+checkPathParamList = [ params.input, params.multiqc_config, params.phix_reference, params.host_fasta, params.centrifuge_db, params.kraken2_db, params.cat_db, params.lambda_reference, params.busco_reference ]
+for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
+
+// Check mandatory parameters
+if (!params.input) exit 1, 'Input samplesheet not specified!'
+
+////////////////////////////////////////////////////
 /* --          CONFIG FILES                    -- */
 ////////////////////////////////////////////////////
 
@@ -66,35 +77,8 @@ include { FASTQC as FASTQC_RAW     } from '../modules/nf-core/software/fastqc/ma
 include { FASTQC as FASTQC_TRIMMED } from '../modules/nf-core/software/fastqc/main'              addParams( options: modules['fastqc_trimmed']        )
 include { FASTP                    } from '../modules/nf-core/software/fastp/main'               addParams( options: modules['fastp']            )
 
-
 ////////////////////////////////////////////////////
-/* --          PARAMETER CHECKS                -- */
-////////////////////////////////////////////////////
-
-// Check that conda channels are set-up correctly
-if (params.enable_conda) {
-    Checks.check_conda_channels(log)
-}
-
-// Check AWS batch settings
-Checks.aws_batch(workflow, params)
-
-// Check the hostnames against configured profiles
-Checks.hostname(workflow, params, log)
-
-////////////////////////////////////////////////////
-/* --          VALIDATE INPUTS                 -- */
-////////////////////////////////////////////////////
-
-// Check input path parameters to see if they exist
-checkPathParamList = [ params.input, params.multiqc_config, params.phix_reference, params.host_fasta, params.centrifuge_db, params.kraken2_db, params.cat_db, params.lambda_reference, params.busco_reference ]
-for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
-
-// Check mandatory parameters
-if (!params.input) exit 1, 'Input samplesheet not specified!'
-
-////////////////////////////////////////////////////
-/* --     MORE PARAMETER CHECKS                -- */
+/* --     PARAMETER CHECKS                -- */
 ////////////////////////////////////////////////////
 
 hybrid = false
