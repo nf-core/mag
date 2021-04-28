@@ -48,7 +48,7 @@ class Completion {
         // On success try attach the multiqc report
         def mqc_report = null
         try {
-            if (workflow.success && !params.skip_multiqc) {
+            if (workflow.success) {
                 mqc_report = multiqc_report.getVal()
                 if (mqc_report.getClass() == ArrayList && mqc_report.size() >= 1) {
                     if (mqc_report.size() > 1) {
@@ -86,7 +86,7 @@ class Completion {
         def sendmail_html          = sendmail_template.toString()
 
         // Send the HTML e-mail
-        Map colors = Headers.log_colours(params.monochrome_logs)
+        Map colors = Utils.logColours(params.monochrome_logs)
         if (email_address) {
             try {
                 if (params.plaintext_email) { throw GroovyException('Send plaintext e-mail, not HTML') }
@@ -116,7 +116,7 @@ class Completion {
     }
 
     static void summary(workflow, params, log, busco_failed_bins = [:]) {
-        Map colors = Headers.log_colours(params.monochrome_logs)
+        Map colors = Utils.logColours(params.monochrome_logs)
 
         if (busco_failed_bins.size() > 0) {
             def failed_bins_no_genes = ''
@@ -150,7 +150,7 @@ class Completion {
                 log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} Pipeline completed successfully, but with errored process(es) ${colors.reset}-"
             }
         } else {
-            Checks.hostname(workflow, params, log)
+            Checks.hostName(workflow, params, log)
             log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} Pipeline completed with errors${colors.reset}-"
         }
     }

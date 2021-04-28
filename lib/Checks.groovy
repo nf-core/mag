@@ -6,7 +6,7 @@ import org.yaml.snakeyaml.Yaml
 
 class Checks {
 
-    static void check_conda_channels(log) {
+    static void checkCondaChannels(log) {
         Yaml parser = new Yaml()
         def channels = []
         try {
@@ -35,7 +35,7 @@ class Checks {
         }
     }
 
-    static void aws_batch(workflow, params) {
+    static void awsBatch(workflow, params) {
         if (workflow.profile.contains('awsbatch')) {
             assert (params.awsqueue && params.awsregion) : "Specify correct --awsqueue and --awsregion parameters on AWSBatch!"
             // Check outdir paths to be S3 buckets if running on AWSBatch
@@ -46,8 +46,8 @@ class Checks {
         }
     }
 
-    static void hostname(workflow, params, log) {
-        Map colors = Headers.log_colours(params.monochrome_logs)
+    static void hostName(workflow, params, log) {
+        Map colors = Utils.logColours(params.monochrome_logs)
         if (params.hostnames) {
             def hostname = "hostname".execute().text.trim()
             params.hostnames.each { prof, hnames ->
@@ -63,39 +63,4 @@ class Checks {
             }
         }
     }
-
-    // Citation string
-    private static String citation(workflow) {
-        return "If you use ${workflow.manifest.name} for your analysis please cite:\n\n" +
-               "* The pipeline\n" + 
-               "  https://doi.org/10.5281/zenodo.1400710\n\n" +
-               "* The nf-core framework\n" +
-               "  https://dx.doi.org/10.1038/s41587-020-0439-x\n" +
-               "  https://rdcu.be/b1GjZ\n\n" +
-               "* Software dependencies\n" +
-               "  https://github.com/${workflow.manifest.name}/blob/master/CITATIONS.md"
-    }
-
-    // Exit pipeline if incorrect --genome key provided
-    static void genome_exists(params, log) {
-        if (params.genomes && params.genome && !params.genomes.containsKey(params.genome)) {
-            log.error "=============================================================================\n" +
-                      "  Genome '${params.genome}' not found in any config files provided to the pipeline.\n" +
-                      "  Currently, the available genome keys are:\n" +
-                      "  ${params.genomes.keySet().join(", ")}\n" +
-                      "============================================================================="
-            System.exit(0)
-        }
-    }
-
-    // Get attribute from genome config file e.g. fasta
-    static String get_genome_attribute(params, attribute) {
-        def val = ''
-        if (params.genomes && params.genome && params.genomes.containsKey(params.genome)) {
-            if (params.genomes[ params.genome ].containsKey(attribute)) {
-                val = params.genomes[ params.genome ][ attribute ]
-            }
-        }
-        return val
-    }    
 }
