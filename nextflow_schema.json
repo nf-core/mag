@@ -405,6 +405,12 @@
                     "type": "string",
                     "description": "Database for taxonomic classification of metagenome assembled genomes.",
                     "help_text": "E.g. \"https://tbb.bio.uu.nl/bastiaan/CAT_prepare/CAT_prepare_20210107.tar.gz\".\nThe zipped file needs to contain a folder named \"*taxonomy*\" and \"*CAT_database*\" that hold the respective files."
+                },
+                "gtdb": {
+                    "type": "string",
+                    "default": "https://data.gtdb.ecogenomic.org/releases/release95/95.0/auxillary_files/gtdbtk_r95_data.tar.gz",
+                    "description": "GTDB database for taxonomic classification of bins with GTDB-tk.",
+                    "help_text": "for information which GTDB reference databases are compatible with the used GTDB-tk version see https://ecogenomics.github.io/GTDBTk/installing/index.html#gtdb-tk-reference-data."
                 }
             }
         },
