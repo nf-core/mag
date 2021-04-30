@@ -410,7 +410,21 @@
                     "type": "string",
                     "default": "https://data.gtdb.ecogenomic.org/releases/release95/95.0/auxillary_files/gtdbtk_r95_data.tar.gz",
                     "description": "GTDB database for taxonomic classification of bins with GTDB-tk.",
-                    "help_text": "for information which GTDB reference databases are compatible with the used GTDB-tk version see https://ecogenomics.github.io/GTDBTk/installing/index.html#gtdb-tk-reference-data."
+                    "help_text": "For information which GTDB reference databases are compatible with the used GTDB-tk version see https://ecogenomics.github.io/GTDBTk/installing/index.html#gtdb-tk-reference-data."
+                },
+                "gtdbtk_min_completeness": {
+                    "type": "number",
+                    "default": 50.0,
+                    "description": "Min. bin completeness required to apply GTDB-tk classification."
+                },
+                "gtdbtk_max_contamination": {
+                    "type": "number",
+                    "default": 10.0,
+                    "description": "Max. bin contamination allowed to apply GTDB-tk classification."
+                },
+                "skip_filt_gtdbtk": {
+                    "type": "boolean",
+                    "description": "Skip filtering of bins based on BUSCO results for GTDB-tk classification."
                 }
             }
         },

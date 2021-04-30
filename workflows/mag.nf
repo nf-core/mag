@@ -504,10 +504,47 @@ workflow MAG {
          * GTDB-tk: taxonomic classifications using GTDB reference
          */
         if ( params.gtdb ){
-            // TODO apply only to medium & high quality MAGs (>=50% complete, <=10% contamination)?
+            ch_bins_gtdbtk = METABAT2_BINNING.out.bins
+            // Filter bins: classify only medium & high quality MAGs
+            if (!params.skip_busco && !params.skip_filt_gtdbtk) {
+                // Collect completness and contamination metrics from busco summary
+                def bin_metrics = [:]
+                ch_busco_summary
+                    .splitCsv(header: true, sep: '\t')
+                    .map { row ->
+                                def completeness  = -1
+                                def contamination = -1
+                                def missing, duplicated
+                                if (params.busco_reference) {
+                                    missing    = row.'%Missing (specific)'      // TODO or just take '%Complete'?
+                                    duplicated = row.'%Complete and duplicated (specific)'
+                                } else {
+                                    missing    = row.'%Missing (domain)'
+                                    duplicated = row.'%Complete and duplicated (domain)'
+                                }
+                                if (missing != '') completeness = 100.0 - Double.parseDouble(missing)
+                                if (duplicated != '') contamination = Double.parseDouble(duplicated)
+                                [row.'GenomeBin', completeness, contamination]
+                    }
+                    .set { ch_busco_metrics }
+                // Filter bins based on collected metrics: completeness, contamination
+                METABAT2_BINNING.out.bins
+                    .transpose()
+                    .map { meta, bin -> [bin.getName(), bin, meta]}
+                    .join(ch_busco_metrics, failOnDuplicate: true, failOnMismatch: true)
+                    .map { bin_name, bin, meta, completeness, contamination ->
+                            if (completeness != -1 && completeness >= params.gtdbtk_min_completeness &&
+                                contamination != -1 && contamination <= params.gtdbtk_max_contamination)
+                                [meta, bin]
+                    }
+                    .groupTuple()
+                    .view()
+                    .set { ch_bins_gtdbtk }
+            }
+
             GTDBTK_DB_PREPARATION ( ch_gtdb )
             GTDBTK_CLASSIFY (
-                METABAT2_BINNING.out.bins,
+                ch_bins_gtdbtk,
                 GTDBTK_DB_PREPARATION.out
             )
             ch_software_versions = ch_software_versions.mix(GTDBTK_CLASSIFY.out.version.first().ifEmpty(null))
