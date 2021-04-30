@@ -11,11 +11,11 @@ process GTDBTK_CLASSIFY {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:"${meta.assembler}/${meta.id}") }
 
-    conda (params.enable_conda ? "conda-forge::gtdbtk=1.4.1" : null)
+    conda (params.enable_conda ? "conda-forge::gtdbtk=1.5.0" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/gtdbtk:1.4.1--py_1"
+        container "https://depot.galaxyproject.org/singularity/gtdbtk:1.5.0--pyhdfd78af_0"
     } else {
-        container "quay.io/biocontainers/gtdbtk:1.4.1--py_1"
+        container "quay.io/biocontainers/gtdbtk:1.5.0--pyhdfd78af_0"
     }
 
     input:
