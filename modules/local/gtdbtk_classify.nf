@@ -23,25 +23,31 @@ process GTDBTK_CLASSIFY {
     tuple val(db_name), path("database/*")
 
     output:
-    path "classify/gtdbtk.${meta.assembler}-${meta.id}.*.summary.tsv"        , emit: summary
-    path "classify/gtdbtk.${meta.assembler}-${meta.id}.*.classify.tree"      , emit: tree
-    path "classify/gtdbtk.${meta.assembler}-${meta.id}.*.markers_summary.tsv", emit: markers
-    path "classify/gtdbtk.${meta.assembler}-${meta.id}.*.msa.fasta"          , emit: msa
-    path "classify/gtdbtk.${meta.assembler}-${meta.id}.*.user_msa.fasta"     , emit: user_msa
-    path "classify/gtdbtk.${meta.assembler}-${meta.id}.*.filtered.tsv"       , emit: filtered
-    path "classify/gtdbtk.${meta.assembler}-${meta.id}.log"                  , emit: log
-    path "classify/gtdbtk.${meta.assembler}-${meta.id}.warnings.log"         , emit: warnings
-    path "classify/gtdbtk.${meta.assembler}-${meta.id}.failed_genomes.tsv"   , emit: failed
-    path '*.version.txt'                                                     , emit: version
+    path "gtdbtk.${meta.assembler}-${meta.id}.*.summary.tsv"        , emit: summary
+    path "gtdbtk.${meta.assembler}-${meta.id}.*.classify.tree"      , emit: tree
+    path "gtdbtk.${meta.assembler}-${meta.id}.*.markers_summary.tsv", emit: markers
+    path "gtdbtk.${meta.assembler}-${meta.id}.*.msa.fasta"          , emit: msa
+    path "gtdbtk.${meta.assembler}-${meta.id}.*.user_msa.fasta"     , emit: user_msa
+    path "gtdbtk.${meta.assembler}-${meta.id}.*.filtered.tsv"       , emit: filtered
+    path "gtdbtk.${meta.assembler}-${meta.id}.log"                  , emit: log
+    path "gtdbtk.${meta.assembler}-${meta.id}.warnings.log"         , emit: warnings
+    path "gtdbtk.${meta.assembler}-${meta.id}.failed_genomes.tsv"   , emit: failed
+    path '*.version.txt'                                            , emit: version
 
     script:
     def software = getSoftwareName(task.process)
     """
     export GTDBTK_DATA_PATH="\${PWD}/database"
-    gtdbtk classify_wf --genome_dir bins --prefix "gtdbtk.${meta.assembler}-${meta.id}" --out_dir classify -x fa --cpus ${task.cpus} --min_perc_aa ${params.gtdbtk_min_perc_aa} --min_af ${params.gtdbtk_min_af}
+    gtdbtk classify_wf --genome_dir bins \
+                       --prefix "gtdbtk.${meta.assembler}-${meta.id}" \
+                       --out_dir "\${PWD}" \
+                       -x fa \
+                       --cpus ${task.cpus} \
+                       --min_perc_aa ${params.gtdbtk_min_perc_aa} \
+                       --min_af ${params.gtdbtk_min_af}
 
-    mv classify/gtdbtk.log "classify/gtdbtk.${meta.assembler}-${meta.id}.log"
-    mv classify/gtdbtk.warnings.log "classify/gtdbtk.${meta.assembler}-${meta.id}.warnings.log"
+    mv gtdbtk.log "gtdbtk.${meta.assembler}-${meta.id}.log"
+    mv gtdbtk.warnings.log "gtdbtk.${meta.assembler}-${meta.id}.warnings.log"
     gtdbtk --version | sed "s/gtdbtk: version //; s/ Copyright.*//" > ${software}.version.txt
     """
 }
