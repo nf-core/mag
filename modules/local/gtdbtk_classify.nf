@@ -23,15 +23,16 @@ process GTDBTK_CLASSIFY {
     tuple val(db_name), path("database/*")
 
     output:
-    path 'classify/gtdbtk.*.summary.tsv'        , emit: summary
-    path 'classify/gtdbtk.*.classify.tree'      , emit: tree
-    path 'classify/gtdbtk.*.markers_summary.tsv', emit: markers
-    path 'classify/gtdbtk.*.msa.fasta'          , emit: msa
-    path 'classify/gtdbtk.*.user_msa.fasta'     , emit: user_msa
-    path 'classify/gtdbtk.*.filtered.tsv'       , emit: filtered
-    path 'classify/gtdbtk.*.log'                , emit: log
-    path 'classify/gtdbtk.*.warnings.log'       , emit: warnings
-    path '*.version.txt'                        , emit: version
+    path "classify/gtdbtk.${meta.assembler}-${meta.id}.*.summary.tsv"        , emit: summary
+    path "classify/gtdbtk.${meta.assembler}-${meta.id}.*.classify.tree"      , emit: tree
+    path "classify/gtdbtk.${meta.assembler}-${meta.id}.*.markers_summary.tsv", emit: markers
+    path "classify/gtdbtk.${meta.assembler}-${meta.id}.*.msa.fasta"          , emit: msa
+    path "classify/gtdbtk.${meta.assembler}-${meta.id}.*.user_msa.fasta"     , emit: user_msa
+    path "classify/gtdbtk.${meta.assembler}-${meta.id}.*.filtered.tsv"       , emit: filtered
+    path "classify/gtdbtk.${meta.assembler}-${meta.id}.log"                  , emit: log
+    path "classify/gtdbtk.${meta.assembler}-${meta.id}.warnings.log"         , emit: warnings
+    path "classify/gtdbtk.${meta.assembler}-${meta.id}.failed_genomes.tsv"   , emit: failed
+    path '*.version.txt'                                                     , emit: version
 
     script:
     def software = getSoftwareName(task.process)

@@ -82,6 +82,7 @@ include { CAT_DB                                              } from '../modules
 include { CAT                                                 } from '../modules/local/cat'                         addParams( options: modules['cat']                        )
 include { GTDBTK_DB_PREPARATION                               } from '../modules/local/gtdbtk_db_preparation'       addParams( options: [:]                                   )
 include { GTDBTK_CLASSIFY                                     } from '../modules/local/gtdbtk_classify'             addParams( options: [:]                                   )
+include { GTDBTK_SUMMARY                                     } from '../modules/local/gtdbtk_summary'             addParams( options: [:]                                   )
 include { MULTIQC                                             } from '../modules/local/multiqc'                     addParams( options: multiqc_options                       )
 
 // Local: Sub-workflows
@@ -530,21 +531,30 @@ workflow MAG {
                 .transpose()
                 .map { meta, bin -> [bin.getName(), bin, meta]}
                 .join(ch_busco_metrics, failOnDuplicate: true, failOnMismatch: true)
-                .map { bin_name, bin, meta, completeness, contamination ->
-                        if (completeness != -1 && completeness >= params.gtdbtk_min_completeness &&
-                            contamination != -1 && contamination <= params.gtdbtk_max_contamination)
-                            [meta, bin]
+                .map { bin_name, bin, meta, completeness, contamination -> [meta, bin, completeness, contamination] }
+                .branch {
+                    passed: (it[2] != -1 && it[2] >= params.gtdbtk_min_completeness && it[3] != -1 && it[3] <= params.gtdbtk_max_contamination)
+                        return [it[0], it[1]]
+                    discarded: (it[2] == -1 || it[2] < params.gtdbtk_min_completeness || it[3] == -1 || it[3] > params.gtdbtk_max_contamination)
+                        return [it[0], it[1]]
                 }
-                .groupTuple()
-                .view()
-                .set { ch_bins_gtdbtk }
+                .set { ch_filtered_bins }
 
             GTDBTK_DB_PREPARATION ( ch_gtdb )
             GTDBTK_CLASSIFY (
-                ch_bins_gtdbtk,
+                ch_filtered_bins.passed.groupTuple(),
                 GTDBTK_DB_PREPARATION.out
             )
             ch_software_versions = ch_software_versions.mix(GTDBTK_CLASSIFY.out.version.first().ifEmpty(null))
+
+            GTDBTK_SUMMARY (
+                ch_filtered_bins.discarded.map{it[1]}.collect().ifEmpty([]),
+                GTDBTK_CLASSIFY.out.summary.collect().ifEmpty([]),
+                GTDBTK_CLASSIFY.out.filtered.collect().ifEmpty([]),
+                GTDBTK_CLASSIFY.out.failed.collect().ifEmpty([])
+            )
+
+            // TODO when mering with busco and quast: check if for one bin gtdbtk result missing and throw error!
         }
     }
 
