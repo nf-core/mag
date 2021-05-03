@@ -421,10 +421,6 @@
                     "type": "number",
                     "default": 10.0,
                     "description": "Max. bin contamination allowed to apply GTDB-tk classification."
-                },
-                "skip_filt_gtdbtk": {
-                    "type": "boolean",
-                    "description": "Skip filtering of bins based on BUSCO results for GTDB-tk classification."
                 }
             }
         },

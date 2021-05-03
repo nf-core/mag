@@ -128,8 +128,10 @@ class Workflow {
             System.exit(1)
         }
 
-        if (params.skip_busco && !params.skip_filt_gtdbtk && params.gtdb)
-            log.warn "GTDB-tk bin classification is run on all bins without filtering based on BUSCO QC results, because BUSCO analysis is skipped (specified by --skip_busco)! Results can be impaired due to not enough marker genes or contamination."
+        if (params.skip_busco && params.gtdb) {
+            log.error "Invalid combination of parameters --skip_busco and --gtdb are specififed! GTDB-tk bin classification requires bin filtering based on BUSCO QC results to avoid GTDB-tk errors."
+            System.exit(1)
+        }
     }
 
     /*
