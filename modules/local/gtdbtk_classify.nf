@@ -29,16 +29,18 @@ process GTDBTK_CLASSIFY {
     path 'classify/gtdbtk.*.msa.fasta'          , emit: msa
     path 'classify/gtdbtk.*.user_msa.fasta'     , emit: user_msa
     path 'classify/gtdbtk.*.filtered.tsv'       , emit: filtered
-    path 'classify/gtdbtk.log'                  , emit: log
-    path 'classify/gtdbtk.warnings.log'         , emit: warnings
+    path 'classify/gtdbtk.*.log'                , emit: log
+    path 'classify/gtdbtk.*.warnings.log'       , emit: warnings
     path '*.version.txt'                        , emit: version
 
     script:
     def software = getSoftwareName(task.process)
     """
     export GTDBTK_DATA_PATH="\${PWD}/database"
-    gtdbtk classify_wf --genome_dir bins --out_dir classify -x fa --cpus ${task.cpus} --min_perc_aa 5 --min_af 0.4
+    gtdbtk classify_wf --genome_dir bins --prefix "gtdbtk.${meta.assembler}-${meta.id}" --out_dir classify -x fa --cpus ${task.cpus} --min_perc_aa 5 --min_af 0.4
 
+    mv classify/gtdbtk.log "classify/gtdbtk.${meta.assembler}-${meta.id}.log"
+    mv classify/gtdbtk.warnings.log "classify/gtdbtk.${meta.assembler}-${meta.id}.warnings.log"
     gtdbtk --version | sed "s/gtdbtk: version //; s/ Copyright.*//" > ${software}.version.txt
     """
 }
