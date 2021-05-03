@@ -81,8 +81,8 @@ include { MERGE_QUAST_AND_BUSCO                               } from '../modules
 include { CAT_DB                                              } from '../modules/local/cat_db'
 include { CAT                                                 } from '../modules/local/cat'                         addParams( options: modules['cat']                        )
 include { GTDBTK_DB_PREPARATION                               } from '../modules/local/gtdbtk_db_preparation'       addParams( options: [:]                                   )
-include { GTDBTK_CLASSIFY                                     } from '../modules/local/gtdbtk_classify'             addParams( options: [:]                                   )
-include { GTDBTK_SUMMARY                                     } from '../modules/local/gtdbtk_summary'             addParams( options: [:]                                   )
+include { GTDBTK_CLASSIFY                                     } from '../modules/local/gtdbtk_classify'             addParams( options: modules['gtdbtk_classify']            )
+include { GTDBTK_SUMMARY                                      } from '../modules/local/gtdbtk_summary'              addParams( options: modules['gtdbtk_summary']             )
 include { MULTIQC                                             } from '../modules/local/multiqc'                     addParams( options: multiqc_options                       )
 
 // Local: Sub-workflows
