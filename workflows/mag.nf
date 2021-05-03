@@ -482,13 +482,11 @@ workflow MAG {
                 .map { bin, error -> if (!bin.contains(".unbinned.")) busco_failed_bins[bin] = error }
         }
 
+        ch_quast_bins_summaries = Channel.empty()
         if (!params.skip_quast){
             QUAST_BINS ( METABAT2_BINNING.out.bins )
             ch_software_versions = ch_software_versions.mix(QUAST_BINS.out.version.first().ifEmpty(null))
-            MERGE_QUAST_AND_BUSCO (
-                QUAST_BINS.out.quast_bin_summaries.collect(),
-                ch_busco_summary
-            )
+            ch_quast_bins_summaries = QUAST_BINS.out.quast_bin_summaries
         }
 
         /*
@@ -553,9 +551,13 @@ workflow MAG {
                 GTDBTK_CLASSIFY.out.filtered.collect().ifEmpty([]),
                 GTDBTK_CLASSIFY.out.failed.collect().ifEmpty([])
             )
-
             // TODO when mering with busco and quast: check if for one bin gtdbtk result missing and throw error!
         }
+
+        MERGE_QUAST_AND_BUSCO (
+            ch_quast_bins_summaries.collect(),
+            ch_busco_summary
+        )
     }
 
     /*
