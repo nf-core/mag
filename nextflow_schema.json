@@ -415,7 +415,7 @@
                 "gtdbtk_min_completeness": {
                     "type": "number",
                     "default": 50.0,
-                    "description": "Min. bin completeness required to apply GTDB-tk classification.",
+                    "description": "Min. bin completeness (in %) required to apply GTDB-tk classification.",
                     "help_text": "Must be greater than 0 (min. 0.01) to avoid GTDB-tk errors. If too low, GTDB-tk classification results can be impaired due to not enough marker genes!",
                     "minimum": 0.01,
                     "maximum": 100.0
@@ -423,9 +423,24 @@
                 "gtdbtk_max_contamination": {
                     "type": "number",
                     "default": 10.0,
-                    "description": "Max. bin contamination allowed to apply GTDB-tk classification. If too high, GTDB-tk classification results can be impaired due to contamination!",
+                    "description": "Max. bin contamination (in %) allowed to apply GTDB-tk classification.",
+                    "help_text": "If too high, GTDB-tk classification results can be impaired due to contamination!",
                     "minimum": 0.0,
                     "maximum": 100.0
+                },
+                "gtdbtk_min_perc_aa": {
+                    "type": "number",
+                    "default": 10,
+                    "description": "Min. fraction of AA (in %) in the MSA for bins to be kept.",
+                    "minimum": 0.0,
+                    "maximum": 100.0
+                },
+                "gtdbtk_min_af": {
+                    "type": "number",
+                    "default": 0.65,
+                    "description": "Min. alignment fraction to consider closest genome.",
+                    "minimum": 0.0,
+                    "maximum": 1.0
                 }
             }
         },

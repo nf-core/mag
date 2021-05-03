@@ -37,7 +37,7 @@ process GTDBTK_CLASSIFY {
     def software = getSoftwareName(task.process)
     """
     export GTDBTK_DATA_PATH="\${PWD}/database"
-    gtdbtk classify_wf --genome_dir bins --prefix "gtdbtk.${meta.assembler}-${meta.id}" --out_dir classify -x fa --cpus ${task.cpus} --min_perc_aa 5 --min_af 0.4
+    gtdbtk classify_wf --genome_dir bins --prefix "gtdbtk.${meta.assembler}-${meta.id}" --out_dir classify -x fa --cpus ${task.cpus} --min_perc_aa ${params.gtdbtk_min_perc_aa} --min_af ${params.gtdbtk_min_af}
 
     mv classify/gtdbtk.log "classify/gtdbtk.${meta.assembler}-${meta.id}.log"
     mv classify/gtdbtk.warnings.log "classify/gtdbtk.${meta.assembler}-${meta.id}.warnings.log"
