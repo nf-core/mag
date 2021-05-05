@@ -8,6 +8,7 @@ import pandas as pd
 
 def parse_args(args=None):
     parser = argparse.ArgumentParser()
+    parser.add_argument('-x',  "--extension",                    required=True,                 type=str,                    help="File extension passed to GTDB-TK and substracted by GTDB-Tk from bin names in results files.")
     parser.add_argument('-s',  "--summaries",         nargs="+",                metavar='FILE',                              help="List of GTDB-tk summary files.")
     parser.add_argument('-fi', "--filtered_bins",     nargs="+",                metavar='FILE',                              help="List of files containing names of bins which where filtered out during GTDB-tk analysis.")
     parser.add_argument('-fa', "--failed_bins",       nargs="+",                metavar='FILE',                              help="List of files containing bin names for which GTDB-tk analysis failed.")
@@ -51,6 +52,8 @@ def main(args=None):
     if args.summaries:
         for file in args.summaries:
             df_summary = pd.read_csv(file, sep='\t')[columns]
+            # add by GTDB-Tk substracted file extension again to bin names (at least until changed consistently in rest of pipeline)
+            df_summary['user_genome'] = df_summary['user_genome'].astype(str) + '.' + args.extension
             df_summary.set_index('user_genome', inplace=True)
             df_final = df_final.append(df_summary, verify_integrity=True)
 
@@ -64,6 +67,7 @@ def main(args=None):
                 filtered.append(bin_results)
     
     df_filtered = pd.DataFrame(filtered, columns=columns)
+    df_filtered['user_genome'] = df_filtered['user_genome'].astype(str) + '.' + args.extension
     df_filtered.set_index('user_genome', inplace=True)
     df_final = df_final.append(df_filtered, verify_integrity=True)
 
@@ -77,6 +81,7 @@ def main(args=None):
                 failed.append(bin_results)
 
     df_failed = pd.DataFrame(failed, columns=columns)
+    df_failed['user_genome'] = df_failed['user_genome'].astype(str) + '.' + args.extension
     df_failed.set_index('user_genome', inplace=True)
     df_final = df_final.append(df_failed, verify_integrity=True)
 

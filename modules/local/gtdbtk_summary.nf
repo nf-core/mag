@@ -32,6 +32,6 @@ process GTDBTK_SUMMARY {
     def filtered  = filtered_bins.size() > 0 ?     "--filtered_bins ${filtered_bins}" : ""
     def failed    = failed_bins.size() > 0 ?       "--failed_bins ${failed_bins}" : ""
     """
-    summary_gtdbtk.py $discarded $summaries $filtered $failed --out gtdbtk_summary.tsv
+    summary_gtdbtk.py $options.args $discarded $summaries $filtered $failed --out gtdbtk_summary.tsv
     """
 }

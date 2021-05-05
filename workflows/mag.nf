@@ -77,12 +77,13 @@ include { SPADES                                              } from '../modules
 include { SPADESHYBRID                                        } from '../modules/local/spadeshybrid'                addParams( options: modules['spadeshybrid']               )
 include { QUAST                                               } from '../modules/local/quast'                       addParams( options: modules['quast']                      )
 include { QUAST_BINS                                          } from '../modules/local/quast_bins'                  addParams( options: modules['quast_bins']                 )
-include { MERGE_QUAST_AND_BUSCO                               } from '../modules/local/merge_quast_and_busco'       addParams( options: modules['merge_quast_and_busco']      )
+include { QUAST_BINS_SUMMARY                                  } from '../modules/local/quast_bins_summary'          addParams( options: modules['quast_bins_summary']         )
 include { CAT_DB                                              } from '../modules/local/cat_db'
 include { CAT                                                 } from '../modules/local/cat'                         addParams( options: modules['cat']                        )
 include { GTDBTK_DB_PREPARATION                               } from '../modules/local/gtdbtk_db_preparation'       addParams( options: [:]                                   )
 include { GTDBTK_CLASSIFY                                     } from '../modules/local/gtdbtk_classify'             addParams( options: modules['gtdbtk_classify']            )
 include { GTDBTK_SUMMARY                                      } from '../modules/local/gtdbtk_summary'              addParams( options: modules['gtdbtk_summary']             )
+include { MERGE_QUAST_BUSCO_GTDBTK                            } from '../modules/local/merge_quast_busco_gtdbtk'   addParams( options: modules['merge_quast_busco_gtdbtk']   )
 include { MULTIQC                                             } from '../modules/local/multiqc'                     addParams( options: multiqc_options                       )
 
 // Local: Sub-workflows
@@ -482,11 +483,12 @@ workflow MAG {
                 .map { bin, error -> if (!bin.contains(".unbinned.")) busco_failed_bins[bin] = error }
         }
 
-        ch_quast_bins_summaries = Channel.empty()
+        ch_quast_bins_summary = Channel.empty()
         if (!params.skip_quast){
             QUAST_BINS ( METABAT2_BINNING.out.bins )
             ch_software_versions = ch_software_versions.mix(QUAST_BINS.out.version.first().ifEmpty(null))
-            ch_quast_bins_summaries = QUAST_BINS.out.quast_bin_summaries
+            QUAST_BINS_SUMMARY ( QUAST_BINS.out.quast_bin_summaries.collect() )
+            ch_quast_bins_summary = QUAST_BINS_SUMMARY.out.summary
         }
 
         /*
@@ -502,6 +504,7 @@ workflow MAG {
         /*
          * GTDB-tk: taxonomic classifications using GTDB reference
          */
+        ch_gtdbtk_summary = Channel.empty()
         if ( params.gtdb ){
             // Filter bins: classify only medium & high quality MAGs
             // Collect completness and contamination metrics from busco summary
@@ -551,13 +554,18 @@ workflow MAG {
                 GTDBTK_CLASSIFY.out.filtered.collect().ifEmpty([]),
                 GTDBTK_CLASSIFY.out.failed.collect().ifEmpty([])
             )
-            // TODO when mering with busco and quast: check if for one bin gtdbtk result missing and throw error!
+            ch_gtdbtk_summary = GTDBTK_SUMMARY.out.summary
         }
 
-        MERGE_QUAST_AND_BUSCO (
-            ch_quast_bins_summaries.collect(),
-            ch_busco_summary
-        )
+        if ( (!params.skip_busco && !params.skip_quast) ||
+             (!params.skip_busco && params.gtdb ) ||
+             (!params.skip_quast && params.gtdb )) {
+            MERGE_QUAST_BUSCO_GTDBTK (
+                ch_busco_summary.ifEmpty([]),
+                ch_quast_bins_summary.ifEmpty([]),
+                ch_gtdbtk_summary.ifEmpty([])
+            )
+        }
     }
 
     /*
