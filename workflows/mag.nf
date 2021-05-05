@@ -80,9 +80,6 @@ include { QUAST_BINS                                          } from '../modules
 include { QUAST_BINS_SUMMARY                                  } from '../modules/local/quast_bins_summary'          addParams( options: modules['quast_bins_summary']         )
 include { CAT_DB                                              } from '../modules/local/cat_db'
 include { CAT                                                 } from '../modules/local/cat'                         addParams( options: modules['cat']                        )
-include { GTDBTK_DB_PREPARATION                               } from '../modules/local/gtdbtk_db_preparation'       addParams( options: [:]                                   )
-include { GTDBTK_CLASSIFY                                     } from '../modules/local/gtdbtk_classify'             addParams( options: modules['gtdbtk_classify']            )
-include { GTDBTK_SUMMARY                                      } from '../modules/local/gtdbtk_summary'              addParams( options: modules['gtdbtk_summary']             )
 include { MERGE_QUAST_BUSCO_GTDBTK                            } from '../modules/local/merge_quast_busco_gtdbtk'   addParams( options: modules['merge_quast_busco_gtdbtk']   )
 include { MULTIQC                                             } from '../modules/local/multiqc'                     addParams( options: multiqc_options                       )
 
@@ -90,6 +87,7 @@ include { MULTIQC                                             } from '../modules
 include { INPUT_CHECK         } from '../subworkflows/local/input_check'
 include { METABAT2_BINNING    } from '../subworkflows/local/metabat2_binning'      addParams( bowtie2_align_options: modules['bowtie2_assembly_align'], metabat2_options: modules['metabat2']                                                   )
 include { BUSCO_QC            } from '../subworkflows/local/busco_qc'              addParams( busco_db_options: modules['busco_db_preparation'], busco_options: modules['busco'], busco_save_download_options: modules['busco_save_download'], busco_plot_options: modules['busco_plot'], busco_summary_options: modules['busco_summary'])
+include { GTDBTK              } from '../subworkflows/local/gtdbtk'                addParams( gtdbtk_classify_options: modules['gtdbtk_classify'], gtdbtk_summary_options: modules['gtdbtk_summary'])
 
 // nf-core/modules: Modules
 include { FASTQC as FASTQC_RAW     } from '../modules/nf-core/software/fastqc/main'              addParams( options: modules['fastqc_raw']            )
@@ -506,55 +504,13 @@ workflow MAG {
          */
         ch_gtdbtk_summary = Channel.empty()
         if ( params.gtdb ){
-            // Filter bins: classify only medium & high quality MAGs
-            // Collect completness and contamination metrics from busco summary
-            def bin_metrics = [:]
-            ch_busco_summary
-                .splitCsv(header: true, sep: '\t')
-                .map { row ->
-                            def completeness  = -1
-                            def contamination = -1
-                            def missing, duplicated
-                            if (params.busco_reference) {
-                                missing    = row.'%Missing (specific)'      // TODO or just take '%Complete'?
-                                duplicated = row.'%Complete and duplicated (specific)'
-                            } else {
-                                missing    = row.'%Missing (domain)'
-                                duplicated = row.'%Complete and duplicated (domain)'
-                            }
-                            if (missing != '') completeness = 100.0 - Double.parseDouble(missing)
-                            if (duplicated != '') contamination = Double.parseDouble(duplicated)
-                            [row.'GenomeBin', completeness, contamination]
-                }
-                .set { ch_busco_metrics }
-            // Filter bins based on collected metrics: completeness, contamination
-            METABAT2_BINNING.out.bins
-                .transpose()
-                .map { meta, bin -> [bin.getName(), bin, meta]}
-                .join(ch_busco_metrics, failOnDuplicate: true, failOnMismatch: true)
-                .map { bin_name, bin, meta, completeness, contamination -> [meta, bin, completeness, contamination] }
-                .branch {
-                    passed: (it[2] != -1 && it[2] >= params.gtdbtk_min_completeness && it[3] != -1 && it[3] <= params.gtdbtk_max_contamination)
-                        return [it[0], it[1]]
-                    discarded: (it[2] == -1 || it[2] < params.gtdbtk_min_completeness || it[3] == -1 || it[3] > params.gtdbtk_max_contamination)
-                        return [it[0], it[1]]
-                }
-                .set { ch_filtered_bins }
-
-            GTDBTK_DB_PREPARATION ( ch_gtdb )
-            GTDBTK_CLASSIFY (
-                ch_filtered_bins.passed.groupTuple(),
-                GTDBTK_DB_PREPARATION.out
+            GTDBTK (
+                METABAT2_BINNING.out.bins,
+                ch_busco_summary,
+                ch_gtdb
             )
-            ch_software_versions = ch_software_versions.mix(GTDBTK_CLASSIFY.out.version.first().ifEmpty(null))
-
-            GTDBTK_SUMMARY (
-                ch_filtered_bins.discarded.map{it[1]}.collect().ifEmpty([]),
-                GTDBTK_CLASSIFY.out.summary.collect().ifEmpty([]),
-                GTDBTK_CLASSIFY.out.filtered.collect().ifEmpty([]),
-                GTDBTK_CLASSIFY.out.failed.collect().ifEmpty([])
-            )
-            ch_gtdbtk_summary = GTDBTK_SUMMARY.out.summary
+            ch_software_versions = ch_software_versions.mix(GTDBTK.out.version.first().ifEmpty(null))
+            ch_gtdbtk_summary = GTDBTK.out.summary
         }
 
         if ( (!params.skip_busco && !params.skip_quast) ||
