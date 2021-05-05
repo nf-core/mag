@@ -65,7 +65,7 @@ def main(args=None):
                 bin_name = infile.readline().split("\t")[0]
                 bin_results = [bin_name, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA]
                 filtered.append(bin_results)
-    
+
     df_filtered = pd.DataFrame(filtered, columns=columns)
     df_filtered['user_genome'] = df_filtered['user_genome'].astype(str) + '.' + args.extension
     df_filtered.set_index('user_genome', inplace=True)
