@@ -416,7 +416,7 @@
                     "type": "number",
                     "default": 50.0,
                     "description": "Min. bin completeness (in %) required to apply GTDB-tk classification.",
-                    "help_text": "Must be greater than 0 (min. 0.01) to avoid GTDB-tk errors. If too low, GTDB-tk classification results can be impaired due to not enough marker genes!",
+                    "help_text": "Completeness assessed with BUSCO analysis (100% - %Missing). Must be greater than 0 (min. 0.01) to avoid GTDB-tk errors. If too low, GTDB-tk classification results can be impaired due to not enough marker genes!",
                     "minimum": 0.01,
                     "maximum": 100.0
                 },
@@ -424,7 +424,7 @@
                     "type": "number",
                     "default": 10.0,
                     "description": "Max. bin contamination (in %) allowed to apply GTDB-tk classification.",
-                    "help_text": "If too high, GTDB-tk classification results can be impaired due to contamination!",
+                    "help_text": "Contamination approximated based on BUSCO analysis (%Complete and duplicated). If too high, GTDB-tk classification results can be impaired due to contamination!",
                     "minimum": 0.0,
                     "maximum": 100.0
                 },
