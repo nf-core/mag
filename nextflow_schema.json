@@ -441,6 +441,18 @@
                     "description": "Min. alignment fraction to consider closest genome.",
                     "minimum": 0.0,
                     "maximum": 1.0
+                },
+                "gtdbtk_pplacer_cpus": {
+                    "type": "number",
+                    "default": 1,
+                    "description": "Number of CPUs used for the by GTDB-Tk run tool pplacer.",
+                    "help_text": "A low number of CPUs helps to reduce the memory required/reported by GTDB-Tk. See also the [GTDB-Tk documentation](https://ecogenomics.github.io/GTDBTk/faq.html#gtdb-tk-reaches-the-memory-limit-pplacer-crashes)."
+                },
+                "gtdbtk_pplacer_scratch": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Reduce GTDB-Tk memory consumption by running pplacer in a setting writing to disk.",
+                    "help_text": "Will be slower. Set to `false` to turn this off."
                 }
             }
         },

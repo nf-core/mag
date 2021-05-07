@@ -36,13 +36,20 @@ process GTDBTK_CLASSIFY {
 
     script:
     def software = getSoftwareName(task.process)
+    def pplacer_scratch = params.gtdbtk_pplacer_scratch ? "--scratch_dir pplacer_tmp" : ""
     """
     export GTDBTK_DATA_PATH="\${PWD}/database"
+    if [ ${pplacer_scratch} != "" ] ; then
+        mkdir pplacer_tmp
+    fi
+
     gtdbtk classify_wf $options.args \
                        --genome_dir bins \
                        --prefix "gtdbtk.${meta.assembler}-${meta.id}" \
                        --out_dir "\${PWD}" \
                        --cpus ${task.cpus} \
+                       --pplacer_cpus ${params.gtdbtk_pplacer_cpus} \
+                       ${pplacer_scratch} \
                        --min_perc_aa ${params.gtdbtk_min_perc_aa} \
                        --min_af ${params.gtdbtk_min_af}
 
