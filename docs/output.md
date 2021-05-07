@@ -268,7 +268,7 @@ Besides the reference files or output files created by BUSCO, the following summ
 
 **Output files:**
 
-* `Taxonomy/[assembler]/`
+* `Taxonomy/CAT/[assembler]/`
   * `[assembler]-[sample/group].ORF2LCA.txt`: Tab-delimited files containing the lineage of each contig
   * `[assembler]-[sample/group].names.txt`: Taxonomy classification, with names of each lineage levels instead og taxids
   * `[assembler]-[sample/group].predicted_proteins.faa`: predicted protein sequences for each genome bins, in fasta format
