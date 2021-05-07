@@ -224,9 +224,6 @@ Files in these two folders contain all contigs of an assembly.
   * `report.*`: QUAST report in various formats, such as html, txt, tsv or tex
   * `quast.log`: QUAST log file
   * `predicted_genes/[assembler]-[sample/group].rna.gff`: Contig positions for rRNA genes in gff version 3 format
-  
-**Output files:**
-
 * `GenomeBinning/QC/`
   * `quast_summary.tsv`: QUAST output for all bins summarized
 
