@@ -12,10 +12,11 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/)
 and processes data using the following steps:
 
 * [Quality control](#quality-control) of input reads - trimming and contaminant removal
-* [Taxonomic classification of trimmed reads](#taxonomic-classification-reads)
+* [Taxonomic classification of trimmed reads](#taxonomic-classification-of-trimmed-reads)
 * [Assembly](#assembly) of trimmed reads
 * [Binning](#binning) of assembled contigs
-* [Taxonomic classification of binned genomes](#taxonomic-classification-bins)
+* [Taxonomic classification of binned genomes](#taxonomic-classification-of-binned-genomes)
+* [Additional summary for binned genomes](#additional-summary-for-binned-genomes)
 * [MultiQC](#multiqc) - aggregate report, describing results of the whole pipeline
 * [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
 
@@ -228,7 +229,6 @@ Files in these two folders contain all contigs of an assembly.
 
 * `GenomeBinning/QC/`
   * `quast_summary.tsv`: QUAST output for all bins summarized
-  * `quast_and_busco_summary.tsv`: Summary of BUSCO and QUAST results
 
 ### QC for metagenome assembled genomes with BUSCO
 
@@ -258,7 +258,6 @@ Besides the reference files or output files created by BUSCO, the following summ
 
 * `GenomeBinning/QC/`
   * `busco_summary.tsv`: A summary table of the BUSCO results, with % of marker genes found. If run in automated lineage selection mode, both the results for the selected domain and for the selected more specific lineage will be given, if available.
-  * `quast_and_busco_summary.tsv`; Summary of BUSCO and QUAST results
 
 ## Taxonomic classification of binned genomes
 
@@ -291,6 +290,12 @@ Besides the reference files or output files created by BUSCO, the following summ
   * `gtdbtk.[assembler]-[sample/group].*.log`: Log files.
   * `gtdbtk.[assembler]-[sample/group].failed_genomes.tsv`: A list of genomes for which the GTDB-Tk analysis failed, e.g. because Prodigal could not detect any genes.
 * `Taxonomy/GTDB-Tk/gtdbtk_summary.tsv`: A summary table of the GTDB-Tk classification results for all bins, also containing bins which were discarded based on the BUSCO QC, which were filtered out by GTDB-Tk ((listed in `*.filtered.tsv`) or for which the analysis failed (listed in `*.failed_genomes.tsv`).
+
+## Additional summary for binned genomes
+
+**Output files:**
+
+* `GenomeBinning/bin_summary.tsv`: Summary of BUSCO, QUAST and GTDB-Tk results, if at least two of those were generated.
 
 ## MultiQC
 
