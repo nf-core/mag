@@ -27,22 +27,30 @@ def main(args=None):
     columns = ["user_genome", \
                 "classification", \
                 "fastani_reference", \
+                "fastani_reference_radius", \
+                "fastani_taxonomy", \
                 "fastani_ani", \
                 "fastani_af", \
                 "closest_placement_reference", \
+                "closest_placement_radius", \
+                "closest_placement_taxonomy", \
                 "closest_placement_ani", \
                 "closest_placement_af", \
+                "pplacer_taxonomy", \
                 "classification_method", \
+                "note", \
+                "other_related_references(genome_id,species_name,radius,ANI,AF)", \
                 "msa_percent", \
+                "translation_table", \
                 "red_value", \
                 "warnings"]
-    # TODO add more columns?
+    # Note: currently all columns included
 
     # For bins already discarded based on BUSCO QC metrics
     discarded = []
     if args.qc_discarded_bins:
         for bin_name in args.qc_discarded_bins:
-            bin_results = [bin_name, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA]
+            bin_results = [bin_name, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA]
             discarded.append(bin_results)
 
     df_final = pd.DataFrame(discarded, columns=columns)
@@ -63,7 +71,7 @@ def main(args=None):
         for file in args.filtered_bins:
             with open(file) as infile:
                 bin_name = infile.readline().split("\t")[0]
-                bin_results = [bin_name, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA]
+                bin_results = [bin_name, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA]
                 filtered.append(bin_results)
 
     df_filtered = pd.DataFrame(filtered, columns=columns)
@@ -77,7 +85,7 @@ def main(args=None):
         for file in args.failed_bins:
             with open(file) as infile:
                 bin_name = infile.readline().split("\t")[0]
-                bin_results = [bin_name, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA]
+                bin_results = [bin_name, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA]
                 failed.append(bin_results)
 
     df_failed = pd.DataFrame(failed, columns=columns)
