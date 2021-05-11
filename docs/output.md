@@ -280,9 +280,9 @@ Besides the reference files or output files created by BUSCO, the following summ
 
 * `Taxonomy/GTDB-Tk/[assembler]-[sample/group]/`
   * `gtdbtk.[assembler]-[sample/group].{bac120/ar122}.summary.tsv`: Classifications for bacterial and archaeal genomes (see the [GTDB-Tk documentation for details](https://ecogenomics.github.io/GTDBTk/files/summary.tsv.html).
-  * `gtdbtk.[assembler]-[sample/group].{bac120/ar122}.classify.tree`: Reference tree in Newick format containing query genomes placed with pplacer.
+  * `gtdbtk.[assembler]-[sample/group].{bac120/ar122}.classify.tree.gz`: Reference tree in Newick format containing query genomes placed with pplacer.
   * `gtdbtk.[assembler]-[sample/group].{bac120/ar122}.markers_summary.tsv`: A summary of unique, duplicated, and missing markers within the 120 bacterial marker set, or the 122 archaeal marker set for each submitted genome.
-  * `gtdbtk.[assembler]-[sample/group].{bac120/ar122}.msa.fasta`: FASTA file containing MSA of submitted and reference genomes.
+  * `gtdbtk.[assembler]-[sample/group].{bac120/ar122}.msa.fasta.gz`: FASTA file containing MSA of submitted and reference genomes.
   * `gtdbtk.[assembler]-[sample/group].{bac120/ar122}.filtered.tsv`: A list of genomes with an insufficient number of amino acids in MSA.
   * `gtdbtk.[assembler]-[sample/group].*.log`: Log files.
   * `gtdbtk.[assembler]-[sample/group].failed_genomes.tsv`: A list of genomes for which the GTDB-Tk analysis failed, e.g. because Prodigal could not detect any genes.

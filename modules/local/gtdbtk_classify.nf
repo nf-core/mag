@@ -24,9 +24,9 @@ process GTDBTK_CLASSIFY {
 
     output:
     path "gtdbtk.${meta.assembler}-${meta.id}.*.summary.tsv"        , emit: summary
-    path "gtdbtk.${meta.assembler}-${meta.id}.*.classify.tree"      , emit: tree
+    path "gtdbtk.${meta.assembler}-${meta.id}.*.classify.tree.gz"   , emit: tree
     path "gtdbtk.${meta.assembler}-${meta.id}.*.markers_summary.tsv", emit: markers
-    path "gtdbtk.${meta.assembler}-${meta.id}.*.msa.fasta"          , emit: msa
+    path "gtdbtk.${meta.assembler}-${meta.id}.*.msa.fasta.gz"       , emit: msa
     path "gtdbtk.${meta.assembler}-${meta.id}.*.user_msa.fasta"     , emit: user_msa
     path "gtdbtk.${meta.assembler}-${meta.id}.*.filtered.tsv"       , emit: filtered
     path "gtdbtk.${meta.assembler}-${meta.id}.log"                  , emit: log
@@ -53,6 +53,7 @@ process GTDBTK_CLASSIFY {
                        --min_perc_aa ${params.gtdbtk_min_perc_aa} \
                        --min_af ${params.gtdbtk_min_af}
 
+    gzip "gtdbtk.${meta.assembler}-${meta.id}".*.classify.tree "gtdbtk.${meta.assembler}-${meta.id}".*.msa.fasta
     mv gtdbtk.log "gtdbtk.${meta.assembler}-${meta.id}.log"
     mv gtdbtk.warnings.log "gtdbtk.${meta.assembler}-${meta.id}.warnings.log"
     gtdbtk --version | sed "s/gtdbtk: version //; s/ Copyright.*//" > ${software}.version.txt
