@@ -405,6 +405,54 @@
                     "type": "string",
                     "description": "Database for taxonomic classification of metagenome assembled genomes.",
                     "help_text": "E.g. \"https://tbb.bio.uu.nl/bastiaan/CAT_prepare/CAT_prepare_20210107.tar.gz\".\nThe zipped file needs to contain a folder named \"*taxonomy*\" and \"*CAT_database*\" that hold the respective files."
+                },
+                "gtdb": {
+                    "type": "string",
+                    "default": "https://data.gtdb.ecogenomic.org/releases/release202/202.0/auxillary_files/gtdbtk_r202_data.tar.gz",
+                    "description": "GTDB database for taxonomic classification of bins with GTDB-tk.",
+                    "help_text": "For information which GTDB reference databases are compatible with the used GTDB-tk version see https://ecogenomics.github.io/GTDBTk/installing/index.html#gtdb-tk-reference-data."
+                },
+                "gtdbtk_min_completeness": {
+                    "type": "number",
+                    "default": 50.0,
+                    "description": "Min. bin completeness (in %) required to apply GTDB-tk classification.",
+                    "help_text": "Completeness assessed with BUSCO analysis (100% - %Missing). Must be greater than 0 (min. 0.01) to avoid GTDB-tk errors. If too low, GTDB-tk classification results can be impaired due to not enough marker genes!",
+                    "minimum": 0.01,
+                    "maximum": 100.0
+                },
+                "gtdbtk_max_contamination": {
+                    "type": "number",
+                    "default": 10.0,
+                    "description": "Max. bin contamination (in %) allowed to apply GTDB-tk classification.",
+                    "help_text": "Contamination approximated based on BUSCO analysis (%Complete and duplicated). If too high, GTDB-tk classification results can be impaired due to contamination!",
+                    "minimum": 0.0,
+                    "maximum": 100.0
+                },
+                "gtdbtk_min_perc_aa": {
+                    "type": "number",
+                    "default": 10,
+                    "description": "Min. fraction of AA (in %) in the MSA for bins to be kept.",
+                    "minimum": 0.0,
+                    "maximum": 100.0
+                },
+                "gtdbtk_min_af": {
+                    "type": "number",
+                    "default": 0.65,
+                    "description": "Min. alignment fraction to consider closest genome.",
+                    "minimum": 0.0,
+                    "maximum": 1.0
+                },
+                "gtdbtk_pplacer_cpus": {
+                    "type": "number",
+                    "default": 1,
+                    "description": "Number of CPUs used for the by GTDB-Tk run tool pplacer.",
+                    "help_text": "A low number of CPUs helps to reduce the memory required/reported by GTDB-Tk. See also the [GTDB-Tk documentation](https://ecogenomics.github.io/GTDBTk/faq.html#gtdb-tk-reaches-the-memory-limit-pplacer-crashes)."
+                },
+                "gtdbtk_pplacer_scratch": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Reduce GTDB-Tk memory consumption by running pplacer in a setting writing to disk.",
+                    "help_text": "Will be slower. Set to `false` to turn this off."
                 }
             }
         },

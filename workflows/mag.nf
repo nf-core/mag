@@ -11,7 +11,7 @@ params.summary_params = [:]
 include { hasExtension } from '../modules/local/functions'
 
 // Check input path parameters to see if they exist
-def checkPathParamList = [ params.input, params.multiqc_config, params.phix_reference, params.host_fasta, params.centrifuge_db, params.kraken2_db, params.cat_db, params.lambda_reference, params.busco_reference ]
+def checkPathParamList = [ params.input, params.multiqc_config, params.phix_reference, params.host_fasta, params.centrifuge_db, params.kraken2_db, params.cat_db, params.gtdb, params.lambda_reference, params.busco_reference ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
 // Check mandatory parameters
@@ -77,15 +77,17 @@ include { SPADES                                              } from '../modules
 include { SPADESHYBRID                                        } from '../modules/local/spadeshybrid'                addParams( options: modules['spadeshybrid']               )
 include { QUAST                                               } from '../modules/local/quast'                       addParams( options: modules['quast']                      )
 include { QUAST_BINS                                          } from '../modules/local/quast_bins'                  addParams( options: modules['quast_bins']                 )
-include { MERGE_QUAST_AND_BUSCO                               } from '../modules/local/merge_quast_and_busco'       addParams( options: modules['merge_quast_and_busco']      )
+include { QUAST_BINS_SUMMARY                                  } from '../modules/local/quast_bins_summary'          addParams( options: modules['quast_bins_summary']         )
 include { CAT_DB                                              } from '../modules/local/cat_db'
 include { CAT                                                 } from '../modules/local/cat'                         addParams( options: modules['cat']                        )
+include { MERGE_QUAST_BUSCO_GTDBTK                            } from '../modules/local/merge_quast_busco_gtdbtk'   addParams( options: modules['merge_quast_busco_gtdbtk']   )
 include { MULTIQC                                             } from '../modules/local/multiqc'                     addParams( options: multiqc_options                       )
 
 // Local: Sub-workflows
 include { INPUT_CHECK         } from '../subworkflows/local/input_check'
 include { METABAT2_BINNING    } from '../subworkflows/local/metabat2_binning'      addParams( bowtie2_align_options: modules['bowtie2_assembly_align'], metabat2_options: modules['metabat2']                                                   )
 include { BUSCO_QC            } from '../subworkflows/local/busco_qc'              addParams( busco_db_options: modules['busco_db_preparation'], busco_options: modules['busco'], busco_save_download_options: modules['busco_save_download'], busco_plot_options: modules['busco_plot'], busco_summary_options: modules['busco_summary'])
+include { GTDBTK              } from '../subworkflows/local/gtdbtk'                addParams( gtdbtk_classify_options: modules['gtdbtk_classify'], gtdbtk_summary_options: modules['gtdbtk_summary'])
 
 // nf-core/modules: Modules
 include { FASTQC as FASTQC_RAW     } from '../modules/nf-core/software/fastqc/main'              addParams( options: modules['fastqc_raw']            )
@@ -163,7 +165,15 @@ if (!params.keep_lambda) {
     Channel
         .value(file( "${params.lambda_reference}" ))
         .set { ch_nanolyse_db }
-} 
+}
+
+if (params.gtdb) {
+    Channel
+        .value(file( "${params.gtdb}" ))
+        .set { ch_gtdb }
+} else {
+    ch_gtdb = Channel.empty()
+}
 
 ////////////////////////////////////////////////////
 /* --           RUN MAIN WORKFLOW              -- */
@@ -471,13 +481,12 @@ workflow MAG {
                 .map { bin, error -> if (!bin.contains(".unbinned.")) busco_failed_bins[bin] = error }
         }
 
+        ch_quast_bins_summary = Channel.empty()
         if (!params.skip_quast){
             QUAST_BINS ( METABAT2_BINNING.out.bins )
             ch_software_versions = ch_software_versions.mix(QUAST_BINS.out.version.first().ifEmpty(null))
-            MERGE_QUAST_AND_BUSCO (
-                QUAST_BINS.out.quast_bin_summaries.collect(),
-                ch_busco_summary
-            )
+            QUAST_BINS_SUMMARY ( QUAST_BINS.out.quast_bin_summaries.collect() )
+            ch_quast_bins_summary = QUAST_BINS_SUMMARY.out.summary
         }
 
         /*
@@ -489,6 +498,30 @@ workflow MAG {
             CAT_DB.out.db
         )
         ch_software_versions = ch_software_versions.mix(CAT.out.version.first().ifEmpty(null))
+
+        /*
+         * GTDB-tk: taxonomic classifications using GTDB reference
+         */
+        ch_gtdbtk_summary = Channel.empty()
+        if ( params.gtdb ){
+            GTDBTK (
+                METABAT2_BINNING.out.bins,
+                ch_busco_summary,
+                ch_gtdb
+            )
+            ch_software_versions = ch_software_versions.mix(GTDBTK.out.version.first().ifEmpty(null))
+            ch_gtdbtk_summary = GTDBTK.out.summary
+        }
+
+        if ( (!params.skip_busco && !params.skip_quast) ||
+             (!params.skip_busco && params.gtdb ) ||
+             (!params.skip_quast && params.gtdb )) {
+            MERGE_QUAST_BUSCO_GTDBTK (
+                ch_busco_summary.ifEmpty([]),
+                ch_quast_bins_summary.ifEmpty([]),
+                ch_gtdbtk_summary.ifEmpty([])
+            )
+        }
     }
 
     /*

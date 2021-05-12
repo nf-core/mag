@@ -29,6 +29,9 @@
 
 * [Filtlong](https://github.com/rrwick/Filtlong)
 
+* [GTDB-Tk](https://doi.org/10.1093/bioinformatics/btz848)
+  > Chaumeil, P. A., Mussig, A. J., Hugenholtz, P., & Parks, D. H. (2020). GTDB-Tk: a toolkit to classify genomes with the Genome Taxonomy Database. Bioinformatics , 36(6), 1925–1927. doi: 10.1093/bioinformatics/btz848.
+
 * [Kraken2](https://doi.org/10.1186/s13059-019-1891-0)
   > Wood, D et al., 2019. Improved metagenomic analysis with Kraken 2. Genome Biology volume 20, Article number: 257. doi: 10.1186/s13059-019-1891-0.
 

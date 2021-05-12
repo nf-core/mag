@@ -127,6 +127,11 @@ class Workflow {
             log.error "Both --busco_auto_lineage_prok and --busco_reference are specififed! Invalid combination, please specify either --busco_auto_lineage_prok or --busco_reference."
             System.exit(1)
         }
+
+        if (params.skip_busco && params.gtdb) {
+            log.error "Invalid combination of parameters --skip_busco and --gtdb are specififed! GTDB-tk bin classification requires bin filtering based on BUSCO QC results to avoid GTDB-tk errors."
+            System.exit(1)
+        }
     }
 
     /*

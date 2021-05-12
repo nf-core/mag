@@ -4,7 +4,7 @@ include { initOptions; saveFiles; getSoftwareName } from './functions'
 params.options = [:]
 options    = initOptions(params.options)
 
-process MERGE_QUAST_AND_BUSCO {
+process MERGE_QUAST_BUSCO_GTDBTK {
 
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
@@ -18,25 +18,21 @@ process MERGE_QUAST_AND_BUSCO {
     }
 
     input:
-    path(quast_bin_sum)
     path(busco_sum)
+    path(quast_sum)
+    path(gtdbtk_sum)
 
     output:
-    path("quast_and_busco_summary.tsv"), emit: quast_and_busco
-    path("quast_summary.tsv")          , emit: quast
+    path("bin_summary.tsv"), emit: summary
 
     script:
+    def busco_summary  = busco_sum.size() > 0 ?  "--busco_summary ${busco_sum}" : ""
+    def quast_summary  = quast_sum.size() > 0 ?  "--quast_summary ${quast_sum}" : ""
+    def gtdbtk_summary = gtdbtk_sum.size() > 0 ? "--gtdbtk_summary ${gtdbtk_sum}" : ""
     """
-    QUAST_BIN=\$(echo \"$quast_bin_sum\" | sed 's/[][]//g')
-    IFS=', ' read -r -a quast_bin <<< \"\$QUAST_BIN\"
-    
-    for quast_file in \"\${quast_bin[@]}\"; do
-        if ! [ -f "quast_summary.tsv" ]; then 
-            cp "\${quast_file}" "quast_summary.tsv"
-        else
-            tail -n +2 "\${quast_file}" >> "quast_summary.tsv"
-        fi
-    done   
-    combine_tables.py $busco_sum quast_summary.tsv >quast_and_busco_summary.tsv
+    combine_tables.py $busco_summary \
+                      $quast_summary \
+                      $gtdbtk_summary \
+                      --out bin_summary.tsv
     """
 }
