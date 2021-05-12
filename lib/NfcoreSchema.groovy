@@ -112,8 +112,14 @@ class NfcoreSchema {
             }
             // unexpected params
             def params_ignore = params.schema_ignore_params.split(',') + 'schema_ignore_params'
-            if (!expectedParams.contains(specifiedParam) && !params_ignore.contains(specifiedParam)) {
-                unexpectedParams.push(specifiedParam)
+            def expectedParamsLowerCase = expectedParams.collect{ it.replace("-", "").toLowerCase() }
+            def specifiedParamLowerCase = specifiedParam.replace("-", "").toLowerCase()
+            if (!expectedParams.contains(specifiedParam) && !params_ignore.contains(specifiedParam) && !expectedParamsLowerCase.contains(specifiedParamLowerCase)) {
+                // Temporarily remove camelCase/camel-case params #1035
+                def unexpectedParamsLowerCase = unexpectedParams.collect{ it.replace("-", "").toLowerCase()}
+                if (!unexpectedParamsLowerCase.contains(specifiedParamLowerCase)){
+                    unexpectedParams.push(specifiedParam)
+                }
             }
         }
 
@@ -243,7 +249,7 @@ class NfcoreSchema {
             }
             // Cast Duration to String
             if (p['value'].getClass() == nextflow.util.Duration) {
-                new_params.replace(p.key, p['value'].toString())
+                new_params.replace(p.key, p['value'].toString().replaceFirst(/d(?!\S)/, "day"))
             }
             // Cast LinkedHashMap to String
             if (p['value'].getClass() == LinkedHashMap) {
