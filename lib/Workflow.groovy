@@ -132,6 +132,12 @@ class Workflow {
             log.error "Invalid combination of parameters --skip_busco and --gtdb are specififed! GTDB-tk bin classification requires bin filtering based on BUSCO QC results to avoid GTDB-tk errors."
             System.exit(1)
         }
+
+        // Check if CAT parameters are valid
+        if (params.cat_db && params.cat_db_generate) {
+            log.error "Invalid combination of parameters --cat_db and --cat_db_generate is specififed! Please specify either --cat_db or --cat_db_generate."
+            System.exit(1)
+        }
     }
 
     /*
