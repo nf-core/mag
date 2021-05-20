@@ -19,14 +19,16 @@ process CAT_DB_GENERATE {
 
     output:
     tuple env(DB_NAME), path("database/*"), path("taxonomy/*"), emit: db
+    path("CAT_prepare_*.tar.gz"), optional:true               , emit: db_tar_gz
     path '*.version.txt'                                      , emit: version
 
     script:
     def software = getSoftwareName(task.process)
+    def save_db = params.save_cat_db ? "Y" : "N"
     """
     CAT prepare --fresh
 
-    # get name of generated datase
+    # get name/date of generated datase
     out=(*_taxonomy/)
     [[ \$out =~ (.*)_taxonomy/ ]];
     DB_NAME="CAT_prepare_\${BASH_REMATCH[1]}"
@@ -34,6 +36,10 @@ process CAT_DB_GENERATE {
     mv *_taxonomy taxonomy
     mv *_database database
     rm database/*.nr.gz
+    if [ ${save_db} = "Y" ] ; then
+        tar -cf - taxonomy database | gzip > "\${DB_NAME}".tar.gz
+    fi
+
     CAT --version | sed "s/CAT v//; s/(.*//" > ${software}.version.txt
     """
 }
