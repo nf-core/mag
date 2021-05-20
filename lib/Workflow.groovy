@@ -138,6 +138,9 @@ class Workflow {
             log.error "Invalid combination of parameters --cat_db and --cat_db_generate is specififed! Please specify either --cat_db or --cat_db_generate."
             System.exit(1)
         }
+        if (params.save_cat_db && !params.cat_db_generate) {
+            log.warn "Parameter --save_cat_db specified, but not --cat_db_generate! Parameter --save_cat_db will have no effect."
+        }
     }
 
     /*
