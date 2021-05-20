@@ -265,12 +265,14 @@ Besides the reference files or output files created by BUSCO, the following summ
 **Output files:**
 
 * `Taxonomy/CAT/[assembler]/`
-  * `[assembler]-[sample/group].ORF2LCA.txt`: Tab-delimited files containing the lineage of each contig
-  * `[assembler]-[sample/group].names.txt`: Taxonomy classification, with names of each lineage levels instead og taxids
-  * `[assembler]-[sample/group].predicted_proteins.faa`: predicted protein sequences for each genome bins, in fasta format
-  * `[assembler]-[sample/group].predicted_proteins.gff`: predicted protein features for each genome bins, in gff format
+  * `[assembler]-[sample/group].ORF2LCA.names.txt.gz`: Tab-delimited files containing the lineage of each contig, with full lineage names
+  * `[assembler]-[sample/group].bin2classification.names.txt.gz`: Taxonomy classification of the genome bins, with full lineage names
+* `Taxonomy/CAT/[assembler]/raw/`
+  * `[assembler]-[sample/group].concatenated.predicted_proteins.faa.gz`: Predicted protein sequences for each genome bin, in fasta format
+  * `[assembler]-[sample/group].concatenated.predicted_proteins.gff.gz`: Predicted protein features for each genome bin, in gff format
+  * `[assembler]-[sample/group].ORF2LCA.txt.gz`: Tab-delimited files containing the lineage of each contig
+  * `[assembler]-[sample/group].bin2classification.txt.gz`: Taxonomy classification of the genome bins
   * `[assembler]-[sample/group].log`: Log files
-  * `[assembler]-[sample/group].bin2classification.txt`: Taxonomy classification of the genome bins
 
 ### GTDB-Tk
 
