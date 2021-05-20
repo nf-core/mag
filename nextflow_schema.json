@@ -412,8 +412,8 @@
                 },
                 "save_cat_db": {
                     "type": "boolean",
-                    "description": "Save the used CAT database provided via --cat_db or generated when specified by --cat_db_generate.",
-                    "help_text": "Useful to allow reproducibility, as old versions of prebuild CAT databases do not always remain accessible and underlying NCBI taxonomy and nr databases, used when generating the database, change."
+                    "description": "Save the CAT database generated when specified by --cat_db_generate.",
+                    "help_text": "Useful to allow reproducibility, as old versions of prebuild CAT databases do not always remain accessible and underlying NCBI taxonomy and nr databases change."
                 },
                 "gtdb": {
                     "type": "string",
