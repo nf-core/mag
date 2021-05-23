@@ -408,7 +408,8 @@
                 },
                 "cat_db_generate": {
                     "type": "boolean",
-                    "description": "Generate CAT database."
+                    "description": "Generate CAT database.",
+                    "help_text": "Download the taxonomy files from NCBI taxonomy, the nr database and generate CAT database. Useful to build a CAT database with the same DIAMOND version as used for running CAT classification, avoiding compatibility problems."
                 },
                 "save_cat_db": {
                     "type": "boolean",
