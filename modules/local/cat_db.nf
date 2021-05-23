@@ -25,6 +25,6 @@ process CAT_DB {
     mkdir catDB
     tar -xf ${database} -C catDB
     mv `find catDB/ -type d -name "*taxonomy*"` taxonomy/
-    mv `find catDB/ -type d -name "*CAT_database*"` database/
+    mv `find catDB/ -type d -name "*database*"` database/
     """
 }
