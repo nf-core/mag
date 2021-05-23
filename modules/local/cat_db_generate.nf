@@ -7,7 +7,7 @@ options    = initOptions(params.options)
 process CAT_DB_GENERATE {
 
     publishDir "${params.outdir}",
-        mode: params.publish_dir_mode,
+        mode: 'move',
         saveAs: { filename -> params.save_cat_db ? saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:'') : null }
 
     conda (params.enable_conda ? "bioconda::cat=4.6 bioconda::diamond=2.0.6" : null)
