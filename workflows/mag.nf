@@ -79,8 +79,9 @@ include { QUAST                                               } from '../modules
 include { QUAST_BINS                                          } from '../modules/local/quast_bins'                  addParams( options: modules['quast_bins']                 )
 include { QUAST_BINS_SUMMARY                                  } from '../modules/local/quast_bins_summary'          addParams( options: modules['quast_bins_summary']         )
 include { CAT_DB                                              } from '../modules/local/cat_db'
+include { CAT_DB_GENERATE                                     } from '../modules/local/cat_db_generate'             addParams( options: modules['cat_db_generate']            )
 include { CAT                                                 } from '../modules/local/cat'                         addParams( options: modules['cat']                        )
-include { MERGE_QUAST_BUSCO_GTDBTK                            } from '../modules/local/merge_quast_busco_gtdbtk'   addParams( options: modules['merge_quast_busco_gtdbtk']   )
+include { MERGE_QUAST_BUSCO_GTDBTK                            } from '../modules/local/merge_quast_busco_gtdbtk'    addParams( options: modules['merge_quast_busco_gtdbtk']   )
 include { MULTIQC                                             } from '../modules/local/multiqc'                     addParams( options: multiqc_options                       )
 
 // Local: Sub-workflows
@@ -492,10 +493,17 @@ workflow MAG {
         /*
          * CAT: Bin Annotation Tool (BAT) are pipelines for the taxonomic classification of long DNA sequences and metagenome assembled genomes (MAGs/bins)
          */
-        CAT_DB ( ch_cat_db_file )
-        CAT ( 
+        ch_cat_db = Channel.empty()
+        if (params.cat_db){
+            CAT_DB ( ch_cat_db_file )
+            ch_cat_db = CAT_DB.out.db
+        } else if (params.cat_db_generate){
+            CAT_DB_GENERATE ()
+            ch_cat_db = CAT_DB_GENERATE.out.db
+        }
+        CAT (
             METABAT2_BINNING.out.bins,
-            CAT_DB.out.db
+            ch_cat_db
         )
         ch_software_versions = ch_software_versions.mix(CAT.out.version.first().ifEmpty(null))
 

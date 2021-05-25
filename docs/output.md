@@ -274,6 +274,10 @@ Besides the reference files or output files created by BUSCO, the following summ
   * `[assembler]-[sample/group].bin2classification.txt.gz`: Taxonomy classification of the genome bins
   * `[assembler]-[sample/group].log`: Log files
 
+If the parameters `--cat_db_generate` and `--save_cat_db` are set, additionally the generated CAT database is stored:
+
+* `Taxonomy/CAT/CAT_prepare_*.tar.gz`: Generated and used CAT database.
+
 ### GTDB-Tk
 
 [GTDB-Tk](https://github.com/Ecogenomics/GTDBTk) is a toolkit for assigning taxonomic classifications to bacterial and archaeal genomes based on the Genome Database Taxonomy [GTDB](https://gtdb.ecogenomic.org/). nf-core/mag uses GTDB-Tk to classify binned genomes which satisfy certain quality criteria (i.e. completeness and contamination assessed with the BUSCO analysis).
