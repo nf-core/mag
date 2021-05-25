@@ -165,7 +165,7 @@ This input method only works with short read data and will assign all files to t
 Please note the following additional requirements:
 
 * Files names must be unique
-* Valid file extensions: `.fastq.gz`, `.fastq`, `.fq.gz`, `.fq`
+* Valid file extensions: `.fastq.gz`, `.fq.gz` (files must be compressed)
 * The path must be enclosed in quotes
 * The path must have at least one `*` wildcard character
 * When using the pipeline with paired end data, the path must use `{1,2}` notation to specify read pairs
@@ -203,6 +203,7 @@ Please note the following requirements:
 * Valid file extension: `.csv`
 * Must contain the header `sample,group,short_reads_1,short_reads_2,long_reads`
 * Sample IDs must be unique
+* FastQ files must be compressed (`.fastq.gz`, `.fq.gz`)
 * `long_reads` can only be provided in combination with paired-end short read data
 * Within one samplesheet either only single-end or only paired-end reads can be specified
 * If single-end reads are specified, the command line parameter `--single_end` must be specified as well
