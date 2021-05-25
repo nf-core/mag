@@ -404,16 +404,16 @@
                 "cat_db": {
                     "type": "string",
                     "description": "Database for taxonomic classification of metagenome assembled genomes.",
-                    "help_text": "E.g. \"https://tbb.bio.uu.nl/bastiaan/CAT_prepare/CAT_prepare_20210107.tar.gz\".\nThe zipped file needs to contain a folder named \"*taxonomy*\" and \"*CAT_database*\" that hold the respective files."
+                    "help_text": "E.g. \"https://tbb.bio.uu.nl/bastiaan/CAT_prepare/CAT_prepare_20210107.tar.gz\". This parameter is mutually exclusive with '--cat_db_generate'. The zipped file needs to contain a folder named '*taxonomy*' and '*database*' that hold the respective files."
                 },
                 "cat_db_generate": {
                     "type": "boolean",
                     "description": "Generate CAT database.",
-                    "help_text": "Download the taxonomy files from NCBI taxonomy, the nr database and generate CAT database. Useful to build a CAT database with the same DIAMOND version as used for running CAT classification, avoiding compatibility problems."
+                    "help_text": "Download the taxonomy files from NCBI taxonomy, the nr database and generate CAT database. This parameter is mutually exclusive with '--cat_db'. Useful to build a CAT database with the same DIAMOND version as used for running CAT classification, avoiding compatibility problems."
                 },
                 "save_cat_db": {
                     "type": "boolean",
-                    "description": "Save the CAT database generated when specified by --cat_db_generate.",
+                    "description": "Save the CAT database generated when specified by '--cat_db_generate'.",
                     "help_text": "Useful to allow reproducibility, as old versions of prebuild CAT databases do not always remain accessible and underlying NCBI taxonomy and nr databases change."
                 },
                 "gtdb": {
