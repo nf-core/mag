@@ -92,7 +92,7 @@ If `-profile` is not specified, the pipeline will run locally and expect all sof
   * Please only use Conda as a last resort i.e. when it's not possible to run the pipeline with Docker, Singularity, Podman, Shifter or Charliecloud.
   * A generic configuration profile to be used with [Conda](https://conda.io/docs/)
   * Pulls most software from [Bioconda](https://bioconda.github.io/)
-* `test`, `test_hybrid`, `test_host_rm`, `test_hybrid_host_rm`
+* `test`, `test_hybrid`, `test_host_rm`, `test_hybrid_host_rm`, `test_busco_auto`
   * Profiles with a complete configuration for automated testing
   * Includes links to test data so needs no other parameters
 
