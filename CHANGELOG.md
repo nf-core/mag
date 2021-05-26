@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#191](https://github.com/nf-core/mag/pull/191) - Update to nf-core 1.14 `TEMPLATE`
 - [#193](https://github.com/nf-core/mag/pull/193) - Compress CAT output files [#180](https://github.com/nf-core/mag/issues/180)
 - [#198](https://github.com/nf-core/mag/pull/198) - Requires nextflow version `>= 21.04.0`
+- [#200](https://github.com/nf-core/mag/pull/200) - Small changes in GitHub Actions tests
 
 ### `Fixed`
 
