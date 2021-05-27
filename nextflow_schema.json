@@ -300,18 +300,20 @@
                 "save_trimmed_fail": {
                     "type": "boolean",
                     "fa_icon": "fas fa-save",
-                    "description": "Save the trimmed FastQ files in the results directory.",
+                    "description": "Save the by fastp trimmed FastQ files in the results directory.",
                     "help_text": "By default, trimmed FastQ files will not be saved to the results directory. Specify this flag (or set to true in your config file) to copy these files to the results directory when complete."
                 },
-                "mean_quality": {
+                "fastp_qualified_quality": {
                     "type": "integer",
                     "default": 15,
-                    "description": "Mean qualified quality value for keeping read."
+                    "description": "Minimum phred quality value of a base to be qualified.",
+                    "help": "Reads with more than 40% of unqualified bases will be discarded."
                 },
-                "trimming_quality": {
+                "fastp_cut_mean_quality": {
                     "type": "integer",
                     "default": 15,
-                    "description": "Trimming quality value for the sliding window."
+                    "description": "The mean quality requirement used for per read sliding window cutting by fastp.",
+                    "help": "Used in combination with the fastp options '--cut_front' and '--cut_tail'. If the mean quality within a window (of size 4) is below `--fastp_cut_mean_quality`, the bases are dropped and the sliding window is moved further, otherwise it stops."
                 },
                 "host_genome": {
                     "type": "string",
