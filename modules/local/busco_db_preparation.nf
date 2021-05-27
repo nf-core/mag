@@ -19,7 +19,7 @@ process BUSCO_DB_PREPARATION {
     }
 
     input:
-    path(database)
+    path database
 
     output:
     path "buscodb/*", emit: db
