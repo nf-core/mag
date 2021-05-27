@@ -303,10 +303,11 @@
                     "description": "Save the trimmed FastQ files in the results directory.",
                     "help_text": "By default, trimmed FastQ files will not be saved to the results directory. Specify this flag (or set to true in your config file) to copy these files to the results directory when complete."
                 },
-                "mean_quality": {
+                "fastp_qualified_quality": {
                     "type": "integer",
                     "default": 15,
-                    "description": "Mean qualified quality value for keeping read."
+                    "description": "Minimum phred quality value of a base to be qualified.",
+                    "help": "Reads with more than 40% of unqualified bases will be discarded."
                 },
                 "trimming_quality": {
                     "type": "integer",
