@@ -300,7 +300,7 @@
                 "save_trimmed_fail": {
                     "type": "boolean",
                     "fa_icon": "fas fa-save",
-                    "description": "Save the trimmed FastQ files in the results directory.",
+                    "description": "Save the by fastp trimmed FastQ files in the results directory.",
                     "help_text": "By default, trimmed FastQ files will not be saved to the results directory. Specify this flag (or set to true in your config file) to copy these files to the results directory when complete."
                 },
                 "fastp_qualified_quality": {
