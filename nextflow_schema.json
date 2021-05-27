@@ -309,10 +309,11 @@
                     "description": "Minimum phred quality value of a base to be qualified.",
                     "help": "Reads with more than 40% of unqualified bases will be discarded."
                 },
-                "trimming_quality": {
+                "fastp_cut_mean_quality": {
                     "type": "integer",
                     "default": 15,
-                    "description": "Trimming quality value for the sliding window."
+                    "description": "The mean quality requirement used for per read sliding window cutting by fastp.",
+                    "help": "Used in combination with the fastp options '--cut_front' and '--cut_tail'. If the mean quality within a window (of size 4) is below `--fastp_cut_mean_quality`, the bases are dropped and the sliding window is moved further, otherwise it stops."
                 },
                 "host_genome": {
                     "type": "string",
