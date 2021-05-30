@@ -27,10 +27,10 @@ process BUSCO_SUMMARY {
 
     script:
     def auto = params.busco_reference ? "" : "-a"
-    def ss = summaries_specific.size() > 0 ? "-ss ${summaries_specific}" : ""
-    def sd = summaries_domain.size() > 0 ? "-sd ${summaries_domain}" : ""
+    def ss = summaries_specific.sort().size() > 0 ? "-ss ${summaries_specific}" : ""
+    def sd = summaries_domain.sort().size() > 0 ? "-sd ${summaries_domain}" : ""
     def f = ""
-    if (!params.busco_reference && failed_bins.size() > 0)
+    if (!params.busco_reference && failed_bins.sort().size() > 0)
         f = "-f ${failed_bins}"
     """
     summary_busco.py $auto $ss $sd $f -o busco_summary.tsv

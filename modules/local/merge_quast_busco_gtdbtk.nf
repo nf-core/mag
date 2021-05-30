@@ -26,9 +26,9 @@ process MERGE_QUAST_BUSCO_GTDBTK {
     path("bin_summary.tsv"), emit: summary
 
     script:
-    def busco_summary  = busco_sum.size() > 0 ?  "--busco_summary ${busco_sum}" : ""
-    def quast_summary  = quast_sum.size() > 0 ?  "--quast_summary ${quast_sum}" : ""
-    def gtdbtk_summary = gtdbtk_sum.size() > 0 ? "--gtdbtk_summary ${gtdbtk_sum}" : ""
+    def busco_summary  = busco_sum.sort().size() > 0 ?  "--busco_summary ${busco_sum}" : ""
+    def quast_summary  = quast_sum.sort().size() > 0 ?  "--quast_summary ${quast_sum}" : ""
+    def gtdbtk_summary = gtdbtk_sum.sort().size() > 0 ? "--gtdbtk_summary ${gtdbtk_sum}" : ""
     """
     combine_tables.py $busco_summary \
                       $quast_summary \
