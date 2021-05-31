@@ -19,7 +19,7 @@ process GTDBTK_SUMMARY {
 
     input:
     path(qc_discarded_bins)
-    path(summaries)
+    path(gtdbtk_summaries)
     path(filtered_bins)
     path(failed_bins)
 
@@ -27,10 +27,10 @@ process GTDBTK_SUMMARY {
     path "gtdbtk_summary.tsv", emit: summary
 
     script:
-    def discarded = qc_discarded_bins.size() > 0 ? "--qc_discarded_bins ${qc_discarded_bins}" : ""
-    def summaries = summaries.size() > 0 ?         "--summaries ${summaries}" : ""
-    def filtered  = filtered_bins.size() > 0 ?     "--filtered_bins ${filtered_bins}" : ""
-    def failed    = failed_bins.size() > 0 ?       "--failed_bins ${failed_bins}" : ""
+    def discarded = qc_discarded_bins.sort().size() > 0 ? "--qc_discarded_bins ${qc_discarded_bins}" : ""
+    def summaries = gtdbtk_summaries.sort().size() > 0 ?  "--summaries ${gtdbtk_summaries}" : ""
+    def filtered  = filtered_bins.sort().size() > 0 ?     "--filtered_bins ${filtered_bins}" : ""
+    def failed    = failed_bins.sort().size() > 0 ?       "--failed_bins ${failed_bins}" : ""
     """
     summary_gtdbtk.py $options.args $discarded $summaries $filtered $failed --out gtdbtk_summary.tsv
     """

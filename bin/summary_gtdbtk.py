@@ -69,8 +69,9 @@ def main(args=None):
     filtered = []
     if args.filtered_bins:
         for file in args.filtered_bins:
-            with open(file) as infile:
-                bin_name = infile.readline().split("\t")[0]
+            df = pd.read_csv(file, sep='\t', names=["bin_name", "reason"])
+            for index, row in df.iterrows():
+                bin_name = row['bin_name']
                 bin_results = [bin_name, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA]
                 filtered.append(bin_results)
 
@@ -83,8 +84,9 @@ def main(args=None):
     failed = []
     if args.failed_bins:
         for file in args.failed_bins:
-            with open(file) as infile:
-                bin_name = infile.readline().split("\t")[0]
+            df = pd.read_csv(file, sep='\t', names=["bin_name", "reason"])
+            for index, row in df.iterrows():
+                bin_name = row['bin_name']
                 bin_results = [bin_name, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA]
                 failed.append(bin_results)
 
