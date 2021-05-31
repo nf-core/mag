@@ -5,10 +5,12 @@
 params.bowtie2_build_options = [:]
 params.bowtie2_align_options = [:]
 params.metabat2_options      = [:]
+params.mag_depths_options    = [:]
 
 include { BOWTIE2_ASSEMBLY_BUILD    } from '../../modules/local/bowtie2_assembly_build'   addParams( options: params.bowtie2_build_options )
 include { BOWTIE2_ASSEMBLY_ALIGN    } from '../../modules/local/bowtie2_assembly_align'   addParams( options: params.bowtie2_align_options )
 include { METABAT2                  } from '../../modules/local/metabat2'                 addParams( options: params.metabat2_options      )
+include { MAG_DEPTHS                } from '../../modules/local/mag_depths'               addParams( options: params.mag_depths_options      )
 
 workflow METABAT2_BINNING {
     take:
@@ -47,6 +49,12 @@ workflow METABAT2_BINNING {
         .map { meta, assembly, bams, bais -> [ meta, assembly[0], bams, bais ] }     // multiple symlinks to the same assembly -> use first
 
     METABAT2 ( ch_grouped_mappings )
+
+    // Compute bin depths for different samples (according to `binning_map_mode`)
+    MAG_DEPTHS (
+        METABAT2.out.bins,
+        METABAT2.out.depths
+     )
 
     emit:
     bowtie2_assembly_multiqc = BOWTIE2_ASSEMBLY_ALIGN.out.log.map { assembly_meta, reads_meta, log -> if (assembly_meta.id == reads_meta.id) {return [ log ]} }
