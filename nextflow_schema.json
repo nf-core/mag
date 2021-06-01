@@ -14,13 +14,8 @@
                 "input": {
                     "type": "string",
                     "fa_icon": "fas fa-dna",
-                    "description": "Input FastQ files or TSV file.",
-                    "help_text": "Use this to specify the location of your input FastQ files. For example:\n\n```bash\n--input 'path/to/data/sample_*_{1,2}.fastq'\n```\n\nAll files will get assigned the same group ID (by default only used to compute co-abundances for binning). Please note the following requirements:\n\n1. The path must be enclosed in quotes\n2. The path must have at least one `*` wildcard character\n3. When using the pipeline with paired end data, the path must use `{1,2}` notation to specify read pairs.\n\nIf left unspecified, a default pattern is used: `data/*{1,2}.fastq.gz`. \n\nAlternatively, to assign different groups or to include long reads for hybrid assembly with metaSPAdes, you can specify a TSV input file (requires a '.tsv' suffix) with 4 or 5 headerless columns: Sample_Id, Group_Id, Short_Reads_1, Short_Reads_2 [, Long_Reads]."
-                },
-                "input_paths": {
-                    "type": "string",
-                    "description": "Paths to input FastQ files for tests.",
-                    "hidden": true
+                    "description": "Input FastQ files or CSV samplesheet file.",
+                    "help_text": "Use this to specify the location of your input FastQ files. For example:\n\n```bash\n--input 'path/to/data/sample_*_{1,2}.fastq.gz'\n``` \n\nAlternatively, to assign different groups or to include long reads for hybrid assembly with metaSPAdes, you can specify a CSV samplesheet input file with 5 columns and the following header: sample,group,short_reads_1,short_reads_2,long_reads. See [usage docs](https://nf-co.re/mag/usage#input-specifications)."
                 },
                 "single_end": {
                     "type": "boolean",
@@ -52,7 +47,7 @@
                 "igenomes_base": {
                     "type": "string",
                     "description": "Directory / URL base for iGenomes references.",
-                    "default": "s3://ngi-igenomes/igenomes/",
+                    "default": "s3://ngi-igenomes/igenomes",
                     "fa_icon": "fas fa-cloud-download-alt",
                     "hidden": true
                 },
@@ -94,12 +89,12 @@
                         "move"
                     ]
                 },
-                "name": {
-                    "type": "string",
-                    "description": "Workflow name.",
-                    "fa_icon": "fas fa-fingerprint",
-                    "hidden": true,
-                    "help_text": "A custom name for the pipeline run. Unlike the core nextflow `-name` option with one hyphen this parameter can be reused multiple times, for example if using `-resume`. Passed through to steps such as MultiQC and used for things like report filenames and titles."
+                "validate_params": {
+                    "type": "boolean",
+                    "description": "Boolean whether to validate parameters against the schema at runtime",
+                    "default": true,
+                    "fa_icon": "fas fa-check-square",
+                    "hidden": true
                 },
                 "email_on_fail": {
                     "type": "string",
@@ -131,11 +126,19 @@
                     "hidden": true,
                     "help_text": "Set to disable colourful command line output and live life in monochrome."
                 },
+                "skip_multiqc": {
+                    "type": "boolean"
+                },
                 "multiqc_config": {
                     "type": "string",
                     "description": "Custom config file to supply to MultiQC.",
                     "fa_icon": "fas fa-cog",
                     "hidden": true
+                },
+                "multiqc_title": {
+                    "type": "string",
+                    "description": "MultiQC report title. Printed as page header, used for filename if not otherwise specified.",
+                    "fa_icon": "fas fa-file-signature"
                 },
                 "tracedir": {
                     "type": "string",
@@ -143,6 +146,26 @@
                     "default": "${params.outdir}/pipeline_info",
                     "fa_icon": "fas fa-cogs",
                     "hidden": true
+                },
+                "enable_conda": {
+                    "type": "boolean",
+                    "description": "Run this workflow with Conda. You can also use '-profile conda' instead of providing this parameter.",
+                    "hidden": true,
+                    "fa_icon": "fas fa-bacon"
+                },
+                "singularity_pull_docker_container": {
+                    "type": "boolean",
+                    "description": "Instead of directly downloading Singularity images for use with Singularity, force the workflow to pull and convert Docker containers instead.",
+                    "hidden": true,
+                    "fa_icon": "fas fa-toolbox",
+                    "help_text": "This may be useful for example if you are unable to directly pull Singularity containers to run the pipeline due to http/https proxy issues."
+                },
+                "show_hidden_params": {
+                    "type": "boolean",
+                    "fa_icon": "far fa-eye-slash",
+                    "description": "Show all params when using `--help`",
+                    "hidden": true,
+                    "help_text": "By default, parameters set as _hidden_ in the schema are not shown on the command line when a user runs with `--help`. Specifying this option will tell the pipeline to show all parameters."
                 }
             }
         },
@@ -166,6 +189,7 @@
                     "description": "Maximum amount of memory that can be requested for any single job.",
                     "default": "128.GB",
                     "fa_icon": "fas fa-memory",
+                    "pattern": "^\\d+(\\.\\d+)?\\.?\\s*(K|M|G|T)?B$",
                     "hidden": true,
                     "help_text": "Use to set an upper-limit for the memory requirement for each process. Should be a string in the format integer-unit e.g. `--max_memory '8.GB'`"
                 },
@@ -174,6 +198,7 @@
                     "description": "Maximum amount of time that can be requested for any single job.",
                     "default": "240.h",
                     "fa_icon": "far fa-clock",
+                    "pattern": "^(\\d+\\.?\\s*(s|m|h|day)\\s*)+$",
                     "hidden": true,
                     "help_text": "Use to set an upper-limit for the time requirement for each process. Should be a string in the format integer-unit e.g. `--max_time '2.h'`"
                 }
@@ -205,6 +230,12 @@
                 "hostnames": {
                     "type": "string",
                     "description": "Institutional configs hostname.",
+                    "hidden": true,
+                    "fa_icon": "fas fa-users-cog"
+                },
+                "config_profile_name": {
+                    "type": "string",
+                    "description": "Institutional config name.",
                     "hidden": true,
                     "fa_icon": "fas fa-users-cog"
                 },
@@ -241,13 +272,15 @@
                 },
                 "spades_fix_cpus": {
                     "type": "integer",
+                    "default": -1,
                     "description": "Fix number of CPUs used by SPAdes. Not increased with retries.",
-                    "help_text": "SPAdes is designed to be deterministic for a given number of threads. To generate reproducible results fix the number of CPUs using this parameter.\n\nWhen using this parameter do not change the number of CPUs for the `spades` process with a custom config file. This would result in an error.\n\nDefault: The number of CPUs is specified in the `base.config` file, and increased with each retry."
+                    "help_text": "SPAdes is designed to be deterministic for a given number of threads. To generate reproducible results fix the number of CPUs using this parameter.\n\nWhen using this parameter do not change the number of CPUs for the `spades` process with a custom config file. This would result in an error.\n\nDefault: -1 (the number of CPUs is specified in the `base.config` or in a custom config file, and increased with each retry)."
                 },
                 "spadeshybrid_fix_cpus": {
                     "type": "integer",
+                    "default": -1,
                     "description": "Fix number of CPUs used by SPAdes hybrid. Not increased with retries.",
-                    "help_text": "SPAdes is designed to be deterministic for a given number of threads. To generate reproducible results fix the number of CPUs using this parameter.\n\nWhen using this parameter do not change the number of CPUs for the `spadeshybrid` process with a custom config file. This would result in an error.\n\nDefault: The number of CPUs is specified in the `base.config` file, and increased with each retry."
+                    "help_text": "SPAdes is designed to be deterministic for a given number of threads. To generate reproducible results fix the number of CPUs using this parameter.\n\nWhen using this parameter do not change the number of CPUs for the `spadeshybrid` process with a custom config file. This would result in an error.\n\nDefault: -1 (the number of CPUs is specified in the `base.config` or in a custom config file, and increased with each retry)."
                 },
                 "metabat_rng_seed": {
                     "type": "integer",
@@ -264,25 +297,23 @@
             "description": "",
             "default": "",
             "properties": {
-                "adapter_forward": {
-                    "type": "string",
-                    "default": "AGATCGGAAGAGCACACGTCTGAACTCCAGTCA",
-                    "description": "Sequence of 3' adapter to remove in the forward reads."
+                "save_trimmed_fail": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-save",
+                    "description": "Save the by fastp trimmed FastQ files in the results directory.",
+                    "help_text": "By default, trimmed FastQ files will not be saved to the results directory. Specify this flag (or set to true in your config file) to copy these files to the results directory when complete."
                 },
-                "adapter_reverse": {
-                    "type": "string",
-                    "default": "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT",
-                    "description": "Sequence of 3' adapter to remove in the reverse reads."
-                },
-                "mean_quality": {
+                "fastp_qualified_quality": {
                     "type": "integer",
                     "default": 15,
-                    "description": "Mean qualified quality value for keeping read."
+                    "description": "Minimum phred quality value of a base to be qualified.",
+                    "help": "Reads with more than 40% of unqualified bases will be discarded."
                 },
-                "trimming_quality": {
+                "fastp_cut_mean_quality": {
                     "type": "integer",
                     "default": 15,
-                    "description": "Trimming quality value for the sliding window."
+                    "description": "The mean quality requirement used for per read sliding window cutting by fastp.",
+                    "help": "Used in combination with the fastp options '--cut_front' and '--cut_tail'. If the mean quality within a window (of size 4) is below `--fastp_cut_mean_quality`, the bases are dropped and the sliding window is moved further, otherwise it stops."
                 },
                 "host_genome": {
                     "type": "string",
@@ -361,12 +392,12 @@
                 "centrifuge_db": {
                     "type": "string",
                     "description": "Database for taxonomic binning with centrifuge.",
-                    "help_text": "E.g. \"ftp://ftp.ccb.jhu.edu/pub/infphilo/centrifuge/data/p_compressed+h+v.tar.gz\"."
+                    "help_text": "E.g. ftp://ftp.ccb.jhu.edu/pub/infphilo/centrifuge/data/p_compressed+h+v.tar.gz."
                 },
                 "kraken2_db": {
                     "type": "string",
                     "description": "Database for taxonomic binning with kraken2.",
-                    "help_text": "E.g. \"ftp://ftp.ccb.jhu.edu/pub/data/kraken2_dbs/minikraken_8GB_202003.tgz\"."
+                    "help_text": "The database file must be a compressed tar archive that contains at least the three files `hash.k2d`, `opts.k2d` and `taxo.k2d`. E.g. ftp://ftp.ccb.jhu.edu/pub/data/kraken2_dbs/minikraken_8GB_202003.tgz."
                 },
                 "skip_krona": {
                     "type": "boolean",
@@ -375,7 +406,65 @@
                 "cat_db": {
                     "type": "string",
                     "description": "Database for taxonomic classification of metagenome assembled genomes.",
-                    "help_text": "E.g. \"http://tbb.bio.uu.nl/bastiaan/CAT_prepare/CAT_prepare_20200304.tar.gz\".\nThe zipped file needs to contain a folder named \"*taxonomy*\" and \"*CAT_database*\" that hold the respective files."
+                    "help_text": "E.g. https://tbb.bio.uu.nl/bastiaan/CAT_prepare/CAT_prepare_20210107.tar.gz. This parameter is mutually exclusive with `--cat_db_generate`. The zipped file needs to contain a folder named `*taxonomy*` and `*database*` that hold the respective files."
+                },
+                "cat_db_generate": {
+                    "type": "boolean",
+                    "description": "Generate CAT database.",
+                    "help_text": "Download the taxonomy files from NCBI taxonomy, the nr database and generate CAT database. This parameter is mutually exclusive with `--cat_db`. Useful to build a CAT database with the same DIAMOND version as used for running CAT classification, avoiding compatibility problems."
+                },
+                "save_cat_db": {
+                    "type": "boolean",
+                    "description": "Save the CAT database generated when specified by `--cat_db_generate`.",
+                    "help_text": "Useful to allow reproducibility, as old versions of prebuild CAT databases do not always remain accessible and underlying NCBI taxonomy and nr databases change."
+                },
+                "gtdb": {
+                    "type": "string",
+                    "default": "https://data.gtdb.ecogenomic.org/releases/release202/202.0/auxillary_files/gtdbtk_r202_data.tar.gz",
+                    "description": "GTDB database for taxonomic classification of bins with GTDB-tk.",
+                    "help_text": "For information which GTDB reference databases are compatible with the used GTDB-tk version see https://ecogenomics.github.io/GTDBTk/installing/index.html#gtdb-tk-reference-data."
+                },
+                "gtdbtk_min_completeness": {
+                    "type": "number",
+                    "default": 50.0,
+                    "description": "Min. bin completeness (in %) required to apply GTDB-tk classification.",
+                    "help_text": "Completeness assessed with BUSCO analysis (100% - %Missing). Must be greater than 0 (min. 0.01) to avoid GTDB-tk errors. If too low, GTDB-tk classification results can be impaired due to not enough marker genes!",
+                    "minimum": 0.01,
+                    "maximum": 100.0
+                },
+                "gtdbtk_max_contamination": {
+                    "type": "number",
+                    "default": 10.0,
+                    "description": "Max. bin contamination (in %) allowed to apply GTDB-tk classification.",
+                    "help_text": "Contamination approximated based on BUSCO analysis (%Complete and duplicated). If too high, GTDB-tk classification results can be impaired due to contamination!",
+                    "minimum": 0.0,
+                    "maximum": 100.0
+                },
+                "gtdbtk_min_perc_aa": {
+                    "type": "number",
+                    "default": 10,
+                    "description": "Min. fraction of AA (in %) in the MSA for bins to be kept.",
+                    "minimum": 0.0,
+                    "maximum": 100.0
+                },
+                "gtdbtk_min_af": {
+                    "type": "number",
+                    "default": 0.65,
+                    "description": "Min. alignment fraction to consider closest genome.",
+                    "minimum": 0.0,
+                    "maximum": 1.0
+                },
+                "gtdbtk_pplacer_cpus": {
+                    "type": "number",
+                    "default": 1,
+                    "description": "Number of CPUs used for the by GTDB-Tk run tool pplacer.",
+                    "help_text": "A low number of CPUs helps to reduce the memory required/reported by GTDB-Tk. See also the [GTDB-Tk documentation](https://ecogenomics.github.io/GTDBTk/faq.html#gtdb-tk-reaches-the-memory-limit-pplacer-crashes)."
+                },
+                "gtdbtk_pplacer_scratch": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Reduce GTDB-Tk memory consumption by running pplacer in a setting writing to disk.",
+                    "help_text": "Will be slower. Set to `false` to turn this off."
                 }
             }
         },
@@ -392,12 +481,10 @@
                 "spades_options": {
                     "type": "string",
                     "description": "Additional custom options for SPAdes.",
-                    "help_text": "An example is adjusting k-mers (\"-k 21,33,55,77\") or adding [advanced options](https://github.com/ablab/spades#advanced-options). But not -t, -m, -o or --out-prefix, because these are already in use.",
-                    "default": "\"\""
+                    "help_text": "An example is adjusting k-mers (\"-k 21,33,55,77\") or adding [advanced options](https://github.com/ablab/spades#advanced-options). But not -t, -m, -o or --out-prefix, because these are already in use."
                 },
                 "megahit_options": {
                     "type": "string",
-                    "default": "\"\"",
                     "description": "Additional custom options for MEGAHIT.",
                     "help_text": "An example is adjusting presets (e.g. \"--presets meta-large\"), k-mers (e.g. \"-k 21,33,55,77\") or adding other [advanced options](https://github.com/voutcn/megahit#advanced-usage). For example, increase the minimum k-mer in the event of an error message such as \"Too many vertices in the unitig graph, you may increase the kmer size to remove tons of erroneous kmers.\" in the MEGAHIT log file. But not --threads, --memory, -o or input read files, because these are already in use."
                 },
@@ -467,26 +554,22 @@
                 },
                 "busco_reference": {
                     "type": "string",
-                    "default": "https://busco-data.ezlab.org/v4/data/lineages/bacteria_odb10.2020-03-06.tar.gz",
-                    "description": "Download path for BUSCO database.",
-                    "help_text": "Available databases are listed here: https://busco.ezlab.org/."
+                    "description": "Download path for BUSCO lineage dataset, instead of using automated lineage selection.",
+                    "help_text": "E.g. https://busco-data.ezlab.org/v5/data/lineages/bacteria_odb10.2020-03-06.tar.gz. Available databases are listed here: https://busco-data.ezlab.org/v5/data/lineages/."
+                },
+                "busco_download_path": {
+                    "type": "string",
+                    "description": "Path to local folder containing already downloaded and unpacked lineage datasets.",
+                    "help_text": "If provided, BUSCO analysis will be run in offline mode. Data can be downloaded from https://busco-data.ezlab.org/v5/data/ (files still need to be unpacked manually). Run in combination with automated lineage selection."
+                },
+                "busco_auto_lineage_prok": {
+                    "type": "boolean",
+                    "description": "Run BUSCO with automated lineage selection, but ignoring eukaryotes (saves runtime)."
                 },
                 "save_busco_reference": {
                     "type": "boolean",
-                    "description": "Save BUSCO reference.",
+                    "description": "Save the used BUSCO lineage datasets provided via --busco_reference or downloaded when not using --busco_reference or --busco_download_path.",
                     "help_text": "Useful to allow reproducibility, as BUSCO datasets are frequently updated and old versions do not always remain accessible."
-                }
-            }
-        },
-        "deprecated": {
-            "title": "Deprecated",
-            "type": "object",
-            "description": "",
-            "default": "",
-            "properties": {
-                "manifest": {
-                    "type": "string",
-                    "hidden": true
                 }
             }
         }
@@ -527,9 +610,6 @@
         },
         {
             "$ref": "#/definitions/bin_quality_check_options"
-        },
-        {
-            "$ref": "#/definitions/deprecated"
         }
     ]
 }

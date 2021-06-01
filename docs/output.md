@@ -1,9 +1,5 @@
 # nf-core/mag: Output
 
-## :warning: Please read this documentation on the nf-core website: [https://nf-co.re/mag/output](https://nf-co.re/mag/output)
-
-> _Documentation of pipeline parameters is generated automatically from the pipeline schema and can no longer be found in markdown files._
-
 ## Introduction
 
 This document describes the output produced by the pipeline. Most of the plots are taken from the MultiQC report, which summarises results at the end of the pipeline.
@@ -16,13 +12,15 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/)
 and processes data using the following steps:
 
 * [Quality control](#quality-control) of input reads - trimming and contaminant removal
-* [Taxonomic classification](#taxonomic-classification) of trimmed reads
+* [Taxonomic classification of trimmed reads](#taxonomic-classification-of-trimmed-reads)
 * [Assembly](#assembly) of trimmed reads
 * [Binning](#binning) of assembled contigs
+* [Taxonomic classification of binned genomes](#taxonomic-classification-of-binned-genomes)
+* [Additional summary for binned genomes](#additional-summary-for-binned-genomes)
 * [MultiQC](#multiqc) - aggregate report, describing results of the whole pipeline
 * [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
 
-Note that when specifying the parameter `--coassemble_group`, for the corresponding output filenames/directories of the assembly or downsteam processes the group ID, or more precisely the term `group[group_id]`, will be used instead of the sample ID.
+Note that when specifying the parameter `--coassemble_group`, for the corresponding output filenames/directories of the assembly or downsteam processes the group ID, or more precisely the term `group-[group_id]`, will be used instead of the sample ID.
 
 ## Quality control
 
@@ -39,8 +37,8 @@ For further reading and documentation see the [FastQC help pages](http://www.bio
 **Output files:**
 
 * `QC_shortreads/fastqc/`
-  * `[sample]_R[1/2]_fastqc.html`: FastQC report, containing quality metrics for your untrimmed raw fastq files
-  * `[sample]_R[1/2].trimmed_fastqc.html`: FastQC report, containing quality metrics for trimmed and, if specified, filtered read files
+  * `[sample]_[1/2]_fastqc.html`: FastQC report, containing quality metrics for your untrimmed raw fastq files
+  * `[sample].trimmed_[1/2]_fastqc.html`: FastQC report, containing quality metrics for trimmed and, if specified, filtered read files
 
 ### fastp
 
@@ -59,7 +57,7 @@ The pipeline uses bowtie2 to map the reads against PhiX and removes mapped reads
 **Output files:**
 
 * `QC_shortreads/remove_phix/`
-  * `[sample]_remove_phix.log`: Contains a brief log file indicating how many reads have been retained.
+  * `[sample].phix_removed.bowtie2.log`: Contains a brief log file indicating how many reads have been retained.
 
 ### Host read removal
 
@@ -68,7 +66,7 @@ The pipeline uses bowtie2 to map short reads against the host reference genome s
 **Output files:**
 
 * `QC_shortreads/remove_host/`
-  * `[sample].bowtie2.log`: Contains the bowtie2 log file indicating how many reads have been mapped as well as a file listing the read ids of discarded reads.
+  * `[sample].host_removed.bowtie2.log`: Contains the bowtie2 log file indicating how many reads have been mapped as well as a file listing the read ids of discarded reads.
 
 ### Remove Phage Lambda sequences from long reads
 
@@ -94,11 +92,11 @@ NanoPlot is used to calculate various metrics and plots about the quality and le
 
 **Output files:**
 
-* `QC_longreads/NanoPlot_[sample]/`
+* `QC_longreads/NanoPlot/[sample]/`
   * `raw_*.[png/html/txt]`: Plots and reports for raw data
   * `filtered_*.[png/html/txt]`: Plots and reports for filtered data
 
-## Taxonomic Classification
+## Taxonomic classification of trimmed reads
 
 ### Kraken
 
@@ -123,20 +121,6 @@ More information on the [Centrifuge](https://ccb.jhu.edu/software/centrifuge/) w
   * `kreport.txt`: Classification in the Kraken report format. See the [kraken2 manual](https://github.com/DerrickWood/kraken2/wiki/Manual#output-formats) for more details
   * `taxonomy.krona.html`: Interactive pie chart produced by [KronaTools](https://github.com/marbl/Krona/wiki)
 
-### CAT
-
-[CAT](https://github.com/dutilh/CAT) is a toolkit for annotating contigs and bins from metagenome-assembled-genomes. The MAG pipeline uses CAT to assign taxonomy to genome bins based on the taxnomy of the contigs.
-
-**Output files:**
-
-* `Taxonomy/[assembler]/`
-  * `[assembler]-[sample/group].ORF2LCA.txt`: Tab-delimited files containing the lineage of each contig
-  * `[assembler]-[sample/group].names.txt`: Taxonomy classification, with names of each lineage levels instead og taxids
-  * `[assembler]-[sample/group].predicted_proteins.faa`: predicted protein sequences for each genome bins, in fasta format
-  * `[assembler]-[sample/group].predicted_proteins.gff`: predicted protein features for each genome bins, in gff format
-  * `[assembler]-[sample/group].log`: Log files
-  * `[assembler]-[sample/group].bin2classification.txt`: Taxonomy classification of the genome bins
-
 ## Assembly
 
 Trimmed (short) reads are assembled with both megahit and SPAdes. Hybrid assembly is only supported by SPAdes.
@@ -152,7 +136,7 @@ Trimmed (short) reads are assembled with both megahit and SPAdes. Hybrid assembl
   * `[sample/group].log`: Log file
   * `[sample/group]_QC/`: Directory containing QUAST files and Bowtie2 mapping logs
   * `[sample/group]_QC/MEGAHIT-[sample].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the sample that the metagenome was assembled from, only present if `--coassemble_group` is not set.
-  * `[sample/group]_QC/MEGAHIT-[sample/group]-[sampleToMap].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the respective sample ("sampleToMap").
+  * `[sample/group]_QC/MEGAHIT-[sample/group]-[sampleToMap].bowtie2.log` and/or `[sample]_QC/MEGAHIT-[sample].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the respective sample ("sampleToMap").
 
 ### SPAdes
 
@@ -167,7 +151,7 @@ Trimmed (short) reads are assembled with both megahit and SPAdes. Hybrid assembl
   * `[sample/group].log`: Log file
   * `[sample/group]_QC/`: Directory containing QUAST files and Bowtie2 mapping logs
   * `[sample/group]_QC/SPAdes-[sample].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the sample that the metagenome was assembled from, only present if `--coassemble_group` is not set.
-  * `[sample/group]_QC/SPAdes-[sample/group]-[sampleToMap].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the respective sample ("sampleToMap").
+  * `[sample/group]_QC/SPAdes-[sample/group]-[sampleToMap].bowtie2.log` and/or `[sample]_QC/SPAdes-[sample].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the respective sample ("sampleToMap").
 
 ### SPAdesHybrid
 
@@ -182,7 +166,7 @@ SPAdesHybrid is a part of the [SPAdes](http://cab.spbu.ru/software/spades/) soft
   * `[sample/group].log`: Log file
   * `[sample/group]_QC/`: Directory containing QUAST files and Bowtie2 mapping logs
   * `[sample/group]_QC/SPAdesHybrid-[sample].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the sample that the metagenome was assembled from, only present if `--coassemble_group` is not set.
-  * `[sample/group]_QC/SPAdesHybrid-[sample/group]-[sampleToMap].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the respective sample ("sampleToMap").
+  * `[sample/group]_QC/SPAdesHybrid-[sample/group]-[sampleToMap].bowtie2.log` and/or `[sample]_QC/SPAdesHybrid-[sample].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the respective sample ("sampleToMap").
 
 ### Metagenome QC with QUAST
 
@@ -221,10 +205,10 @@ All the files and contigs in this folder will be assessed by QUAST and BUSCO.
 **Output files:**
 
 * `GenomeBinning/MetaBAT2/discarded/`
-  * `*.lowDepth.fa`: Low depth contigs that are filtered by MetaBat2
-  * `*.tooShort.fa`: Too short contigs that are filtered by MetaBat2
-  * `*.unbinned.pooled.fa`: Pooled unbinned contigs equal or above `--min_contig_size`, by default 1500 bp.
-  * `*.unbinned.remaining.fa`: Remaining unbinned contigs below `--min_contig_size`, by default 1500 bp, but not in any other file.
+  * `*.lowDepth.fa.gz`: Low depth contigs that are filtered by MetaBat2
+  * `*.tooShort.fa.gz`: Too short contigs that are filtered by MetaBat2
+  * `*.unbinned.pooled.fa.gz`: Pooled unbinned contigs equal or above `--min_contig_size`, by default 1500 bp.
+  * `*.unbinned.remaining.fa.gz`: Remaining unbinned contigs below `--min_contig_size`, by default 1500 bp, but not in any other file.
 
 All the files in this folder contain small and/or unbinned contigs that are not further processed.
 
@@ -240,36 +224,81 @@ Files in these two folders contain all contigs of an assembly.
   * `report.*`: QUAST report in various formats, such as html, txt, tsv or tex
   * `quast.log`: QUAST log file
   * `predicted_genes/[assembler]-[sample/group].rna.gff`: Contig positions for rRNA genes in gff version 3 format
-
-**Output files:**
-
 * `GenomeBinning/QC/`
   * `quast_summary.tsv`: QUAST output for all bins summarized
-  * `quast_and_busco_summary.tsv`: Summary of BUSCO and QUAST results
 
 ### QC for metagenome assembled genomes with BUSCO
 
-[BUSCO](https://busco.ezlab.org/) is a tool used to assess the completeness of a genome assembly. It is run on all the genome bins and high quality contigs obtained by MetaBAT2.
+[BUSCO](https://busco.ezlab.org/) is a tool used to assess the completeness of a genome assembly. It is run on all the genome bins and high quality contigs obtained by MetaBAT2. By default, BUSCO is run in automated lineage selection mode in which it first tries to select the domain and then a more specific lineage based on phylogenetic placement. If available, result files for both the selected domain lineage and the selected more specific lineage are placed in the output directory. If a lineage dataset is specified already with `--busco_reference`, only results for this specific lineage will be generated.
 
 **Output files:**
 
 * `GenomeBinning/QC/BUSCO/`
-  * `[assembler]-[bin]_busco.log`: BUSCO log file
-  * `[assembler]-[bin]_busco.fna`: Nucleotide sequence of all identified BUSCOs
-  * `[assembler]-[bin]_busco.faa`: Aminoacid sequence of all identified BUSCOs
+  * `[assembler]-[bin]_busco.log`: Log file containing the standard output of BUSCO.
+  * `[assembler]-[bin]_busco.err`: File containing potential error messages returned from BUSCO.
+  * `short_summary.domain.[lineage].[assembler]-[bin].txt`: BUSCO summary of the results for the selected domain when run in automated lineage selection mode. Not available for bins for which a viral lineage was selected.
+  * `short_summary.specific_lineage.[lineage].[assembler]-[bin].txt`: BUSCO summary of the results in case a more specific lineage than the domain could be selected or for the lineage provided via `--busco_reference`.
+  * `[assembler]-[bin]_buscos.[lineage].fna.gz`: Nucleotide sequence of all identified BUSCOs for used lineages (domain or specific).
+  * `[assembler]-[bin]_buscos.[lineage].faa.gz`: Aminoacid sequence of all identified BUSCOs for used lineages (domain or specific).
 
-If the parameter `--save_busco_reference` is set the used BUSCO reference is stored.
+If the parameter `--save_busco_reference` is set, additionally the used BUSCO lineage datasets are stored in the output directy.
 
 **Output files:**
 
-* `GenomeBinning/QC/BUSCO/reference/`
-  * `*.tar.gz`: BUSCO reference file
+* `GenomeBinning/QC/BUSCO/`
+  * `busco_downloads/`: All files and lineage datasets downloaded by BUSCO when run in automated lineage selection mode. (Can currently not be used to reproduce analysis, see the [nf-core/mag website documentation](https://nf-co.re/mag/usage#reproducibility) how to achieve reproducible BUSCO results).
+  * `reference/*.tar.gz`: BUSCO reference lineage dataset that was provided via `--busco_reference`.
+
+Besides the reference files or output files created by BUSCO, the following summary files will be generated:
 
 **Output files:**
 
 * `GenomeBinning/QC/`
-  * `busco_summary.txt`: A summary table of the BUSCO results, with % of marker genes found
-  * `quast_and_busco_summary.tsv`; Summary of BUSCO and QUAST results
+  * `busco_summary.tsv`: A summary table of the BUSCO results, with % of marker genes found. If run in automated lineage selection mode, both the results for the selected domain and for the selected more specific lineage will be given, if available.
+
+## Taxonomic classification of binned genomes
+
+### CAT
+
+[CAT](https://github.com/dutilh/CAT) is a toolkit for annotating contigs and bins from metagenome-assembled-genomes. The MAG pipeline uses CAT to assign taxonomy to genome bins based on the taxnomy of the contigs.
+
+**Output files:**
+
+* `Taxonomy/CAT/[assembler]/`
+  * `[assembler]-[sample/group].ORF2LCA.names.txt.gz`: Tab-delimited files containing the lineage of each contig, with full lineage names
+  * `[assembler]-[sample/group].bin2classification.names.txt.gz`: Taxonomy classification of the genome bins, with full lineage names
+* `Taxonomy/CAT/[assembler]/raw/`
+  * `[assembler]-[sample/group].concatenated.predicted_proteins.faa.gz`: Predicted protein sequences for each genome bin, in fasta format
+  * `[assembler]-[sample/group].concatenated.predicted_proteins.gff.gz`: Predicted protein features for each genome bin, in gff format
+  * `[assembler]-[sample/group].ORF2LCA.txt.gz`: Tab-delimited files containing the lineage of each contig
+  * `[assembler]-[sample/group].bin2classification.txt.gz`: Taxonomy classification of the genome bins
+  * `[assembler]-[sample/group].log`: Log files
+
+If the parameters `--cat_db_generate` and `--save_cat_db` are set, additionally the generated CAT database is stored:
+
+* `Taxonomy/CAT/CAT_prepare_*.tar.gz`: Generated and used CAT database.
+
+### GTDB-Tk
+
+[GTDB-Tk](https://github.com/Ecogenomics/GTDBTk) is a toolkit for assigning taxonomic classifications to bacterial and archaeal genomes based on the Genome Database Taxonomy [GTDB](https://gtdb.ecogenomic.org/). nf-core/mag uses GTDB-Tk to classify binned genomes which satisfy certain quality criteria (i.e. completeness and contamination assessed with the BUSCO analysis).
+
+**Output files:**
+
+* `Taxonomy/GTDB-Tk/[assembler]-[sample/group]/`
+  * `gtdbtk.[assembler]-[sample/group].{bac120/ar122}.summary.tsv`: Classifications for bacterial and archaeal genomes (see the [GTDB-Tk documentation for details](https://ecogenomics.github.io/GTDBTk/files/summary.tsv.html).
+  * `gtdbtk.[assembler]-[sample/group].{bac120/ar122}.classify.tree.gz`: Reference tree in Newick format containing query genomes placed with pplacer.
+  * `gtdbtk.[assembler]-[sample/group].{bac120/ar122}.markers_summary.tsv`: A summary of unique, duplicated, and missing markers within the 120 bacterial marker set, or the 122 archaeal marker set for each submitted genome.
+  * `gtdbtk.[assembler]-[sample/group].{bac120/ar122}.msa.fasta.gz`: FASTA file containing MSA of submitted and reference genomes.
+  * `gtdbtk.[assembler]-[sample/group].{bac120/ar122}.filtered.tsv`: A list of genomes with an insufficient number of amino acids in MSA.
+  * `gtdbtk.[assembler]-[sample/group].*.log`: Log files.
+  * `gtdbtk.[assembler]-[sample/group].failed_genomes.tsv`: A list of genomes for which the GTDB-Tk analysis failed, e.g. because Prodigal could not detect any genes.
+* `Taxonomy/GTDB-Tk/gtdbtk_summary.tsv`: A summary table of the GTDB-Tk classification results for all bins, also containing bins which were discarded based on the BUSCO QC, which were filtered out by GTDB-Tk ((listed in `*.filtered.tsv`) or for which the analysis failed (listed in `*.failed_genomes.tsv`).
+
+## Additional summary for binned genomes
+
+**Output files:**
+
+* `GenomeBinning/bin_summary.tsv`: Summary of BUSCO, QUAST and GTDB-Tk results, if at least two of those were generated.
 
 ## MultiQC
 
@@ -295,4 +324,3 @@ For more information about how to use MultiQC reports, see [https://multiqc.info
 * `pipeline_info/`
   * Reports generated by Nextflow: `execution_report.html`, `execution_timeline.html`, `execution_trace.txt` and `pipeline_dag.dot`/`pipeline_dag.svg`.
   * Reports generated by the pipeline: `pipeline_report.html`, `pipeline_report.txt` and `software_versions.csv`.
-  * Documentation for interpretation of results in HTML format: `results_description.html`.
