@@ -13,7 +13,7 @@ from Bio import SeqIO
 def parse_args(args=None):
     parser = argparse.ArgumentParser()
     parser.add_argument('-b', '--bins'         , required=True, nargs="+", metavar='FILE'                             , help="Bins: FASTA containing all contigs.")
-    parser.add_argument('-d', '--depths'       , required=True           , metavar='FILE'                             , help="(Compressed) TSV file containing contig depths for each sample (within group): contigName, contigLen, totalAvgDepth, sample1_avgDepth, sample1_var [, sample2_avgDepth, sample2_var, ...].")
+    parser.add_argument('-d', '--depths'       , required=True           , metavar='FILE'                             , help="(Compressed) TSV file containing contig depths for each sample: contigName, contigLen, totalAvgDepth, sample1_avgDepth, sample1_var [, sample2_avgDepth, sample2_var, ...].")
     parser.add_argument('-a', '--assembly_name', required=True                           , type=str                   , help="Assembly name.")
     parser.add_argument('-o', "--out"          , required=True           , metavar='FILE', type=argparse.FileType('w'), help="Output file containing depth for each bin.")
     return parser.parse_args(args)
