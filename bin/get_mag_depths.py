@@ -42,7 +42,7 @@ def main(args=None):
 
     n_samples = len(sample_names)
     # for each bin, access contig depths and compute mean bin depth (for all samples)
-    print("bin", '\t'.join(sample_names), file=args.out)
+    print("bin", '\t'.join(sample_names), sep='\t', file=args.out)
     for file in args.bins:
         mean_depths = [0] * n_samples
         with open(file, "rt") as infile:
@@ -54,7 +54,7 @@ def main(args=None):
                 c += 1
         for sample in range(n_samples):
             mean_depths[sample] = mean_depths[sample]/float(c)
-        print(os.path.basename(file), '\t'.join(str(d) for d in mean_depths), file=args.out)
+        print(os.path.basename(file), '\t'.join(str(d) for d in mean_depths), sep='\t', file=args.out)
 
 
 if __name__ == "__main__":
