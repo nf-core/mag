@@ -31,6 +31,7 @@ process MAG_DEPTHS {
     """
     get_mag_depths.py --bins ${bins} \
                       --depths ${contig_depths} \
+                      --assembly_name "${meta.assembler}-${meta.id}" \
                       --out "${meta.assembler}-${meta.id}-binDepths.tsv"
     """
 }

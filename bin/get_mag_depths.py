@@ -12,9 +12,10 @@ from Bio import SeqIO
 
 def parse_args(args=None):
     parser = argparse.ArgumentParser()
-    parser.add_argument('-b', '--bins'       , required=True, nargs="+", metavar='FILE'                             , help="Bins: FASTA containing all contigs.")
-    parser.add_argument('-d', '--depths'     , required=True           , metavar='FILE'                             , help="(Compressed) TSV file containing contig depths for each sample (within group): contigName, contigLen, totalAvgDepth, sample1_avgDepth, sample1_var [, sample2_avgDepth, sample2_var, ...].")
-    parser.add_argument('-o', "--out"        , required=True           , metavar='FILE', type=argparse.FileType('w'), help="Output file containing depth for each bin.")
+    parser.add_argument('-b', '--bins'         , required=True, nargs="+", metavar='FILE'                             , help="Bins: FASTA containing all contigs.")
+    parser.add_argument('-d', '--depths'       , required=True           , metavar='FILE'                             , help="(Compressed) TSV file containing contig depths for each sample (within group): contigName, contigLen, totalAvgDepth, sample1_avgDepth, sample1_var [, sample2_avgDepth, sample2_var, ...].")
+    parser.add_argument('-a', '--assembly_name', required=True                           , type=str                   , help="Assembly name.")
+    parser.add_argument('-o', "--out"          , required=True           , metavar='FILE', type=argparse.FileType('w'), help="Output file containing depth for each bin.")
     return parser.parse_args(args)
 
 def main(args=None):
@@ -28,7 +29,10 @@ def main(args=None):
         # process header
         header = next(reader)
         for sample in range(int((len(header)-3)/2)):
-            sample_names.append(header[3+2*sample])
+            col_name = header[3+2*sample]
+            # retrieve sample name: "<assembly_name>-<sample_name>.bam"
+            sample_name = col_name[len(args.assembly_name)+1:-4]
+            sample_names.append(sample_name)
         # process contig depths
         for row in reader:
             contig_depths = []
