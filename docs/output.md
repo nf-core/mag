@@ -214,6 +214,15 @@ All the files in this folder contain small and/or unbinned contigs that are not 
 
 Files in these two folders contain all contigs of an assembly.
 
+### Bin sequencing depth
+
+For each genome bin the average sequencing depth is computed based on the corresponding contig depths given in `GenomeBinning/[assembler]-[sample/group]-depth.txt.gz`.
+
+**Output files:**
+
+* `GenomeBinning/`
+  * `[assembler]-[sample/group]-binDepths.tsv`: Bin sequencing depths for samples mapped against the assembly, i.e. according to the mapping strategy specified with `--binning_map_mode`. Only for short reads.
+
 ### QC for metagenome assembled genomes with QUAST
 
 [QUAST](http://cab.spbu.ru/software/quast/) is a tool that evaluates genome assemblies by computing various metrics. The QUAST output is also included in the MultiQC report, as well as in the assembly directories themselves.
