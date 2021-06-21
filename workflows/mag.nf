@@ -81,7 +81,7 @@ include { QUAST_BINS_SUMMARY                                  } from '../modules
 include { CAT_DB                                              } from '../modules/local/cat_db'
 include { CAT_DB_GENERATE                                     } from '../modules/local/cat_db_generate'             addParams( options: modules['cat_db_generate']            )
 include { CAT                                                 } from '../modules/local/cat'                         addParams( options: modules['cat']                        )
-include { MERGE_QUAST_BUSCO_GTDBTK                            } from '../modules/local/merge_quast_busco_gtdbtk'    addParams( options: modules['merge_quast_busco_gtdbtk']   )
+include { BIN_SUMMARY                                         } from '../modules/local/bin_summary'                 addParams( options: modules['bin_summary']                )
 include { MULTIQC                                             } from '../modules/local/multiqc'                     addParams( options: multiqc_options                       )
 
 // Local: Sub-workflows
@@ -522,7 +522,7 @@ workflow MAG {
         }
 
         if (!params.skip_busco || !params.skip_quast || params.gtdb){
-            MERGE_QUAST_BUSCO_GTDBTK (
+            BIN_SUMMARY (
                 METABAT2_BINNING.out.depths_summary,
                 ch_busco_summary.ifEmpty([]),
                 ch_quast_bins_summary.ifEmpty([]),

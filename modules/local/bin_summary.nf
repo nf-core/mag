@@ -4,7 +4,7 @@ include { initOptions; saveFiles; getSoftwareName } from './functions'
 params.options = [:]
 options    = initOptions(params.options)
 
-process MERGE_QUAST_BUSCO_GTDBTK {
+process BIN_SUMMARY {
 
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
