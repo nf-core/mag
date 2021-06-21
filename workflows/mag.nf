@@ -521,10 +521,9 @@ workflow MAG {
             ch_gtdbtk_summary = GTDBTK.out.summary
         }
 
-        if ( (!params.skip_busco && !params.skip_quast) ||
-             (!params.skip_busco && params.gtdb ) ||
-             (!params.skip_quast && params.gtdb )) {
+        if (!params.skip_busco || !params.skip_quast || params.gtdb){
             MERGE_QUAST_BUSCO_GTDBTK (
+                METABAT2_BINNING.out.depths_summary,
                 ch_busco_summary.ifEmpty([]),
                 ch_quast_bins_summary.ifEmpty([]),
                 ch_gtdbtk_summary.ifEmpty([])
