@@ -28,6 +28,7 @@ def main(args=None):
 
     # handle bin depths
     results = pd.read_csv(args.depths_summary, sep="\t")
+    results.columns = ["Depth " + str(col) if col != "bin" else col for col in results.columns ]
     bins    = results['bin'].sort_values().reset_index(drop=True)
 
     if args.busco_summary:
