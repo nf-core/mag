@@ -24,7 +24,7 @@ process MAG_DEPTHS {
     path(contig_depths)
 
     output:
-    tuple val(meta), path("${meta.assembler}-${meta.id}-binDepths.tsv")
+    tuple val(meta), path("${meta.assembler}-${meta.id}-binDepths.tsv"), emit: depths
 
     script:
     def software = getSoftwareName(task.process)
