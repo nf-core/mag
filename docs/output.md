@@ -221,7 +221,7 @@ For each genome bin the average sequencing depth is computed based on the corres
 **Output files:**
 
 * `GenomeBinning/`
-  * `[assembler]-[sample/group]-binDepths.tsv`: Bin sequencing depths for samples mapped against the assembly, i.e. according to the mapping strategy specified with `--binning_map_mode`. Only for short reads.
+  * `bin_depths_summary.tsv`: Summary of bin sequencing depths for all samples. Depths are available for samples mapped against the corresponding assembly, i.e. according to the mapping strategy specified with `--binning_map_mode`. Only for short reads.
 
 ### QC for metagenome assembled genomes with QUAST
 
