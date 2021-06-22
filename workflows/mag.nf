@@ -81,12 +81,12 @@ include { QUAST_BINS_SUMMARY                                  } from '../modules
 include { CAT_DB                                              } from '../modules/local/cat_db'
 include { CAT_DB_GENERATE                                     } from '../modules/local/cat_db_generate'             addParams( options: modules['cat_db_generate']            )
 include { CAT                                                 } from '../modules/local/cat'                         addParams( options: modules['cat']                        )
-include { MERGE_QUAST_BUSCO_GTDBTK                            } from '../modules/local/merge_quast_busco_gtdbtk'    addParams( options: modules['merge_quast_busco_gtdbtk']   )
+include { BIN_SUMMARY                                         } from '../modules/local/bin_summary'                 addParams( options: modules['bin_summary']                )
 include { MULTIQC                                             } from '../modules/local/multiqc'                     addParams( options: multiqc_options                       )
 
 // Local: Sub-workflows
 include { INPUT_CHECK         } from '../subworkflows/local/input_check'
-include { METABAT2_BINNING    } from '../subworkflows/local/metabat2_binning'      addParams( bowtie2_align_options: modules['bowtie2_assembly_align'], metabat2_options: modules['metabat2']                                                   )
+include { METABAT2_BINNING    } from '../subworkflows/local/metabat2_binning'      addParams( bowtie2_align_options: modules['bowtie2_assembly_align'], metabat2_options: modules['metabat2'], mag_depths_options: modules['mag_depths'], mag_depths_summary_options: modules['mag_depths_summary'])
 include { BUSCO_QC            } from '../subworkflows/local/busco_qc'              addParams( busco_db_options: modules['busco_db_preparation'], busco_options: modules['busco'], busco_save_download_options: modules['busco_save_download'], busco_plot_options: modules['busco_plot'], busco_summary_options: modules['busco_summary'])
 include { GTDBTK              } from '../subworkflows/local/gtdbtk'                addParams( gtdbtk_classify_options: modules['gtdbtk_classify'], gtdbtk_summary_options: modules['gtdbtk_summary'])
 
@@ -521,10 +521,9 @@ workflow MAG {
             ch_gtdbtk_summary = GTDBTK.out.summary
         }
 
-        if ( (!params.skip_busco && !params.skip_quast) ||
-             (!params.skip_busco && params.gtdb ) ||
-             (!params.skip_quast && params.gtdb )) {
-            MERGE_QUAST_BUSCO_GTDBTK (
+        if (!params.skip_busco || !params.skip_quast || params.gtdb){
+            BIN_SUMMARY (
+                METABAT2_BINNING.out.depths_summary,
                 ch_busco_summary.ifEmpty([]),
                 ch_quast_bins_summary.ifEmpty([]),
                 ch_gtdbtk_summary.ifEmpty([])
