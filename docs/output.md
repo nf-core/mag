@@ -307,7 +307,7 @@ If the parameters `--cat_db_generate` and `--save_cat_db` are set, additionally 
 
 **Output files:**
 
-* `GenomeBinning/bin_summary.tsv`: Summary of BUSCO, QUAST and GTDB-Tk results, if at least two of those were generated.
+* `GenomeBinning/bin_summary.tsv`: Summary of bin sequencing depths together with BUSCO, QUAST and GTDB-Tk results, if at least one of the later was generated.
 
 ## MultiQC
 
