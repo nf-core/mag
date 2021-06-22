@@ -5,6 +5,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v2.1.0dev - [date]
 
+### `Added`
+
+- [#212](https://github.com/nf-core/mag/pull/212) - Add bin abundance estimation based on mean sequencing depths of corresponding contigs (results are written to `results/GenomeBinning/bin_depths_summary.tsv` and `results/GenomeBinning/bin_summary.tsv`) [#197](https://github.com/nf-core/mag/issues/197).
+
 ## v2.0.0 - 2021/06/01
 
 ### `Added`
