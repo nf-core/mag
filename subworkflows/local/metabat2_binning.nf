@@ -60,7 +60,13 @@ workflow METABAT2_BINNING {
         METABAT2.out.depths
     )
     // Plot bin depths heatmap for each assembly and mapped samples (according to `binning_map_mode`)
-    MAG_DEPTHS_PLOT ( MAG_DEPTHS.out.depths )
+    ch_sample_groups = reads
+        .collectFile(name:'sample_groups.tsv'){ meta, reads -> meta.id + '\t' + meta.group + '\n' }
+    MAG_DEPTHS_PLOT (
+        MAG_DEPTHS.out.depths,
+        ch_sample_groups.collect()
+    )
+
     MAG_DEPTHS_SUMMARY ( MAG_DEPTHS.out.depths.map{it[1]}.collect() )
 
     emit:
