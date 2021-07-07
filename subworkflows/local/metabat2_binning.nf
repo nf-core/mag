@@ -16,6 +16,8 @@ include { MAG_DEPTHS                } from '../../modules/local/mag_depths'     
 include { MAG_DEPTHS_PLOT           } from '../../modules/local/mag_depths_plot'          addParams( options: params.mag_depths_plot_options    )
 include { MAG_DEPTHS_SUMMARY        } from '../../modules/local/mag_depths_summary'       addParams( options: params.mag_depths_summary_options )
 
+include { getColNo } from '../../modules/local/functions'
+
 workflow METABAT2_BINNING {
     take:
     assemblies           // channel: [ val(meta), path(assembly) ]
@@ -60,10 +62,14 @@ workflow METABAT2_BINNING {
         METABAT2.out.depths
     )
     // Plot bin depths heatmap for each assembly and mapped samples (according to `binning_map_mode`)
+    // create file containg group information for all samples
     ch_sample_groups = reads
         .collectFile(name:'sample_groups.tsv'){ meta, reads -> meta.id + '\t' + meta.group + '\n' }
+    // filter MAG depth files: use only those for plotting that contain depths for > 2 samples
+    ch_mag_depths_plot = MAG_DEPTHS.out.depths
+        .map { meta, depth_file -> if (getColNo(depth_file) > 2) [meta, depth_file] }
     MAG_DEPTHS_PLOT (
-        MAG_DEPTHS.out.depths,
+        ch_mag_depths_plot,
         ch_sample_groups.collect()
     )
 

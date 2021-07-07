@@ -64,3 +64,11 @@ def saveFiles(Map args) {
 def hasExtension(it, extension) {
     it.toString().toLowerCase().endsWith(extension.toLowerCase())
 }
+
+/*
+ * Get number of columns in file (first line)
+ */
+def getColNo(filename) {
+    lines  = file(filename).readLines()
+    return lines[0].split('\t').size()
+}
