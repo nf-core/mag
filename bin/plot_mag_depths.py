@@ -44,7 +44,7 @@ def main(args=None):
     plt.figure()
     # TODO row_cluster=False ? add colors for tax. classification at certain level, e.g. phylum (if adding clustering based on phylogenetic information)
     # TODO yticklabels=False ? if number of bins > 20 ?
-    sns.clustermap(df, row_cluster=True, cmap="vlag", col_colors=groups.group.map(color_map))
+    sns.clustermap(df, row_cluster=True, cmap="vlag", center=0, col_colors=groups.group.map(color_map))
     plt.savefig(args.out)
 
 
