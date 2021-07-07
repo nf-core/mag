@@ -216,7 +216,7 @@ Files in these two folders contain all contigs of an assembly.
 
 ### Bin sequencing depth
 
-For each genome bin the average sequencing depth is computed based on the corresponding contig depths given in `GenomeBinning/[assembler]-[sample/group]-depth.txt.gz`.
+For each genome bin the median sequencing depth is computed based on the corresponding contig depths given in `GenomeBinning/[assembler]-[sample/group]-depth.txt.gz`.
 
 **Output files:**
 
