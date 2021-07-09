@@ -6,6 +6,7 @@ import os.path
 import pandas as pd
 import csv
 import gzip
+import statistics
 
 from Bio import SeqIO
 
@@ -44,17 +45,13 @@ def main(args=None):
     # for each bin, access contig depths and compute mean bin depth (for all samples)
     print("bin", '\t'.join(sample_names), sep='\t', file=args.out)
     for file in args.bins:
-        mean_depths = [0] * n_samples
+        all_depths = [[] for i in range(n_samples)]
         with open(file, "rt") as infile:
-            c = 0
             for rec in SeqIO.parse(infile,'fasta'):
-                depths = dict_contig_depths[rec.id]
+                contig_depths = dict_contig_depths[rec.id]
                 for sample in range(n_samples):
-                    mean_depths[sample] += depths[sample]
-                c += 1
-        for sample in range(n_samples):
-            mean_depths[sample] = mean_depths[sample]/float(c)
-        print(os.path.basename(file), '\t'.join(str(d) for d in mean_depths), sep='\t', file=args.out)
+                    all_depths[sample].append(contig_depths[sample])
+        print(os.path.basename(file), '\t'.join(str(statistics.median(sample_depths)) for sample_depths in all_depths), sep='\t', file=args.out)
 
 
 if __name__ == "__main__":
