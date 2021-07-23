@@ -9,7 +9,7 @@ process BUSCO {
 
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        saveAs: { filename -> filename.indexOf("busco_downloads") == -1 ? saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:'') : null }
+        saveAs: { filename -> filename.indexOf("busco_downloads") == -1 ? saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:[]) : null }
 
     conda (params.enable_conda ? "bioconda::busco=5.1.0" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {

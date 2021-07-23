@@ -9,7 +9,7 @@ process CAT {
 
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.assembler) }
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['assembler']) }
 
     conda (params.enable_conda ? "bioconda::cat=4.6 bioconda::diamond=2.0.6" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {

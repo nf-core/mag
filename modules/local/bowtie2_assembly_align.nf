@@ -9,7 +9,7 @@ process BOWTIE2_ASSEMBLY_ALIGN {
 
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:"${assembly_meta.assembler}/${assembly_meta.id}_QC") }
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:assembly_meta, publish_by_meta:['assembler', 'id']) }
 
     conda (params.enable_conda ? "bioconda::bowtie2=2.4.2 bioconda::samtools=1.11 conda-forge::pigz=2.3.4" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {

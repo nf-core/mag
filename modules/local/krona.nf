@@ -5,11 +5,11 @@ params.options = [:]
 options    = initOptions(params.options)
 
 process KRONA {
-    tag "${classifier}-${meta.id}"
+    tag "${meta.classifier}-${meta.id}"
 
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:"${classifier}/${meta.id}") }
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['classifier', 'id']) }
 
     conda (params.enable_conda ? "bioconda::krona=2.7.1" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
@@ -19,7 +19,7 @@ process KRONA {
     }
 
     input:
-    tuple val(classifier), val(meta), path(report)
+    tuple val(meta), path(report)
     path  "taxonomy/taxonomy.tab"
 
     output:
