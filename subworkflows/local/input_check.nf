@@ -1,4 +1,7 @@
-// Import generic module functions
+//
+// Check input samplesheet and get read channels
+//
+
 include { hasExtension } from '../../modules/local/functions'
 
 params.options = [:]
