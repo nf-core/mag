@@ -31,6 +31,7 @@ process BUSCO {
     path("${bin}_busco.err")
     path("${bin}_buscos.*.faa.gz")                                      , optional:true
     path("${bin}_buscos.*.fna.gz")                                      , optional:true
+    path("${bin}_prodigal.gff")                                         , optional:true , emit: prodigal_genes
     tuple val(meta), path("${bin}_busco.failed_bin.txt")                , optional:true , emit: failed_bin
     path '*.version.txt'                                                                , emit: version
 
@@ -179,6 +180,11 @@ process BUSCO {
     else
         echo "ERROR: BUSCO analysis failed for some unknown reason! See also ${bin}_busco.err." >&2
         exit 1
+    fi
+
+    # additionally output genes predicted with Prodigal (GFF3)
+    if [ -f BUSCO/logs/prodigal_out.log ]; then
+        mv BUSCO/logs/prodigal_out.log "${bin}_prodigal.gff"
     fi
 
     busco --version | sed "s/BUSCO //" > ${software}.version.txt

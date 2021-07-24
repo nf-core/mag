@@ -250,18 +250,15 @@ For each genome bin the median sequencing depth is computed based on the corresp
   * `short_summary.specific_lineage.[lineage].[assembler]-[bin].txt`: BUSCO summary of the results in case a more specific lineage than the domain could be selected or for the lineage provided via `--busco_reference`.
   * `[assembler]-[bin]_buscos.[lineage].fna.gz`: Nucleotide sequence of all identified BUSCOs for used lineages (domain or specific).
   * `[assembler]-[bin]_buscos.[lineage].faa.gz`: Aminoacid sequence of all identified BUSCOs for used lineages (domain or specific).
+  * `[assembler]-[bin]_prodigal.gff`: Genes predicted with Prodigal.
 
 If the parameter `--save_busco_reference` is set, additionally the used BUSCO lineage datasets are stored in the output directy.
-
-**Output files:**
 
 * `GenomeBinning/QC/BUSCO/`
   * `busco_downloads/`: All files and lineage datasets downloaded by BUSCO when run in automated lineage selection mode. (Can currently not be used to reproduce analysis, see the [nf-core/mag website documentation](https://nf-co.re/mag/usage#reproducibility) how to achieve reproducible BUSCO results).
   * `reference/*.tar.gz`: BUSCO reference lineage dataset that was provided via `--busco_reference`.
 
 Besides the reference files or output files created by BUSCO, the following summary files will be generated:
-
-**Output files:**
 
 * `GenomeBinning/QC/`
   * `busco_summary.tsv`: A summary table of the BUSCO results, with % of marker genes found. If run in automated lineage selection mode, both the results for the selected domain and for the selected more specific lineage will be given, if available.
