@@ -68,7 +68,7 @@ include { NANOPLOT as NANOPLOT_RAW                            } from '../modules
 include { NANOPLOT as NANOPLOT_FILTERED                       } from '../modules/local/nanoplot'                    addParams( options: modules['nanoplot_filtered']          )
 include { CENTRIFUGE_DB_PREPARATION                           } from '../modules/local/centrifuge_db_preparation'
 include { CENTRIFUGE                                          } from '../modules/local/centrifuge'                  addParams( options: modules['centrifuge']                 )
-include { KRAKEN2_DB_PREPARATION                              } from '../modules/local/kraken2_db_preparation' 
+include { KRAKEN2_DB_PREPARATION                              } from '../modules/local/kraken2_db_preparation'
 include { KRAKEN2                                             } from '../modules/local/kraken2'                     addParams( options: modules['kraken2']                    )
 include { KRONA_DB                                            } from '../modules/local/krona_db'
 include { KRONA                                               } from '../modules/local/krona'                       addParams( options: modules['krona']                      )

@@ -44,9 +44,9 @@ process METABAT2 {
 
     mkdir MetaBAT2/discarded
     gzip "MetaBAT2/${meta.assembler}-${meta.id}.lowDepth.fa" \
-         "MetaBAT2/${meta.assembler}-${meta.id}.tooShort.fa" \
-         "MetaBAT2/${meta.assembler}-${meta.id}.unbinned.pooled.fa" \
-         "MetaBAT2/${meta.assembler}-${meta.id}.unbinned.remaining.fa"
+        "MetaBAT2/${meta.assembler}-${meta.id}.tooShort.fa" \
+        "MetaBAT2/${meta.assembler}-${meta.id}.unbinned.pooled.fa" \
+        "MetaBAT2/${meta.assembler}-${meta.id}.unbinned.remaining.fa"
     mv "MetaBAT2/${meta.assembler}-${meta.id}".*.fa.gz MetaBAT2/discarded/
 
     echo \$(metabat2 --help 2>&1) | sed "s/^.*version 2\\://; s/ (Bioconda.*//" > ${software}.version.txt

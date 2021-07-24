@@ -29,7 +29,7 @@ process MAG_DEPTHS_PLOT {
     def software = getSoftwareName(task.process)
     """
     plot_mag_depths.py --bin_depths ${depths} \
-                       --groups ${sample_groups} \
-                       --out "${meta.assembler}-${meta.id}-binDepths.heatmap.png"
+                    --groups ${sample_groups} \
+                    --out "${meta.assembler}-${meta.id}-binDepths.heatmap.png"
     """
 }

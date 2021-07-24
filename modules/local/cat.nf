@@ -41,11 +41,11 @@ process CAT {
     mkdir raw
     mv *.ORF2LCA.txt *.predicted_proteins.faa *.predicted_proteins.gff *.log *.bin2classification.txt raw/
     gzip "raw/${meta.assembler}-${meta.id}.ORF2LCA.txt" \
-         "raw/${meta.assembler}-${meta.id}.concatenated.predicted_proteins.faa" \
-         "raw/${meta.assembler}-${meta.id}.concatenated.predicted_proteins.gff" \
-         "raw/${meta.assembler}-${meta.id}.bin2classification.txt" \
-         "${meta.assembler}-${meta.id}.ORF2LCA.names.txt" \
-         "${meta.assembler}-${meta.id}.bin2classification.names.txt"
+        "raw/${meta.assembler}-${meta.id}.concatenated.predicted_proteins.faa" \
+        "raw/${meta.assembler}-${meta.id}.concatenated.predicted_proteins.gff" \
+        "raw/${meta.assembler}-${meta.id}.bin2classification.txt" \
+        "${meta.assembler}-${meta.id}.ORF2LCA.names.txt" \
+        "${meta.assembler}-${meta.id}.bin2classification.names.txt"
 
     CAT --version | sed "s/CAT v//; s/(.*//" > ${software}.version.txt
     """

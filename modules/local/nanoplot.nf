@@ -33,10 +33,10 @@ process NANOPLOT {
     def title  = options.suffix ? "${meta.id}_${options.suffix}" : "${meta.id}"
     """
     NanoPlot -t ${task.cpus} \
-             ${prefix} \
-             --title ${title} \
-             -c darkblue \
-             --fastq ${reads}
+            ${prefix} \
+            --title ${title} \
+            -c darkblue \
+            --fastq ${reads}
     NanoPlot --version | sed -e "s/NanoPlot //g" > ${software}.version.txt
     """
 }

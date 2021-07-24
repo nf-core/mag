@@ -28,7 +28,7 @@ process QUAST_BINS_SUMMARY {
     QUAST_BIN=\$(echo \"$summaries\" | sed 's/[][]//g')
     IFS=', ' read -r -a quast_bin <<< \"\$QUAST_BIN\"
     for quast_file in \"\${quast_bin[@]}\"; do
-        if ! [ -f "quast_summary.tsv" ]; then 
+        if ! [ -f "quast_summary.tsv" ]; then
             cp "\${quast_file}" "quast_summary.tsv"
         else
             tail -n +2 "\${quast_file}" >> "quast_summary.tsv"

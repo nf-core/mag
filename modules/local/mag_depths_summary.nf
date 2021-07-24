@@ -27,6 +27,6 @@ process MAG_DEPTHS_SUMMARY {
     def software = getSoftwareName(task.process)
     """
     get_mag_depths_summary.py --depths ${mag_depths} \
-                              --out "bin_depths_summary.tsv"
+                            --out "bin_depths_summary.tsv"
     """
 }

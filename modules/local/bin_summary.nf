@@ -32,9 +32,9 @@ process BIN_SUMMARY {
     def gtdbtk_summary = gtdbtk_sum.sort().size() > 0 ? "--gtdbtk_summary ${gtdbtk_sum}" : ""
     """
     combine_tables.py --depths_summary ${bin_depths} \
-                      $busco_summary \
-                      $quast_summary \
-                      $gtdbtk_summary \
-                      --out bin_summary.tsv
+                    $busco_summary \
+                    $quast_summary \
+                    $gtdbtk_summary \
+                    --out bin_summary.tsv
     """
 }
