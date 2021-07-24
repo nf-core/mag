@@ -158,9 +158,9 @@ Trimmed (short) reads are assembled with both megahit and SPAdes. Hybrid assembl
 * `Assembly/MEGAHIT/`
   * `[sample/group].contigs.fa.gz`: Compressed metagenome assembly in fasta format
   * `[sample/group].log`: Log file
-  * `[sample/group]_QC/`: Directory containing QUAST files and Bowtie2 mapping logs
-  * `[sample/group]_QC/MEGAHIT-[sample].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the sample that the metagenome was assembled from, only present if `--coassemble_group` is not set.
-  * `[sample/group]_QC/MEGAHIT-[sample/group]-[sampleToMap].bowtie2.log` and/or `[sample]_QC/MEGAHIT-[sample].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the respective sample ("sampleToMap").
+  * `QC/[sample/group]/`: Directory containing QUAST files and Bowtie2 mapping logs
+    * `MEGAHIT-[sample].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the sample that the metagenome was assembled from, only present if `--coassemble_group` is not set.
+    * `MEGAHIT-[sample/group]-[sampleToMap].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the respective sample ("sampleToMap").
 
 </details>
 
@@ -176,9 +176,9 @@ Trimmed (short) reads are assembled with both megahit and SPAdes. Hybrid assembl
   * `[sample/group]_graph.gfa.gz`: Compressed assembly graph in gfa format
   * `[sample/group]_contigs.fasta.gz`: Compressed assembled contigs in fasta format
   * `[sample/group].log`: Log file
-  * `[sample/group]_QC/`: Directory containing QUAST files and Bowtie2 mapping logs
-  * `[sample/group]_QC/SPAdes-[sample].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the sample that the metagenome was assembled from, only present if `--coassemble_group` is not set.
-  * `[sample/group]_QC/SPAdes-[sample/group]-[sampleToMap].bowtie2.log` and/or `[sample]_QC/SPAdes-[sample].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the respective sample ("sampleToMap").
+  * `QC/[sample/group]/`: Directory containing QUAST files and Bowtie2 mapping logs
+    * `SPAdes-[sample].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the sample that the metagenome was assembled from, only present if `--coassemble_group` is not set.
+    * `SPAdes-[sample/group]-[sampleToMap].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the respective sample ("sampleToMap").
 
 </details>
 
@@ -194,9 +194,9 @@ SPAdesHybrid is a part of the [SPAdes](http://cab.spbu.ru/software/spades/) soft
   * `[sample/group]_graph.gfa.gz`: Compressed assembly graph in gfa format
   * `[sample/group]_contigs.fasta.gz`: Compressed assembled contigs in fasta format
   * `[sample/group].log`: Log file
-  * `[sample/group]_QC/`: Directory containing QUAST files and Bowtie2 mapping logs
-  * `[sample/group]_QC/SPAdesHybrid-[sample].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the sample that the metagenome was assembled from, only present if `--coassemble_group` is not set.
-  * `[sample/group]_QC/SPAdesHybrid-[sample/group]-[sampleToMap].bowtie2.log` and/or `[sample]_QC/SPAdesHybrid-[sample].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the respective sample ("sampleToMap").
+  * `QC/[sample/group]/`: Directory containing QUAST files and Bowtie2 mapping logs
+    * `SPAdesHybrid-[sample].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the sample that the metagenome was assembled from, only present if `--coassemble_group` is not set.
+    * `SPAdesHybrid-[sample/group]-[sampleToMap].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the respective sample ("sampleToMap").
 
 </details>
 
@@ -207,7 +207,7 @@ SPAdesHybrid is a part of the [SPAdes](http://cab.spbu.ru/software/spades/) soft
 <details markdown="1">
 <summary>Output files</summary>
 
-* `Assembly/[assembler]/[sample/group]_QC/`
+* `Assembly/[assembler]/QC/[sample/group]/`
   * `report.*`: QUAST report in various formats, such as html, txt, tsv or tex
   * `quast.log`: QUAST log file
   * `predicted_genes/[assembler]-[sample/group].rna.gff`: Contig positions for rRNA genes in gff version 3 format
@@ -363,7 +363,7 @@ If the parameters `--cat_db_generate` and `--save_cat_db` are set, additionally 
 <details markdown="1">
 <summary>Output files</summary>
 
-* `Taxonomy/GTDB-Tk/[assembler]-[sample/group]/`
+* `Taxonomy/GTDB-Tk/[assembler]/[sample/group]/`
   * `gtdbtk.[assembler]-[sample/group].{bac120/ar122}.summary.tsv`: Classifications for bacterial and archaeal genomes (see the [GTDB-Tk documentation for details](https://ecogenomics.github.io/GTDBTk/files/summary.tsv.html).
   * `gtdbtk.[assembler]-[sample/group].{bac120/ar122}.classify.tree.gz`: Reference tree in Newick format containing query genomes placed with pplacer.
   * `gtdbtk.[assembler]-[sample/group].{bac120/ar122}.markers_summary.tsv`: A summary of unique, duplicated, and missing markers within the 120 bacterial marker set, or the 122 archaeal marker set for each submitted genome.
