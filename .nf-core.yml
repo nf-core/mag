@@ -1,0 +1,4 @@
+# Remove when not needed anymore!
+lint:
+  files_unchanged:
+    - lib/NfcoreTemplate.groovy

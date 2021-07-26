@@ -9,7 +9,7 @@ process BUSCO {
 
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        saveAs: { filename -> filename.indexOf("busco_downloads") == -1 ? saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:'') : null }
+        saveAs: { filename -> filename.indexOf("busco_downloads") == -1 ? saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:[]) : null }
 
     conda (params.enable_conda ? "bioconda::busco=5.1.0" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
@@ -102,10 +102,10 @@ process BUSCO {
         else
             # auto lineage selection
             if { egrep -q \$'INFO:\t\\S+ selected' ${bin}_busco.log \
-                 && egrep -q \$'INFO:\tLineage \\S+ is selected, supported by ' ${bin}_busco.log ; } || \
-               { egrep -q \$'INFO:\t\\S+ selected' ${bin}_busco.log \
-                 && egrep -q \$'INFO:\tThe results from the Prodigal gene predictor indicate that your data belongs to the mollicutes clade. Testing subclades...' ${bin}_busco.log \
-                 && egrep -q \$'INFO:\tUsing local lineages directory ' ${bin}_busco.log ; }; then
+                && egrep -q \$'INFO:\tLineage \\S+ is selected, supported by ' ${bin}_busco.log ; } || \
+                { egrep -q \$'INFO:\t\\S+ selected' ${bin}_busco.log \
+                && egrep -q \$'INFO:\tThe results from the Prodigal gene predictor indicate that your data belongs to the mollicutes clade. Testing subclades...' ${bin}_busco.log \
+                && egrep -q \$'INFO:\tUsing local lineages directory ' ${bin}_busco.log ; }; then
                 # the second statement is necessary, because certain mollicute clades use a different genetic code, are not part of the BUSCO placement tree, are tested separately
                 # and cause different log messages
                 echo "Domain and specific lineage could be selected by BUSCO."

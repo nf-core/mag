@@ -8,7 +8,7 @@ process QUAST_BINS_SUMMARY {
 
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:'') }
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:[:], publish_by_meta:[]) }
 
     conda (params.enable_conda ? "conda-forge::sed=4.7" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
@@ -28,7 +28,7 @@ process QUAST_BINS_SUMMARY {
     QUAST_BIN=\$(echo \"$summaries\" | sed 's/[][]//g')
     IFS=', ' read -r -a quast_bin <<< \"\$QUAST_BIN\"
     for quast_file in \"\${quast_bin[@]}\"; do
-        if ! [ -f "quast_summary.tsv" ]; then 
+        if ! [ -f "quast_summary.tsv" ]; then
             cp "\${quast_file}" "quast_summary.tsv"
         else
             tail -n +2 "\${quast_file}" >> "quast_summary.tsv"

@@ -9,7 +9,7 @@ process MAG_DEPTHS_PLOT {
 
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:"${meta.assembler}-${meta.id}") }
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['assembler', 'id']) }
 
     conda (params.enable_conda ? "conda-forge::python=3.9 conda-forge::pandas=1.3.0 anaconda::seaborn=0.11.0" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
@@ -29,7 +29,7 @@ process MAG_DEPTHS_PLOT {
     def software = getSoftwareName(task.process)
     """
     plot_mag_depths.py --bin_depths ${depths} \
-                       --groups ${sample_groups} \
-                       --out "${meta.assembler}-${meta.id}-binDepths.heatmap.png"
+                    --groups ${sample_groups} \
+                    --out "${meta.assembler}-${meta.id}-binDepths.heatmap.png"
     """
 }

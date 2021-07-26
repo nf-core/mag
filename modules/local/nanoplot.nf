@@ -9,7 +9,7 @@ process NANOPLOT {
 
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['id']) }
 
     conda (params.enable_conda ? "bioconda::nanoplot=1.26.3" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
@@ -33,10 +33,10 @@ process NANOPLOT {
     def title  = options.suffix ? "${meta.id}_${options.suffix}" : "${meta.id}"
     """
     NanoPlot -t ${task.cpus} \
-             ${prefix} \
-             --title ${title} \
-             -c darkblue \
-             --fastq ${reads}
+            ${prefix} \
+            --title ${title} \
+            -c darkblue \
+            --fastq ${reads}
     NanoPlot --version | sed -e "s/NanoPlot //g" > ${software}.version.txt
     """
 }

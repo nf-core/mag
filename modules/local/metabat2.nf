@@ -9,7 +9,7 @@ process METABAT2 {
 
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.assembler) }
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['assembler']) }
 
     conda (params.enable_conda ? "bioconda::metabat2=2.15 conda-forge::python=3.6.7 conda-forge::biopython=1.74 conda-forge::pandas=1.1.5" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
@@ -44,9 +44,9 @@ process METABAT2 {
 
     mkdir MetaBAT2/discarded
     gzip "MetaBAT2/${meta.assembler}-${meta.id}.lowDepth.fa" \
-         "MetaBAT2/${meta.assembler}-${meta.id}.tooShort.fa" \
-         "MetaBAT2/${meta.assembler}-${meta.id}.unbinned.pooled.fa" \
-         "MetaBAT2/${meta.assembler}-${meta.id}.unbinned.remaining.fa"
+        "MetaBAT2/${meta.assembler}-${meta.id}.tooShort.fa" \
+        "MetaBAT2/${meta.assembler}-${meta.id}.unbinned.pooled.fa" \
+        "MetaBAT2/${meta.assembler}-${meta.id}.unbinned.remaining.fa"
     mv "MetaBAT2/${meta.assembler}-${meta.id}".*.fa.gz MetaBAT2/discarded/
 
     echo \$(metabat2 --help 2>&1) | sed "s/^.*version 2\\://; s/ (Bioconda.*//" > ${software}.version.txt

@@ -44,4 +44,4 @@ sp:
         fn: 'host_removal_metrics.tsv'
 
 extra_fn_clean_exts:
-     - '.bowtie2'
+    - '.bowtie2'

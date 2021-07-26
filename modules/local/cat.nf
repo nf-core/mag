@@ -9,7 +9,7 @@ process CAT {
 
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.assembler) }
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['assembler']) }
 
     conda (params.enable_conda ? "bioconda::cat=4.6 bioconda::diamond=2.0.6" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
@@ -41,11 +41,11 @@ process CAT {
     mkdir raw
     mv *.ORF2LCA.txt *.predicted_proteins.faa *.predicted_proteins.gff *.log *.bin2classification.txt raw/
     gzip "raw/${meta.assembler}-${meta.id}.ORF2LCA.txt" \
-         "raw/${meta.assembler}-${meta.id}.concatenated.predicted_proteins.faa" \
-         "raw/${meta.assembler}-${meta.id}.concatenated.predicted_proteins.gff" \
-         "raw/${meta.assembler}-${meta.id}.bin2classification.txt" \
-         "${meta.assembler}-${meta.id}.ORF2LCA.names.txt" \
-         "${meta.assembler}-${meta.id}.bin2classification.names.txt"
+        "raw/${meta.assembler}-${meta.id}.concatenated.predicted_proteins.faa" \
+        "raw/${meta.assembler}-${meta.id}.concatenated.predicted_proteins.gff" \
+        "raw/${meta.assembler}-${meta.id}.bin2classification.txt" \
+        "${meta.assembler}-${meta.id}.ORF2LCA.names.txt" \
+        "${meta.assembler}-${meta.id}.bin2classification.names.txt"
 
     CAT --version | sed "s/CAT v//; s/(.*//" > ${software}.version.txt
     """
