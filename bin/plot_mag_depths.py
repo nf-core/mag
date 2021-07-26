@@ -27,13 +27,10 @@ def main(args=None):
     # add pseudo-abundances (sample-wise? dependent on lib-size)
     pseudo_cov = 0.1 * df[df > 0].min().min()
     df.replace(0, pseudo_cov, inplace=True)
-    print(df)
     # compute centered log-ratios
     # divide df by sample-wise geometric means
     gmeans = stats.gmean(df, axis=0)                # apply on axis=0: 'index'
     df = np.log(df.div(gmeans, axis='columns'))     # divide column-wise (axis=1|'columns'), take natural logorithm
-    # NOTE NaNs should not occur
-    print(df)
     df.index.name='MAGs'
     df.columns.name='Samples'
 
@@ -42,9 +39,10 @@ def main(args=None):
 
     # plot
     plt.figure()
-    # TODO row_cluster=False ? add colors for tax. classification at certain level, e.g. phylum (if adding clustering based on phylogenetic information)
-    # TODO yticklabels=False ? if number of bins > 20 ?
-    sns.clustermap(df, row_cluster=True, cmap="vlag", center=0, col_colors=groups.group.map(color_map))
+    bin_labels=True
+    if (len(df) > 30):
+        bin_labels=False
+    sns.clustermap(df, row_cluster=True, yticklabels=bin_labels, cmap="vlag", center=0, col_colors=groups.group.map(color_map), figsize=(6,6))
     plt.savefig(args.out)
 
 
