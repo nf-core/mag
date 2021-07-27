@@ -600,7 +600,9 @@ workflow MAG {
 */
 
 workflow.onComplete {
-    NfcoreTemplate.email(workflow, params, summary_params, projectDir, log, multiqc_report, busco_failed_bins)
+    if (params.email || params.email_on_fail) {
+        NfcoreTemplate.email(workflow, params, summary_params, projectDir, log, multiqc_report, busco_failed_bins)
+    }
     NfcoreTemplate.summary(workflow, params, log, busco_failed_bins)
 }
 
