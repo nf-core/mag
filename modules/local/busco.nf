@@ -111,15 +111,18 @@ process BUSCO {
                 echo "Domain and specific lineage could be selected by BUSCO."
                 cp BUSCO/short_summary.specific.\${db_name_spec}.BUSCO.txt short_summary.specific_lineage.\${db_name_spec}.${bin}.txt
 
+                db_name_gen=""
                 summaries_gen=(BUSCO/short_summary.generic.*.BUSCO.txt)
-                if [ \${#summaries_gen[@]} -ne 1 ]; then
-                    echo "ERROR: none or multiple 'BUSCO/short_summary.generic.*.BUSCO.txt' files found. Expected one."
-                    exit 1
+                if [ \${#summaries_gen[@]} -lt 1 ]; then
+                    echo "No 'BUSCO/short_summary.generic.*.BUSCO.txt' file found. Assuming selected domain and specific lineages are the same."
+                    cp BUSCO/short_summary.specific.\${db_name_spec}.BUSCO.txt short_summary.domain.\${db_name_spec}.${bin}.txt
+                    db_name_gen=\${db_name_spec}
+                else
+                    [[ \$summaries_gen =~ BUSCO/short_summary.generic.(.*).BUSCO.txt ]];
+                    db_name_gen="\${BASH_REMATCH[1]}"
+                    echo "Used generic lineage dataset: \${db_name_gen}"
+                    cp BUSCO/short_summary.generic.\${db_name_gen}.BUSCO.txt short_summary.domain.\${db_name_gen}.${bin}.txt
                 fi
-                [[ \$summaries_gen =~ BUSCO/short_summary.generic.(.*).BUSCO.txt ]];
-                db_name_gen="\${BASH_REMATCH[1]}"
-                echo "Used generic lineage dataset: \${db_name_gen}"
-                cp BUSCO/short_summary.generic.\${db_name_gen}.BUSCO.txt short_summary.domain.\${db_name_gen}.${bin}.txt
 
                 for f in BUSCO/run_\${db_name_gen}/busco_sequences/single_copy_busco_sequences/*faa; do
                     cat BUSCO/run_\${db_name_gen}/busco_sequences/single_copy_busco_sequences/*faa | gzip >${bin}_buscos.\${db_name_gen}.faa.gz
