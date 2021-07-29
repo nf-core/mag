@@ -9,7 +9,7 @@ process BUSCO {
 
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        saveAs: { filename -> filename.indexOf("busco_downloads") == -1 ? saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:'') : null }
+        saveAs: { filename -> filename.indexOf("busco_downloads") == -1 ? saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:[]) : null }
 
     conda (params.enable_conda ? "bioconda::busco=5.1.0" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
@@ -31,6 +31,7 @@ process BUSCO {
     path("${bin}_busco.err")
     path("${bin}_buscos.*.faa.gz")                                      , optional:true
     path("${bin}_buscos.*.fna.gz")                                      , optional:true
+    path("${bin}_prodigal.gff")                                         , optional:true , emit: prodigal_genes
     tuple val(meta), path("${bin}_busco.failed_bin.txt")                , optional:true , emit: failed_bin
     path '*.version.txt'                                                                , emit: version
 
@@ -101,24 +102,27 @@ process BUSCO {
         else
             # auto lineage selection
             if { egrep -q \$'INFO:\t\\S+ selected' ${bin}_busco.log \
-                 && egrep -q \$'INFO:\tLineage \\S+ is selected, supported by ' ${bin}_busco.log ; } || \
-               { egrep -q \$'INFO:\t\\S+ selected' ${bin}_busco.log \
-                 && egrep -q \$'INFO:\tThe results from the Prodigal gene predictor indicate that your data belongs to the mollicutes clade. Testing subclades...' ${bin}_busco.log \
-                 && egrep -q \$'INFO:\tUsing local lineages directory ' ${bin}_busco.log ; }; then
+                && egrep -q \$'INFO:\tLineage \\S+ is selected, supported by ' ${bin}_busco.log ; } || \
+                { egrep -q \$'INFO:\t\\S+ selected' ${bin}_busco.log \
+                && egrep -q \$'INFO:\tThe results from the Prodigal gene predictor indicate that your data belongs to the mollicutes clade. Testing subclades...' ${bin}_busco.log \
+                && egrep -q \$'INFO:\tUsing local lineages directory ' ${bin}_busco.log ; }; then
                 # the second statement is necessary, because certain mollicute clades use a different genetic code, are not part of the BUSCO placement tree, are tested separately
                 # and cause different log messages
                 echo "Domain and specific lineage could be selected by BUSCO."
                 cp BUSCO/short_summary.specific.\${db_name_spec}.BUSCO.txt short_summary.specific_lineage.\${db_name_spec}.${bin}.txt
 
+                db_name_gen=""
                 summaries_gen=(BUSCO/short_summary.generic.*.BUSCO.txt)
-                if [ \${#summaries_gen[@]} -ne 1 ]; then
-                    echo "ERROR: none or multiple 'BUSCO/short_summary.generic.*.BUSCO.txt' files found. Expected one."
-                    exit 1
+                if [ \${#summaries_gen[@]} -lt 1 ]; then
+                    echo "No 'BUSCO/short_summary.generic.*.BUSCO.txt' file found. Assuming selected domain and specific lineages are the same."
+                    cp BUSCO/short_summary.specific.\${db_name_spec}.BUSCO.txt short_summary.domain.\${db_name_spec}.${bin}.txt
+                    db_name_gen=\${db_name_spec}
+                else
+                    [[ \$summaries_gen =~ BUSCO/short_summary.generic.(.*).BUSCO.txt ]];
+                    db_name_gen="\${BASH_REMATCH[1]}"
+                    echo "Used generic lineage dataset: \${db_name_gen}"
+                    cp BUSCO/short_summary.generic.\${db_name_gen}.BUSCO.txt short_summary.domain.\${db_name_gen}.${bin}.txt
                 fi
-                [[ \$summaries_gen =~ BUSCO/short_summary.generic.(.*).BUSCO.txt ]];
-                db_name_gen="\${BASH_REMATCH[1]}"
-                echo "Used generic lineage dataset: \${db_name_gen}"
-                cp BUSCO/short_summary.generic.\${db_name_gen}.BUSCO.txt short_summary.domain.\${db_name_gen}.${bin}.txt
 
                 for f in BUSCO/run_\${db_name_gen}/busco_sequences/single_copy_busco_sequences/*faa; do
                     cat BUSCO/run_\${db_name_gen}/busco_sequences/single_copy_busco_sequences/*faa | gzip >${bin}_buscos.\${db_name_gen}.faa.gz
@@ -179,6 +183,11 @@ process BUSCO {
     else
         echo "ERROR: BUSCO analysis failed for some unknown reason! See also ${bin}_busco.err." >&2
         exit 1
+    fi
+
+    # additionally output genes predicted with Prodigal (GFF3)
+    if [ -f BUSCO/logs/prodigal_out.log ]; then
+        mv BUSCO/logs/prodigal_out.log "${bin}_prodigal.gff"
     fi
 
     busco --version | sed "s/BUSCO //" > ${software}.version.txt

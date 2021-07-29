@@ -1,4 +1,7 @@
-// Import generic module functions
+//
+// Check input samplesheet and get read channels
+//
+
 include { hasExtension } from '../../modules/local/functions'
 
 params.options = [:]
@@ -35,9 +38,9 @@ workflow INPUT_CHECK {
                         meta.id           = id
                         meta.group        = group
                         meta.single_end   = params.single_end
-                        if (params.single_end) 
+                        if (params.single_end)
                             return [ meta, [ sr1] ]
-                        else 
+                        else
                             return [ meta, [ sr1, sr2 ] ]
                 }
             .set { ch_raw_short_reads }

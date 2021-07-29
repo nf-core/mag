@@ -30,13 +30,13 @@ def main(args=None):
     regexes = [r"# Summarized benchmarking in BUSCO notation for file (\S+)", r"# The lineage dataset is: (\S+) \(", r"	C:(\S+)%\[S:",
             r"%\[S:(\S+)%,D:", r"%,D:(\S+)%\],F:", r"%\],F:(\S+)%,M:", r"%,M:(\S+)%,n:", r"%,n:(\S+)"]
     columns_domain = ["GenomeBin", \
-                     "Domain", \
-                     "%Complete (domain)", \
-                     "%Complete and single-copy (domain)", \
-                     "%Complete and duplicated (domain)", \
-                     "%Fragmented (domain)", \
-                     "%Missing (domain)", \
-                     "Total number (domain)"]
+                    "Domain", \
+                    "%Complete (domain)", \
+                    "%Complete and single-copy (domain)", \
+                    "%Complete and duplicated (domain)", \
+                    "%Fragmented (domain)", \
+                    "%Missing (domain)", \
+                    "Total number (domain)"]
     columns_specific = ["GenomeBin", \
                         "Specific lineage dataset", \
                         "%Complete (specific)", \

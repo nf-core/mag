@@ -9,7 +9,7 @@ process GTDBTK_CLASSIFY {
 
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:"${meta.assembler}-${meta.id}") }
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['assembler', 'id']) }
 
     conda (params.enable_conda ? "conda-forge::gtdbtk=1.5.0" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
@@ -44,14 +44,14 @@ process GTDBTK_CLASSIFY {
     fi
 
     gtdbtk classify_wf $options.args \
-                       --genome_dir bins \
-                       --prefix "gtdbtk.${meta.assembler}-${meta.id}" \
-                       --out_dir "\${PWD}" \
-                       --cpus ${task.cpus} \
-                       --pplacer_cpus ${params.gtdbtk_pplacer_cpus} \
-                       ${pplacer_scratch} \
-                       --min_perc_aa ${params.gtdbtk_min_perc_aa} \
-                       --min_af ${params.gtdbtk_min_af}
+                    --genome_dir bins \
+                    --prefix "gtdbtk.${meta.assembler}-${meta.id}" \
+                    --out_dir "\${PWD}" \
+                    --cpus ${task.cpus} \
+                    --pplacer_cpus ${params.gtdbtk_pplacer_cpus} \
+                    ${pplacer_scratch} \
+                    --min_perc_aa ${params.gtdbtk_min_perc_aa} \
+                    --min_af ${params.gtdbtk_min_af}
 
     gzip "gtdbtk.${meta.assembler}-${meta.id}".*.classify.tree "gtdbtk.${meta.assembler}-${meta.id}".*.msa.fasta
     mv gtdbtk.log "gtdbtk.${meta.assembler}-${meta.id}.log"

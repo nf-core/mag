@@ -2,13 +2,21 @@
  * Binning with MetaBAT2
  */
 
-params.bowtie2_build_options = [:]
-params.bowtie2_align_options = [:]
-params.metabat2_options      = [:]
+params.bowtie2_build_options      = [:]
+params.bowtie2_align_options      = [:]
+params.metabat2_options           = [:]
+params.mag_depths_options         = [:]
+params.mag_depths_plot_options    = [:]
+params.mag_depths_summary_options = [:]
 
-include { BOWTIE2_ASSEMBLY_BUILD    } from '../../modules/local/bowtie2_assembly_build'   addParams( options: params.bowtie2_build_options )
-include { BOWTIE2_ASSEMBLY_ALIGN    } from '../../modules/local/bowtie2_assembly_align'   addParams( options: params.bowtie2_align_options )
-include { METABAT2                  } from '../../modules/local/metabat2'                 addParams( options: params.metabat2_options      )
+include { BOWTIE2_ASSEMBLY_BUILD    } from '../../modules/local/bowtie2_assembly_build'   addParams( options: params.bowtie2_build_options      )
+include { BOWTIE2_ASSEMBLY_ALIGN    } from '../../modules/local/bowtie2_assembly_align'   addParams( options: params.bowtie2_align_options      )
+include { METABAT2                  } from '../../modules/local/metabat2'                 addParams( options: params.metabat2_options           )
+include { MAG_DEPTHS                } from '../../modules/local/mag_depths'               addParams( options: params.mag_depths_options         )
+include { MAG_DEPTHS_PLOT           } from '../../modules/local/mag_depths_plot'          addParams( options: params.mag_depths_plot_options    )
+include { MAG_DEPTHS_SUMMARY        } from '../../modules/local/mag_depths_summary'       addParams( options: params.mag_depths_summary_options )
+
+include { getColNo } from '../../modules/local/functions'
 
 workflow METABAT2_BINNING {
     take:
@@ -48,9 +56,29 @@ workflow METABAT2_BINNING {
 
     METABAT2 ( ch_grouped_mappings )
 
+    // Compute bin depths for different samples (according to `binning_map_mode`)
+    MAG_DEPTHS (
+        METABAT2.out.bins,
+        METABAT2.out.depths
+    )
+    // Plot bin depths heatmap for each assembly and mapped samples (according to `binning_map_mode`)
+    // create file containg group information for all samples
+    ch_sample_groups = reads
+        .collectFile(name:'sample_groups.tsv'){ meta, reads -> meta.id + '\t' + meta.group + '\n' }
+    // filter MAG depth files: use only those for plotting that contain depths for > 2 samples
+    ch_mag_depths_plot = MAG_DEPTHS.out.depths
+        .map { meta, depth_file -> if (getColNo(depth_file) > 2) [meta, depth_file] }
+    MAG_DEPTHS_PLOT (
+        ch_mag_depths_plot,
+        ch_sample_groups.collect()
+    )
+
+    MAG_DEPTHS_SUMMARY ( MAG_DEPTHS.out.depths.map{it[1]}.collect() )
+
     emit:
     bowtie2_assembly_multiqc = BOWTIE2_ASSEMBLY_ALIGN.out.log.map { assembly_meta, reads_meta, log -> if (assembly_meta.id == reads_meta.id) {return [ log ]} }
     bowtie2_version          = BOWTIE2_ASSEMBLY_ALIGN.out.version
     bins                     = METABAT2.out.bins
+    depths_summary           = MAG_DEPTHS_SUMMARY.out.summary
     metabat2_version         = METABAT2.out.version
 }

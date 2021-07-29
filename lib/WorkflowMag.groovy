@@ -1,38 +1,13 @@
-/*
- * This file holds several functions specific to the pipeline.
- */
+//
+// This file holds several functions specific to the workflow/mag.nf in the nf-core/mag pipeline
+//
 
-class Workflow {
+class WorkflowMag {
 
-    // Citation string
-    private static String citation(workflow) {
-        return "If you use ${workflow.manifest.name} for your analysis please cite:\n\n" +
-               "* The pipeline\n" + 
-               "  https://doi.org/10.5281/zenodo.3589527\n\n" +
-               "* The nf-core framework\n" +
-               "  https://doi.org/10.1038/s41587-020-0439-x\n\n" +
-               "* Software dependencies\n" +
-               "  https://github.com/${workflow.manifest.name}/blob/master/CITATIONS.md"
-    }
-
-    static void validateMainParams(workflow, params, json_schema, log) {
-        if (params.validate_params) {
-            NfcoreSchema.validateParameters(params, json_schema, log)
-        }
-
-        // Check that conda channels are set-up correctly
-        if (params.enable_conda) {
-            Checks.checkCondaChannels(log)
-        }
-
-        // Check AWS batch settings
-        Checks.awsBatch(workflow, params)
-
-        // Check the hostnames against configured profiles
-        Checks.hostName(workflow, params, log)
-    }
-
-    static void validateWorkflowParams(params, log, hybrid) {
+    //
+    // Check and validate parameters
+    //
+    public static void initialise(params, log, hybrid) {
         // Check if binning mapping mode is valid
         if (!['all','group','own'].contains(params.binning_map_mode)) {
             log.error "Invalid parameter '--binning_map_mode ${params.binning_map_mode}'. Valid values are 'all', 'group' or 'own'."
@@ -144,10 +119,10 @@ class Workflow {
         }
     }
 
-    /*
-     * Get workflow summary for MultiQC
-     */
-    static String paramsSummaryMultiqc(workflow, summary) {
+    //
+    // Get workflow summary for MultiQC
+    //
+    public static String paramsSummaryMultiqc(workflow, summary) {
         String summary_section = ''
         for (group in summary.keySet()) {
             def group_params = summary.get(group)  // This gets the parameters of that particular group
@@ -169,5 +144,5 @@ class Workflow {
         yaml_file_text        += "data: |\n"
         yaml_file_text        += "${summary_section}"
         return yaml_file_text
-    } 
+    }
 }

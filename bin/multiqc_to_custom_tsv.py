@@ -104,9 +104,9 @@ def main(args=None):
 
     ## Write Bowtie 2 metrics to file
     metrics_dict_to_file(FileFieldList=Bowtie2FileFieldList,
-                         MultiQCDataDir=args.MULTIQC_DATA_DIR,
-                         OutFile='host_removal_metrics.tsv',
-                         se=args.SINGLE_END)
+                        MultiQCDataDir=args.MULTIQC_DATA_DIR,
+                        OutFile='host_removal_metrics.tsv',
+                        se=args.SINGLE_END)
 
 
 if __name__ == '__main__':

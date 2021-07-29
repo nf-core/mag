@@ -1,26 +1,15 @@
-////////////////////////////////////////////////////
-/* --         LOCAL PARAMETER VALUES           -- */
-////////////////////////////////////////////////////
+/*
+========================================================================================
+    VALIDATE INPUTS
+========================================================================================
+*/
 
-params.summary_params = [:]
+def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
 
-////////////////////////////////////////////////////
-/* --          VALIDATE INPUTS                 -- */
-////////////////////////////////////////////////////
-
+// Check already if long reads are provided
 include { hasExtension } from '../modules/local/functions'
-
-// Check input path parameters to see if they exist
-def checkPathParamList = [ params.input, params.multiqc_config, params.phix_reference, params.host_fasta, params.centrifuge_db, params.kraken2_db, params.cat_db, params.gtdb, params.lambda_reference, params.busco_reference ]
-for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
-
-// Check mandatory parameters
-if (!params.input) exit 1, 'Input samplesheet not specified!'
-
-// Validate input parameters
 def hybrid = false
 if(hasExtension(params.input, "csv")){
-    // just check if long reads are provided
     Channel
         .from(file(params.input))
         .splitCsv(header: true)
@@ -33,26 +22,40 @@ if(hasExtension(params.input, "csv")){
                 }
             }
 }
-Workflow.validateWorkflowParams(params, log, hybrid)
 
-////////////////////////////////////////////////////
-/* --          CONFIG FILES                    -- */
-////////////////////////////////////////////////////
+// Validate input parameters
+WorkflowMag.initialise(params, log, hybrid)
+
+// Check input path parameters to see if they exist
+def checkPathParamList = [ params.input, params.multiqc_config, params.phix_reference, params.host_fasta, params.centrifuge_db, params.kraken2_db, params.cat_db, params.gtdb, params.lambda_reference, params.busco_reference ]
+for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
+
+// Check mandatory parameters
+if (params.input) { ch_input = file(params.input) } else { exit 1, 'Input samplesheet not specified!' }
+
+/*
+========================================================================================
+    CONFIG FILES
+========================================================================================
+*/
 
 ch_multiqc_config        = file("$projectDir/assets/multiqc_config.yaml", checkIfExists: true)
 ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
 
-////////////////////////////////////////////////////
-/* -- IMPORT MODULES / SUBWORKFLOWS / FUNCTIONS-- */
-////////////////////////////////////////////////////
+/*
+========================================================================================
+    IMPORT LOCAL MODULES/SUBWORKFLOWS
+========================================================================================
+*/
 
 // Don't overwrite global params.modules, create a copy instead and use that within the main script.
 def modules = params.modules.clone()
-
 def multiqc_options   = modules['multiqc']
-multiqc_options.args += params.multiqc_title ? " --title \"$params.multiqc_title\"" : ''
+multiqc_options.args += params.multiqc_title ? Utils.joinModuleArgs(["--title \"$params.multiqc_title\""]) : ''
 
-// Local: Modules
+//
+// MODULE: Local to the pipeline
+//
 include { GET_SOFTWARE_VERSIONS                               } from '../modules/local/get_software_versions'       addParams( options: [publish_files : ['csv':'']]          )
 include { BOWTIE2_REMOVAL_BUILD as BOWTIE2_HOST_REMOVAL_BUILD } from '../modules/local/bowtie2_removal_build'
 include { BOWTIE2_REMOVAL_ALIGN as BOWTIE2_HOST_REMOVAL_ALIGN } from '../modules/local/bowtie2_removal_align'       addParams( options: modules['bowtie2_host_removal_align'] )
@@ -65,7 +68,7 @@ include { NANOPLOT as NANOPLOT_RAW                            } from '../modules
 include { NANOPLOT as NANOPLOT_FILTERED                       } from '../modules/local/nanoplot'                    addParams( options: modules['nanoplot_filtered']          )
 include { CENTRIFUGE_DB_PREPARATION                           } from '../modules/local/centrifuge_db_preparation'
 include { CENTRIFUGE                                          } from '../modules/local/centrifuge'                  addParams( options: modules['centrifuge']                 )
-include { KRAKEN2_DB_PREPARATION                              } from '../modules/local/kraken2_db_preparation' 
+include { KRAKEN2_DB_PREPARATION                              } from '../modules/local/kraken2_db_preparation'
 include { KRAKEN2                                             } from '../modules/local/kraken2'                     addParams( options: modules['kraken2']                    )
 include { KRONA_DB                                            } from '../modules/local/krona_db'
 include { KRONA                                               } from '../modules/local/krona'                       addParams( options: modules['krona']                      )
@@ -81,19 +84,29 @@ include { QUAST_BINS_SUMMARY                                  } from '../modules
 include { CAT_DB                                              } from '../modules/local/cat_db'
 include { CAT_DB_GENERATE                                     } from '../modules/local/cat_db_generate'             addParams( options: modules['cat_db_generate']            )
 include { CAT                                                 } from '../modules/local/cat'                         addParams( options: modules['cat']                        )
-include { MERGE_QUAST_BUSCO_GTDBTK                            } from '../modules/local/merge_quast_busco_gtdbtk'    addParams( options: modules['merge_quast_busco_gtdbtk']   )
+include { BIN_SUMMARY                                         } from '../modules/local/bin_summary'                 addParams( options: modules['bin_summary']                )
 include { MULTIQC                                             } from '../modules/local/multiqc'                     addParams( options: multiqc_options                       )
 
-// Local: Sub-workflows
+//
+// SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
+//
 include { INPUT_CHECK         } from '../subworkflows/local/input_check'
-include { METABAT2_BINNING    } from '../subworkflows/local/metabat2_binning'      addParams( bowtie2_align_options: modules['bowtie2_assembly_align'], metabat2_options: modules['metabat2']                                                   )
+include { METABAT2_BINNING    } from '../subworkflows/local/metabat2_binning'      addParams( bowtie2_align_options: modules['bowtie2_assembly_align'], metabat2_options: modules['metabat2'], mag_depths_options: modules['mag_depths'], mag_depths_plot_options: modules['mag_depths_plot'], mag_depths_summary_options: modules['mag_depths_summary'])
 include { BUSCO_QC            } from '../subworkflows/local/busco_qc'              addParams( busco_db_options: modules['busco_db_preparation'], busco_options: modules['busco'], busco_save_download_options: modules['busco_save_download'], busco_plot_options: modules['busco_plot'], busco_summary_options: modules['busco_summary'])
 include { GTDBTK              } from '../subworkflows/local/gtdbtk'                addParams( gtdbtk_classify_options: modules['gtdbtk_classify'], gtdbtk_summary_options: modules['gtdbtk_summary'])
 
-// nf-core/modules: Modules
-include { FASTQC as FASTQC_RAW     } from '../modules/nf-core/software/fastqc/main'              addParams( options: modules['fastqc_raw']            )
-include { FASTQC as FASTQC_TRIMMED } from '../modules/nf-core/software/fastqc/main'              addParams( options: modules['fastqc_trimmed']        )
-include { FASTP                    } from '../modules/nf-core/software/fastp/main'               addParams( options: modules['fastp']            )
+/*
+========================================================================================
+    IMPORT NF-CORE MODULES/SUBWORKFLOWS
+========================================================================================
+*/
+
+//
+// MODULE: Installed directly from nf-core/modules
+//
+include { FASTQC as FASTQC_RAW     } from '../modules/nf-core/modules/fastqc/main'              addParams( options: modules['fastqc_raw']            )
+include { FASTQC as FASTQC_TRIMMED } from '../modules/nf-core/modules/fastqc/main'              addParams( options: modules['fastqc_trimmed']        )
+include { FASTP                    } from '../modules/nf-core/modules/fastp/main'               addParams( options: modules['fastp']                 )
 
 ////////////////////////////////////////////////////
 /* --  Create channel for reference databases  -- */
@@ -176,9 +189,11 @@ if (params.gtdb) {
     ch_gtdb = Channel.empty()
 }
 
-////////////////////////////////////////////////////
-/* --           RUN MAIN WORKFLOW              -- */
-////////////////////////////////////////////////////
+/*
+========================================================================================
+    RUN MAIN WORKFLOW
+========================================================================================
+*/
 
 // Info required for completion email and summary
 def multiqc_report    = []
@@ -188,9 +203,9 @@ workflow MAG {
 
     ch_software_versions = Channel.empty()
 
-    /*
-    * Parse and check samplesheet
-    */
+    //
+    // SUBWORKFLOW: Read in samplesheet, validate and stage input files
+    //
     INPUT_CHECK ()
     ch_raw_short_reads = INPUT_CHECK.out.raw_short_reads
     ch_raw_long_reads  = INPUT_CHECK.out.raw_long_reads
@@ -316,8 +331,15 @@ workflow MAG {
 
     if (( params.centrifuge_db || params.kraken2_db ) && !params.skip_krona){
         KRONA_DB ()
+        CENTRIFUGE.out.results_for_krona.mix(KRAKEN2.out.results_for_krona)
+            . map { classifier, meta, report ->
+                def meta_new = meta.clone()
+                meta_new.classifier  = classifier
+                [ meta_new, report ]
+            }
+            .set { ch_tax_classifications }
         KRONA (
-            CENTRIFUGE.out.results_for_krona.mix(KRAKEN2.out.results_for_krona),
+            ch_tax_classifications,
             KRONA_DB.out.db.collect()
         )
         ch_software_versions = ch_software_versions.mix(KRONA.out.version.first().ifEmpty(null))
@@ -521,10 +543,9 @@ workflow MAG {
             ch_gtdbtk_summary = GTDBTK.out.summary
         }
 
-        if ( (!params.skip_busco && !params.skip_quast) ||
-             (!params.skip_busco && params.gtdb ) ||
-             (!params.skip_quast && params.gtdb )) {
-            MERGE_QUAST_BUSCO_GTDBTK (
+        if (!params.skip_busco || !params.skip_quast || params.gtdb){
+            BIN_SUMMARY (
+                METABAT2_BINNING.out.depths_summary,
                 ch_busco_summary.ifEmpty([]),
                 ch_quast_bins_summary.ifEmpty([]),
                 ch_gtdbtk_summary.ifEmpty([])
@@ -532,49 +553,61 @@ workflow MAG {
         }
     }
 
-    /*
-     * MODULE: Pipeline reporting
-     */
+    //
+    // MODULE: Pipeline reporting
+    //
+    ch_software_versions
+        .map { it -> if (it) [ it.baseName, it ] }
+        .groupTuple()
+        .map { it[1][0] }
+        .flatten()
+        .collect()
+        .set { ch_software_versions }
+
     GET_SOFTWARE_VERSIONS (
         ch_software_versions.map { it }.collect()
     )
 
-    /*
-     * MultiQC
-     */
-    if (!params.skip_multiqc) {
-        workflow_summary    = Workflow.paramsSummaryMultiqc(workflow, params.summary_params)
-        ch_workflow_summary = Channel.value(workflow_summary)
+    //
+    // MODULE: MultiQC
+    //
+    workflow_summary    = WorkflowMag.paramsSummaryMultiqc(workflow, summary_params)
+    ch_workflow_summary = Channel.value(workflow_summary)
 
-        ch_multiqc_files = Channel.empty()
-        ch_multiqc_files = ch_multiqc_files.mix(Channel.from(ch_multiqc_config))
-        ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
-        ch_multiqc_files = ch_multiqc_files.mix(GET_SOFTWARE_VERSIONS.out.yaml.collect())
+    ch_multiqc_files = Channel.empty()
+    ch_multiqc_files = ch_multiqc_files.mix(Channel.from(ch_multiqc_config))
+    ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
+    ch_multiqc_files = ch_multiqc_files.mix(GET_SOFTWARE_VERSIONS.out.yaml.collect())
 
-        MULTIQC (
-            ch_multiqc_files.collect(),
-            ch_multiqc_custom_config.collect().ifEmpty([]),
-            FASTQC_RAW.out.zip.collect{it[1]}.ifEmpty([]),
-            FASTQC_TRIMMED.out.zip.collect{it[1]}.ifEmpty([]),
-            ch_bowtie2_removal_host_multiqc.collect{it[1]}.ifEmpty([]),
-            ch_quast_multiqc.collect().ifEmpty([]),
-            ch_bowtie2_assembly_multiqc.collect().ifEmpty([]),
-            ch_busco_multiqc.collect().ifEmpty([])
-        )
-        multiqc_report       = MULTIQC.out.report.toList()
-        //ch_software_versions = ch_software_versions.mix(MULTIQC.out.version.ifEmpty(null)) // TODO ?
-    }
+    MULTIQC (
+        ch_multiqc_files.collect(),
+        ch_multiqc_custom_config.collect().ifEmpty([]),
+        FASTQC_RAW.out.zip.collect{it[1]}.ifEmpty([]),
+        FASTQC_TRIMMED.out.zip.collect{it[1]}.ifEmpty([]),
+        ch_bowtie2_removal_host_multiqc.collect{it[1]}.ifEmpty([]),
+        ch_quast_multiqc.collect().ifEmpty([]),
+        ch_bowtie2_assembly_multiqc.collect().ifEmpty([]),
+        ch_busco_multiqc.collect().ifEmpty([])
+    )
+    multiqc_report       = MULTIQC.out.report.toList()
+    ch_software_versions = ch_software_versions.mix(MULTIQC.out.version.ifEmpty(null))
 }
 
-////////////////////////////////////////////////////
-/* --              COMPLETION EMAIL            -- */
-////////////////////////////////////////////////////
+/*
+========================================================================================
+    COMPLETION EMAIL AND SUMMARY
+========================================================================================
+*/
 
 workflow.onComplete {
-    Completion.email(workflow, params, params.summary_params, projectDir, log, multiqc_report, busco_failed_bins)
-    Completion.summary(workflow, params, log, busco_failed_bins)
+    if (params.email || params.email_on_fail) {
+        NfcoreTemplate.email(workflow, params, summary_params, projectDir, log, multiqc_report, busco_failed_bins)
+    }
+    NfcoreTemplate.summary(workflow, params, log, busco_failed_bins)
 }
 
-////////////////////////////////////////////////////
-/* --                  THE END                 -- */
-////////////////////////////////////////////////////
+/*
+========================================================================================
+    THE END
+========================================================================================
+*/
