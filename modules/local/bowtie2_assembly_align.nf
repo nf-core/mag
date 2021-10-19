@@ -31,7 +31,7 @@ process BOWTIE2_ASSEMBLY_ALIGN {
     def name = "${assembly_meta.assembler}-${assembly_meta.id}-${reads_meta.id}"
     def input = params.single_end ? "-U \"${reads}\"" :  "-1 \"${reads[0]}\" -2 \"${reads[1]}\""
     """
-    INDEX=`find -L ./ -name "*.rev.1.bt2l" -o -name "*.rev.1.bt2" | sed 's/.rev.1.bt2l//' | sed 's/.rev.1.bt2//`
+    INDEX=`find -L ./ -name "*.rev.1.bt2l" -o -name "*.rev.1.bt2" | sed 's/.rev.1.bt2l//' | sed 's/.rev.1.bt2//'`
     bowtie2 -p "${task.cpus}" -x \$INDEX $input 2> "${name}.bowtie2.log" | \
         samtools view -@ "${task.cpus}" -bS | \
         samtools sort -@ "${task.cpus}" -o "${name}.bam"
