@@ -5,6 +5,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v2.2.0dev - [date]
 
+### `Added`
+
+### `Changed`
+
+### `Fixed`
+
+- [#236](https://github.com/nf-core/mag/pull/236) - Fix large assemblies (> 4 billion nucleotides in length).
+
 ## v2.1.0 - 2021/07/29
 
 ### `Added`

@@ -40,6 +40,6 @@ process CENTRIFUGE {
     centrifuge-kreport -x "${db_name}" results.txt > kreport.txt
     cat results.txt | cut -f 1,3 > results.krona
 
-    centrifuge --version | head -n 1 | sed 's/^.*centrifuge-class version //' > ${software}.version.txt
+    centrifuge --version | sed -n 1p | sed 's/^.*centrifuge-class version //' > ${software}.version.txt
     """
 }
