@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Added`
 
 -[#240](https://github.com/nf-core/mag/pull/240) - Add prodigal to predict protein-coding genes for assemblies
+
 ### `Changed`
 
 ### `Fixed`
