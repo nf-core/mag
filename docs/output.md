@@ -217,7 +217,7 @@ SPAdesHybrid is a part of the [SPAdes](http://cab.spbu.ru/software/spades/) soft
 
 ## Gene prediction
 
-Protein-coding genes are predicted for the assemblies.
+Protein-coding genes are predicted for each assembly.
 
 <details markdown="1">
 <summary>Output files</summary>
