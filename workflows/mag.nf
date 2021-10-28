@@ -107,6 +107,7 @@ include { GTDBTK              } from '../subworkflows/local/gtdbtk'             
 include { FASTQC as FASTQC_RAW     } from '../modules/nf-core/modules/fastqc/main'              addParams( options: modules['fastqc_raw']            )
 include { FASTQC as FASTQC_TRIMMED } from '../modules/nf-core/modules/fastqc/main'              addParams( options: modules['fastqc_trimmed']        )
 include { FASTP                    } from '../modules/nf-core/modules/fastp/main'               addParams( options: modules['fastp']                 )
+include { PRODIGAL                 } from '../modules/nf-core/modules/prodigal/main'            addParams( options: modules['prodigal']              )
 
 ////////////////////////////////////////////////////
 /* --  Create channel for reference databases  -- */
@@ -465,6 +466,18 @@ workflow MAG {
         ch_quast_multiqc = QUAST.out.qc
         ch_software_versions = ch_software_versions.mix(QUAST.out.version.first().ifEmpty(null))
     }
+
+    /*
+    ================================================================================
+                                    Predict proteins
+    ================================================================================
+    */
+
+    PRODIGAL (
+        ch_assemblies,
+        modules['prodigal']['output_format']
+    )
+    ch_software_versions = ch_software_versions.mix(PRODIGAL.out.version.first().ifEmpty(null))
 
     /*
     ================================================================================
