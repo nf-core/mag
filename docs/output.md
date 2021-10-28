@@ -226,7 +226,7 @@ Protein-coding genes are predicted for the assemblies.
     * `[sample/group].gff`: Gene Coordinates in GFF format
     * `[sample/group].faa`: The protein translation file consists of all the proteins from all the sequences in multiple FASTA format.
     * `[sample/group].fna`: Nucleotide sequences of the predicted proteins using the DNA alphabet, not mRNA (so you will see 'T' in the output and not 'U').
-    * `[sample/group]_all.txt`: Starts file
+    * `[sample/group]_all.txt`: Information about start positions of genes.
 
 </details>
 
