@@ -13,6 +13,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 * [Quality control](#quality-control) of input reads - trimming and contaminant removal
 * [Taxonomic classification of trimmed reads](#taxonomic-classification-of-trimmed-reads)
 * [Assembly](#assembly) of trimmed reads
+* [Protein-coding gene prediction](#gene-prediction) of assemblies
 * [Binning](#binning) of assembled contigs
 * [Taxonomic classification of binned genomes](#taxonomic-classification-of-binned-genomes)
 * [Additional summary for binned genomes](#additional-summary-for-binned-genomes)
@@ -211,6 +212,22 @@ SPAdesHybrid is a part of the [SPAdes](http://cab.spbu.ru/software/spades/) soft
     * `report.*`: QUAST report in various formats, such as html, txt, tsv or tex
     * `quast.log`: QUAST log file
     * `predicted_genes/[assembler]-[sample/group].rna.gff`: Contig positions for rRNA genes in gff version 3 format
+
+</details>
+
+## Gene prediction
+
+Protein-coding genes are predicted for the assemblies.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+* `Prodigal/`
+    * `[sample/group].gff`: Gene Coordinates in GFF format
+    * `[sample/group].faa`: The protein translation file consists of all the proteins from all the sequences in multiple FASTA format.
+    * `[sample/group].fna`: Nucleotide sequences of the predicted proteins using the DNA alphabet, not mRNA (so you will see 'T' in the output and not 'U').
+    * `[sample/group]_all.txt`: Starts file
+    
 
 </details>
 

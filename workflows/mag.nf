@@ -477,7 +477,7 @@ workflow MAG {
         ch_assemblies,
         modules['prodigal']['output_format']
     )
-    ch_software_versions = ch_software_versions.mix(PRODIGAL.out.version.first().ifEmpty(null))
+    ch_software_versions = ch_software_versions.mix(PRODIGAL.out.versions.first().ifEmpty(null))
 
     /*
     ================================================================================
