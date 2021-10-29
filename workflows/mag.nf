@@ -108,6 +108,7 @@ include { FASTQC as FASTQC_RAW     } from '../modules/nf-core/modules/fastqc/mai
 include { FASTQC as FASTQC_TRIMMED } from '../modules/nf-core/modules/fastqc/main'              addParams( options: modules['fastqc_trimmed']        )
 include { FASTP                    } from '../modules/nf-core/modules/fastp/main'               addParams( options: modules['fastp']                 )
 include { PRODIGAL                 } from '../modules/nf-core/modules/prodigal/main'            addParams( options: modules['prodigal']              )
+include { PROKKA                   } from '../modules/nf-core/modules/prokka/main'              addParams( options: modules['prokka']                )
 
 ////////////////////////////////////////////////////
 /* --  Create channel for reference databases  -- */
@@ -565,6 +566,19 @@ workflow MAG {
                 ch_quast_bins_summary.ifEmpty([]),
                 ch_gtdbtk_summary.ifEmpty([])
             )
+        }
+
+        /*
+         * Prokka: Genome annotation
+         */
+
+        if (!params.skip_prokka){
+            PROKKA (
+                METABAT2_BINNING.out.bins,
+                [],
+                []
+            )
+            ch_software_versions = ch_software_versions.mix(PROKKA.out.versions.first().ifEmpty(null))
         }
     }
 
