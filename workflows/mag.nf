@@ -571,10 +571,16 @@ workflow MAG {
         /*
          * Prokka: Genome annotation
          */
-
+        METABAT2_BINNING.out.bins.transpose().map { meta, bin ->
+                def meta_new = meta.clone()
+                meta_new.id  = bin.getBaseName().split('-')[1]
+                [ meta_new, bin ]
+            }
+            .set { ch_bins_for_prokka }
+        ch_bins_for_prokka.dump(tag:'prokka')
         if (!params.skip_prokka){
             PROKKA (
-                METABAT2_BINNING.out.bins,
+                ch_bins_for_prokka,
                 [],
                 []
             )
