@@ -472,7 +472,7 @@ workflow MAG {
                                     Predict proteins
     ================================================================================
     */
-    
+
     if (!params.skip_prodigal){
         PRODIGAL (
             ch_assemblies,
