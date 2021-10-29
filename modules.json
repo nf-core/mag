@@ -11,6 +11,9 @@
             },
             "prodigal": {
                 "git_sha": "49da8642876ae4d91128168cd0db4f1c858d7792"
+            },
+            "prokka": {
+                "git_sha": "49da8642876ae4d91128168cd0db4f1c858d7792"
             }
         }
     }
