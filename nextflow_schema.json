@@ -502,6 +502,18 @@
                 }
             }
         },
+        "gene_prediction_options": {
+            "title": "Gene prediction options",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "skip_prodigal": {
+                    "type": "boolean",
+                    "description": "Skip Prodigal gene prediction"
+                }
+            }
+        },
         "binning_options": {
             "title": "Binning options",
             "type": "object",
@@ -597,6 +609,9 @@
         },
         {
             "$ref": "#/definitions/assembly_options"
+        },
+        {
+            "$ref": "#/definitions/gene_prediction_options"
         },
         {
             "$ref": "#/definitions/binning_options"
