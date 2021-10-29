@@ -611,6 +611,9 @@
             "$ref": "#/definitions/assembly_options"
         },
         {
+            "$ref": "#/definitions/gene_prediction_options"
+        },
+        {
             "$ref": "#/definitions/binning_options"
         },
         {
