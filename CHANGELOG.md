@@ -7,8 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
--[#240](https://github.com/nf-core/mag/pull/240) - Add prodigal to predict protein-coding genes for assemblies
--[#241](https://github.com/nf-core/mag/pull/241) - Add parameter `--skip_prodigal`
+-[#240](https://github.com/nf-core/mag/pull/240) - Add prodigal to predict protein-coding genes for assemblies.
+-[#241](https://github.com/nf-core/mag/pull/241) - Add parameter `--skip_prodigal`.
+-[#243](https://github.com/nf-core/mag/pull/241) - Add pipeline preprint information.
 
 ### `Changed`
 
