@@ -3,14 +3,35 @@
     "homePage": "https://github.com/nf-core/mag",
     "repos": {
         "nf-core/modules": {
+            "bcftools/consensus": {
+                "git_sha": "3aacd46da2b221ed47aaa05c413a828538d2c2ae"
+            },
+            "bcftools/index": {
+                "git_sha": "3aacd46da2b221ed47aaa05c413a828538d2c2ae"
+            },
+            "bcftools/view": {
+                "git_sha": "3aacd46da2b221ed47aaa05c413a828538d2c2ae"
+            },
             "fastp": {
                 "git_sha": "e937c7950af70930d1f34bb961403d9d2aa81c7d"
             },
             "fastqc": {
                 "git_sha": "e937c7950af70930d1f34bb961403d9d2aa81c7d"
             },
+            "freebayes/germline": {
+                "git_sha": "3df4fe60851c19ec8d55ef3a978ae851eaccfd68"
+            },
             "prodigal": {
                 "git_sha": "49da8642876ae4d91128168cd0db4f1c858d7792"
+            },
+            "pydamage/analyze": {
+                "git_sha": "49da8642876ae4d91128168cd0db4f1c858d7792"
+            },
+            "pydamage/filter": {
+                "git_sha": "49da8642876ae4d91128168cd0db4f1c858d7792"
+            },
+            "samtools/faidx": {
+                "git_sha": "3aacd46da2b221ed47aaa05c413a828538d2c2ae"
             }
         }
     }
