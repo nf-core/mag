@@ -10,7 +10,7 @@
 
 ## Pipeline tools
 
-* [BCFtools]()
+* [BCFtools](https://doi.org/10.1093/gigascience/giab008)
     > Danecek, Petr, et al. "Twelve years of SAMtools and BCFtools." Gigascience 10.2 (2021): giab008. doi: 10.1093/gigascience/giab008 
 
 * [Bowtie2](https:/dx.doi.org/10.1038/nmeth.1923)
