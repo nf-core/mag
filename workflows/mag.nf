@@ -90,11 +90,11 @@ include { MULTIQC                                             } from '../modules
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { INPUT_CHECK         } from '../subworkflows/local/input_check'
-include { METABAT2_BINNING    } from '../subworkflows/local/metabat2_binning'      addParams( bowtie2_align_options: modules['bowtie2_assembly_align'], metabat2_options: modules['metabat2'], mag_depths_options: modules['mag_depths'], mag_depths_plot_options: modules['mag_depths_plot'], mag_depths_summary_options: modules['mag_depths_summary'])
-include { BUSCO_QC            } from '../subworkflows/local/busco_qc'              addParams( busco_db_options: modules['busco_db_preparation'], busco_options: modules['busco'], busco_save_download_options: modules['busco_save_download'], busco_plot_options: modules['busco_plot'], busco_summary_options: modules['busco_summary'])
-include { GTDBTK              } from '../subworkflows/local/gtdbtk'                addParams( gtdbtk_classify_options: modules['gtdbtk_classify'], gtdbtk_summary_options: modules['gtdbtk_summary'])
-
+include { INPUT_CHECK                    } from '../subworkflows/local/input_check'
+include { METABAT2_BINNING               } from '../subworkflows/local/metabat2_binning'      addParams( bowtie2_align_options: modules['bowtie2_assembly_align'], metabat2_options: modules['metabat2'], mag_depths_options: modules['mag_depths'], mag_depths_plot_options: modules['mag_depths_plot'], mag_depths_summary_options: modules['mag_depths_summary'])
+include { BUSCO_QC                       } from '../subworkflows/local/busco_qc'              addParams( busco_db_options: modules['busco_db_preparation'], busco_options: modules['busco'], busco_save_download_options: modules['busco_save_download'], busco_plot_options: modules['busco_plot'], busco_summary_options: modules['busco_summary'])
+include { GTDBTK                         } from '../subworkflows/local/gtdbtk'                addParams( gtdbtk_classify_options: modules['gtdbtk_classify'], gtdbtk_summary_options: modules['gtdbtk_summary'])
+include { ANCIENT_DNA_ASSEMLY_VALIDATION } from '../subworkflows/local/ancient_dna'           addParams( bcftools_consensus_options: modules['bcftools_consensus'], bcftools_view_options: modules['bcftools_view'], bcftools_index_options: modules['bcftools_index'], freebayes_options: modules['freebayes'], pydamage_analyze_options: modules['pydamage_analyze'], pydamage_filter_options: modules['pydamage_filter'], samtools_faidx_options: modules['samtools_faidx']) 
 /*
 ========================================================================================
     IMPORT NF-CORE MODULES/SUBWORKFLOWS
@@ -566,6 +566,18 @@ workflow MAG {
                 ch_gtdbtk_summary.ifEmpty([])
             )
         }
+    }
+
+    /*
+    ================================================================================
+                                    Ancient DNA
+    ================================================================================
+    */
+
+    if (params.ancient_dna){
+        METABAT2_BINNING.out.assembly_mappings.view()
+        ANCIENT_DNA_ASSEMLY_VALIDATION(METABAT2_BINNING.out.assembly_mappings)
+        ch_software_versions = ch_software_versions.mix(ANCIENT_DNA_ASSEMLY_VALIDATION.out.versions.ifEmpty(null))
     }
 
     //

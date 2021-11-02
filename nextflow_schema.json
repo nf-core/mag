@@ -422,33 +422,33 @@
                 },
                 "gtdbtk_min_completeness": {
                     "type": "number",
-                    "default": 50.0,
+                    "default": 50,
                     "description": "Min. bin completeness (in %) required to apply GTDB-tk classification.",
                     "help_text": "Completeness assessed with BUSCO analysis (100% - %Missing). Must be greater than 0 (min. 0.01) to avoid GTDB-tk errors. If too low, GTDB-tk classification results can be impaired due to not enough marker genes!",
                     "minimum": 0.01,
-                    "maximum": 100.0
+                    "maximum": 100
                 },
                 "gtdbtk_max_contamination": {
                     "type": "number",
-                    "default": 10.0,
+                    "default": 10,
                     "description": "Max. bin contamination (in %) allowed to apply GTDB-tk classification.",
                     "help_text": "Contamination approximated based on BUSCO analysis (%Complete and duplicated). If too high, GTDB-tk classification results can be impaired due to contamination!",
-                    "minimum": 0.0,
-                    "maximum": 100.0
+                    "minimum": 0,
+                    "maximum": 100
                 },
                 "gtdbtk_min_perc_aa": {
                     "type": "number",
                     "default": 10,
                     "description": "Min. fraction of AA (in %) in the MSA for bins to be kept.",
-                    "minimum": 0.0,
-                    "maximum": 100.0
+                    "minimum": 0,
+                    "maximum": 100
                 },
                 "gtdbtk_min_af": {
                     "type": "number",
                     "default": 0.65,
                     "description": "Min. alignment fraction to consider closest genome.",
-                    "minimum": 0.0,
-                    "maximum": 1.0
+                    "minimum": 0,
+                    "maximum": 1
                 },
                 "gtdbtk_pplacer_cpus": {
                     "type": "number",
@@ -547,6 +547,11 @@
                     "default": 100,
                     "description": "Maximal number of contigs that are not part of any bin but treated as individual genome.",
                     "help_text": "Contigs that do not fulfill the thresholds of `--min_length_unbinned_contigs` and `--max_unbinned_contigs` are pooled for downstream analysis and reporting, except contigs that also do not fullfill `--min_contig_size` are not considered further."
+                },
+                "bowtie2_mode": {
+                    "type": "string",
+                    "description": "Bowtie2 alignment mode",
+                    "help_text": "Bowtie2 alignment mode options, for example: `--very fast` , `--very-sensitive -N 1` , ..."
                 }
             }
         },
@@ -580,6 +585,33 @@
                     "help_text": "Useful to allow reproducibility, as BUSCO datasets are frequently updated and old versions do not always remain accessible."
                 }
             }
+        },
+        "ancient_dna_assembly": {
+            "title": "Ancient DNA assembly",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "ancient_dna": {
+                    "type": "boolean",
+                    "description": "Turn on/off the ancient DNA subworfklow"
+                },
+                "freebayes_ploidy": {
+                    "type": "integer",
+                    "default": 1,
+                    "description": "Ploidy for variant calling"
+                },
+                "bcftools_view_variant_quality": {
+                    "type": "integer",
+                    "default": 10,
+                    "description": "Variant calling quality threshold"
+                },
+                "pydamage_accuracy": {
+                    "type": "number",
+                    "default": 0.5,
+                    "description": "PyDamage accuracy threshold"
+                }
+            }
         }
     },
     "allOf": [
@@ -594,6 +626,9 @@
         },
         {
             "$ref": "#/definitions/max_job_request_options"
+        },
+        {
+            "$ref": "#/definitions/generic_options"
         },
         {
             "$ref": "#/definitions/reproducibility_options"
@@ -620,7 +655,7 @@
             "$ref": "#/definitions/bin_quality_check_options"
         },
         {
-            "$ref": "#/definitions/generic_options"
+            "$ref": "#/definitions/ancient_dna_assembly"
         }
     ]
 }

@@ -77,6 +77,7 @@ workflow METABAT2_BINNING {
 
     emit:
     bowtie2_assembly_multiqc = BOWTIE2_ASSEMBLY_ALIGN.out.log.map { assembly_meta, reads_meta, log -> if (assembly_meta.id == reads_meta.id) {return [ log ]} }
+    assembly_mappings        = ch_grouped_mappings  
     bowtie2_version          = BOWTIE2_ASSEMBLY_ALIGN.out.version
     bins                     = METABAT2.out.bins
     depths_summary           = MAG_DEPTHS_SUMMARY.out.summary

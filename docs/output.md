@@ -400,6 +400,38 @@ If the parameters `--cat_db_generate` and `--save_cat_db` are set, additionally 
 
 </details>
 
+## Ancient DNA (optional, only with `-profile ancient_dna`)
+
+### `PyDamage`
+
+[Pydamage](https://github.com/maxibor/pydamage), is tool to automate the process of ancient DNA damage identification and estimation
+
+<details markdown="1">
+<summary>Output files</summary>
+
+* `Ancient_DNA/pydamage/analyze`
+    * `[sample/group]/pydamage_results/pydamage_results.csv`: PyDamage raw result tabular file in `.csv` format. Format described here: [pydamage.readthedocs.io/en/latest/output.html](https://pydamage.readthedocs.io/en/latest/output.html) 
+* `Ancient_DNA/pydamage/filter`
+    * `[sample/group]/pydamage_results/pydamage_results.csv`: PyDamage filtered result tabular file in `.csv` format. Format described here: [pydamage.readthedocs.io/en/latest/output.html](https://pydamage.readthedocs.io/en/latest/output.html) 
+
+</details>
+
+### `variant_calling`
+
+Because of aDNA damage, *de novo* assemblers sometimes struggle to call a correct consensus on the contig sequence. To avoid this situation, the consensus is re-called with a variant calling software using the reads aligned back to the contigs
+
+<details markdown="1">
+<summary>Output files</summary>
+
+* `variant_calling/consensus`
+    * `[sample/group].fa`: contigs sequence with re-called consensus from read-to-contig alignment
+* `variant_calling/unfiltered`
+    * `[sample/group].vcf.gz`: raw variant calls of the reads aligned back to the contigs.
+* `variant_calling/filtered`
+    * `[sample/group].filtered.vcf.gz`: quality filtered variant calls of the reads aligned back to the contigs.
+
+</details>
+
 ### MultiQC
 
 <details markdown="1">

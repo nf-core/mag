@@ -148,6 +148,8 @@ If `-profile` is not specified, the pipeline will run locally and expect all sof
 * `test`, `test_hybrid`, `test_host_rm`, `test_hybrid_host_rm`, `test_busco_auto`
     * Profiles with a complete configuration for automated testing
     * Includes links to test data so needs no other parameters
+* `ancient_dna`
+    * A profile to run MAG with ancient DNA assembly specific parameters and the ancient DNA subworkflow.
 
 ### `-resume`
 

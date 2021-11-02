@@ -41,7 +41,7 @@ process FREEBAYES_GERMLINE {
     if (task.cpus > 1) {
         """
         freebayes-parallel \\
-            <(fasta_generate_regions.py ${fasta}.fai 10000) ${task.cpus} \\
+            <(fasta_generate_regions.py $fai 10000) ${task.cpus} \\
             -f $fasta \\
             $targets_file \\
             $samples_file \\
@@ -50,7 +50,7 @@ process FREEBAYES_GERMLINE {
             $options.args \\
             $input  > ${prefix}.vcf
 
-        gzip --no-name ${prefix}.vcf
+        bgzip --threads ${task.cpus} ${prefix}.vcf
 
         cat <<-END_VERSIONS > versions.yml
         ${getProcessName(task.process)}:
