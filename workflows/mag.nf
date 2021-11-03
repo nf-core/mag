@@ -574,7 +574,7 @@ workflow MAG {
         METABAT2_BINNING.out.bins.transpose()
             .map { meta, bin ->
                 def meta_new = meta.clone()
-                meta_new.id  = (bin.getBaseName() - ~/\b\w+\-/)
+                meta_new.id  = bin.getBaseName()
                 [ meta_new, bin ]
             }
             .set { ch_bins_for_prokka }
