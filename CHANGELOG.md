@@ -11,8 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#241](https://github.com/nf-core/mag/pull/241) - Add parameter `--skip_prodigal`.
 - [#244](https://github.com/nf-core/mag/pull/244) - Add pipeline preprint information.
 - [#247](https://github.com/nf-core/mag/pull/247) - Add ancient DNA subworkflow
+- [#245](https://github.com/nf-core/mag/pull/245) - Add Prokka to annotate binned genomes.
 
 ### `Changed`
+
+- [#249](https://github.com/nf-core/mag/pull/249) - Update workflow overview figure.
 
 ### `Fixed`
 

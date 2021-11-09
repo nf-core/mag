@@ -552,6 +552,10 @@
                     "type": "string",
                     "description": "Bowtie2 alignment mode",
                     "help_text": "Bowtie2 alignment mode options, for example: `--very fast` , `--very-sensitive -N 1` , ..."
+                },
+                "skip_prokka": {
+                    "type": "boolean",
+                    "description": "Skip Prokka genome annotation."
                 }
             }
         },
@@ -653,9 +657,12 @@
         },
         {
             "$ref": "#/definitions/bin_quality_check_options"
+<<<<<<< HEAD
         },
         {
             "$ref": "#/definitions/ancient_dna_assembly"
+=======
+>>>>>>> upstream/dev
         }
     ]
 }
