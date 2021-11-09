@@ -657,12 +657,9 @@
         },
         {
             "$ref": "#/definitions/bin_quality_check_options"
-<<<<<<< HEAD
         },
         {
             "$ref": "#/definitions/ancient_dna_assembly"
-=======
->>>>>>> upstream/dev
         }
     ]
 }
