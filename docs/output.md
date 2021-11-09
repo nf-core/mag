@@ -430,15 +430,15 @@ Whole genome annotation is the process of identifying features of interest in a 
 
 ### `PyDamage`
 
-[Pydamage](https://github.com/maxibor/pydamage), is tool to automate the process of ancient DNA damage identification and estimation
+[Pydamage](https://github.com/maxibor/pydamage), is a tool to automate the process of ancient DNA damage identification and estimation
 
 <details markdown="1">
 <summary>Output files</summary>
 
 * `Ancient_DNA/pydamage/analyze`
-    * `[sample/group]/pydamage_results/pydamage_results.csv`: PyDamage raw result tabular file in `.csv` format. Format described here: [pydamage.readthedocs.io/en/latest/output.html](https://pydamage.readthedocs.io/en/latest/output.html) 
+    * `[sample/group]/pydamage_results/pydamage_results.csv`: PyDamage raw result tabular file in `.csv` format. Format described here: [pydamage.readthedocs.io/en/0.62/output.html](https://pydamage.readthedocs.io/en/0.62/output.html) 
 * `Ancient_DNA/pydamage/filter`
-    * `[sample/group]/pydamage_results/pydamage_results.csv`: PyDamage filtered result tabular file in `.csv` format. Format described here: [pydamage.readthedocs.io/en/latest/output.html](https://pydamage.readthedocs.io/en/latest/output.html) 
+    * `[sample/group]/pydamage_results/pydamage_results.csv`: PyDamage filtered result tabular file in `.csv` format. Format described here: [pydamage.readthedocs.io/en/0.62/output.html](https://pydamage.readthedocs.io/en/0.62/output.html) 
 
 </details>
 

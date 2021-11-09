@@ -66,6 +66,10 @@ Please note the following requirements:
 
 Again, by default, the group information is only used to compute co-abundances for the binning step, but not for group-wise co-assembly (see the parameter docs for [`--coassemble_group`](https://nf-co.re/mag/parameters#coassemble_group) and [`--binning_map_mode`](https://nf-co.re/mag/parameters#binning_map_mode) for more information about how this group information can be used).
 
+### Ancient DNA mode
+
+Using the ancient DNA profile `-profile ancient_dna` (see [`profile` section](https://nf-co.re/mag/2.1.0/usage#profile)), you can perform ancient DNA *de novo* assembly validation.
+
 ## Running the pipeline
 
 The typical command for running the pipeline is as follows:
@@ -149,7 +153,7 @@ If `-profile` is not specified, the pipeline will run locally and expect all sof
     * Profiles with a complete configuration for automated testing
     * Includes links to test data so needs no other parameters
 * `ancient_dna`
-    * A profile to run MAG with ancient DNA assembly specific parameters and the ancient DNA subworkflow.
+    * A profile to run nf-core/mag with ancient DNA assembly specific parameters and the ancient DNA subworkflow.
 
 ### `-resume`
 

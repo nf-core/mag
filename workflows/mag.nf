@@ -596,7 +596,6 @@ workflow MAG {
     */
 
     if (params.ancient_dna){
-        METABAT2_BINNING.out.assembly_mappings.view()
         ANCIENT_DNA_ASSEMLY_VALIDATION(METABAT2_BINNING.out.assembly_mappings)
         ch_software_versions = ch_software_versions.mix(ANCIENT_DNA_ASSEMLY_VALIDATION.out.versions.ifEmpty(null))
     }
