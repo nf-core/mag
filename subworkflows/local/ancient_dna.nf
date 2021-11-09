@@ -23,12 +23,12 @@ workflow ANCIENT_DNA_ASSEMLY_VALIDATION {
         FAIDX(input.map { item -> [ item[1] ] })
         FREEBAYES (input.map { item -> [item[0], item[2], item[3], [], []] }, input.map { item -> [ item[1] ] }, FAIDX.out.fai, [], [], [], [] )
         BCFTOOLS_INDEX_PRE(FREEBAYES.out.vcf)
-        BCFTOOLS_VIEW(FREEBAYES.out.vcf.join(BCFTOOLS_INDEX_PRE.out.tbi), [], [], []) 
+        BCFTOOLS_VIEW(FREEBAYES.out.vcf.join(BCFTOOLS_INDEX_PRE.out.tbi), [], [], [])
         BCFTOOLS_INDEX_POST(BCFTOOLS_VIEW.out.vcf)
         BCFTOOLS_CONSENSUS(BCFTOOLS_VIEW.out.vcf
-                               .join(BCFTOOLS_INDEX_POST.out.tbi)
-                               .join(input.map { item -> [ item[0], item[1] ] }))
-        
+                                .join(BCFTOOLS_INDEX_POST.out.tbi)
+                                .join(input.map { item -> [ item[0], item[1] ] }))
+
         ch_versions = Channel.empty()
         ch_versions = PYDAMAGE_ANALYZE.out.versions.first()
         ch_versions = ch_versions.mix(FAIDX.out.versions.first())
