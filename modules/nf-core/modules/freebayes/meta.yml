@@ -1,11 +1,14 @@
-name: freebayes_germline
+name: freebayes
 description: A haplotype-based variant detector
 keywords:
   - variant caller
   - SNP
   - genotyping
-  - variant calling
+  - somatic variant calling
+  - germline variant calling
+  - bacterial variant calling
   - bayesian
+
 tools:
   - freebayes:
       description: Bayesian haplotype-based polymorphism discovery and genotyping
@@ -73,6 +76,8 @@ output:
       type: file
       description: Compressed VCF file
       pattern: "*.vcf.gz"
+
 authors:
   - "@maxibor"
   - "@FriederikeHanssen"
+  - "@maxulysse"

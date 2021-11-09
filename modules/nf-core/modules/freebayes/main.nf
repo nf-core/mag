@@ -4,7 +4,7 @@ include { initOptions; saveFiles; getProcessName; getSoftwareName } from './func
 params.options = [:]
 options        = initOptions(params.options)
 
-process FREEBAYES_GERMLINE {
+process FREEBAYES {
     tag "$meta.id"
     label 'process_low'
     publishDir "${params.outdir}",
@@ -19,7 +19,7 @@ process FREEBAYES_GERMLINE {
     }
 
     input:
-    tuple val(meta), path(input), path(input_index)
+    tuple val(meta), path(input_1), path(input_1_index), path(input_2), path(input_2_index)
     path fasta
     path fai
     path targets
@@ -33,6 +33,7 @@ process FREEBAYES_GERMLINE {
 
     script:
     def prefix           = options.suffix ? "${meta.id}${options.suffix}"  : "${meta.id}"
+    def input            = input_2        ? "${input_1} ${input_2}"        : "${input_1}"
     def targets_file     = targets        ? "--target ${targets}"          : ""
     def samples_file     = samples        ? "--samples ${samples}"         : ""
     def populations_file = populations    ? "--populations ${populations}" : ""
@@ -41,16 +42,16 @@ process FREEBAYES_GERMLINE {
     if (task.cpus > 1) {
         """
         freebayes-parallel \\
-            <(fasta_generate_regions.py $fai 10000) ${task.cpus} \\
+            <(fasta_generate_regions.py ${fasta}.fai 10000) ${task.cpus} \\
             -f $fasta \\
             $targets_file \\
             $samples_file \\
             $populations_file \\
             $cnv_file \\
             $options.args \\
-            $input  > ${prefix}.vcf
+            $input > ${prefix}.vcf
 
-        bgzip --threads ${task.cpus} ${prefix}.vcf
+        gzip --no-name ${prefix}.vcf
 
         cat <<-END_VERSIONS > versions.yml
         ${getProcessName(task.process)}:
