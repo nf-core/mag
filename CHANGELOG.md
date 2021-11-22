@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
+- [#251](https://github.com/nf-core/mag/issus/251) - Update gtdbtk conda channel.
 - [#236](https://github.com/nf-core/mag/pull/236) - Fix large assemblies (> 4 billion nucleotides in length).
 
 ## v2.1.0 - 2021/07/29
