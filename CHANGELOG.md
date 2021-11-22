@@ -15,12 +15,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Changed`
 
 - [#249](https://github.com/nf-core/mag/pull/249) - Update workflow overview figure.
+- [#258](https://github.com/nf-core/mag/pull/258) - Updated MultiQC 1.9 to 1.11.
 
 ### `Fixed`
 
 - [#251](https://github.com/nf-core/mag/issus/251) - Update gtdbtk conda channel.
 - [#236](https://github.com/nf-core/mag/pull/236) - Fix large assemblies (> 4 billion nucleotides in length).
 - [#253](https://github.com/nf-core/mag/issues/253) - Fix MetaBAT2 error with nextflow version 21.10.x (21.04.03 is the latest functional version for nf-core/mag 2.1.0).
+- [#258](https://github.com/nf-core/mag/pull/258) - FastP results are now in MultiQC.
 
 ## v2.1.0 - 2021/07/29
 
