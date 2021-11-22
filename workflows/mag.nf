@@ -186,7 +186,7 @@ if (!params.keep_lambda) {
 gtdb = params.skip_busco ? false : params.gtdb
 if (gtdb) {
     Channel
-        .value(file( gtdb ))
+        .value(file( "${gtdb}" ))
         .set { ch_gtdb }
 } else {
     ch_gtdb = Channel.empty()
