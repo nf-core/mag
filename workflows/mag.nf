@@ -619,6 +619,7 @@ workflow MAG {
         ch_multiqc_files.collect(),
         ch_multiqc_custom_config.collect().ifEmpty([]),
         FASTQC_RAW.out.zip.collect{it[1]}.ifEmpty([]),
+        FASTP.out.json.collect{it[1]}.ifEmpty([]),
         FASTQC_TRIMMED.out.zip.collect{it[1]}.ifEmpty([]),
         ch_bowtie2_removal_host_multiqc.collect{it[1]}.ifEmpty([]),
         ch_quast_multiqc.collect().ifEmpty([]),
