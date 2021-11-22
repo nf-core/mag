@@ -16,7 +16,13 @@ include { MAG_DEPTHS                } from '../../modules/local/mag_depths'     
 include { MAG_DEPTHS_PLOT           } from '../../modules/local/mag_depths_plot'          addParams( options: params.mag_depths_plot_options    )
 include { MAG_DEPTHS_SUMMARY        } from '../../modules/local/mag_depths_summary'       addParams( options: params.mag_depths_summary_options )
 
-include { getColNo } from '../../modules/local/functions'
+/*
+ * Get number of columns in file (first line)
+ */
+def getColNo(filename) {
+    lines  = file(filename).readLines()
+    return lines[0].split('\t').size()
+}
 
 workflow METABAT2_BINNING {
     take:
