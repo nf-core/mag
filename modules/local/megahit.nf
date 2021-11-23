@@ -11,11 +11,11 @@ process MEGAHIT {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['id']) }
 
-    conda (params.enable_conda ? "bioconda::megahit=1.2.7" : null)
+    conda (params.enable_conda ? "bioconda::megahit=1.2.9" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/megahit:1.2.7--h8b12597_0"
+        container "https://depot.galaxyproject.org/singularity/megahit:1.2.9--h2e03b76_1"
     } else {
-        container "quay.io/biocontainers/megahit:1.2.7--h8b12597_0"
+        container "quay.io/biocontainers/megahit:1.2.9--h2e03b76_1"
     }
 
     input:
