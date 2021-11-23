@@ -19,9 +19,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
-- [#251](https://github.com/nf-core/mag/issus/251) - Update gtdbtk conda channel.
+- [#256](https://github.com/nf-core/mag/pull/256) - Fix `--skip_busco`.
 - [#236](https://github.com/nf-core/mag/pull/236) - Fix large assemblies (> 4 billion nucleotides in length).
-- [#253](https://github.com/nf-core/mag/issues/253) - Fix MetaBAT2 error with nextflow version 21.10.x (21.04.03 is the latest functional version for nf-core/mag 2.1.0).
+- [#254](https://github.com/nf-core/mag/pull/254) - Fix MetaBAT2 error with nextflow version 21.10.x (21.04.03 is the latest functional version for nf-core/mag 2.1.0).
+- [#255](https://github.com/nf-core/mag/pull/255) - Update gtdbtk conda channel.
 - [#258](https://github.com/nf-core/mag/pull/258) - FastP results are now in MultiQC.
 
 ## v2.1.0 - 2021/07/29

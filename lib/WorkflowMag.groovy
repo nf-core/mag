@@ -104,8 +104,7 @@ class WorkflowMag {
         }
 
         if (params.skip_busco && params.gtdb) {
-            log.error "Invalid combination of parameters --skip_busco and --gtdb are specififed! GTDB-tk bin classification requires bin filtering based on BUSCO QC results to avoid GTDB-tk errors."
-            System.exit(1)
+            log.warn "--skip_busco and --gtdb are specified! GTDB-tk will be omitted because GTDB-tk bin classification requires bin filtering based on BUSCO QC results to avoid GTDB-tk errors."
         }
 
         // Check if CAT parameters are valid

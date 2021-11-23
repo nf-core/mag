@@ -183,9 +183,10 @@ if (!params.keep_lambda) {
         .set { ch_nanolyse_db }
 }
 
-if (params.gtdb) {
+gtdb = params.skip_busco ? false : params.gtdb
+if (gtdb) {
     Channel
-        .value(file( "${params.gtdb}" ))
+        .value(file( "${gtdb}" ))
         .set { ch_gtdb }
 } else {
     ch_gtdb = Channel.empty()
@@ -549,7 +550,7 @@ workflow MAG {
          * GTDB-tk: taxonomic classifications using GTDB reference
          */
         ch_gtdbtk_summary = Channel.empty()
-        if ( params.gtdb ){
+        if ( gtdb ){
             GTDBTK (
                 METABAT2_BINNING.out.bins,
                 ch_busco_summary,
@@ -559,7 +560,7 @@ workflow MAG {
             ch_gtdbtk_summary = GTDBTK.out.summary
         }
 
-        if (!params.skip_busco || !params.skip_quast || params.gtdb){
+        if (!params.skip_busco || !params.skip_quast || gtdb){
             BIN_SUMMARY (
                 METABAT2_BINNING.out.depths_summary,
                 ch_busco_summary.ifEmpty([]),
