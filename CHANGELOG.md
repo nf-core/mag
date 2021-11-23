@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v2.2.0dev - [date]
+## v2.1.1 - 2021/11/23
 
 ### `Added`
 
@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#249](https://github.com/nf-core/mag/pull/249) - Update workflow overview figure.
 - [#258](https://github.com/nf-core/mag/pull/258) - Updated MultiQC 1.9 to 1.11.
+- [#260](https://github.com/nf-core/mag/pull/260) - Updated SPAdes 3.13.1 -> 3.15.3, MEGAHIT 1.2.7 -> 1.2.7
 
 ### `Fixed`
 
