@@ -46,7 +46,7 @@ class WorkflowMag {
 
         // Check if parameters for host contamination removal are valid
         if ( params.host_fasta && params.host_genome) {
-            log.error "Both host fasta reference and iGenomes genome are specififed to remove host contamination! Invalid combination, please specify either --host_fasta or --host_genome."
+            log.error "Both host fasta reference and iGenomes genome are specified to remove host contamination! Invalid combination, please specify either --host_fasta or --host_genome."
             System.exit(1)
         }
         if ( hybrid && (params.host_fasta || params.host_genome) ) {
@@ -82,24 +82,24 @@ class WorkflowMag {
         // Check if BUSCO parameters combinations are valid
         if (params.skip_busco){
             if (params.busco_reference) {
-                log.error "Both --skip_busco and --busco_reference are specififed! Invalid combination, please specify either --skip_busco or --busco_reference."
+                log.error "Both --skip_busco and --busco_reference are specified! Invalid combination, please specify either --skip_busco or --busco_reference."
                 System.exit(1)
             }
             if (params.busco_download_path) {
-                log.error "Both --skip_busco and --busco_download_path are specififed! Invalid combination, please specify either --skip_busco or --busco_download_path."
+                log.error "Both --skip_busco and --busco_download_path are specified! Invalid combination, please specify either --skip_busco or --busco_download_path."
                 System.exit(1)
             }
             if (params.busco_auto_lineage_prok) {
-                log.error "Both --skip_busco and --busco_auto_lineage_prok are specififed! Invalid combination, please specify either --skip_busco or --busco_auto_lineage_prok."
+                log.error "Both --skip_busco and --busco_auto_lineage_prok are specified! Invalid combination, please specify either --skip_busco or --busco_auto_lineage_prok."
                 System.exit(1)
             }
         }
         if (params.busco_reference && params.busco_download_path) {
-            log.error "Both --busco_reference and --busco_download_path are specififed! Invalid combination, please specify either --busco_reference or --busco_download_path."
+            log.error "Both --busco_reference and --busco_download_path are specified! Invalid combination, please specify either --busco_reference or --busco_download_path."
             System.exit(1)
         }
         if (params.busco_auto_lineage_prok && params.busco_reference) {
-            log.error "Both --busco_auto_lineage_prok and --busco_reference are specififed! Invalid combination, please specify either --busco_auto_lineage_prok or --busco_reference."
+            log.error "Both --busco_auto_lineage_prok and --busco_reference are specified! Invalid combination, please specify either --busco_auto_lineage_prok or --busco_reference."
             System.exit(1)
         }
 
@@ -109,7 +109,7 @@ class WorkflowMag {
 
         // Check if CAT parameters are valid
         if (params.cat_db && params.cat_db_generate) {
-            log.error "Invalid combination of parameters --cat_db and --cat_db_generate is specififed! Please specify either --cat_db or --cat_db_generate."
+            log.error "Invalid combination of parameters --cat_db and --cat_db_generate is specified! Please specify either --cat_db or --cat_db_generate."
             System.exit(1)
         }
         if (params.save_cat_db && !params.cat_db_generate) {
