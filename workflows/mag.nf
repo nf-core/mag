@@ -494,8 +494,6 @@ workflow MAG {
     ch_busco_summary            = Channel.empty()
     ch_busco_multiqc            = Channel.empty()
 
-    ch_assemblies.dump(tag: "input_into_metabat2")
-
     if (!params.skip_binning){
 
         BINNING_PREPARATION (
@@ -510,6 +508,7 @@ workflow MAG {
         ch_bowtie2_assembly_multiqc = BINNING_PREPARATION.out.bowtie2_assembly_multiqc
         ch_software_versions = ch_software_versions.mix(BINNING_PREPARATION.out.bowtie2_version.first().ifEmpty(null))
         ch_software_versions = ch_software_versions.mix(METABAT2_BINNING.out.metabat2_version.first().ifEmpty(null))
+        ch_software_versions = ch_software_versions.mix(METABAT2_BINNING.out.metabat2_jgisummarizebamcontigdepths_version.first().ifEmpty(null))
 
         if (!params.skip_busco){
             /*
