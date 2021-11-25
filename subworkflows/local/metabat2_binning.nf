@@ -10,7 +10,7 @@ params.mag_depths_summary_options                   = [:]
 
 include { METABAT2                  } from '../../modules/local/metabat2'                 addParams( options: params.metabat2_options           ) // local
 
-include { METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS  } from '../../modules/nf-core/modules/metabat2/jgisummarizebamcontigdepths/main' addParams( options: params.metabat2_jgisummarizebamcontigdepths_options         )
+include { METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS  } from '../../modules/nf-core/modules/metabat2/jgisummarizebamcontigdepths/main' addParams( options: [ suffix: { meta.assembler } ] )
 include { MAG_DEPTHS                            } from '../../modules/local/mag_depths'               addParams( options: params.mag_depths_options         )
 include { MAG_DEPTHS_PLOT                       } from '../../modules/local/mag_depths_plot'          addParams( options: params.mag_depths_plot_options    )
 include { MAG_DEPTHS_SUMMARY                    } from '../../modules/local/mag_depths_summary'       addParams( options: params.mag_depths_summary_options )
