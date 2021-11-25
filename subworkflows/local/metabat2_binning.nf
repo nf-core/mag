@@ -7,10 +7,12 @@ params.mag_depths_options         = [:]
 params.mag_depths_plot_options    = [:]
 params.mag_depths_summary_options = [:]
 
-include { METABAT2                  } from '../../modules/local/metabat2'                 addParams( options: params.metabat2_options           )
-include { MAG_DEPTHS                } from '../../modules/local/mag_depths'               addParams( options: params.mag_depths_options         )
-include { MAG_DEPTHS_PLOT           } from '../../modules/local/mag_depths_plot'          addParams( options: params.mag_depths_plot_options    )
-include { MAG_DEPTHS_SUMMARY        } from '../../modules/local/mag_depths_summary'       addParams( options: params.mag_depths_summary_options )
+include { METABAT2                  } from '../../modules/local/metabat2'                 addParams( options: params.metabat2_options           ) // local
+
+include { METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS  } from '../../modules/nf-core/modules/metabat2/jgisummarizebamcontigdepths/main'
+include { MAG_DEPTHS                            } from '../../modules/local/mag_depths'               addParams( options: params.mag_depths_options         )
+include { MAG_DEPTHS_PLOT                       } from '../../modules/local/mag_depths_plot'          addParams( options: params.mag_depths_plot_options    )
+include { MAG_DEPTHS_SUMMARY                    } from '../../modules/local/mag_depths_summary'       addParams( options: params.mag_depths_summary_options )
 
 /*
  * Get number of columns in file (first line)
@@ -26,7 +28,20 @@ workflow METABAT2_BINNING {
     reads                // channel: [ val(meta), [ reads ] ]
 
     main:
-    METABAT2 ( assemblies )
+
+    ch_summarizedepth_input = assemblies
+                                .map { meta, assembly, bams, bais -> [ meta, bams, bais ] }
+
+    METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS (
+        ch_summarizedepth_input
+    )
+
+    // TODO re-merge with FASTA assemblies
+    ch_metabat2_input = assemblies
+        .join(METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS.out.depth)
+        .dump(tag: "METABAT2_BINNING:ch_metabat2_input")
+
+    METABAT2 ( ch_metabat2_input )
 
     // Compute bin depths for different samples (according to `binning_map_mode`)
     MAG_DEPTHS (
@@ -50,7 +65,8 @@ workflow METABAT2_BINNING {
     MAG_DEPTHS_SUMMARY ( MAG_DEPTHS.out.depths.map{it[1]}.collect() )
 
     emit:
-    bins                     = METABAT2.out.bins
-    depths_summary           = MAG_DEPTHS_SUMMARY.out.summary
-    metabat2_version         = METABAT2.out.version
+    bins                                         = METABAT2.out.bins
+    depths_summary                               = MAG_DEPTHS_SUMMARY.out.summary
+    metabat2_version                             = METABAT2.out.version
+    metabat2_jgisummarizebamcontigdepths_version = METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS.out.versions
 }
