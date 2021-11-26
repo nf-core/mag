@@ -4,6 +4,7 @@
 [![GitHub Actions Linting Status](https://github.com/nf-core/mag/workflows/nf-core%20linting/badge.svg)](https://github.com/nf-core/mag/actions?query=workflow%3A%22nf-core+linting%22)
 [![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/mag/results)
 [![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.3589527-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.3589527)
+[![Cite Preprint](https://img.shields.io/badge/Cite%20Us!-Cite%20Preprint-orange)](https://doi.org/10.1101/2021.08.29.458094)
 
 [![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A521.04.0-23aa62.svg?labelColor=000000)](https://www.nextflow.io/)
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
@@ -19,7 +20,7 @@
 **nf-core/mag** is a bioinformatics best-practise analysis pipeline for assembly, binning and annotation of metagenomes.
 
 <p align="center">
-    <img src="docs/images/mag_workflow.png" alt="nf-core/mag workflow overview" width="60%">
+    <img src="docs/images/mag_workflow.png" alt="nf-core/mag workflow overview" width="90%">
 </p>
 
 The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It uses Docker/Singularity containers making installation trivial and results highly reproducible. The [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) implementation of this pipeline uses one container per process which makes it much easier to maintain and update software dependencies. Where possible, these processes have been submitted to and installed from [nf-core/modules](https://github.com/nf-core/modules) in order to make them available to all nf-core pipelines, and to everyone within the Nextflow community!
@@ -33,6 +34,7 @@ The pipeline then:
 
 * assigns taxonomy to reads using [Centrifuge](https://ccb.jhu.edu/software/centrifuge/) and/or [Kraken2](https://github.com/DerrickWood/kraken2/wiki)
 * performs assembly using [MEGAHIT](https://github.com/voutcn/megahit) and [SPAdes](http://cab.spbu.ru/software/spades/), and checks their quality using [Quast](http://quast.sourceforge.net/quast)
+* predicts protein-coding genes for the assemblies using [Prodigal](https://github.com/hyattpd/Prodigal)
 * performs metagenome binning using [MetaBAT2](https://bitbucket.org/berkeleylab/metabat/src/master/), and checks the quality of the genome bins using [Busco](https://busco.ezlab.org/)
 * assigns taxonomy to bins using [GTDB-Tk](https://github.com/Ecogenomics/GTDBTk) and/or [CAT](https://github.com/dutilh/CAT)
 
@@ -87,6 +89,7 @@ Long read processing was inspired by [caspargross/HybridAssembly](https://github
 We thank the following people for their extensive assistance in the development of this pipeline:
 
 * [Alexander Peltzer](https://github.com/apeltzer)
+* [Antonia Schuster](https://github.com/antoniaschuster)
 * [Phil Ewels](https://github.com/ewels)
 * [Gisela Gabernet](https://github.com/ggabernet)
 * [Harshil Patel](https://github.com/drpatelh)
@@ -103,7 +106,15 @@ For further information or help, don't hesitate to get in touch on the [Slack `#
 
 ## Citations
 
-If you use nf-core/mag for your analysis, please cite it using the following doi: [10.5281/zenodo.3589527](https://doi.org/10.5281/zenodo.3589527)
+If you use nf-core/mag for your analysis, please cite the preprint as follows:
+
+> **nf-core/mag: a best-practice pipeline for metagenome hybrid assembly and binning**
+>
+> Sabrina Krakau, Daniel Straub, Hadrien Gourlé, Gisela Gabernet, Sven Nahnsen.
+>
+> bioRxiv 2021.08.29.458094. doi: [10.1101/2021.08.29.458094](https://doi.org/10.1101/2021.08.29.458094).
+
+additionally you can cite the pipeline directly with the following doi: [10.5281/zenodo.3589527](https://doi.org/10.5281/zenodo.3589527)
 
 An extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.
 

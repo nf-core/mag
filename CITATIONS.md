@@ -55,6 +55,12 @@
 
 * [Porechop](https://github.com/rrwick/Porechop)
 
+* [Prodigal](https://pubmed.ncbi.nlm.nih.gov/20211023/)
+    > Hyatt D, Chen GL, Locascio PF, Land ML, Larimer FW, Hauser LJ. Prodigal: prokaryotic gene recognition and translation initiation site identification. BMC Bioinformatics. 2010 Mar 8;11:119. doi: 10.1186/1471-2105-11-119. PMID: 20211023; PMCID: PMC2848648.
+
+* [Prokka](https://pubmed.ncbi.nlm.nih.gov/24642063/)
+    > Seemann T. Prokka: rapid prokaryotic genome annotation. Bioinformatics. 2014 Jul 15;30(14):2068-9. doi: 10.1093/bioinformatics/btu153. Epub 2014 Mar 18. PMID: 24642063.
+
 * [SAMtools](https://doi.org/10.1093/bioinformatics/btp352)
     > Li, H., Handsaker, B., Wysoker, A., Fennell, T., Ruan, J., Homer, N., … 1000 Genome Project Data Processing Subgroup. (2009). The Sequence Alignment/Map format and SAMtools. Bioinformatics , 25(16), 2078–2079. doi: 10.1093/bioinformatics/btp352.
 

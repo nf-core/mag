@@ -13,8 +13,10 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 * [Quality control](#quality-control) of input reads - trimming and contaminant removal
 * [Taxonomic classification of trimmed reads](#taxonomic-classification-of-trimmed-reads)
 * [Assembly](#assembly) of trimmed reads
+* [Protein-coding gene prediction](#gene-prediction) of assemblies
 * [Binning](#binning) of assembled contigs
 * [Taxonomic classification of binned genomes](#taxonomic-classification-of-binned-genomes)
+* [Genome annotation of binned genomes](#genome-annotation-of-binned-genomes)
 * [Additional summary for binned genomes](#additional-summary-for-binned-genomes)
 * [MultiQC](#multiqc) - aggregate report, describing results of the whole pipeline
 * [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
@@ -214,6 +216,21 @@ SPAdesHybrid is a part of the [SPAdes](http://cab.spbu.ru/software/spades/) soft
 
 </details>
 
+## Gene prediction
+
+Protein-coding genes are predicted for each assembly.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+* `Prodigal/`
+    * `[sample/group].gff`: Gene Coordinates in GFF format
+    * `[sample/group].faa`: The protein translation file consists of all the proteins from all the sequences in multiple FASTA format.
+    * `[sample/group].fna`: Nucleotide sequences of the predicted proteins using the DNA alphabet, not mRNA (so you will see 'T' in the output and not 'U').
+    * `[sample/group]_all.txt`: Information about start positions of genes.
+
+</details>
+
 ## Binning
 
 ### Contig sequencing depth
@@ -372,6 +389,31 @@ If the parameters `--cat_db_generate` and `--save_cat_db` are set, additionally 
     * `gtdbtk.[assembler]-[sample/group].*.log`: Log files.
     * `gtdbtk.[assembler]-[sample/group].failed_genomes.tsv`: A list of genomes for which the GTDB-Tk analysis failed, e.g. because Prodigal could not detect any genes.
 * `Taxonomy/GTDB-Tk/gtdbtk_summary.tsv`: A summary table of the GTDB-Tk classification results for all bins, also containing bins which were discarded based on the BUSCO QC, which were filtered out by GTDB-Tk ((listed in `*.filtered.tsv`) or for which the analysis failed (listed in `*.failed_genomes.tsv`).
+
+</details>
+
+## Genome annotation of binned genomes
+
+### Prokka
+
+Whole genome annotation is the process of identifying features of interest in a set of genomic DNA sequences, and labelling them with useful information. [Prokka](https://github.com/tseemann/prokka) is a software tool to annotate bacterial, archaeal and viral genomes quickly and produce standards-compliant output files.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+* `Prokka/[assembler]/[bin]/`
+    * `[bin].gff`: annotation in GFF3 format, containing both sequences and annotations
+    * `[bin].gbk`: annotation in GenBank format, containing both sequences and annotations
+    * `[bin].fna`: nucleotide FASTA file of the input contig sequences
+    * `[bin].faa`: protein FASTA file of the translated CDS sequences
+    * `[bin].ffn`: nucleotide FASTA file of all the prediction transcripts (CDS, rRNA, tRNA, tmRNA, misc_RNA)
+    * `[bin].sqn`: an ASN1 format "Sequin" file for submission to Genbank
+    * `[bin].fsa`: nucleotide FASTA file of the input contig sequences, used by "tbl2asn" to create the .sqn file
+    * `[bin].tbl`: feature Table file, used by "tbl2asn" to create the .sqn file
+    * `[bin].err`: unacceptable annotations - the NCBI discrepancy report.
+    * `[bin].log`: contains all the output that Prokka produced during its run
+    * `[bin].txt`: statistics relating to the annotated features found
+    * `[bin].tsv`: tab-separated file of all features (locus_tag, ftype, len_bp, gene, EC_number, COG, product)
 
 </details>
 

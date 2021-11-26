@@ -8,6 +8,12 @@
             },
             "fastqc": {
                 "git_sha": "e937c7950af70930d1f34bb961403d9d2aa81c7d"
+            },
+            "prodigal": {
+                "git_sha": "49da8642876ae4d91128168cd0db4f1c858d7792"
+            },
+            "prokka": {
+                "git_sha": "49da8642876ae4d91128168cd0db4f1c858d7792"
             }
         }
     }

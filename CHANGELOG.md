@@ -3,7 +3,30 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v2.1.0 - 2021/07/28
+## v2.1.1 - 2021/11/25
+
+### `Added`
+
+- [#240](https://github.com/nf-core/mag/pull/240) - Add prodigal to predict protein-coding genes for assemblies.
+- [#241](https://github.com/nf-core/mag/pull/241) - Add parameter `--skip_prodigal`.
+- [#244](https://github.com/nf-core/mag/pull/244) - Add pipeline preprint information.
+- [#245](https://github.com/nf-core/mag/pull/245) - Add Prokka to annotate binned genomes.
+
+### `Changed`
+
+- [#249](https://github.com/nf-core/mag/pull/249) - Update workflow overview figure.
+- [#258](https://github.com/nf-core/mag/pull/258) - Updated MultiQC 1.9 to 1.11.
+- [#260](https://github.com/nf-core/mag/pull/260) - Updated SPAdes 3.13.1 -> 3.15.3, MEGAHIT 1.2.7 -> 1.2.7
+
+### `Fixed`
+
+- [#256](https://github.com/nf-core/mag/pull/256) - Fix `--skip_busco`.
+- [#236](https://github.com/nf-core/mag/pull/236) - Fix large assemblies (> 4 billion nucleotides in length).
+- [#254](https://github.com/nf-core/mag/pull/254) - Fix MetaBAT2 error with nextflow version 21.10.x (21.04.03 is the latest functional version for nf-core/mag 2.1.0).
+- [#255](https://github.com/nf-core/mag/pull/255) - Update gtdbtk conda channel.
+- [#258](https://github.com/nf-core/mag/pull/258) - FastP results are now in MultiQC.
+
+## v2.1.0 - 2021/07/29
 
 ### `Added`
 
