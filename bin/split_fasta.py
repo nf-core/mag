@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
-#USAGE: ./combine_tables.py <*.unbinned.fa> <length threshold> <maximal number of sequences> <length threshold to retain contigs>
+#USAGE: ./split_fasta.py <*.unbinned.fa(.gz)> <min_length_unbinned_contigs> <max_unbinned_contigs> <min_contig_size>
 
 import pandas as pd
+import gzip
 from sys import argv
 from Bio import SeqIO
 from Bio.Seq import Seq
@@ -24,23 +25,40 @@ df_above_threshold = pd.DataFrame(columns=['id','seq','length'])
 pooled             = []
 remaining          = []
 
-# Read file
-with open(input_file) as f:
-    fasta_sequences = SeqIO.parse(f,'fasta')
+if input_file.endswith('.gz'):
+    with gzip.open(input_file, 'rt') as f:
+        fasta_sequences = SeqIO.parse(f,'fasta')
 
-    for fasta in fasta_sequences:
-        name, sequence = fasta.id, str(fasta.seq)
-        length = len(sequence)
+        for fasta in fasta_sequences:
+            name, sequence = fasta.id, str(fasta.seq)
+            length = len(sequence)
 
-        # store each sequence above threshold together with its length into df
-        if length >= length_threshold:
-            df_above_threshold = df_above_threshold.append({"id":name, "seq":sequence, "length":length}, ignore_index = True)
-        # contigs to retain and pool
-        elif length >= min_length_to_retain_contig:
-            pooled.append(SeqRecord(Seq(sequence, generic_dna), id = name))
-        # remaining sequences
-        else:
-            remaining.append(SeqRecord(Seq(sequence, generic_dna), id = name))
+            # store each sequence above threshold together with its length into df
+            if length >= length_threshold:
+                df_above_threshold = df_above_threshold.append({"id":name, "seq":sequence, "length":length}, ignore_index = True)
+            # contigs to retain and pool
+            elif length >= min_length_to_retain_contig:
+                pooled.append(SeqRecord(Seq(sequence, generic_dna), id = name))
+            # remaining sequences
+            else:
+                remaining.append(SeqRecord(Seq(sequence, generic_dna), id = name))
+else:
+    with open(input_file) as f:
+        fasta_sequences = SeqIO.parse(f,'fasta')
+
+        for fasta in fasta_sequences:
+            name, sequence = fasta.id, str(fasta.seq)
+            length = len(sequence)
+
+            # store each sequence above threshold together with its length into df
+            if length >= length_threshold:
+                df_above_threshold = df_above_threshold.append({"id":name, "seq":sequence, "length":length}, ignore_index = True)
+            # contigs to retain and pool
+            elif length >= min_length_to_retain_contig:
+                pooled.append(SeqRecord(Seq(sequence, generic_dna), id = name))
+            # remaining sequences
+            else:
+                remaining.append(SeqRecord(Seq(sequence, generic_dna), id = name))
 
 # Sort sequences above threshold by length
 df_above_threshold.sort_values(by=['length'], ascending=False, inplace=True)
