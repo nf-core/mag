@@ -10,13 +10,13 @@
                 "git_sha": "e937c7950af70930d1f34bb961403d9d2aa81c7d"
             },
             "maxbin2": {
-                "git_sha": "bd2baa1e7c0f0e3d052e10406d2f86125c51af20"
+                "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
             },
             "metabat2/jgisummarizebamcontigdepths": {
-                "git_sha": "e0ada7d219e6e3a71b47a8579d1a822a730ed38d"
+                "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
             },
             "metabat2/metabat2": {
-                "git_sha": "e0ada7d219e6e3a71b47a8579d1a822a730ed38d"
+                "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
             },
             "prodigal": {
                 "git_sha": "49da8642876ae4d91128168cd0db4f1c858d7792"
