@@ -2,15 +2,15 @@
  * Binning with MetaBAT2
  */
 
-params.metabat2_jgisummarizebamcontigdepths_options = [:]
-params.metabat2_options                             = [:]
 params.mag_depths_options                           = [:]
 params.mag_depths_plot_options                      = [:]
 params.mag_depths_summary_options                   = [:]
 
-include { METABAT2                  } from '../../modules/local/metabat2'                 addParams( options: params.metabat2_options           ) // local
+include { METABAT2_METABAT2                  } from '../../modules/nf-core/modules/metabat2/metabat2/main'
+include { METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS  } from '../../modules/nf-core/modules/metabat2/jgisummarizebamcontigdepths/main'
+include { GUNZIP } from '../../modules/nf-core/modules/gunzip/main'
 
-include { METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS  } from '../../modules/nf-core/modules/metabat2/jgisummarizebamcontigdepths/main' addParams( options: [ suffix: { meta.assembler } ] )
+include { SPLIT_FASTQ }  from '../../modules/local/split_fastq'
 include { MAG_DEPTHS                            } from '../../modules/local/mag_depths'               addParams( options: params.mag_depths_options         )
 include { MAG_DEPTHS_PLOT                       } from '../../modules/local/mag_depths_plot'          addParams( options: params.mag_depths_plot_options    )
 include { MAG_DEPTHS_SUMMARY                    } from '../../modules/local/mag_depths_summary'       addParams( options: params.mag_depths_summary_options )
@@ -37,16 +37,29 @@ workflow METABAT2_BINNING {
         ch_summarizedepth_input
     )
 
-    // TODO re-merge with FASTA assemblies
     ch_metabat2_input = assemblies
-        .join(METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS.out.depth)
+        .join( METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS.out.depth, by: 0 )
+        . map { it -> [ it[0], it[1], it[4] ] }
 
-    METABAT2 ( ch_metabat2_input )
+    METABAT2_METABAT2 ( ch_metabat2_input )
+
+    // split FASTQ
+    SPLIT_FASTQ (
+        METABAT2_METABAT2.out.unbinned
+    )
+
+    // decompress main bins for downstream
+    GUNZIP (
+        METABAT2_METABAT2.out.fasta
+    )
 
     // Compute bin depths for different samples (according to `binning_map_mode`)
+    ch_depth_input = METABAT2_METABAT2.out.fasta
+        .join( METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS.out.depth, by: 0  )
+        .dump(tag:"pre_for_mag_depths")
+
     MAG_DEPTHS (
-        METABAT2.out.bins,
-        METABAT2.out.depths
+        ch_depth_input
     )
     // Plot bin depths heatmap for each assembly and mapped samples (according to `binning_map_mode`)
     // create file containing group information for all samples
@@ -65,8 +78,11 @@ workflow METABAT2_BINNING {
     MAG_DEPTHS_SUMMARY ( MAG_DEPTHS.out.depths.map{it[1]}.collect() )
 
     emit:
-    bins                                         = METABAT2.out.bins
+    bins                                         = GUNZIP.out.gunzip // TODO this would include discarded FASTAS! need to separate out somehow! Probably in metabat2 module
+    unbinned                                     = SPLIT_FASTQ.out.unbinned
+    tooshort                                     = METABAT2_METABAT2.out.tooshort
+    lowdepth                                     = METABAT2_METABAT2.out.lowdepth
     depths_summary                               = MAG_DEPTHS_SUMMARY.out.summary
-    metabat2_version                             = METABAT2.out.version
+    metabat2_version                             = METABAT2_METABAT2.out.versions
     metabat2_jgisummarizebamcontigdepths_version = METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS.out.versions
 }

@@ -44,7 +44,7 @@ workflow BINNING_PREPARATION {
         .groupTuple(by: 0)
         .map { meta, assembly, bams, bais -> [ meta, assembly[0], bams, bais ] }     // multiple symlinks to the same assembly -> use first
 
-    ch_grouped_mappings.dump(tag: "grouped_mappings")
+    ch_grouped_mappings
 
     emit:
     bowtie2_assembly_multiqc = BOWTIE2_ASSEMBLY_ALIGN.out.log.map { assembly_meta, reads_meta, log -> if (assembly_meta.id == reads_meta.id) {return [ log ]} }
