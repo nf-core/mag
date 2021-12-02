@@ -89,6 +89,7 @@ Long read processing was inspired by [caspargross/HybridAssembly](https://github
 We thank the following people for their extensive assistance in the development of this pipeline:
 
 * [Alexander Peltzer](https://github.com/apeltzer)
+* [Antonia Schuster](https://github.com/antoniaschuster)
 * [Phil Ewels](https://github.com/ewels)
 * [Gisela Gabernet](https://github.com/ggabernet)
 * [Harshil Patel](https://github.com/drpatelh)
