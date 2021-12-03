@@ -33,9 +33,7 @@ workflow METABAT2_BINNING {
     ch_summarizedepth_input = assemblies
                                 .map { meta, assembly, bams, bais -> [ meta, bams, bais ] }
 
-    METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS (
-        ch_summarizedepth_input
-    )
+    METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS ( ch_summarizedepth_input )
 
     ch_metabat2_input = assemblies
         .join( METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS.out.depth, by: 0 )
@@ -43,24 +41,27 @@ workflow METABAT2_BINNING {
 
     METABAT2_METABAT2 ( ch_metabat2_input )
 
-    // split FASTQ
-    SPLIT_FASTQ (
-        METABAT2_METABAT2.out.unbinned
-    )
+    METABAT2_METABAT2.out.fasta.dump(tag:"fasta_channel_metabat2_output")
 
-    // decompress main bins for downstream
-    GUNZIP (
-        METABAT2_METABAT2.out.fasta
-    )
+    // split FASTQ
+    SPLIT_FASTQ ( METABAT2_METABAT2.out.unbinned )
+
+    // decompress main bins for downstream, have to separate and re-group due to limitation of GUNZIP
+    METABAT2_METABAT2.out.fasta
+        .transpose()
+        .set { ch_metabat2_results_transposed }
+
+    GUNZIP ( ch_metabat2_results_transposed )
+
+    GUNZIP.out.gunzip.groupTuple(by: 0).set{ ch_metabat_results_gunzipped }
 
     // Compute bin depths for different samples (according to `binning_map_mode`)
-    ch_depth_input = METABAT2_METABAT2.out.fasta
+    ch_depth_input = ch_metabat_results_gunzipped
         .join( METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS.out.depth, by: 0  )
         .dump(tag:"pre_for_mag_depths")
 
-    MAG_DEPTHS (
-        ch_depth_input
-    )
+    MAG_DEPTHS ( ch_depth_input )
+
     // Plot bin depths heatmap for each assembly and mapped samples (according to `binning_map_mode`)
     // create file containing group information for all samples
     ch_sample_groups = reads
@@ -70,15 +71,12 @@ workflow METABAT2_BINNING {
     ch_mag_depths_plot = MAG_DEPTHS.out.depths
         .map { meta, depth_file -> if (getColNo(depth_file) > 2) [meta, depth_file] }
 
-    MAG_DEPTHS_PLOT (
-        ch_mag_depths_plot,
-        ch_sample_groups.collect()
-    )
+    MAG_DEPTHS_PLOT ( ch_mag_depths_plot, ch_sample_groups.collect() )
 
     MAG_DEPTHS_SUMMARY ( MAG_DEPTHS.out.depths.map{it[1]}.collect() )
 
     emit:
-    bins                                         = GUNZIP.out.gunzip // TODO this would include discarded FASTAS! need to separate out somehow! Probably in metabat2 module
+    bins                                         = ch_metabat_results_gunzipped // TODO this would include discarded FASTAS! need to separate out somehow! Probably in metabat2 module
     unbinned                                     = SPLIT_FASTQ.out.unbinned
     tooshort                                     = METABAT2_METABAT2.out.tooshort
     lowdepth                                     = METABAT2_METABAT2.out.lowdepth

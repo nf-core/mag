@@ -28,9 +28,9 @@ process MAG_DEPTHS {
     script:
     def software = getSoftwareName(task.process)
     """
-    get_mag_depths.py --bins *.fa.gz \
-                    --depths ${contig_depths} \
-                    --assembly_name "${meta.assembler}-${meta.id}" \
+    get_mag_depths.py --bins ${bins} \\
+                    --depths ${contig_depths} \\
+                    --assembly_name "${meta.assembler}-${meta.id}" \\
                     --out "${meta.assembler}-${meta.id}-binDepths.tsv"
     """
 }
