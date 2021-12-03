@@ -4,13 +4,13 @@
     "repos": {
         "nf-core/modules": {
             "bcftools/consensus": {
-                "git_sha": "3aacd46da2b221ed47aaa05c413a828538d2c2ae"
+                "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
             },
             "bcftools/index": {
-                "git_sha": "3aacd46da2b221ed47aaa05c413a828538d2c2ae"
+                "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
             },
             "bcftools/view": {
-                "git_sha": "3aacd46da2b221ed47aaa05c413a828538d2c2ae"
+                "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
             },
             "fastp": {
                 "git_sha": "e937c7950af70930d1f34bb961403d9d2aa81c7d"
@@ -19,22 +19,22 @@
                 "git_sha": "e937c7950af70930d1f34bb961403d9d2aa81c7d"
             },
             "freebayes": {
-                "git_sha": "9767b081b9d808d7b6671d34d48c70afb436a5f1"
+                "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
             },
             "prodigal": {
                 "git_sha": "49da8642876ae4d91128168cd0db4f1c858d7792"
             },
-            "pydamage/analyze": {
-                "git_sha": "49da8642876ae4d91128168cd0db4f1c858d7792"
-            },
-            "pydamage/filter": {
-                "git_sha": "49da8642876ae4d91128168cd0db4f1c858d7792"
-            },
-            "samtools/faidx": {
-                "git_sha": "3aacd46da2b221ed47aaa05c413a828538d2c2ae"
-            },
             "prokka": {
                 "git_sha": "49da8642876ae4d91128168cd0db4f1c858d7792"
+            },
+            "pydamage/analyze": {
+                "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
+            },
+            "pydamage/filter": {
+                "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
+            },
+            "samtools/faidx": {
+                "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
             }
         }
     }
