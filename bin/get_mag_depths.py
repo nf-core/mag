@@ -44,13 +44,22 @@ def main(args=None):
     n_samples = len(sample_names)
     # for each bin, access contig depths and compute mean bin depth (for all samples)
     print("bin", '\t'.join(sample_names), sep='\t', file=args.out)
+
     for file in args.bins:
         all_depths = [[] for i in range(n_samples)]
-        with open(file, "rt") as infile:
-            for rec in SeqIO.parse(infile,'fasta'):
-                contig_depths = dict_contig_depths[rec.id]
-                for sample in range(n_samples):
-                    all_depths[sample].append(contig_depths[sample])
+
+        if file.endswith('.gz'):
+            with gzip.open(file, 'rt') as infile:
+                for rec in SeqIO.parse(infile,'fasta'):
+                    contig_depths = dict_contig_depths[rec.id]
+                    for sample in range(n_samples):
+                        all_depths[sample].append(contig_depths[sample])
+        else:
+            with open(file, "rt") as infile:
+                for rec in SeqIO.parse(infile,'fasta'):
+                    contig_depths = dict_contig_depths[rec.id]
+                    for sample in range(n_samples):
+                        all_depths[sample].append(contig_depths[sample])
         print(os.path.basename(file), '\t'.join(str(statistics.median(sample_depths)) for sample_depths in all_depths), sep='\t', file=args.out)
 
 

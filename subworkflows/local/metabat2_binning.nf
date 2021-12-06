@@ -2,19 +2,18 @@
  * Binning with MetaBAT2
  */
 
-params.bowtie2_build_options      = [:]
-params.bowtie2_align_options      = [:]
-params.metabat2_options           = [:]
-params.mag_depths_options         = [:]
-params.mag_depths_plot_options    = [:]
-params.mag_depths_summary_options = [:]
+params.mag_depths_options                           = [:]
+params.mag_depths_plot_options                      = [:]
+params.mag_depths_summary_options                   = [:]
 
-include { BOWTIE2_ASSEMBLY_BUILD    } from '../../modules/local/bowtie2_assembly_build'   addParams( options: params.bowtie2_build_options      )
-include { BOWTIE2_ASSEMBLY_ALIGN    } from '../../modules/local/bowtie2_assembly_align'   addParams( options: params.bowtie2_align_options      )
-include { METABAT2                  } from '../../modules/local/metabat2'                 addParams( options: params.metabat2_options           )
-include { MAG_DEPTHS                } from '../../modules/local/mag_depths'               addParams( options: params.mag_depths_options         )
-include { MAG_DEPTHS_PLOT           } from '../../modules/local/mag_depths_plot'          addParams( options: params.mag_depths_plot_options    )
-include { MAG_DEPTHS_SUMMARY        } from '../../modules/local/mag_depths_summary'       addParams( options: params.mag_depths_summary_options )
+include { METABAT2_METABAT2                  } from '../../modules/nf-core/modules/metabat2/metabat2/main'
+include { METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS  } from '../../modules/nf-core/modules/metabat2/jgisummarizebamcontigdepths/main'
+include { GUNZIP } from '../../modules/nf-core/modules/gunzip/main'
+
+include { SPLIT_FASTQ }  from '../../modules/local/split_fastq'
+include { MAG_DEPTHS                            } from '../../modules/local/mag_depths'               addParams( options: params.mag_depths_options         )
+include { MAG_DEPTHS_PLOT                       } from '../../modules/local/mag_depths_plot'          addParams( options: params.mag_depths_plot_options    )
+include { MAG_DEPTHS_SUMMARY                    } from '../../modules/local/mag_depths_summary'       addParams( options: params.mag_depths_summary_options )
 
 /*
  * Get number of columns in file (first line)
@@ -26,66 +25,62 @@ def getColNo(filename) {
 
 workflow METABAT2_BINNING {
     take:
-    assemblies           // channel: [ val(meta), path(assembly) ]
+    assemblies           // channel: [ val(meta), path(assembly), path(bams), path(bais) ]
     reads                // channel: [ val(meta), [ reads ] ]
 
     main:
-    // build bowtie2 index for all assemblies
-    BOWTIE2_ASSEMBLY_BUILD ( assemblies )
 
-    // combine assemblies with sample reads for binning depending on specified mapping mode
-    if (params.binning_map_mode == 'all'){
-        // combine assemblies with reads of all samples
-        ch_bowtie2_input = BOWTIE2_ASSEMBLY_BUILD.out.assembly_index
-            .combine(reads)
-    } else if (params.binning_map_mode == 'group'){
-        // combine assemblies with reads of samples from same group
-        ch_reads_bowtie2 = reads.map{ meta, reads -> [ meta.group, meta, reads ] }
-        ch_bowtie2_input = BOWTIE2_ASSEMBLY_BUILD.out.assembly_index
-            .map { meta, assembly, index -> [ meta.group, meta, assembly, index ] }
-            .combine(ch_reads_bowtie2, by: 0)
-            .map { group, assembly_meta, assembly, index, reads_meta, reads -> [ assembly_meta, assembly, index, reads_meta, reads ] }
-    } else {
-        // combine assemblies (not co-assembled) with reads from own sample
-        ch_reads_bowtie2 = reads.map{ meta, reads -> [ meta.id, meta, reads ] }
-        ch_bowtie2_input = BOWTIE2_ASSEMBLY_BUILD.out.assembly_index
-            .map { meta, assembly, index -> [ meta.id, meta, assembly, index ] }
-            .combine(ch_reads_bowtie2, by: 0)
-            .map { id, assembly_meta, assembly, index, reads_meta, reads -> [ assembly_meta, assembly, index, reads_meta, reads ] }
-    }
+    ch_summarizedepth_input = assemblies
+                                .map { meta, assembly, bams, bais -> [ meta, bams, bais ] }
 
-    BOWTIE2_ASSEMBLY_ALIGN ( ch_bowtie2_input )
-    // group mappings for one assembly
-    ch_grouped_mappings = BOWTIE2_ASSEMBLY_ALIGN.out.mappings
-        .groupTuple(by: 0)
-        .map { meta, assembly, bams, bais -> [ meta, assembly[0], bams, bais ] }     // multiple symlinks to the same assembly -> use first
+    METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS ( ch_summarizedepth_input )
 
-    METABAT2 ( ch_grouped_mappings )
+    ch_metabat2_input = assemblies
+        .join( METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS.out.depth, by: 0 )
+        . map { it -> [ it[0], it[1], it[4] ] }
+
+    METABAT2_METABAT2 ( ch_metabat2_input )
+
+    METABAT2_METABAT2.out.fasta.dump(tag:"fasta_channel_metabat2_output")
+
+    // split FASTQ
+    SPLIT_FASTQ ( METABAT2_METABAT2.out.unbinned )
+
+    // decompress main bins for downstream, have to separate and re-group due to limitation of GUNZIP
+    METABAT2_METABAT2.out.fasta
+        .transpose()
+        .set { ch_metabat2_results_transposed }
+
+    GUNZIP ( ch_metabat2_results_transposed )
+
+    GUNZIP.out.gunzip.groupTuple(by: 0).set{ ch_metabat_results_gunzipped }
 
     // Compute bin depths for different samples (according to `binning_map_mode`)
-    MAG_DEPTHS (
-        METABAT2.out.bins,
-        METABAT2.out.depths
-    )
+    ch_depth_input = ch_metabat_results_gunzipped
+        .join( METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS.out.depth, by: 0  )
+        .dump(tag:"pre_for_mag_depths")
+
+    MAG_DEPTHS ( ch_depth_input )
+
     // Plot bin depths heatmap for each assembly and mapped samples (according to `binning_map_mode`)
-    // create file containg group information for all samples
+    // create file containing group information for all samples
     ch_sample_groups = reads
         .collectFile(name:'sample_groups.tsv'){ meta, reads -> meta.id + '\t' + meta.group + '\n' }
+
     // filter MAG depth files: use only those for plotting that contain depths for > 2 samples
     ch_mag_depths_plot = MAG_DEPTHS.out.depths
         .map { meta, depth_file -> if (getColNo(depth_file) > 2) [meta, depth_file] }
-    MAG_DEPTHS_PLOT (
-        ch_mag_depths_plot,
-        ch_sample_groups.collect()
-    )
+
+    MAG_DEPTHS_PLOT ( ch_mag_depths_plot, ch_sample_groups.collect() )
 
     MAG_DEPTHS_SUMMARY ( MAG_DEPTHS.out.depths.map{it[1]}.collect() )
 
     emit:
-    bowtie2_assembly_multiqc = BOWTIE2_ASSEMBLY_ALIGN.out.log.map { assembly_meta, reads_meta, log -> if (assembly_meta.id == reads_meta.id) {return [ log ]} }
-    assembly_mappings        = ch_grouped_mappings
-    bowtie2_version          = BOWTIE2_ASSEMBLY_ALIGN.out.version
-    bins                     = METABAT2.out.bins
-    depths_summary           = MAG_DEPTHS_SUMMARY.out.summary
-    metabat2_version         = METABAT2.out.version
+    bins                                         = ch_metabat_results_gunzipped // TODO this would include discarded FASTAS! need to separate out somehow! Probably in metabat2 module
+    unbinned                                     = SPLIT_FASTQ.out.unbinned
+    tooshort                                     = METABAT2_METABAT2.out.tooshort
+    lowdepth                                     = METABAT2_METABAT2.out.lowdepth
+    depths_summary                               = MAG_DEPTHS_SUMMARY.out.summary
+    metabat2_version                             = METABAT2_METABAT2.out.versions
+    metabat2_jgisummarizebamcontigdepths_version = METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS.out.versions
 }

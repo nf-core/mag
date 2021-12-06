@@ -21,6 +21,18 @@
             "freebayes": {
                 "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
             },
+            "gunzip": {
+                "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
+            },
+            "maxbin2": {
+                "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
+            },
+            "metabat2/jgisummarizebamcontigdepths": {
+                "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
+            },
+            "metabat2/metabat2": {
+                "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
+            },
             "prodigal": {
                 "git_sha": "49da8642876ae4d91128168cd0db4f1c858d7792"
             },

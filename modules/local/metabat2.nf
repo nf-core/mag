@@ -19,7 +19,7 @@ process METABAT2 {
     }
 
     input:
-    tuple val(meta), path(assembly), path(bam), path(bai)
+    tuple val(meta), path(assembly), path(bam), path(bai), path(depth)
 
     output:
     tuple val(meta), path("MetaBAT2/*.fa")            , emit: bins
@@ -30,11 +30,13 @@ process METABAT2 {
     script:
     def software = getSoftwareName(task.process)
     """
-    OMP_NUM_THREADS=${task.cpus} jgi_summarize_bam_contig_depths --outputDepth depth.txt ${bam}
-    metabat2 -t "${task.cpus}" -i "${assembly}" -a depth.txt -o "MetaBAT2/${meta.assembler}-${meta.id}" -m ${params.min_contig_size} --unbinned --seed ${params.metabat_rng_seed}
+    ## OMP_NUM_THREADS=${task.cpus} jgi_summarize_bam_contig_depths --outputDepth depth.txt ${bam}
+    gunzip -f $depth
 
-    gzip depth.txt
-    mv depth.txt.gz "${meta.assembler}-${meta.id}-depth.txt.gz"
+    metabat2 -t "${task.cpus}" -i "${assembly}" -a ${depth.getName().replace(".gz", "")} -o "MetaBAT2/${meta.assembler}-${meta.id}" -m ${params.min_contig_size} --unbinned --seed ${params.metabat_rng_seed}
+
+    gzip ${depth.getName().replace(".gz", "")}
+    mv $depth "${meta.assembler}-${meta.id}-depth.txt.gz"
 
     # save unbinned contigs above thresholds into individual files, dump others in one file
     split_fasta.py "MetaBAT2/${meta.assembler}-${meta.id}.unbinned.fa" ${params.min_length_unbinned_contigs} ${params.max_unbinned_contigs} ${params.min_contig_size}
