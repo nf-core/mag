@@ -40,8 +40,9 @@ process METABAT2_METABAT2 {
     gzip ${prefix}.tsv
     gzip bins/*.fa
 
-    ## Some bash trickeryy to successfully execute `mv`, even if no contigs
-    ## discarded. Thanks to Stéphane Chazelas https://unix.stackexchange.com/a/522283/478356 
+    ## Some bash trickery to successfully execute `mv`, even when no contigs are
+    ## actually discarded. 
+    ## Thanks to Stéphane Chazelas https://unix.stackexchange.com/a/522283/478356 
     (
         shopt -s nullglob
         shopt -u failglob
