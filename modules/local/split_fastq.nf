@@ -14,15 +14,15 @@ process SPLIT_FASTQ {
     tuple val(meta), path(unbinned)
 
     output:
-    path "${meta.assembler}/unbinned/" , emit: unbinned
+    path "${meta.assembler}/discarded/" , emit: unbinned
 
     script:
     """
     # save unbinned contigs above thresholds into individual files, dump others in one file
     split_fasta.py $unbinned ${params.min_length_unbinned_contigs} ${params.max_unbinned_contigs} ${params.min_contig_size}
 
-    mkdir -p ${meta.assembler}/unbinned/
-    mv *.fa ${meta.assembler}/unbinned/
-    gzip ${meta.assembler}/unbinned/*
+    mkdir -p ${meta.assembler}/discarded/
+    mv *.fa ${meta.assembler}/discarded/
+    gzip ${meta.assembler}/discarded/*
     """
 }

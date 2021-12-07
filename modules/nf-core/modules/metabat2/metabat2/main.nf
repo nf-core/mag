@@ -20,7 +20,7 @@ process METABAT2_METABAT2 {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta.id}"
     def decompress_depth = depth ? "gzip -d -f $depth" : ""
     def depth_file = depth ? "-a ${depth.baseName}" : ""
     """
@@ -38,17 +38,8 @@ process METABAT2_METABAT2 {
     mv metabat2 bins
 
     gzip ${prefix}.tsv
-    gzip bins/*.fa
-
-    ## Some bash trickery to successfully execute `mv`, even when no contigs are
-    ## actually discarded. 
-    ## Thanks to Stéphane Chazelas https://unix.stackexchange.com/a/522283/478356 
-    (
-        shopt -s nullglob
-        shopt -u failglob
-        files=(bins/*{lowDepth,tooShort,unbinned}.fa.gz)
-        ((\${#files[@]} == 0)) || mv -- "\${files[@]}" .
-    )
+    find ./bins/ -name "*.fa" -type f | xargs -t -n 1 bgzip -@ ${task.cpus}
+    find ./bins/ -name "*[lowDepth,tooShort,unbinned].fa.gz" -type f -exec mv {} . \\;
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
