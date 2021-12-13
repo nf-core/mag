@@ -35,15 +35,33 @@ workflow METABAT2_BINNING {
 
     METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS ( ch_summarizedepth_input )
 
+    METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS.out.depth
+        .dump(tag: "output_jgi")
+        .map { it ->
+            it[0]['binner'] = 'METABAT2'
+
+            [ it[0], it[1] ]
+        }
+        .dump(tag: "output_jgi_updated")
+        .set { ch_metabat_depths }
+
     ch_metabat2_input = assemblies
-        .join( METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS.out.depth, by: 0 )
-        . map { it -> [ it[0], it[1], it[4] ] }
+        .dump(tag: "metabat2_raw")
+        .map { it ->
+            it[0]['binner'] = 'METABAT2'
+
+            [ it[0], it[1], it[2], it[3] ]
+        }
+        .join( ch_metabat_depths, by: 0 )
+        .map { it ->
+            [ it[0], it[1], it[4]]
+        }
+        .dump(tag: "metabat2_input_updated")
 
     METABAT2_METABAT2 ( ch_metabat2_input )
 
-    METABAT2_METABAT2.out.fasta.dump(tag:"fasta_channel_metabat2_output")
-
     // split FASTQ
+    METABAT2_METABAT2.out.unbinned.dump(tag: "input_splitfastq")
     SPLIT_FASTQ ( METABAT2_METABAT2.out.unbinned )
 
     // decompress main bins for downstream, have to separate and re-group due to limitation of GUNZIP
@@ -57,8 +75,8 @@ workflow METABAT2_BINNING {
 
     // Compute bin depths for different samples (according to `binning_map_mode`)
     ch_depth_input = ch_metabat_results_gunzipped
+        .dump(tag: "depth_input")
         .join( METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS.out.depth, by: 0  )
-        .dump(tag:"pre_for_mag_depths")
 
     MAG_DEPTHS ( ch_depth_input )
 
@@ -76,7 +94,7 @@ workflow METABAT2_BINNING {
     MAG_DEPTHS_SUMMARY ( MAG_DEPTHS.out.depths.map{it[1]}.collect() )
 
     emit:
-    bins                                         = ch_metabat_results_gunzipped // TODO this would include discarded FASTAS! need to separate out somehow! Probably in metabat2 module
+    bins                                         = ch_metabat_results_gunzipped
     unbinned                                     = SPLIT_FASTQ.out.unbinned
     tooshort                                     = METABAT2_METABAT2.out.tooshort
     lowdepth                                     = METABAT2_METABAT2.out.lowdepth
