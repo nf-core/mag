@@ -10,7 +10,7 @@ include { METABAT2_METABAT2                     } from '../../modules/nf-core/mo
 include { METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS  } from '../../modules/nf-core/modules/metabat2/jgisummarizebamcontigdepths/main'
 include { GUNZIP                                } from '../../modules/nf-core/modules/gunzip/main'
 
-include { SPLIT_FASTQ }  from '../../modules/local/split_fastq'
+include { SPLIT_FASTA }  from '../../modules/local/SPLIT_FASTA'
 include { MAG_DEPTHS                            } from '../../modules/local/mag_depths'               addParams( options: params.mag_depths_options         )
 include { MAG_DEPTHS_PLOT                       } from '../../modules/local/mag_depths_plot'          addParams( options: params.mag_depths_plot_options    )
 include { MAG_DEPTHS_SUMMARY                    } from '../../modules/local/mag_depths_summary'       addParams( options: params.mag_depths_summary_options )
@@ -62,7 +62,7 @@ workflow METABAT2_BINNING {
 
     // split FASTQ
     METABAT2_METABAT2.out.unbinned.dump(tag: "input_splitfastq")
-    SPLIT_FASTQ ( METABAT2_METABAT2.out.unbinned )
+    SPLIT_FASTA ( METABAT2_METABAT2.out.unbinned )
 
     // decompress main bins for downstream, have to separate and re-group due to limitation of GUNZIP
     METABAT2_METABAT2.out.fasta
@@ -95,7 +95,7 @@ workflow METABAT2_BINNING {
 
     emit:
     bins                                         = ch_metabat_results_gunzipped
-    unbinned                                     = SPLIT_FASTQ.out.unbinned
+    unbinned                                     = SPLIT_FASTA.out.unbinned
     tooshort                                     = METABAT2_METABAT2.out.tooshort
     lowdepth                                     = METABAT2_METABAT2.out.lowdepth
     depths_summary                               = MAG_DEPTHS_SUMMARY.out.summary

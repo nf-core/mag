@@ -1,4 +1,4 @@
-process SPLIT_FASTQ {
+process SPLIT_FASTA {
     tag "${meta.assembler}-${meta.id}"
     label 'process_low'
 
@@ -14,7 +14,7 @@ process SPLIT_FASTQ {
     tuple val(meta), path(unbinned)
 
     output:
-    path "unbinned/" , emit: unbinned
+    path "unbinned/*" , emit: unbinned
 
     script:
     """
