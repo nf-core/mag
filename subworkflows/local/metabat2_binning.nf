@@ -6,9 +6,9 @@ params.mag_depths_options                           = [:]
 params.mag_depths_plot_options                      = [:]
 params.mag_depths_summary_options                   = [:]
 
-include { METABAT2_METABAT2                  } from '../../modules/nf-core/modules/metabat2/metabat2/main'
+include { METABAT2_METABAT2                     } from '../../modules/nf-core/modules/metabat2/metabat2/main'
 include { METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS  } from '../../modules/nf-core/modules/metabat2/jgisummarizebamcontigdepths/main'
-include { GUNZIP } from '../../modules/nf-core/modules/gunzip/main'
+include { GUNZIP                                } from '../../modules/nf-core/modules/gunzip/main'
 
 include { SPLIT_FASTQ }  from '../../modules/local/split_fastq'
 include { MAG_DEPTHS                            } from '../../modules/local/mag_depths'               addParams( options: params.mag_depths_options         )
