@@ -10,7 +10,7 @@ include { METABAT2_METABAT2                     } from '../../modules/nf-core/mo
 include { METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS  } from '../../modules/nf-core/modules/metabat2/jgisummarizebamcontigdepths/main'
 include { GUNZIP                                } from '../../modules/nf-core/modules/gunzip/main'
 
-include { SPLIT_FASTA }  from '../../modules/local/SPLIT_FASTA'
+include { SPLIT_FASTA }  from '../../modules/local/split_fasta'
 include { MAG_DEPTHS                            } from '../../modules/local/mag_depths'               addParams( options: params.mag_depths_options         )
 include { MAG_DEPTHS_PLOT                       } from '../../modules/local/mag_depths_plot'          addParams( options: params.mag_depths_plot_options    )
 include { MAG_DEPTHS_SUMMARY                    } from '../../modules/local/mag_depths_summary'       addParams( options: params.mag_depths_summary_options )
