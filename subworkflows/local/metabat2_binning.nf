@@ -36,17 +36,14 @@ workflow METABAT2_BINNING {
     METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS ( ch_summarizedepth_input )
 
     METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS.out.depth
-        .dump(tag: "output_jgi")
         .map { it ->
             it[0]['binner'] = 'METABAT2'
 
             [ it[0], it[1] ]
         }
-        .dump(tag: "output_jgi_updated")
         .set { ch_metabat_depths }
 
     ch_metabat2_input = assemblies
-        .dump(tag: "metabat2_raw")
         .map { it ->
             it[0]['binner'] = 'METABAT2'
 
@@ -56,26 +53,25 @@ workflow METABAT2_BINNING {
         .map { it ->
             [ it[0], it[1], it[4]]
         }
-        .dump(tag: "metabat2_input_updated")
 
     METABAT2_METABAT2 ( ch_metabat2_input )
 
     // split FASTQ
-    METABAT2_METABAT2.out.unbinned.dump(tag: "input_splitfastq")
+    METABAT2_METABAT2.out.unbinned
     SPLIT_FASTA ( METABAT2_METABAT2.out.unbinned )
 
-    // decompress main bins for downstream, have to separate and re-group due to limitation of GUNZIP
-    METABAT2_METABAT2.out.fasta
-        .transpose()
-        .set { ch_metabat2_results_transposed }
+    // decompress main bins (and large unbinned contigs) for downstream,
+    // first have to separate and re-group due to limitation of GUNZIP
+    METABAT2_METABAT2.out.fasta.transpose().set { ch_metabat2_results_transposed }
+    SPLIT_FASTA.out.unbinned.transpose().set { ch_split_fasta_results_transposed }
 
-    GUNZIP ( ch_metabat2_results_transposed )
+    ch_metabat2_results_transposed.mix( ch_split_fasta_results_transposed ).set { ch_final_bins_for_gunzip }
 
+    GUNZIP ( ch_final_bins_for_gunzip )
     GUNZIP.out.gunzip.groupTuple(by: 0).set{ ch_metabat_results_gunzipped }
 
     // Compute bin depths for different samples (according to `binning_map_mode`)
     ch_depth_input = ch_metabat_results_gunzipped
-        .dump(tag: "depth_input")
         .join( METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS.out.depth, by: 0  )
 
     MAG_DEPTHS ( ch_depth_input )

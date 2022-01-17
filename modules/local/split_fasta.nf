@@ -14,7 +14,9 @@ process SPLIT_FASTA {
     tuple val(meta), path(unbinned)
 
     output:
-    path "unbinned/*" , emit: unbinned
+    tuple val(meta), path("unbinned/*unbinned.[0-9]*.fa.gz")     , optional:true, emit: unbinned  //not happy with this glob, but best I can do
+    tuple val(meta), path("unbinned/*unbinned.pooled.fa.gz")     , optional:true, emit: pooled
+    tuple val(meta), path("unbinned/*unbinned.remaining.fa.gz")  , optional:true, emit: remaining
 
     script:
     """
