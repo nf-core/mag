@@ -1,18 +1,10 @@
-params.bcftools_consensus_options = [:]
-params.bcftools_view_options      = [:]
-params.bcftools_index_options     = [:]
-params.freebayes_options          = [:]
-params.pydamage_analyze_options   = [:]
-params.pydamage_filter_options    = [:]
-params.samtools_faidx_options     = [:]
-
-include { BCFTOOLS_CONSENSUS }                                                           from '../../modules/nf-core/modules/bcftools/consensus/main' addParams( options: params.bcftools_consensus_options )
-include { BCFTOOLS_INDEX as BCFTOOLS_INDEX_PRE ; BCFTOOLS_INDEX as BCFTOOLS_INDEX_POST } from '../../modules/nf-core/modules/bcftools/index/main'     addParams( options: params.bcftools_index_options )
-include { BCFTOOLS_VIEW }                                                                from '../../modules/nf-core/modules/bcftools/view/main'      addParams( options: params.bcftools_view_options )
-include { FREEBAYES }                                                                    from '../../modules/nf-core/modules/freebayes/main'          addParams( options: params.freebayes_options )
-include { PYDAMAGE_ANALYZE }                                                             from '../../modules/nf-core/modules/pydamage/analyze/main'   addParams( options: params.pydamage_analyze_options )
-include { PYDAMAGE_FILTER }                                                              from '../../modules/nf-core/modules/pydamage/filter/main'    addParams( options: params.pydamage_filter_options )
-include { SAMTOOLS_FAIDX as FAIDX}                                                       from '../../modules/nf-core/modules/samtools/faidx/main'     addParams( options: params.samtools_faidx_options )
+include { BCFTOOLS_CONSENSUS }                                                           from '../../modules/nf-core/modules/bcftools/consensus/main' 
+include { BCFTOOLS_INDEX as BCFTOOLS_INDEX_PRE ; BCFTOOLS_INDEX as BCFTOOLS_INDEX_POST } from '../../modules/nf-core/modules/bcftools/index/main'     
+include { BCFTOOLS_VIEW }                                                                from '../../modules/nf-core/modules/bcftools/view/main'      
+include { FREEBAYES }                                                                    from '../../modules/nf-core/modules/freebayes/main'          
+include { PYDAMAGE_ANALYZE }                                                             from '../../modules/nf-core/modules/pydamage/analyze/main'   
+include { PYDAMAGE_FILTER }                                                              from '../../modules/nf-core/modules/pydamage/filter/main'    
+include { SAMTOOLS_FAIDX as FAIDX}                                                       from '../../modules/nf-core/modules/samtools/faidx/main' 
 
 workflow ANCIENT_DNA_ASSEMLY_VALIDATION {
     take:

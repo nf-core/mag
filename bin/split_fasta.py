@@ -18,7 +18,11 @@ max_sequences = int(argv[3])
 min_length_to_retain_contig = int(argv[4])
 
 # Base name for file output
-out_base = (os.path.splitext(input_file)[0])
+if input_file.endswith('.gz'):
+    rm_ext=os.path.splitext(input_file)[0]
+    out_base = (os.path.splitext(rm_ext)[0])
+else:
+    out_base = (os.path.splitext(input_file)[0])
 
 # Data structures to separate and store sequences
 df_above_threshold = pd.DataFrame(columns=['id','seq','length'])

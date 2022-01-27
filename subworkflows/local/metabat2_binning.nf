@@ -6,11 +6,11 @@ params.mag_depths_options                           = [:]
 params.mag_depths_plot_options                      = [:]
 params.mag_depths_summary_options                   = [:]
 
-include { METABAT2_METABAT2                  } from '../../modules/nf-core/modules/metabat2/metabat2/main'
+include { METABAT2_METABAT2                     } from '../../modules/nf-core/modules/metabat2/metabat2/main'
 include { METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS  } from '../../modules/nf-core/modules/metabat2/jgisummarizebamcontigdepths/main'
-include { GUNZIP } from '../../modules/nf-core/modules/gunzip/main'
+include { GUNZIP                                } from '../../modules/nf-core/modules/gunzip/main'
 
-include { SPLIT_FASTQ }  from '../../modules/local/split_fastq'
+include { SPLIT_FASTA }  from '../../modules/local/split_fasta'
 include { MAG_DEPTHS                            } from '../../modules/local/mag_depths'               addParams( options: params.mag_depths_options         )
 include { MAG_DEPTHS_PLOT                       } from '../../modules/local/mag_depths_plot'          addParams( options: params.mag_depths_plot_options    )
 include { MAG_DEPTHS_SUMMARY                    } from '../../modules/local/mag_depths_summary'       addParams( options: params.mag_depths_summary_options )
@@ -35,30 +35,44 @@ workflow METABAT2_BINNING {
 
     METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS ( ch_summarizedepth_input )
 
+    METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS.out.depth
+        .map { it ->
+            it[0]['binner'] = 'METABAT2'
+
+            [ it[0], it[1] ]
+        }
+        .set { ch_metabat_depths }
+
     ch_metabat2_input = assemblies
-        .join( METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS.out.depth, by: 0 )
-        . map { it -> [ it[0], it[1], it[4] ] }
+        .map { it ->
+            it[0]['binner'] = 'METABAT2'
+
+            [ it[0], it[1], it[2], it[3] ]
+        }
+        .join( ch_metabat_depths, by: 0 )
+        .map { it ->
+            [ it[0], it[1], it[4]]
+        }
 
     METABAT2_METABAT2 ( ch_metabat2_input )
 
-    METABAT2_METABAT2.out.fasta.dump(tag:"fasta_channel_metabat2_output")
-
     // split FASTQ
-    SPLIT_FASTQ ( METABAT2_METABAT2.out.unbinned )
+    METABAT2_METABAT2.out.unbinned
+    SPLIT_FASTA ( METABAT2_METABAT2.out.unbinned )
 
-    // decompress main bins for downstream, have to separate and re-group due to limitation of GUNZIP
-    METABAT2_METABAT2.out.fasta
-        .transpose()
-        .set { ch_metabat2_results_transposed }
+    // decompress main bins (and large unbinned contigs) for downstream,
+    // first have to separate and re-group due to limitation of GUNZIP
+    METABAT2_METABAT2.out.fasta.transpose().set { ch_metabat2_results_transposed }
+    SPLIT_FASTA.out.unbinned.transpose().set { ch_split_fasta_results_transposed }
 
-    GUNZIP ( ch_metabat2_results_transposed )
+    ch_metabat2_results_transposed.mix( ch_split_fasta_results_transposed ).set { ch_final_bins_for_gunzip }
 
+    GUNZIP ( ch_final_bins_for_gunzip )
     GUNZIP.out.gunzip.groupTuple(by: 0).set{ ch_metabat_results_gunzipped }
 
     // Compute bin depths for different samples (according to `binning_map_mode`)
     ch_depth_input = ch_metabat_results_gunzipped
         .join( METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS.out.depth, by: 0  )
-        .dump(tag:"pre_for_mag_depths")
 
     MAG_DEPTHS ( ch_depth_input )
 
@@ -76,8 +90,8 @@ workflow METABAT2_BINNING {
     MAG_DEPTHS_SUMMARY ( MAG_DEPTHS.out.depths.map{it[1]}.collect() )
 
     emit:
-    bins                                         = ch_metabat_results_gunzipped // TODO this would include discarded FASTAS! need to separate out somehow! Probably in metabat2 module
-    unbinned                                     = SPLIT_FASTQ.out.unbinned
+    bins                                         = ch_metabat_results_gunzipped
+    unbinned                                     = SPLIT_FASTA.out.unbinned
     tooshort                                     = METABAT2_METABAT2.out.tooshort
     lowdepth                                     = METABAT2_METABAT2.out.lowdepth
     depths_summary                               = MAG_DEPTHS_SUMMARY.out.summary

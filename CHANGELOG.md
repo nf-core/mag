@@ -3,6 +3,16 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.2.0dev
+
+### `Added`
+- [#263](https://github.com/nf-core/mag/pull/263) - Restructure binning subworkflow in preparation for aDNA workflow and extended binning
+- [#247](https://github.com/nf-core/mag/pull/247) - Add ancient DNA subworkflow
+
+### `Changed`
+
+### `Fixed`
+
 ## v2.1.1 - 2021/11/25
 
 ### `Added`
@@ -10,7 +20,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#240](https://github.com/nf-core/mag/pull/240) - Add prodigal to predict protein-coding genes for assemblies.
 - [#241](https://github.com/nf-core/mag/pull/241) - Add parameter `--skip_prodigal`.
 - [#244](https://github.com/nf-core/mag/pull/244) - Add pipeline preprint information.
-- [#247](https://github.com/nf-core/mag/pull/247) - Add ancient DNA subworkflow
 - [#245](https://github.com/nf-core/mag/pull/245) - Add Prokka to annotate binned genomes.
 
 ### `Changed`

@@ -1,4 +1,4 @@
-process SPLIT_FASTQ {
+process SPLIT_FASTA {
     tag "${meta.assembler}-${meta.id}"
     label 'process_low'
 
@@ -14,15 +14,15 @@ process SPLIT_FASTQ {
     tuple val(meta), path(unbinned)
 
     output:
-    path "${meta.assembler}/unbinned/" , emit: unbinned
+    tuple val(meta), path("*unbinned.[0-9]*.fa.gz")     , optional:true, emit: unbinned  //not happy with this glob, but best I can do
+    tuple val(meta), path("*unbinned.pooled.fa.gz")     , optional:true, emit: pooled
+    tuple val(meta), path("*unbinned.remaining.fa.gz")  , optional:true, emit: remaining
 
     script:
     """
     # save unbinned contigs above thresholds into individual files, dump others in one file
     split_fasta.py $unbinned ${params.min_length_unbinned_contigs} ${params.max_unbinned_contigs} ${params.min_contig_size}
 
-    mkdir -p ${meta.assembler}/unbinned/
-    mv *.fa ${meta.assembler}/unbinned/
-    gzip ${meta.assembler}/unbinned/*
+    gzip *.unbinned.*.fa
     """
 }
