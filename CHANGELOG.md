@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## v2.2.0dev
 
 ### `Added`
+
 - [#263](https://github.com/nf-core/mag/pull/263) - Restructure binning subworkflow in preparation for aDNA workflow and extended binning
 - [#247](https://github.com/nf-core/mag/pull/247) - Add ancient DNA subworkflow
 

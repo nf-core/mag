@@ -488,16 +488,16 @@ workflow MAG {
 
     /*
     ================================================================================
-                               Binning preparation
+                                Binning preparation
     ================================================================================
     */
-    
+
 
     ch_bowtie2_assembly_multiqc = Channel.empty()
     ch_busco_summary            = Channel.empty()
     ch_busco_multiqc            = Channel.empty()
 
-    
+
 
     BINNING_PREPARATION (
         ch_assemblies,
@@ -522,7 +522,7 @@ workflow MAG {
     */
 
     if (!params.skip_binning){
-        
+
         if (params.ancient_dna) {
             METABAT2_BINNING (
                 BINNING_PREPARATION.out.grouped_mappings
@@ -537,7 +537,7 @@ workflow MAG {
             )
         }
 
-        
+
         ch_bowtie2_assembly_multiqc = BINNING_PREPARATION.out.bowtie2_assembly_multiqc
         ch_software_versions = ch_software_versions.mix(BINNING_PREPARATION.out.bowtie2_version.first().ifEmpty(null))
         ch_software_versions = ch_software_versions.mix(METABAT2_BINNING.out.metabat2_version.first().ifEmpty(null))

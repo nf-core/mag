@@ -551,7 +551,7 @@
                 "bowtie2_mode": {
                     "type": "string",
                     "description": "Bowtie2 alignment mode",
-                    "help_text": "Bowtie2 alignment mode options, for example: `--very fast` , `--very-sensitive -N 1` , ..."
+                    "help_text": "Bowtie2 alignment mode options, for example: `--very-fast` , `--very-sensitive-local -N 1` , ..."
                 },
                 "skip_prokka": {
                     "type": "boolean",
