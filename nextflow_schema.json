@@ -593,7 +593,7 @@
         "ancient_dna_assembly": {
             "title": "Ancient DNA assembly",
             "type": "object",
-            "description": "",
+            "description": "Performs ancient DNA assembly validation and contig consensus sequence recalling.",
             "default": "",
             "properties": {
                 "ancient_dna": {
