@@ -548,6 +548,11 @@
                     "description": "Maximal number of contigs that are not part of any bin but treated as individual genome.",
                     "help_text": "Contigs that do not fulfill the thresholds of `--min_length_unbinned_contigs` and `--max_unbinned_contigs` are pooled for downstream analysis and reporting, except contigs that also do not fullfill `--min_contig_size` are not considered further."
                 },
+                "bowtie2_mode": {
+                    "type": "string",
+                    "description": "Bowtie2 alignment mode",
+                    "help_text": "Bowtie2 alignment mode options, for example: `--very-fast` , `--very-sensitive-local -N 1` , ..."
+                },
                 "skip_prokka": {
                     "type": "boolean",
                     "description": "Skip Prokka genome annotation."
@@ -582,6 +587,33 @@
                     "type": "boolean",
                     "description": "Save the used BUSCO lineage datasets provided via --busco_reference or downloaded when not using --busco_reference or --busco_download_path.",
                     "help_text": "Useful to allow reproducibility, as BUSCO datasets are frequently updated and old versions do not always remain accessible."
+                }
+            }
+        },
+        "ancient_dna_assembly": {
+            "title": "Ancient DNA assembly",
+            "type": "object",
+            "description": "Performs ancient DNA assembly validation and contig consensus sequence recalling.",
+            "default": "",
+            "properties": {
+                "ancient_dna": {
+                    "type": "boolean",
+                    "description": "Turn on/off the ancient DNA subworfklow"
+                },
+                "freebayes_ploidy": {
+                    "type": "integer",
+                    "default": 1,
+                    "description": "Ploidy for variant calling"
+                },
+                "bcftools_view_variant_quality": {
+                    "type": "integer",
+                    "default": 10,
+                    "description": "Variant calling quality threshold"
+                },
+                "pydamage_accuracy": {
+                    "type": "number",
+                    "default": 0.5,
+                    "description": "PyDamage accuracy threshold"
                 }
             }
         }
@@ -625,6 +657,9 @@
         },
         {
             "$ref": "#/definitions/bin_quality_check_options"
+        },
+        {
+            "$ref": "#/definitions/ancient_dna_assembly"
         }
     ]
 }
