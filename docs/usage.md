@@ -312,6 +312,6 @@ NXF_OPTS='-Xms1g -Xmx4g'
 
 ## A note on the ancient DNA subworkflow
 
-From version 2.2, MAG integrates an additional subworkflow to validate ancient DNA *de novo* assembly:
+MAG integrates an additional subworkflow to validate ancient DNA *de novo* assembly:
 
-[Characteristic patterns of ancient DNA (aDNA) damage]((https://doi.org/10.1073/pnas.0704665104)), namely DNA fragmentation and cytosine deamination (observed as C-to-T transitions) are typically used to authenticate aDNA sequences. By identifying assembled contigs carrying typical aDNA damages using [PyDamage](https://github.com/maxibor/pydamage), MAG can tell appart ancient contigs from contigs carrying no aDNA damage. Furthermore, to mitigate the effect of aDNA damage on contig  sequence assembly, [freebayes](https://github.com/freebayes/freebayes) in combination with [BCFtools](https://github.com/samtools/bcftools) are used to (re)call the variants from the reads aligned to the contigs, and (re)generate contig consensus sequences.
+[Characteristic patterns of ancient DNA (aDNA) damage]((https://doi.org/10.1073/pnas.0704665104)), namely DNA fragmentation and cytosine deamination (observed as C-to-T transitions) are typically used to authenticate aDNA sequences. By identifying assembled contigs carrying typical aDNA damages using [PyDamage](https://github.com/maxibor/pydamage), MAG can report and distinguish ancient contigs from contigs carrying no aDNA damage. Furthermore, to mitigate the effect of aDNA damage on contig sequence assembly, [freebayes](https://github.com/freebayes/freebayes) in combination with [BCFtools](https://github.com/samtools/bcftools) are used to (re)call the variants from the reads aligned to the contigs, and (re)generate contig consensus sequences.
