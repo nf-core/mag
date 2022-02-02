@@ -1,22 +1,10 @@
-// Import generic module functions
-include { initOptions; saveFiles; getSoftwareName } from './functions'
-
-params.options = [:]
-options    = initOptions(params.options)
-
 process NANOPLOT {
     tag "$meta.id"
 
-    publishDir "${params.outdir}",
-        mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['id']) }
-
     conda (params.enable_conda ? "bioconda::nanoplot=1.26.3" : null)
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/nanoplot:1.26.3--py_0"
-    } else {
-        container "quay.io/biocontainers/nanoplot:1.26.3--py_0"
-    }
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/nanoplot:1.26.3--py_0' :
+        'quay.io/biocontainers/nanoplot:1.26.3--py_0' }"
 
     input:
     tuple val(meta), path(reads)
@@ -25,18 +13,21 @@ process NANOPLOT {
     path '*.png'        , emit: png
     path '*.html'       , emit: html
     path '*.txt'        , emit: txt
-    path '*.version.txt', emit: version
+    path "versions.yml" , emit: versions
 
     script:
-    def software = getSoftwareName(task.process)
-    def prefix = options.suffix ? "-p ${options.suffix}_" : ''
-    def title  = options.suffix ? "${meta.id}_${options.suffix}" : "${meta.id}"
+    def prefix = task.ext.suffix ? "-p ${task.ext.suffix}_" : ''
+    def title  = task.ext.suffix ? "${meta.id}_${task.ext.suffix}" : "${meta.id}"
     """
     NanoPlot -t ${task.cpus} \
             ${prefix} \
             --title ${title} \
             -c darkblue \
             --fastq ${reads}
-    NanoPlot --version | sed -e "s/NanoPlot //g" > ${software}.version.txt
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        NanoPlot: \$(NanoPlot --version | sed -e "s/NanoPlot //g")
+    END_VERSIONS
     """
 }

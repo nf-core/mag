@@ -67,5 +67,5 @@ workflow GTDBTK {
 
     emit:
     summary     = GTDBTK_SUMMARY.out.summary
-    version     = GTDBTK_CLASSIFY.out.version
+    versions    = GTDBTK_CLASSIFY.out.versions
 }

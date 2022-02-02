@@ -1,9 +1,3 @@
-// Import generic module functions
-include { initOptions; saveFiles; getSoftwareName } from './functions'
-
-params.options = [:]
-options    = initOptions(params.options)
-
 process BOWTIE2_ASSEMBLY_BUILD {
     tag "${meta.assembler}-${meta.id}"
 
@@ -19,13 +13,17 @@ process BOWTIE2_ASSEMBLY_BUILD {
 
     output:
     tuple val(meta), path(assembly), path('bt2_index_base*'), emit: assembly_index
-    path '*.version.txt'                                    , emit: version
+    path "versions.yml"                                     , emit: versions
 
     script:
-    def software  = getSoftwareName(task.process)
+    def args = task.ext.args ?: ''
     """
     mkdir bowtie
     bowtie2-build --threads $task.cpus $assembly "bt2_index_base"
-    bowtie2 --version > ${software}.version.txt
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        bowtie2: \$(echo \$(bowtie2 --version 2>&1) | sed 's/^.*bowtie2-align-s version //; s/ .*\$//')
+    END_VERSIONS
     """
 }

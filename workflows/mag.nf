@@ -7,7 +7,9 @@
 def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
 
 // Check already if long reads are provided
-include { hasExtension } from '../modules/local/functions'
+def hasExtension(it, extension) {
+    it.toString().toLowerCase().endsWith(extension.toLowerCase())
+}
 def hybrid = false
 if(hasExtension(params.input, "csv")){
     Channel
@@ -48,54 +50,47 @@ ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multi
 ========================================================================================
 */
 
-// Don't overwrite global params.modules, create a copy instead and use that within the main script.
-def modules = params.modules.clone()
-def multiqc_options   = modules['multiqc']
-
-multiqc_options.args += params.multiqc_title ? Utils.joinModuleArgs(["--title \"$params.multiqc_title\""]) : ''
-
 //
 // MODULE: Local to the pipeline
 //
-include { GET_SOFTWARE_VERSIONS                               } from '../modules/local/get_software_versions'       addParams( options: [publish_files : ['csv':'']]          )
 include { BOWTIE2_REMOVAL_BUILD as BOWTIE2_HOST_REMOVAL_BUILD } from '../modules/local/bowtie2_removal_build'
-include { BOWTIE2_REMOVAL_ALIGN as BOWTIE2_HOST_REMOVAL_ALIGN } from '../modules/local/bowtie2_removal_align'       addParams( options: modules['bowtie2_host_removal_align'] )
+include { BOWTIE2_REMOVAL_ALIGN as BOWTIE2_HOST_REMOVAL_ALIGN } from '../modules/local/bowtie2_removal_align'
 include { BOWTIE2_REMOVAL_BUILD as BOWTIE2_PHIX_REMOVAL_BUILD } from '../modules/local/bowtie2_removal_build'
-include { BOWTIE2_REMOVAL_ALIGN as BOWTIE2_PHIX_REMOVAL_ALIGN } from '../modules/local/bowtie2_removal_align'       addParams( options: modules['bowtie2_phix_removal_align'] )
+include { BOWTIE2_REMOVAL_ALIGN as BOWTIE2_PHIX_REMOVAL_ALIGN } from '../modules/local/bowtie2_removal_align'
 include { PORECHOP                                            } from '../modules/local/porechop'
-include { NANOLYSE                                            } from '../modules/local/nanolyse'                    addParams( options: modules['nanolyse']                   )
+include { NANOLYSE                                            } from '../modules/local/nanolyse'
 include { FILTLONG                                            } from '../modules/local/filtlong'
-include { NANOPLOT as NANOPLOT_RAW                            } from '../modules/local/nanoplot'                    addParams( options: modules['nanoplot_raw']               )
-include { NANOPLOT as NANOPLOT_FILTERED                       } from '../modules/local/nanoplot'                    addParams( options: modules['nanoplot_filtered']          )
+include { NANOPLOT as NANOPLOT_RAW                            } from '../modules/local/nanoplot'
+include { NANOPLOT as NANOPLOT_FILTERED                       } from '../modules/local/nanoplot'
 include { CENTRIFUGE_DB_PREPARATION                           } from '../modules/local/centrifuge_db_preparation'
-include { CENTRIFUGE                                          } from '../modules/local/centrifuge'                  addParams( options: modules['centrifuge']                 )
+include { CENTRIFUGE                                          } from '../modules/local/centrifuge'
 include { KRAKEN2_DB_PREPARATION                              } from '../modules/local/kraken2_db_preparation'
-include { KRAKEN2                                             } from '../modules/local/kraken2'                     addParams( options: modules['kraken2']                    )
+include { KRAKEN2                                             } from '../modules/local/kraken2'
 include { KRONA_DB                                            } from '../modules/local/krona_db'
-include { KRONA                                               } from '../modules/local/krona'                       addParams( options: modules['krona']                      )
+include { KRONA                                               } from '../modules/local/krona'
 include { POOL_SINGLE_READS                                   } from '../modules/local/pool_single_reads'
 include { POOL_PAIRED_READS                                   } from '../modules/local/pool_paired_reads'
 include { POOL_SINGLE_READS as POOL_LONG_READS                } from '../modules/local/pool_single_reads'
-include { MEGAHIT                                             } from '../modules/local/megahit'                     addParams( options: modules['megahit']                    )
-include { SPADES                                              } from '../modules/local/spades'                      addParams( options: modules['spades']                     )
-include { SPADESHYBRID                                        } from '../modules/local/spadeshybrid'                addParams( options: modules['spadeshybrid']               )
-include { QUAST                                               } from '../modules/local/quast'                       addParams( options: modules['quast']                      )
-include { QUAST_BINS                                          } from '../modules/local/quast_bins'                  addParams( options: modules['quast_bins']                 )
-include { QUAST_BINS_SUMMARY                                  } from '../modules/local/quast_bins_summary'          addParams( options: modules['quast_bins_summary']         )
+include { MEGAHIT                                             } from '../modules/local/megahit'
+include { SPADES                                              } from '../modules/local/spades'
+include { SPADESHYBRID                                        } from '../modules/local/spadeshybrid'
+include { QUAST                                               } from '../modules/local/quast'
+include { QUAST_BINS                                          } from '../modules/local/quast_bins'
+include { QUAST_BINS_SUMMARY                                  } from '../modules/local/quast_bins_summary'
 include { CAT_DB                                              } from '../modules/local/cat_db'
-include { CAT_DB_GENERATE                                     } from '../modules/local/cat_db_generate'             addParams( options: modules['cat_db_generate']            )
-include { CAT                                                 } from '../modules/local/cat'                         addParams( options: modules['cat']                        )
-include { BIN_SUMMARY                                         } from '../modules/local/bin_summary'                 addParams( options: modules['bin_summary']                )
-include { MULTIQC                                             } from '../modules/local/multiqc'                     addParams( options: multiqc_options                       )
+include { CAT_DB_GENERATE                                     } from '../modules/local/cat_db_generate'
+include { CAT                                                 } from '../modules/local/cat'
+include { BIN_SUMMARY                                         } from '../modules/local/bin_summary'
+include { MULTIQC                                             } from '../modules/local/multiqc'
 
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
 include { INPUT_CHECK         } from '../subworkflows/local/input_check'
-include { BINNING_PREPARATION } from '../subworkflows/local/binning_preparation'   addParams( bowtie2_align_options: modules['bowtie2_assembly_align'])
-include { METABAT2_BINNING    } from '../subworkflows/local/metabat2_binning'      addParams( mag_depths_options: modules['mag_depths'], mag_depths_plot_options: modules['mag_depths_plot'], mag_depths_summary_options: modules['mag_depths_summary'])
-include { BUSCO_QC            } from '../subworkflows/local/busco_qc'              addParams( busco_db_options: modules['busco_db_preparation'], busco_options: modules['busco'], busco_save_download_options: modules['busco_save_download'], busco_plot_options: modules['busco_plot'], busco_summary_options: modules['busco_summary'])
-include { GTDBTK              } from '../subworkflows/local/gtdbtk'                addParams( gtdbtk_classify_options: modules['gtdbtk_classify'], gtdbtk_summary_options: modules['gtdbtk_summary'])
+include { BINNING_PREPARATION } from '../subworkflows/local/binning_preparation'
+include { METABAT2_BINNING    } from '../subworkflows/local/metabat2_binning'
+include { BUSCO_QC            } from '../subworkflows/local/busco_qc'
+include { GTDBTK              } from '../subworkflows/local/gtdbtk'
 include { ANCIENT_DNA_ASSEMLY_VALIDATION } from '../subworkflows/local/ancient_dna'
 
 /*
@@ -107,11 +102,12 @@ include { ANCIENT_DNA_ASSEMLY_VALIDATION } from '../subworkflows/local/ancient_d
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { FASTQC as FASTQC_RAW     } from '../modules/nf-core/modules/fastqc/main'              addParams( options: modules['fastqc_raw']            )
-include { FASTQC as FASTQC_TRIMMED } from '../modules/nf-core/modules/fastqc/main'              addParams( options: modules['fastqc_trimmed']        )
-include { FASTP                    } from '../modules/nf-core/modules/fastp/main'               addParams( options: modules['fastp']                 )
-include { PRODIGAL                 } from '../modules/nf-core/modules/prodigal/main'            addParams( options: modules['prodigal']              )
-include { PROKKA                   } from '../modules/nf-core/modules/prokka/main'              addParams( options: modules['prokka']                )
+include { FASTQC as FASTQC_RAW        } from '../modules/nf-core/modules/fastqc/main'
+include { FASTQC as FASTQC_TRIMMED    } from '../modules/nf-core/modules/fastqc/main'
+include { FASTP                       } from '../modules/nf-core/modules/fastp/main'
+include { PRODIGAL                    } from '../modules/nf-core/modules/prodigal/main'
+include { PROKKA                      } from '../modules/nf-core/modules/prokka/main'
+include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
 
 ////////////////////////////////////////////////////
 /* --  Create channel for reference databases  -- */
@@ -207,7 +203,7 @@ def busco_failed_bins = [:]
 
 workflow MAG {
 
-    ch_software_versions = Channel.empty()
+    ch_versions = Channel.empty()
 
     //
     // SUBWORKFLOW: Read in samplesheet, validate and stage input files
@@ -225,13 +221,15 @@ workflow MAG {
     FASTQC_RAW (
         ch_raw_short_reads
     )
-    ch_software_versions = ch_software_versions.mix(FASTQC_RAW.out.version.first().ifEmpty(null))
+    ch_versions = ch_versions.mix(FASTQC_RAW.out.versions.first())
 
     FASTP (
-        ch_raw_short_reads
+        ch_raw_short_reads,
+        [],
+        []
     )
     ch_short_reads = FASTP.out.reads
-    ch_software_versions = ch_software_versions.mix(FASTP.out.version.first().ifEmpty(null))
+    ch_versions = ch_versions.mix(FASTP.out.versions.first())
 
     if (params.host_fasta){
         BOWTIE2_HOST_REMOVAL_BUILD (
@@ -247,7 +245,7 @@ workflow MAG {
         )
         ch_short_reads = BOWTIE2_HOST_REMOVAL_ALIGN.out.reads
         ch_bowtie2_removal_host_multiqc = BOWTIE2_HOST_REMOVAL_ALIGN.out.log
-        ch_software_versions = ch_software_versions.mix(BOWTIE2_HOST_REMOVAL_ALIGN.out.version.first().ifEmpty(null))
+        ch_versions = ch_versions.mix(BOWTIE2_HOST_REMOVAL_ALIGN.out.versions.first())
     }
 
     if(!params.keep_phix) {
@@ -264,6 +262,7 @@ workflow MAG {
     FASTQC_TRIMMED (
         ch_short_reads
     )
+    ch_versions = ch_versions.mix(FASTQC_TRIMMED.out.versions)
 
     /*
     ================================================================================
@@ -273,7 +272,7 @@ workflow MAG {
     NANOPLOT_RAW (
         ch_raw_long_reads
     )
-    ch_software_versions = ch_software_versions.mix(NANOPLOT_RAW.out.version.first().ifEmpty(null))
+    ch_versions = ch_versions.mix(NANOPLOT_RAW.out.versions.first())
 
     ch_long_reads = ch_raw_long_reads
     if (!params.skip_adapter_trimming) {
@@ -281,7 +280,7 @@ workflow MAG {
             ch_raw_long_reads
         )
         ch_long_reads = PORECHOP.out.reads
-        ch_software_versions = ch_software_versions.mix(PORECHOP.out.version.first().ifEmpty(null))
+        ch_versions = ch_versions.mix(PORECHOP.out.versions.first())
     }
 
     if (!params.keep_lambda) {
@@ -290,7 +289,7 @@ workflow MAG {
             ch_nanolyse_db
         )
         ch_long_reads = NANOLYSE.out.reads
-        ch_software_versions = ch_software_versions.mix(NANOLYSE.out.version.first().ifEmpty(null))
+        ch_versions = ch_versions.mix(NANOLYSE.out.versions.first())
     }
 
     // join long and short reads by sample name
@@ -308,7 +307,7 @@ workflow MAG {
         ch_short_and_long_reads
     )
     ch_long_reads = FILTLONG.out.reads
-    ch_software_versions = ch_software_versions.mix(FILTLONG.out.version.first().ifEmpty(null))
+    ch_versions = ch_versions.mix(FILTLONG.out.versions.first())
 
     NANOPLOT_FILTERED (
         ch_long_reads
@@ -324,7 +323,7 @@ workflow MAG {
         ch_short_reads,
         CENTRIFUGE_DB_PREPARATION.out.db
     )
-    ch_software_versions = ch_software_versions.mix(CENTRIFUGE.out.version.first().ifEmpty(null))
+    ch_versions = ch_versions.mix(CENTRIFUGE.out.versions.first())
 
     KRAKEN2_DB_PREPARATION (
         ch_kraken2_db_file
@@ -333,7 +332,7 @@ workflow MAG {
         ch_short_reads,
         KRAKEN2_DB_PREPARATION.out.db
     )
-    ch_software_versions = ch_software_versions.mix(KRAKEN2.out.version.first().ifEmpty(null))
+    ch_versions = ch_versions.mix(KRAKEN2.out.versions.first())
 
     if (( params.centrifuge_db || params.kraken2_db ) && !params.skip_krona){
         KRONA_DB ()
@@ -348,7 +347,7 @@ workflow MAG {
             ch_tax_classifications,
             KRONA_DB.out.db.collect()
         )
-        ch_software_versions = ch_software_versions.mix(KRONA.out.version.first().ifEmpty(null))
+        ch_versions = ch_versions.mix(KRONA.out.versions.first())
     }
 
     /*
@@ -404,7 +403,7 @@ workflow MAG {
             }
             .set { ch_megahit_assemblies }
         ch_assemblies = ch_assemblies.mix(ch_megahit_assemblies)
-        ch_software_versions = ch_software_versions.mix(MEGAHIT.out.version.first().ifEmpty(null))
+        ch_versions = ch_versions.mix(MEGAHIT.out.versions.first())
     }
 
     // Co-assembly: pool reads for SPAdes
@@ -441,7 +440,7 @@ workflow MAG {
             }
             .set { ch_spades_assemblies }
         ch_assemblies = ch_assemblies.mix(ch_spades_assemblies)
-        ch_software_versions = ch_software_versions.mix(SPADES.out.version.first().ifEmpty(null))
+        ch_versions = ch_versions.mix(SPADES.out.versions.first())
     }
 
     if (!params.single_end && !params.skip_spadeshybrid){
@@ -462,14 +461,14 @@ workflow MAG {
             }
             .set { ch_spadeshybrid_assemblies }
         ch_assemblies = ch_assemblies.mix(ch_spadeshybrid_assemblies)
-        ch_software_versions = ch_software_versions.mix(SPADESHYBRID.out.version.first().ifEmpty(null))
+        ch_versions = ch_versions.mix(SPADESHYBRID.out.versions.first())
     }
 
     ch_quast_multiqc = Channel.empty()
     if (!params.skip_quast){
         QUAST ( ch_assemblies )
         ch_quast_multiqc = QUAST.out.qc
-        ch_software_versions = ch_software_versions.mix(QUAST.out.version.first().ifEmpty(null))
+        ch_versions = ch_versions.mix(QUAST.out.versions.first())
     }
 
     /*
@@ -481,9 +480,9 @@ workflow MAG {
     if (!params.skip_prodigal){
         PRODIGAL (
             ch_assemblies,
-            modules['prodigal']['output_format']
+            'gff'
         )
-        ch_software_versions = ch_software_versions.mix(PRODIGAL.out.versions.first().ifEmpty(null))
+        ch_versions = ch_versions.mix(PRODIGAL.out.versions.first())
     }
 
     /*
@@ -512,7 +511,7 @@ workflow MAG {
 
     if (params.ancient_dna){
         ANCIENT_DNA_ASSEMLY_VALIDATION(BINNING_PREPARATION.out.grouped_mappings)
-        ch_software_versions = ch_software_versions.mix(ANCIENT_DNA_ASSEMLY_VALIDATION.out.versions.ifEmpty(null))
+        ch_versions = ch_versions.mix(ANCIENT_DNA_ASSEMLY_VALIDATION.out.versions.first())
     }
 
     /*
@@ -539,9 +538,9 @@ workflow MAG {
 
 
         ch_bowtie2_assembly_multiqc = BINNING_PREPARATION.out.bowtie2_assembly_multiqc
-        ch_software_versions = ch_software_versions.mix(BINNING_PREPARATION.out.bowtie2_version.first().ifEmpty(null))
-        ch_software_versions = ch_software_versions.mix(METABAT2_BINNING.out.metabat2_version.first().ifEmpty(null))
-        ch_software_versions = ch_software_versions.mix(METABAT2_BINNING.out.metabat2_jgisummarizebamcontigdepths_version.first().ifEmpty(null))
+        ch_versions = ch_versions.mix(BINNING_PREPARATION.out.bowtie2_version.first())
+        ch_versions = ch_versions.mix(METABAT2_BINNING.out.metabat2_version.first())
+        ch_versions = ch_versions.mix(METABAT2_BINNING.out.metabat2_jgisummarizebamcontigdepths_version.first())
 
         if (!params.skip_busco){
             /*
@@ -554,7 +553,7 @@ workflow MAG {
             )
             ch_busco_summary = BUSCO_QC.out.summary
             ch_busco_multiqc = BUSCO_QC.out.multiqc
-            ch_software_versions = ch_software_versions.mix(BUSCO_QC.out.version.first().ifEmpty(null))
+            ch_versions = ch_versions.mix(BUSCO_QC.out.versions.first())
             // process information if BUSCO analysis failed for individual bins due to no matching genes
             BUSCO_QC.out
                 .failed_bin
@@ -565,7 +564,7 @@ workflow MAG {
         ch_quast_bins_summary = Channel.empty()
         if (!params.skip_quast){
             QUAST_BINS ( METABAT2_BINNING.out.bins )
-            ch_software_versions = ch_software_versions.mix(QUAST_BINS.out.version.first().ifEmpty(null))
+            ch_versions = ch_versions.mix(QUAST_BINS.out.versions.first())
             QUAST_BINS_SUMMARY ( QUAST_BINS.out.quast_bin_summaries.collect() )
             ch_quast_bins_summary = QUAST_BINS_SUMMARY.out.summary
         }
@@ -585,7 +584,7 @@ workflow MAG {
             METABAT2_BINNING.out.bins,
             ch_cat_db
         )
-        ch_software_versions = ch_software_versions.mix(CAT.out.version.first().ifEmpty(null))
+        ch_versions = ch_versions.mix(CAT.out.versions.first())
 
         /*
          * GTDB-tk: taxonomic classifications using GTDB reference
@@ -597,7 +596,7 @@ workflow MAG {
                 ch_busco_summary,
                 ch_gtdb
             )
-            ch_software_versions = ch_software_versions.mix(GTDBTK.out.version.first().ifEmpty(null))
+            ch_versions = ch_versions.mix(GTDBTK.out.versions.first())
             ch_gtdbtk_summary = GTDBTK.out.summary
         }
 
@@ -627,23 +626,12 @@ workflow MAG {
                 [],
                 []
             )
-            ch_software_versions = ch_software_versions.mix(PROKKA.out.versions.first().ifEmpty(null))
+            ch_versions = ch_versions.mix(PROKKA.out.versions.first())
         }
     }
 
-    //
-    // MODULE: Pipeline reporting
-    //
-    ch_software_versions
-        .map { it -> if (it) [ it.baseName, it ] }
-        .groupTuple()
-        .map { it[1][0] }
-        .flatten()
-        .collect()
-        .set { ch_software_versions }
-
-    GET_SOFTWARE_VERSIONS (
-        ch_software_versions.map { it }.collect()
+    CUSTOM_DUMPSOFTWAREVERSIONS (
+        ch_versions.unique().collectFile(name: 'collated_versions.yml')
     )
 
     //
@@ -655,8 +643,22 @@ workflow MAG {
     ch_multiqc_files = Channel.empty()
     ch_multiqc_files = ch_multiqc_files.mix(Channel.from(ch_multiqc_config))
     ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
-    ch_multiqc_files = ch_multiqc_files.mix(GET_SOFTWARE_VERSIONS.out.yaml.collect())
+    ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
+    /* //This is the template input with the nf-core module
+    ch_multiqc_files = ch_multiqc_files.mix(FASTQC_RAW.out.zip.collect{it[1]}.ifEmpty([]))
+    ch_multiqc_files = ch_multiqc_files.mix(FASTP.out.json.collect{it[1]}.ifEmpty([]))
+    ch_multiqc_files = ch_multiqc_files.mix(FASTQC_TRIMMED.out.zip.collect{it[1]}.ifEmpty([]))
+    ch_multiqc_files = ch_multiqc_files.mix(ch_bowtie2_removal_host_multiqc.collect{it[1]}.ifEmpty([]))
+    ch_multiqc_files = ch_multiqc_files.mix(ch_quast_multiqc.collect().ifEmpty([]))
+    ch_multiqc_files = ch_multiqc_files.mix(ch_bowtie2_assembly_multiqc.collect().ifEmpty([]))
+    ch_multiqc_files = ch_multiqc_files.mix(ch_busco_multiqc.collect().ifEmpty([]))
 
+    MULTIQC (
+        ch_multiqc_files.collect()
+    )
+    */
+
+    //This is the local module because (1) fastq file name clashes [probably solveable] and (2) host removal bowtie reporting
     MULTIQC (
         ch_multiqc_files.collect(),
         ch_multiqc_custom_config.collect().ifEmpty([]),
@@ -668,8 +670,8 @@ workflow MAG {
         ch_bowtie2_assembly_multiqc.collect().ifEmpty([]),
         ch_busco_multiqc.collect().ifEmpty([])
     )
-    multiqc_report       = MULTIQC.out.report.toList()
-    ch_software_versions = ch_software_versions.mix(MULTIQC.out.version.ifEmpty(null))
+    multiqc_report = MULTIQC.out.report.toList()
+    ch_versions    = ch_versions.mix(MULTIQC.out.versions)
 }
 
 /*
