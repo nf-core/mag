@@ -17,10 +17,11 @@ process MEGAHIT {
 
     script:
     def input = params.single_end ? "-r \"" + reads1.join(",") + "\"" : "-1 \"" + reads1.join(",") + "\" -2 \"" + reads2.join(",") + "\""
+    def megahit_options = params.megahit_options ?: ''
     mem = task.memory.toBytes()
     if ( !params.megahit_fix_cpu_1 || task.cpus == 1 )
         """
-        megahit ${params.megahit_options} -t "${task.cpus}" -m $mem $input -o MEGAHIT --out-prefix "${meta.id}"
+        megahit $megahit_options -t "${task.cpus}" -m $mem $input -o MEGAHIT --out-prefix "${meta.id}"
         gzip -c "MEGAHIT/${meta.id}.contigs.fa" > "MEGAHIT/${meta.id}.contigs.fa.gz"
 
         cat <<-END_VERSIONS > versions.yml
