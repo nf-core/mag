@@ -52,9 +52,6 @@ jobs:
     # Only run on push if this is the nf-core dev branch (merged PRs)
     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/mag') }}
     runs-on: ubuntu-latest
-    env:
-      NXF_VER: '21.04.0'
-      NXF_ANSI_LOG: false
     strategy:
       matrix:
         # Run remaining test profiles with minimum nextflow version
@@ -64,8 +61,6 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install Nextflow
-        env:
-          CAPSULE_LOG: none
         run: |
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
