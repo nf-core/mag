@@ -2,11 +2,9 @@ process BOWTIE2_REMOVAL_BUILD {
     tag "$fasta"
 
     conda (params.enable_conda ? 'bioconda::bowtie2=2.4.2' : null)
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container 'https://depot.galaxyproject.org/singularity/bowtie2:2.4.2--py38h1c8e9b9_1'
-    } else {
-        container 'quay.io/biocontainers/bowtie2:2.4.2--py38h1c8e9b9_1'
-    }
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/bowtie2:2.4.2--py38h1c8e9b9_1' :
+        'quay.io/biocontainers/bowtie2:2.4.2--py38h1c8e9b9_1' }"
 
     input:
     path fasta
