@@ -15,7 +15,7 @@ process KRONA_DB {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        ktImportTaxonomy: \$(ktImportTaxonomy 2>&1 | sed 's/^.*KronaTools //; s/ - ktImportTaxonomy.*//')
+        ktImportTaxonomy: \$(ktImportTaxonomy 2>&1 | sed -n '/KronaTools /p' | sed 's/^.*KronaTools //; s/ - ktImportTaxonomy.*//')
     END_VERSIONS
     """
 }
