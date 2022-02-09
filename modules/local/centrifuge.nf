@@ -1,22 +1,10 @@
-// Import generic module functions
-include { initOptions; saveFiles; getSoftwareName } from './functions'
-
-params.options = [:]
-options    = initOptions(params.options)
-
 process CENTRIFUGE {
     tag "${meta.id}-${db_name}"
 
-    publishDir "${params.outdir}",
-        mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['id']) }
-
     conda (params.enable_conda ? "bioconda::centrifuge=1.0.4_beta" : null)
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/centrifuge:1.0.4_beta--he513fc3_5"
-    } else {
-        container "quay.io/biocontainers/centrifuge:1.0.4_beta--he513fc3_5"
-    }
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/centrifuge:1.0.4_beta--he513fc3_5' :
+        'quay.io/biocontainers/centrifuge:1.0.4_beta--he513fc3_5' }"
 
     input:
     tuple val(meta), path(reads)
@@ -26,10 +14,9 @@ process CENTRIFUGE {
     tuple val("centrifuge"), val(meta), path("results.krona"), emit: results_for_krona
     path "report.txt"                                        , emit: report
     path "kreport.txt"                                       , emit: kreport
-    path '*.version.txt'                                     , emit: version
+    path "versions.yml"                                      , emit: versions
 
     script:
-    def software = getSoftwareName(task.process)
     def input = meta.single_end ? "-U \"${reads}\"" :  "-1 \"${reads[0]}\" -2 \"${reads[1]}\""
     """
     centrifuge -x "${db_name}" \
@@ -40,6 +27,9 @@ process CENTRIFUGE {
     centrifuge-kreport -x "${db_name}" results.txt > kreport.txt
     cat results.txt | cut -f 1,3 > results.krona
 
-    centrifuge --version | sed -n 1p | sed 's/^.*centrifuge-class version //' > ${software}.version.txt
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        centrifuge: \$(centrifuge --version | sed -n 1p | sed 's/^.*centrifuge-class version //')
+    END_VERSIONS
     """
 }

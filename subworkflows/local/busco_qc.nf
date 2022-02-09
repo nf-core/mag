@@ -55,5 +55,5 @@ workflow BUSCO_QC {
     summary     = BUSCO_SUMMARY.out.summary
     failed_bin  = BUSCO.out.failed_bin.map{it[1]}
     multiqc     = BUSCO.out.summary_domain.map{it[1]}
-    version     = BUSCO.out.version
+    versions    = BUSCO.out.versions
 }

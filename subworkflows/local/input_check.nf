@@ -2,9 +2,9 @@
 // Check input samplesheet and get read channels
 //
 
-include { hasExtension } from '../../modules/local/functions'
-
-params.options = [:]
+def hasExtension(it, extension) {
+    it.toString().toLowerCase().endsWith(extension.toLowerCase())
+}
 
 workflow INPUT_CHECK {
     main:

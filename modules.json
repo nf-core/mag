@@ -12,11 +12,14 @@
             "bcftools/view": {
                 "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
             },
+            "custom/dumpsoftwareversions": {
+                "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
+            },
             "fastp": {
-                "git_sha": "e937c7950af70930d1f34bb961403d9d2aa81c7d"
+                "git_sha": "e751e5040af57e1b4e06ed4e0f3efe6de25c1683"
             },
             "fastqc": {
-                "git_sha": "e937c7950af70930d1f34bb961403d9d2aa81c7d"
+                "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
             },
             "freebayes": {
                 "git_sha": "7026122ec8696016b0b81496d9d39a7918cdb5b2"
@@ -34,10 +37,10 @@
                 "git_sha": "be8528998134132c6f4823f627bbb0aec6a51747"
             },
             "prodigal": {
-                "git_sha": "49da8642876ae4d91128168cd0db4f1c858d7792"
+                "git_sha": "a45e03016632fe7dc2f48bfa73d9642c7f03e035"
             },
             "prokka": {
-                "git_sha": "49da8642876ae4d91128168cd0db4f1c858d7792"
+                "git_sha": "d473a247d2e0c619b0df877ea19d9a5a98c8e3c8"
             },
             "pydamage/analyze": {
                 "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"

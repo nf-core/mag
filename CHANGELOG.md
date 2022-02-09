@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
+- [#269](https://github.com/nf-core/mag/pull/269) - Update to nf-core 2.2 `TEMPLATE`
+
 ### `Fixed`
 
 ## v2.1.1 - 2021/11/25

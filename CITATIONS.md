@@ -50,8 +50,8 @@
 * [MetaBAT2](https://doi.org/10.7717/peerj.7359)
     > Kang, D. D., Li, F., Kirton, E., Thomas, A., Egan, R., An, H., & Wang, Z. (2019). MetaBAT 2: an adaptive binning algorithm for robust and efficient genome reconstruction from metagenome assemblies. PeerJ, 7, e7359. doi: 10.7717/peerj.7359.
 
-* [MultiQC](https://doi.org/10.1093/bioinformatics/btw354)
-    > Ewels, P., Magnusson, M., Lundin, S., & Käller, M. (2016). MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics , 32(19), 3047–3048. doi: doi.org/10.1093/bioinformatics/btw354.
+* [MultiQC](https://pubmed.ncbi.nlm.nih.gov/27312411/)
+    > Ewels P, Magnusson M, Lundin S, Käller M. MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics. 2016 Oct 1;32(19):3047-8. doi: 10.1093/bioinformatics/btw354. Epub 2016 Jun 16. PubMed PMID: 27312411; PubMed Central PMCID: PMC5039924.
 
 * [NanoLyse](https://doi.org/10.1093/bioinformatics/bty149)
     > De Coster, W., D’Hert, S., Schultz, D. T., Cruts, M., & Van Broeckhoven, C. (2018). NanoPack: visualizing and processing long-read sequencing data. Bioinformatics, 34(15), 2666-2669. doi: 10.1093/bioinformatics/bty149.
