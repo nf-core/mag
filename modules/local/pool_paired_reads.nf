@@ -20,7 +20,7 @@ process POOL_PAIRED_READS {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        sed: \$(sed --version 2>&1 | sed -n 1p | sed 's/sed (GNU sed) //')
+        cat: \$(cat --version 2>&1 | sed -n 1p | sed 's/cat (GNU coreutils) //')
     END_VERSIONS
     """
 }
