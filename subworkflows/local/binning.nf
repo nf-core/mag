@@ -32,16 +32,15 @@ workflow BINNING {
 
     main:
 
+    // TODO is scaffolds meant to go into here? These aren't being labelled correctly if so.
     ch_summarizedepth_input = assemblies
                                 .map { meta, assembly, bams, bais ->
-                                    meta['binner'] = 'MetaBAT2'
                                     [ meta, bams, bais ]
                                 }
 
     METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS ( ch_summarizedepth_input )
 
     METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS.out.depth
-
         .set { ch_metabat_depths }
 
     ch_metabat2_input = assemblies
@@ -56,6 +55,7 @@ workflow BINNING {
         }
 
     // run binning, with convertion of metabat2 depth files to maxbin2 compatible if necessary
+    // TODO consider replacing if statemetns with the new `when` modules args - requires latest modules though
 
     if ( !params.skip_metabat2 ) {
         METABAT2_METABAT2 ( ch_metabat2_input )
@@ -84,20 +84,22 @@ workflow BINNING {
 
     SPLIT_FASTA ( ch_input_splitfasta )
 
-    // decompress main bins (and large unbinned contigs) for downstream,
+    // decompress main bins (and large unbinned contigs) for MAG Depths,
     // first have to separate and re-group due to limitation of GUNZIP
     METABAT2_METABAT2.out.fasta.transpose().set { ch_metabat2_results_transposed }
+    MAXBIN2.out.binned_fastas.transpose().set { ch_maxbin2_results_transposed }
 
-    // TODO Add maxbin2 here
     SPLIT_FASTA.out.unbinned.transpose().set { ch_split_fasta_results_transposed }
 
-    ch_metabat2_results_transposed.mix( ch_split_fasta_results_transposed ).set { ch_final_bins_for_gunzip }
+    ch_metabat2_results_transposed
+        .mix( ch_maxbin2_results_transposed, ch_split_fasta_results_transposed )
+        .set { ch_final_bins_for_gunzip }
 
     GUNZIP ( ch_final_bins_for_gunzip )
-    GUNZIP.out.gunzip.groupTuple(by: 0).set{ ch_metabat_results_gunzipped }
+    GUNZIP.out.gunzip.groupTuple(by: 0).set{ ch_binning_results_gunzipped }
 
     // Compute bin depths for different samples (according to `binning_map_mode`)
-    ch_depth_input = ch_metabat_results_gunzipped
+    ch_depth_input = ch_binning_results_gunzipped
         .join( METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS.out.depth, by: 0  )
 
     MAG_DEPTHS ( ch_depth_input )
