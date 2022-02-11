@@ -1,5 +1,5 @@
 process QUAST_BINS {
-    tag "${meta.assembler}-${meta.id}"
+    tag "${meta.assembler}-${meta.binner}-${meta.id}"
 
     conda (params.enable_conda ? "bioconda::quast=5.0.2" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?

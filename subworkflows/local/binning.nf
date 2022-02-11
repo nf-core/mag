@@ -1,5 +1,5 @@
 /*
- * Binning with MetaBAT2
+ * Binning with MetaBAT2 and MaxBin2
  */
 
 params.mag_depths_options                           = [:]
@@ -8,9 +8,11 @@ params.mag_depths_summary_options                   = [:]
 
 include { METABAT2_METABAT2                     } from '../../modules/nf-core/modules/metabat2/metabat2/main'
 include { METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS  } from '../../modules/nf-core/modules/metabat2/jgisummarizebamcontigdepths/main'
+include { MAXBIN2                               } from '../../modules/nf-core/modules/maxbin2/main'
 include { GUNZIP                                } from '../../modules/nf-core/modules/gunzip/main'
 
-include { SPLIT_FASTA }  from '../../modules/local/split_fasta'
+include { CONVERT_DEPTHS                        } from '../../modules/local/convert_depths'
+include { SPLIT_FASTA                           }  from '../../modules/local/split_fasta'
 include { MAG_DEPTHS                            } from '../../modules/local/mag_depths'               addParams( options: params.mag_depths_options         )
 include { MAG_DEPTHS_PLOT                       } from '../../modules/local/mag_depths_plot'          addParams( options: params.mag_depths_plot_options    )
 include { MAG_DEPTHS_SUMMARY                    } from '../../modules/local/mag_depths_summary'       addParams( options: params.mag_depths_summary_options )
@@ -23,7 +25,7 @@ def getColNo(filename) {
     return lines[0].split('\t').size()
 }
 
-workflow METABAT2_BINNING {
+workflow BINNING {
     take:
     assemblies           // channel: [ val(meta), path(assembly), path(bams), path(bais) ]
     reads                // channel: [ val(meta), [ reads ] ]
@@ -31,21 +33,20 @@ workflow METABAT2_BINNING {
     main:
 
     ch_summarizedepth_input = assemblies
-                                .map { meta, assembly, bams, bais -> [ meta, bams, bais ] }
+                                .map { meta, assembly, bams, bais ->
+                                    meta['binner'] = 'MetaBAT2'
+                                    [ meta, bams, bais ]
+                                }
 
     METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS ( ch_summarizedepth_input )
 
     METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS.out.depth
-        .map { it ->
-            it[0]['binner'] = 'METABAT2'
 
-            [ it[0], it[1] ]
-        }
         .set { ch_metabat_depths }
 
     ch_metabat2_input = assemblies
         .map { it ->
-            it[0]['binner'] = 'METABAT2'
+            it[0]['binner'] = 'MetaBAT2'
 
             [ it[0], it[1], it[2], it[3] ]
         }
@@ -54,15 +55,40 @@ workflow METABAT2_BINNING {
             [ it[0], it[1], it[4]]
         }
 
-    METABAT2_METABAT2 ( ch_metabat2_input )
+    // run binning, with convertion of metabat2 depth files to maxbin2 compatible if necessary
+
+    if ( !params.skip_metabat2 ) {
+        METABAT2_METABAT2 ( ch_metabat2_input )
+    }
+
+    if ( !params.skip_maxbin2 ) {
+        CONVERT_DEPTHS ( ch_metabat2_input )
+            .map { it ->
+                it[0]['binner'] = 'MaxBin2'
+
+                [ it[0], it[1], it[2], it[3] ]
+            }
+            .set { ch_maxbin2_input }
+
+        MAXBIN2 ( ch_maxbin2_input )
+    }
 
     // split FASTQ
-    METABAT2_METABAT2.out.unbinned
-    SPLIT_FASTA ( METABAT2_METABAT2.out.unbinned )
+    if ( !params.skip_metabat2 & params.skip_maxbin2 ) {
+        ch_input_splitfasta = METABAT2_METABAT2.out.unbinned
+    } else if ( params.skip_metabat2 & !params.skip_maxbin2 ) {
+        ch_input_splitfasta = MAXBIN2.out.unbinned_fasta
+    } else {
+        ch_input_splitfasta = METABAT2_METABAT2.out.unbinned.mix(MAXBIN2.out.unbinned_fasta)
+    }
+
+    SPLIT_FASTA ( ch_input_splitfasta )
 
     // decompress main bins (and large unbinned contigs) for downstream,
     // first have to separate and re-group due to limitation of GUNZIP
     METABAT2_METABAT2.out.fasta.transpose().set { ch_metabat2_results_transposed }
+
+    // TODO Add maxbin2 here
     SPLIT_FASTA.out.unbinned.transpose().set { ch_split_fasta_results_transposed }
 
     ch_metabat2_results_transposed.mix( ch_split_fasta_results_transposed ).set { ch_final_bins_for_gunzip }

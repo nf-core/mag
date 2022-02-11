@@ -1,5 +1,5 @@
 process SPLIT_FASTA {
-    tag "${meta.assembler}-${meta.id}"
+    tag "${meta.assembler}-${meta.binner}-${meta.id}"
     label 'process_low'
 
     // Using container from metabat2 process, since this will be anyway already downloaded and contains biopython and pandas
@@ -12,9 +12,9 @@ process SPLIT_FASTA {
     tuple val(meta), path(unbinned)
 
     output:
-    tuple val(meta), path("*unbinned.[0-9]*.fa.gz")     , optional:true, emit: unbinned  //not happy with this glob, but best I can do
-    tuple val(meta), path("*unbinned.pooled.fa.gz")     , optional:true, emit: pooled
-    tuple val(meta), path("*unbinned.remaining.fa.gz")  , optional:true, emit: remaining
+    tuple val(meta), path("*.[0-9]*.fa.gz")     , optional:true, emit: unbinned  //not happy with this glob, but best I can do
+    tuple val(meta), path("*.pooled.fa.gz")     , optional:true, emit: pooled
+    tuple val(meta), path("*.remaining.fa.gz")  , optional:true, emit: remaining
     path "versions.yml"                                 , emit: versions
 
     script:
@@ -22,7 +22,7 @@ process SPLIT_FASTA {
     # save unbinned contigs above thresholds into individual files, dump others in one file
     split_fasta.py $unbinned ${params.min_length_unbinned_contigs} ${params.max_unbinned_contigs} ${params.min_contig_size}
 
-    gzip *.unbinned.*.fa
+    gzip *.fa
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
