@@ -21,7 +21,7 @@ process BUSCO_DB_PREPARATION {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        sed: \$(sed --version 2>&1 | sed -n 1p | sed 's/sed (GNU sed) //')
+        tar: \$(tar --version 2>&1 | sed -n 1p | sed 's/tar (GNU tar) //')
     END_VERSIONS
     """
 }

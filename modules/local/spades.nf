@@ -18,12 +18,12 @@ process SPADES {
     path "versions.yml"                                , emit: versions
 
     script:
-    def spades_options = params.spades_options ?: ''
+    def args = task.ext.args ?: ''
     maxmem = task.memory.toGiga()
     if ( params.spades_fix_cpus == -1 || task.cpus == params.spades_fix_cpus )
         """
         metaspades.py \
-            $spades_options \
+            $args \
             --threads "${task.cpus}" \
             --memory $maxmem \
             --pe1-1 ${reads[0]} \
