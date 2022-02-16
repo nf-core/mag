@@ -576,10 +576,30 @@
                     "default": 1,
                     "description": "Ploidy for variant calling"
                 },
-                "bcftools_view_variant_quality": {
+                "freebayes_min_basequality": {
                     "type": "integer",
-                    "default": 10,
-                    "description": "Variant calling quality threshold"
+                    "default": 20,
+                    "description": "minimum base quality required for variant calling"
+                },
+                "freebayes_minallelefreq": {
+                    "type": "number",
+                    "default": 0.33,
+                    "description": "minimum minor allele frequency for considering variants"
+                },
+                "bcftools_view_high_variant_quality": {
+                    "type": "integer",
+                    "default": 30,
+                    "description": "minimum genotype quality for considering a variant high quality"
+                },
+                "bcftools_view_medium_variant_quality": {
+                    "type": "integer",
+                    "default": 20,
+                    "description": "minimum genotype quality for considering a variant medium quality"
+                },
+                "bcftools_view_minimal_allelesupport": {
+                    "type": "integer",
+                    "default": 3,
+                    "description": "minimum number of bases supporting the alternative allele"
                 },
                 "pydamage_accuracy": {
                     "type": "number",
