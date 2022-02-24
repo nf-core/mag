@@ -499,7 +499,15 @@
                 },
                 "skip_binning": {
                     "type": "boolean",
-                    "description": "Skip metagenome binning."
+                    "description": "Skip metagenome binning entirely"
+                },
+                "skip_metabat2": {
+                    "type": "boolean",
+                    "description": "Skip MetaBAT2 Binning"
+                },
+                "skip_maxbin2": {
+                    "type": "boolean",
+                    "description": "Skip MaxBin2 Binning"
                 },
                 "min_contig_size": {
                     "type": "integer",

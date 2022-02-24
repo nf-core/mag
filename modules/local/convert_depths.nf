@@ -11,7 +11,6 @@ process CONVERT_DEPTHS {
 
     output:
     // need to add empty val because representing reads as we dont want maxbin to calculate for us.
-    // theoretically could move this outside the module for clarity but 🤫
     tuple val(meta), path(fasta), val([]), path("*_mb2_depth.txt"), emit: output
 
     script:
