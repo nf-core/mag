@@ -563,7 +563,11 @@ workflow MAG {
 
         ch_quast_bins_summary = Channel.empty()
         if (!params.skip_quast){
+            ch_foo = BINNING.out.bins
+            ch_foo.dump(tag: "input_QUAST_BINS")
             QUAST_BINS ( BINNING.out.bins )
+            ch_bar = QUAST_BINS.out.quast_bin_summaries
+            ch_bar.dump(tag: "output_QUAST_BINS")
             ch_versions = ch_versions.mix(QUAST_BINS.out.versions.first())
             QUAST_BINS_SUMMARY ( QUAST_BINS.out.quast_bin_summaries.collect() )
             ch_quast_bins_summary = QUAST_BINS_SUMMARY.out.summary

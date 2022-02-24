@@ -32,48 +32,63 @@ workflow BINNING {
 
     main:
 
-    // TODO is scaffolds meant to go into here? These aren't being labelled correctly if so.
+    // TODO are scaffolds meant to go into here? These aren't being labelled
+    // correctly if so...
+
+    // generate coverage depths for each contig
     ch_summarizedepth_input = assemblies
                                 .map { meta, assembly, bams, bais ->
-                                    [ meta, bams, bais ]
+                                        def meta_new = meta.clone()
+                                    [ meta_new, bams, bais ]
                                 }
 
     METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS ( ch_summarizedepth_input )
 
     METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS.out.depth
+        .map { meta, depths ->
+            def meta_new = meta.clone()
+            meta_new['binner'] = 'MetaBAT2'
+
+            [ meta_new, depths ]
+        }
         .set { ch_metabat_depths }
 
+    // combine depths back with assemblies
     ch_metabat2_input = assemblies
-        .map { it ->
-            it[0]['binner'] = 'MetaBAT2'
+        .map { meta, contigs, reads, indicies ->
+            def meta_new = meta.clone()
+            meta_new['binner'] = 'MetaBAT2'
 
-            [ it[0], it[1], it[2], it[3] ]
+            [ meta_new, contigs, reads, indicies ]
         }
         .join( ch_metabat_depths, by: 0 )
-        .map { it ->
-            [ it[0], it[1], it[4]]
+        .map { meta, contigs, reads, indicies, depths ->
+            [ meta, contigs, depths ]
         }
 
-    // run binning, with convertion of metabat2 depth files to maxbin2 compatible if necessary
-    // TODO consider replacing if statemetns with the new `when` modules args - requires latest modules though
+    // conver metabat2 depth files to maxbin2
+    if ( !params.skip_maxbin2 ) {
+        CONVERT_DEPTHS ( ch_metabat2_input )
+        CONVERT_DEPTHS.out.output
+            .map { meta, contigs, reads, depth ->
+                    def meta_new = meta.clone()
+                    meta_new['binner'] = 'MaxBin2'
 
+                [ meta_new, contigs, reads, depth ]
+            }
+            .set { ch_maxbin2_input }
+    }
+
+    // run binning
     if ( !params.skip_metabat2 ) {
         METABAT2_METABAT2 ( ch_metabat2_input )
     }
 
     if ( !params.skip_maxbin2 ) {
-        CONVERT_DEPTHS ( ch_metabat2_input )
-            .map { it ->
-                it[0]['binner'] = 'MaxBin2'
-
-                [ it[0], it[1], it[2], it[3] ]
-            }
-            .set { ch_maxbin2_input }
-
         MAXBIN2 ( ch_maxbin2_input )
     }
 
-    // split FASTQ
+    // split fastq files, depending
     if ( !params.skip_metabat2 & params.skip_maxbin2 ) {
         ch_input_splitfasta = METABAT2_METABAT2.out.unbinned
     } else if ( params.skip_metabat2 & !params.skip_maxbin2 ) {
@@ -84,11 +99,11 @@ workflow BINNING {
 
     SPLIT_FASTA ( ch_input_splitfasta )
 
-    // decompress main bins (and large unbinned contigs) for MAG Depths,
-    // first have to separate and re-group due to limitation of GUNZIP
+    // decompress main bins (and large unbinned contigs from SPLIT_FASTA) for
+    // MAG Depths, first have to separate and re-group due to limitation of
+    // GUNZIP module
     METABAT2_METABAT2.out.fasta.transpose().set { ch_metabat2_results_transposed }
     MAXBIN2.out.binned_fastas.transpose().set { ch_maxbin2_results_transposed }
-
     SPLIT_FASTA.out.unbinned.transpose().set { ch_split_fasta_results_transposed }
 
     ch_metabat2_results_transposed
@@ -96,11 +111,21 @@ workflow BINNING {
         .set { ch_final_bins_for_gunzip }
 
     GUNZIP ( ch_final_bins_for_gunzip )
-    GUNZIP.out.gunzip.groupTuple(by: 0).set{ ch_binning_results_gunzipped }
+    GUNZIP.out.gunzip
+        .set{ ch_binning_results_gunzipped }
 
     // Compute bin depths for different samples (according to `binning_map_mode`)
-    ch_depth_input = ch_binning_results_gunzipped
-        .join( METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS.out.depth, by: 0  )
+    // Have to remove binner meta for grouping to mix back with original depth
+    // files, as required for MAG_DEPTHS
+    // Q: where is maxbin2 noclass? All filtered out already?
+    ch_binning_results_gunzipped
+            .map { meta, results ->
+                def meta_new = meta.clone()
+                [ [ 'id': meta_new['id'], 'group': meta_new['group'], 'single_end': meta_new['single_end'], 'assembler': meta_new['assembler'] ], results ]
+            }
+        .groupTuple (by: 0 )
+        .join( METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS.out.depth, by: 0 )
+        .set { ch_depth_input }
 
     MAG_DEPTHS ( ch_depth_input )
 
@@ -114,11 +139,15 @@ workflow BINNING {
         .map { meta, depth_file -> if (getColNo(depth_file) > 2) [meta, depth_file] }
 
     MAG_DEPTHS_PLOT ( ch_mag_depths_plot, ch_sample_groups.collect() )
-
     MAG_DEPTHS_SUMMARY ( MAG_DEPTHS.out.depths.map{it[1]}.collect() )
 
+    // Group final binned contigs per sample for final output
+    ch_binning_results_gunzipped
+        .groupTuple(by: 0)
+        .set{ ch_binning_results_final }
+
     emit:
-    bins                                         = ch_metabat_results_gunzipped
+    bins                                         = ch_binning_results_final
     unbinned                                     = SPLIT_FASTA.out.unbinned
     tooshort                                     = METABAT2_METABAT2.out.tooshort
     lowdepth                                     = METABAT2_METABAT2.out.lowdepth
