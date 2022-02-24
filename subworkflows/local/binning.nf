@@ -31,10 +31,6 @@ workflow BINNING {
     reads                // channel: [ val(meta), [ reads ] ]
 
     main:
-
-    // TODO are scaffolds meant to go into here? These aren't being labelled
-    // correctly if so...
-
     // generate coverage depths for each contig
     ch_summarizedepth_input = assemblies
                                 .map { meta, assembly, bams, bais ->
@@ -100,7 +96,7 @@ workflow BINNING {
     SPLIT_FASTA ( ch_input_splitfasta )
 
     // decompress main bins (and large unbinned contigs from SPLIT_FASTA) for
-    // MAG Depths, first have to separate and re-group due to limitation of
+    // MAG_DEPTHS, first have to separate and re-group due to limitation of
     // GUNZIP module
     METABAT2_METABAT2.out.fasta.transpose().set { ch_metabat2_results_transposed }
     MAXBIN2.out.binned_fastas.transpose().set { ch_maxbin2_results_transposed }
