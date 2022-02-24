@@ -11,7 +11,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#247](https://github.com/nf-core/mag/pull/247) - Add ancient DNA subworkflow
 - [#263](https://github.com/nf-core/mag/pull/263) - Add MaxBin2 as second contig binning tool
 
-
 ### `Changed`
 
 - [#269](https://github.com/nf-core/mag/pull/269) - Update to nf-core 2.2 `TEMPLATE`
