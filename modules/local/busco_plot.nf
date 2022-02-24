@@ -21,17 +21,17 @@ process BUSCO_PLOT {
         # replace dots in bin names within summary file names by underscores
         # currently (BUSCO v5.1.0) generate_plot.py does not allow further dots
         for sum in ${summaries}; do
-            [[ \${sum} =~ short_summary.([_[:alnum:]]+).([_[:alnum:]]+).${meta.assembler}-${meta.id}.(.+).txt ]];
+            [[ \${sum} =~ short_summary.([_[:alnum:]]+).([_[:alnum:]]+).${meta.assembler}-${meta.binner}-${meta.id}.(.+).txt ]];
             mode=\${BASH_REMATCH[1]}
             db_name=\${BASH_REMATCH[2]}
-            bin="${meta.assembler}-${meta.id}.\${BASH_REMATCH[3]}"
+            bin="${meta.assembler}-${meta.binner}-${meta.id}.\${BASH_REMATCH[3]}"
             bin_new="\${bin//./_}"
             mv \${sum} short_summary.\${mode}.\${db_name}.\${bin_new}.txt
         done
         generate_plot.py --working_directory .
 
-        mv busco_figure.png "${meta.assembler}-${meta.id}.\${mode}.\${db_name}.busco_figure.png"
-        mv busco_figure.R "${meta.assembler}-${meta.id}.\${mode}.\${db_name}.busco_figure.R"
+        mv busco_figure.png "${meta.assembler}-${meta.binner}-${meta.id}.\${mode}.\${db_name}.busco_figure.png"
+        mv busco_figure.R "${meta.assembler}-${meta.binner}-${meta.id}.\${mode}.\${db_name}.busco_figure.R"
     fi
 
     cat <<-END_VERSIONS > versions.yml
