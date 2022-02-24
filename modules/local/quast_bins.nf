@@ -20,7 +20,7 @@ process QUAST_BINS {
     IFS=', ' read -r -a bins <<< \"\$BINS\"
     for bin in \"\${bins[@]}\"; do
         metaquast.py --threads "${task.cpus}" --max-ref-number 0 --rna-finding --gene-finding -l "\${bin}" "\${bin}" -o "QUAST/\${bin}"
-        if ! [ -f "QUAST/${meta.assembler}-${meta.id}-quast_summary.tsv" ]; then
+        if ! [ -f "QUAST/${meta.assembler}-${meta.binner}-${meta.id}-quast_summary.tsv" ]; then
             cp "QUAST/\${bin}/transposed_report.tsv" "QUAST/${meta.assembler}-${meta.binner}-${meta.id}-quast_summary.tsv"
         else
             tail -n +2 "QUAST/\${bin}/transposed_report.tsv" >> "QUAST/${meta.assembler}-${meta.binner}-${meta.id}-quast_summary.tsv"
