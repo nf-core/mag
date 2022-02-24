@@ -44,6 +44,9 @@
 * [Krona](https://doi.org/10.1186/1471-2105-12-385)
     > Ondov, B. D., Bergman, N. H., & Phillippy, A. M. (2011). Interactive metagenomic visualization in a Web browser. BMC bioinformatics, 12(1), 1-10. doi: 10.1186/1471-2105-12-385.
 
+* [MaxBin2](https://doi.org/10.1093/bioinformatics/btv638)
+    > Yu-Wei, W., Simmons, B. A. & Singer, S. W. (2015) MaxBin 2.0: An Automated Binning Algorithm to Recover Genomes from Multiple Metagenomic Datasets. Bioinformatics  32 (4): 605–7. doi: 10.1093/bioinformatics/btv638.
+
 * [MEGAHIT](https://doi.org/10.1016/j.ymeth.2016.02.020)
     > Li, D., Luo, R., Liu, C. M., Leung, C. M., Ting, H. F., Sadakane, K., ... & Lam, T. W. (2016). MEGAHIT v1. 0: a fast and scalable metagenome assembler driven by advanced methodologies and community practices. Methods, 102, 3-11. doi: 10.1016/j.ymeth.2016.02.020.
 

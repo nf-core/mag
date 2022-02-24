@@ -5,8 +5,8 @@
    viewBox="0 0 310.4236 140.53292"
    version="1.1"
    id="svg8"
-   inkscape:version="1.1.1 (1:1.1+202109281949+c3084ef5ed)"
-   sodipodi:docname="mag_workflow_new.svg"
+   inkscape:version="1.1.2 (1:1.1+202202050950+0a00cf5339)"
+   sodipodi:docname="mag_workflow.svg"
    inkscape:export-filename="mag_workflow_new.png"
    inkscape:export-xdpi="289.40701"
    inkscape:export-ydpi="289.40701"
@@ -376,16 +376,16 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.1988419"
-     inkscape:cx="735.29296"
-     inkscape:cy="174.75199"
+     inkscape:zoom="0.59942095"
+     inkscape:cx="379.53295"
+     inkscape:cy="30.863119"
      inkscape:document-units="mm"
-     inkscape:current-layer="g390-7"
+     inkscape:current-layer="g4134"
      showgrid="true"
      inkscape:window-width="1920"
      inkscape:window-height="1016"
-     inkscape:window-x="0"
-     inkscape:window-y="27"
+     inkscape:window-x="1052"
+     inkscape:window-y="1107"
      inkscape:window-maximized="1"
      showguides="false"
      inkscape:document-rotation="0"
@@ -2238,6 +2238,14 @@
              width="31.519596"
              id="rect4770-6-1-7-0"
              style="fill:#24af63;fill-opacity:1;stroke:#000000;stroke-width:0.296403;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal" />
+          <rect
+             ry="2.4688616"
+             y="54.951195"
+             x="140.82114"
+             height="4.9377232"
+             width="31.519596"
+             id="rect4770-6-1-7-0-3"
+             style="fill:#24af63;fill-opacity:1;stroke:#000000;stroke-width:0.296403;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal" />
           <text
              id="text4774-3-1"
              y="51.927891"
@@ -2249,9 +2257,20 @@
                x="149.15891"
                id="tspan4772-2-9"
                sodipodi:role="line">MetaBAT2</tspan></text>
+          <text
+             id="text4774-3-1-6"
+             y="58.542469"
+             x="150.37047"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.175px;line-height:0.25;font-family:Arial;-inkscape-font-specification:Arial;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+             xml:space="preserve"><tspan
+               style="font-size:3.175px;stroke-width:0.264583"
+               y="58.542469"
+               x="150.37047"
+               id="tspan4772-2-9-7"
+               sodipodi:role="line">MaxBin2</tspan></text>
           <g
              id="g2539"
-             transform="translate(110.93518,-169.69232)">
+             transform="translate(110.93518,-163.87148)">
             <ellipse
                transform="matrix(0.31320571,0.94968531,0.94968531,-0.31320571,0,0)"
                style="opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#808080;stroke-width:0.75;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
