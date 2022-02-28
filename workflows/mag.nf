@@ -541,6 +541,7 @@ workflow MAG {
         ch_versions = ch_versions.mix(BINNING_PREPARATION.out.bowtie2_version.first())
         ch_versions = ch_versions.mix(BINNING.out.metabat2_version.first())
         ch_versions = ch_versions.mix(BINNING.out.metabat2_jgisummarizebamcontigdepths_version.first())
+        ch_versions = ch_versions.mix(BINNING.out.maxbin2_version.first())
 
         if (!params.skip_busco){
             /*

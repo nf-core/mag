@@ -150,4 +150,5 @@ workflow BINNING {
     depths_summary                               = MAG_DEPTHS_SUMMARY.out.summary
     metabat2_version                             = METABAT2_METABAT2.out.versions
     metabat2_jgisummarizebamcontigdepths_version = METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS.out.versions
+    maxbin2_version                              = MAXBIN2.out.versions
 }
