@@ -285,7 +285,7 @@ Files in these two folders contain all contigs of an assembly.
 
 * `GenomeBinning/MaxBin2/`
     * `bins/[assembler]-[binner]-[sample/group].*.fa.gz`: Genome bins retrieved from input assembly
-    * `unbinned/[assembler]-[binner]-[sample/group].unbinned.[1-9]*.fa.gz`: Contigs that were not binned with other contigs but considered interesting. By default, these are at least 1 Mbp (`--min_length_unbinned_contigs`) in length and at most the 100 longest contigs (`--max_unbinned_contigs`) are reported. Note that normally these would be output from MaxBin2 with the  `.noclass` suffix prior the additional nf-core/mag filtering.
+    * `unbinned/[assembler]-[binner]-[sample/group].unbinned.[1-9]*.fa.gz`: Contigs that were not binned with other contigs but considered interesting. By default, these are at least 1 Mbp (`--min_length_unbinned_contigs`) in length and at most the 100 longest contigs (`--max_unbinned_contigs`) are reported. Note that normally these would be output from MaxBin2 with the `.noclass` suffix prior the additional nf-core/mag filtering.
 
 </details>
 
