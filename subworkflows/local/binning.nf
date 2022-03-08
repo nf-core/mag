@@ -33,6 +33,7 @@ workflow BINNING {
     main:
     // generate coverage depths for each contig
     ch_summarizedepth_input = assemblies
+                                .dump(tag: "input_binning")
                                 .map { meta, assembly, bams, bais ->
                                         def meta_new = meta.clone()
                                     [ meta_new, bams, bais ]
@@ -47,6 +48,7 @@ workflow BINNING {
 
             [ meta_new, depths ]
         }
+        .dump(tag: "jgi_depths_out")
         .set { ch_metabat_depths }
 
     // combine depths back with assemblies
@@ -61,6 +63,7 @@ workflow BINNING {
         .map { meta, contigs, reads, indicies, depths ->
             [ meta, contigs, depths ]
         }
+        .dump(tag: "binning_input")
 
     // conver metabat2 depth files to maxbin2
     if ( !params.skip_maxbin2 ) {
@@ -98,9 +101,9 @@ workflow BINNING {
     // decompress main bins (and large unbinned contigs from SPLIT_FASTA) for
     // MAG_DEPTHS, first have to separate and re-group due to limitation of
     // GUNZIP module
-    METABAT2_METABAT2.out.fasta.transpose().set { ch_metabat2_results_transposed }
-    MAXBIN2.out.binned_fastas.transpose().set { ch_maxbin2_results_transposed }
-    SPLIT_FASTA.out.unbinned.transpose().set { ch_split_fasta_results_transposed }
+    METABAT2_METABAT2.out.fasta.transpose().dump(tag: "metabat2_fasta").set { ch_metabat2_results_transposed }
+    MAXBIN2.out.binned_fastas.transpose().dump(tag: "maxbin2_fasta").set { ch_maxbin2_results_transposed }
+    SPLIT_FASTA.out.unbinned.transpose().dump(tag: "splitfasta_fasta").set { ch_split_fasta_results_transposed }
 
     ch_metabat2_results_transposed
         .mix( ch_maxbin2_results_transposed, ch_split_fasta_results_transposed )
@@ -138,7 +141,8 @@ workflow BINNING {
     MAG_DEPTHS_SUMMARY ( MAG_DEPTHS.out.depths.map{it[1]}.collect() )
 
     // Group final binned contigs per sample for final output
-    ch_binning_results_gunzipped
+    METABAT2_METABAT2.out.fasta.mix(MAXBIN2.out.binned_fastas)
+        .dump(tag: "final_bins_out")
         .groupTuple(by: 0)
         .set{ ch_binning_results_final }
 

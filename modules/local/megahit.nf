@@ -10,9 +10,9 @@ process MEGAHIT {
     tuple val(meta), path(reads1), path(reads2)
 
     output:
-    tuple val(meta), path("MEGAHIT/${meta.id}.contigs.fa"), emit: assembly
+    tuple val(meta), path("MEGAHIT/MEGAHIT-${meta.id}.contigs.fa"), emit: assembly
     path "MEGAHIT/*.log"                                  , emit: log
-    path "MEGAHIT/${meta.id}.contigs.fa.gz"               , emit: assembly_gz
+    path "MEGAHIT/MEGAHIT-${meta.id}.contigs.fa.gz"               , emit: assembly_gz
     path "versions.yml"                                   , emit: versions
 
     script:
@@ -21,8 +21,8 @@ process MEGAHIT {
     mem = task.memory.toBytes()
     if ( !params.megahit_fix_cpu_1 || task.cpus == 1 )
         """
-        megahit $args -t "${task.cpus}" -m $mem $input -o MEGAHIT --out-prefix "${meta.id}"
-        gzip -c "MEGAHIT/${meta.id}.contigs.fa" > "MEGAHIT/${meta.id}.contigs.fa.gz"
+        megahit $args -t "${task.cpus}" -m $mem $input -o MEGAHIT --out-prefix "MEGAHIT-${meta.id}"
+        gzip -c "MEGAHIT/MEGAHIT-${meta.id}.contigs.fa" > "MEGAHIT/MEGAHIT-${meta.id}.contigs.fa.gz"
 
         cat <<-END_VERSIONS > versions.yml
         "${task.process}":
