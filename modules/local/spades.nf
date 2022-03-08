@@ -10,11 +10,11 @@ process SPADES {
     tuple val(meta), path(reads)
 
     output:
-    tuple val(meta), path("${meta.id}_scaffolds.fasta"), emit: assembly
-    path "${meta.id}.log"                              , emit: log
-    path "${meta.id}_contigs.fasta.gz"                 , emit: contigs_gz
-    path "${meta.id}_scaffolds.fasta.gz"               , emit: assembly_gz
-    path "${meta.id}_graph.gfa.gz"                     , emit: graph
+    tuple val(meta), path("SPAdes-${meta.id}_scaffolds.fasta"), emit: assembly
+    path "SPAdes-${meta.id}.log"                              , emit: log
+    path "SPAdes-${meta.id}_contigs.fasta.gz"                 , emit: contigs_gz
+    path "SPAdes-${meta.id}_scaffolds.fasta.gz"               , emit: assembly_gz
+    path "SPAdes-${meta.id}_graph.gfa.gz"                     , emit: graph
     path "versions.yml"                                , emit: versions
 
     script:
@@ -29,13 +29,13 @@ process SPADES {
             --pe1-1 ${reads[0]} \
             --pe1-2 ${reads[1]} \
             -o spades
-        mv spades/assembly_graph_with_scaffolds.gfa ${meta.id}_graph.gfa
-        mv spades/scaffolds.fasta ${meta.id}_scaffolds.fasta
-        mv spades/contigs.fasta ${meta.id}_contigs.fasta
-        mv spades/spades.log ${meta.id}.log
-        gzip "${meta.id}_contigs.fasta"
-        gzip "${meta.id}_graph.gfa"
-        gzip -c "${meta.id}_scaffolds.fasta" > "${meta.id}_scaffolds.fasta.gz"
+        mv spades/assembly_graph_with_scaffolds.gfa SPAdes-${meta.id}_graph.gfa
+        mv spades/scaffolds.fasta SPAdes-${meta.id}_scaffolds.fasta
+        mv spades/contigs.fasta SPAdes-${meta.id}_contigs.fasta
+        mv spades/spades.log SPAdes-${meta.id}.log
+        gzip "SPAdes-${meta.id}_contigs.fasta"
+        gzip "SPAdes-${meta.id}_graph.gfa"
+        gzip -c "SPAdes-${meta.id}_scaffolds.fasta" > "SPAdes-${meta.id}_scaffolds.fasta.gz"
 
         cat <<-END_VERSIONS > versions.yml
         "${task.process}":

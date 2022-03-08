@@ -137,14 +137,22 @@ workflow BINNING {
     MAG_DEPTHS_PLOT ( ch_mag_depths_plot, ch_sample_groups.collect() )
     MAG_DEPTHS_SUMMARY ( MAG_DEPTHS.out.depths.map{it[1]}.collect() )
 
+    // Final actual bins for bin refinement
+    METABAT2_METABAT2.out.fasta.mix(MAXBIN2.out.fastas)
+        .groupTuple(by: 0)
+        .set{ ch_bins_gz }
+
     // Group final binned contigs per sample for final output
     ch_binning_results_gunzipped
         .groupTuple(by: 0)
         .set{ ch_binning_results_final }
 
+
+
     emit:
-    bins                                         = ch_binning_results_final
-    unbinned                                     = SPLIT_FASTA.out.unbinned
+    fastas                                         = ch_binning_results_final          // all output from binning
+    bins_gz                                      = ch_bins_gz                          // all only binned FASTAs in gzip (no gzip)
+    unbinned                                     = SPLIT_FASTA.out.unbinned            // only (length) filtered unbinned contigs
     tooshort                                     = METABAT2_METABAT2.out.tooshort
     lowdepth                                     = METABAT2_METABAT2.out.lowdepth
     depths_summary                               = MAG_DEPTHS_SUMMARY.out.summary
