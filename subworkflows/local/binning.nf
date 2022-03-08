@@ -84,6 +84,7 @@ workflow BINNING {
     }
 
     if ( !params.skip_maxbin2 ) {
+        ch_maxbin2_input.dump(tag: "maxbin2_input")
         MAXBIN2 ( ch_maxbin2_input )
     }
 
