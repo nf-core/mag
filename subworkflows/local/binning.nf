@@ -9,7 +9,8 @@ params.mag_depths_summary_options                   = [:]
 include { METABAT2_METABAT2                     } from '../../modules/nf-core/modules/metabat2/metabat2/main'
 include { METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS  } from '../../modules/nf-core/modules/metabat2/jgisummarizebamcontigdepths/main'
 include { MAXBIN2                               } from '../../modules/nf-core/modules/maxbin2/main'
-include { GUNZIP                                } from '../../modules/nf-core/modules/gunzip/main'
+include { GUNZIP as GUNZIP_BINS                 } from '../../modules/nf-core/modules/gunzip/main'
+include { GUNZIP as GUNZIP_UNBINS               } from '../../modules/nf-core/modules/gunzip/main'
 
 include { CONVERT_DEPTHS                        } from '../../modules/local/convert_depths'
 include { SPLIT_FASTA                           } from '../../modules/local/split_fasta'
@@ -31,9 +32,11 @@ workflow BINNING {
     reads                // channel: [ val(meta), [ reads ] ]
 
     main:
+
+    ch_versions = Channel.empty()
+
     // generate coverage depths for each contig
     ch_summarizedepth_input = assemblies
-                                .dump(tag: "input_binning")
                                 .map { meta, assembly, bams, bais ->
                                         def meta_new = meta.clone()
                                     [ meta_new, bams, bais ]
@@ -48,8 +51,9 @@ workflow BINNING {
 
             [ meta_new, depths ]
         }
-        .dump(tag: "jgi_depths_out")
         .set { ch_metabat_depths }
+
+    ch_versions = ch_versions.mix(METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS.out.versions)
 
     // combine depths back with assemblies
     ch_metabat2_input = assemblies
@@ -63,7 +67,6 @@ workflow BINNING {
         .map { meta, contigs, reads, indicies, depths ->
             [ meta, contigs, depths ]
         }
-        .dump(tag: "binning_input")
 
     // conver metabat2 depth files to maxbin2
     if ( !params.skip_maxbin2 ) {
@@ -81,11 +84,12 @@ workflow BINNING {
     // run binning
     if ( !params.skip_metabat2 ) {
         METABAT2_METABAT2 ( ch_metabat2_input )
+        ch_versions = ch_versions.mix(METABAT2_METABAT2.out.versions)
     }
 
     if ( !params.skip_maxbin2 ) {
-        ch_maxbin2_input.dump(tag: "maxbin2_input")
         MAXBIN2 ( ch_maxbin2_input )
+        ch_versions = ch_versions.mix(MAXBIN2.out.versions)
     }
 
     // split fastq files, depending
@@ -102,32 +106,42 @@ workflow BINNING {
     // decompress main bins (and large unbinned contigs from SPLIT_FASTA) for
     // MAG_DEPTHS, first have to separate and re-group due to limitation of
     // GUNZIP module
-    METABAT2_METABAT2.out.fasta.transpose().dump(tag: "metabat2_fasta").set { ch_metabat2_results_transposed }
-    MAXBIN2.out.binned_fastas.transpose().dump(tag: "maxbin2_fasta").set { ch_maxbin2_results_transposed }
-    SPLIT_FASTA.out.unbinned.transpose().dump(tag: "splitfasta_fasta").set { ch_split_fasta_results_transposed }
+    METABAT2_METABAT2.out.fasta.transpose().set { ch_metabat2_results_transposed }
+    MAXBIN2.out.binned_fastas.transpose().set { ch_maxbin2_results_transposed }
 
+    SPLIT_FASTA.out.unbinned.transpose().set { ch_split_fasta_results_transposed }
+    ch_versions = ch_versions.mix(SPLIT_FASTA.out.versions)
+
+    // mix all bins together
     ch_metabat2_results_transposed
-        .mix( ch_maxbin2_results_transposed, ch_split_fasta_results_transposed )
+        .mix( ch_maxbin2_results_transposed )
         .set { ch_final_bins_for_gunzip }
 
-    GUNZIP ( ch_final_bins_for_gunzip )
-    GUNZIP.out.gunzip
+    GUNZIP_BINS ( ch_final_bins_for_gunzip )
+    GUNZIP_BINS.out.gunzip
         .set{ ch_binning_results_gunzipped }
+    ch_versions = ch_versions.mix(GUNZIP_BINS.out.versions)
+
+    GUNZIP_UNBINS ( ch_split_fasta_results_transposed )
+    GUNZIP_UNBINS.out.gunzip
+        .set{ ch_splitfasta_results_gunzipped }
+    ch_versions = ch_versions.mix(GUNZIP_UNBINS.out.versions)
 
     // Compute bin depths for different samples (according to `binning_map_mode`)
     // Have to remove binner meta for grouping to mix back with original depth
     // files, as required for MAG_DEPTHS
-    // Q: where is maxbin2 noclass? All filtered out already?
     ch_binning_results_gunzipped
-            .map { meta, results ->
-                def meta_new = meta.clone()
-                [ [ 'id': meta_new['id'], 'group': meta_new['group'], 'single_end': meta_new['single_end'], 'assembler': meta_new['assembler'] ], results ]
-            }
+        .mix(ch_splitfasta_results_gunzipped )
+        .map { meta, results ->
+            def meta_new = meta.clone()
+            [ [ 'id': meta_new['id'], 'group': meta_new['group'], 'single_end': meta_new['single_end'], 'assembler': meta_new['assembler'] ], results ]
+        }
         .groupTuple (by: 0 )
         .join( METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS.out.depth, by: 0 )
         .set { ch_depth_input }
 
     MAG_DEPTHS ( ch_depth_input )
+    ch_versions = //ch_versions.mix(MAG_DEPTHS.out.versions)
 
     // Plot bin depths heatmap for each assembly and mapped samples (according to `binning_map_mode`)
     // create file containing group information for all samples
@@ -140,20 +154,27 @@ workflow BINNING {
 
     MAG_DEPTHS_PLOT ( ch_mag_depths_plot, ch_sample_groups.collect() )
     MAG_DEPTHS_SUMMARY ( MAG_DEPTHS.out.depths.map{it[1]}.collect() )
+    ch_versions = ch_versions.mix(MAG_DEPTHS_PLOT.out.versions).mix(MAG_DEPTHS_SUMMARY.out.versions)
 
     // Group final binned contigs per sample for final output
-    METABAT2_METABAT2.out.fasta.mix(MAXBIN2.out.binned_fastas)
-        .dump(tag: "final_bins_out")
+    // TODO work out which output channel I want? Have I duplicated?
+    ch_binning_results_gunzipped
+        .dump(tag: "final_bins_out_ugz")
         .groupTuple(by: 0)
-        .set{ ch_binning_results_final }
+        .set{ ch_binning_results_gunzipped_final }
+
+    METABAT2_METABAT2.out.fasta.mix(MAXBIN2.out.binned_fastas)
+        .dump(tag: "final_bins_out_gz")
+        .groupTuple(by: 0)
+        .set{ ch_binning_results_gzipped_final }
+
+    SPLIT_FASTA.out.unbinned.dump(tag: "final_unbins_out_ugz")
 
     emit:
-    bins                                         = ch_binning_results_final
-    unbinned                                     = SPLIT_FASTA.out.unbinned
-    tooshort                                     = METABAT2_METABAT2.out.tooshort
-    lowdepth                                     = METABAT2_METABAT2.out.lowdepth
+    bins                                         = ch_binning_results_gunzipped_final
+    bins_gz                                      = ch_binning_results_gzipped_final
+    unbinned                                     = ch_splitfasta_results_gunzipped.groupTuple()
+    unbinned_gz                                  = SPLIT_FASTA.out.unbinned
     depths_summary                               = MAG_DEPTHS_SUMMARY.out.summary
-    metabat2_version                             = METABAT2_METABAT2.out.versions
-    metabat2_jgisummarizebamcontigdepths_version = METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS.out.versions
-    maxbin2_version                              = MAXBIN2.out.versions
+    versions                                     = ch_versions
 }

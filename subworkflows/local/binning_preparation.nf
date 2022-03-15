@@ -14,7 +14,6 @@ workflow BINNING_PREPARATION {
     reads                // channel: [ val(meta), [ reads ] ]
 
     main:
-    assemblies.dump(tag: "input_binning_preparation")
     // build bowtie2 index for all assemblies
     BOWTIE2_ASSEMBLY_BUILD ( assemblies )
 
