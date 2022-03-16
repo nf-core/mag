@@ -620,7 +620,7 @@ workflow MAG {
         /*
          * Prokka: Genome annotation
          */
-        BINNING.out.bins.transpose()
+        BINNING.out.bins.mix(BINNING.out.unbinned).transpose()
             .map { meta, bin ->
                 def meta_new = meta.clone()
                 meta_new.id  = bin.getBaseName()
