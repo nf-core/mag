@@ -141,7 +141,7 @@ workflow BINNING {
         .set { ch_depth_input }
 
     MAG_DEPTHS ( ch_depth_input )
-    ch_versions = //ch_versions.mix(MAG_DEPTHS.out.versions)
+    ch_versions = ch_versions.mix(MAG_DEPTHS.out.versions)
 
     // Plot bin depths heatmap for each assembly and mapped samples (according to `binning_map_mode`)
     // create file containing group information for all samples
@@ -154,21 +154,19 @@ workflow BINNING {
 
     MAG_DEPTHS_PLOT ( ch_mag_depths_plot, ch_sample_groups.collect() )
     MAG_DEPTHS_SUMMARY ( MAG_DEPTHS.out.depths.map{it[1]}.collect() )
-    ch_versions = ch_versions.mix(MAG_DEPTHS_PLOT.out.versions).mix(MAG_DEPTHS_SUMMARY.out.versions)
+    ch_versions = ch_versions.mix(MAG_DEPTHS_PLOT.out.versions)
+    ch_versions = ch_versions.mix(MAG_DEPTHS_SUMMARY.out.versions)
 
     // Group final binned contigs per sample for final output
-    // TODO work out which output channel I want? Have I duplicated?
     ch_binning_results_gunzipped
-        .dump(tag: "final_bins_out_ugz")
         .groupTuple(by: 0)
         .set{ ch_binning_results_gunzipped_final }
 
     METABAT2_METABAT2.out.fasta.mix(MAXBIN2.out.binned_fastas)
-        .dump(tag: "final_bins_out_gz")
         .groupTuple(by: 0)
         .set{ ch_binning_results_gzipped_final }
 
-    SPLIT_FASTA.out.unbinned.dump(tag: "final_unbins_out_ugz")
+    SPLIT_FASTA.out.unbinned
 
     emit:
     bins                                         = ch_binning_results_gunzipped_final
@@ -176,5 +174,5 @@ workflow BINNING {
     unbinned                                     = ch_splitfasta_results_gunzipped.groupTuple()
     unbinned_gz                                  = SPLIT_FASTA.out.unbinned
     depths_summary                               = MAG_DEPTHS_SUMMARY.out.summary
-    versions                                     = ch_versions
+    versions                                     = ch_versions.dump(tag: "binning_versions")
 }

@@ -538,7 +538,7 @@ workflow MAG {
 
         ch_bowtie2_assembly_multiqc = BINNING_PREPARATION.out.bowtie2_assembly_multiqc
         ch_versions = ch_versions.mix(BINNING_PREPARATION.out.bowtie2_version.first())
-        //ch_versions = ch_versions.mix(BINNING.out.versions)
+        ch_versions = ch_versions.mix(BINNING.out.versions)
 
         if (!params.skip_busco){
             /*
