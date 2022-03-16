@@ -299,15 +299,24 @@ For each genome bin the median sequencing depth is computed based on the corresp
 
 ### QC for metagenome assembled genomes with QUAST
 
-[QUAST](http://cab.spbu.ru/software/quast/) is a tool that evaluates genome assemblies by computing various metrics. The QUAST output is also included in the MultiQC report, as well as in the assembly directories themselves.
+[QUAST](http://cab.spbu.ru/software/quast/) is a tool that evaluates genome assemblies by computing various metrics. The QUAST output is in the bin directories shown below. This QUAST output is not shown in the MultiQC report.
 
 <details markdown="1">
 <summary>Output files</summary>
 
 * `GenomeBinning/QC/QUAST/[assembler]-[bin]/`
-    * `report.*`: QUAST report in various formats, such as html, txt, tsv or tex
+    * `report.*`: QUAST report in various formats, such as html, pdf, tex, tsv, or txt
+    * `transposed_report.*`: QUAST report that has been transposed into wide format (tex, tsv, or txt)
     * `quast.log`: QUAST log file
+    * `metaquast.log`: MetaQUAST log file
+    * `icarus.html`: Icarus main menu with links to interactive viewers
+    * `icarus_viewers/contig_size_viewer.html`: Diagram of contigs that are ordered from longest to shortest
+    * `basic_stats/cumulative_plot.pdf`: Shows the growth of contig lengths (contigs are ordered from largest to shortest)
+    * `basic_stats/GC_content_plot.pdf`: Shows the distribution of GC content in the contigs
+    * `basic_stats/[assembler]-[sample/group]_GC_content_plot.pdf`: Histogram of the GC percentage for the contigs
+    * `basic_stats/Nx_plot.pdf`: Plot of Nx values as x varies from 0 to 100%.
     * `predicted_genes/[assembler]-[sample/group].rna.gff`: Contig positions for rRNA genes in gff version 3 format
+    * `predicted_genes/barrnap.log`: Barrnap log file (ribosomal RNA predictor)
 * `GenomeBinning/QC/`
     * `quast_summary.tsv`: QUAST output for all bins summarized
 
