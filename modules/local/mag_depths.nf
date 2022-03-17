@@ -24,7 +24,6 @@ process MAG_DEPTHS {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         python: \$(python --version 2>&1 | sed 's/Python //g')
-        biopython: \$(biopython --version 2>&1 | sed 's/biopython //g')
         pandas: \$(python -c "import pkg_resources; print(pkg_resources.get_distribution('pandas').version)")
     END_VERSIONS
     """
