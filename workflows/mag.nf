@@ -88,7 +88,7 @@ include { MULTIQC                                             } from '../modules
 //
 include { INPUT_CHECK         } from '../subworkflows/local/input_check'
 include { BINNING_PREPARATION } from '../subworkflows/local/binning_preparation'
-include { METABAT2_BINNING    } from '../subworkflows/local/metabat2_binning'
+include { BINNING             } from '../subworkflows/local/binning'
 include { BUSCO_QC            } from '../subworkflows/local/busco_qc'
 include { GTDBTK              } from '../subworkflows/local/gtdbtk'
 include { ANCIENT_DNA_ASSEMLY_VALIDATION } from '../subworkflows/local/ancient_dna'
@@ -523,33 +523,32 @@ workflow MAG {
     if (!params.skip_binning){
 
         if (params.ancient_dna) {
-            METABAT2_BINNING (
+            BINNING (
                 BINNING_PREPARATION.out.grouped_mappings
                     .join(ANCIENT_DNA_ASSEMLY_VALIDATION.out.contigs_recalled)
                     .map{ it -> [ it[0], it[4], it[2], it[3] ] }, // [meta, contigs_recalled, bam, bais]
                 ch_short_reads
             )
         } else {
-            METABAT2_BINNING (
+            BINNING (
                 BINNING_PREPARATION.out.grouped_mappings,
                 ch_short_reads
             )
         }
 
-
         ch_bowtie2_assembly_multiqc = BINNING_PREPARATION.out.bowtie2_assembly_multiqc
         ch_versions = ch_versions.mix(BINNING_PREPARATION.out.bowtie2_version.first())
-        ch_versions = ch_versions.mix(METABAT2_BINNING.out.metabat2_version.first())
-        ch_versions = ch_versions.mix(METABAT2_BINNING.out.metabat2_jgisummarizebamcontigdepths_version.first())
+        ch_versions = ch_versions.mix(BINNING.out.versions)
 
         if (!params.skip_busco){
             /*
             * BUSCO subworkflow: Quantitative measures for the assessment of genome assembly
             */
+            ch_input_bins_busco = BINNING.out.bins.mix( BINNING.out.unbinned ).transpose().dump(tag: "input_to_busco")
             BUSCO_QC (
                 ch_busco_db_file,
                 ch_busco_download_folder,
-                METABAT2_BINNING.out.bins.transpose()
+                ch_input_bins_busco
             )
             ch_busco_summary = BUSCO_QC.out.summary
             ch_busco_multiqc = BUSCO_QC.out.multiqc
@@ -563,7 +562,16 @@ workflow MAG {
 
         ch_quast_bins_summary = Channel.empty()
         if (!params.skip_quast){
-            QUAST_BINS ( METABAT2_BINNING.out.bins )
+            ch_input_for_quast_bins = BINNING.out.bins
+                                        .mix( BINNING.out.unbinned )
+                                        .groupTuple()
+                                        .map{
+                                            meta, reads ->
+                                                def new_reads = reads.flatten()
+                                                [meta, new_reads]
+                                            }
+                                        .dump(tag: "input_for_quast_bins")
+            QUAST_BINS ( ch_input_for_quast_bins )
             ch_versions = ch_versions.mix(QUAST_BINS.out.versions.first())
             QUAST_BINS_SUMMARY ( QUAST_BINS.out.quast_bin_summaries.collect() )
             ch_quast_bins_summary = QUAST_BINS_SUMMARY.out.summary
@@ -581,7 +589,7 @@ workflow MAG {
             ch_cat_db = CAT_DB_GENERATE.out.db
         }
         CAT (
-            METABAT2_BINNING.out.bins,
+            BINNING.out.bins,
             ch_cat_db
         )
         ch_versions = ch_versions.mix(CAT.out.versions.first())
@@ -592,7 +600,7 @@ workflow MAG {
         ch_gtdbtk_summary = Channel.empty()
         if ( gtdb ){
             GTDBTK (
-                METABAT2_BINNING.out.bins,
+                BINNING.out.bins,
                 ch_busco_summary,
                 ch_gtdb
             )
@@ -602,7 +610,7 @@ workflow MAG {
 
         if (!params.skip_busco || !params.skip_quast || gtdb){
             BIN_SUMMARY (
-                METABAT2_BINNING.out.depths_summary,
+                BINNING.out.depths_summary,
                 ch_busco_summary.ifEmpty([]),
                 ch_quast_bins_summary.ifEmpty([]),
                 ch_gtdbtk_summary.ifEmpty([])
@@ -612,7 +620,7 @@ workflow MAG {
         /*
          * Prokka: Genome annotation
          */
-        METABAT2_BINNING.out.bins.transpose()
+        BINNING.out.bins.mix(BINNING.out.unbinned).transpose()
             .map { meta, bin ->
                 def meta_new = meta.clone()
                 meta_new.id  = bin.getBaseName()

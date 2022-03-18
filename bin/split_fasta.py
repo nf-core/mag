@@ -10,6 +10,7 @@ from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 from Bio.Alphabet import generic_dna
 import os
+import re
 
 # Input
 input_file = argv[1]
@@ -19,10 +20,10 @@ min_length_to_retain_contig = int(argv[4])
 
 # Base name for file output
 if input_file.endswith('.gz'):
-    rm_ext=os.path.splitext(input_file)[0]
-    out_base = (os.path.splitext(rm_ext)[0])
+    rm_ext = input_file.replace(".gz", "")
+    out_base = out_base = re.sub(r'\.fasta$|\.fa$|\.fna$', '', rm_ext)
 else:
-    out_base = (os.path.splitext(input_file)[0])
+    out_base = re.sub(r'\.fasta$|\.fa$|\.fna$', '', input_file)
 
 # Data structures to separate and store sequences
 df_above_threshold = pd.DataFrame(columns=['id','seq','length'])

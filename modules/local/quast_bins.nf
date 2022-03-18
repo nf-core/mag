@@ -1,5 +1,5 @@
 process QUAST_BINS {
-    tag "${meta.assembler}-${meta.id}"
+    tag "${meta.assembler}-${meta.binner}-${meta.id}"
 
     conda (params.enable_conda ? "bioconda::quast=5.0.2" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -20,10 +20,10 @@ process QUAST_BINS {
     IFS=', ' read -r -a bins <<< \"\$BINS\"
     for bin in \"\${bins[@]}\"; do
         metaquast.py --threads "${task.cpus}" --max-ref-number 0 --rna-finding --gene-finding -l "\${bin}" "\${bin}" -o "QUAST/\${bin}"
-        if ! [ -f "QUAST/${meta.assembler}-${meta.id}-quast_summary.tsv" ]; then
-            cp "QUAST/\${bin}/transposed_report.tsv" "QUAST/${meta.assembler}-${meta.id}-quast_summary.tsv"
+        if ! [ -f "QUAST/${meta.assembler}-${meta.binner}-${meta.id}-quast_summary.tsv" ]; then
+            cp "QUAST/\${bin}/transposed_report.tsv" "QUAST/${meta.assembler}-${meta.binner}-${meta.id}-quast_summary.tsv"
         else
-            tail -n +2 "QUAST/\${bin}/transposed_report.tsv" >> "QUAST/${meta.assembler}-${meta.id}-quast_summary.tsv"
+            tail -n +2 "QUAST/\${bin}/transposed_report.tsv" >> "QUAST/${meta.assembler}-${meta.binner}-${meta.id}-quast_summary.tsv"
         fi
     done
 
