@@ -86,13 +86,12 @@ include { MULTIQC                                             } from '../modules
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { INPUT_CHECK                       } from '../subworkflows/local/input_check'
-include { ANCIENT_DNA_ASSEMLY_VALIDATION    } from '../subworkflows/local/ancient_dna'
-include { BINNING_PREPARATION               } from '../subworkflows/local/binning_preparation'
-include { BINNING                           } from '../subworkflows/local/binning'
-include { BINNING_REFINEMENT                } from '../subworkflows/local/binning_refinement'
-include { BUSCO_QC                          } from '../subworkflows/local/busco_qc'
-include { GTDBTK                            } from '../subworkflows/local/gtdbtk'
+include { INPUT_CHECK         } from '../subworkflows/local/input_check'
+include { BINNING_PREPARATION } from '../subworkflows/local/binning_preparation'
+include { BINNING             } from '../subworkflows/local/binning'
+include { BUSCO_QC            } from '../subworkflows/local/busco_qc'
+include { GTDBTK              } from '../subworkflows/local/gtdbtk'
+include { ANCIENT_DNA_ASSEMLY_VALIDATION } from '../subworkflows/local/ancient_dna'
 
 /*
 ========================================================================================
@@ -541,16 +540,6 @@ workflow MAG {
         ch_versions = ch_versions.mix(BINNING_PREPARATION.out.bowtie2_version.first())
         ch_versions = ch_versions.mix(BINNING.out.versions)
 
-
-        /*
-         * DASTool: Binning refinement
-         */
-
-        if ( params.run_dastool ) {
-            BINNING_REFINEMENT ( ch_assemblies, BINNING.out.bins_gz )
-            ch_versions = ch_versions.mix(BINNING_REFINEMENT.out.versions)
-        }
-
         if (!params.skip_busco){
             /*
             * BUSCO subworkflow: Quantitative measures for the assessment of genome assembly
@@ -647,7 +636,6 @@ workflow MAG {
             )
             ch_versions = ch_versions.mix(PROKKA.out.versions.first())
         }
-
     }
 
     CUSTOM_DUMPSOFTWAREVERSIONS (

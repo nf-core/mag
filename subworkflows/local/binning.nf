@@ -157,11 +157,6 @@ workflow BINNING {
     ch_versions = ch_versions.mix(MAG_DEPTHS_PLOT.out.versions)
     ch_versions = ch_versions.mix(MAG_DEPTHS_SUMMARY.out.versions)
 
-    // Final actual bins for bin refinement
-    METABAT2_METABAT2.out.fasta.mix(MAXBIN2.out.fastas)
-        .groupTuple(by: 0)
-        .set{ ch_bins_gz }
-
     // Group final binned contigs per sample for final output
     ch_binning_results_gunzipped
         .groupTuple(by: 0)
@@ -172,8 +167,6 @@ workflow BINNING {
         .set{ ch_binning_results_gzipped_final }
 
     SPLIT_FASTA.out.unbinned
-
-
 
     emit:
     bins                                         = ch_binning_results_gunzipped_final
