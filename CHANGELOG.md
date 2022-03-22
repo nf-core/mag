@@ -17,6 +17,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
+### `Dependencies`
+
+| Tool | Previous version | New version |
+| --- | --- | --- |
+| bcftools | 1.13 | 1.14 |
+| samtools | 1.14 | 1.15 |
+
 ## v2.1.1 - 2021/11/25
 
 ### `Added`
