@@ -4,13 +4,13 @@
     "repos": {
         "nf-core/modules": {
             "bcftools/consensus": {
-                "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
+                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
             "bcftools/index": {
                 "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
             },
             "bcftools/view": {
-                "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
+                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
             "custom/dumpsoftwareversions": {
                 "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
@@ -19,13 +19,13 @@
                 "git_sha": "e751e5040af57e1b4e06ed4e0f3efe6de25c1683"
             },
             "fastqc": {
-                "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
+                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
             "freebayes": {
                 "git_sha": "7026122ec8696016b0b81496d9d39a7918cdb5b2"
             },
             "gunzip": {
-                "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
+                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
             "maxbin2": {
                 "git_sha": "b78a4a456762a4c59fd5023e70f36a27f76d4a97"
@@ -49,7 +49,7 @@
                 "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
             },
             "samtools/faidx": {
-                "git_sha": "e0aa89141ffecb5f54d230f7ea46de242b74e084"
+                "git_sha": "1ad73f1b2abdea9398680d6d20014838135c9a35"
             }
         }
     }
