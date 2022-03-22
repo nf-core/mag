@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
-- [#269](https://github.com/nf-core/mag/pull/269) - Update to nf-core 2.2 `TEMPLATE`
+- [#269](https://github.com/nf-core/mag/pull/269),[#283](https://github.com/nf-core/mag/pull/283) - Update to nf-core 2.3 `TEMPLATE`
 
 ### `Fixed`
 
