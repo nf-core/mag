@@ -17,6 +17,8 @@ top_modules:
     name: 'FastQC: raw reads'
     path_filters_exclude:
         - '*trimmed*'
+- 'fastp'
+- 'adapterRemoval':
 - custom_content
 - 'fastqc':
     name: 'FastQC: after preprocessing'
@@ -42,6 +44,9 @@ custom_data:
 sp:
     host_removal:
         fn: 'host_removal_metrics.tsv'
+    adapterRemoval:
+        fn: '*_ar2_*.log'
 
 extra_fn_clean_exts:
     - '.bowtie2'
+    - '_ar2'

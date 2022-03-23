@@ -228,7 +228,7 @@ workflow MAG {
     if ( params.clip_tool == 'fastp' ) {
         ch_clipmerge_out = FASTP (
             ch_raw_short_reads,
-            [],
+            params.fastp_save_trimmed_fail,
             []
         )
         ch_short_reads = FASTP.out.reads
@@ -717,7 +717,7 @@ workflow MAG {
         ch_quast_multiqc.collect().ifEmpty([]),
         ch_bowtie2_assembly_multiqc.collect().ifEmpty([]),
         ch_busco_multiqc.collect().ifEmpty([]),
-        ch_multiqc_additional
+        ch_multiqc_additional.collect().ifEmpty([]),
     )
     multiqc_report = MULTIQC.out.report.toList()
     ch_versions    = ch_versions.mix(MULTIQC.out.versions)
