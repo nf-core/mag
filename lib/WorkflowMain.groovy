@@ -9,8 +9,8 @@ class WorkflowMain {
     //
     public static String citation(workflow) {
         return "If you use ${workflow.manifest.name} for your analysis please cite:\n\n" +
-            "* The preprint\n" +
-            "  https://doi.org/10.1101/2021.08.29.458094\n\n" +
+            "* The pipeline publication\n" +
+            "  https://doi.org/10.1093/nargab/lqac007\n\n" +
             "* The pipeline\n" +
             "  https://doi.org/10.5281/zenodo.3589527\n\n" +
             "* The nf-core framework\n" +
