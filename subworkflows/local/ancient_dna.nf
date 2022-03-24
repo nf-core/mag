@@ -15,10 +15,9 @@ workflow ANCIENT_DNA_ASSEMLY_VALIDATION {
         FAIDX(input.map { item -> [ item[0], item[1] ] })
         input.join(FAIDX.out.fai)
             .set { freebayes_input } // [val(meta), path(contigs), path(bam), path(bam_index), path(fai)]
-        FREEBAYES (freebayes_input.map { item -> [item[0], item[2], item[3], [], []] },
+        FREEBAYES (freebayes_input.map { item -> [item[0], item[2], item[3], [], [], []] },
                     freebayes_input.map { item -> item[1] },
                     freebayes_input.map { item -> item[4] },
-                    [],
                     [],
                     [],
                     [] )

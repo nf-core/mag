@@ -17,7 +17,7 @@ process CONVERT_DEPTHS {
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
     gunzip $depth
-    bioawk -t '{{if (NR > 1){{print \$1, \$3}}}}' ${depth.toString() - '.gz'} > ${prefix}_mb2_depth.txt
+    bioawk -t '{ { if (NR > 1) { { print \$1, \$3 } } } }' ${depth.toString() - '.gz'} > ${prefix}_mb2_depth.txt
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

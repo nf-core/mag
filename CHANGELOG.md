@@ -14,10 +14,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
-- [#269](https://github.com/nf-core/mag/pull/269) - Update to nf-core 2.2 `TEMPLATE`
+- [#269](https://github.com/nf-core/mag/pull/269),[#283](https://github.com/nf-core/mag/pull/283) - Update to nf-core 2.3.1 `TEMPLATE`
 - [#286](https://github.com/nf-core/mag/pull/286) - Cite our publication instead of the preprint
 
 ### `Fixed`
+
+- Clarified conda usage and added an installation tutorial for Singularity since the one on Syllabs' website uses an outdate version of GO Compiler
+
+### `Dependencies`
+
+| Tool     | Previous version | New version |
+| -------- | ---------------- | ----------- |
+| bcftools | 1.13             | 1.14        |
+| samtools | 1.14             | 1.15        |
 
 ## v2.1.1 - 2021/11/25
 

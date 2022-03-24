@@ -14,20 +14,20 @@ env:
 
 jobs:
   test:
-    name: Run workflow tests
+    name: Run pipeline with test data
     # Only run on push if this is the nf-core dev branch (merged PRs)
-    if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/mag') }}
+    if: "${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/mag') }}"
     runs-on: ubuntu-latest
     strategy:
       matrix:
         # Nextflow versions
         include:
           # Test pipeline minimum Nextflow version
-          - NXF_VER: '21.10.3'
-            NXF_EDGE: ''
+          - NXF_VER: "21.10.3"
+            NXF_EDGE: ""
           # Test latest edge release of Nextflow
-          - NXF_VER: ''
-            NXF_EDGE: '1'
+          - NXF_VER: ""
+            NXF_EDGE: "1"
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
@@ -44,8 +44,7 @@ jobs:
 
       - name: Run pipeline with test data
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker
-
+          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --outdir ./results
 
   profiles:
     name: Run workflow profile
@@ -55,7 +54,8 @@ jobs:
     strategy:
       matrix:
         # Run remaining test profiles with minimum nextflow version
-        profile: [test_host_rm, test_hybrid, test_hybrid_host_rm, test_busco_auto, test_ancient_dna, test_adapterremoval]
+        profile:
+          [test_host_rm, test_hybrid, test_hybrid_host_rm, test_busco_auto, test_ancient_dna, test_adapterremoval]
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
@@ -67,4 +67,6 @@ jobs:
 
       - name: Run pipeline with ${{ matrix.profile }} test profile
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile ${{ matrix.profile }},docker
+          nextflow run ${GITHUB_WORKSPACE} -profile ${{ matrix.profile }},docker --outdir ./results
+
+#
