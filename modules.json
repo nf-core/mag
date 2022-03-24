@@ -7,7 +7,7 @@
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
             "bcftools/index": {
-                "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
+                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
             "bcftools/view": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
@@ -16,13 +16,13 @@
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
             "fastp": {
-                "git_sha": "e751e5040af57e1b4e06ed4e0f3efe6de25c1683"
+                "git_sha": "d0a1cbb703a130c19f6796c3fce24fbe7dfce789"
             },
             "fastqc": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
             "freebayes": {
-                "git_sha": "7026122ec8696016b0b81496d9d39a7918cdb5b2"
+                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
             "gunzip": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
@@ -31,22 +31,22 @@
                 "git_sha": "b78a4a456762a4c59fd5023e70f36a27f76d4a97"
             },
             "metabat2/jgisummarizebamcontigdepths": {
-                "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
+                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
             "metabat2/metabat2": {
-                "git_sha": "be8528998134132c6f4823f627bbb0aec6a51747"
+                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
             "prodigal": {
-                "git_sha": "a45e03016632fe7dc2f48bfa73d9642c7f03e035"
+                "git_sha": "fcb1dce7b6f1563bdcdb70fdbe235cc2f9fed62e"
             },
             "prokka": {
-                "git_sha": "d473a247d2e0c619b0df877ea19d9a5a98c8e3c8"
+                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
             "pydamage/analyze": {
-                "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
+                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
             "pydamage/filter": {
-                "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
+                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
             "samtools/faidx": {
                 "git_sha": "1ad73f1b2abdea9398680d6d20014838135c9a35"

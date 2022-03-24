@@ -32,12 +32,12 @@ On release, automated continuous integration tests run the pipeline on a full-si
 By default, the pipeline currently performs the following: it supports both short and long reads, quality trims the reads and adapters with [fastp](https://github.com/OpenGene/fastp) and [Porechop](https://github.com/rrwick/Porechop), and performs basic QC with [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/).
 The pipeline then:
 
-* assigns taxonomy to reads using [Centrifuge](https://ccb.jhu.edu/software/centrifuge/) and/or [Kraken2](https://github.com/DerrickWood/kraken2/wiki)
-* performs assembly using [MEGAHIT](https://github.com/voutcn/megahit) and [SPAdes](http://cab.spbu.ru/software/spades/), and checks their quality using [Quast](http://quast.sourceforge.net/quast)
-* (optionally) performs ancient DNA assembly validation using [PyDamage](https://github.com/maxibor/pydamage) and contig consensus sequence recalling with [Freebayes](https://github.com/freebayes/freebayes) and [BCFtools](http://samtools.github.io/bcftools/bcftools.html)
-* predicts protein-coding genes for the assemblies using [Prodigal](https://github.com/hyattpd/Prodigal)
-* performs metagenome binning using [MetaBAT2](https://bitbucket.org/berkeleylab/metabat/src/master/) and/or with [MaxBin2](https://sourceforge.net/projects/maxbin2/), and checks the quality of the genome bins using [Busco](https://busco.ezlab.org/)
-* assigns taxonomy to bins using [GTDB-Tk](https://github.com/Ecogenomics/GTDBTk) and/or [CAT](https://github.com/dutilh/CAT)
+- assigns taxonomy to reads using [Centrifuge](https://ccb.jhu.edu/software/centrifuge/) and/or [Kraken2](https://github.com/DerrickWood/kraken2/wiki)
+- performs assembly using [MEGAHIT](https://github.com/voutcn/megahit) and [SPAdes](http://cab.spbu.ru/software/spades/), and checks their quality using [Quast](http://quast.sourceforge.net/quast)
+- (optionally) performs ancient DNA assembly validation using [PyDamage](https://github.com/maxibor/pydamage) and contig consensus sequence recalling with [Freebayes](https://github.com/freebayes/freebayes) and [BCFtools](http://samtools.github.io/bcftools/bcftools.html)
+- predicts protein-coding genes for the assemblies using [Prodigal](https://github.com/hyattpd/Prodigal)
+- performs metagenome binning using [MetaBAT2](https://bitbucket.org/berkeleylab/metabat/src/master/) and/or with [MaxBin2](https://sourceforge.net/projects/maxbin2/), and checks the quality of the genome bins using [Busco](https://busco.ezlab.org/)
+- assigns taxonomy to bins using [GTDB-Tk](https://github.com/Ecogenomics/GTDBTk) and/or [CAT](https://github.com/dutilh/CAT)
 
 Furthermore, the pipeline creates various reports in the results directory specified, including a [MultiQC](https://multiqc.info/) report summarizing some of the findings and software versions.
 
@@ -62,15 +62,15 @@ Furthermore, the pipeline creates various reports in the results directory speci
 
 4. Start running your own analysis!
 
-    ```console
-    nextflow run nf-core/mag -profile <docker/singularity/podman/shifter/charliecloud/conda/institute> --input '*_R{1,2}.fastq.gz' --outdir <OUTDIR>
-    ```
+   ```console
+   nextflow run nf-core/mag -profile <docker/singularity/podman/shifter/charliecloud/conda/institute> --input '*_R{1,2}.fastq.gz' --outdir <OUTDIR>
+   ```
 
-    or
+   or
 
-    ```console
-    nextflow run nf-core/mag -profile <docker/singularity/podman/shifter/charliecloud/conda/institute> --input samplesheet.csv --outdir <OUTDIR>
-    ```
+   ```console
+   nextflow run nf-core/mag -profile <docker/singularity/podman/shifter/charliecloud/conda/institute> --input samplesheet.csv --outdir <OUTDIR>
+   ```
 
 See [usage docs](https://nf-co.re/mag/usage) and [parameter docs](https://nf-co.re/mag/parameters) for all of the available options when running the pipeline.
 
@@ -92,15 +92,15 @@ Long read processing was inspired by [caspargross/HybridAssembly](https://github
 
 We thank the following people for their extensive assistance in the development of this pipeline:
 
-* [Alexander Peltzer](https://github.com/apeltzer)
-* [Antonia Schuster](https://github.com/antoniaschuster)
-* [Phil Ewels](https://github.com/ewels)
-* [Gisela Gabernet](https://github.com/ggabernet)
-* [Harshil Patel](https://github.com/drpatelh)
-* [Johannes Alneberg](https://github.com/alneberg)
-* [Maxime Borry](https://github.com/maxibor)
-* [Maxime Garcia](https://github.com/MaxUlysse)
-* [Michael L Heuer](https://github.com/heuermh)
+- [Alexander Peltzer](https://github.com/apeltzer)
+- [Antonia Schuster](https://github.com/antoniaschuster)
+- [Phil Ewels](https://github.com/ewels)
+- [Gisela Gabernet](https://github.com/ggabernet)
+- [Harshil Patel](https://github.com/drpatelh)
+- [Johannes Alneberg](https://github.com/alneberg)
+- [Maxime Borry](https://github.com/maxibor)
+- [Maxime Garcia](https://github.com/MaxUlysse)
+- [Michael L Heuer](https://github.com/heuermh)
 
 ## Contributions and Support
 

@@ -46,7 +46,6 @@ jobs:
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile test,docker --outdir ./results
 
-
   profiles:
     name: Run workflow profile
     # Only run on push if this is the nf-core dev branch (merged PRs)
@@ -68,4 +67,5 @@ jobs:
       - name: Run pipeline with ${{ matrix.profile }} test profile
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile ${{ matrix.profile }},docker --outdir ./results
+
 #
