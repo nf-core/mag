@@ -21,6 +21,7 @@ workflow ANCIENT_DNA_ASSEMLY_VALIDATION {
                     [],
                     [],
                     [],
+                    [],
                     [] )
 
         BCFTOOLS_INDEX_PRE(FREEBAYES.out.vcf)
