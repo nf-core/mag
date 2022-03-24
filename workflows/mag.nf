@@ -89,6 +89,7 @@ include { MULTIQC                                             } from '../modules
 include { INPUT_CHECK         } from '../subworkflows/local/input_check'
 include { BINNING_PREPARATION } from '../subworkflows/local/binning_preparation'
 include { BINNING             } from '../subworkflows/local/binning'
+include { BINNING_REFINEMENT  } from '../subworkflows/local/binning_refinement'
 include { BUSCO_QC            } from '../subworkflows/local/busco_qc'
 include { GTDBTK              } from '../subworkflows/local/gtdbtk'
 include { ANCIENT_DNA_ASSEMLY_VALIDATION } from '../subworkflows/local/ancient_dna'
@@ -642,7 +643,17 @@ workflow MAG {
             )
             ch_versions = ch_versions.mix(PROKKA.out.versions.first())
         }
+
+        /*
+        * DAS_Tool: binning refinement
+        */
+        if ( params.refine_bins_dastool && !params.skip_metabat2 && !params.skip_maxbin2 ) {
+            BINNING_REFINEMENT ( BINNING_PREPARATION.out.grouped_mappings, BINNING.out.bins )
+        }
+
     }
+
+
 
     CUSTOM_DUMPSOFTWAREVERSIONS (
         ch_versions.unique().collectFile(name: 'collated_versions.yml')
