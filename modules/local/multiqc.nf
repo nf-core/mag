@@ -1,21 +1,21 @@
 process MULTIQC {
     label 'process_medium'
 
-    conda (params.enable_conda ? "bioconda::multiqc=1.11" : null)
+    conda (params.enable_conda ? "bioconda::multiqc=1.12" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/multiqc:1.11--pyhdfd78af_0' :
-        'quay.io/biocontainers/multiqc:1.11--pyhdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/multiqc:1.12--pyhdfd78af_0' :
+        'quay.io/biocontainers/multiqc:1.12--pyhdfd78af_0' }"
 
     input:
     path multiqc_files
     path mqc_custom_config
     path 'fastqc_raw/*'
-    path 'fastp/*'
     path 'fastqc_trimmed/*'
     path host_removal
     path 'quast*/*'
     path 'bowtie2log/*'
     path short_summary
+    path additional
 
     output:
     path "*multiqc_report.html", emit: report

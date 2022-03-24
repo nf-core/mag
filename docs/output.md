@@ -57,6 +57,18 @@ FastQC is run for visualising the general quality metrics of the sequencing runs
 
 </details>
 
+### AdapterRemoval2
+
+[AdapterRemoval](https://adapterremoval.readthedocs.io/en/stable/) searches for and removes remnant adapter sequences from High-Throughput Sequencing (HTS) data and (optionally) trims low quality bases from the 3' end of reads following adapter removal. It is popular in the field of palaeogenomics. The output logs are stored in the results folder, and as a part of the MultiQC report.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+* `QC_shortreads/adapterremoval/[sample]/`
+    * `[sample]_ar2.log`: AdapterRemoval log file (normally called `.settings` by AdapterRemoval.)
+
+</details>
+
 ### Remove PhiX sequences from short reads
 
 The pipeline uses bowtie2 to map the reads against PhiX and removes mapped reads.
