@@ -54,7 +54,7 @@ jobs:
     strategy:
       matrix:
         # Run remaining test profiles with minimum nextflow version
-        profile: [test_host_rm, test_hybrid, test_hybrid_host_rm, test_busco_auto, test_ancient_dna]
+        profile: [test_host_rm, test_hybrid, test_hybrid_host_rm, test_busco_auto, test_ancient_dna, test_adapterremoval]
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2

@@ -102,12 +102,14 @@ include { ANCIENT_DNA_ASSEMLY_VALIDATION } from '../subworkflows/local/ancient_d
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { FASTQC as FASTQC_RAW        } from '../modules/nf-core/modules/fastqc/main'
-include { FASTQC as FASTQC_TRIMMED    } from '../modules/nf-core/modules/fastqc/main'
-include { FASTP                       } from '../modules/nf-core/modules/fastp/main'
-include { PRODIGAL                    } from '../modules/nf-core/modules/prodigal/main'
-include { PROKKA                      } from '../modules/nf-core/modules/prokka/main'
-include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
+include { FASTQC as FASTQC_RAW                   } from '../modules/nf-core/modules/fastqc/main'
+include { FASTQC as FASTQC_TRIMMED               } from '../modules/nf-core/modules/fastqc/main'
+include { FASTP                                  } from '../modules/nf-core/modules/fastp/main'
+include { ADAPTERREMOVAL as ADAPTERREMOVAL_PE    } from '../modules/nf-core/modules/adapterremoval/main'
+include { ADAPTERREMOVAL as ADAPTERREMOVAL_SE    } from '../modules/nf-core/modules/adapterremoval/main'
+include { PRODIGAL                               } from '../modules/nf-core/modules/prodigal/main'
+include { PROKKA                                 } from '../modules/nf-core/modules/prokka/main'
+include { CUSTOM_DUMPSOFTWAREVERSIONS            } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
 
 ////////////////////////////////////////////////////
 /* --  Create channel for reference databases  -- */
@@ -223,13 +225,43 @@ workflow MAG {
     )
     ch_versions = ch_versions.mix(FASTQC_RAW.out.versions.first())
 
-    FASTP (
-        ch_raw_short_reads,
-        [],
-        []
-    )
-    ch_short_reads = FASTP.out.reads
-    ch_versions = ch_versions.mix(FASTP.out.versions.first())
+    if ( params.clip_tool == 'fastp' ) {
+        ch_clipmerge_out = FASTP (
+            ch_raw_short_reads,
+            params.fastp_save_trimmed_fail,
+            []
+        )
+        ch_short_reads = FASTP.out.reads
+        ch_versions = ch_versions.mix(FASTP.out.versions.first())
+
+    } else if ( params.clip_tool == 'adapterremoval' ) {
+
+        // due to strange output file scheme in AR2, have to manually separate
+        // SE/PE to allow correct pulling of reads after.
+        ch_adapterremoval_in = ch_raw_short_reads
+            .branch {
+                    single: it[0]['single_end']
+                    paired: !it[0]['single_end']
+                }
+
+        ADAPTERREMOVAL_PE ( ch_adapterremoval_in.paired, [] )
+        ADAPTERREMOVAL_SE ( ch_adapterremoval_in.single, [] )
+
+        // pair1 and 2 come for PE data from separate output channels, so bring
+        // this back together again here
+        ch_adapterremoval_pe_out = Channel.empty()
+        ch_adapterremoval_pe_out = ADAPTERREMOVAL_PE.out.pair1_truncated
+            .join(ADAPTERREMOVAL_PE.out.pair2_truncated)
+            .map {
+                [ it[0], [it[1], it[2]] ]
+            }
+
+        ch_short_reads = Channel.empty()
+        ch_short_reads = ch_short_reads.mix(ADAPTERREMOVAL_SE.out.singles_truncated, ch_adapterremoval_pe_out)
+
+        ch_versions = ch_versions.mix(ADAPTERREMOVAL_PE.out.versions, ADAPTERREMOVAL_SE.out.versions)
+
+    }
 
     if (params.host_fasta){
         BOWTIE2_HOST_REMOVAL_BUILD (
@@ -544,7 +576,7 @@ workflow MAG {
             /*
             * BUSCO subworkflow: Quantitative measures for the assessment of genome assembly
             */
-            ch_input_bins_busco = BINNING.out.bins.mix( BINNING.out.unbinned ).transpose().dump(tag: "input_to_busco")
+            ch_input_bins_busco = BINNING.out.bins.mix( BINNING.out.unbinned ).transpose()
             BUSCO_QC (
                 ch_busco_db_file,
                 ch_busco_download_folder,
@@ -570,7 +602,6 @@ workflow MAG {
                                                 def new_reads = reads.flatten()
                                                 [meta, new_reads]
                                             }
-                                        .dump(tag: "input_for_quast_bins")
             QUAST_BINS ( ch_input_for_quast_bins )
             ch_versions = ch_versions.mix(QUAST_BINS.out.versions.first())
             QUAST_BINS_SUMMARY ( QUAST_BINS.out.quast_bin_summaries.collect() )
@@ -667,16 +698,24 @@ workflow MAG {
     */
 
     //This is the local module because (1) fastq file name clashes [probably solveable] and (2) host removal bowtie reporting
+    ch_multiqc_additional = Channel.empty()
+
+    if ( params.clip_tool == "fastp") {
+        ch_multiqc_additional = ch_multiqc_additional.mix(FASTP.out.json.collect{it[1]}.ifEmpty([]))
+    } else if ( params.clip_tool == "adapterremoval" ) {
+        ch_multiqc_additional = ch_multiqc_additional.mix(ADAPTERREMOVAL_PE.out.log.collect{it[1]}.ifEmpty([]), ADAPTERREMOVAL_SE.out.log.collect{it[1]}.ifEmpty([]))
+    }
+
     MULTIQC (
         ch_multiqc_files.collect(),
         ch_multiqc_custom_config.collect().ifEmpty([]),
         FASTQC_RAW.out.zip.collect{it[1]}.ifEmpty([]),
-        FASTP.out.json.collect{it[1]}.ifEmpty([]),
         FASTQC_TRIMMED.out.zip.collect{it[1]}.ifEmpty([]),
         ch_bowtie2_removal_host_multiqc.collect{it[1]}.ifEmpty([]),
         ch_quast_multiqc.collect().ifEmpty([]),
         ch_bowtie2_assembly_multiqc.collect().ifEmpty([]),
-        ch_busco_multiqc.collect().ifEmpty([])
+        ch_busco_multiqc.collect().ifEmpty([]),
+        ch_multiqc_additional.collect().ifEmpty([]),
     )
     multiqc_report = MULTIQC.out.report.toList()
     ch_versions    = ch_versions.mix(MULTIQC.out.versions)

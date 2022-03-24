@@ -274,16 +274,24 @@
             "description": "",
             "default": "",
             "properties": {
-                "save_trimmed_fail": {
-                    "type": "boolean",
-                    "fa_icon": "fas fa-save",
-                    "description": "Save the by fastp trimmed FastQ files in the results directory.",
-                    "help_text": "By default, trimmed FastQ files will not be saved to the results directory. Specify this flag (or set to true in your config file) to copy these files to the results directory when complete."
+                "clip_tool": {
+                    "type": "string",
+                    "default": "fastp",
+                    "description": "Specify which adapter clipping tool to use. Options: 'fastp', 'adapterremoval'",
+                    "enum": [
+                        "fastp",
+                        "adapterremoval"
+                    ]
+                },
+                "reads_minlength": {
+                    "type": "integer",
+                    "default": 15,
+                    "description": "The minimum length of reads must have to be retained for downstream analysis."
                 },
                 "fastp_qualified_quality": {
                     "type": "integer",
                     "default": 15,
-                    "description": "Minimum phred quality value of a base to be qualified.",
+                    "description": "Minimum phred quality value of a base to be qualified in fastp.",
                     "help": "Reads with more than 40% of unqualified bases will be discarded."
                 },
                 "fastp_cut_mean_quality": {
@@ -291,6 +299,30 @@
                     "default": 15,
                     "description": "The mean quality requirement used for per read sliding window cutting by fastp.",
                     "help": "Used in combination with the fastp options '--cut_front' and '--cut_tail'. If the mean quality within a window (of size 4) is below `--fastp_cut_mean_quality`, the bases are dropped and the sliding window is moved further, otherwise it stops."
+                },
+                "fastp_save_trimmed_fail": {
+                    "type": "boolean",
+                    "description": "Save reads that fail fastp filtering in a separate file. Not used downstream."
+                },
+                "adapterremoval_minquality": {
+                    "type": "integer",
+                    "default": 2,
+                    "description": "The minimum base quality for low-quality base trimming by AdapterRemoval."
+                },
+                "adapterremoval_trim_quality_stretch": {
+                    "type": "boolean",
+                    "description": "Turn on quality trimming by consecutive stretch of low quality bases, rather than by window.",
+                    "help_text": "Default base-quality trimming is set to trim by 'windows', as in FastP. Specifying this flag will use trim via contiguous stretch of low quality bases (Ns) instead.\n\n> Replaces --trimwindows 4 with --trimqualities in AdapterRemoval"
+                },
+                "adapterremoval_adapter1": {
+                    "type": "string",
+                    "default": "AGATCGGAAGAGCACACGTCTGAACTCCAGTCACNNNNNNATCTCGTATGCCGTCTTCTGCTTG",
+                    "description": "Forward read adapter to be trimmed by AdapterRemoval."
+                },
+                "adapterremoval_adapter2": {
+                    "type": "string",
+                    "default": "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT",
+                    "description": "Reverse read adapter to be trimmed by AdapterRemoval for paired end data."
                 },
                 "host_genome": {
                     "type": "string",

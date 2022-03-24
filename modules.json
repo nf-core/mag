@@ -3,6 +3,9 @@
     "homePage": "https://github.com/nf-core/mag",
     "repos": {
         "nf-core/modules": {
+            "adapterremoval": {
+                "git_sha": "f0800157544a82ae222931764483331a81812012"
+            },
             "bcftools/consensus": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
