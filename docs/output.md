@@ -64,8 +64,8 @@ FastQC is run for visualising the general quality metrics of the sequencing runs
 <details markdown="1">
 <summary>Output files</summary>
 
-* `QC_shortreads/adapterremoval/[sample]/`
-    * `[sample]_ar2.log`: AdapterRemoval log file (normally called `.settings` by AdapterRemoval.)
+- `QC_shortreads/adapterremoval/[sample]/`
+  - `[sample]_ar2.log`: AdapterRemoval log file (normally called `.settings` by AdapterRemoval.)
 
 </details>
 

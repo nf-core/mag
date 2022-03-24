@@ -278,10 +278,7 @@
                     "type": "string",
                     "default": "fastp",
                     "description": "Specify which adapter clipping tool to use. Options: 'fastp', 'adapterremoval'",
-                    "enum": [
-                        "fastp",
-                        "adapterremoval"
-                    ]
+                    "enum": ["fastp", "adapterremoval"]
                 },
                 "reads_minlength": {
                     "type": "integer",
