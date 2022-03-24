@@ -252,11 +252,9 @@ workflow MAG {
         ch_adapterremoval_pe_out = Channel.empty()
         ch_adapterremoval_pe_out = ADAPTERREMOVAL_PE.out.pair1_truncated
             .join(ADAPTERREMOVAL_PE.out.pair2_truncated)
-            .dump(tag: "ar_pe_mix_out")
             .map {
                 [ it[0], [it[1], it[2]] ]
             }
-            .dump(tag: "ar2_pe_out")
 
         ch_short_reads = Channel.empty()
         ch_short_reads = ch_short_reads.mix(ADAPTERREMOVAL_SE.out.singles_truncated, ch_adapterremoval_pe_out)
