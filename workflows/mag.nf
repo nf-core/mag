@@ -248,7 +248,7 @@ workflow MAG {
         ch_short_reads = Channel.empty()
         ch_short_reads = ch_short_reads.mix(ADAPTERREMOVAL_SE.out.singles_truncated, ch_adapterremoval_pe_out)
 
-        ch_versions = ch_versions.mix(ADAPTERREMOVAL_PE.out.versions, ADAPTERREMOVAL_SE.out.versions)
+        ch_versions = ch_versions.mix(ADAPTERREMOVAL_PE.out.versions.first(), ADAPTERREMOVAL_SE.out.versions.first())
 
     }
 

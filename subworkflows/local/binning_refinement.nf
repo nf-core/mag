@@ -2,8 +2,8 @@
  * Binning with MetaBAT2 and MaxBin2
  */
 
-include { DASTOOL_SCAFFOLDS2BIN as DASTOOL_SCAFFOLDS2BIN_METABAT2 } from '../../modules/nf-core/modules/dastool/scaffolds2bin/main.nf'
-include { DASTOOL_SCAFFOLDS2BIN as DASTOOL_SCAFFOLDS2BIN_MAXBIN2  } from '../../modules/nf-core/modules/dastool/scaffolds2bin/main.nf'
+include { DASTOOL_FASTATOCONTIG2BIN as DASTOOL_FASTATOCONTIG2BIN_METABAT2 } from '../../modules/nf-core/modules/dastool/fastatocontig2bin/main.nf'
+include { DASTOOL_FASTATOCONTIG2BIN as DASTOOL_FASTATOCONTIG2BIN_MAXBIN2  } from '../../modules/nf-core/modules/dastool/fastatocontig2bin/main.nf'
 include { DASTOOL_DASTOOL                                         } from '../../modules/nf-core/modules/dastool/dastool/main.nf'
 
 workflow BINNING_REFINEMENT {
@@ -23,25 +23,42 @@ workflow BINNING_REFINEMENT {
                                 .dump(tag: "binrefine_contigs")
     bins.dump(tag: "binrefine_bins")
 
-    ch_bins_for_scaffolds2bin = bins
+    ch_bins_for_fastatocontig2bin = bins
                                     .branch {
                                         metabat2: it[0]['binner'] == 'MetaBAT2'
                                         maxbin2:  it[0]['binner'] == 'MaxBin2'
                                     }
 
     // Run on each bin file separately
-    DASTOOL_SCAFFOLDS2BIN_METABAT2 ( ch_bins_for_scaffolds2bin.metabat2, "fa")
-    DASTOOL_SCAFFOLDS2BIN_MAXBIN2  ( ch_bins_for_scaffolds2bin.maxbin2, "fasta")
+    DASTOOL_FASTATOCONTIG2BIN_METABAT2 ( ch_bins_for_fastatocontig2bin.metabat2, "fa")
+    DASTOOL_FASTATOCONTIG2BIN_MAXBIN2 ( ch_bins_for_fastatocontig2bin.maxbin2, "fasta")
 
-    ch_versions = ch_versions.mix(DASTOOL_SCAFFOLDS2BIN_METABAT2.out.versions)
-    ch_versions = ch_versions.mix(DASTOOL_SCAFFOLDS2BIN_MAXBIN2.out.versions)
+    ch_fastatocontig2bin_for_dastool = Channel.empty()
+    ch_fastatocontig2bin_for_dastool = ch_fastatocontig2bin_for_dastool
+                                    .mix(DASTOOL_FASTATOCONTIG2BIN_METABAT2.out.fastatocontig2bin)
+                                    .mix(DASTOOL_FASTATOCONTIG2BIN_MAXBIN2.out.fastatocontig2bin)
+                                    .map {
+                                        meta, fastatocontig2bin ->
+                                            def meta_new = meta.clone()
+                                            meta_new.remove('binner')
+
+                                            [ meta_new, fastatocontig2bin ]
+                                    }
+                                    .groupTuple(by: 0)
+                                    .dump(tag: "fastatocontig2bin_out_mixed")
+
+    ch_input_for_dastool = ch_contigs_for_dastool.join(ch_fastatocontig2bin_for_dastool, by: 0).dump(tag: "input_to_dastool")
+
+    ch_versions = ch_versions.mix(DASTOOL_FASTATOCONTIG2BIN_METABAT2.out.versions.first())
+    ch_versions = ch_versions.mix(DASTOOL_FASTATOCONTIG2BIN_MAXBIN2.out.versions.first())
 
     // Concatenate each binner table per sample (based on contig names in FASTA file, not fasta file itself, so should be OK)
 
     // Run DAStool
-    //DASTOOL_DASTOOL()
-    //ch_versions = ch_versions.mix(DASTOOL_DASTOOL.out.versions)
+    DASTOOL_DASTOOL(ch_input_for_dastool, [], [])
+    ch_versions = ch_versions.mix(DASTOOL_DASTOOL.out.versions.first())
 
     emit:
-    versions               = ch_versions
+    dastool     = DASTOOL_DASTOOL.out.bins
+    versions    = ch_versions
 }

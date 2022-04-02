@@ -19,10 +19,10 @@
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
             "dastool/dastool": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                "git_sha": "8ce68107871c96519b3eb0095d97896e34ef4489"
             },
-            "dastool/scaffolds2bin": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+            "dastool/fastatocontig2bin": {
+                "git_sha": "8ce68107871c96519b3eb0095d97896e34ef4489"
             },
             "fastp": {
                 "git_sha": "d0a1cbb703a130c19f6796c3fce24fbe7dfce789"
