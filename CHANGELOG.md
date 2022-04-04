@@ -19,6 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
+- [#290](https://github.com/nf-core/mag/pull/290) - Fix caching of binning input
+
 ### `Dependencies`
 
 | Tool     | Previous version | New version |
