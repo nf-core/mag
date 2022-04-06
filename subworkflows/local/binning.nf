@@ -57,26 +57,26 @@ workflow BINNING {
 
     // combine depths back with assemblies
     ch_metabat2_input = assemblies
-        .map { meta, contigs, reads, indicies ->
+        .map { meta, assembly, bams, bais ->
             def meta_new = meta.clone()
             meta_new['binner'] = 'MetaBAT2'
 
-            [ meta_new, contigs, reads, indicies ]
+            [ meta_new, assembly, bams, bais ]
         }
         .join( ch_metabat_depths, by: 0 )
-        .map { meta, contigs, reads, indicies, depths ->
-            [ meta, contigs, depths ]
+        .map { meta, assembly, bams, bais, depths ->
+            [ meta, assembly, depths ]
         }
 
     // conver metabat2 depth files to maxbin2
     if ( !params.skip_maxbin2 ) {
         CONVERT_DEPTHS ( ch_metabat2_input )
         CONVERT_DEPTHS.out.output
-            .map { meta, contigs, reads, depth ->
+            .map { meta, assembly, reads, depth ->
                     def meta_new = meta.clone()
                     meta_new['binner'] = 'MaxBin2'
 
-                [ meta_new, contigs, reads, depth ]
+                [ meta_new, assembly, reads, depth ]
             }
             .set { ch_maxbin2_input }
     }
