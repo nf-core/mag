@@ -418,6 +418,7 @@ Besides the reference files or output files created by BUSCO, the following summ
   - `[assembler]-[sample/group]_DASTool_contig2bin.tsv`: File describing which contig is associated to which bin from the input binners
   - `[assembler]-[sample/group]_DASTool.log`: Log file from the DAS_Tool run describing the command executed and additional runtime information
   - `[assembler]-[sample/group].seqlength`: Tab-delimited file describing the length of each contig
+  - `[assembler]-[sample/group]_DASTool_bins/*`: Directory containing bins in FASTA format
 
 </details>
 
