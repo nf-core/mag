@@ -15,7 +15,7 @@ process SPLIT_FASTA {
     tuple val(meta), path("*.[0-9]*.fa.gz")     , optional:true, emit: unbinned
     tuple val(meta), path("*.pooled.fa.gz")     , optional:true, emit: pooled
     tuple val(meta), path("*.remaining.fa.gz")  , optional:true, emit: remaining
-    path "versions.yml"                                 , emit: versions
+    path "versions.yml"                         , emit: versions
 
     script:
     """

@@ -649,6 +649,7 @@ workflow MAG {
         */
         if ( params.refine_bins_dastool && !params.skip_metabat2 && !params.skip_maxbin2 ) {
             BINNING_REFINEMENT ( BINNING_PREPARATION.out.grouped_mappings, BINNING.out.bins )
+            ch_versions = ch_versions.mix(BINNING_REFINEMENT.out.versions)
         }
 
     }
@@ -683,13 +684,12 @@ workflow MAG {
     )
     */
 
-    //This is the local module because (1) fastq file name clashes [probably solveable] and (2) host removal bowtie reporting
-    ch_multiqc_additional = Channel.empty()
+    ch_multiqc_readprep = Channel.empty()
 
     if ( params.clip_tool == "fastp") {
-        ch_multiqc_additional = ch_multiqc_additional.mix(FASTP.out.json.collect{it[1]}.ifEmpty([]))
+        ch_multiqc_readprep = ch_multiqc_readprep.mix(FASTP.out.json.collect{it[1]}.ifEmpty([]))
     } else if ( params.clip_tool == "adapterremoval" ) {
-        ch_multiqc_additional = ch_multiqc_additional.mix(ADAPTERREMOVAL_PE.out.log.collect{it[1]}.ifEmpty([]), ADAPTERREMOVAL_SE.out.log.collect{it[1]}.ifEmpty([]))
+        ch_multiqc_readprep = ch_multiqc_readprep.mix(ADAPTERREMOVAL_PE.out.log.collect{it[1]}.ifEmpty([]), ADAPTERREMOVAL_SE.out.log.collect{it[1]}.ifEmpty([]))
     }
 
     MULTIQC (
@@ -701,7 +701,7 @@ workflow MAG {
         ch_quast_multiqc.collect().ifEmpty([]),
         ch_bowtie2_assembly_multiqc.collect().ifEmpty([]),
         ch_busco_multiqc.collect().ifEmpty([]),
-        ch_multiqc_additional.collect().ifEmpty([]),
+        ch_multiqc_readprep.collect().ifEmpty([]),
     )
     multiqc_report = MULTIQC.out.report.toList()
     ch_versions    = ch_versions.mix(MULTIQC.out.versions)

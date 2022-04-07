@@ -404,6 +404,23 @@ Besides the reference files or output files created by BUSCO, the following summ
 
 </details>
 
+### Bin Refinement
+
+[DAS Tool](https://github.com/cmks/DAS_Tool) is an automated method that integrates the results of a flexible number of binning algorithms to calculate an optimized, non-redundant set of bins from a single assembly. MAG uses this tool to attempt to further improve bins based on combining the MetaBAT2 and MaxBin2 binning output, assuming sufficient quality is met for those bins.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `BinRefinement/`
+
+  - `[assembler]-[sample/group]_allBins.eval`: Tab-delimited description with quality and completeness metrics for the input bin sets
+  - `[assembler]-[sample/group]_DASTool_summary.tsv`: Tab-delimited description with quality and completeness metrics for the refined output bin sets
+  - `[assembler]-[sample/group]_DASTool_contig2bin.tsv`: File describing which contig is associated to which bin from the input binners
+  - `[assembler]-[sample/group]_DASTool.log`: Log file from the DAS_Tool run describing the command executed and additional runtime information
+  - `[assembler]-[sample/group].seqlength`: Tab-delimited file describing the length of each contig
+
+</details>
+
 ## Taxonomic classification of binned genomes
 
 ### CAT

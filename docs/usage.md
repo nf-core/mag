@@ -287,3 +287,15 @@ NXF_OPTS='-Xms1g -Xmx4g'
 MAG integrates an additional subworkflow to validate ancient DNA _de novo_ assembly:
 
 [Characteristic patterns of ancient DNA (aDNA) damage](<(https://doi.org/10.1073/pnas.0704665104)>), namely DNA fragmentation and cytosine deamination (observed as C-to-T transitions) are typically used to authenticate aDNA sequences. By identifying assembled contigs carrying typical aDNA damages using [PyDamage](https://github.com/maxibor/pydamage), MAG can report and distinguish ancient contigs from contigs carrying no aDNA damage. Furthermore, to mitigate the effect of aDNA damage on contig sequence assembly, [freebayes](https://github.com/freebayes/freebayes) in combination with [BCFtools](https://github.com/samtools/bcftools) are used to (re)call the variants from the reads aligned to the contigs, and (re)generate contig consensus sequences.
+
+## A note on bin refinement
+
+DAS_Tool may not always be able to refine bins due to insufficient recovery of enough single-copy genes. In these cases you will get a NOTE such as
+
+```console
+[16/d330a6] NOTE: Process `NFCORE_MAG:MAG:BINNING_REFINEMENT:DASTOOL_DASTOOL (test_minigut_sample2)` terminated with an error exit status (1) -- Error is ignored
+```
+
+In this case, DAS_Tool pipeline has not necessarily failed but was unable to complete the refinement. You will therefore not expect to find any output files in the BinRefinement results directory for that sample.
+
+If you are regularly getting such errors, you can try reducing the `--refine_bins_dastool_threshold` value, which will modify the scoring threshold defined in the [DAS_Tool publication](https://www.nature.com/articles/s41564-018-0171-1).
