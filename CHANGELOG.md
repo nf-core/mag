@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | -------- | ---------------- | ----------- |
 | bcftools | 1.13             | 1.14        |
 | samtools | 1.14             | 1.15        |
+| pydamage | 0.62             | 0.70        |
 
 ## v2.1.1 - 2021/11/25
 

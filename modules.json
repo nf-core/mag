@@ -46,10 +46,10 @@
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
             "pydamage/analyze": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                "git_sha": "64b06baa06bc41269282bc7d286af37e859ad244"
             },
             "pydamage/filter": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                "git_sha": "64b06baa06bc41269282bc7d286af37e859ad244"
             },
             "samtools/faidx": {
                 "git_sha": "1ad73f1b2abdea9398680d6d20014838135c9a35"
