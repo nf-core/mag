@@ -4,7 +4,9 @@
 
 include { DASTOOL_FASTATOCONTIG2BIN as DASTOOL_FASTATOCONTIG2BIN_METABAT2 } from '../../modules/nf-core/modules/dastool/fastatocontig2bin/main.nf'
 include { DASTOOL_FASTATOCONTIG2BIN as DASTOOL_FASTATOCONTIG2BIN_MAXBIN2  } from '../../modules/nf-core/modules/dastool/fastatocontig2bin/main.nf'
-include { DASTOOL_DASTOOL                                         } from '../../modules/nf-core/modules/dastool/dastool/main.nf'
+include { DASTOOL_DASTOOL                                                 } from '../../modules/nf-core/modules/dastool/dastool/main.nf'
+include { RENAME_DASTOOL                                                  } from '../../modules/local/rename_dastool'
+
 
 workflow BINNING_REFINEMENT {
     take:
@@ -48,13 +50,25 @@ workflow BINNING_REFINEMENT {
     ch_versions = ch_versions.mix(DASTOOL_FASTATOCONTIG2BIN_METABAT2.out.versions.first())
     ch_versions = ch_versions.mix(DASTOOL_FASTATOCONTIG2BIN_MAXBIN2.out.versions.first())
 
-    // Concatenate each binner table per sample (based on contig names in FASTA file, not fasta file itself, so should be OK)
-
     // Run DAStool
     DASTOOL_DASTOOL(ch_input_for_dastool, [], [])
     ch_versions = ch_versions.mix(DASTOOL_DASTOOL.out.versions.first())
 
+    ch_input_for_renamedastool = DASTOOL_DASTOOL.out.bins
+        .map {
+            meta, bins ->
+                def meta_new = meta.clone()
+                meta_new['binner'] = 'DASTool'
+                [ meta_new, bins ]
+            }
+
+    RENAME_DASTOOL ( ch_input_for_renamedastool )
+
+    RENAME_DASTOOL.out.refined_bins.dump(tag: "out_from_renamedastool_bins")
+    RENAME_DASTOOL.out.refined_bins.dump(tag: "out_from_renamedastool_unbins")
+
     emit:
-    dastool     = DASTOOL_DASTOOL.out.bins
+    refined_bins     = RENAME_DASTOOL.out.refined_bins.dump(tag: "out_from_renamedastool")
+    refined_unbins   = RENAME_DASTOOL.out.refined_unbins
     versions    = ch_versions
 }

@@ -549,11 +549,30 @@ workflow MAG {
         ch_versions = ch_versions.mix(BINNING_PREPARATION.out.bowtie2_version.first())
         ch_versions = ch_versions.mix(BINNING.out.versions)
 
+        /*
+        * DAS_Tool: binning refinement
+        */
+        if ( params.refine_bins_dastool && !params.skip_metabat2 && !params.skip_maxbin2 ) {
+            BINNING_REFINEMENT ( BINNING_PREPARATION.out.grouped_mappings, BINNING.out.bins )
+            ch_versions = ch_versions.mix(BINNING_REFINEMENT.out.versions)
+        }
+
+        if ( params.postbinning_input == 'raw_bins_only' ) {
+            ch_input_for_postbinning_bins        = BINNING.out..dump(tag: "bin_refine_out_raw")
+            ch_input_for_postbinning_bins_unbins = BINNING.out.bins.mix(BINNING.out.unbinned)
+        } else if ( params.postbinning_input == 'refined_bins_only' ) {
+            ch_input_for_postbinning_bins        = BINNING_REFINEMENT.out.refined_bins.dump(tag: "bin_refine_out_refinedonly")
+            ch_input_for_postbinning_bins_unbins = BINNING_REFINEMENT.out.refined_bins.mix(BINNING_REFINEMENT.out.refined_unbins)
+        } else if (params.postbinning_input == 'both') {
+            ch_input_for_postbinning_bins        = BINNING.out.bins.mix(BINNING_REFINEMENT.out.refined_bins).dump(tag: "bin_refine_out_both")
+            ch_input_for_postbinning_bins_unbins = BINNING.out.bins.mix(BINNING.out.bins,BINNING_REFINEMENT.out.refined_bins,BINNING_REFINEMENT.out.refined_unbins)
+        }
+
         if (!params.skip_busco){
             /*
             * BUSCO subworkflow: Quantitative measures for the assessment of genome assembly
             */
-            ch_input_bins_busco = BINNING.out.bins.mix( BINNING.out.unbinned ).transpose()
+            ch_input_bins_busco = ch_input_for_postbinning_bins_unbins.transpose()
             BUSCO_QC (
                 ch_busco_db_file,
                 ch_busco_download_folder,
@@ -571,8 +590,7 @@ workflow MAG {
 
         ch_quast_bins_summary = Channel.empty()
         if (!params.skip_quast){
-            ch_input_for_quast_bins = BINNING.out.bins
-                                        .mix( BINNING.out.unbinned )
+            ch_input_for_quast_bins = ch_input_for_postbinning_bins_unbins
                                         .groupTuple()
                                         .map{
                                             meta, reads ->
@@ -597,7 +615,7 @@ workflow MAG {
             ch_cat_db = CAT_DB_GENERATE.out.db
         }
         CAT (
-            BINNING.out.bins,
+            ch_input_for_postbinning_bins,
             ch_cat_db
         )
         ch_versions = ch_versions.mix(CAT.out.versions.first())
@@ -608,7 +626,7 @@ workflow MAG {
         ch_gtdbtk_summary = Channel.empty()
         if ( gtdb ){
             GTDBTK (
-                BINNING.out.bins,
+                ch_input_for_postbinning_bins_unbins,
                 ch_busco_summary,
                 ch_gtdb
             )
@@ -628,7 +646,7 @@ workflow MAG {
         /*
          * Prokka: Genome annotation
          */
-        ch_bins_for_prokka = BINNING.out.bins.mix(BINNING.out.unbinned).transpose()
+        ch_bins_for_prokka = ch_input_for_postbinning_bins_unbins.transpose()
             .map { meta, bin ->
                 def meta_new = meta.clone()
                 meta_new.id  = bin.getBaseName()
@@ -643,15 +661,6 @@ workflow MAG {
             )
             ch_versions = ch_versions.mix(PROKKA.out.versions.first())
         }
-
-        /*
-        * DAS_Tool: binning refinement
-        */
-        if ( params.refine_bins_dastool && !params.skip_metabat2 && !params.skip_maxbin2 ) {
-            BINNING_REFINEMENT ( BINNING_PREPARATION.out.grouped_mappings, BINNING.out.bins )
-            ch_versions = ch_versions.mix(BINNING_REFINEMENT.out.versions)
-        }
-
     }
 
     CUSTOM_DUMPSOFTWAREVERSIONS (

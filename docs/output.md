@@ -425,7 +425,7 @@ Besides the reference files or output files created by BUSCO, the following summ
 
 ### CAT
 
-[CAT](https://github.com/dutilh/CAT) is a toolkit for annotating contigs and bins from metagenome-assembled-genomes. The MAG pipeline uses CAT to assign taxonomy to genome bins based on the taxnomy of the contigs.
+[CAT](https://github.com/dutilh/CAT) is a toolkit for annotating contigs and bins from metagenome-assembled-genomes. The nf-core/mag pipeline uses CAT to assign taxonomy to genome bins based on the taxnomy of the contigs.
 
 <details markdown="1">
 <summary>Output files</summary>

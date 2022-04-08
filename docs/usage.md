@@ -299,3 +299,5 @@ DAS_Tool may not always be able to refine bins due to insufficient recovery of e
 In this case, DAS_Tool pipeline has not necessarily failed but was unable to complete the refinement. You will therefore not expect to find any output files in the BinRefinement results directory for that sample.
 
 If you are regularly getting such errors, you can try reducing the `--refine_bins_dastool_threshold` value, which will modify the scoring threshold defined in the [DAS_Tool publication](https://www.nature.com/articles/s41564-018-0171-1).
+
+Furthermore, only
