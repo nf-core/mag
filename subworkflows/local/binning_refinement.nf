@@ -20,8 +20,6 @@ workflow BINNING_REFINEMENT {
                                         def meta_new = meta.clone()
                                         [ meta_new, assembly ]
                                 }
-                                .dump(tag: "binrefine_contigs")
-    bins.dump(tag: "binrefine_bins")
 
     ch_bins_for_fastatocontig2bin = bins
                                     .branch {
@@ -41,11 +39,9 @@ workflow BINNING_REFINEMENT {
                                         meta, fastatocontig2bin ->
                                             def meta_new = meta.clone()
                                             meta_new.remove('binner')
-
                                             [ meta_new, fastatocontig2bin ]
                                     }
                                     .groupTuple(by: 0)
-                                    .dump(tag: "fastatocontig2bin_out_mixed")
 
     ch_input_for_dastool = ch_contigs_for_dastool.join(ch_fastatocontig2bin_for_dastool, by: 0).dump(tag: "input_to_dastool")
 

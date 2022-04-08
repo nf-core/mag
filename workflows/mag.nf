@@ -654,8 +654,6 @@ workflow MAG {
 
     }
 
-
-
     CUSTOM_DUMPSOFTWAREVERSIONS (
         ch_versions.unique().collectFile(name: 'collated_versions.yml')
     )

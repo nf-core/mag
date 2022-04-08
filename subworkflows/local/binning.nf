@@ -174,5 +174,5 @@ workflow BINNING {
     unbinned                                     = ch_splitfasta_results_gunzipped.groupTuple()
     unbinned_gz                                  = SPLIT_FASTA.out.unbinned
     depths_summary                               = MAG_DEPTHS_SUMMARY.out.summary
-    versions                                     = ch_versions.dump(tag: "binning_versions")
+    versions                                     = ch_versions
 }
