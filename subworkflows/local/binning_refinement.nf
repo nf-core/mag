@@ -64,11 +64,8 @@ workflow BINNING_REFINEMENT {
 
     RENAME_DASTOOL ( ch_input_for_renamedastool )
 
-    RENAME_DASTOOL.out.refined_bins.dump(tag: "out_from_renamedastool_bins")
-    RENAME_DASTOOL.out.refined_bins.dump(tag: "out_from_renamedastool_unbins")
-
     emit:
-    refined_bins     = RENAME_DASTOOL.out.refined_bins.dump(tag: "out_from_renamedastool")
+    refined_bins     = RENAME_DASTOOL.out.refined_bins
     refined_unbins   = RENAME_DASTOOL.out.refined_unbins
     versions    = ch_versions
 }

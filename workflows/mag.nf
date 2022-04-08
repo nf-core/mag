@@ -558,13 +558,13 @@ workflow MAG {
         }
 
         if ( params.postbinning_input == 'raw_bins_only' ) {
-            ch_input_for_postbinning_bins        = BINNING.out..dump(tag: "bin_refine_out_raw")
+            ch_input_for_postbinning_bins        = BINNING.out.bins
             ch_input_for_postbinning_bins_unbins = BINNING.out.bins.mix(BINNING.out.unbinned)
         } else if ( params.postbinning_input == 'refined_bins_only' ) {
-            ch_input_for_postbinning_bins        = BINNING_REFINEMENT.out.refined_bins.dump(tag: "bin_refine_out_refinedonly")
+            ch_input_for_postbinning_bins        = BINNING_REFINEMENT.out.refined_bins
             ch_input_for_postbinning_bins_unbins = BINNING_REFINEMENT.out.refined_bins.mix(BINNING_REFINEMENT.out.refined_unbins)
         } else if (params.postbinning_input == 'both') {
-            ch_input_for_postbinning_bins        = BINNING.out.bins.mix(BINNING_REFINEMENT.out.refined_bins).dump(tag: "bin_refine_out_both")
+            ch_input_for_postbinning_bins        = BINNING.out.bins.mix(BINNING_REFINEMENT.out.refined_bins)
             ch_input_for_postbinning_bins_unbins = BINNING.out.bins.mix(BINNING.out.bins,BINNING_REFINEMENT.out.refined_bins,BINNING_REFINEMENT.out.refined_unbins)
         }
 
