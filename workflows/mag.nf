@@ -35,6 +35,8 @@ for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true
 // Check mandatory parameters
 if (params.input) { ch_input = file(params.input) } else { exit 1, 'Input samplesheet not specified!' }
 
+if ( !params.refine_bins_dastool && params.postbinning_input != 'raw_bins_only' ) { exit 1, "[nf-core/mag] error: Can only specify '--postbinning_input ${params.postbinning_input}' for downstream steps if bin refinement activated with --refine_bins_dastool! Check input." }
+
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     CONFIG FILES
@@ -555,18 +557,23 @@ workflow MAG {
         if ( params.refine_bins_dastool && !params.skip_metabat2 && !params.skip_maxbin2 ) {
             BINNING_REFINEMENT ( BINNING_PREPARATION.out.grouped_mappings, BINNING.out.bins )
             ch_versions = ch_versions.mix(BINNING_REFINEMENT.out.versions)
+
+            if ( params.postbinning_input == 'raw_bins_only' ) {
+                ch_input_for_postbinning_bins        = BINNING.out.bins
+                ch_input_for_postbinning_bins_unbins = BINNING.out.bins.mix(BINNING.out.unbinned)
+            } else if ( params.postbinning_input == 'refined_bins_only' ) {
+                ch_input_for_postbinning_bins        = BINNING_REFINEMENT.out.refined_bins
+                ch_input_for_postbinning_bins_unbins = BINNING_REFINEMENT.out.refined_bins.mix(BINNING_REFINEMENT.out.refined_unbins)
+            } else if (params.postbinning_input == 'both') {
+                ch_input_for_postbinning_bins        = BINNING.out.bins.mix(BINNING_REFINEMENT.out.refined_bins)
+                ch_input_for_postbinning_bins_unbins = BINNING.out.bins.mix(BINNING.out.unbinned,BINNING_REFINEMENT.out.refined_bins,BINNING_REFINEMENT.out.refined_unbins)
+            }
+
+        } else {
+                ch_input_for_postbinning_bins        = BINNING.out.bins
+                ch_input_for_postbinning_bins_unbins = BINNING.out.bins.mix(BINNING.out.unbinned)
         }
 
-        if ( params.postbinning_input == 'raw_bins_only' ) {
-            ch_input_for_postbinning_bins        = BINNING.out.bins
-            ch_input_for_postbinning_bins_unbins = BINNING.out.bins.mix(BINNING.out.unbinned)
-        } else if ( params.postbinning_input == 'refined_bins_only' ) {
-            ch_input_for_postbinning_bins        = BINNING_REFINEMENT.out.refined_bins
-            ch_input_for_postbinning_bins_unbins = BINNING_REFINEMENT.out.refined_bins.mix(BINNING_REFINEMENT.out.refined_unbins)
-        } else if (params.postbinning_input == 'both') {
-            ch_input_for_postbinning_bins        = BINNING.out.bins.mix(BINNING_REFINEMENT.out.refined_bins)
-            ch_input_for_postbinning_bins_unbins = BINNING.out.bins.mix(BINNING.out.bins,BINNING_REFINEMENT.out.refined_bins,BINNING_REFINEMENT.out.refined_unbins)
-        }
 
         if (!params.skip_busco){
             /*
