@@ -5,7 +5,8 @@
 include { DASTOOL_FASTATOCONTIG2BIN as DASTOOL_FASTATOCONTIG2BIN_METABAT2 } from '../../modules/nf-core/modules/dastool/fastatocontig2bin/main.nf'
 include { DASTOOL_FASTATOCONTIG2BIN as DASTOOL_FASTATOCONTIG2BIN_MAXBIN2  } from '../../modules/nf-core/modules/dastool/fastatocontig2bin/main.nf'
 include { DASTOOL_DASTOOL                                                 } from '../../modules/nf-core/modules/dastool/dastool/main.nf'
-include { RENAME_DASTOOL                                                  } from '../../modules/local/rename_dastool'
+include { RENAME_PREDASTOOL                                               } from '../../modules/local/rename_predastool'
+include { RENAME_POSTDASTOOL                                              } from '../../modules/local/rename_postdastool'
 
 
 workflow BINNING_REFINEMENT {
@@ -23,11 +24,11 @@ workflow BINNING_REFINEMENT {
                                         [ meta_new, assembly ]
                                 }
 
-    ch_bins_for_fastatocontig2bin = bins
-                                    .branch {
-                                        metabat2: it[0]['binner'] == 'MetaBAT2'
-                                        maxbin2:  it[0]['binner'] == 'MaxBin2'
-                                    }
+    ch_bins_for_fastatocontig2bin = RENAME_PREDASTOOL(bins).renamed_bins
+                                        .branch {
+                                            metabat2: it[0]['binner'] == 'MetaBAT2'
+                                            maxbin2:  it[0]['binner'] == 'MaxBin2'
+                                        }
 
     // Run on each bin file separately
     DASTOOL_FASTATOCONTIG2BIN_METABAT2 ( ch_bins_for_fastatocontig2bin.metabat2, "fa")
@@ -62,10 +63,10 @@ workflow BINNING_REFINEMENT {
                 [ meta_new, bins ]
             }
 
-    RENAME_DASTOOL ( ch_input_for_renamedastool )
+    RENAME_POSTDASTOOL ( ch_input_for_renamedastool )
 
     emit:
-    refined_bins     = RENAME_DASTOOL.out.refined_bins
-    refined_unbins   = RENAME_DASTOOL.out.refined_unbins
+    refined_bins     = DASTOOL_DASTOOL.out.bins
+    refined_unbins   = RENAME_POSTDASTOOL.out.refined_unbins
     versions    = ch_versions
 }

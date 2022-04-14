@@ -1,4 +1,4 @@
-process RENAME_DASTOOL {
+process RENAME_POSTDASTOOL {
     tag "${meta.assembler}-${meta.id}"
     label 'process_low'
 
@@ -18,11 +18,7 @@ process RENAME_DASTOOL {
     script:
     """
     if [[ -f unbinned.fa ]]; then
-        mv unbinned.fa ${meta.assembler}-${meta.binner}-${meta.id}_refined_unbinned.fasta
+        mv unbinned.fa ${meta.assembler}-DASToolRefined-${meta.id}_refined_unbinned.fasta
     fi
-
-    for i in *.fa; do
-        mv \$i \${i%%.fa}_refined.fasta
-    done
     """
 }
