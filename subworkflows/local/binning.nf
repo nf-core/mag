@@ -105,8 +105,13 @@ workflow BINNING {
     // decompress main bins (and large unbinned contigs from SPLIT_FASTA) for
     // MAG_DEPTHS, first have to separate and re-group due to limitation of
     // GUNZIP module
-    ch_metabat2_results_transposed = METABAT2_METABAT2.out.fasta.transpose()
-    ch_maxbin2_results_transposed = MAXBIN2.out.binned_fastas.transpose()
+    if ( !params.skip_metabat2 ) {
+        ch_metabat2_results_transposed = METABAT2_METABAT2.out.fasta.transpose()
+    }
+
+    if ( !params.skip_maxbin2 ) {
+        ch_maxbin2_results_transposed = MAXBIN2.out.binned_fastas.transpose()
+    }
 
     ch_split_fasta_results_transposed = SPLIT_FASTA.out.unbinned.transpose()
     ch_versions = ch_versions.mix(SPLIT_FASTA.out.versions)

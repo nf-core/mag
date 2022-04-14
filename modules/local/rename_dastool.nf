@@ -18,7 +18,7 @@ process RENAME_DASTOOL {
     script:
     """
     if [[ -f unbinned.fa ]]; then
-        mv unbinned.fa ${meta.assembler}-${meta.id}_refined_unbinned.fasta
+        mv unbinned.fa ${meta.assembler}-${meta.binner}-${meta.id}_refined_unbinned.fasta
     fi
 
     for i in *.fa; do
