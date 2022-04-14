@@ -35,8 +35,6 @@ for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true
 // Check mandatory parameters
 if (params.input) { ch_input = file(params.input) } else { exit 1, 'Input samplesheet not specified!' }
 
-if ( !params.refine_bins_dastool && params.postbinning_input != 'raw_bins_only' ) { exit 1, "[nf-core/mag] error: Can only specify '--postbinning_input ${params.postbinning_input}' for downstream steps if bin refinement activated with --refine_bins_dastool! Check input." }
-
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     CONFIG FILES
