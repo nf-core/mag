@@ -37,7 +37,7 @@ workflow BUSCO_QC {
         ch_downloads = BUSCO.out.busco_downloads.groupTuple().map{lin,downloads -> downloads[0]}.toSortedList().flatten()
         BUSCO_SAVE_DOWNLOAD ( ch_downloads )
     }
-    // group by assembler and sample name for plotting
+    // group by assembler, binner and sample name for plotting
     // note: failed bins and bins with no domain, i.e. with viral lineages selected, will not be represented in these plots
     ch_results_busco_plot = BUSCO.out.summary_specific.groupTuple(by: 0)
     if (!params.busco_reference){

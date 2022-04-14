@@ -1,5 +1,5 @@
 process BUSCO_PLOT {
-    tag "${meta.assembler}-${meta.id}"
+    tag "${meta.assembler}-${meta.binner}-${meta.id}"
 
     conda (params.enable_conda ? "bioconda::busco=5.1.0" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -10,8 +10,8 @@ process BUSCO_PLOT {
     tuple val(meta), path(summaries)
 
     output:
-    path("${meta.assembler}-${meta.id}.*.busco_figure.png") , optional:true, emit: png
-    path("${meta.assembler}-${meta.id}.*.busco_figure.R")   , optional:true, emit: rscript
+    path("${meta.assembler}-${meta.binner}-${meta.id}.*.busco_figure.png") , optional:true, emit: png
+    path("${meta.assembler}-${meta.binner}-${meta.id}.*.busco_figure.R")   , optional:true, emit: rscript
     path "versions.yml"                                                    , emit: versions
 
     script:
