@@ -79,7 +79,7 @@ class WorkflowMag {
             }
         }
 
-        // Check if t least two binners where applied in order to run DAS Tool for bin refinment
+        // Check if at least two binners were applied in order to run DAS Tool for bin refinment
         // (needs to be adjusted in case additional binners are added)
         if (params.refine_bins_dastool && params.skip_metabat2 ){
             log.error "Both --refine_bins_dastool and --skip_metabat2 are specified! Invalid combination, bin refinement requires MetaBAT2 and MaxBin2 binning results."
