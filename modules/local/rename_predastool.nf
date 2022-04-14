@@ -16,7 +16,7 @@ process RENAME_PREDASTOOL {
 
     script:
     """
-    for i in *{fa.gz,fasta.gz}; do
+    for i in ${bins}; do
         filename=\$i
         suffix=\${filename#*.}
 
