@@ -79,6 +79,17 @@ class WorkflowMag {
             }
         }
 
+        // Check if t least two binners where applied in order to run DAS Tool for bin refinment
+        // (needs to be adjusted in case additional binners are added)
+        if (params.refine_bins_dastool && params.skip_metabat2 ){
+            log.error "Both --refine_bins_dastool and --skip_metabat2 are specified! Invalid combination, bin refinement requires MetaBAT2 and MaxBin2 binning results."
+            System.exit(1)
+        }
+        if (params.refine_bins_dastool && params.skip_maxbin2 ){
+            log.error "Both --refine_bins_dastool and --skip_maxbin2 are specified! Invalid combination, bin refinement requires MetaBAT2 and MaxBin2 binning results."
+            System.exit(1)
+        }
+
         // Check if BUSCO parameters combinations are valid
         if (params.skip_busco){
             if (params.busco_reference) {
