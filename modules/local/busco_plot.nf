@@ -21,12 +21,16 @@ process BUSCO_PLOT {
         # replace dots in bin names within summary file names by underscores
         # currently (BUSCO v5.1.0) generate_plot.py does not allow further dots
         for sum in ${summaries}; do
-            [[ \${sum} =~ short_summary.([_[:alnum:]]+).([_[:alnum:]]+).${meta.assembler}-${meta.binner}-${meta.id}.(.+).txt ]];
-            mode=\${BASH_REMATCH[1]}
-            db_name=\${BASH_REMATCH[2]}
-            bin="${meta.assembler}-${meta.binner}-${meta.id}.\${BASH_REMATCH[3]}"
-            bin_new="\${bin//./_}"
-            mv \${sum} short_summary.\${mode}.\${db_name}.\${bin_new}.txt
+            if [[ \${sum} =~ short_summary.([_[:alnum:]]+).([_[:alnum:]]+).${meta.assembler}-${meta.binner}-${meta.id}.(.+).txt ]]; then
+                mode=\${BASH_REMATCH[1]}
+                db_name=\${BASH_REMATCH[2]}
+                bin="${meta.assembler}-${meta.binner}-${meta.id}.\${BASH_REMATCH[3]}"
+                bin_new="\${bin//./_}"
+                mv \${sum} short_summary.\${mode}.\${db_name}.\${bin_new}.txt
+            else
+                echo "ERROR: the summary filename \${sum} does not match the expected format 'short_summary.([_[:alnum:]]+).([_[:alnum:]]+).${meta.assembler}-${meta.binner}-${meta.id}.(.+).txt'!"
+                exit 1
+            fi
         done
         generate_plot.py --working_directory .
 
