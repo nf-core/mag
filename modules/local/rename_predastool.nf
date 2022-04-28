@@ -16,11 +16,10 @@ process RENAME_PREDASTOOL {
 
     script:
     """
-    for i in ${bins}; do
-        filename=\$i
-        suffix=\${filename#*.}
+    SAMPLES=(*)
 
-        mv \$i ${meta.assembler}-${meta.binner}Refined-${meta.id}.\$suffix
+    for i in \$(seq 0 \$((\${#SAMPLES[@]}-1))); do
+        mv \${SAMPLES[\$i]} ${meta.assembler}-${meta.binner}Refined-${meta.id}.\$(( \$i + 1)).fa
     done
     """
 }

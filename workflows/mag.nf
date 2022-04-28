@@ -553,7 +553,8 @@ workflow MAG {
         * DAS_Tool: binning refinement
         */
         if ( params.refine_bins_dastool && !params.skip_metabat2 && !params.skip_maxbin2 ) {
-            BINNING_REFINEMENT ( BINNING_PREPARATION.out.grouped_mappings, BINNING.out.bins )
+
+            BINNING_REFINEMENT ( BINNING_PREPARATION.out.grouped_mappings, BINNING.out.bins, BINNING.out.metabat2depths )
             ch_versions = ch_versions.mix(BINNING_REFINEMENT.out.versions)
 
             if ( params.postbinning_input == 'raw_bins_only' ) {
@@ -572,6 +573,8 @@ workflow MAG {
                 ch_input_for_postbinning_bins_unbins = BINNING.out.bins.mix(BINNING.out.unbinned)
         }
 
+        ch_input_for_postbinning_bins
+        ch_input_for_postbinning_bins
 
         if (!params.skip_busco){
             /*
@@ -638,6 +641,7 @@ workflow MAG {
             ch_versions = ch_versions.mix(GTDBTK.out.versions.first())
             ch_gtdbtk_summary = GTDBTK.out.summary
         }
+
 
         if (!params.skip_busco || !params.skip_quast || gtdb){
             BIN_SUMMARY (

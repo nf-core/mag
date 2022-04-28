@@ -12,13 +12,12 @@ process RENAME_POSTDASTOOL {
     tuple val(meta), path(bins)
 
     output:
-    tuple val(meta), path("*_refined.fasta")           , optional:true, emit: refined_bins
-    tuple val(meta), path("*_refined_unbinned.fasta")  , optional:true, emit: refined_unbins
+    tuple val(meta), path("${meta.assembler}-DASToolUnbinned-${meta.id}.fa")  , optional:true, emit: refined_unbins
 
     script:
     """
     if [[ -f unbinned.fa ]]; then
-        mv unbinned.fa ${meta.assembler}-DASToolRefined-${meta.id}_refined_unbinned.fasta
+        mv unbinned.fa ${meta.assembler}-DASToolUnbinned-${meta.id}.fa
     fi
     """
 }

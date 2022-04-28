@@ -67,7 +67,7 @@ workflow BINNING {
             [ meta, assembly, depths ]
         }
 
-    // conver metabat2 depth files to maxbin2
+    // convert metabat2 depth files to maxbin2
     if ( !params.skip_maxbin2 ) {
         CONVERT_DEPTHS ( ch_metabat2_input )
         ch_maxbin2_input = CONVERT_DEPTHS.out.output
@@ -179,5 +179,6 @@ workflow BINNING {
     unbinned                                     = ch_splitfasta_results_gunzipped.groupTuple()
     unbinned_gz                                  = SPLIT_FASTA.out.unbinned
     depths_summary                               = MAG_DEPTHS_SUMMARY.out.summary
+    metabat2depths                               = METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS.out.depth
     versions                                     = ch_versions
 }
