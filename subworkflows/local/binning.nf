@@ -121,17 +121,19 @@ workflow BINNING {
         .mix( ch_maxbin2_results_transposed )
 
     GUNZIP_BINS ( ch_final_bins_for_gunzip )
-    ch_binning_results_gunzipped = GUNZIP_BINS.out.gunzip
+    GUNZIP_BINS.out
+        .set{ ch_binning_results_gunzipped }
     ch_versions = ch_versions.mix(GUNZIP_BINS.out.versions.first())
 
     GUNZIP_UNBINS ( ch_split_fasta_results_transposed )
-    ch_splitfasta_results_gunzipped = GUNZIP_UNBINS.out.gunzip
+    GUNZIP_UNBINS.out.gunzip
+        .set{ ch_splitfasta_results_gunzipped }
     ch_versions = ch_versions.mix(GUNZIP_UNBINS.out.versions.first())
 
     // Compute bin depths for different samples (according to `binning_map_mode`)
     // Have to remove binner meta for grouping to mix back with original depth
     // files, as required for MAG_DEPTHS
-    ch_depth_input = ch_binning_results_gunzipped
+    ch_binning_results_gunzipped
         .mix(ch_splitfasta_results_gunzipped )
         .map { meta, results ->
             def meta_new = meta.clone()
@@ -140,6 +142,7 @@ workflow BINNING {
         }
         .groupTuple (by: 0 )
         .join( METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS.out.depth, by: 0 )
+        .set { ch_depth_input }
 
     MAG_DEPTHS ( ch_depth_input )
     ch_versions = ch_versions.mix(MAG_DEPTHS.out.versions)
@@ -165,11 +168,13 @@ workflow BINNING {
     ch_versions = ch_versions.mix( MAG_DEPTHS_SUMMARY.out.versions )
 
     // Group final binned contigs per sample for final output
-    ch_binning_results_gunzipped_final = ch_binning_results_gunzipped
+    ch_binning_results_gunzipped
         .groupTuple(by: 0)
+        .set{ ch_binning_results_gunzipped_final }
 
-    ch_binning_results_gzipped_final = METABAT2_METABAT2.out.fasta.mix(MAXBIN2.out.binned_fastas)
+    METABAT2_METABAT2.out.fasta.mix(MAXBIN2.out.binned_fastas)
         .groupTuple(by: 0)
+        .set{ ch_binning_results_gzipped_final }
 
     SPLIT_FASTA.out.unbinned
 
