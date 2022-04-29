@@ -316,13 +316,13 @@ workflow MAG {
     // join long and short reads by sample name
     ch_short_reads
         .map { meta, sr -> [ meta.id, meta, sr ] }
-        .set { ch_short_reads_tmp }
+        .set {ch_short_reads_tmp}
 
     ch_long_reads
         .map { meta, lr -> [ meta.id, meta, lr ] }
         .join(ch_short_reads_tmp, by: 0)
         .map { id, meta_lr, lr, meta_sr, sr -> [ meta_lr, lr, sr[0], sr[1] ] }  // should not occur for single-end, since SPAdes (hybrid) does not support single-end
-        .set { ch_short_and_long_reads }
+        .set{ ch_short_and_long_reads }
 
     FILTLONG (
         ch_short_and_long_reads

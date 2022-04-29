@@ -121,7 +121,7 @@ workflow BINNING {
         .mix( ch_maxbin2_results_transposed )
 
     GUNZIP_BINS ( ch_final_bins_for_gunzip )
-    GUNZIP_BINS.out
+    GUNZIP_BINS.out.gunzip
         .set{ ch_binning_results_gunzipped }
     ch_versions = ch_versions.mix(GUNZIP_BINS.out.versions.first())
 
