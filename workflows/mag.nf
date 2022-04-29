@@ -117,78 +117,66 @@ include { CUSTOM_DUMPSOFTWAREVERSIONS            } from '../modules/nf-core/modu
 
 if ( params.host_genome ) {
     host_fasta = params.genomes[params.host_genome].fasta ?: false
-    Channel
+    ch_host_fasta = Channel
         .value(file( "${host_fasta}" ))
-        .set { ch_host_fasta }
-
     host_bowtie2index = params.genomes[params.host_genome].bowtie2 ?: false
-    Channel
+    ch_host_bowtie2index = Channel
         .value(file( "${host_bowtie2index}/*" ))
-        .set { ch_host_bowtie2index }
 } else if ( params.host_fasta ) {
-    Channel
+    ch_host_fasta = Channel
         .value(file( "${params.host_fasta}" ))
-        .set { ch_host_fasta }
 } else {
     ch_host_fasta = Channel.empty()
 }
 
 if(params.busco_reference){
-    Channel
+    ch_busco_db_file = Channel
         .value(file( "${params.busco_reference}" ))
-        .set { ch_busco_db_file }
 } else {
     ch_busco_db_file = Channel.empty()
 }
 if (params.busco_download_path) {
-    Channel
+    ch_busco_download_folder = Channel
         .value(file( "${params.busco_download_path}" ))
-        .set { ch_busco_download_folder }
 } else {
     ch_busco_download_folder = Channel.empty()
 }
 
 if(params.centrifuge_db){
-    Channel
+    ch_centrifuge_db_file = Channel
         .value(file( "${params.centrifuge_db}" ))
-        .set { ch_centrifuge_db_file }
 } else {
     ch_centrifuge_db_file = Channel.empty()
 }
 
 if(params.kraken2_db){
-    Channel
+    ch_kraken2_db_file = Channel
         .value(file( "${params.kraken2_db}" ))
-        .set { ch_kraken2_db_file }
 } else {
     ch_kraken2_db_file = Channel.empty()
 }
 
 if(params.cat_db){
-    Channel
+    ch_cat_db_file = Channel
         .value(file( "${params.cat_db}" ))
-        .set { ch_cat_db_file }
 } else {
     ch_cat_db_file = Channel.empty()
 }
 
 if(!params.keep_phix) {
-    Channel
+    ch_phix_db_file = Channel
         .value(file( "${params.phix_reference}" ))
-        .set { ch_phix_db_file }
 }
 
 if (!params.keep_lambda) {
-    Channel
+    ch_nanolyse_db = Channel
         .value(file( "${params.lambda_reference}" ))
-        .set { ch_nanolyse_db }
 }
 
 gtdb = params.skip_busco ? false : params.gtdb
 if (gtdb) {
-    Channel
+    ch_gtdb = Channel
         .value(file( "${gtdb}" ))
-        .set { ch_gtdb }
 } else {
     ch_gtdb = Channel.empty()
 }
@@ -325,15 +313,13 @@ workflow MAG {
     }
 
     // join long and short reads by sample name
-    ch_short_reads
+    ch_short_reads_tmp = ch_short_reads
         .map { meta, sr -> [ meta.id, meta, sr ] }
-        .set {ch_short_reads_tmp}
 
-    ch_long_reads
+    ch_short_and_long_reads = ch_long_reads
         .map { meta, lr -> [ meta.id, meta, lr ] }
         .join(ch_short_reads_tmp, by: 0)
         .map { id, meta_lr, lr, meta_sr, sr -> [ meta_lr, lr, sr[0], sr[1] ] }  // should not occur for single-end, since SPAdes (hybrid) does not support single-end
-        .set{ ch_short_and_long_reads }
 
     FILTLONG (
         ch_short_and_long_reads
@@ -368,13 +354,12 @@ workflow MAG {
 
     if (( params.centrifuge_db || params.kraken2_db ) && !params.skip_krona){
         KRONA_DB ()
-        CENTRIFUGE.out.results_for_krona.mix(KRAKEN2.out.results_for_krona)
+        ch_tax_classifications = CENTRIFUGE.out.results_for_krona.mix(KRAKEN2.out.results_for_krona)
             . map { classifier, meta, report ->
                 def meta_new = meta.clone()
                 meta_new.classifier  = classifier
                 [ meta_new, report ]
             }
-            .set { ch_tax_classifications }
         KRONA (
             ch_tax_classifications,
             KRONA_DB.out.db.collect()
@@ -392,7 +377,7 @@ workflow MAG {
     if (params.coassemble_group) {
         // short reads
         // group and set group as new id
-        ch_short_reads
+        ch_short_reads_grouped = ch_short_reads
             .map { meta, reads -> [ meta.group, meta, reads ] }
             .groupTuple(by: 0)
             .map { group, metas, reads ->
@@ -403,10 +388,9 @@ workflow MAG {
                     if (!params.single_end) [ meta, reads.collect { it[0] }, reads.collect { it[1] } ]
                     else [ meta, reads.collect { it }, [] ]
             }
-            .set { ch_short_reads_grouped }
         // long reads
         // group and set group as new id
-        ch_long_reads
+        ch_long_reads_grouped = ch_long_reads
             .map { meta, reads -> [ meta.group, meta, reads ] }
             .groupTuple(by: 0)
             .map { group, metas, reads ->
@@ -415,25 +399,22 @@ workflow MAG {
                 meta.group       = group
                 [ meta, reads.collect { it } ]
             }
-            .set { ch_long_reads_grouped }
     } else {
-        ch_short_reads
+        ch_short_reads_grouped = ch_short_reads
             .map { meta, reads ->
                     if (!params.single_end){ [ meta, [reads[0]], [reads[1]] ] }
                     else [ meta, [reads], [] ] }
-            .set { ch_short_reads_grouped }
     }
 
     ch_assemblies = Channel.empty()
     if (!params.skip_megahit){
         MEGAHIT ( ch_short_reads_grouped )
-        MEGAHIT.out.assembly
+        ch_megahit_assemblies = MEGAHIT.out.assembly
             .map { meta, assembly ->
                 def meta_new = meta.clone()
                 meta_new.assembler  = "MEGAHIT"
                 [ meta_new, assembly ]
             }
-            .set { ch_megahit_assemblies }
         ch_assemblies = ch_assemblies.mix(ch_megahit_assemblies)
         ch_versions = ch_versions.mix(MEGAHIT.out.versions.first())
     }
@@ -457,41 +438,36 @@ workflow MAG {
         }
     } else {
         ch_short_reads_spades = ch_short_reads
-        ch_long_reads
+        ch_long_reads_spades = ch_long_reads
             .map { meta, reads -> [ meta, [reads] ] }
-            .set { ch_long_reads_spades }
     }
 
     if (!params.single_end && !params.skip_spades){
         SPADES ( ch_short_reads_spades )
-        SPADES.out.assembly
+        ch_spades_assemblies = SPADES.out.assembly
             .map { meta, assembly ->
                 def meta_new = meta.clone()
                 meta_new.assembler  = "SPAdes"
                 [ meta_new, assembly ]
             }
-            .set { ch_spades_assemblies }
         ch_assemblies = ch_assemblies.mix(ch_spades_assemblies)
         ch_versions = ch_versions.mix(SPADES.out.versions.first())
     }
 
     if (!params.single_end && !params.skip_spadeshybrid){
-        ch_short_reads_spades
+        ch_short_reads_spades_tmp = ch_short_reads_spades
             .map { meta, reads -> [ meta.id, meta, reads ] }
-            .set {ch_short_reads_spades_tmp}
-        ch_long_reads_spades
+        ch_reads_spadeshybrid = ch_long_reads_spades
             .map { meta, reads -> [ meta.id, meta, reads ] }
             .combine(ch_short_reads_spades_tmp, by: 0)
             .map { id, meta_long, long_reads, meta_short, short_reads -> [ meta_short, long_reads, short_reads ] }
-            .set { ch_reads_spadeshybrid }
         SPADESHYBRID ( ch_reads_spadeshybrid )
-        SPADESHYBRID.out.assembly
+        ch_spadeshybrid_assemblies = SPADESHYBRID.out.assembly
             .map { meta, assembly ->
                 def meta_new = meta.clone()
                 meta_new.assembler  = "SPAdesHybrid"
                 [ meta_new, assembly ]
             }
-            .set { ch_spadeshybrid_assemblies }
         ch_assemblies = ch_assemblies.mix(ch_spadeshybrid_assemblies)
         ch_versions = ch_versions.mix(SPADESHYBRID.out.versions.first())
     }
@@ -651,13 +627,12 @@ workflow MAG {
         /*
          * Prokka: Genome annotation
          */
-        BINNING.out.bins.mix(BINNING.out.unbinned).transpose()
+        ch_bins_for_prokka = BINNING.out.bins.mix(BINNING.out.unbinned).transpose()
             .map { meta, bin ->
                 def meta_new = meta.clone()
                 meta_new.id  = bin.getBaseName()
                 [ meta_new, bin ]
             }
-            .set { ch_bins_for_prokka }
 
         if (!params.skip_prokka){
             PROKKA (
