@@ -77,6 +77,7 @@ workflow BINNING {
 
                 [ meta_new, assembly, reads, depth ]
             }
+            .set { ch_maxbin2_input }
         ch_versions = ch_versions.mix(CONVERT_DEPTHS.out.versions.first())
     }
 
