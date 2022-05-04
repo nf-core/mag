@@ -7,13 +7,24 @@ include { DASTOOL_FASTATOCONTIG2BIN as DASTOOL_FASTATOCONTIG2BIN_MAXBIN2  } from
 include { DASTOOL_DASTOOL                                                 } from '../../modules/nf-core/modules/dastool/dastool/main.nf'
 include { RENAME_PREDASTOOL                                               } from '../../modules/local/rename_predastool'
 include { RENAME_POSTDASTOOL                                              } from '../../modules/local/rename_postdastool'
-include { MAG_DEPTHS                                                      } from '../../modules/local/mag_depths'
+include { MAG_DEPTHS as MAG_DEPTHS_REFINED                                } from '../../modules/local/mag_depths'
+include { MAG_DEPTHS_PLOT as MAG_DEPTHS_PLOT_REFINED                      } from '../../modules/local/mag_depths_plot'
+include { MAG_DEPTHS_SUMMARY as MAG_DEPTHS_SUMMARY_REFINED                } from '../../modules/local/mag_depths_summary'
+
+/*
+ * Get number of columns in file (first line)
+ */
+def getColNo(filename) {
+    lines  = file(filename).readLines()
+    return lines[0].split('\t').size()
+}
 
 workflow BINNING_REFINEMENT {
     take:
     contigs        //
     bins           // channel: [ val(meta), path(bins) ]
     depths
+    reads
 
     main:
     ch_versions = Channel.empty()
@@ -89,8 +100,6 @@ workflow BINNING_REFINEMENT {
 
     // We have to strip the meta to be able to combine with the original
     // depths file to run MAG_DEPTH
-    depths.dump(tag: "depths")
-
     ch_input_for_magdepth = ch_dastool_bins_newmeta
         .mix( RENAME_POSTDASTOOL.out.refined_unbins )
         .map {
@@ -101,16 +110,24 @@ workflow BINNING_REFINEMENT {
         .join( depths, by: 0 )
         .dump(tag: "refined_cominbed_join")
 
-    MAG_DEPTHS ( ch_input_for_magdepth )
+    MAG_DEPTHS_REFINED ( ch_input_for_magdepth )
 
-    // TODO Add MAG_DEPTH_SUMMARY
-    // Update channel logic in mag.nf for BIN_SUMARY so if refined use bin refined DPETH_SUMMARY, otherwise use original from binning.nf
-    // Work out what to do when running refined + raw together? Separate plots?
+    // Plot bin depths heatmap for each assembly and mapped samples (according to `binning_map_mode`)
+    // create file containing group information for all samples
+    ch_sample_groups = reads
+        .collectFile(name:'sample_groups.tsv'){ meta, reads -> meta.id + '\t' + meta.group + '\n' }
+
+    // filter MAG depth files: use only those for plotting that contain depths for > 2 samples
+    ch_mag_depths_plot_refined = MAG_DEPTHS_REFINED.out.depths
+        .map { meta, depth_file -> if (getColNo(depth_file) > 2) [meta, depth_file] }
+
+    MAG_DEPTHS_PLOT_REFINED ( ch_mag_depths_plot_refined, ch_sample_groups.collect() )
+    MAG_DEPTHS_SUMMARY_REFINED ( MAG_DEPTHS_REFINED.out.depths.map{it[1]}.collect() )
 
     emit:
-    refined_bins     = ch_dastool_bins_newmeta
-    refined_unbins   = RENAME_POSTDASTOOL.out.refined_unbins
-    refined_bin_depths = MAG_DEPTHS.out.depths
-    versions    = ch_versions
+    refined_bins                = ch_dastool_bins_newmeta
+    refined_unbins              = RENAME_POSTDASTOOL.out.refined_unbins
+    refined_depths              = MAG_DEPTHS_REFINED.out.depths
+    refined_depths_summary      = MAG_DEPTHS_SUMMARY_REFINED.out.summary
+    versions                    = ch_versions
 }
-

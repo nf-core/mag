@@ -81,6 +81,7 @@ include { CAT_DB                                              } from '../modules
 include { CAT_DB_GENERATE                                     } from '../modules/local/cat_db_generate'
 include { CAT                                                 } from '../modules/local/cat'
 include { BIN_SUMMARY                                         } from '../modules/local/bin_summary'
+include { COMBINE_TSV                                         } from '../modules/local/combine_tsv'
 include { MULTIQC                                             } from '../modules/local/multiqc'
 
 //
@@ -554,29 +555,36 @@ workflow MAG {
         /*
         * DAS_Tool: binning refinement
         */
+
+        // TODO Add MAG_DEPTH_SUMMARY
+        // Update channel logic in mag.nf for BIN_SUMARY so if refined use bin refined DPETH_SUMMARY, otherwise use original from binning.nf
+        // Work out what to do when running refined + raw together? Separate plots?
+
         if ( params.refine_bins_dastool && !params.skip_metabat2 && !params.skip_maxbin2 ) {
 
-            BINNING_REFINEMENT ( BINNING_PREPARATION.out.grouped_mappings, BINNING.out.bins, BINNING.out.metabat2depths )
+            BINNING_REFINEMENT ( BINNING_PREPARATION.out.grouped_mappings, BINNING.out.bins, BINNING.out.metabat2depths, ch_short_reads )
             ch_versions = ch_versions.mix(BINNING_REFINEMENT.out.versions)
 
             if ( params.postbinning_input == 'raw_bins_only' ) {
                 ch_input_for_postbinning_bins        = BINNING.out.bins
                 ch_input_for_postbinning_bins_unbins = BINNING.out.bins.mix(BINNING.out.unbinned)
+                ch_input_for_binsummary              = BINNING.out.depths_summary
             } else if ( params.postbinning_input == 'refined_bins_only' ) {
                 ch_input_for_postbinning_bins        = BINNING_REFINEMENT.out.refined_bins
                 ch_input_for_postbinning_bins_unbins = BINNING_REFINEMENT.out.refined_bins.mix(BINNING_REFINEMENT.out.refined_unbins)
+                ch_input_for_binsummary              = BINNING_REFINEMENT.out.refined_depths_summary
             } else if (params.postbinning_input == 'both') {
                 ch_input_for_postbinning_bins        = BINNING.out.bins.mix(BINNING_REFINEMENT.out.refined_bins)
                 ch_input_for_postbinning_bins_unbins = BINNING.out.bins.mix(BINNING.out.unbinned,BINNING_REFINEMENT.out.refined_bins,BINNING_REFINEMENT.out.refined_unbins)
+                //TODO BINSUMMARY COMBINNING BOTH RAW AND REFINED
+                ch_combinedepthtsvs_for_binsummary   = BINNING.out.depths_summary.mix(BINNING_REFINEMENT.out.refined_depths_summary).dump(tag: "input_to_combinetsv")
+                ch_input_for_binsummary = COMBINE_TSV ( ch_combinedepthtsvs_for_binsummary.collect() ).combined
             }
 
         } else {
                 ch_input_for_postbinning_bins        = BINNING.out.bins
                 ch_input_for_postbinning_bins_unbins = BINNING.out.bins.mix(BINNING.out.unbinned)
         }
-
-        ch_input_for_postbinning_bins
-        ch_input_for_postbinning_bins
 
         if (!params.skip_busco){
             /*
@@ -646,7 +654,7 @@ workflow MAG {
 
         if (!params.skip_busco || !params.skip_quast || gtdb){
             BIN_SUMMARY (
-                BINNING.out.depths_summary,
+                ch_input_for_binsummary,
                 ch_busco_summary.ifEmpty([]),
                 ch_quast_bins_summary.ifEmpty([]),
                 ch_gtdbtk_summary.ifEmpty([])
