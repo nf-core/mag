@@ -55,7 +55,7 @@ workflow BINNING_REFINEMENT {
     DASTOOL_FASTATOCONTIG2BIN_METABAT2 ( ch_bins_for_fastatocontig2bin.metabat2, "fa")
     DASTOOL_FASTATOCONTIG2BIN_MAXBIN2 ( ch_bins_for_fastatocontig2bin.maxbin2, "fasta")
 
-    // Ru DAST
+    // Run DASTOOL
     ch_fastatocontig2bin_for_dastool = Channel.empty()
     ch_fastatocontig2bin_for_dastool = ch_fastatocontig2bin_for_dastool
                                     .mix(DASTOOL_FASTATOCONTIG2BIN_METABAT2.out.fastatocontig2bin)
@@ -78,11 +78,11 @@ workflow BINNING_REFINEMENT {
 
     ch_dastool_bins_newmeta = DASTOOL_DASTOOL.out.bins.transpose()
         .map {
-            meta, bins ->
+            meta, bin ->
                 def meta_new = meta.clone()
 
-                meta_new['binner'] = bins.name.split("-")[1]
-                [ meta_new, bins ]
+                meta_new['binner'] = bin.name.split("-")[1]
+                [ meta_new, bin ]
             }
         .groupTuple()
 
