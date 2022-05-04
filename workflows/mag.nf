@@ -556,10 +556,6 @@ workflow MAG {
         * DAS_Tool: binning refinement
         */
 
-        // TODO Add MAG_DEPTH_SUMMARY
-        // Update channel logic in mag.nf for BIN_SUMARY so if refined use bin refined DPETH_SUMMARY, otherwise use original from binning.nf
-        // Work out what to do when running refined + raw together? Separate plots?
-
         if ( params.refine_bins_dastool && !params.skip_metabat2 && !params.skip_maxbin2 ) {
 
             BINNING_REFINEMENT ( BINNING_PREPARATION.out.grouped_mappings, BINNING.out.bins, BINNING.out.metabat2depths, ch_short_reads )
@@ -576,8 +572,7 @@ workflow MAG {
             } else if (params.postbinning_input == 'both') {
                 ch_input_for_postbinning_bins        = BINNING.out.bins.mix(BINNING_REFINEMENT.out.refined_bins)
                 ch_input_for_postbinning_bins_unbins = BINNING.out.bins.mix(BINNING.out.unbinned,BINNING_REFINEMENT.out.refined_bins,BINNING_REFINEMENT.out.refined_unbins)
-                //TODO BINSUMMARY COMBINNING BOTH RAW AND REFINED
-                ch_combinedepthtsvs_for_binsummary   = BINNING.out.depths_summary.mix(BINNING_REFINEMENT.out.refined_depths_summary).dump(tag: "input_to_combinetsv")
+                ch_combinedepthtsvs_for_binsummary   = BINNING.out.depths_summary.mix(BINNING_REFINEMENT.out.refined_depths_summary)
                 ch_input_for_binsummary = COMBINE_TSV ( ch_combinedepthtsvs_for_binsummary.collect() ).combined
             }
 

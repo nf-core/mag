@@ -108,7 +108,6 @@ workflow BINNING_REFINEMENT {
                 [ meta_new, refinedbins ]
         }
         .join( depths, by: 0 )
-        .dump(tag: "refined_cominbed_join")
 
     MAG_DEPTHS_REFINED ( ch_input_for_magdepth )
 
