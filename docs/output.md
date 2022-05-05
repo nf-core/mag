@@ -329,7 +329,7 @@ Files in these two folders contain all contigs of an assembly.
 
 ### Bin sequencing depth
 
-For each genome bin the median sequencing depth is computed based on the corresponding contig depths given in `GenomeBinning/[assembler]-[sample/group]-depth.txt.gz`.
+For each genome bin the median sequencing depth is computed based on the corresponding contig depths.
 
 <details markdown="1">
 <summary>Output files</summary>
@@ -411,13 +411,17 @@ Besides the reference files or output files created by BUSCO, the following summ
 <details markdown="1">
 <summary>Output files</summary>
 
-- `BinRefinement/`
+- `GenomeBinningRefinement/`
+  - `bin_depths_summary_refined.tsv`: Summary of bin sequencing depths for all samples against refined for refined bin contigs. Depths are available for samples mapped against the corresponding assembly, i.e. according to the mapping strategy specified with `--binning_map_mode`. Only for short reads
+  - `bin_summary.tsv`: Summary of bin and refined bin sequencing depths together with BUSCO, QUAST and GTDB-Tk results, if at least one of the later was generated. This will be alternatively placed in `GenomeBinning/` when **no** binning refinement is performed
   - `[assembler]-[sample/group]_allBins.eval`: Tab-delimited description with quality and completeness metrics for the input bin sets
   - `[assembler]-[sample/group]_DASTool_summary.tsv`: Tab-delimited description with quality and completeness metrics for the refined output bin sets
   - `[assembler]-[sample/group]_DASTool_contig2bin.tsv`: File describing which contig is associated to which bin from the input binners
   - `[assembler]-[sample/group]_DASTool.log`: Log file from the DAS_Tool run describing the command executed and additional runtime information
   - `[assembler]-[sample/group].seqlength`: Tab-delimited file describing the length of each contig
-  - `[assembler]-[sample/group]_DASTool_bins/*`: Directory containing bins in FASTA format
+  - `[assembler]-[binner]Refined-[sample/group].*.fa`: Refined bins in fasta format
+  - `[assembler]-DASToolUnbinned-[sample/group].*.fa`: Discarded contigs from bin refinement in fasta format
+  - `[assembler]-[sample/group]-binDepths.heatmap.png`: Clustered heatmap showing refined bin abundances of the assembly across samples. Refined bin depths are transformed to centered log-ratios and bins as well as samples are clustered by Euclidean distance. Again, sample depths are available according to the mapping strategy specified with `--binning_map_mode`.
 
 </details>
 
@@ -500,7 +504,7 @@ Whole genome annotation is the process of identifying features of interest in a 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `GenomeBinning/bin_summary.tsv`: Summary of bin sequencing depths together with BUSCO, QUAST and GTDB-Tk results, if at least one of the later was generated.
+- `GenomeBinning/bin_summary.tsv`: Summary of bin sequencing depths together with BUSCO, QUAST and GTDB-Tk results, if at least one of the later was generated. This will be alternatively placed in `GenomeBinningRefinement/` if `--refine_bins_dastool` binning refinement is performed.
 
 </details>
 
