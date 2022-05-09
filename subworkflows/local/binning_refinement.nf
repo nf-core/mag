@@ -37,18 +37,10 @@ workflow BINNING_REFINEMENT {
                                         [ meta_new, assembly ]
                                 }
 
-    // Rename for consistency for downstream steps (BUSCO etc.)
     ch_bins_for_fastatocontig2bin = RENAME_PREDASTOOL(bins).renamed_bins
-                                        .map {
-                                            meta, bins ->
-                                                def meta_new = meta.clone()
-                                                meta_new.binner = meta.binner + 'Refined'
-
-                                                [ meta_new, bins ]
-                                        }
                                         .branch {
-                                            metabat2: it[0]['binner'] == 'MetaBAT2Refined'
-                                            maxbin2:  it[0]['binner'] == 'MaxBin2Refined'
+                                            metabat2: it[0]['binner'] == 'MetaBAT2'
+                                            maxbin2:  it[0]['binner'] == 'MaxBin2'
                                         }
 
     // Generate DASTool auxilary files
