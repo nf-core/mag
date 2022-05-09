@@ -10,7 +10,7 @@ workflow INPUT_CHECK {
     main:
     if(hasExtension(params.input, "csv")){
         // extracts read files from samplesheet CSV and distribute into channels
-        Channel
+        ch_input_rows = Channel
             .from(file(params.input))
             .splitCsv(header: true)
             .map { row ->
@@ -30,9 +30,8 @@ workflow INPUT_CHECK {
                         exit 1, "Input samplesheet contains row with ${row.size()} column(s). Expects 5."
                     }
                 }
-            .set { ch_input_rows }
         // separate short and long reads
-        ch_input_rows
+        ch_raw_short_reads = ch_input_rows
             .map { id, group, sr1, sr2, lr ->
                         def meta = [:]
                         meta.id           = id
@@ -43,8 +42,7 @@ workflow INPUT_CHECK {
                         else
                             return [ meta, [ sr1, sr2 ] ]
                 }
-            .set { ch_raw_short_reads }
-        ch_input_rows
+        ch_raw_long_reads = ch_input_rows
             .map { id, group, sr1, sr2, lr ->
                         if (lr) {
                             def meta = [:]
@@ -53,9 +51,8 @@ workflow INPUT_CHECK {
                             return [ meta, lr ]
                         }
                 }
-            .set { ch_raw_long_reads }
     } else {
-        Channel
+        ch_raw_short_reads = Channel
             .fromFilePairs(params.input, size: params.single_end ? 1 : 2)
             .ifEmpty { exit 1, "Cannot find any reads matching: ${params.input}\nNB: Path needs to be enclosed in quotes!\nIf this is single-end data, please specify --single_end on the command line." }
             .map { row ->
@@ -65,7 +62,6 @@ workflow INPUT_CHECK {
                         meta.single_end   = params.single_end
                         return [ meta, row[1] ]
                 }
-            .set { ch_raw_short_reads }
         ch_input_rows = Channel.empty()
         ch_raw_long_reads = Channel.empty()
     }
