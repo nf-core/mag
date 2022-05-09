@@ -252,7 +252,7 @@ Protein-coding genes are predicted for each assembly.
 
 </details>
 
-## Binning
+## Binning and Binning Refinement
 
 ### Contig sequencing depth
 
@@ -327,6 +327,25 @@ All the files in this folder contain small and/or unbinned contigs that are not 
 
 Files in these two folders contain all contigs of an assembly.
 
+### DAS Tool
+
+[DAS Tool](https://github.com/cmks/DAS_Tool) is an automated binning refinement method that integrates the results of a flexible number of binning algorithms to calculate an optimized, non-redundant set of bins from a single assembly. nf-core/mag uses this tool to attempt to further improve bins based on combining the MetaBAT2 and MaxBin2 binning output, assuming sufficient quality is met for those bins.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `GenomeBinning/DASTool/`
+  - `[assembler]-[sample/group]_allBins.eval`: Tab-delimited description with quality and completeness metrics for the input bin sets
+  - `[assembler]-[sample/group]_DASTool_summary.tsv`: Tab-delimited description with quality and completeness metrics for the refined output bin sets
+  - `[assembler]-[sample/group]_DASTool_contig2bin.tsv`: File describing which contig is associated to which bin from the input binners
+  - `[assembler]-[sample/group]_DASTool.log`: Log file from the DAS_Tool run describing the command executed and additional runtime information
+  - `[assembler]-[sample/group].seqlength`: Tab-delimited file describing the length of each contig
+  - `bins/[assembler]-[binner]Refined-[sample/group].*.fa`: Refined bins in fasta format
+  - `bins/[assembler]-DASToolUnbinned-[sample/group].*.fa`: Unbinned contigs from bin refinement in fasta format
+  - `[assembler]-[sample/group]-binDepths.heatmap.png`: Clustered heatmap showing refined bin abundances of the assembly across samples. Refined bin depths are transformed to centered log-ratios and bins as well as samples are clustered by Euclidean distance. Again, sample depths are available according to the mapping strategy specified with `--binning_map_mode`.
+
+</details>
+
 ### Bin sequencing depth
 
 For each genome bin the median sequencing depth is computed based on the corresponding contig depths.
@@ -336,6 +355,7 @@ For each genome bin the median sequencing depth is computed based on the corresp
 
 - `GenomeBinning/depths/`
   - `bin_depths_summary.tsv`: Summary of bin sequencing depths for all samples. Depths are available for samples mapped against the corresponding assembly, i.e. according to the mapping strategy specified with `--binning_map_mode`. Only for short reads.
+  - `bin_depths_summary_refined.tsv`: Summary of bin sequencing depths for all samples against refined bin contigs, if refinement performed. Depths are available for samples mapped against the corresponding assembly, i.e. according to the mapping strategy specified with `--binning_map_mode`. Only for short reads.
   - `[assembler]-[binner]-[sample/group]-binDepths.heatmap.png`: Clustered heatmap showing bin abundances of the assembly across samples. Bin depths are transformed to centered log-ratios and bins as well as samples are clustered by Euclidean distance. Again, sample depths are available according to the mapping strategy specified with `--binning_map_mode`.
 
 </details>
@@ -367,7 +387,7 @@ For each genome bin the median sequencing depth is computed based on the corresp
 
 ### QC for metagenome assembled genomes with BUSCO
 
-[BUSCO](https://busco.ezlab.org/) is a tool used to assess the completeness of a genome assembly. It is run on all the genome bins and high quality contigs obtained by MetaBAT2. By default, BUSCO is run in automated lineage selection mode in which it first tries to select the domain and then a more specific lineage based on phylogenetic placement. If available, result files for both the selected domain lineage and the selected more specific lineage are placed in the output directory. If a lineage dataset is specified already with `--busco_reference`, only results for this specific lineage will be generated.
+[BUSCO](https://busco.ezlab.org/) is a tool used to assess the completeness of a genome assembly. It is run on all the genome bins and refined bins and high quality contigs obtained by MetaBAT2. By default, BUSCO is run in automated lineage selection mode in which it first tries to select the domain and then a more specific lineage based on phylogenetic placement. If available, result files for both the selected domain lineage and the selected more specific lineage are placed in the output directory. If a lineage dataset is specified already with `--busco_reference`, only results for this specific lineage will be generated.
 
 <details markdown="1">
 <summary>Output files</summary>
@@ -403,28 +423,6 @@ Besides the reference files or output files created by BUSCO, the following summ
   - `busco_summary.tsv`: A summary table of the BUSCO results, with % of marker genes found. If run in automated lineage selection mode, both the results for the selected domain and for the selected more specific lineage will be given, if available.
 
 </details>
-
-### Bin Refinement
-
-[DAS Tool](https://github.com/cmks/DAS_Tool) is an automated method that integrates the results of a flexible number of binning algorithms to calculate an optimized, non-redundant set of bins from a single assembly. nf-core/mag uses this tool to attempt to further improve bins based on combining the MetaBAT2 and MaxBin2 binning output, assuming sufficient quality is met for those bins.
-
-<details markdown="1">
-<summary>Output files</summary>
-
-- `GenomeBinningRefinement/`
-  - `bin_depths_summary_refined.tsv`: Summary of bin sequencing depths for all samples against refined for refined bin contigs. Depths are available for samples mapped against the corresponding assembly, i.e. according to the mapping strategy specified with `--binning_map_mode`. Only for short reads
-  - `bin_summary.tsv`: Summary of bin and refined bin sequencing depths together with BUSCO, QUAST and GTDB-Tk results, if at least one of the later was generated. This will be alternatively placed in `GenomeBinning/` when **no** binning refinement is performed
-  - `[assembler]-[sample/group]_allBins.eval`: Tab-delimited description with quality and completeness metrics for the input bin sets
-  - `[assembler]-[sample/group]_DASTool_summary.tsv`: Tab-delimited description with quality and completeness metrics for the refined output bin sets
-  - `[assembler]-[sample/group]_DASTool_contig2bin.tsv`: File describing which contig is associated to which bin from the input binners
-  - `[assembler]-[sample/group]_DASTool.log`: Log file from the DAS_Tool run describing the command executed and additional runtime information
-  - `[assembler]-[sample/group].seqlength`: Tab-delimited file describing the length of each contig
-  - `[assembler]-[binner]Refined-[sample/group].*.fa`: Refined bins in fasta format
-  - `[assembler]-DASToolUnbinned-[sample/group].*.fa`: Discarded contigs from bin refinement in fasta format
-  - `[assembler]-[sample/group]-binDepths.heatmap.png`: Clustered heatmap showing refined bin abundances of the assembly across samples. Refined bin depths are transformed to centered log-ratios and bins as well as samples are clustered by Euclidean distance. Again, sample depths are available according to the mapping strategy specified with `--binning_map_mode`.
-
-</details>
-
 ## Taxonomic classification of binned genomes
 
 ### CAT
@@ -504,7 +502,7 @@ Whole genome annotation is the process of identifying features of interest in a 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `GenomeBinning/bin_summary.tsv`: Summary of bin sequencing depths together with BUSCO, QUAST and GTDB-Tk results, if at least one of the later was generated. This will be alternatively placed in `GenomeBinningRefinement/` if `--refine_bins_dastool` binning refinement is performed.
+- `GenomeBinning/bin_summary.tsv`: Summary of bin sequencing depths together with BUSCO, QUAST and GTDB-Tk results, if at least one of the later was generated. This will also include refined bins if `--refine_bins_dastool` binning refinement is performed.
 
 </details>
 
