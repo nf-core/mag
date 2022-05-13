@@ -129,7 +129,8 @@ workflow BINNING {
         .mix(ch_splitfasta_results_gunzipped )
         .map { meta, results ->
             def meta_new = meta.clone()
-            [ [ 'id': meta_new['id'], 'group': meta_new['group'], 'single_end': meta_new['single_end'], 'assembler': meta_new['assembler'] ], results ]
+            meta_new.remove('binner')
+            [ meta_new, results ]
         }
         .groupTuple (by: 0 )
         .join( METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS.out.depth, by: 0 )
