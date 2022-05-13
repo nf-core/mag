@@ -11,15 +11,15 @@ process MAG_DEPTHS {
     tuple val(meta), path(bins), path(contig_depths)
 
     output:
-    tuple val(meta), path("${meta.assembler}-${meta.id}-binDepths.tsv"), emit: depths
-    path "versions.yml"                                                , emit: versions
+    tuple val(meta), path("${meta.assembler}-*-${meta.id}-binDepths.tsv"), emit: depths
+    path "versions.yml"                                                  , emit: versions
 
     script:
     """
     get_mag_depths.py --bins ${bins} \\
                     --depths ${contig_depths} \\
-                    --assembly_name "${meta.assembler}-${meta.id}" \\
-                    --out "${meta.assembler}-${meta.id}-binDepths.tsv"
+                    --assembler ${meta.assembler} \\
+                    --id ${meta.id}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

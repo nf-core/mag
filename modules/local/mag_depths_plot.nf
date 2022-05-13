@@ -1,5 +1,5 @@
 process MAG_DEPTHS_PLOT {
-    tag "${meta.assembler}-${meta.id}"
+    tag "${meta.assembler}-${meta.binner}-${meta.id}"
 
     conda (params.enable_conda ? "conda-forge::python=3.9 conda-forge::pandas=1.3.0 anaconda::seaborn=0.11.0" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -11,14 +11,14 @@ process MAG_DEPTHS_PLOT {
     path(sample_groups)
 
     output:
-    tuple val(meta), path("${meta.assembler}-${meta.id}-binDepths.heatmap.png"), emit: heatmap
-    path "versions.yml"                                                        , emit: versions
+    tuple val(meta), path("${meta.assembler}-${meta.binner}-${meta.id}-binDepths.heatmap.png"), emit: heatmap
+    path "versions.yml"                                                                       , emit: versions
 
     script:
     """
     plot_mag_depths.py --bin_depths ${depths} \
                     --groups ${sample_groups} \
-                    --out "${meta.assembler}-${meta.id}-binDepths.heatmap.png"
+                    --out "${meta.assembler}-${meta.binner}-${meta.id}-binDepths.heatmap.png"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

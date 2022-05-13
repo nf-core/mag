@@ -143,9 +143,15 @@ workflow BINNING {
     ch_sample_groups = reads
         .collectFile(name:'sample_groups.tsv'){ meta, reads -> meta.id + '\t' + meta.group + '\n' }
 
+    // Transpose and add 'binner' meta information again for plotting
     // filter MAG depth files: use only those for plotting that contain depths for > 2 samples
     ch_mag_depths_plot = MAG_DEPTHS.out.depths
-        .map { meta, depth_file -> if (getColNo(depth_file) > 2) [meta, depth_file] }
+        .transpose()
+        .map { meta, depth_file ->
+            def meta_new = meta.clone()
+            meta_new['binner'] = depth_file.name.split("-")[1]
+            if (getColNo(depth_file) > 2) [ meta_new, depth_file ]
+        }
 
     MAG_DEPTHS_PLOT ( ch_mag_depths_plot, ch_sample_groups.collect() )
     MAG_DEPTHS_SUMMARY ( MAG_DEPTHS.out.depths.map{it[1]}.collect() )
