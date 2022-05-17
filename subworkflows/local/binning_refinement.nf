@@ -96,7 +96,8 @@ workflow BINNING_REFINEMENT {
         .mix( RENAME_POSTDASTOOL.out.refined_unbins )
         .map {
                 meta, refinedbins ->
-                def meta_new = [ 'id': meta.id, 'group': meta.group, 'single_end': meta.single_end, 'assembler': meta.assembler ]
+                def meta_new = meta.clone()
+                meta_new.remove('binner')
                 [ meta_new, refinedbins ]
         }
         .join( depths, by: 0 )
