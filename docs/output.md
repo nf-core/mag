@@ -342,7 +342,6 @@ Files in these two folders contain all contigs of an assembly.
   - `[assembler]-[sample/group].seqlength`: Tab-delimited file describing the length of each contig
   - `bins/[assembler]-[binner]Refined-[sample/group].*.fa`: Refined bins in fasta format
   - `bins/[assembler]-DASToolUnbinned-[sample/group].*.fa`: Unbinned contigs from bin refinement in fasta format
-  - `[assembler]-[sample/group]-binDepths.heatmap.png`: Clustered heatmap showing refined bin abundances of the assembly across samples. Refined bin depths are transformed to centered log-ratios and bins as well as samples are clustered by Euclidean distance. Again, sample depths are available according to the mapping strategy specified with `--binning_map_mode`.
 
 </details>
 
