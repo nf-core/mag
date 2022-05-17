@@ -80,14 +80,22 @@ workflow BINNING {
         ch_versions = ch_versions.mix(CONVERT_DEPTHS.out.versions.first())
     }
 
+    // main bins for decompressing for MAG_DEPTHS
+    ch_final_bins_for_gunzip = Channel.empty()
+    // final gzipped bins
+    ch_binning_results_gzipped_final = Channel.empty()
     // run binning
     if ( !params.skip_metabat2 ) {
         METABAT2_METABAT2 ( ch_metabat2_input )
+        // before decompressing first have to separate and re-group due to limitation of GUNZIP module
+        ch_final_bins_for_gunzip = ch_final_bins_for_gunzip.mix( METABAT2_METABAT2.out.fasta.transpose() )
+        ch_binning_results_gzipped_final = ch_binning_results_gzipped_final.mix( METABAT2_METABAT2.out.fasta )
         ch_versions = ch_versions.mix(METABAT2_METABAT2.out.versions.first())
     }
-
     if ( !params.skip_maxbin2 ) {
         MAXBIN2 ( ch_maxbin2_input )
+        ch_final_bins_for_gunzip = ch_final_bins_for_gunzip.mix( MAXBIN2.out.binned_fastas.transpose() )
+        ch_binning_results_gzipped_final = ch_binning_results_gzipped_final.mix( MAXBIN2.out.binned_fastas )
         ch_versions = ch_versions.mix(MAXBIN2.out.versions.first())
     }
 
@@ -101,24 +109,10 @@ workflow BINNING {
     }
 
     SPLIT_FASTA ( ch_input_splitfasta )
-
-    // decompress main bins (and large unbinned contigs from SPLIT_FASTA) for
-    // MAG_DEPTHS, first have to separate and re-group due to limitation of
-    // GUNZIP module
-    if ( !params.skip_metabat2 ) {
-        ch_metabat2_results_transposed = METABAT2_METABAT2.out.fasta.transpose()
-    }
-
-    if ( !params.skip_maxbin2 ) {
-        ch_maxbin2_results_transposed = MAXBIN2.out.binned_fastas.transpose()
-    }
-
+    // large unbinned contigs from SPLIT_FASTA for decompressing for MAG_DEPTHS,
+    // first have to separate and re-group due to limitation of GUNZIP module
     ch_split_fasta_results_transposed = SPLIT_FASTA.out.unbinned.transpose()
     ch_versions = ch_versions.mix(SPLIT_FASTA.out.versions)
-
-    // mix all bins together
-    ch_final_bins_for_gunzip = ch_metabat2_results_transposed
-        .mix( ch_maxbin2_results_transposed )
 
     GUNZIP_BINS ( ch_final_bins_for_gunzip )
     ch_binning_results_gunzipped = GUNZIP_BINS.out.gunzip
@@ -165,11 +159,8 @@ workflow BINNING {
     ch_versions = ch_versions.mix( MAG_DEPTHS_SUMMARY.out.versions )
 
     // Group final binned contigs per sample for final output
-    ch_binning_results_gunzipped_final = ch_binning_results_gunzipped
-        .groupTuple(by: 0)
-
-    ch_binning_results_gzipped_final = METABAT2_METABAT2.out.fasta.mix(MAXBIN2.out.binned_fastas)
-        .groupTuple(by: 0)
+    ch_binning_results_gunzipped_final = ch_binning_results_gunzipped.groupTuple(by: 0)
+    ch_binning_results_gzipped_final   = ch_binning_results_gzipped_final.groupTuple(by: 0)
 
     SPLIT_FASTA.out.unbinned
 
