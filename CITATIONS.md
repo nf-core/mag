@@ -34,7 +34,7 @@
 
   > Kim, D., Song, L., Breitwieser, F. P., & Salzberg, S. L. (2016). Centrifuge: rapid and sensitive classification of metagenomic sequences. Genome research, 26(12), 1721-1729. doi: 10.1101/gr.210641.116.
 
-- [DAS_Tool](https://doi.org/10.1038/s41564-018-0171-1)
+- [DAS Tool](https://doi.org/10.1038/s41564-018-0171-1)
 
   > Sieber, C. M. K., et al. 2018. "Recovery of Genomes from Metagenomes via a Dereplication, Aggregation and Scoring Strategy." Nature Microbiology 3 (7): 836-43. doi: 10.1038/s41564-018-0171-1
 

@@ -551,7 +551,7 @@ workflow MAG {
         ch_versions = ch_versions.mix(BINNING.out.versions)
 
         /*
-        * DAS_Tool: binning refinement
+        * DAS Tool: binning refinement
         */
 
         if ( params.refine_bins_dastool && !params.skip_metabat2 && !params.skip_maxbin2 ) {

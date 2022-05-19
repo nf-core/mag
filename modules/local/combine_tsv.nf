@@ -10,8 +10,8 @@ process COMBINE_TSV {
     path(bin_summaries)
 
     output:
-    path("*.tsv"), emit: combined
-    path "versions.yml"          , emit: versions
+    path("*.tsv")      , emit: combined
+    path "versions.yml", emit: versions
 
     script:
     def prefix = task.ext.prefix ?: "bin_depths_summary_combined"

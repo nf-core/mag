@@ -608,19 +608,19 @@
                 },
                 "refine_bins_dastool": {
                     "type": "boolean",
-                    "description": "Turn on bin refinement using DAS_Tool."
+                    "description": "Turn on bin refinement using DAS Tool."
                 },
                 "refine_bins_dastool_threshold": {
                     "type": "number",
                     "default": 0.5,
                     "description": "Specify single-copy gene score threshold for bin refinement.",
-                    "help_text": "Score threshold for single-copy gene selection algorithm to keep selecting bins, with a value ranging from 0-1.\n\nFor description of scoring algorithm, see: Sieber, Christian M. K., et al. 2018. Nature Microbiology 3 (7): 836\u201343. https://doi.org/10.1038/s41564-018-0171-1.\n\n> Modifies DAS_Tool parameter --score_threshold\n"
+                    "help_text": "Score threshold for single-copy gene selection algorithm to keep selecting bins, with a value ranging from 0-1.\n\nFor description of scoring algorithm, see: Sieber, Christian M. K., et al. 2018. Nature Microbiology 3 (7): 836\u201343. https://doi.org/10.1038/s41564-018-0171-1.\n\n> Modifies DAS Tool parameter --score_threshold\n"
                 },
                 "postbinning_input": {
                     "type": "string",
                     "default": "raw_bins_only",
-                    "description": "Specify which binning output is sent for downstream annotation, taxonomic categorisation, assembly qualiy control etc.",
-                    "help_text": "`raw_bins_only`: only bins (and unbinned contigs) from the binners.\n`refined_bins_only`:  only bins (and unbinned contigs) from the bin refinement step .\n`both`: bins and and unbinned contigs from both the binning and bin refinement steps.",
+                    "description": "Specify which binning output is sent for downstream annotation, taxonomic classification, bin quality control etc.",
+                    "help_text": "`raw_bins_only`: only bins (and unbinned contigs) from the binners.\n`refined_bins_only`:  only bins (and unbinned contigs) from the bin refinement step .\n`both`: bins and unbinned contigs from both the binning and bin refinement steps.",
                     "enum": ["raw_bins_only", "refined_bins_only", "both"]
                 }
             }

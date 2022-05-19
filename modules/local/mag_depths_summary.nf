@@ -10,7 +10,7 @@ process MAG_DEPTHS_SUMMARY {
 
     output:
     path("${prefix}.tsv"), emit: summary
-    path "versions.yml"           , emit: versions
+    path "versions.yml"  , emit: versions
 
     script:
     prefix = task.ext.prefix ?: "bin_depths_summary"

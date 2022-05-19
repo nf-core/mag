@@ -12,7 +12,7 @@ process RENAME_POSTDASTOOL {
     tuple val(meta), path(bins)
 
     output:
-    tuple val(meta), path("${meta.assembler}-DASToolUnbinned-${meta.id}.fa")  , optional:true, emit: refined_unbins
+    tuple val(meta), path("${meta.assembler}-DASToolUnbinned-${meta.id}.fa"), optional:true, emit: refined_unbins
 
     script:
     """

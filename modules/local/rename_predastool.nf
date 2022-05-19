@@ -12,7 +12,7 @@ process RENAME_PREDASTOOL {
     tuple val(meta), path(bins)
 
     output:
-    tuple val(meta), path("${meta.assembler}-${meta.binner}Refined-${meta.id}*")           , emit: renamed_bins
+    tuple val(meta), path("${meta.assembler}-${meta.binner}Refined-${meta.id}*"), emit: renamed_bins
 
     script:
     """
