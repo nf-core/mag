@@ -14,7 +14,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 - [Taxonomic classification of trimmed reads](#taxonomic-classification-of-trimmed-reads)
 - [Assembly](#assembly) of trimmed reads
 - [Protein-coding gene prediction](#gene-prediction) of assemblies
-- [Binning](#binning) of assembled contigs
+- [Binning and binning refinement](#binning-and-binning-refinement) of assembled contigs
 - [Taxonomic classification of binned genomes](#taxonomic-classification-of-binned-genomes)
 - [Genome annotation of binned genomes](#genome-annotation-of-binned-genomes)
 - [Additional summary for binned genomes](#additional-summary-for-binned-genomes)
@@ -252,7 +252,7 @@ Protein-coding genes are predicted for each assembly.
 
 </details>
 
-## Binning and Binning Refinement
+## Binning and binning refinement
 
 ### Contig sequencing depth
 
