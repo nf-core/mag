@@ -335,13 +335,13 @@ Files in these two folders contain all contigs of an assembly.
 <summary>Output files</summary>
 
 - `GenomeBinning/DASTool/`
-  - `[assembler]-[sample/group]_allBins.eval`: Tab-delimited description with quality and completeness metrics for the input bin sets
-  - `[assembler]-[sample/group]_DASTool_summary.tsv`: Tab-delimited description with quality and completeness metrics for the refined output bin sets
-  - `[assembler]-[sample/group]_DASTool_contig2bin.tsv`: File describing which contig is associated to which bin from the input binners
-  - `[assembler]-[sample/group]_DASTool.log`: Log file from the DAS_Tool run describing the command executed and additional runtime information
-  - `[assembler]-[sample/group].seqlength`: Tab-delimited file describing the length of each contig
-  - `bins/[assembler]-[binner]Refined-[sample/group].*.fa`: Refined bins in fasta format
-  - `bins/[assembler]-DASToolUnbinned-[sample/group].*.fa`: Unbinned contigs from bin refinement in fasta format
+  - `[assembler]-[sample/group]_allBins.eval`: Tab-delimited description with quality and completeness metrics for the input bin sets. Quality and completeness are estimated by DAS TOOL using a scoring function based on the frequency of bacterial or archaeal reference single-copy genes (SCG).
+  - `[assembler]-[sample/group]_DASTool_summary.tsv`: Tab-delimited description with quality and completeness metrics for the refined output bin sets.
+  - `[assembler]-[sample/group]_DASTool_contig2bin.tsv`: File describing which contig is associated to which bin from the input binners.
+  - `[assembler]-[sample/group]_DASTool.log`: Log file from the DAS Tool run describing the command executed and additional runtime information.
+  - `[assembler]-[sample/group].seqlength`: Tab-delimited file describing the length of each contig.
+  - `bins/[assembler]-[binner]Refined-[sample/group].*.fa`: Refined bins in fasta format.
+  - `bins/[assembler]-DASToolUnbinned-[sample/group].*.fa`: Unbinned contigs from bin refinement in fasta format.
 
 </details>
 
@@ -354,7 +354,7 @@ For each genome bin the median sequencing depth is computed based on the corresp
 
 - `GenomeBinning/depths/`
   - `bin_depths_summary.tsv`: Summary of bin sequencing depths for all samples. Depths are available for samples mapped against the corresponding assembly, i.e. according to the mapping strategy specified with `--binning_map_mode`. Only for short reads.
-  - `bin_depths_summary_refined.tsv`: Summary of bin sequencing depths for all samples against refined bin contigs, if refinement performed. Depths are available for samples mapped against the corresponding assembly, i.e. according to the mapping strategy specified with `--binning_map_mode`. Only for short reads.
+  - `bin_depths_summary_refined.tsv`: Summary of sequencing depths for refined bins for all samples, if refinement was performed. Depths are available for samples mapped against the corresponding assembly, i.e. according to the mapping strategy specified with `--binning_map_mode`. Only for short reads.
   - `[assembler]-[binner]-[sample/group]-binDepths.heatmap.png`: Clustered heatmap showing bin abundances of the assembly across samples. Bin depths are transformed to centered log-ratios and bins as well as samples are clustered by Euclidean distance. Again, sample depths are available according to the mapping strategy specified with `--binning_map_mode`.
 
 </details>
