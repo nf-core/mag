@@ -76,5 +76,3 @@ jobs:
       - name: Run pipeline with ${{ matrix.profile }} test profile
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile ${{ matrix.profile }},docker --outdir ./results
-
-#
