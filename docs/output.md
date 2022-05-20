@@ -341,7 +341,7 @@ Files in these two folders contain all contigs of an assembly.
   - `[assembler]-[sample/group]_DASTool.log`: Log file from the DAS Tool run describing the command executed and additional runtime information.
   - `[assembler]-[sample/group].seqlength`: Tab-delimited file describing the length of each contig.
   - `bins/[assembler]-[binner]Refined-[sample/group].*.fa`: Refined bins in fasta format.
-  - `bins/[assembler]-DASToolUnbinned-[sample/group].*.fa`: Unbinned contigs from bin refinement in fasta format.
+  - `unbinned/[assembler]-DASToolUnbinned-[sample/group].*.fa`: Unbinned contigs from bin refinement in fasta format.
 
 </details>
 
