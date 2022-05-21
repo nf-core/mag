@@ -45,7 +45,8 @@ workflow BINNING_REFINEMENT {
 
     // Generate DASTool auxilary files
     DASTOOL_FASTATOCONTIG2BIN_METABAT2 ( ch_bins_for_fastatocontig2bin.metabat2, "fa")
-    DASTOOL_FASTATOCONTIG2BIN_MAXBIN2 ( ch_bins_for_fastatocontig2bin.maxbin2, "fasta")
+    // MaxBin2 bin extension was changed to 'fa' as well in RENAME_PREDASTOOL
+    DASTOOL_FASTATOCONTIG2BIN_MAXBIN2 ( ch_bins_for_fastatocontig2bin.maxbin2, "fa")
 
     // Run DASTOOL
     ch_fastatocontig2bin_for_dastool = Channel.empty()
