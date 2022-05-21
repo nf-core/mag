@@ -68,20 +68,22 @@ workflow BINNING_REFINEMENT {
 
     // Run DAStool
     DASTOOL_DASTOOL(ch_input_for_dastool, [], [])
+    ch_versions = ch_versions.mix(DASTOOL_DASTOOL.out.versions.first())
 
     // Prepare bins for downstream analysis (separate from unbins, add 'binner' info and group)
+    // use DASTool as 'binner' info allowing according grouping of refined bin sets,
+    // while keeping information about original binning method in filenames and used binnames, e.g. "*-MaxBin2Refined-*.fa"
+    // (alternatively one could think of adding, for example, meta.orig_binner, if this would simplify code)
     ch_dastool_bins_newmeta = DASTOOL_DASTOOL.out.bins.transpose()
         .map {
             meta, bin ->
                 if (bin.name != "unbinned.fa") {
                     def meta_new = meta.clone()
-                    meta_new['binner'] = bin.name.split("-")[1]
+                    meta_new['binner'] = 'DASTool'
                     [ meta_new, bin ]
                 }
             }
         .groupTuple()
-
-    ch_versions = ch_versions.mix(DASTOOL_DASTOOL.out.versions.first())
 
     ch_input_for_renamedastool = DASTOOL_DASTOOL.out.bins
         .map {
@@ -103,6 +105,8 @@ workflow BINNING_REFINEMENT {
                 meta_new.remove('binner')
                 [ meta_new, refinedbins ]
         }
+        .transpose()
+        .groupTuple (by: 0 )
         .join( depths, by: 0 )
 
     MAG_DEPTHS_REFINED ( ch_input_for_magdepth )
@@ -118,7 +122,7 @@ workflow BINNING_REFINEMENT {
         .transpose()
         .map { meta, depth_file ->
             def meta_new = meta.clone()
-            meta_new['binner'] = depth_file.name.split("-")[1]
+            meta_new['binner'] = 'DASTool'
             if (getColNo(depth_file) > 2) [meta_new, depth_file]
         }
 
