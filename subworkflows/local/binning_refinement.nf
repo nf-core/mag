@@ -69,13 +69,15 @@ workflow BINNING_REFINEMENT {
     // Run DAStool
     DASTOOL_DASTOOL(ch_input_for_dastool, [], [])
 
+    // Prepare bins for downstream analysis (separate from unbins, add 'binner' info and group)
     ch_dastool_bins_newmeta = DASTOOL_DASTOOL.out.bins.transpose()
         .map {
             meta, bin ->
-                def meta_new = meta.clone()
-
-                meta_new['binner'] = bin.name.split("-")[1]
-                [ meta_new, bin ]
+                if (bin.name != "unbinned.fa") {
+                    def meta_new = meta.clone()
+                    meta_new['binner'] = bin.name.split("-")[1]
+                    [ meta_new, bin ]
+                }
             }
         .groupTuple()
 
