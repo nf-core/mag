@@ -123,17 +123,25 @@ workflow BINNING {
     ch_versions = ch_versions.mix(GUNZIP_UNBINS.out.versions.first())
 
     // Compute bin depths for different samples (according to `binning_map_mode`)
-    // Have to remove binner meta for grouping to mix back with original depth
-    // files, as required for MAG_DEPTHS
+    // Have to remove binner meta before joining with according depths files,
+    // as required for MAG_DEPTHS
+    // add 'binner' info again and finally group by 'assembler', 'id', 'binner'
     ch_depth_input = ch_binning_results_gunzipped
         .mix(ch_splitfasta_results_gunzipped )
-        .map { meta, results ->
+        .map { meta, bin ->
             def meta_new = meta.clone()
             meta_new.remove('binner')
-            [ meta_new, results ]
+            [ meta_new, bin ]
         }
         .groupTuple (by: 0 )
         .join( METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS.out.depth, by: 0 )
+        .transpose()
+        .map { meta, bin, contig_depths_file ->
+            def meta_new = meta.clone()
+            meta_new['binner'] = bin.name.split("-")[1]
+            [ meta_new, bin, contig_depths_file ]
+        }
+        .groupTuple (by: [0,2] )
 
     MAG_DEPTHS ( ch_depth_input )
     ch_versions = ch_versions.mix(MAG_DEPTHS.out.versions)
@@ -143,14 +151,10 @@ workflow BINNING {
     ch_sample_groups = reads
         .collectFile(name:'sample_groups.tsv'){ meta, reads -> meta.id + '\t' + meta.group + '\n' }
 
-    // Transpose and add 'binner' meta information again for plotting
-    // filter MAG depth files: use only those for plotting that contain depths for > 2 samples
+    // Filter MAG depth files: use only those for plotting that contain depths for > 2 samples
     ch_mag_depths_plot = MAG_DEPTHS.out.depths
-        .transpose()
-        .map { meta, depth_file ->
-            def meta_new = meta.clone()
-            meta_new['binner'] = depth_file.name.split("-")[1]
-            if (getColNo(depth_file) > 2) [ meta_new, depth_file ]
+        .map { meta, bin_depths_file ->
+            if (getColNo(bin_depths_file) > 2) [ meta, bin_depths_file ]
         }
 
     MAG_DEPTHS_PLOT ( ch_mag_depths_plot, ch_sample_groups.collect() )

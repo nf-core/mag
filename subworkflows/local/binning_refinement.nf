@@ -108,6 +108,12 @@ workflow BINNING_REFINEMENT {
         .transpose()
         .groupTuple (by: 0 )
         .join( depths, by: 0 )
+        .map {
+            meta, bins, contig_depths_file ->
+                def meta_new = meta.clone()
+                meta_new['binner'] = 'DASTool'
+                [ meta_new, bins, contig_depths_file ]
+        }
 
     MAG_DEPTHS_REFINED ( ch_input_for_magdepth )
 
@@ -116,14 +122,10 @@ workflow BINNING_REFINEMENT {
     ch_sample_groups = reads
         .collectFile(name:'sample_groups.tsv'){ meta, reads -> meta.id + '\t' + meta.group + '\n' }
 
-    // Transpose and add 'binner' meta information again for plotting
-    // filter MAG depth files: use only those for plotting that contain depths for > 2 samples
+    // Filter MAG depth files: use only those for plotting that contain depths for > 2 samples
     ch_mag_depths_plot_refined = MAG_DEPTHS_REFINED.out.depths
-        .transpose()
-        .map { meta, depth_file ->
-            def meta_new = meta.clone()
-            meta_new['binner'] = 'DASTool'
-            if (getColNo(depth_file) > 2) [meta_new, depth_file]
+        .map { meta, bin_depths_file ->
+            if (getColNo(bin_depths_file) > 2) [ meta, bin_depths_file ]
         }
 
     MAG_DEPTHS_PLOT_REFINED ( ch_mag_depths_plot_refined, ch_sample_groups.collect() )

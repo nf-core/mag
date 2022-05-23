@@ -1,5 +1,5 @@
 process MAG_DEPTHS {
-    tag "${meta.assembler}-${meta.id}"
+    tag "${meta.assembler}-${meta.binner}-${meta.id}"
 
     // Using container from metabat2 process, since this will be anyway already downloaded and contains biopython and pandas
     conda (params.enable_conda ? "bioconda::metabat2=2.15 conda-forge::python=3.6.7 conda-forge::biopython=1.74 conda-forge::pandas=1.1.5" : null)
@@ -11,15 +11,16 @@ process MAG_DEPTHS {
     tuple val(meta), path(bins), path(contig_depths)
 
     output:
-    tuple val(meta), path("${meta.assembler}-*-${meta.id}-binDepths.tsv"), emit: depths
-    path "versions.yml"                                                  , emit: versions
+    tuple val(meta), path("${meta.assembler}-${meta.binner}-${meta.id}-binDepths.tsv"), emit: depths
+    path "versions.yml"                                                               , emit: versions
 
     script:
     """
     get_mag_depths.py --bins ${bins} \\
                     --depths ${contig_depths} \\
                     --assembler ${meta.assembler} \\
-                    --id ${meta.id}
+                    --id ${meta.id} \\
+                    --binner ${meta.binner}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
