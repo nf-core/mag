@@ -277,6 +277,7 @@ workflow MAG {
             BOWTIE2_PHIX_REMOVAL_BUILD.out.index
         )
         ch_short_reads = BOWTIE2_PHIX_REMOVAL_ALIGN.out.reads
+        ch_versions = ch_versions.mix(BOWTIE2_PHIX_REMOVAL_ALIGN.out.versions.first())
     }
 
     FASTQC_TRIMMED (
