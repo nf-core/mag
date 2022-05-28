@@ -47,7 +47,7 @@ process GTDBTK_CLASSIFY {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        gtdbtk: \$(gtdbtk --version | sed "s/gtdbtk: version //; s/ Copyright.*//")
+        gtdbtk: \$(gtdbtk --version | head -n 1 | sed "s/gtdbtk: version //; s/ Copyright.*//")
     END_VERSIONS
     """
 }
