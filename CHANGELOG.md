@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Fixed`
 
 - [#290](https://github.com/nf-core/mag/pull/290) - Fix caching of binning input
+- [#307](https://github.com/nf-core/mag/pull/307) - Fix retrieval of GTDB-Tk version (note about newer version caused error in `CUSTOM_DUMPSOFTWAREVERSIONS`)
 
 ### `Dependencies`
 
