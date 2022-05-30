@@ -316,7 +316,7 @@ All the files and contigs in these folders will be assessed by QUAST and BUSCO.
 <summary>Output files</summary>
 
 - `GenomeBinning/MaxBin2/discarded/`
-  - `*.tooshort.fa.gz`: Too short contigs that are filtered by MaxBin2
+  - `*.tooshort.gz`: Too short contigs that are filtered by MaxBin2
 - `GenomeBinning/MaxBin2/unbinned/discarded/`
   - `*.noclass.pooled.fa.gz`: Pooled unbinned contigs equal or above `--min_contig_size`, by default 1500 bp.
   - `*.noclass.remaining.fa.gz`: Remaining unbinned contigs below `--min_contig_size`, by default 1500 bp, but not in any other file.
