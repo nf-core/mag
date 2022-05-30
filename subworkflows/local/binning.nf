@@ -13,6 +13,7 @@ include { GUNZIP as GUNZIP_BINS                 } from '../../modules/nf-core/mo
 include { GUNZIP as GUNZIP_UNBINS               } from '../../modules/nf-core/modules/gunzip/main'
 
 include { CONVERT_DEPTHS                        } from '../../modules/local/convert_depths'
+include { ADJUST_MAXBIN2_EXT                    } from '../../modules/local/adjust_maxbin2_ext'
 include { SPLIT_FASTA                           } from '../../modules/local/split_fasta'
 include { MAG_DEPTHS                            } from '../../modules/local/mag_depths'               addParams( options: params.mag_depths_options         )
 include { MAG_DEPTHS_PLOT                       } from '../../modules/local/mag_depths_plot'          addParams( options: params.mag_depths_plot_options    )
@@ -93,8 +94,9 @@ workflow BINNING {
     }
     if ( !params.skip_maxbin2 ) {
         MAXBIN2 ( ch_maxbin2_input )
-        ch_final_bins_for_gunzip = ch_final_bins_for_gunzip.mix( MAXBIN2.out.binned_fastas.transpose() )
-        ch_binning_results_gzipped_final = ch_binning_results_gzipped_final.mix( MAXBIN2.out.binned_fastas )
+        ADJUST_MAXBIN2_EXT ( MAXBIN2.out.binned_fastas )
+        ch_final_bins_for_gunzip = ch_final_bins_for_gunzip.mix( ADJUST_MAXBIN2_EXT.out.renamed_bins.transpose() )
+        ch_binning_results_gzipped_final = ch_binning_results_gzipped_final.mix( ADJUST_MAXBIN2_EXT.out.renamed_bins )
         ch_versions = ch_versions.mix(MAXBIN2.out.versions)
     }
 
