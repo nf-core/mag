@@ -12,10 +12,10 @@ process SPLIT_FASTA {
     tuple val(meta), path(unbinned)
 
     output:
-    tuple val(meta), path("*.[0-9]*.fa.gz")     , optional:true, emit: unbinned
-    tuple val(meta), path("*.pooled.fa.gz")     , optional:true, emit: pooled
-    tuple val(meta), path("*.remaining.fa.gz")  , optional:true, emit: remaining
-    path "versions.yml"                         , emit: versions
+    tuple val(meta), path("${meta.assembler}-${meta.binner}-${meta.id}.*.[1-9]*.fa.gz")   , optional:true, emit: unbinned
+    tuple val(meta), path("${meta.assembler}-${meta.binner}-${meta.id}.*.pooled.fa.gz")   , optional:true, emit: pooled
+    tuple val(meta), path("${meta.assembler}-${meta.binner}-${meta.id}.*.remaining.fa.gz"), optional:true, emit: remaining
+    path "versions.yml"                                                                   , emit: versions
 
     script:
     """
