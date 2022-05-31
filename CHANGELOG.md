@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#290](https://github.com/nf-core/mag/pull/290) - Fix caching of binning input
 - [#305](https://github.com/nf-core/mag/pull/305) - Add missing Bowtie2 version for process `BOWTIE2_PHIX_REMOVAL_ALIGN` to `software_versions.yml`
 - [#307](https://github.com/nf-core/mag/pull/307) - Fix retrieval of GTDB-Tk version (note about newer version caused error in `CUSTOM_DUMPSOFTWAREVERSIONS`)
+- [#309](https://github.com/nf-core/mag/pull/309) - Fix publishing of BUSCO `busco_downloads/` folder, i.e. publish only when `--save_busco_reference` is specified
 
 ### `Dependencies`
 
