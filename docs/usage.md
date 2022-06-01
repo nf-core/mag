@@ -290,6 +290,8 @@ MAG integrates an additional subworkflow to validate ancient DNA _de novo_ assem
 
 ## A note on bin refinement
 
+### Error Reporting
+
 DAS Tool may not always be able to refine bins due to insufficient recovery of enough single-copy genes. In these cases you will get a NOTE such as
 
 ```console
