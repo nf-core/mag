@@ -12,22 +12,38 @@ export_plots: true
 
 data_format: "yaml"
 
+run_modules:
+  - fastqc
+  - fastp
+  - adapterRemoval
+  - custom_content
+  - bowtie2
+  - busco
+  - quast
+  - kraken2
+  - bcftools
+  - prokka
+
 top_modules:
   - "fastqc":
       name: "FastQC: raw reads"
       path_filters_exclude:
         - "*trimmed*"
   - "fastp"
-  - "adapterRemoval":
-  - custom_content
+  - "adapterRemoval"
   - "fastqc":
       name: "FastQC: after preprocessing"
       info: "After trimming and, if requested, contamination removal."
       path_filters:
         - "*trimmed*"
+  - "kraken2"
+  - "bowtie2"
+  - "bcftools"
+  - custom_content
   - "busco":
       info: "assesses genome assembly and annotation completeness with Benchmarking Universal Single-Copy Orthologs. In case BUSCO's automated lineage selection was used, only generic results for the selected domain are shown and only for genome bins and kept, unbinned contigs for which the BUSCO analysis was successfull, i.e. not for contigs for which no BUSCO genes could be found. Bins for which a specific virus lineage was selected are also not shown."
   - "quast"
+  - "prokka"
 
 custom_data:
   host_removal:
@@ -49,3 +65,7 @@ sp:
 extra_fn_clean_exts:
   - ".bowtie2"
   - "_ar2"
+
+custom_logo: "nf-core-mag_logo_light.png"
+custom_logo_url: https://github.com/nf-core/mag/
+custom_logo_title: "nf-core/mag"

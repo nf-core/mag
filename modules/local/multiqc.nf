@@ -16,6 +16,7 @@ process MULTIQC {
     path 'bowtie2log/*'
     path short_summary
     path additional
+    path logo
 
     output:
     path "*multiqc_report.html", emit: report

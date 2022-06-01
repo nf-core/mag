@@ -195,6 +195,8 @@ workflow MAG {
 
     ch_versions = Channel.empty()
 
+    ch_mag_logo = Channel.fromPath("$projectDir/assets/nf-core-mag_logo_light.png")
+
     //
     // SUBWORKFLOW: Read in samplesheet, validate and stage input files
     //
@@ -682,6 +684,7 @@ workflow MAG {
         ch_multiqc_additional = ch_multiqc_additional.mix(ADAPTERREMOVAL_PE.out.log.collect{it[1]}.ifEmpty([]), ADAPTERREMOVAL_SE.out.log.collect{it[1]}.ifEmpty([]))
     }
 
+
     MULTIQC (
         ch_multiqc_files.collect(),
         ch_multiqc_custom_config.collect().ifEmpty([]),
@@ -692,6 +695,7 @@ workflow MAG {
         ch_bowtie2_assembly_multiqc.collect().ifEmpty([]),
         ch_busco_multiqc.collect().ifEmpty([]),
         ch_multiqc_additional.collect().ifEmpty([]),
+        ch_mag_logo.collect().ifEmpty([])
     )
     multiqc_report = MULTIQC.out.report.toList()
     ch_versions    = ch_versions.mix(MULTIQC.out.versions)
