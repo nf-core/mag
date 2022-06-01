@@ -17,7 +17,9 @@ def parse_args(args=None):
     parser.add_argument('-d', '--depths'       , required=True           , metavar='FILE'                             , help="(Compressed) TSV file containing contig depths for each sample: contigName, contigLen, totalAvgDepth, sample1_avgDepth, sample1_var [, sample2_avgDepth, sample2_var, ...].")
     parser.add_argument('-a', '--assembler'    , required=True                           , type=str                   , help="Assembler name.")
     parser.add_argument('-i', '--id'           , required=True                           , type=str                   , help="Sample or group id.")
+    parser.add_argument('-m', '--binner'       , required=True                           , type=str                   , help="Binning method.")
     return parser.parse_args(args)
+# Processing contig depths for each binner again, i.e. not the most efficient way, but ok
 
 def main(args=None):
     args = parse_args(args)
@@ -43,10 +45,8 @@ def main(args=None):
 
     # Initialize output files
     n_samples = len(sample_names)
-    binners = set([ os.path.basename(file).split("-")[1] for file in args.bins ])
-    for binner in binners:
-        with open(args.assembler + "-" + binner + "-" + args.id + "-binDepths.tsv", 'w') as outfile:
-            print("bin", '\t'.join(sample_names), sep='\t', file=outfile)
+    with open(args.assembler + "-" + args.binner + "-" + args.id + "-binDepths.tsv", 'w') as outfile:
+        print("bin", '\t'.join(sample_names), sep='\t', file=outfile)
 
     # for each bin, access contig depths and compute mean bin depth (for all samples)
     for file in args.bins:
@@ -66,7 +66,7 @@ def main(args=None):
                         all_depths[sample].append(contig_depths[sample])
 
         binname = os.path.basename(file)
-        with open(args.assembler + "-" + binname.split("-")[1] + "-" + args.id + "-binDepths.tsv", 'a') as outfile:
+        with open(args.assembler + "-" + args.binner + "-" + args.id + "-binDepths.tsv", 'a') as outfile:
             print(binname, '\t'.join(str(statistics.median(sample_depths)) for sample_depths in all_depths), sep='\t', file=outfile)
 
 

@@ -30,7 +30,6 @@ workflow INPUT_CHECK {
                         exit 1, "Input samplesheet contains row with ${row.size()} column(s). Expects 5."
                     }
                 }
-
         // separate short and long reads
         ch_raw_short_reads = ch_input_rows
             .map { id, group, sr1, sr2, lr ->
