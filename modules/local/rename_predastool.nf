@@ -16,10 +16,17 @@ process RENAME_PREDASTOOL {
 
     script:
     """
-    SAMPLES=(*)
-
-    for i in \$(seq 0 \$((\${#SAMPLES[@]}-1))); do
-        mv \${SAMPLES[\$i]} ${meta.assembler}-${meta.binner}Refined-${meta.id}.\$(( \$i + 1)).fa
-    done
+    if [ -n "${bins}" ]
+    then
+        for bin in ${bins}; do
+            if [[ \${bin} =~ ${meta.assembler}-${meta.binner}-${meta.id}.([_[:alnum:]]+).fa ]]; then
+                num=\${BASH_REMATCH[1]}
+                mv \${bin} ${meta.assembler}-${meta.binner}Refined-${meta.id}.\${num}.fa
+            else
+                echo "ERROR: the bin filename \${bin} does not match the expected format '${meta.assembler}-${meta.binner}-${meta.id}.([_[:alnum:]]+).fa'!"
+                exit 1
+            fi
+        done
+    fi
     """
 }
