@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#286](https://github.com/nf-core/mag/pull/286) - Cite our publication instead of the preprint
 - [#299](https://github.com/nf-core/mag/pull/299) - Add extra results folder `GenomeBinning/depths` for `[assembler]-[sample/group]-depth.txt.gz`, `bin_depths_summary.tsv` and `[assembler]-[binner]-[sample/group]-binDepths.heatmap.png`
 - [#302](https://github.com/nf-core/mag/pull/302) - Update to nf-core 2.4 `TEMPLATE`
-- Replace base container for standard shell tools to fix problems with running on Google Cloud
+- [#315](https://github.com/nf-core/mag/pull/315) - Replace base container for standard shell tools to fix problems with running on Google Cloud
 
 ### `Fixed`
 
