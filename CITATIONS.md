@@ -96,6 +96,9 @@
 
   > Seemann T. Prokka: rapid prokaryotic genome annotation. Bioinformatics. 2014 Jul 15;30(14):2068-9. doi: 10.1093/bioinformatics/btu153. Epub 2014 Mar 18. PMID: 24642063.
 
+- [PyDamage](https://doi.org/10.7717/peerj.11845)
+  > Borry M, Hübner A, Rohrlach AB, Warinner C. 2021. PyDamage: automated ancient damage identification and estimation for contigs in ancient DNA de novo assembly. PeerJ 9:e11845 doi: 10.7717/peerj.11845
+
 - [SAMtools](https://doi.org/10.1093/bioinformatics/btp352)
 
   > Li, H., Handsaker, B., Wysoker, A., Fennell, T., Ruan, J., Homer, N., … 1000 Genome Project Data Processing Subgroup. (2009). The Sequence Alignment/Map format and SAMtools. Bioinformatics , 25(16), 2078–2079. doi: 10.1093/bioinformatics/btp352.
@@ -104,8 +107,6 @@
 
   > Nurk, S., Meleshko, D., Korobeynikov, A., & Pevzner, P. A. (2017). metaSPAdes: a new versatile metagenomic assembler. Genome research, 27(5), 824-834. doi: 10.1101/gr.213959.116.
 
-- [PyDamage](https://doi.org/10.7717/peerj.11845)
-  > Borry M, Hübner A, Rohrlach AB, Warinner C. 2021. PyDamage: automated ancient damage identification and estimation for contigs in ancient DNA de novo assembly. PeerJ 9:e11845 doi: 10.7717/peerj.11845
 
 ## Data
 

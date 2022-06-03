@@ -1,5 +1,5 @@
 process RENAME_PREDASTOOL {
-    tag "${meta.assembler}-${meta.id}"
+    tag "${meta.assembler}-${meta.binner}-${meta.id}"
     label 'process_low'
 
     // Using container from multiqc since it'll be included anyway

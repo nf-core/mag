@@ -21,7 +21,7 @@ def getColNo(filename) {
 
 workflow BINNING_REFINEMENT {
     take:
-    contigs        //
+    contigs
     bins           // channel: [ val(meta), path(bins) ]
     depths
     reads

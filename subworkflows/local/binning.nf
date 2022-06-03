@@ -126,8 +126,9 @@ workflow BINNING {
 
     // Compute bin depths for different samples (according to `binning_map_mode`)
     // Have to remove binner meta before joining with according depths files,
-    // as required for MAG_DEPTHS
-    // add 'binner' info again and finally group by 'assembler', 'id', 'binner'
+    // as required for MAG_DEPTHS, but we can add  'binner' 
+    // info again based on file name and finally group by 
+    // 'assembler', 'id', 'binner'
     ch_depth_input = ch_binning_results_gunzipped
         .mix(ch_splitfasta_results_gunzipped )
         .map { meta, bin ->
