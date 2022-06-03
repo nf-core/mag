@@ -26,7 +26,6 @@ process BOWTIE2_ASSEMBLY_ALIGN {
         $args \\
         $input \\
         2> "${name}.bowtie2.log" | \
-
         samtools view -@ "${task.cpus}" -bS | \
         samtools sort -@ "${task.cpus}" -o "${name}.bam"
     samtools index "${name}.bam"
