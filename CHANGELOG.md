@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#263](https://github.com/nf-core/mag/pull/263) - Add MaxBin2 as second contig binning tool
 - [#285](https://github.com/nf-core/mag/pull/285) - Add AdapterRemoval2 as an alternative read trimmer
 - [#291](https://github.com/nf-core/mag/pull/291) - Add DAS Tool for bin refinement
+- [#319](https://github.com/nf-core/mag/pull/319) - Activate pipeline-specific institutional nf-core/configs
 
 ### `Changed`
 
