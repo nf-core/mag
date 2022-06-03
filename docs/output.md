@@ -381,9 +381,9 @@ For each genome bin the median sequencing depth is computed based on the corresp
   - `icarus_viewers/contig_size_viewer.html`: Diagram of contigs that are ordered from longest to shortest
   - `basic_stats/cumulative_plot.pdf`: Shows the growth of contig lengths (contigs are ordered from largest to shortest)
   - `basic_stats/GC_content_plot.pdf`: Shows the distribution of GC content in the contigs
-  - `basic_stats/[assembler]-[sample/group]_GC_content_plot.pdf`: Histogram of the GC percentage for the contigs
+  - `basic_stats/[assembler]-[bin]_GC_content_plot.pdf`: Histogram of the GC percentage for the contigs
   - `basic_stats/Nx_plot.pdf`: Plot of Nx values as x varies from 0 to 100%.
-  - `predicted_genes/[assembler]-[sample/group].rna.gff`: Contig positions for rRNA genes in gff version 3 format
+  - `predicted_genes/[assembler]-[bin].rna.gff`: Contig positions for rRNA genes in gff version 3 format
   - `predicted_genes/barrnap.log`: Barrnap log file (ribosomal RNA predictor)
 - `GenomeBinning/QC/`
   - `quast_summary.tsv`: QUAST output for all bins summarized
@@ -437,15 +437,15 @@ Besides the reference files or output files created by BUSCO, the following summ
 <details markdown="1">
 <summary>Output files</summary>
 
-- `Taxonomy/CAT/[assembler]/`
-  - `[assembler]-[sample/group].ORF2LCA.names.txt.gz`: Tab-delimited files containing the lineage of each contig, with full lineage names
-  - `[assembler]-[sample/group].bin2classification.names.txt.gz`: Taxonomy classification of the genome bins, with full lineage names
-- `Taxonomy/CAT/[assembler]/raw/`
-  - `[assembler]-[sample/group].concatenated.predicted_proteins.faa.gz`: Predicted protein sequences for each genome bin, in fasta format
-  - `[assembler]-[sample/group].concatenated.predicted_proteins.gff.gz`: Predicted protein features for each genome bin, in gff format
-  - `[assembler]-[sample/group].ORF2LCA.txt.gz`: Tab-delimited files containing the lineage of each contig
-  - `[assembler]-[sample/group].bin2classification.txt.gz`: Taxonomy classification of the genome bins
-  - `[assembler]-[sample/group].log`: Log files
+- `Taxonomy/CAT/[assembler]/[binner]/`
+  - `[assembler]-[binner]-[sample/group].ORF2LCA.names.txt.gz`: Tab-delimited files containing the lineage of each contig, with full lineage names
+  - `[assembler]-[binner]-[sample/group].bin2classification.names.txt.gz`: Taxonomy classification of the genome bins, with full lineage names
+- `Taxonomy/CAT/[assembler]/[binner]/raw/`
+  - `[assembler]-[binner]-[sample/group].concatenated.predicted_proteins.faa.gz`: Predicted protein sequences for each genome bin, in fasta format
+  - `[assembler]-[binner]-[sample/group].concatenated.predicted_proteins.gff.gz`: Predicted protein features for each genome bin, in gff format
+  - `[assembler]-[binner]-[sample/group].ORF2LCA.txt.gz`: Tab-delimited files containing the lineage of each contig
+  - `[assembler]-[binner]-[sample/group].bin2classification.txt.gz`: Taxonomy classification of the genome bins
+  - `[assembler]-[binner]-[sample/group].log`: Log files
 
 </details>
 
@@ -465,14 +465,14 @@ If the parameters `--cat_db_generate` and `--save_cat_db` are set, additionally 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `Taxonomy/GTDB-Tk/[assembler]/[sample/group]/`
-  - `gtdbtk.[assembler]-[sample/group].{bac120/ar122}.summary.tsv`: Classifications for bacterial and archaeal genomes (see the [GTDB-Tk documentation for details](https://ecogenomics.github.io/GTDBTk/files/summary.tsv.html).
-  - `gtdbtk.[assembler]-[sample/group].{bac120/ar122}.classify.tree.gz`: Reference tree in Newick format containing query genomes placed with pplacer.
-  - `gtdbtk.[assembler]-[sample/group].{bac120/ar122}.markers_summary.tsv`: A summary of unique, duplicated, and missing markers within the 120 bacterial marker set, or the 122 archaeal marker set for each submitted genome.
-  - `gtdbtk.[assembler]-[sample/group].{bac120/ar122}.msa.fasta.gz`: FASTA file containing MSA of submitted and reference genomes.
-  - `gtdbtk.[assembler]-[sample/group].{bac120/ar122}.filtered.tsv`: A list of genomes with an insufficient number of amino acids in MSA.
-  - `gtdbtk.[assembler]-[sample/group].*.log`: Log files.
-  - `gtdbtk.[assembler]-[sample/group].failed_genomes.tsv`: A list of genomes for which the GTDB-Tk analysis failed, e.g. because Prodigal could not detect any genes.
+- `Taxonomy/GTDB-Tk/[assembler]/[binner]/[sample/group]/`
+  - `gtdbtk.[assembler]-[binner]-[sample/group].{bac120/ar122}.summary.tsv`: Classifications for bacterial and archaeal genomes (see the [GTDB-Tk documentation for details](https://ecogenomics.github.io/GTDBTk/files/summary.tsv.html).
+  - `gtdbtk.[assembler]-[binner]-[sample/group].{bac120/ar122}.classify.tree.gz`: Reference tree in Newick format containing query genomes placed with pplacer.
+  - `gtdbtk.[assembler]-[binner]-[sample/group].{bac120/ar122}.markers_summary.tsv`: A summary of unique, duplicated, and missing markers within the 120 bacterial marker set, or the 122 archaeal marker set for each submitted genome.
+  - `gtdbtk.[assembler]-[binner]-[sample/group].{bac120/ar122}.msa.fasta.gz`: FASTA file containing MSA of submitted and reference genomes.
+  - `gtdbtk.[assembler]-[binner]-[sample/group].{bac120/ar122}.filtered.tsv`: A list of genomes with an insufficient number of amino acids in MSA.
+  - `gtdbtk.[assembler]-[binner]-[sample/group].*.log`: Log files.
+  - `gtdbtk.[assembler]-[binner]-[sample/group].failed_genomes.tsv`: A list of genomes for which the GTDB-Tk analysis failed, e.g. because Prodigal could not detect any genes.
 - `Taxonomy/GTDB-Tk/gtdbtk_summary.tsv`: A summary table of the GTDB-Tk classification results for all bins, also containing bins which were discarded based on the BUSCO QC, which were filtered out by GTDB-Tk ((listed in `*.filtered.tsv`) or for which the analysis failed (listed in `*.failed_genomes.tsv`).
 
 </details>

@@ -1,5 +1,5 @@
 process CAT {
-    tag "${meta.assembler}-${meta.id}-${db_name}"
+    tag "${meta.assembler}-${meta.binner}-${meta.id}-${db_name}"
 
     conda (params.enable_conda ? "bioconda::cat=4.6 bioconda::diamond=2.0.6" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -21,18 +21,18 @@ process CAT {
 
     script:
     """
-    CAT bins -b "bins/" -d database/ -t taxonomy/ -n "${task.cpus}" -s .fa --top 6 -o "${meta.assembler}-${meta.id}" --I_know_what_Im_doing
-    CAT add_names -i "${meta.assembler}-${meta.id}.ORF2LCA.txt" -o "${meta.assembler}-${meta.id}.ORF2LCA.names.txt" -t taxonomy/
-    CAT add_names -i "${meta.assembler}-${meta.id}.bin2classification.txt" -o "${meta.assembler}-${meta.id}.bin2classification.names.txt" -t taxonomy/
+    CAT bins -b "bins/" -d database/ -t taxonomy/ -n "${task.cpus}" -s .fa --top 6 -o "${meta.assembler}-${meta.binner}-${meta.id}" --I_know_what_Im_doing
+    CAT add_names -i "${meta.assembler}-${meta.binner}-${meta.id}.ORF2LCA.txt" -o "${meta.assembler}-${meta.binner}-${meta.id}.ORF2LCA.names.txt" -t taxonomy/
+    CAT add_names -i "${meta.assembler}-${meta.binner}-${meta.id}.bin2classification.txt" -o "${meta.assembler}-${meta.binner}-${meta.id}.bin2classification.names.txt" -t taxonomy/
 
     mkdir raw
     mv *.ORF2LCA.txt *.predicted_proteins.faa *.predicted_proteins.gff *.log *.bin2classification.txt raw/
-    gzip "raw/${meta.assembler}-${meta.id}.ORF2LCA.txt" \
-        "raw/${meta.assembler}-${meta.id}.concatenated.predicted_proteins.faa" \
-        "raw/${meta.assembler}-${meta.id}.concatenated.predicted_proteins.gff" \
-        "raw/${meta.assembler}-${meta.id}.bin2classification.txt" \
-        "${meta.assembler}-${meta.id}.ORF2LCA.names.txt" \
-        "${meta.assembler}-${meta.id}.bin2classification.names.txt"
+    gzip "raw/${meta.assembler}-${meta.binner}-${meta.id}.ORF2LCA.txt" \
+        "raw/${meta.assembler}-${meta.binner}-${meta.id}.concatenated.predicted_proteins.faa" \
+        "raw/${meta.assembler}-${meta.binner}-${meta.id}.concatenated.predicted_proteins.gff" \
+        "raw/${meta.assembler}-${meta.binner}-${meta.id}.bin2classification.txt" \
+        "${meta.assembler}-${meta.binner}-${meta.id}.ORF2LCA.names.txt" \
+        "${meta.assembler}-${meta.binner}-${meta.id}.bin2classification.names.txt"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
