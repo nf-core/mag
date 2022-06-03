@@ -1,5 +1,5 @@
 process GTDBTK_CLASSIFY {
-    tag "${meta.assembler}-${meta.id}"
+    tag "${meta.assembler}-${meta.binner}-${meta.id}"
 
     conda (params.enable_conda ? "bioconda::gtdbtk=1.5.0" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -11,16 +11,16 @@ process GTDBTK_CLASSIFY {
     tuple val(db_name), path("database/*")
 
     output:
-    path "gtdbtk.${meta.assembler}-${meta.id}.*.summary.tsv"        , emit: summary
-    path "gtdbtk.${meta.assembler}-${meta.id}.*.classify.tree.gz"   , emit: tree
-    path "gtdbtk.${meta.assembler}-${meta.id}.*.markers_summary.tsv", emit: markers
-    path "gtdbtk.${meta.assembler}-${meta.id}.*.msa.fasta.gz"       , emit: msa
-    path "gtdbtk.${meta.assembler}-${meta.id}.*.user_msa.fasta"     , emit: user_msa
-    path "gtdbtk.${meta.assembler}-${meta.id}.*.filtered.tsv"       , emit: filtered
-    path "gtdbtk.${meta.assembler}-${meta.id}.log"                  , emit: log
-    path "gtdbtk.${meta.assembler}-${meta.id}.warnings.log"         , emit: warnings
-    path "gtdbtk.${meta.assembler}-${meta.id}.failed_genomes.tsv"   , emit: failed
-    path "versions.yml"                                             , emit: versions
+    path "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.*.summary.tsv"        , emit: summary
+    path "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.*.classify.tree.gz"   , emit: tree
+    path "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.*.markers_summary.tsv", emit: markers
+    path "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.*.msa.fasta.gz"       , emit: msa
+    path "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.*.user_msa.fasta"     , emit: user_msa
+    path "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.*.filtered.tsv"       , emit: filtered
+    path "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.log"                  , emit: log
+    path "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.warnings.log"         , emit: warnings
+    path "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.failed_genomes.tsv"   , emit: failed
+    path "versions.yml"                                                            , emit: versions
 
     script:
     def args = task.ext.args ?: ''
@@ -33,7 +33,7 @@ process GTDBTK_CLASSIFY {
 
     gtdbtk classify_wf $args \
                     --genome_dir bins \
-                    --prefix "gtdbtk.${meta.assembler}-${meta.id}" \
+                    --prefix "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}" \
                     --out_dir "\${PWD}" \
                     --cpus ${task.cpus} \
                     --pplacer_cpus ${params.gtdbtk_pplacer_cpus} \
@@ -41,9 +41,9 @@ process GTDBTK_CLASSIFY {
                     --min_perc_aa ${params.gtdbtk_min_perc_aa} \
                     --min_af ${params.gtdbtk_min_af}
 
-    gzip "gtdbtk.${meta.assembler}-${meta.id}".*.classify.tree "gtdbtk.${meta.assembler}-${meta.id}".*.msa.fasta
-    mv gtdbtk.log "gtdbtk.${meta.assembler}-${meta.id}.log"
-    mv gtdbtk.warnings.log "gtdbtk.${meta.assembler}-${meta.id}.warnings.log"
+    gzip "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}".*.classify.tree "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}".*.msa.fasta
+    mv gtdbtk.log "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.log"
+    mv gtdbtk.warnings.log "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.warnings.log"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
