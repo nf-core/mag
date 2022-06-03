@@ -353,7 +353,7 @@ By default, only the raw bins (and unbinned contigs) from the actual binning met
 
 ### Bin sequencing depth
 
-For each genome bin the median sequencing depth is computed based on the corresponding contig depths of each bin or refined bin.
+For each bin or refined bin the median sequencing depth is computed based on the corresponding contig depths.
 
 <details markdown="1">
 <summary>Output files</summary>
