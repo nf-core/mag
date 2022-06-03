@@ -381,9 +381,9 @@ For each genome bin the median sequencing depth is computed based on the corresp
   - `icarus_viewers/contig_size_viewer.html`: Diagram of contigs that are ordered from longest to shortest
   - `basic_stats/cumulative_plot.pdf`: Shows the growth of contig lengths (contigs are ordered from largest to shortest)
   - `basic_stats/GC_content_plot.pdf`: Shows the distribution of GC content in the contigs
-  - `basic_stats/[assembler]-[sample/group]_GC_content_plot.pdf`: Histogram of the GC percentage for the contigs
+  - `basic_stats/[assembler]-[bin]_GC_content_plot.pdf`: Histogram of the GC percentage for the contigs
   - `basic_stats/Nx_plot.pdf`: Plot of Nx values as x varies from 0 to 100%.
-  - `predicted_genes/[assembler]-[sample/group].rna.gff`: Contig positions for rRNA genes in gff version 3 format
+  - `predicted_genes/[assembler]-[bin].rna.gff`: Contig positions for rRNA genes in gff version 3 format
   - `predicted_genes/barrnap.log`: Barrnap log file (ribosomal RNA predictor)
 - `GenomeBinning/QC/`
   - `quast_summary.tsv`: QUAST output for all bins summarized
