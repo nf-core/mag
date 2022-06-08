@@ -18,6 +18,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 - [Taxonomic classification of binned genomes](#taxonomic-classification-of-binned-genomes)
 - [Genome annotation of binned genomes](#genome-annotation-of-binned-genomes)
 - [Additional summary for binned genomes](#additional-summary-for-binned-genomes)
+- [Ancient DNA](#ancient-dna)
 - [MultiQC](#multiqc) - aggregate report, describing results of the whole pipeline
 - [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
 
@@ -512,7 +513,8 @@ Whole genome annotation is the process of identifying features of interest in a 
 
 </details>
 
-## Ancient DNA (optional, only with `-profile ancient_dna`)
+## Ancient DNA
+Optional, only running when parameter `-profile ancient_dna` is specified.
 
 ### `PyDamage`
 
