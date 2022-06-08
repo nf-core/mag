@@ -169,8 +169,6 @@ workflow BINNING {
     ch_binning_results_gunzipped_final = ch_binning_results_gunzipped.groupTuple(by: 0)
     ch_binning_results_gzipped_final   = ch_binning_results_gzipped_final.groupTuple(by: 0)
 
-    SPLIT_FASTA.out.unbinned
-
     emit:
     bins                                         = ch_binning_results_gunzipped_final
     bins_gz                                      = ch_binning_results_gzipped_final
