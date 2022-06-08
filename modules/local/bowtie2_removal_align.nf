@@ -2,7 +2,7 @@
  * Bowtie2 for read removal
  */
 process BOWTIE2_REMOVAL_ALIGN {
-    tag "${meta.id}-${task.ext.suffix}"
+    tag "$meta.id"
 
     conda (params.enable_conda ? "bioconda::bowtie2=2.4.2" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -21,7 +21,7 @@ process BOWTIE2_REMOVAL_ALIGN {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix    = task.ext.suffix ? "${meta.id}.${task.ext.suffix}" : "${meta.id}"
+    def prefix    = task.ext.prefix ?: "${meta.id}"
     def sensitivity = params.host_removal_verysensitive ? "--very-sensitive" : "--sensitive"
     def save_ids = params.host_removal_save_ids ? "Y" : "N"
     if (!meta.single_end){
