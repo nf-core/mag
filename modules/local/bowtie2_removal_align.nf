@@ -21,15 +21,15 @@ process BOWTIE2_REMOVAL_ALIGN {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix    = task.ext.prefix ?: "${meta.id}"
-    def sensitivity = params.host_removal_verysensitive ? "--very-sensitive" : "--sensitive"
-    def save_ids = params.host_removal_save_ids ? "Y" : "N"
+    def args2 = task.ext.args2 ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def save_ids = (args2.contains('--host_removal_save_ids')) ? "Y" : "N"
     if (!meta.single_end){
         """
         bowtie2 -p ${task.cpus} \
                 -x ${index[0].getSimpleName()} \
                 -1 "${reads[0]}" -2 "${reads[1]}" \
-                $sensitivity \
+                $args \
                 --un-conc-gz ${prefix}.unmapped_%.fastq.gz \
                 --al-conc-gz ${prefix}.mapped_%.fastq.gz \
                 1> /dev/null \
@@ -50,7 +50,7 @@ process BOWTIE2_REMOVAL_ALIGN {
         bowtie2 -p ${task.cpus} \
                 -x ${index[0].getSimpleName()} \
                 -U ${reads} \
-                $sensitivity \
+                $args \
                 --un-gz ${prefix}.unmapped.fastq.gz \
                 --al-gz ${prefix}.mapped.fastq.gz \
                 1> /dev/null \
