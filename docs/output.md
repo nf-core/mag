@@ -514,6 +514,7 @@ Whole genome annotation is the process of identifying features of interest in a 
 </details>
 
 ## Ancient DNA
+
 Optional, only running when parameter `-profile ancient_dna` is specified.
 
 ### `PyDamage`

@@ -31,10 +31,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Dependencies`
 
-| Tool     | Previous version | New version |
-| -------- | ---------------- | ----------- |
-| fastp    | 0.20.1           | 0.23.2      |
-| MULTIQC  | 1.11             | 1.12        |
+| Tool    | Previous version | New version |
+| ------- | ---------------- | ----------- |
+| fastp   | 0.20.1           | 0.23.2      |
+| MULTIQC | 1.11             | 1.12        |
 
 ## v2.1.1 - 2021/11/25
 
