@@ -18,6 +18,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 - [Taxonomic classification of binned genomes](#taxonomic-classification-of-binned-genomes)
 - [Genome annotation of binned genomes](#genome-annotation-of-binned-genomes)
 - [Additional summary for binned genomes](#additional-summary-for-binned-genomes)
+- [Ancient DNA](#ancient-dna)
 - [MultiQC](#multiqc) - aggregate report, describing results of the whole pipeline
 - [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
 
@@ -89,7 +90,8 @@ The pipeline uses bowtie2 to map short reads against the host reference genome s
 <summary>Output files</summary>
 
 - `QC_shortreads/remove_host/`
-  - `[sample].host_removed.bowtie2.log`: Contains the bowtie2 log file indicating how many reads have been mapped as well as a file listing the read ids of discarded reads.
+  - `[sample].host_removed.bowtie2.log`: Contains the bowtie2 log file indicating how many reads have been mapped.
+  - `[sample].host_removed.mapped*.read_ids.txt`: Contains a file listing the read ids of discarded reads.
 
 </details>
 
@@ -513,7 +515,9 @@ Whole genome annotation is the process of identifying features of interest in a 
 
 </details>
 
-## Ancient DNA (optional, only with `-profile ancient_dna`)
+## Ancient DNA
+
+Optional, only running when parameter `-profile ancient_dna` is specified.
 
 ### `PyDamage`
 
