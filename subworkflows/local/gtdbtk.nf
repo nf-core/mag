@@ -19,7 +19,7 @@ workflow GTDBTK {
     // Filter bins: classify only medium & high quality MAGs
     // Collect completness and contamination metrics from busco summary
     def bin_metrics = [:]
-    busco_summary
+    ch_busco_metrics = busco_summary
         .splitCsv(header: true, sep: '\t')
         .map { row ->
                     def completeness  = -1
@@ -36,10 +36,9 @@ workflow GTDBTK {
                     if (duplicated != '') contamination = Double.parseDouble(duplicated)
                     [row.'GenomeBin', completeness, contamination]
         }
-        .set { ch_busco_metrics }
 
     // Filter bins based on collected metrics: completeness, contamination
-    bins
+    ch_filtered_bins = bins
         .transpose()
         .map { meta, bin -> [bin.getName(), bin, meta]}
         .join(ch_busco_metrics, failOnDuplicate: true, failOnMismatch: true)
@@ -50,7 +49,6 @@ workflow GTDBTK {
             discarded: (it[2] == -1 || it[2] < params.gtdbtk_min_completeness || it[3] == -1 || it[3] > params.gtdbtk_max_contamination)
                 return [it[0], it[1]]
         }
-        .set { ch_filtered_bins }
 
     GTDBTK_DB_PREPARATION ( gtdb )
     GTDBTK_CLASSIFY (
@@ -67,5 +65,5 @@ workflow GTDBTK {
 
     emit:
     summary     = GTDBTK_SUMMARY.out.summary
-    version     = GTDBTK_CLASSIFY.out.version
+    versions    = GTDBTK_CLASSIFY.out.versions
 }

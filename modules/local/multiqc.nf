@@ -1,41 +1,30 @@
-// Import generic module functions
-include { initOptions; saveFiles; getSoftwareName } from './functions'
-
-params.options = [:]
-options    = initOptions(params.options)
-
 process MULTIQC {
     label 'process_medium'
-    publishDir "${params.outdir}",
-        mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename: filename, options: params.options, publish_dir: getSoftwareName(task.process), meta:[:], publish_by_meta:[]) }
 
-    conda (params.enable_conda ? "bioconda::multiqc=1.11" : null)
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/multiqc:1.11--pyhdfd78af_0"
-    } else {
-        container "quay.io/biocontainers/multiqc:1.11--pyhdfd78af_0"
-    }
+    conda (params.enable_conda ? "bioconda::multiqc=1.12" : null)
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/multiqc:1.12--pyhdfd78af_0' :
+        'quay.io/biocontainers/multiqc:1.12--pyhdfd78af_0' }"
 
     input:
     path multiqc_files
     path mqc_custom_config
     path 'fastqc_raw/*'
-    path 'fastp/*'
     path 'fastqc_trimmed/*'
     path host_removal
     path 'quast*/*'
     path 'bowtie2log/*'
     path short_summary
+    path additional
 
     output:
     path "*multiqc_report.html", emit: report
     path "*_data"              , emit: data
     path "*_plots"             , optional:true, emit: plots
-    path "*.version.txt"       , emit: version
+    path "versions.yml"        , emit: versions
 
     script:
-    def software = getSoftwareName(task.process)
+    def args = task.ext.args ?: ''
     custom_config_file = params.multiqc_config ? "--config $mqc_custom_config" : ''
     read_type = params.single_end ? "--single_end" : ''
     if ( params.host_fasta || params.host_genome ) {
@@ -45,12 +34,20 @@ process MULTIQC {
         multiqc_to_custom_tsv.py ${read_type}
         # run multiqc using custom content file instead of original bowtie2 log files
         multiqc -f $custom_config_file --ignore "*.bowtie2.log" .
-        multiqc --version | sed -e "s/multiqc, version //g" > ${software}.version.txt
+
+        cat <<-END_VERSIONS > versions.yml
+        "${task.process}":
+            multiqc: \$( multiqc --version | sed -e "s/multiqc, version //g" )
+        END_VERSIONS
         """
     } else {
         """
-        multiqc -f $options.args .
-        multiqc --version | sed -e "s/multiqc, version //g" > ${software}.version.txt
+        multiqc -f $args .
+
+        cat <<-END_VERSIONS > versions.yml
+        "${task.process}":
+            multiqc: \$( multiqc --version | sed -e "s/multiqc, version //g" )
+        END_VERSIONS
         """
     }
 }

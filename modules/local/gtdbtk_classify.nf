@@ -1,41 +1,29 @@
-// Import generic module functions
-include { initOptions; saveFiles; getSoftwareName } from './functions'
-
-params.options = [:]
-options    = initOptions(params.options)
-
 process GTDBTK_CLASSIFY {
-    tag "${meta.assembler}-${meta.id}"
-
-    publishDir "${params.outdir}",
-        mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['assembler', 'id']) }
+    tag "${meta.assembler}-${meta.binner}-${meta.id}"
 
     conda (params.enable_conda ? "bioconda::gtdbtk=1.5.0" : null)
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/gtdbtk:1.5.0--pyhdfd78af_0"
-    } else {
-        container "quay.io/biocontainers/gtdbtk:1.5.0--pyhdfd78af_0"
-    }
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/gtdbtk:1.5.0--pyhdfd78af_0' :
+        'quay.io/biocontainers/gtdbtk:1.5.0--pyhdfd78af_0' }"
 
     input:
     tuple val(meta), path("bins/*")
     tuple val(db_name), path("database/*")
 
     output:
-    path "gtdbtk.${meta.assembler}-${meta.id}.*.summary.tsv"        , emit: summary
-    path "gtdbtk.${meta.assembler}-${meta.id}.*.classify.tree.gz"   , emit: tree
-    path "gtdbtk.${meta.assembler}-${meta.id}.*.markers_summary.tsv", emit: markers
-    path "gtdbtk.${meta.assembler}-${meta.id}.*.msa.fasta.gz"       , emit: msa
-    path "gtdbtk.${meta.assembler}-${meta.id}.*.user_msa.fasta"     , emit: user_msa
-    path "gtdbtk.${meta.assembler}-${meta.id}.*.filtered.tsv"       , emit: filtered
-    path "gtdbtk.${meta.assembler}-${meta.id}.log"                  , emit: log
-    path "gtdbtk.${meta.assembler}-${meta.id}.warnings.log"         , emit: warnings
-    path "gtdbtk.${meta.assembler}-${meta.id}.failed_genomes.tsv"   , emit: failed
-    path '*.version.txt'                                            , emit: version
+    path "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.*.summary.tsv"        , emit: summary
+    path "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.*.classify.tree.gz"   , emit: tree
+    path "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.*.markers_summary.tsv", emit: markers
+    path "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.*.msa.fasta.gz"       , emit: msa
+    path "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.*.user_msa.fasta"     , emit: user_msa
+    path "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.*.filtered.tsv"       , emit: filtered
+    path "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.log"                  , emit: log
+    path "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.warnings.log"         , emit: warnings
+    path "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.failed_genomes.tsv"   , emit: failed
+    path "versions.yml"                                                            , emit: versions
 
     script:
-    def software = getSoftwareName(task.process)
+    def args = task.ext.args ?: ''
     def pplacer_scratch = params.gtdbtk_pplacer_scratch ? "--scratch_dir pplacer_tmp" : ""
     """
     export GTDBTK_DATA_PATH="\${PWD}/database"
@@ -43,9 +31,9 @@ process GTDBTK_CLASSIFY {
         mkdir pplacer_tmp
     fi
 
-    gtdbtk classify_wf $options.args \
+    gtdbtk classify_wf $args \
                     --genome_dir bins \
-                    --prefix "gtdbtk.${meta.assembler}-${meta.id}" \
+                    --prefix "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}" \
                     --out_dir "\${PWD}" \
                     --cpus ${task.cpus} \
                     --pplacer_cpus ${params.gtdbtk_pplacer_cpus} \
@@ -53,9 +41,13 @@ process GTDBTK_CLASSIFY {
                     --min_perc_aa ${params.gtdbtk_min_perc_aa} \
                     --min_af ${params.gtdbtk_min_af}
 
-    gzip "gtdbtk.${meta.assembler}-${meta.id}".*.classify.tree "gtdbtk.${meta.assembler}-${meta.id}".*.msa.fasta
-    mv gtdbtk.log "gtdbtk.${meta.assembler}-${meta.id}.log"
-    mv gtdbtk.warnings.log "gtdbtk.${meta.assembler}-${meta.id}.warnings.log"
-    gtdbtk --version | sed "s/gtdbtk: version //; s/ Copyright.*//" > ${software}.version.txt
+    gzip "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}".*.classify.tree "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}".*.msa.fasta
+    mv gtdbtk.log "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.log"
+    mv gtdbtk.warnings.log "gtdbtk.${meta.assembler}-${meta.binner}-${meta.id}.warnings.log"
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        gtdbtk: \$(gtdbtk --version | sed -n 1p | sed "s/gtdbtk: version //; s/ Copyright.*//")
+    END_VERSIONS
     """
 }

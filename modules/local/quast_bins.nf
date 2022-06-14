@@ -1,22 +1,10 @@
-// Import generic module functions
-include { initOptions; saveFiles; getSoftwareName } from './functions'
-
-params.options = [:]
-options    = initOptions(params.options)
-
 process QUAST_BINS {
-    tag "${meta.assembler}-${meta.id}"
-
-    publishDir "${params.outdir}",
-        mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['assembler', 'id']) }
+    tag "${meta.assembler}-${meta.binner}-${meta.id}"
 
     conda (params.enable_conda ? "bioconda::quast=5.0.2" : null)
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/quast:5.0.2--py37pl526hb5aa323_2"
-    } else {
-        container "quay.io/biocontainers/quast:5.0.2--py37pl526hb5aa323_2"
-    }
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/quast:5.0.2--py37pl526hb5aa323_2' :
+        'quay.io/biocontainers/quast:5.0.2--py37pl526hb5aa323_2' }"
 
     input:
     tuple val(meta), path(bins)
@@ -24,22 +12,25 @@ process QUAST_BINS {
     output:
     path "QUAST/*", type: 'dir'
     path "QUAST/*-quast_summary.tsv", emit: quast_bin_summaries
-    path '*.version.txt'            , emit: version
+    path "versions.yml"             , emit: versions
 
     script:
-    def software = getSoftwareName(task.process)
     """
     BINS=\$(echo \"$bins\" | sed 's/[][]//g')
     IFS=', ' read -r -a bins <<< \"\$BINS\"
     for bin in \"\${bins[@]}\"; do
         metaquast.py --threads "${task.cpus}" --max-ref-number 0 --rna-finding --gene-finding -l "\${bin}" "\${bin}" -o "QUAST/\${bin}"
-        if ! [ -f "QUAST/${meta.assembler}-${meta.id}-quast_summary.tsv" ]; then
-            cp "QUAST/\${bin}/transposed_report.tsv" "QUAST/${meta.assembler}-${meta.id}-quast_summary.tsv"
+        if ! [ -f "QUAST/${meta.assembler}-${meta.binner}-${meta.id}-quast_summary.tsv" ]; then
+            cp "QUAST/\${bin}/transposed_report.tsv" "QUAST/${meta.assembler}-${meta.binner}-${meta.id}-quast_summary.tsv"
         else
-            tail -n +2 "QUAST/\${bin}/transposed_report.tsv" >> "QUAST/${meta.assembler}-${meta.id}-quast_summary.tsv"
+            tail -n +2 "QUAST/\${bin}/transposed_report.tsv" >> "QUAST/${meta.assembler}-${meta.binner}-${meta.id}-quast_summary.tsv"
         fi
     done
 
-    metaquast.py --version | sed "s/QUAST v//; s/ (MetaQUAST mode)//" > ${software}_bins.version.txt
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        python: \$(python --version 2>&1 | sed 's/Python //g')
+        metaquast: \$(metaquast.py --version | sed "s/QUAST v//; s/ (MetaQUAST mode)//")
+    END_VERSIONS
     """
 }

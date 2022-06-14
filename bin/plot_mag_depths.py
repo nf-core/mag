@@ -11,7 +11,7 @@ from scipy import stats
 
 def parse_args(args=None):
     parser = argparse.ArgumentParser()
-    parser.add_argument('-d', '--bin_depths'   , required=True, metavar='FILE'          , help="Bin depths file in TSV format (for one assembly): bin, sample1_depth, sample2_depth, ....")
+    parser.add_argument('-d', '--bin_depths'   , required=True, metavar='FILE'          , help="Bin depths file in TSV format (for one assembly and binning method): bin, sample1_depth, sample2_depth, ....")
     parser.add_argument('-g', '--groups'       , required=True, metavar='FILE'          , help="File in TSV format containing group information for samples: sample, group")
     parser.add_argument('-o', "--out"          , required=True, metavar='FILE', type=str, help="Output file.")
     return parser.parse_args(args)

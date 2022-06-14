@@ -1,22 +1,16 @@
-// Import generic module functions
-include { initOptions; saveFiles; getSoftwareName } from './functions'
-
-params.options = [:]
-options    = initOptions(params.options)
-
 process KRAKEN2_DB_PREPARATION {
+
     conda (params.enable_conda ? "conda-forge::sed=4.7" : null)
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://containers.biocontainers.pro/s3/SingImgsRepo/biocontainers/v1.2.0_cv1/biocontainers_v1.2.0_cv1.img"
-    } else {
-        container "biocontainers/biocontainers:v1.2.0_cv1"
-    }
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/ubuntu:20.04' :
+        'ubuntu:20.04' }"
 
     input:
     path db
 
     output:
     tuple val("${db.simpleName}"), path("database/*.k2d"), emit: db
+    path "versions.yml"                                  , emit: versions
 
     script:
     """
@@ -24,5 +18,10 @@ process KRAKEN2_DB_PREPARATION {
     tar -xf "${db}" -C db_tmp
     mkdir database
     mv `find db_tmp/ -name "*.k2d"` database/
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        tar: \$(tar --version 2>&1 | sed -n 1p | sed 's/tar (GNU tar) //')
+    END_VERSIONS
     """
 }

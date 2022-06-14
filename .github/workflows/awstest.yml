@@ -10,19 +10,16 @@ jobs:
     if: github.repository == 'nf-core/mag'
     runs-on: ubuntu-latest
     steps:
+      # Launch workflow using Tower CLI tool action
       - name: Launch workflow via tower
-        uses: nf-core/tower-action@master
-        
+        uses: nf-core/tower-action@v3
         with:
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
-          bearer_token: ${{ secrets.TOWER_BEARER_TOKEN }}
+          access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
           compute_env: ${{ secrets.TOWER_COMPUTE_ENV }}
-          pipeline: ${{ github.repository }}
-          revision: ${{ github.sha }}
           workdir: s3://${{ secrets.AWS_S3_BUCKET }}/work/mag/work-${{ github.sha }}
           parameters: |
             {
-              "outdir": "s3://${{ secrets.AWS_S3_BUCKET }}/mag/results-${{ github.sha }}"
+              "outdir": "s3://${{ secrets.AWS_S3_BUCKET }}/mag/results-test-${{ github.sha }}"
             }
-          profiles: '[ "test", "aws_tower" ]'
-
+          profiles: test,aws_tower

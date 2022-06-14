@@ -3,6 +3,39 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.2.0 - 2022/06/14
+
+### `Added`
+
+- [#263](https://github.com/nf-core/mag/pull/263) - Restructure binning subworkflow in preparation for aDNA workflow and extended binning
+- [#247](https://github.com/nf-core/mag/pull/247) - Add ancient DNA subworkflow
+- [#263](https://github.com/nf-core/mag/pull/263) - Add MaxBin2 as second contig binning tool
+- [#285](https://github.com/nf-core/mag/pull/285) - Add AdapterRemoval2 as an alternative read trimmer
+- [#291](https://github.com/nf-core/mag/pull/291) - Add DAS Tool for bin refinement
+- [#319](https://github.com/nf-core/mag/pull/319) - Activate pipeline-specific institutional nf-core/configs
+
+### `Changed`
+
+- [#269](https://github.com/nf-core/mag/pull/269),[#283](https://github.com/nf-core/mag/pull/283),[#289](https://github.com/nf-core/mag/pull/289),[#302](https://github.com/nf-core/mag/pull/302) - Update to nf-core 2.4 `TEMPLATE`
+- [#286](https://github.com/nf-core/mag/pull/286) - Cite our publication instead of the preprint
+- [#291](https://github.com/nf-core/mag/pull/291), [#299](https://github.com/nf-core/mag/pull/299) - Add extra results folder `GenomeBinning/depths/contigs` for `[assembler]-[sample/group]-depth.txt.gz`, and `GenomeBinning/depths/bins` for `bin_depths_summary.tsv` and `[assembler]-[binner]-[sample/group]-binDepths.heatmap.png`
+- [#315](https://github.com/nf-core/mag/pull/315) - Replace base container for standard shell tools to fix problems with running on Google Cloud
+
+### `Fixed`
+
+- [#290](https://github.com/nf-core/mag/pull/290) - Fix caching of binning input
+- [#305](https://github.com/nf-core/mag/pull/305) - Add missing Bowtie2 version for process `BOWTIE2_PHIX_REMOVAL_ALIGN` to `software_versions.yml`
+- [#307](https://github.com/nf-core/mag/pull/307) - Fix retrieval of GTDB-Tk version (note about newer version caused error in `CUSTOM_DUMPSOFTWAREVERSIONS`)
+- [#309](https://github.com/nf-core/mag/pull/309) - Fix publishing of BUSCO `busco_downloads/` folder, i.e. publish only when `--save_busco_reference` is specified
+- [#321](https://github.com/nf-core/mag/pull/321) - Fix parameter processing in `BOWTIE2_REMOVAL_ALIGN` (which was erroneously for `BOWTIE2_PHIX_REMOVAL_ALIGN`)
+
+### `Dependencies`
+
+| Tool    | Previous version | New version |
+| ------- | ---------------- | ----------- |
+| fastp   | 0.20.1           | 0.23.2      |
+| MultiQC | 1.11             | 1.12        |
+
 ## v2.1.1 - 2021/11/25
 
 ### `Added`

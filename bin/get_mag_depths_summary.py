@@ -7,8 +7,8 @@ import pandas as pd
 
 def parse_args(args=None):
     parser = argparse.ArgumentParser()
-    parser.add_argument('-d', '--depths'       , required=True, nargs="+", metavar='FILE'                             , help="TSV file for each assembly containing bin depths for samples: bin, sample1, ....")
-    parser.add_argument('-o', "--out"          , required=True           , metavar='FILE', type=argparse.FileType('w'), help="Output file containing depths for all assemblies and all samples.")
+    parser.add_argument('-d', '--depths'       , required=True, nargs="+", metavar='FILE'                             , help="TSV file for each assembly and binning method containing bin depths for samples: bin, sample1, ....")
+    parser.add_argument('-o', "--out"          , required=True           , metavar='FILE', type=argparse.FileType('w'), help="Output file containing depths for all assemblies, binning methods and all samples.")
     return parser.parse_args(args)
 
 def main(args=None):

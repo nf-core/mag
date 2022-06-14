@@ -1,22 +1,10 @@
-// Import generic module functions
-include { initOptions; saveFiles; getSoftwareName } from './functions'
-
-params.options = [:]
-options    = initOptions(params.options)
-
 process BUSCO {
     tag "${bin}"
 
-    publishDir "${params.outdir}",
-        mode: params.publish_dir_mode,
-        saveAs: { filename -> filename.indexOf("busco_downloads") == -1 ? saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:[]) : null }
-
     conda (params.enable_conda ? "bioconda::busco=5.1.0" : null)
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/busco:5.1.0--py_1"
-    } else {
-        container "quay.io/biocontainers/busco:5.1.0--py_1"
-    }
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/busco:5.1.0--py_1' :
+        'quay.io/biocontainers/busco:5.1.0--py_1' }"
 
     input:
     tuple val(meta), path(bin)
@@ -33,10 +21,9 @@ process BUSCO {
     path("${bin}_buscos.*.fna.gz")                                      , optional:true
     path("${bin}_prodigal.gff")                                         , optional:true , emit: prodigal_genes
     tuple val(meta), path("${bin}_busco.failed_bin.txt")                , optional:true , emit: failed_bin
-    path '*.version.txt'                                                                , emit: version
+    path "versions.yml"                                                                 , emit: versions
 
     script:
-    def software = getSoftwareName(task.process)
     def cp_augustus_config = "Y"
     if( workflow.profile.toString().indexOf("conda") != -1)
         cp_augustus_config = "N"
@@ -190,6 +177,11 @@ process BUSCO {
         mv BUSCO/logs/prodigal_out.log "${bin}_prodigal.gff"
     fi
 
-    busco --version | sed "s/BUSCO //" > ${software}.version.txt
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        python: \$(python --version 2>&1 | sed 's/Python //g')
+        R: \$(R --version 2>&1 | sed -n 1p | sed 's/R version //' | sed 's/ (.*//')
+        busco: \$(busco --version 2>&1 | sed 's/BUSCO //g')
+    END_VERSIONS
     """
 }

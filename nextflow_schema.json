@@ -10,6 +10,7 @@
             "type": "object",
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should find input data and save output data.",
+            "required": ["input", "outdir"],
             "properties": {
                 "input": {
                     "type": "string",
@@ -26,8 +27,8 @@
                 },
                 "outdir": {
                     "type": "string",
-                    "description": "Path to the output directory where the results will be saved.",
-                    "default": "./results",
+                    "format": "directory-path",
+                    "description": "The output directory where the results will be saved. You have to use absolute paths to storage on Cloud infrastructure.",
                     "fa_icon": "fas fa-folder-open"
                 },
                 "email": {
@@ -87,12 +88,6 @@
                     "default": "https://raw.githubusercontent.com/nf-core/configs/master",
                     "hidden": true,
                     "help_text": "If you're running offline, Nextflow will not be able to fetch the institutional config files from the internet. If you don't need them, then this is not a problem. If you do need them, you should download the files from the repo and tell Nextflow where to find them with this parameter.",
-                    "fa_icon": "fas fa-users-cog"
-                },
-                "hostnames": {
-                    "type": "string",
-                    "description": "Institutional configs hostname.",
-                    "hidden": true,
                     "fa_icon": "fas fa-users-cog"
                 },
                 "config_profile_name": {
@@ -175,14 +170,7 @@
                     "description": "Method used to save pipeline results to output directory.",
                     "help_text": "The Nextflow `publishDir` option specifies which intermediate files should be saved to the output directory. This option tells the pipeline what method should be used to move these files. See [Nextflow docs](https://www.nextflow.io/docs/latest/process.html#publishdir) for details.",
                     "fa_icon": "fas fa-copy",
-                    "enum": [
-                        "symlink",
-                        "rellink",
-                        "link",
-                        "copy",
-                        "copyNoFollow",
-                        "move"
-                    ],
+                    "enum": ["symlink", "rellink", "link", "copy", "copyNoFollow", "move"],
                     "hidden": true
                 },
                 "email_on_fail": {
@@ -245,13 +233,6 @@
                     "description": "Run this workflow with Conda. You can also use '-profile conda' instead of providing this parameter.",
                     "hidden": true,
                     "fa_icon": "fas fa-bacon"
-                },
-                "singularity_pull_docker_container": {
-                    "type": "boolean",
-                    "description": "Instead of directly downloading Singularity images for use with Singularity, force the workflow to pull and convert Docker containers instead.",
-                    "hidden": true,
-                    "fa_icon": "fas fa-toolbox",
-                    "help_text": "This may be useful for example if you are unable to directly pull Singularity containers to run the pipeline due to http/https proxy issues."
                 }
             }
         },
@@ -293,16 +274,21 @@
             "description": "",
             "default": "",
             "properties": {
-                "save_trimmed_fail": {
-                    "type": "boolean",
-                    "fa_icon": "fas fa-save",
-                    "description": "Save the by fastp trimmed FastQ files in the results directory.",
-                    "help_text": "By default, trimmed FastQ files will not be saved to the results directory. Specify this flag (or set to true in your config file) to copy these files to the results directory when complete."
+                "clip_tool": {
+                    "type": "string",
+                    "default": "fastp",
+                    "description": "Specify which adapter clipping tool to use. Options: 'fastp', 'adapterremoval'",
+                    "enum": ["fastp", "adapterremoval"]
+                },
+                "reads_minlength": {
+                    "type": "integer",
+                    "default": 15,
+                    "description": "The minimum length of reads must have to be retained for downstream analysis."
                 },
                 "fastp_qualified_quality": {
                     "type": "integer",
                     "default": 15,
-                    "description": "Minimum phred quality value of a base to be qualified.",
+                    "description": "Minimum phred quality value of a base to be qualified in fastp.",
                     "help": "Reads with more than 40% of unqualified bases will be discarded."
                 },
                 "fastp_cut_mean_quality": {
@@ -310,6 +296,30 @@
                     "default": 15,
                     "description": "The mean quality requirement used for per read sliding window cutting by fastp.",
                     "help": "Used in combination with the fastp options '--cut_front' and '--cut_tail'. If the mean quality within a window (of size 4) is below `--fastp_cut_mean_quality`, the bases are dropped and the sliding window is moved further, otherwise it stops."
+                },
+                "fastp_save_trimmed_fail": {
+                    "type": "boolean",
+                    "description": "Save reads that fail fastp filtering in a separate file. Not used downstream."
+                },
+                "adapterremoval_minquality": {
+                    "type": "integer",
+                    "default": 2,
+                    "description": "The minimum base quality for low-quality base trimming by AdapterRemoval."
+                },
+                "adapterremoval_trim_quality_stretch": {
+                    "type": "boolean",
+                    "description": "Turn on quality trimming by consecutive stretch of low quality bases, rather than by window.",
+                    "help_text": "Default base-quality trimming is set to trim by 'windows', as in FastP. Specifying this flag will use trim via contiguous stretch of low quality bases (Ns) instead.\n\n> Replaces --trimwindows 4 with --trimqualities in AdapterRemoval"
+                },
+                "adapterremoval_adapter1": {
+                    "type": "string",
+                    "default": "AGATCGGAAGAGCACACGTCTGAACTCCAGTCACNNNNNNATCTCGTATGCCGTCTTCTGCTTG",
+                    "description": "Forward read adapter to be trimmed by AdapterRemoval."
+                },
+                "adapterremoval_adapter2": {
+                    "type": "string",
+                    "default": "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT",
+                    "description": "Reverse read adapter to be trimmed by AdapterRemoval for paired end data."
                 },
                 "host_genome": {
                     "type": "string",
@@ -528,7 +538,15 @@
                 },
                 "skip_binning": {
                     "type": "boolean",
-                    "description": "Skip metagenome binning."
+                    "description": "Skip metagenome binning entirely"
+                },
+                "skip_metabat2": {
+                    "type": "boolean",
+                    "description": "Skip MetaBAT2 Binning"
+                },
+                "skip_maxbin2": {
+                    "type": "boolean",
+                    "description": "Skip MaxBin2 Binning"
                 },
                 "min_contig_size": {
                     "type": "integer",
@@ -547,6 +565,11 @@
                     "default": 100,
                     "description": "Maximal number of contigs that are not part of any bin but treated as individual genome.",
                     "help_text": "Contigs that do not fulfill the thresholds of `--min_length_unbinned_contigs` and `--max_unbinned_contigs` are pooled for downstream analysis and reporting, except contigs that also do not fullfill `--min_contig_size` are not considered further."
+                },
+                "bowtie2_mode": {
+                    "type": "string",
+                    "description": "Bowtie2 alignment mode",
+                    "help_text": "Bowtie2 alignment mode options, for example: `--very-fast` , `--very-sensitive-local -N 1` , ..."
                 },
                 "skip_prokka": {
                     "type": "boolean",
@@ -582,6 +605,70 @@
                     "type": "boolean",
                     "description": "Save the used BUSCO lineage datasets provided via --busco_reference or downloaded when not using --busco_reference or --busco_download_path.",
                     "help_text": "Useful to allow reproducibility, as BUSCO datasets are frequently updated and old versions do not always remain accessible."
+                },
+                "refine_bins_dastool": {
+                    "type": "boolean",
+                    "description": "Turn on bin refinement using DAS Tool."
+                },
+                "refine_bins_dastool_threshold": {
+                    "type": "number",
+                    "default": 0.5,
+                    "description": "Specify single-copy gene score threshold for bin refinement.",
+                    "help_text": "Score threshold for single-copy gene selection algorithm to keep selecting bins, with a value ranging from 0-1.\n\nFor description of scoring algorithm, see: Sieber, Christian M. K., et al. 2018. Nature Microbiology 3 (7): 836\u201343. https://doi.org/10.1038/s41564-018-0171-1.\n\n> Modifies DAS Tool parameter --score_threshold\n"
+                },
+                "postbinning_input": {
+                    "type": "string",
+                    "default": "raw_bins_only",
+                    "description": "Specify which binning output is sent for downstream annotation, taxonomic classification, bin quality control etc.",
+                    "help_text": "`raw_bins_only`: only bins (and unbinned contigs) from the binners.\n`refined_bins_only`:  only bins (and unbinned contigs) from the bin refinement step .\n`both`: bins and unbinned contigs from both the binning and bin refinement steps.",
+                    "enum": ["raw_bins_only", "refined_bins_only", "both"]
+                }
+            }
+        },
+        "ancient_dna_assembly": {
+            "title": "Ancient DNA assembly",
+            "type": "object",
+            "description": "Performs ancient DNA assembly validation and contig consensus sequence recalling.",
+            "default": "",
+            "properties": {
+                "ancient_dna": {
+                    "type": "boolean",
+                    "description": "Turn on/off the ancient DNA subworfklow"
+                },
+                "freebayes_ploidy": {
+                    "type": "integer",
+                    "default": 1,
+                    "description": "Ploidy for variant calling"
+                },
+                "freebayes_min_basequality": {
+                    "type": "integer",
+                    "default": 20,
+                    "description": "minimum base quality required for variant calling"
+                },
+                "freebayes_minallelefreq": {
+                    "type": "number",
+                    "default": 0.33,
+                    "description": "minimum minor allele frequency for considering variants"
+                },
+                "bcftools_view_high_variant_quality": {
+                    "type": "integer",
+                    "default": 30,
+                    "description": "minimum genotype quality for considering a variant high quality"
+                },
+                "bcftools_view_medium_variant_quality": {
+                    "type": "integer",
+                    "default": 20,
+                    "description": "minimum genotype quality for considering a variant medium quality"
+                },
+                "bcftools_view_minimal_allelesupport": {
+                    "type": "integer",
+                    "default": 3,
+                    "description": "minimum number of bases supporting the alternative allele"
+                },
+                "pydamage_accuracy": {
+                    "type": "number",
+                    "default": 0.5,
+                    "description": "PyDamage accuracy threshold"
                 }
             }
         }
@@ -625,6 +712,9 @@
         },
         {
             "$ref": "#/definitions/bin_quality_check_options"
+        },
+        {
+            "$ref": "#/definitions/ancient_dna_assembly"
         }
     ]
 }
