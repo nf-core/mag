@@ -280,6 +280,24 @@
                     "description": "Specify which adapter clipping tool to use. Options: 'fastp', 'adapterremoval'",
                     "enum": ["fastp", "adapterremoval"]
                 },
+                "skip_fastp": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Skip fastp quality control for short reads.",
+                    "help_text": "Use this option to skip fastp quality control for short reads. This is useful if you have already done the quality control and you want to skip it again.\n\nDefault: fastp quality control is performed."
+                },
+                "skip_adapter_trimming": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Skip adapter removal for short reads.",
+                    "help_text": "Use this option to skip adapter removal for short reads. This is useful if you have already done the adapter removal and you want to skip it again.\n\nDefault: adapter removal is performed."
+                },
+                "skip_fastqc": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Skip fastqc quality control for short reads.",
+                    "help_text": "Use this option to skip fastqc quality control for short reads. This is useful if you have already done the quality control and you want to skip it again.\n\nDefault: fastqc quality control is performed."
+                },
                 "reads_minlength": {
                     "type": "integer",
                     "default": 15,
@@ -320,6 +338,12 @@
                     "type": "string",
                     "default": "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT",
                     "description": "Reverse read adapter to be trimmed by AdapterRemoval for paired end data."
+                },
+                "skip_host_removal": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Skip host removal for short reads.",
+                    "help_text": "Use this option to skip host removal for short reads. This is useful if you have already done the host removal and you want to skip it again.\n\nDefault: host removal is performed."
                 },
                 "host_genome": {
                     "type": "string",

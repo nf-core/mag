@@ -14,6 +14,9 @@ process BOWTIE2_ASSEMBLY_ALIGN {
     tuple val(assembly_meta), val(reads_meta), path("*.bowtie2.log")                                                                                                                                      , emit: log
     path "versions.yml"                                                                                                                                                                                   , emit: versions
 
+    when:
+    !params.skip_host_removal
+
     script:
     def args = task.ext.args ?: ''
     def name = "${assembly_meta.assembler}-${assembly_meta.id}-${reads_meta.id}"

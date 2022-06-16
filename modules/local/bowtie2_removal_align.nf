@@ -19,6 +19,9 @@ process BOWTIE2_REMOVAL_ALIGN {
     tuple val(meta), path("*.bowtie2.log")        , emit: log
     path "versions.yml"                           , emit: versions
 
+    when:
+    !params.skip_host_removal
+
     script:
     def args = task.ext.args ?: ''
     def args2 = task.ext.args2 ?: ''

@@ -13,6 +13,9 @@ process BOWTIE2_ASSEMBLY_BUILD {
     tuple val(meta), path(assembly), path('bt2_index_base*'), emit: assembly_index
     path "versions.yml"                                     , emit: versions
 
+    when:
+    !params.skip_host_removal
+
     script:
     def args = task.ext.args ?: ''
     """

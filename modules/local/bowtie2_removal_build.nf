@@ -13,6 +13,9 @@ process BOWTIE2_REMOVAL_BUILD {
     path 'bt2_index_base*', emit: index
     path "versions.yml"   , emit: versions
 
+    when:
+    !params.skip_host_removal
+
     script:
     def args = task.ext.args ?: ''
     """
