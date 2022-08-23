@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
+- Fix too many symbolic links issue in local convert_depths module
+
 ### `Dependencies`
 
 ## v2.2.0 - 2022/06/14
