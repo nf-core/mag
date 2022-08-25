@@ -14,6 +14,7 @@
             "properties": {
                 "input": {
                     "type": "string",
+                    "mimetype": "text/csv",
                     "format": "file-path",
                     "description": "Input FastQ files or CSV samplesheet file containing information about the samples in the experiment.",
                     "help_text": "Use this to specify the location of your input FastQ files. For example:\n\n```bash\n--input 'path/to/data/sample_*_{1,2}.fastq.gz'\n``` \n\nAlternatively, to assign different groups or to include long reads for hybrid assembly with metaSPAdes, you can specify a CSV samplesheet input file with 5 columns and the following header: sample,group,short_reads_1,short_reads_2,long_reads. See [usage docs](https://nf-co.re/mag/usage#input-specifications).",
