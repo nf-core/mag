@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Fixed`
 
 - [#328](https://github.com/nf-core/mag/pull/328) - Fix too many symbolic links issue in local convert_depths module
-- [#329](https://github.com/nf-core/mag/pull/329) Each sample now gets it's own result directory for PyDamage analysis and filter
+- [#329](https://github.com/nf-core/mag/pull/329) - Each sample now gets it's own result directory for PyDamage analysis and filter
 
 ### `Dependencies`
 
