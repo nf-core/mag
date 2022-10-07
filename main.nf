@@ -4,6 +4,7 @@
     nf-core/mag
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     Github : https://github.com/nf-core/mag
+
     Website: https://nf-co.re/mag
     Slack  : https://nfcore.slack.com/channels/mag
 ----------------------------------------------------------------------------------------

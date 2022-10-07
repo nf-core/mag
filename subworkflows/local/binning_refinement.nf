@@ -2,9 +2,9 @@
  * Binning with MetaBAT2 and MaxBin2
  */
 
-include { DASTOOL_FASTATOCONTIG2BIN as DASTOOL_FASTATOCONTIG2BIN_METABAT2 } from '../../modules/nf-core/modules/dastool/fastatocontig2bin/main.nf'
-include { DASTOOL_FASTATOCONTIG2BIN as DASTOOL_FASTATOCONTIG2BIN_MAXBIN2  } from '../../modules/nf-core/modules/dastool/fastatocontig2bin/main.nf'
-include { DASTOOL_DASTOOL                                                 } from '../../modules/nf-core/modules/dastool/dastool/main.nf'
+include { DASTOOL_FASTATOCONTIG2BIN as DASTOOL_FASTATOCONTIG2BIN_METABAT2 } from '../../modules/nf-core/dastool/fastatocontig2bin/main.nf'
+include { DASTOOL_FASTATOCONTIG2BIN as DASTOOL_FASTATOCONTIG2BIN_MAXBIN2  } from '../../modules/nf-core/dastool/fastatocontig2bin/main.nf'
+include { DASTOOL_DASTOOL                                                 } from '../../modules/nf-core/dastool/dastool/main.nf'
 include { RENAME_PREDASTOOL                                               } from '../../modules/local/rename_predastool'
 include { RENAME_POSTDASTOOL                                              } from '../../modules/local/rename_postdastool'
 include { MAG_DEPTHS as MAG_DEPTHS_REFINED                                } from '../../modules/local/mag_depths'
