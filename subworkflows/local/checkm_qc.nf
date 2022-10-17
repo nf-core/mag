@@ -8,7 +8,7 @@ include { CHECKM_LINEAGEWF } from '../../modules/nf-core/checkm/lineagewf/main'
 workflow CHECKM_QC {
     take:
     bins       // channel: [ val(meta), path(bin) ]
-    checkm_db  //
+    checkm_db  // TODO do proper input checks in mag.nf! Add to checkParams etc.,
 
     main:
     ch_versions = Channel.empty()
@@ -33,6 +33,8 @@ workflow CHECKM_QC {
 
     CHECKM_QA ( ch_checkmqa_input, [] )
     ch_versions = ch_versions.mix(CHECKM_QA.out.versions)
+
+    // TODO Check output files published correctly
 
     emit:
     checkm_tsv = CHECKM_QA.out.output
