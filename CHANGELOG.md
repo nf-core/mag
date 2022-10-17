@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Changed`
 
 - [#340](https://github.com/nf-core/mag/pull/340) - Update to nf-core 2.6.1 `TEMPLATE`
+- [#???](???) - Adds support for CheckM as alternative bin completeness and QC tool (added by @jfy133).
 
 ### `Fixed`
 

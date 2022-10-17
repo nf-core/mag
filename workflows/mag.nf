@@ -95,6 +95,7 @@ include { BINNING_PREPARATION } from '../subworkflows/local/binning_preparation'
 include { BINNING             } from '../subworkflows/local/binning'
 include { BINNING_REFINEMENT  } from '../subworkflows/local/binning_refinement'
 include { BUSCO_QC            } from '../subworkflows/local/busco_qc'
+include { CHECKM_QC           } from '../subworkflows/local/checkm_qc'
 include { GTDBTK              } from '../subworkflows/local/gtdbtk'
 include { ANCIENT_DNA_ASSEMLY_VALIDATION } from '../subworkflows/local/ancient_dna'
 
@@ -147,6 +148,12 @@ if (params.busco_download_path) {
     ch_busco_download_folder = Channel.empty()
 }
 
+if(params.checkm_db) {
+    ch_checkm_db = Channel.fromPath(params.checkm_db, checkIfExists: true)
+} else {
+    ch_checkm_db = []
+}
+
 if(params.centrifuge_db){
     ch_centrifuge_db_file = Channel
         .value(file( "${params.centrifuge_db}" ))
@@ -178,7 +185,7 @@ if (!params.keep_lambda) {
         .value(file( "${params.lambda_reference}" ))
 }
 
-gtdb = params.skip_busco ? false : params.gtdb
+gtdb = params.skip_binqc ? false : params.gtdb
 if (gtdb) {
     ch_gtdb = Channel
         .value(file( "${gtdb}" ))
@@ -583,15 +590,21 @@ workflow MAG {
                 ch_input_for_binsummary              = BINNING.out.depths_summary
         }
 
-        if (!params.skip_busco){
+        /*
+        * Bin QC subworkflows: for checking bin completeness with either BUSCO or CHECKM
+        */
+
+        // Results in: [ [meta], path_to_bin.fa ]
+        ch_input_bins_for_qc = ch_input_for_postbinning_bins_unbins.transpose()
+
+        if (!params.skip_binqc && params.binqc_tool == 'busco'){
             /*
             * BUSCO subworkflow: Quantitative measures for the assessment of genome assembly
             */
-            ch_input_bins_busco = ch_input_for_postbinning_bins_unbins.transpose()
             BUSCO_QC (
                 ch_busco_db_file,
                 ch_busco_download_folder,
-                ch_input_bins_busco
+                ch_input_bins_for_qc
             )
             ch_busco_summary = BUSCO_QC.out.summary
             ch_busco_multiqc = BUSCO_QC.out.multiqc
@@ -602,6 +615,22 @@ workflow MAG {
                 .splitCsv(sep: '\t')
                 .map { bin, error -> if (!bin.contains(".unbinned.")) busco_failed_bins[bin] = error }
         }
+
+        if (!params.skip_binqc && params.binqc_tool == 'checkm'){
+            /*
+            * CheckM subworkflow: Quantitative measures for the assessment of genome assembly
+            */
+            CHECKM_QC (
+                ch_input_bins_for_qc,
+                ch_checkm_db
+            )
+
+            // TODO custom output parsing? Add to MultiQC?
+
+            ch_versions = ch_versions.mix(CHECKM_QC.out.versions.first())
+
+        }
+
 
         ch_quast_bins_summary = Channel.empty()
         if (!params.skip_quast){
@@ -649,7 +678,7 @@ workflow MAG {
             ch_gtdbtk_summary = GTDBTK.out.summary
         }
 
-        if (!params.skip_busco || !params.skip_quast || gtdb){
+        if ( ( !params.skip_binqc && params.binqc_tool == 'busco' ) || !params.skip_quast || gtdb){
             BIN_SUMMARY (
                 ch_input_for_binsummary,
                 ch_busco_summary.ifEmpty([]),
@@ -722,15 +751,15 @@ workflow MAG {
     }
 
     MULTIQC (
-        ch_multiqc_files.collect().dump(tag: "1"),
-        ch_multiqc_custom_config.collect().ifEmpty([]).dump(tag: "2"),
-        FASTQC_RAW.out.zip.collect{it[1]}.ifEmpty([]).dump(tag: "3"),
-        FASTQC_TRIMMED.out.zip.collect{it[1]}.ifEmpty([]).dump(tag: "4"),
-        ch_bowtie2_removal_host_multiqc.collect{it[1]}.ifEmpty([]).dump(tag: "5"),
-        ch_quast_multiqc.collect().ifEmpty([]).dump(tag: "6"),
-        ch_bowtie2_assembly_multiqc.collect().ifEmpty([]).dump(tag: "7"),
-        ch_busco_multiqc.collect().ifEmpty([]).dump(tag: "8"),
-        ch_multiqc_readprep.collect().ifEmpty([]).dump(tag: "9"),
+        ch_multiqc_files.collect(),
+        ch_multiqc_custom_config.collect().ifEmpty([]),
+        FASTQC_RAW.out.zip.collect{it[1]}.ifEmpty([]),
+        FASTQC_TRIMMED.out.zip.collect{it[1]}.ifEmpty([]),
+        ch_bowtie2_removal_host_multiqc.collect{it[1]}.ifEmpty([]),
+        ch_quast_multiqc.collect().ifEmpty([]),
+        ch_bowtie2_assembly_multiqc.collect().ifEmpty([]),
+        ch_busco_multiqc.collect().ifEmpty([]),
+        ch_multiqc_readprep.collect().ifEmpty([]),
     )
     multiqc_report = MULTIQC.out.report.toList()
     ch_versions    = ch_versions.mix(MULTIQC.out.versions)

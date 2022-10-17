@@ -8,15 +8,33 @@ include { CHECKM_LINEAGEWF } from '../../modules/nf-core/checkm/lineagewf/main'
 workflow CHECKM_QC {
     take:
     bins       // channel: [ val(meta), path(bin) ]
-    checkm_db
+    checkm_db  //
 
     main:
-    // todo initialise checkm_db as optional if user supplied
-    CHECKM_LINEAGEWF ( bins, checkm_db )
+    ch_versions = Channel.empty()
 
-    // pass output of LINEAGEWF to QA - check snakemake
+    ch_input_checkmdb = checkm_db ? checkm_db : []
+    ch_bins_for_checkmlineagewf = bins
+                                    .multiMap {
+                                        meta, fa ->
+                                            reads: [ meta, fa ]
+                                            ext: fa.extension
+                                    }
 
+    CHECKM_LINEAGEWF ( ch_bins_for_checkmlineagewf.reads, ch_bins_for_checkmlineagewf.ext, checkm_db )
+    ch_versions = ch_versions.mix(CHECKM_LINEAGEWF.out.versions)
+
+    ch_checkmqa_input = CHECKM_LINEAGEWF.out.checkm_output
+        .join(CHECKM_LINEAGEWF.out.marker_file)
+        .map{
+            meta, dir, marker ->
+            [ meta, dir, marker, []]
+        }
+
+    CHECKM_QA ( ch_checkmqa_input, [] )
+    ch_versions = ch_versions.mix(CHECKM_QA.out.versions)
 
     emit:
     checkm_tsv = CHECKM_QA.out.output
+    versions = ch_versions
 }
