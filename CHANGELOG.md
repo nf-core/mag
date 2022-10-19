@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
+- [#345](https://github.com/nf-core/mag/pull/345) Bowtie2 mode changed to global alignment for ancient DNA mode (`--very-sensitive` mode) to prevent soft clipping at the end of reads when running in local mode.
+
 ### `Dependencies`
 
 ## v2.2.1 - 2022/08/25
