@@ -649,7 +649,9 @@
                 },
                 "checkm_db": {
                     "type": "string",
-                    "default": null
+                    "default": "None",
+                    "description": "Path to local folder containing already downloaded and uncompressed CheckM database. Recommended to prevent re-download for every sample.",
+                    "help_text": "It is highly recommended to download the CheckM database and use this parameter, otherwise if CheckM detects the database is missing, it will attempt to download the database within _every_ CheckM process.\n\nThis can be downloaded as per the [CheckM documentation](https://github.com/Ecogenomics/CheckM/wiki/Installation#required-reference-data)"
                 },
                 "refine_bins_dastool": {
                     "type": "boolean",

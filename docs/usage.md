@@ -309,3 +309,11 @@ DAS Tool may not always be able to refine bins due to insufficient recovery of e
 In this case, DAS Tool has not necessarily failed but was unable to complete the refinement. You will therefore not expect to find any output files in the `GenomeBinning/DASTool/` results directory for that particular sample.
 
 If you are regularly getting such errors, you can try reducing the `--refine_bins_dastool_threshold` value, which will modify the scoring threshold defined in the [DAS Tool publication](https://www.nature.com/articles/s41564-018-0171-1).
+
+## A note on CheckM usage
+
+It is _highly_ recommended to pass utilise the `--checkm_db` flag to pass pre-downloaded and uncompressed directory of required CheckM references.
+
+If you do not use this, this will result in the tool detecting the database is missing, and download the files for EVERY CheckM process that is executed.
+
+More information can be found in the [CheckM documentation](https://github.com/Ecogenomics/CheckM/wiki/Installation#required-reference-data).

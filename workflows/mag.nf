@@ -149,7 +149,7 @@ if (params.busco_download_path) {
 }
 
 if(params.checkm_db) {
-    ch_checkm_db = Channel.fromPath(params.checkm_db, checkIfExists: true)
+    ch_checkm_db = file(params.checkm_db, checkIfExists: true)
 } else {
     ch_checkm_db = []
 }
@@ -621,7 +621,7 @@ workflow MAG {
             * CheckM subworkflow: Quantitative measures for the assessment of genome assembly
             */
             CHECKM_QC (
-                ch_input_bins_for_qc,
+                ch_input_bins_for_qc.groupTuple().dump(tag: "checkminput"),
                 ch_checkm_db
             )
 
