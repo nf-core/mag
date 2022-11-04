@@ -71,6 +71,7 @@ jobs:
     # Only run on push if this is the nf-core dev branch (merged PRs)
     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/mag') }}
     runs-on: ubuntu-latest
+
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
@@ -81,7 +82,7 @@ jobs:
           sudo mv nextflow /usr/local/bin/
 
       - name: Download and prepare CheckM database
-      - run: |
+        run: |
           mkdir -p databases/checkm
           wget https://data.ace.uq.edu.au/public/CheckM_databases/checkm_data_2015_01_16.tar.gz -P databases/checkm
           tar xzvf databases/checkm/checkm_data_2015_01_16.tar.gz -C databases/checkm/
