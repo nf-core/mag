@@ -19,6 +19,8 @@ include { MAG_DEPTHS                            } from '../../modules/local/mag_
 include { MAG_DEPTHS_PLOT                       } from '../../modules/local/mag_depths_plot'          addParams( options: params.mag_depths_plot_options    )
 include { MAG_DEPTHS_SUMMARY                    } from '../../modules/local/mag_depths_summary'       addParams( options: params.mag_depths_summary_options )
 
+include { FASTA_BINNING_CONCOCT                 } from '../../subworkflows/nf-core/fasta_binning_concoct/main'
+
 /*
  * Get number of columns in file (first line)
  */
@@ -99,6 +101,20 @@ workflow BINNING {
         ch_final_bins_for_gunzip = ch_final_bins_for_gunzip.mix( ADJUST_MAXBIN2_EXT.out.renamed_bins.transpose() )
         ch_binning_results_gzipped_final = ch_binning_results_gzipped_final.mix( ADJUST_MAXBIN2_EXT.out.renamed_bins )
         ch_versions = ch_versions.mix(MAXBIN2.out.versions)
+    }
+    if ( !params.skip_concoct ){
+
+        ch_concoct_input = assemblies
+                            .multiMap {
+                                meta, bins, bams, bais ->
+                                    bins: [ meta, bins ]
+                                    bams: [ meta, bams, bais ]
+                            }
+
+        FASTA_BINNING_CONCOCT ( ch_concoct_input ) // TODO UPDATE MODULE TO GZIP OUTPUT!
+        ch_final_bins_for_gunzip = ch_final_bins_for_gunzip.mix( FASTA_BINNING_CONCOCT.out.bins.transpose() )
+        ch_binning_results_gzipped_final = ch_binning_results_gzipped_final.mix(  )
+        ch_versions = ch_versions.mix(FASTA_BINNING_CONCOCT.out.versions)
     }
 
     // split fastq files, depending
