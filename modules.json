@@ -7,7 +7,7 @@
                 "nf-core": {
                     "checkm/lineagewf": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                        "git_sha": "622378fed9af12e02d7077472a21a19644aca9aa"
                     },
                     "checkm/qa": {
                         "branch": "master",

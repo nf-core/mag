@@ -443,13 +443,9 @@ By default, nf-core/mag runs CheckM with the `check_lineage` workflow that place
 <summary>Output files</summary>
 
 - `GenomeBinning/QC/CheckM/`
-  - `[assembler]-[bin]_busco.log`: Log file containing the standard output of BUSCO.
-  - `[assembler]-[bin]_busco.err`: File containing potential error messages returned from BUSCO.
-  - `short_summary.domain.[lineage].[assembler]-[bin].txt`: BUSCO summary of the results for the selected domain when run in automated lineage selection mode. Not available for bins for which a viral lineage was selected.
-  - `short_summary.specific_lineage.[lineage].[assembler]-[bin].txt`: BUSCO summary of the results in case a more specific lineage than the domain could be selected or for the lineage provided via `--busco_reference`.
-  - `[assembler]-[bin]_buscos.[lineage].fna.gz`: Nucleotide sequence of all identified BUSCOs for used lineages (domain or specific).
-  - `[assembler]-[bin]_buscos.[lineage].faa.gz`: Aminoacid sequence of all identified BUSCOs for used lineages (domain or specific).
-  - `[assembler]-[bin]_prodigal.gff`: Genes predicted with Prodigal.
+  - `[assembler]-[binner]-[sample/group].txt`: Detailed statistics about bins informing completeness and contamamination scores (output of `checkm qa`).
+  - `[assembler]-[binner]-[sample/group].tsv`: Overall summary file for completeness and contamination (output of `checkm lineage_wf`).
+  - `[assembler]-[binner]-[sample/group]/`: intermediate files for CheckM results, including CheckM generated annotations, log, lineage markers etc.
 
 </details>
 
