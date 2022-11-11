@@ -725,15 +725,15 @@ workflow MAG {
     }
 
     MULTIQC (
-        ch_multiqc_files.collect().dump(tag: "1"),
-        ch_multiqc_custom_config.collect().ifEmpty([]).dump(tag: "2"),
-        FASTQC_RAW.out.zip.collect{it[1]}.ifEmpty([]).dump(tag: "3"),
-        FASTQC_TRIMMED.out.zip.collect{it[1]}.ifEmpty([]).dump(tag: "4"),
-        ch_bowtie2_removal_host_multiqc.collect{it[1]}.ifEmpty([]).dump(tag: "5"),
-        ch_quast_multiqc.collect().ifEmpty([]).dump(tag: "6"),
-        ch_bowtie2_assembly_multiqc.collect().ifEmpty([]).dump(tag: "7"),
-        ch_busco_multiqc.collect().ifEmpty([]).dump(tag: "8"),
-        ch_multiqc_readprep.collect().ifEmpty([]).dump(tag: "9"),
+        ch_multiqc_files.collect(),
+        ch_multiqc_custom_config.collect().ifEmpty([]),
+        FASTQC_RAW.out.zip.collect{it[1]}.ifEmpty([]),
+        FASTQC_TRIMMED.out.zip.collect{it[1]}.ifEmpty([]),
+        ch_bowtie2_removal_host_multiqc.collect{it[1]}.ifEmpty([]),
+        ch_quast_multiqc.collect().ifEmpty([]),
+        ch_bowtie2_assembly_multiqc.collect().ifEmpty([]),
+        ch_busco_multiqc.collect().ifEmpty([]),
+        ch_multiqc_readprep.collect().ifEmpty([])
     )
     multiqc_report = MULTIQC.out.report.toList()
     ch_versions    = ch_versions.mix(MULTIQC.out.versions)

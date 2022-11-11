@@ -19,7 +19,7 @@
                     },
                     "concoct/extractfastabins": {
                         "branch": "master",
-                        "git_sha": "038be4287743ec3afd8fdf7eb06039d7407bb631"
+                        "git_sha": "c7e2aed122bd7042e2c2720f06e692c7d71787b8"
                     },
                     "concoct/mergecutupclustering": {
                         "branch": "master",
