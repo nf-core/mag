@@ -32,6 +32,10 @@ process BUSCO {
     if (params.busco_reference)
         lineage_dataset_provided = "Y"
 
+    def busco_clean = "N"
+    if (params.busco_clean)
+        busco_clean = "Y"
+
     def p = "--auto-lineage"
     if (params.busco_reference){
         p = "--lineage_dataset dataset/${db}"
@@ -175,6 +179,13 @@ process BUSCO {
     # additionally output genes predicted with Prodigal (GFF3)
     if [ -f BUSCO/logs/prodigal_out.log ]; then
         mv BUSCO/logs/prodigal_out.log "${bin}_prodigal.gff"
+    fi
+
+    # if needed delete temporary BUSCO files
+    if [ ${busco_clean} ]; then
+        find . -depth -type d -name "augustus_config" -execdir rm -rf "{}" \\;
+        find . -depth -type d -name "auto_lineage" -execdir rm -rf "{}" \\;
+        find . -depth -type d -name "run_*" -execdir rm -rf "{}" +
     fi
 
     cat <<-END_VERSIONS > versions.yml
