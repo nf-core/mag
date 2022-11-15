@@ -1,10 +1,10 @@
 process BUSCO {
     tag "${bin}"
 
-    conda (params.enable_conda ? "bioconda::busco=5.1.0" : null)
+    conda (params.enable_conda ? "bioconda::busco=5.4.3" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/busco:5.1.0--py_1' :
-        'quay.io/biocontainers/busco:5.1.0--py_1' }"
+        'https://depot.galaxyproject.org/singularity/busco:5.4.3--pyhdfd78af_0':
+        'quay.io/biocontainers/busco:5.4.3--pyhdfd78af_0' }"
 
     input:
     tuple val(meta), path(bin)
@@ -123,6 +123,10 @@ process BUSCO {
                     cat BUSCO/run_\${db_name_gen}/busco_sequences/single_copy_busco_sequences/*fna | gzip >${bin}_buscos.\${db_name_gen}.fna.gz
                     break
                 done
+
+            elif egrep -q \$'INFO:\t\\S+ selected' ${bin}_busco.log && egrep -q \$'INFO:\tNo marker genes were found. Root lineage \\S+ is kept' ${bin}_busco.log ; then
+                echo "Domain could be selected by BUSCO, but no more specific lineage."
+                cp BUSCO/short_summary.specific.\${db_name_spec}.BUSCO.txt short_summary.domain.\${db_name_spec}.${bin}.txt
 
             elif egrep -q \$'INFO:\t\\S+ selected' ${bin}_busco.log && egrep -q \$'INFO:\tNot enough markers were placed on the tree \\([0-9]*\\). Root lineage \\S+ is kept' ${bin}_busco.log ; then
                 echo "Domain could be selected by BUSCO, but no more specific lineage."

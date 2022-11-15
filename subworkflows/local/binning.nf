@@ -6,11 +6,11 @@ params.mag_depths_options                           = [:]
 params.mag_depths_plot_options                      = [:]
 params.mag_depths_summary_options                   = [:]
 
-include { METABAT2_METABAT2                     } from '../../modules/nf-core/modules/metabat2/metabat2/main'
-include { METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS  } from '../../modules/nf-core/modules/metabat2/jgisummarizebamcontigdepths/main'
-include { MAXBIN2                               } from '../../modules/nf-core/modules/maxbin2/main'
-include { GUNZIP as GUNZIP_BINS                 } from '../../modules/nf-core/modules/gunzip/main'
-include { GUNZIP as GUNZIP_UNBINS               } from '../../modules/nf-core/modules/gunzip/main'
+include { METABAT2_METABAT2                     } from '../../modules/nf-core/metabat2/metabat2/main'
+include { METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS  } from '../../modules/nf-core/metabat2/jgisummarizebamcontigdepths/main'
+include { MAXBIN2                               } from '../../modules/nf-core/maxbin2/main'
+include { GUNZIP as GUNZIP_BINS                 } from '../../modules/nf-core/gunzip/main'
+include { GUNZIP as GUNZIP_UNBINS               } from '../../modules/nf-core/gunzip/main'
 
 include { CONVERT_DEPTHS                        } from '../../modules/local/convert_depths'
 include { ADJUST_MAXBIN2_EXT                    } from '../../modules/local/adjust_maxbin2_ext'
@@ -126,8 +126,8 @@ workflow BINNING {
 
     // Compute bin depths for different samples (according to `binning_map_mode`)
     // Have to remove binner meta before joining with according depths files,
-    // as required for MAG_DEPTHS, but we can add  'binner' 
-    // info again based on file name and finally group by 
+    // as required for MAG_DEPTHS, but we can add  'binner'
+    // info again based on file name and finally group by
     // 'assembler', 'id', 'binner'
     ch_depth_input = ch_binning_results_gunzipped
         .mix(ch_splitfasta_results_gunzipped )

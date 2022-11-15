@@ -35,14 +35,20 @@ for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true
 // Check mandatory parameters
 if (params.input) { ch_input = file(params.input) } else { exit 1, 'Input samplesheet not specified!' }
 
+// Check MetaBAT2 inputs
+if ( !params.skip_metabat2 && params.min_contig_size < 1500 ) log.warn("Specified min. contig size under minimum for MetaBAT2. MetaBAT2 will be run with 1500 (other binners not affected). You supplied: --min_contig_size ${params.min_contig_size}")
+
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     CONFIG FILES
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-ch_multiqc_config        = file("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
-ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
+ch_multiqc_config          = file("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
+ch_multiqc_custom_config   = params.multiqc_config ? Channel.fromPath( params.multiqc_config, checkIfExists: true ) : Channel.empty()
+ch_multiqc_logo            = params.multiqc_logo   ? Channel.fromPath( params.multiqc_logo, checkIfExists: true ) : Channel.empty()
+// Currently not used as using local version of MultiQC
+//ch_multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -104,14 +110,14 @@ include { ANCIENT_DNA_ASSEMLY_VALIDATION } from '../subworkflows/local/ancient_d
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { FASTQC as FASTQC_RAW                   } from '../modules/nf-core/modules/fastqc/main'
-include { FASTQC as FASTQC_TRIMMED               } from '../modules/nf-core/modules/fastqc/main'
-include { FASTP                                  } from '../modules/nf-core/modules/fastp/main'
-include { ADAPTERREMOVAL as ADAPTERREMOVAL_PE    } from '../modules/nf-core/modules/adapterremoval/main'
-include { ADAPTERREMOVAL as ADAPTERREMOVAL_SE    } from '../modules/nf-core/modules/adapterremoval/main'
-include { PRODIGAL                               } from '../modules/nf-core/modules/prodigal/main'
-include { PROKKA                                 } from '../modules/nf-core/modules/prokka/main'
-include { CUSTOM_DUMPSOFTWAREVERSIONS            } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
+include { FASTQC as FASTQC_RAW                   } from '../modules/nf-core/fastqc/main'
+include { FASTQC as FASTQC_TRIMMED               } from '../modules/nf-core/fastqc/main'
+include { FASTP                                  } from '../modules/nf-core/fastp/main'
+include { ADAPTERREMOVAL as ADAPTERREMOVAL_PE    } from '../modules/nf-core/adapterremoval/main'
+include { ADAPTERREMOVAL as ADAPTERREMOVAL_SE    } from '../modules/nf-core/adapterremoval/main'
+include { PRODIGAL                               } from '../modules/nf-core/prodigal/main'
+include { PROKKA                                 } from '../modules/nf-core/prokka/main'
+include { CUSTOM_DUMPSOFTWAREVERSIONS            } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 
 ////////////////////////////////////////////////////
 /* --  Create channel for reference databases  -- */
@@ -685,6 +691,10 @@ workflow MAG {
     workflow_summary    = WorkflowMag.paramsSummaryMultiqc(workflow, summary_params)
     ch_workflow_summary = Channel.value(workflow_summary)
 
+    // Currently not used due to local MultiQC module
+    //methods_description    = WorkflowMag.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description)
+    //ch_methods_description = Channel.value(methods_description)
+
     ch_multiqc_files = Channel.empty()
     ch_multiqc_files = ch_multiqc_files.mix(Channel.from(ch_multiqc_config))
     ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
@@ -699,7 +709,10 @@ workflow MAG {
     ch_multiqc_files = ch_multiqc_files.mix(ch_busco_multiqc.collect().ifEmpty([]))
 
     MULTIQC (
-        ch_multiqc_files.collect()
+        ch_multiqc_files.collect(),
+        ch_multiqc_config.collect().ifEmpty([]),
+        ch_multiqc_custom_config.collect().ifEmpty([]),
+        ch_multiqc_logo.collect().ifEmpty([])
     )
     */
 
@@ -712,15 +725,15 @@ workflow MAG {
     }
 
     MULTIQC (
-        ch_multiqc_files.collect(),
-        ch_multiqc_custom_config.collect().ifEmpty([]),
-        FASTQC_RAW.out.zip.collect{it[1]}.ifEmpty([]),
-        FASTQC_TRIMMED.out.zip.collect{it[1]}.ifEmpty([]),
-        ch_bowtie2_removal_host_multiqc.collect{it[1]}.ifEmpty([]),
-        ch_quast_multiqc.collect().ifEmpty([]),
-        ch_bowtie2_assembly_multiqc.collect().ifEmpty([]),
-        ch_busco_multiqc.collect().ifEmpty([]),
-        ch_multiqc_readprep.collect().ifEmpty([]),
+        ch_multiqc_files.collect().dump(tag: "1"),
+        ch_multiqc_custom_config.collect().ifEmpty([]).dump(tag: "2"),
+        FASTQC_RAW.out.zip.collect{it[1]}.ifEmpty([]).dump(tag: "3"),
+        FASTQC_TRIMMED.out.zip.collect{it[1]}.ifEmpty([]).dump(tag: "4"),
+        ch_bowtie2_removal_host_multiqc.collect{it[1]}.ifEmpty([]).dump(tag: "5"),
+        ch_quast_multiqc.collect().ifEmpty([]).dump(tag: "6"),
+        ch_bowtie2_assembly_multiqc.collect().ifEmpty([]).dump(tag: "7"),
+        ch_busco_multiqc.collect().ifEmpty([]).dump(tag: "8"),
+        ch_multiqc_readprep.collect().ifEmpty([]).dump(tag: "9"),
     )
     multiqc_report = MULTIQC.out.report.toList()
     ch_versions    = ch_versions.mix(MULTIQC.out.versions)
@@ -737,6 +750,9 @@ workflow.onComplete {
         NfcoreTemplate.email(workflow, params, summary_params, projectDir, log, multiqc_report, busco_failed_bins)
     }
     NfcoreTemplate.summary(workflow, params, log, busco_failed_bins)
+    if (params.hook_url) {
+        NfcoreTemplate.adaptivecard(workflow, params, summary_params, projectDir, log)
+    }
 }
 
 /*

@@ -2,63 +2,22 @@
     "name": "nf-core/mag",
     "homePage": "https://github.com/nf-core/mag",
     "repos": {
-        "nf-core/modules": {
-            "adapterremoval": {
-                "git_sha": "f0800157544a82ae222931764483331a81812012"
-            },
-            "bcftools/consensus": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
-            },
-            "bcftools/index": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
-            },
-            "bcftools/view": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
-            },
-            "custom/dumpsoftwareversions": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
-            },
-            "dastool/dastool": {
-                "git_sha": "ae48653bd2d169510580220bb62d96f830c31293"
-            },
-            "dastool/fastatocontig2bin": {
-                "git_sha": "8ce68107871c96519b3eb0095d97896e34ef4489"
-            },
-            "fastp": {
-                "git_sha": "d0a1cbb703a130c19f6796c3fce24fbe7dfce789"
-            },
-            "fastqc": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
-            },
-            "freebayes": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
-            },
-            "gunzip": {
-                "git_sha": "9aadd9a6d3f5964476582319b3a1c54a3e3fe7c9"
-            },
-            "maxbin2": {
-                "git_sha": "b78a4a456762a4c59fd5023e70f36a27f76d4a97"
-            },
-            "metabat2/jgisummarizebamcontigdepths": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
-            },
-            "metabat2/metabat2": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
-            },
-            "prodigal": {
-                "git_sha": "fcb1dce7b6f1563bdcdb70fdbe235cc2f9fed62e"
-            },
-            "prokka": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
-            },
-            "pydamage/analyze": {
-                "git_sha": "64b06baa06bc41269282bc7d286af37e859ad244"
-            },
-            "pydamage/filter": {
-                "git_sha": "64b06baa06bc41269282bc7d286af37e859ad244"
-            },
-            "samtools/faidx": {
-                "git_sha": "1ad73f1b2abdea9398680d6d20014838135c9a35"
+        "https://github.com/nf-core/modules.git": {
+            "modules": {
+                "nf-core": {
+                    "custom/dumpsoftwareversions": {
+                        "branch": "master",
+                        "git_sha": "8022c68e7403eecbd8ba9c49496f69f8c49d50f0"
+                    },
+                    "fastqc": {
+                        "branch": "master",
+                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                    },
+                    "multiqc": {
+                        "branch": "master",
+                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                    }
+                }
             }
         }
     }

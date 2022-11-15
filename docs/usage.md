@@ -12,7 +12,7 @@ The input data can be passed to nf-core/mag in two possible ways using the `--in
 
 The easiest way is to specify directly the path (with wildcards) to your input FASTQ files. For example:
 
-```console
+```bash
 --input 'path/to/data/sample_*_R{1,2}.fastq.gz'
 ```
 
@@ -38,7 +38,7 @@ This CSV file should contain the following columns:
 
 The path to `long_reads` and `short_reads_2` is optional. Valid examples could look like the following:
 
-```console
+```bash
 sample,group,short_reads_1,short_reads_2,long_reads
 sample1,0,data/sample1_R1.fastq.gz,data/sample1_R2.fastq.gz,data/sample1.fastq.gz
 sample2,0,data/sample2_R1.fastq.gz,data/sample2_R2.fastq.gz,data/sample2.fastq.gz
@@ -47,7 +47,7 @@ sample3,1,data/sample3_R1.fastq.gz,data/sample3_R2.fastq.gz,
 
 or
 
-```console
+```bash
 sample,group,short_reads_1,short_reads_2,long_reads
 sample1,0,data/sample1.fastq.gz,,
 sample2,0,data/sample2.fastq.gz,,
@@ -70,17 +70,17 @@ Again, by default, the group information is only used to compute co-abundances f
 
 The typical command for running the pipeline is as follows:
 
-```console
-nextflow run nf-core/mag --input samplesheet.csv --outdir <OUTDIR> --genome GRCh37 -profile docker
+```bash
+nextflow run nf-core/mag --input samplesheet.csv --outdir <OUTDIR> --host_genome GRCh37 -profile docker
 ```
 
 This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.
 
 Note that the pipeline will create the following files in your working directory:
 
-```console
+```bash
 work                # Directory containing the nextflow working files
-<OUTIDR>            # Finished results in specified location (defined with --outdir)
+<OUTDIR>            # Finished results in specified location (defined with --outdir)
 .nextflow_log       # Log file from Nextflow
 # Other nextflow hidden files, eg. history of pipeline runs and old logs.
 ```
@@ -91,7 +91,7 @@ See the [nf-core/mag website documentation](https://nf-co.re/mag/usage#usage) fo
 
 When you run the above command, Nextflow automatically pulls the pipeline code from GitHub and stores it as a cached version. When running the pipeline after this, it will always use the cached version if available - even if the pipeline has been updated since. To make sure that you're running the latest version of the pipeline, make sure that you regularly update the cached version of the pipeline:
 
-```console
+```bash
 nextflow pull nf-core/mag
 ```
 
@@ -165,7 +165,7 @@ Whilst the default requirements set within the pipeline will hopefully work for 
 
 For example, if the nf-core/rnaseq pipeline is failing after multiple re-submissions of the `STAR_ALIGN` process due to an exit code of `137` this would indicate that there is an out of memory issue:
 
-```console
+```bash
 [62/149eb0] NOTE: Process `NFCORE_RNASEQ:RNASEQ:ALIGN_STAR:STAR_ALIGN (WT_REP1)` terminated with an error exit status (137) -- Execution is retried (1)
 Error executing process > 'NFCORE_RNASEQ:RNASEQ:ALIGN_STAR:STAR_ALIGN (WT_REP1)'
 
@@ -264,6 +264,14 @@ See the main [Nextflow documentation](https://www.nextflow.io/docs/latest/config
 
 If you have any questions or issues please send us a message on [Slack](https://nf-co.re/join/slack) on the [`#configs` channel](https://nfcore.slack.com/channels/configs).
 
+## Azure Resource Requests
+
+To be used with the `azurebatch` profile by specifying the `-profile azurebatch`.
+We recommend providing a compute `params.vm_type` of `Standard_D16_v3` VMs by default but these options can be changed if required.
+
+Note that the choice of VM size depends on your quota and the overall workload during the analysis.
+For a thorough list, please refer the [Azure Sizes for virtual machines in Azure](https://docs.microsoft.com/en-us/azure/virtual-machines/sizes).
+
 ## Running in the background
 
 Nextflow handles job submissions and supervises the running jobs. The Nextflow process must run until the pipeline is finished.
@@ -278,7 +286,7 @@ Some HPC setups also allow you to run nextflow within a cluster job submitted yo
 In some cases, the Nextflow Java virtual machines can start to request a large amount of memory.
 We recommend adding the following line to your environment to limit this (typically in `~/.bashrc` or `~./bash_profile`):
 
-```console
+```bash
 NXF_OPTS='-Xms1g -Xmx4g'
 ```
 
@@ -294,7 +302,7 @@ nf-core/mag integrates an additional subworkflow to validate ancient DNA _de nov
 
 DAS Tool may not always be able to refine bins due to insufficient recovery of enough single-copy genes. In these cases you will get a NOTE such as
 
-```console
+```bash
 [16/d330a6] NOTE: Process `NFCORE_MAG:MAG:BINNING_REFINEMENT:DASTOOL_DASTOOL (test_minigut_sample2)` terminated with an error exit status (1) -- Error is ignored
 ```
 
