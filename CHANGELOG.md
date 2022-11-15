@@ -3,6 +3,12 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## dev
+
+### `Added`
+
+- [#353](https://github.com/nf-core/mag/pull/353) - Added the busco_clean parameter to optionally clean each BUSCO directory after a successful
+
 ## v2.2.1 - 2022/08/25
 
 ### `Added`
