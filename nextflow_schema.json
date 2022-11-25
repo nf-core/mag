@@ -568,8 +568,7 @@
                     "description": "Skip MaxBin2 Binning"
                 },
                 "skip_concoct": {
-                    "type": "string",
-                    "default": "false",
+                    "type": "boolean",
                     "description": "Skip CONCOCT Binning"
                 },
                 "min_contig_size": {
