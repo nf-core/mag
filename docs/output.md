@@ -331,6 +331,39 @@ All the files in this folder contain small and/or unbinned contigs that are not 
 
 Files in these two folders contain all contigs of an assembly.
 
+### CONCOCT
+
+[CONOCCT](https://github.com/BinPro/CONCOCT) performs unsupervised binning of metagenomic contigs by using nucleotide composition, coverage data in multiple samples and linkage data from paired end reads.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `GenomeBinning/CONCOCT/`
+  - `bins/[assembler]-[binner]-[sample/group].*.fa.gz`: Genome bins retrieved from input assembly
+  - `stats/[assembler]-[binner]-[sample/group].csv`: Table indicating which contig goes with which cluster bin.
+  - `stats/[assembler]-[binner]-[sample/group]*_gt1000.csv`: Various intermediate PCA statistics used for clustering.
+  - `stats/[assembler]-[binner]-[sample/group]_*.tsv`: Coverage statistics of each sub-contig cut up by CONOCOCT prior in an intermediate step prior to binning. Likely not useful in most cases.
+  - `stats/[assembler]-[binner]-[sample/group].log.txt`: CONCOCT execution log file.
+  - `stats/[assembler]-[binner]-[sample/group]_*.args`: List of arguments used in CONCOCT execution.
+  - </details>
+
+All the files and contigs in these folders will be assessed by QUAST and BUSCO.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `GenomeBinning/MaxBin2/discarded/`
+  - `*.tooshort.gz`: Too short contigs that are filtered by MaxBin2
+- `GenomeBinning/MaxBin2/unbinned/discarded/`
+  - `*.noclass.pooled.fa.gz`: Pooled unbinned contigs equal or above `--min_contig_size`, by default 1500 bp.
+  - `*.noclass.remaining.fa.gz`: Remaining unbinned contigs below `--min_contig_size`, by default 1500 bp, but not in any other file.
+
+</details>
+
+All the files in this folder contain small and/or unbinned contigs that are not further processed.
+
+Files in these two folders contain all contigs of an assembly.
+
 ### DAS Tool
 
 [DAS Tool](https://github.com/cmks/DAS_Tool) is an automated binning refinement method that integrates the results of a flexible number of binning algorithms to calculate an optimized, non-redundant set of bins from a single assembly. nf-core/mag uses this tool to attempt to further improve bins based on combining the MetaBAT2 and MaxBin2 binning output, assuming sufficient quality is met for those bins.

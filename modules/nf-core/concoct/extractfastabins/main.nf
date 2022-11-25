@@ -11,7 +11,7 @@ process CONCOCT_EXTRACTFASTABINS {
     tuple val(meta), path(original_fasta), path(csv)
 
     output:
-    tuple val(meta), path("${prefix}/*.fa.gz"), emit: fasta
+    tuple val(meta), path("**/*.fa.gz"), emit: fasta
     path "versions.yml"                     , emit: versions
 
     when:
