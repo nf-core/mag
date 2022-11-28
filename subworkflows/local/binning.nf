@@ -123,24 +123,17 @@ workflow BINNING {
         ch_versions = ch_versions.mix(FASTA_BINNING_CONCOCT.out.versions)
     }
 
-    // split fastq files, depending on which selected
-    if ( !params.skip_metabat2 & params.skip_maxbin2 & params.skip_concoct ) {
+    // decide which unbinned fasta files to further filter, depending on which binners selected
+    // NOTE: CONCOCT does not produce 'unbins' itself, therefore not included here.
+    if ( !params.skip_metabat2 & params.skip_maxbin2 ) {
         ch_input_splitfasta = METABAT2_METABAT2.out.unbinned
-    } else if ( !params.skip_metabat2 & params.skip_maxbin2 & !params.skip_concoct ) {
-        ch_input_splitfasta = METABAT2_METABAT2.out.unbinned.mix(ch_final_bins_for_gunzip)
-    } else if ( params.skip_metabat2 & !params.skip_maxbin2 & params.skip_concoct ) {
+    } else if ( params.skip_metabat2 & !params.skip_maxbin2 ) {
         ch_input_splitfasta = MAXBIN2.out.unbinned_fasta
-    } else if ( !params.skip_metabat2 & params.skip_maxbin2 & !params.skip_concoct ) {
-        ch_input_splitfasta = MAXBIN2.out.unbinned_fasta.mix(ch_final_bins_for_gunzip)
-    } else if ( !params.skip_metabat2 & !params.skip_maxbin2 & params.skip_concoct ) {
-        ch_input_splitfasta = ch_final_bins_for_gunzip
-    } else if ( params.skip_metabat2 & params.skip_maxbin2 & !params.skip_concoct ) {
-        ch_input_splitfasta = METABAT2_METABAT2.out.unbinned.mix(MAXBIN2.out.unbinned_fasta)
     } else {
-        ch_input_splitfasta = METABAT2_METABAT2.out.unbinned.mix(MAXBIN2.out.unbinned_fasta).mix(ch_final_bins_for_gunzip)
+        ch_input_splitfasta = METABAT2_METABAT2.out.unbinned.mix(MAXBIN2.out.unbinned_fasta)
     }
 
-    SPLIT_FASTA ( ch_input_splitfasta.dump(tag: "input to FQ") )
+    SPLIT_FASTA ( ch_input_splitfasta )
     // large unbinned contigs from SPLIT_FASTA for decompressing for MAG_DEPTHS,
     // first have to separate and re-group due to limitation of GUNZIP module
     ch_split_fasta_results_transposed = SPLIT_FASTA.out.unbinned.transpose()

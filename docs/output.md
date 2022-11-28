@@ -333,7 +333,7 @@ Files in these two folders contain all contigs of an assembly.
 
 ### CONCOCT
 
-[CONOCCT](https://github.com/BinPro/CONCOCT) performs unsupervised binning of metagenomic contigs by using nucleotide composition, coverage data in multiple samples and linkage data from paired end reads.
+[CONCOCT](https://github.com/BinPro/CONCOCT) performs unsupervised binning of metagenomic contigs by using nucleotide composition, coverage data in multiple samples and linkage data from paired end reads.
 
 <details markdown="1">
 <summary>Output files</summary>
@@ -349,20 +349,7 @@ Files in these two folders contain all contigs of an assembly.
 
 All the files and contigs in these folders will be assessed by QUAST and BUSCO.
 
-<details markdown="1">
-<summary>Output files</summary>
-
-- `GenomeBinning/MaxBin2/discarded/`
-  - `*.tooshort.gz`: Too short contigs that are filtered by MaxBin2
-- `GenomeBinning/MaxBin2/unbinned/discarded/`
-  - `*.noclass.pooled.fa.gz`: Pooled unbinned contigs equal or above `--min_contig_size`, by default 1500 bp.
-  - `*.noclass.remaining.fa.gz`: Remaining unbinned contigs below `--min_contig_size`, by default 1500 bp, but not in any other file.
-
-</details>
-
-All the files in this folder contain small and/or unbinned contigs that are not further processed.
-
-Files in these two folders contain all contigs of an assembly.
+Note that CONCOCT does not output what it considers 'unbinned' contigs, therefore no 'discarded' contigs are produced here. You may still need to do your own manual curation of the resulting bins.
 
 ### DAS Tool
 
