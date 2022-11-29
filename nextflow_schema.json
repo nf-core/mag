@@ -382,8 +382,7 @@
                     "hidden": true
                 },
                 "skip_clipping": {
-                    "type": "string",
-                    "default": "false",
+                    "type": "boolean",
                     "description": "Skip read preprocessing using fastp or adapterremoval."
                 }
             }
