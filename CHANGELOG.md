@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
+- [#353](https://github.com/nf-core/mag/pull/353) - Added the busco_clean parameter to optionally clean each BUSCO directory after a successful
+
 ### `Changed`
 
 - [#340](https://github.com/nf-core/mag/pull/340) - Update to nf-core 2.6.1 `TEMPLATE`
