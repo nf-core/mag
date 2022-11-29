@@ -294,6 +294,8 @@ workflow MAG {
             ch_short_reads
         )
         ch_versions = ch_versions.mix(FASTQC_TRIMMED.out.versions)
+    } else {
+        ch_short_reads = ch_raw_short_reads
     }
 
     /*
