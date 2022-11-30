@@ -490,6 +490,15 @@
                     "default": true,
                     "description": "Reduce GTDB-Tk memory consumption by running pplacer in a setting writing to disk.",
                     "help_text": "Will be slower. Set to `false` to turn this off."
+                },
+                "virus_classification": {
+                    "type": "boolean",
+                    "description": "Turn on/off virus classification with geNomad"
+                },
+                "genomad_db": {
+                    "type": "string",
+                    "default": "https://portal.nersc.gov/genomad/__data__/genomad_db_v1.1.tar.gz",
+                    "description": "Database for virus classification with geNomad"
                 }
             }
         },
