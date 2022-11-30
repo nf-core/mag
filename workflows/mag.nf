@@ -86,6 +86,7 @@ include { QUAST_BINS_SUMMARY                                  } from '../modules
 include { CAT_DB                                              } from '../modules/local/cat_db'
 include { CAT_DB_GENERATE                                     } from '../modules/local/cat_db_generate'
 include { CAT                                                 } from '../modules/local/cat'
+include { GENOMAD                                             } from '../modules/local/genomad'
 include { BIN_SUMMARY                                         } from '../modules/local/bin_summary'
 include { COMBINE_TSV                                         } from '../modules/local/combine_tsv'
 include { MULTIQC                                             } from '../modules/local/multiqc'
@@ -179,6 +180,13 @@ if(!params.keep_phix) {
 if (!params.keep_lambda) {
     ch_nanolyse_db = Channel
         .value(file( "${params.lambda_reference}" ))
+}
+
+if (params.genomad_db){
+    ch_genomad_db_file = Channel
+        .value(file( "${params.genomad_db}" ))
+} else {
+    ch_genomad_db_file = Channel.empty()
 }
 
 gtdb = params.skip_busco ? false : params.gtdb
@@ -500,6 +508,17 @@ workflow MAG {
             'gff'
         )
         ch_versions = ch_versions.mix(PRODIGAL.out.versions.first())
+    }
+
+    /*
+    ================================================================================
+                                    Virus classification
+    ================================================================================
+    */
+
+    if (params.virus_classification){
+        GENOMAD(ch_assemblies, ch_genomad_db_file)
+        ch_versions = ch_versions.mix(GENOMAD.out.versions.first())
     }
 
     /*
