@@ -732,7 +732,7 @@ workflow MAG {
     }
 
     ch_fastqc_trimmed_multiqc = Channel.empty()
-    if (!params.skip_clipping) {
+    if (!(params.keep_phix && params.skip_clipping && !(params.host_genome || params.host_fasta))) {
         ch_fastqc_trimmed_multiqc = FASTQC_TRIMMED.out.zip.collect{it[1]}.ifEmpty([])
     }
 
