@@ -258,6 +258,8 @@ workflow MAG {
             ch_versions = ch_versions.mix(ADAPTERREMOVAL_PE.out.versions.first(), ADAPTERREMOVAL_SE.out.versions.first())
 
         }
+    } else {
+        ch_short_reads = ch_raw_short_reads
     }
 
     if (params.host_fasta){
@@ -294,8 +296,6 @@ workflow MAG {
             ch_short_reads
         )
         ch_versions = ch_versions.mix(FASTQC_TRIMMED.out.versions)
-    } else {
-        ch_short_reads = ch_raw_short_reads
     }
 
     /*
@@ -723,17 +723,24 @@ workflow MAG {
 
     ch_multiqc_readprep = Channel.empty()
 
-    if ( params.clip_tool == "fastp") {
-        ch_multiqc_readprep = ch_multiqc_readprep.mix(FASTP.out.json.collect{it[1]}.ifEmpty([]))
-    } else if ( params.clip_tool == "adapterremoval" ) {
-        ch_multiqc_readprep = ch_multiqc_readprep.mix(ADAPTERREMOVAL_PE.out.log.collect{it[1]}.ifEmpty([]), ADAPTERREMOVAL_SE.out.log.collect{it[1]}.ifEmpty([]))
+    if (!params.skip_clipping) {
+        if ( params.clip_tool == "fastp") {
+            ch_multiqc_readprep = ch_multiqc_readprep.mix(FASTP.out.json.collect{it[1]}.ifEmpty([]))
+        } else if ( params.clip_tool == "adapterremoval" ) {
+            ch_multiqc_readprep = ch_multiqc_readprep.mix(ADAPTERREMOVAL_PE.out.log.collect{it[1]}.ifEmpty([]), ADAPTERREMOVAL_SE.out.log.collect{it[1]}.ifEmpty([]))
+        }
+    }
+
+    ch_fastqc_trimmed_multiqc = Channel.empty()
+    if (!params.skip_clipping) {
+        ch_fastqc_trimmed_multiqc = FASTQC_TRIMMED.out.zip.collect{it[1]}.ifEmpty([])
     }
 
     MULTIQC (
         ch_multiqc_files.collect().dump(tag: "1"),
         ch_multiqc_custom_config.collect().ifEmpty([]).dump(tag: "2"),
         FASTQC_RAW.out.zip.collect{it[1]}.ifEmpty([]).dump(tag: "3"),
-        FASTQC_TRIMMED.out.zip.collect{it[1]}.ifEmpty([]).dump(tag: "4"),
+        ch_fastqc_trimmed_multiqc.collect().ifEmpty([]).dump(tag: "4"),
         ch_bowtie2_removal_host_multiqc.collect{it[1]}.ifEmpty([]).dump(tag: "5"),
         ch_quast_multiqc.collect().ifEmpty([]).dump(tag: "6"),
         ch_bowtie2_assembly_multiqc.collect().ifEmpty([]).dump(tag: "7"),
