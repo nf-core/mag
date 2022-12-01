@@ -255,7 +255,7 @@ Protein-coding genes are predicted for each assembly.
 
 </details>
 
-## Viral classification of assemblies 
+## Viral classification of assemblies
 
 ### geNomad
 
