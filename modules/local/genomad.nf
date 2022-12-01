@@ -16,10 +16,18 @@ process GENOMAD {
     path(db)
 
     output:
-    // TODO: Add additional output channels here
-    tuple val(meta), path("${meta.id}_summary/*.tsv"), emit: tsv
-    path("*.log")                                    , emit: log
-    path "versions.yml"                              , emit: versions
+    path("${prefix}_annotate/${prefix}_taxonomy.tsv")                                  , emit: taxonomy_tsv
+    path("${prefix}_aggregated_classification/${prefix}_aggregated_classification.tsv"), emit: aggregated_classification_tsv
+    path("${prefix}_summary/${prefix}_virus_summary.tsv")                              , emit: virus_summary_tsv
+    path("${prefix}_summary/${prefix}_plasmid_summary.tsv")                            , emit: plasmid_summary_tsv
+    path("${prefix}_summary/${prefix}_viruses_genes.tsv")                              , emit: viruses_genes_tsv
+    path("${prefix}_summary/${prefix}_plasmids_genes.tsv")                             , emit: plasmids_genes_tsv
+    path("${prefix}_summary/${prefix}_viruses.fna")                                    , emit: viruses_fna
+    path("${prefix}_summary/${prefix}_plasmids.fna")                                   , emit: plasmids_fna
+    path("${prefix}_summary/${prefix}_viruses_proteins.faa")                           , emit: viruses_faa
+    path("${prefix}_summary/${prefix}_plasmids_proteins.faa")                          , emit: plasmids_faa
+    path("${prefix}.log")                                                              , emit: log
+    path "versions.yml"                                                                , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
