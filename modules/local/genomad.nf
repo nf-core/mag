@@ -26,8 +26,9 @@ process GENOMAD {
 
     script:
     def args = task.ext.args ?: ''
-    def clean_db= db.toString() - ".tar.gz"
-    def decompress_db= db.toString() == clean_db ? "" : "mkdir $clean_db && tar xf $db -C $clean_db --strip-components 1"
+    def clean_db = db.toString() - ".tar.gz"
+    def decompress_db = db.toString() == clean_db ? "" : "rm -rf $clean_db && mkdir $clean_db && tar xf $db -C $clean_db --strip-components 1"
+    def prefix = fasta.getBaseName(2)
     """
     $decompress_db
 
