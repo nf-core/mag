@@ -3,13 +3,13 @@ process GENOMAD {
     label 'process_medium'
 
     conda (params.enable_conda ? "bioconda::genomad=1.2.0" : null)
-    // TODO: Replace this with the followng once the container is available
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'docker://philpalmer/genomad:1.2.0':
-        'philpalmer/genomad:1.2.0' }"
+    // TODO: Replace the container below with the followng once the container is available
     // container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
     //     'https://depot.galaxyproject.org/singularity/genomad=1.2.0':
     //     'quay.io/biocontainers/genomad=1.2.0' }"
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'docker://philpalmer/genomad:1.2.0':
+        'philpalmer/genomad:1.2.0' }"
 
     input:
     tuple val(meta), path(fasta)
