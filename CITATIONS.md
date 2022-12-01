@@ -50,6 +50,10 @@
 
   > Garrison E, Marth G. Haplotype-based variant detection from short-read sequencing. arXiv preprint arXiv:1207.3907 [q-bio.GN] 2012
 
+- [geNomad](https://doi.org/10.5281/zenodo.7015982)
+
+  > Antônio Camargo. (2022). apcamargo/genomad: geNomad v1.2.0 (v1.2.0). Zenodo.doi: 10.5281/zenodo.7324808
+
 - [GTDB-Tk](https://doi.org/10.1093/bioinformatics/btz848)
 
   > Chaumeil, P. A., Mussig, A. J., Hugenholtz, P., & Parks, D. H. (2020). GTDB-Tk: a toolkit to classify genomes with the Genome Taxonomy Database. Bioinformatics , 36(6), 1925–1927. doi: 10.1093/bioinformatics/btz848.
