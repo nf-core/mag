@@ -34,6 +34,8 @@ process GENOMAD {
 
     genomad end-to-end $args $fasta . $clean_db
 
+    rm -f ${prefix}.log && ls -rt ${prefix}*.log | xargs cat > ${prefix}.log
+
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         genomad: \$(echo \$(genomad --version 2>&1) | sed 's/^.*genomad, version //')
