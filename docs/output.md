@@ -14,6 +14,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 - [Taxonomic classification of trimmed reads](#taxonomic-classification-of-trimmed-reads)
 - [Assembly](#assembly) of trimmed reads
 - [Protein-coding gene prediction](#gene-prediction) of assemblies
+- [Viral classification](#viral-classification-of-assemblies) of assemblies
 - [Binning and binning refinement](#binning-and-binning-refinement) of assembled contigs
 - [Taxonomic classification of binned genomes](#taxonomic-classification-of-binned-genomes)
 - [Genome annotation of binned genomes](#genome-annotation-of-binned-genomes)
@@ -264,16 +265,19 @@ geNomad's identifies viruses and plasmids in sequencing data (isolates, metageno
 <summary>Output files</summary>
 
 - `Taxonomy/geNomad/[sample/group]/`
-  - `[sample/group]_annotate/[sample/group]_taxonomy.tsv`: Taxonomic assignment data
-  - `[sample/group]_aggregated_classification/[sample/group]_aggregated_classification.tsv`: Sequence classification in tabular format
-  - `[sample/group]_summary/[sample/group]_virus_summary.tsv`: Virus classification summary file in tabular format
-  - `[sample/group]_summary/[sample/group]_plasmid_summary.tsv`: Plasmid classification summary file in tabular format
-  - `[sample/group]_summary/[sample/group]_viruses_genes.tsv`: Virus gene annotation data in tabular format
-  - `[sample/group]_summary/[sample/group]_plasmids_genes.tsv`: Plasmid gene annotation data in tabular format
-  - `[sample/group]_summary/[sample/group]_viruses.fna`: Virus nucleotide sequences in FASTA format
-  - `[sample/group]_summary/[sample/group]_plasmids.fna`: Plasmid nucleotide sequences in FASTA format
-  - `[sample/group]_summary/[sample/group]_viruses_proteins.faa`: Virus protein sequences in FASTA format
-  - `[sample/group]_summary/[sample/group]_plasmids_proteins.faa`: Plasmid protein sequences in FASTA format
+  - `[sample/group]_annotate`
+    - `[sample/group]_taxonomy.tsv`: Taxonomic assignment data
+  - `[sample/group]_aggregated_classification`
+    - `[sample/group]_aggregated_classification.tsv`: Sequence classification in tabular format
+  - `[sample/group]_summary`
+    - `[sample/group]_virus_summary.tsv`: Virus classification summary file in tabular format
+    - `[sample/group]_plasmid_summary.tsv`: Plasmid classification summary file in tabular format
+    - `[sample/group]_viruses_genes.tsv`: Virus gene annotation data in tabular format
+    - `[sample/group]_plasmids_genes.tsv`: Plasmid gene annotation data in tabular format
+    - `[sample/group]_viruses.fna`: Virus nucleotide sequences in FASTA format
+    - `[sample/group]_plasmids.fna`: Plasmid nucleotide sequences in FASTA format
+    - `[sample/group]_viruses_proteins.faa`: Virus protein sequences in FASTA format
+    - `[sample/group]_plasmids_proteins.faa`: Plasmid protein sequences in FASTA format
   - `[sample/group].log`: Plain text log file detailing the steps executed by geNomad (annotate, find-proviruses, marker-classification, nn-classification, aggregated-classification and summary)
 
 </details>
