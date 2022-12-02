@@ -84,7 +84,7 @@ include { CAT_DB                                              } from '../modules
 include { CAT_DB_GENERATE                                     } from '../modules/local/cat_db_generate'
 include { CAT                                                 } from '../modules/local/cat'
 include { BIN_SUMMARY                                         } from '../modules/local/bin_summary'
-include { COMBINE_TSV                                         } from '../modules/local/combine_tsv'
+include { COMBINE_TSV as COMBINE_SUMMARY_TSV                  } from '../modules/local/combine_tsv'
 include { MULTIQC                                             } from '../modules/local/multiqc'
 
 //
@@ -515,6 +515,7 @@ workflow MAG {
 
     ch_bowtie2_assembly_multiqc = Channel.empty()
     ch_busco_summary            = Channel.empty()
+    ch_checkm_summary           = Channel.empty()
     ch_busco_multiqc            = Channel.empty()
 
 
@@ -582,7 +583,7 @@ workflow MAG {
                 ch_input_for_postbinning_bins        = BINNING.out.bins.mix(BINNING_REFINEMENT.out.refined_bins)
                 ch_input_for_postbinning_bins_unbins = BINNING.out.bins.mix(BINNING.out.unbinned,BINNING_REFINEMENT.out.refined_bins,BINNING_REFINEMENT.out.refined_unbins)
                 ch_combinedepthtsvs_for_binsummary   = BINNING.out.depths_summary.mix(BINNING_REFINEMENT.out.refined_depths_summary)
-                ch_input_for_binsummary              = COMBINE_TSV ( ch_combinedepthtsvs_for_binsummary.collect() ).combined
+                ch_input_for_binsummary              = COMBINE_SUMMARY_TSV ( ch_combinedepthtsvs_for_binsummary.collect() ).combined
             }
         } else {
                 ch_input_for_postbinning_bins        = BINNING.out.bins
@@ -624,6 +625,7 @@ workflow MAG {
                 ch_input_bins_for_qc.groupTuple().dump(tag: "checkminput"),
                 ch_checkm_db
             )
+            ch_checkm_summary = CHECKM_QC.out.summary
 
             // TODO custom output parsing? Add to MultiQC?
 
@@ -672,16 +674,18 @@ workflow MAG {
             GTDBTK (
                 ch_input_for_postbinning_bins_unbins,
                 ch_busco_summary,
+                ch_checkm_summary,
                 ch_gtdb
             )
             ch_versions = ch_versions.mix(GTDBTK.out.versions.first())
             ch_gtdbtk_summary = GTDBTK.out.summary
         }
 
-        if ( ( !params.skip_binqc && params.binqc_tool == 'busco' ) || !params.skip_quast || gtdb){
+        if ( ( !params.skip_binqc ) || !params.skip_quast || gtdb){
             BIN_SUMMARY (
                 ch_input_for_binsummary,
                 ch_busco_summary.ifEmpty([]),
+                ch_checkm_summary.ifEmpty([]),
                 ch_quast_bins_summary.ifEmpty([]),
                 ch_gtdbtk_summary.ifEmpty([])
             )

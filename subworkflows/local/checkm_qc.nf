@@ -2,8 +2,9 @@
  * CheckM: Quantitative measures for the assessment of genome assembly
  */
 
-include { CHECKM_QA        } from '../../modules/nf-core/checkm/qa/main'
-include { CHECKM_LINEAGEWF } from '../../modules/nf-core/checkm/lineagewf/main'
+include { CHECKM_QA                         } from '../../modules/nf-core/checkm/qa/main'
+include { CHECKM_LINEAGEWF                  } from '../../modules/nf-core/checkm/lineagewf/main'
+include { COMBINE_TSV as COMBINE_CHECKM_TSV } from '../../modules/local/combine_tsv'
 
 workflow CHECKM_QC {
     take:
@@ -36,7 +37,10 @@ workflow CHECKM_QC {
 
     // TODO Check output files published correctly
 
+    COMBINE_CHECKM_TSV ( CHECKM_QA.out.output.map{it[1]}.collect() )
+
     emit:
+    summary    = COMBINE_CHECKM_TSV.out.combined
     checkm_tsv = CHECKM_QA.out.output
-    versions = ch_versions
+    versions   = ch_versions
 }
