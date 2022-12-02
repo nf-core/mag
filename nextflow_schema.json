@@ -631,11 +631,21 @@
                     "description": "Save the used BUSCO lineage datasets provided via --busco_reference or downloaded when not using --busco_reference or --busco_download_path.",
                     "help_text": "Useful to allow reproducibility, as BUSCO datasets are frequently updated and old versions do not always remain accessible."
                 },
+                "busco_clean": {
+                    "type": "boolean",
+                    "description": "Enable clean-up of temporary files created during BUSCO runs.",
+                    "help_text": "By default, BUSCO creates a large number of intermediate files every run. This may cause problems on some clusters which have file number limits in plate, particularly with large numbers of bins. Enabling this option cleans these files, reducing the total file count of the work directory."
+                },
                 "checkm_db": {
                     "type": "string",
                     "default": "None",
                     "description": "Path to local folder containing already downloaded and uncompressed CheckM database. Recommended to prevent re-download for every sample.",
                     "help_text": "It is highly recommended to download the CheckM database yourself and use this parameter. This can be downloaded as per the [CheckM documentation](https://github.com/Ecogenomics/CheckM/wiki/Installation#required-reference-data). \n\nHowever, the pipeline can also download this for you if not specified, and you can save the resulting directory into your output directory by specifying `--save_checkm_data`. You should move this directory to somewhere else on your machine (and supply back to the pipeline in future runs again with `--checkm_db`."
+                },
+                "save_checkm_data": {
+                    "type": "boolean",
+                    "description": "Save the used CheckM reference files downloaded when not using --checkm_db parameter.",
+                    "help_text": "If specified, the directories and files decompressed from the `tar.gz` file downloaded from the [CheckM FTP server](https://data.ace.uq.edu.au/public/CheckM_databases/) will be stored in your output directory alongside your CheckM results."
                 },
                 "refine_bins_dastool": {
                     "type": "boolean",
@@ -653,11 +663,6 @@
                     "description": "Specify which binning output is sent for downstream annotation, taxonomic classification, bin quality control etc.",
                     "help_text": "`raw_bins_only`: only bins (and unbinned contigs) from the binners.\n`refined_bins_only`:  only bins (and unbinned contigs) from the bin refinement step .\n`both`: bins and unbinned contigs from both the binning and bin refinement steps.",
                     "enum": ["raw_bins_only", "refined_bins_only", "both"]
-                },
-                "save_checkm_data": {
-                    "type": "boolean",
-                    "description": "Save the used CheckM reference files downloaded when not using --checkm_db parameter.",
-                    "help_text": "If specified, the directories and files decompressed from the `tar.gz` file downloaded from the [CheckM FTP server](https://data.ace.uq.edu.au/public/CheckM_databases/) will be stored in your output directory alongside your CheckM results."
                 }
             }
         },
