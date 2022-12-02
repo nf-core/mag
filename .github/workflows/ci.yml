@@ -52,7 +52,7 @@ jobs:
             test_ancient_dna,
             test_adapterremoval,
             test_binrefinement,
-            test_virus_classification
+            test_virus_classification,
           ]
     steps:
       - name: Check out pipeline code
