@@ -259,7 +259,7 @@ Protein-coding genes are predicted for each assembly.
 
 ### geNomad
 
-geNomad's identifies viruses and plasmids in sequencing data (isolates, metagenomes, and metatranscriptomes)
+[geNomad](https://github.com/apcamargo/genomad) identifies viruses and plasmids in sequencing data (isolates, metagenomes, and metatranscriptomes)
 
 <details markdown="1">
 <summary>Output files</summary>
