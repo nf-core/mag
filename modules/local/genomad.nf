@@ -20,12 +20,12 @@ process GENOMAD {
     path("${prefix}_aggregated_classification/${prefix}_aggregated_classification.tsv"), emit: aggregated_classification_tsv
     path("${prefix}_summary/${prefix}_virus_summary.tsv")                              , emit: virus_summary_tsv
     path("${prefix}_summary/${prefix}_plasmid_summary.tsv")                            , emit: plasmid_summary_tsv
-    path("${prefix}_summary/${prefix}_viruses_genes.tsv")                              , emit: viruses_genes_tsv
-    path("${prefix}_summary/${prefix}_plasmids_genes.tsv")                             , emit: plasmids_genes_tsv
-    path("${prefix}_summary/${prefix}_viruses.fna")                                    , emit: viruses_fna
-    path("${prefix}_summary/${prefix}_plasmids.fna")                                   , emit: plasmids_fna
-    path("${prefix}_summary/${prefix}_viruses_proteins.faa")                           , emit: viruses_faa
-    path("${prefix}_summary/${prefix}_plasmids_proteins.faa")                          , emit: plasmids_faa
+    path("${prefix}_summary/${prefix}_virus_genes.tsv")                                , emit: viruses_genes_tsv
+    path("${prefix}_summary/${prefix}_plasmid_genes.tsv")                              , emit: plasmids_genes_tsv
+    path("${prefix}_summary/${prefix}_virus.fna")                                      , emit: viruses_fna
+    path("${prefix}_summary/${prefix}_plasmid.fna")                                    , emit: plasmids_fna
+    path("${prefix}_summary/${prefix}_virus_proteins.faa")                             , emit: viruses_faa
+    path("${prefix}_summary/${prefix}_plasmid_proteins.faa")                           , emit: plasmids_faa
     path("${prefix}.log")                                                              , emit: log
     path "versions.yml"                                                                , emit: versions
 
