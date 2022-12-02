@@ -5,6 +5,11 @@
         "https://github.com/nf-core/modules.git": {
             "modules": {
                 "nf-core": {
+                    "aria2": {
+                        "branch": "master",
+                        "git_sha": "5fde85e8f65546f1aa69b40bf8fc045c6e579a20",
+                        "patch": "modules/nf-core/aria2/aria2.diff"
+                    },
                     "checkm/lineagewf": {
                         "branch": "master",
                         "git_sha": "622378fed9af12e02d7077472a21a19644aca9aa"

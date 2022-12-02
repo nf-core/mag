@@ -108,6 +108,7 @@ include { ANCIENT_DNA_ASSEMLY_VALIDATION } from '../subworkflows/local/ancient_d
 //
 // MODULE: Installed directly from nf-core/modules
 //
+include { ARIA2 as ARIA2_UNTAR                   } from '../modules/nf-core/aria2/main'
 include { FASTQC as FASTQC_RAW                   } from '../modules/nf-core/fastqc/main'
 include { FASTQC as FASTQC_TRIMMED               } from '../modules/nf-core/fastqc/main'
 include { FASTP                                  } from '../modules/nf-core/fastp/main'
@@ -150,8 +151,6 @@ if (params.busco_download_path) {
 
 if(params.checkm_db) {
     ch_checkm_db = file(params.checkm_db, checkIfExists: true)
-} else {
-    ch_checkm_db = []
 }
 
 if(params.centrifuge_db){
@@ -206,6 +205,14 @@ def busco_failed_bins = [:]
 workflow MAG {
 
     ch_versions = Channel.empty()
+
+    // Get checkM database if not supplied
+
+    if ( !params.checkm_db ) {
+        ARIA2_UNTAR ("https://data.ace.uq.edu.au/public/CheckM_databases/checkm_data_2015_01_16.tar.gz")
+        ch_checkm_db = ARIA2_UNTAR.out.downloaded_file
+     }
+
 
     //
     // SUBWORKFLOW: Read in samplesheet, validate and stage input files
