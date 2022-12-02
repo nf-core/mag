@@ -412,7 +412,7 @@ For each bin or refined bin the median sequencing depth is computed based on the
 
 </details>
 
-If the parameter `--save_busco_reference` is set, additionally the used BUSCO lineage datasets are stored in the output directy.
+If the parameter `--save_busco_reference` is set, additionally the used BUSCO lineage datasets are stored in the output directory.
 
 <details markdown="1">
 <summary>Output files</summary>
@@ -443,30 +443,20 @@ By default, nf-core/mag runs CheckM with the `check_lineage` workflow that place
 <summary>Output files</summary>
 
 - `GenomeBinning/QC/CheckM/`
-  - `[assembler]-[binner]-[sample/group].txt`: Detailed statistics about bins informing completeness and contamamination scores (output of `checkm qa`).
-  - `[assembler]-[binner]-[sample/group].tsv`: Overall summary file for completeness and contamination (output of `checkm lineage_wf`).
+  - `[assembler]-[binner]-[sample/group]_qa.txt`: Detailed statistics about bins informing completeness and contamamination scores (output of `checkm qa`). This should normally be your main file to use to evaluate your results.
+  - `[assembler]-[binner]-[sample/group]_wf.tsv`: Overall summary file for completeness and contamination (output of `checkm lineage_wf`).
   - `[assembler]-[binner]-[sample/group]/`: intermediate files for CheckM results, including CheckM generated annotations, log, lineage markers etc.
 
 </details>
 
-If the parameter `--save_busco_reference` is set, additionally the used BUSCO lineage datasets are stored in the output directy.
+If the parameter `--save_checkm_reference` is set, additionally the used the CheckM reference datasets are stored in the output directory.
 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `GenomeBinning/QC/BUSCO/`
-  - `busco_downloads/`: All files and lineage datasets downloaded by BUSCO when run in automated lineage selection mode. (Can currently not be used to reproduce analysis, see the [nf-core/mag website documentation](https://nf-co.re/mag/usage#reproducibility) how to achieve reproducible BUSCO results).
-  - `reference/*.tar.gz`: BUSCO reference lineage dataset that was provided via `--busco_reference`.
-
-</details>
-
-Besides the reference files or output files created by BUSCO, the following summary files will be generated:
-
-<details markdown="1">
-<summary>Output files</summary>
-
-- `GenomeBinning/QC/`
-  - `busco_summary.tsv`: A summary table of the BUSCO results, with % of marker genes found. If run in automated lineage selection mode, both the results for the selected domain and for the selected more specific lineage will be given, if available.
+- `GenomeBinning/QC/CheckM/`
+  - `checkm_downloads/`: All CheckM reference files downloaded from the CheckM FTP server, when not supplied by the user.
+    - `checkm_data_2015_01_16/*`: a range of directories and files required for CheckM to run.
 
 </details>
 

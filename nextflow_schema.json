@@ -635,7 +635,7 @@
                     "type": "string",
                     "default": "None",
                     "description": "Path to local folder containing already downloaded and uncompressed CheckM database. Recommended to prevent re-download for every sample.",
-                    "help_text": "It is highly recommended to download the CheckM database and use this parameter, otherwise if CheckM detects the database is missing, it will attempt to download the database within _every_ CheckM process.\n\nThis can be downloaded as per the [CheckM documentation](https://github.com/Ecogenomics/CheckM/wiki/Installation#required-reference-data)"
+                    "help_text": "It is highly recommended to download the CheckM database yourself and use this parameter. This can be downloaded as per the [CheckM documentation](https://github.com/Ecogenomics/CheckM/wiki/Installation#required-reference-data). \n\nHowever, the pipeline can also download this for you if not specified, and you can save the resulting directory into your output directory by specifying `--save_checkm_data`. You should move this directory to somewhere else on your machine (and supply back to the pipeline in future runs again with `--checkm_db`."
                 },
                 "refine_bins_dastool": {
                     "type": "boolean",
@@ -653,6 +653,11 @@
                     "description": "Specify which binning output is sent for downstream annotation, taxonomic classification, bin quality control etc.",
                     "help_text": "`raw_bins_only`: only bins (and unbinned contigs) from the binners.\n`refined_bins_only`:  only bins (and unbinned contigs) from the bin refinement step .\n`both`: bins and unbinned contigs from both the binning and bin refinement steps.",
                     "enum": ["raw_bins_only", "refined_bins_only", "both"]
+                },
+                "save_checkm_data": {
+                    "type": "boolean",
+                    "description": "Save the used CheckM reference files downloaded when not using --checkm_db parameter.",
+                    "help_text": "If specified, the directories and files decompressed from the `tar.gz` file downloaded from the [CheckM FTP server](https://data.ace.uq.edu.au/public/CheckM_databases/) will be stored in your output directory alongside your CheckM results."
                 }
             }
         },
