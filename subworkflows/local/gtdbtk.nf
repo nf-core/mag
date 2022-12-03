@@ -43,9 +43,9 @@ workflow GTDBTK {
         ch_bin_metrics = checkm_summary
             .splitCsv(header: true, sep: '\t')
             .map { row ->
-                        def completeness  = row.'Completeness'
-                        def contamination = row.'Contamination'
-                        [row.'Bin Id', completeness, contamination]
+                        def completeness  = Double.parseDouble(row.'Completeness')
+                        def contamination = Double.parseDouble(row.'Contamination')
+                        [row.'Bin Id' + ".fa", completeness, contamination]
             }
     }
 
