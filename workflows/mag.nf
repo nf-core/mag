@@ -74,7 +74,7 @@ include { KRAKEN2_DB_PREPARATION                              } from '../modules
 include { KRAKEN2                                             } from '../modules/local/kraken2'
 include { KRONA_DB                                            } from '../modules/local/krona_db'
 include { KRONA                                               } from '../modules/local/krona'
-include { POOL_SINGLE_READS                                   } from '../modules/local/pool_single_reads'
+include { POOL_SINGLE_READS as POOL_SHORT_SINGLE_READS        } from '../modules/local/pool_single_reads'
 include { POOL_PAIRED_READS                                   } from '../modules/local/pool_paired_reads'
 include { POOL_SINGLE_READS as POOL_LONG_READS                } from '../modules/local/pool_single_reads'
 include { MEGAHIT                                             } from '../modules/local/megahit'
@@ -433,8 +433,8 @@ workflow MAG {
         // short reads
         if (!params.single_end && (!params.skip_spades || !params.skip_spadeshybrid)){
             if (params.single_end){
-                POOL_SINGLE_READS ( ch_short_reads_grouped )
-                ch_short_reads_spades = POOL_SINGLE_READS.out.reads
+                POOL_SHORT_SINGLE_READS ( ch_short_reads_grouped )
+                ch_short_reads_spades = POOL_SHORT_SINGLE_READS.out.reads
             } else {
                 POOL_PAIRED_READS ( ch_short_reads_grouped )
                 ch_short_reads_spades = POOL_PAIRED_READS.out.reads
