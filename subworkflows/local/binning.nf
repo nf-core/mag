@@ -117,7 +117,7 @@ workflow BINNING {
                                     bams: [ meta, bams, bais ]
                             }
 
-        FASTA_BINNING_CONCOCT ( ch_concoct_input ) // TODO UPDATE MODULE TO GZIP OUTPUT!
+        FASTA_BINNING_CONCOCT ( ch_concoct_input )
         ch_final_bins_for_gunzip = ch_final_bins_for_gunzip.mix( FASTA_BINNING_CONCOCT.out.bins.transpose() )
         ch_binning_results_gzipped_final = ch_binning_results_gzipped_final.mix( FASTA_BINNING_CONCOCT.out.bins )
         ch_versions = ch_versions.mix(FASTA_BINNING_CONCOCT.out.versions)
