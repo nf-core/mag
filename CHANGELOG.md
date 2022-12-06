@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Added`
 
 - [#353](https://github.com/nf-core/mag/pull/353) - Added the busco_clean parameter to optionally clean each BUSCO directory after a successful
+- [#353](https://github.com/nf-core/mag/pull/339) - Adds CONCOCT as an additional (optional) binning tool
 
 ### `Changed`
 
