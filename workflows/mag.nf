@@ -86,6 +86,7 @@ include { QUAST_BINS_SUMMARY                                  } from '../modules
 include { CAT_DB                                              } from '../modules/local/cat_db'
 include { CAT_DB_GENERATE                                     } from '../modules/local/cat_db_generate'
 include { CAT                                                 } from '../modules/local/cat'
+include { CAT_SUMMARY                                         } from "../modules/local/cat_summary"
 include { BIN_SUMMARY                                         } from '../modules/local/bin_summary'
 include { COMBINE_TSV                                         } from '../modules/local/combine_tsv'
 include { MULTIQC                                             } from '../modules/local/multiqc'
@@ -636,7 +637,11 @@ workflow MAG {
             ch_input_for_postbinning_bins,
             ch_cat_db
         )
+        CAT_SUMMARY(
+            CAT.out.tax_classification.collect()
+        )
         ch_versions = ch_versions.mix(CAT.out.versions.first())
+        ch_versions = ch_versions.mix(CAT_SUMMARY.out.versions.first())
 
         /*
          * GTDB-tk: taxonomic classifications using GTDB reference
