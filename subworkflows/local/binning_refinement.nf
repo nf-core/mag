@@ -42,7 +42,7 @@ workflow BINNING_REFINEMENT {
                                         .branch {
                                             metabat2: it[0]['binner'] == 'MetaBAT2'
                                             maxbin2:  it[0]['binner'] == 'MaxBin2'
-                                            concoct: it[0]['binner'] == 'CONCOCT'
+                                            concoct:  it[0]['binner'] == 'CONCOCT'
                                         }
 
     // Generate DASTool auxilary files
