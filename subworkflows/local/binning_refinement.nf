@@ -65,9 +65,6 @@ workflow BINNING_REFINEMENT {
                                     }
                                     .groupTuple(by: 0)
                                     .dump(tag: "fastatocontigbin_for_dastool")
-                                    // TODO: contigs names might be truncated? https://github.com/cmks/DAS_Tool/issues/78#issuecomment-1086543966
-                                    // Error: Contigs of contig2bin files not found in assembly: 36
-                                    // /home/jfellows/Documents/git/nf-core/mag/testing/work/77/89fbe4f1d985f06ebfac3816b87560
 
     ch_input_for_dastool = ch_contigs_for_dastool.join(ch_fastatocontig2bin_for_dastool, by: 0, failOnMismatch: true)
 
