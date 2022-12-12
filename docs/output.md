@@ -357,7 +357,7 @@ Note that CONCOCT does not output what it considers 'unbinned' contigs, therefor
 
 DAS Tool will remove contigs from bins that do not pass additional filtering criteria, and will discard redundant lower-quality output from binners that represent the same estimated 'organism', until the single highest quality bin is represented.
 
-> ⚠️ If DAS Tool does not find any bins passing your selected threshold it will exit with an error files. Such an error is 'ignored' by nf-core/mag, therefore you will not find files in the `GenomeBinning/DASTool/` results directory for that particular sample.
+> ⚠️ If DAS Tool does not find any bins passing your selected threshold it will exit with an error. Such an error is 'ignored' by nf-core/mag, therefore you will not find files in the `GenomeBinning/DASTool/` results directory for that particular sample.
 
 <details markdown="1">
 <summary>Output files</summary>
