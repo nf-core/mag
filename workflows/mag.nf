@@ -35,9 +35,6 @@ for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true
 // Check mandatory parameters
 if (params.input) { ch_input = file(params.input) } else { exit 1, 'Input samplesheet not specified!' }
 
-// Check MetaBAT2 inputs
-if ( !params.skip_metabat2 && params.min_contig_size < 1500 ) log.warn("Specified min. contig size under minimum for MetaBAT2. MetaBAT2 will be run with 1500 (other binners not affected). You supplied: --min_contig_size ${params.min_contig_size}")
-
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     CONFIG FILES
@@ -561,7 +558,8 @@ workflow MAG {
         * DAS Tool: binning refinement
         */
 
-        if ( params.refine_bins_dastool && !params.skip_metabat2 && !params.skip_maxbin2 ) {
+        // If any two of the binners are both skipped at once, do not run because DAS_Tool needs at least one
+        if ( params.refine_bins_dastool ) {
 
             BINNING_REFINEMENT ( BINNING_PREPARATION.out.grouped_mappings, BINNING.out.bins, BINNING.out.metabat2depths, ch_short_reads )
             ch_versions = ch_versions.mix(BINNING_REFINEMENT.out.versions)
@@ -580,6 +578,7 @@ workflow MAG {
                 ch_combinedepthtsvs_for_binsummary   = BINNING.out.depths_summary.mix(BINNING_REFINEMENT.out.refined_depths_summary)
                 ch_input_for_binsummary              = COMBINE_TSV ( ch_combinedepthtsvs_for_binsummary.collect() ).combined
             }
+
         } else {
                 ch_input_for_postbinning_bins        = BINNING.out.bins
                 ch_input_for_postbinning_bins_unbins = BINNING.out.bins.mix(BINNING.out.unbinned)
@@ -725,15 +724,15 @@ workflow MAG {
     }
 
     MULTIQC (
-        ch_multiqc_files.collect().dump(tag: "1"),
-        ch_multiqc_custom_config.collect().ifEmpty([]).dump(tag: "2"),
-        FASTQC_RAW.out.zip.collect{it[1]}.ifEmpty([]).dump(tag: "3"),
-        FASTQC_TRIMMED.out.zip.collect{it[1]}.ifEmpty([]).dump(tag: "4"),
-        ch_bowtie2_removal_host_multiqc.collect{it[1]}.ifEmpty([]).dump(tag: "5"),
-        ch_quast_multiqc.collect().ifEmpty([]).dump(tag: "6"),
-        ch_bowtie2_assembly_multiqc.collect().ifEmpty([]).dump(tag: "7"),
-        ch_busco_multiqc.collect().ifEmpty([]).dump(tag: "8"),
-        ch_multiqc_readprep.collect().ifEmpty([]).dump(tag: "9"),
+        ch_multiqc_files.collect(),
+        ch_multiqc_custom_config.collect().ifEmpty([]),
+        FASTQC_RAW.out.zip.collect{it[1]}.ifEmpty([]),
+        FASTQC_TRIMMED.out.zip.collect{it[1]}.ifEmpty([]),
+        ch_bowtie2_removal_host_multiqc.collect{it[1]}.ifEmpty([]),
+        ch_quast_multiqc.collect().ifEmpty([]),
+        ch_bowtie2_assembly_multiqc.collect().ifEmpty([]),
+        ch_busco_multiqc.collect().ifEmpty([]),
+        ch_multiqc_readprep.collect().ifEmpty([])
     )
     multiqc_report = MULTIQC.out.report.toList()
     ch_versions    = ch_versions.mix(MULTIQC.out.versions)

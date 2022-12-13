@@ -5,17 +5,139 @@
         "https://github.com/nf-core/modules.git": {
             "modules": {
                 "nf-core": {
+                    "adapterremoval": {
+                        "branch": "master",
+                        "git_sha": "879d42c5e28661fe0a5e744c9e2c515868f9e08a",
+                        "installed_by": "modules"
+                    },
+                    "bcftools/consensus": {
+                        "branch": "master",
+                        "git_sha": "682f789f93070bd047868300dd018faf3d434e7c",
+                        "installed_by": "modules"
+                    },
+                    "bcftools/index": {
+                        "branch": "master",
+                        "git_sha": "682f789f93070bd047868300dd018faf3d434e7c",
+                        "installed_by": "modules"
+                    },
+                    "bcftools/view": {
+                        "branch": "master",
+                        "git_sha": "682f789f93070bd047868300dd018faf3d434e7c",
+                        "installed_by": "modules"
+                    },
+                    "concoct/concoct": {
+                        "branch": "master",
+                        "git_sha": "038be4287743ec3afd8fdf7eb06039d7407bb631",
+                        "installed_by": ["modules"]
+                    },
+                    "concoct/concoctcoveragetable": {
+                        "branch": "master",
+                        "git_sha": "89e8693515a236855b8479e9d1e419ba03a89280",
+                        "installed_by": ["modules"]
+                    },
+                    "concoct/cutupfasta": {
+                        "branch": "master",
+                        "git_sha": "7602cc61d54e452e4a6276548f9bbbaaa8716467",
+                        "installed_by": ["modules"]
+                    },
+                    "concoct/extractfastabins": {
+                        "branch": "master",
+                        "git_sha": "c7e2aed122bd7042e2c2720f06e692c7d71787b8",
+                        "installed_by": ["modules"]
+                    },
+                    "concoct/mergecutupclustering": {
+                        "branch": "master",
+                        "git_sha": "038be4287743ec3afd8fdf7eb06039d7407bb631",
+                        "installed_by": ["modules"]
+                    },
                     "custom/dumpsoftwareversions": {
                         "branch": "master",
-                        "git_sha": "8022c68e7403eecbd8ba9c49496f69f8c49d50f0"
+                        "git_sha": "8022c68e7403eecbd8ba9c49496f69f8c49d50f0",
+                        "installed_by": ["modules"]
+                    },
+                    "dastool/dastool": {
+                        "branch": "master",
+                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905",
+                        "installed_by": "modules"
+                    },
+                    "dastool/fastatocontig2bin": {
+                        "branch": "master",
+                        "git_sha": "90aef30f432332bdf0ce9f4b9004aa5d5c4960bb",
+                        "installed_by": "modules"
+                    },
+                    "fastp": {
+                        "branch": "master",
+                        "git_sha": "2c70c1c1951aaf884d2e8d8d9c871db79f7b35aa",
+                        "installed_by": "modules"
                     },
                     "fastqc": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905",
+                        "installed_by": ["modules"]
+                    },
+                    "freebayes": {
+                        "branch": "master",
+                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905",
+                        "installed_by": "modules"
+                    },
+                    "gunzip": {
+                        "branch": "master",
+                        "git_sha": "90aef30f432332bdf0ce9f4b9004aa5d5c4960bb",
+                        "installed_by": "modules"
+                    },
+                    "maxbin2": {
+                        "branch": "master",
+                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905",
+                        "installed_by": "modules"
+                    },
+                    "metabat2/jgisummarizebamcontigdepths": {
+                        "branch": "master",
+                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905",
+                        "installed_by": "modules"
+                    },
+                    "metabat2/metabat2": {
+                        "branch": "master",
+                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905",
+                        "installed_by": "modules"
                     },
                     "multiqc": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905",
+                        "installed_by": ["modules"]
+                    },
+                    "prodigal": {
+                        "branch": "master",
+                        "git_sha": "90aef30f432332bdf0ce9f4b9004aa5d5c4960bb",
+                        "installed_by": "modules"
+                    },
+                    "prokka": {
+                        "branch": "master",
+                        "git_sha": "ec22f9a9079bd93ff8ec152349ead5f684edeb9f",
+                        "installed_by": "modules"
+                    },
+                    "pydamage/analyze": {
+                        "branch": "master",
+                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905",
+                        "installed_by": "modules"
+                    },
+                    "pydamage/filter": {
+                        "branch": "master",
+                        "git_sha": "90aef30f432332bdf0ce9f4b9004aa5d5c4960bb",
+                        "installed_by": "modules"
+                    },
+                    "samtools/faidx": {
+                        "branch": "master",
+                        "git_sha": "3eb99152cedbb7280258858e5df08478a4670696",
+                        "installed_by": "modules"
+                    }
+                }
+            },
+            "subworkflows": {
+                "nf-core": {
+                    "fasta_binning_concoct": {
+                        "branch": "master",
+                        "git_sha": "038be4287743ec3afd8fdf7eb06039d7407bb631",
+                        "installed_by": ["subworkflows"]
                     }
                 }
             }
