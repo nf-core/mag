@@ -85,14 +85,15 @@ class WorkflowMag {
             }
         }
 
+        // Check MetaBAT2 inputs
+        if ( !params.skip_metabat2 && params.min_contig_size < 1500 ) {
+            log.warn "Specified min. contig size under minimum for MetaBAT2. MetaBAT2 will be run with 1500 (other binners not affected). You supplied: --min_contig_size ${params.min_contig_size}"
+        }
+
         // Check if at least two binners were applied in order to run DAS Tool for bin refinment
         // (needs to be adjusted in case additional binners are added)
-        if (params.refine_bins_dastool && params.skip_metabat2 ) {
-            log.error 'Both --refine_bins_dastool and --skip_metabat2 are specified! Invalid combination, bin refinement requires MetaBAT2 and MaxBin2 binning results.'
-            System.exit(1)
-        }
-        if (params.refine_bins_dastool && params.skip_maxbin2 ) {
-            log.error 'Both --refine_bins_dastool and --skip_maxbin2 are specified! Invalid combination, bin refinement requires MetaBAT2 and MaxBin2 binning results.'
+        if ( params.refine_bins_dastool && [ params.skip_metabat2, params.skip_maxbin2, params.skip_concoct ].count(false) <= 1 ) {
+            log.error 'Bin refinement with --refine_bins_dastool requires at least two binners to be running (not skipped). Check input.'
             System.exit(1)
         }
 

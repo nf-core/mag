@@ -35,9 +35,6 @@ for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true
 // Check mandatory parameters
 if (params.input) { ch_input = file(params.input) } else { exit 1, 'Input samplesheet not specified!' }
 
-// Check MetaBAT2 inputs
-if ( !params.skip_metabat2 && params.min_contig_size < 1500 ) log.warn("Specified min. contig size under minimum for MetaBAT2. MetaBAT2 will be run with 1500 (other binners not affected). You supplied: --min_contig_size ${params.min_contig_size}")
-
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     CONFIG FILES
@@ -562,7 +559,7 @@ workflow MAG {
         */
 
         // If any two of the binners are both skipped at once, do not run because DAS_Tool needs at least one
-        if ( params.refine_bins_dastool && !( ( params.skip_metabat2 && params.skip_maxbin2 ) || ( params.skip_metabat2 && params.skip_concoct ) || ( params.skip_maxbin2 && params.skip_concoct ) ) ) {
+        if ( params.refine_bins_dastool ) {
 
             BINNING_REFINEMENT ( BINNING_PREPARATION.out.grouped_mappings, BINNING.out.bins, BINNING.out.metabat2depths, ch_short_reads )
             ch_versions = ch_versions.mix(BINNING_REFINEMENT.out.versions)
@@ -581,6 +578,7 @@ workflow MAG {
                 ch_combinedepthtsvs_for_binsummary   = BINNING.out.depths_summary.mix(BINNING_REFINEMENT.out.refined_depths_summary)
                 ch_input_for_binsummary              = COMBINE_TSV ( ch_combinedepthtsvs_for_binsummary.collect() ).combined
             }
+
         } else {
                 ch_input_for_postbinning_bins        = BINNING.out.bins
                 ch_input_for_postbinning_bins_unbins = BINNING.out.bins.mix(BINNING.out.unbinned)
