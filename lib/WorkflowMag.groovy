@@ -90,9 +90,9 @@ class WorkflowMag {
             log.warn "Specified min. contig size under minimum for MetaBAT2. MetaBAT2 will be run with 1500 (other binners not affected). You supplied: --min_contig_size ${params.min_contig_size}"
         }
 
-        // Check if at least two binners were applied in order to run DAS Tool for bin refinment
-        // (needs to be adjusted in case additional binners are added)
-        if ( params.refine_bins_dastool && [ params.skip_metabat2, params.skip_maxbin2, params.skip_concoct ].count(false) <= 1 ) {
+        // Check more than one binner is run for bin refinement  (required DAS by Tool)
+        // If the number of run binners (i.e., number of not-skipped) is more than one, otherwise throw an error
+        if ( params.refine_bins_dastool && !([ params.skip_metabat2, params.skip_maxbin2, params.skip_concoct ].count(false) > 1) ) {
             log.error 'Bin refinement with --refine_bins_dastool requires at least two binners to be running (not skipped). Check input.'
             System.exit(1)
         }
