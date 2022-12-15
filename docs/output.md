@@ -331,11 +331,33 @@ All the files in this folder contain small and/or unbinned contigs that are not 
 
 Files in these two folders contain all contigs of an assembly.
 
+### CONCOCT
+
+[CONCOCT](https://github.com/BinPro/CONCOCT) performs unsupervised binning of metagenomic contigs by using nucleotide composition, coverage data in multiple samples and linkage data from paired end reads.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `GenomeBinning/CONCOCT/`
+  - `bins/[assembler]-[binner]-[sample/group].*.fa.gz`: Genome bins retrieved from input assembly
+  - `stats/[assembler]-[binner]-[sample/group].csv`: Table indicating which contig goes with which cluster bin.
+  - `stats/[assembler]-[binner]-[sample/group]*_gt1000.csv`: Various intermediate PCA statistics used for clustering.
+  - `stats/[assembler]-[binner]-[sample/group]_*.tsv`: Coverage statistics of each sub-contig cut up by CONOCOCT prior in an intermediate step prior to binning. Likely not useful in most cases.
+  - `stats/[assembler]-[binner]-[sample/group].log.txt`: CONCOCT execution log file.
+  - `stats/[assembler]-[binner]-[sample/group]_*.args`: List of arguments used in CONCOCT execution.
+  - </details>
+
+All the files and contigs in these folders will be assessed by QUAST and BUSCO.
+
+Note that CONCOCT does not output what it considers 'unbinned' contigs, therefore no 'discarded' contigs are produced here. You may still need to do your own manual curation of the resulting bins.
+
 ### DAS Tool
 
 [DAS Tool](https://github.com/cmks/DAS_Tool) is an automated binning refinement method that integrates the results of a flexible number of binning algorithms to calculate an optimized, non-redundant set of bins from a single assembly. nf-core/mag uses this tool to attempt to further improve bins based on combining the MetaBAT2 and MaxBin2 binning output, assuming sufficient quality is met for those bins.
 
 DAS Tool will remove contigs from bins that do not pass additional filtering criteria, and will discard redundant lower-quality output from binners that represent the same estimated 'organism', until the single highest quality bin is represented.
+
+> ⚠️ If DAS Tool does not find any bins passing your selected threshold it will exit with an error. Such an error is 'ignored' by nf-core/mag, therefore you will not find files in the `GenomeBinning/DASTool/` results directory for that particular sample.
 
 <details markdown="1">
 <summary>Output files</summary>

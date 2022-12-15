@@ -571,6 +571,10 @@
                     "type": "boolean",
                     "description": "Skip MaxBin2 Binning"
                 },
+                "skip_concoct": {
+                    "type": "boolean",
+                    "description": "Skip CONCOCT Binning"
+                },
                 "min_contig_size": {
                     "type": "integer",
                     "default": 1500,
