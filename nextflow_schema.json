@@ -367,6 +367,10 @@
                     "default": "${baseDir}/assets/data/GCA_002596845.1_ASM259684v1_genomic.fna.gz",
                     "description": "Genome reference used to remove Illumina PhiX contaminant reads.",
                     "hidden": true
+                },
+                "skip_clipping": {
+                    "type": "boolean",
+                    "description": "Skip read preprocessing using fastp or adapterremoval."
                 }
             }
         },
