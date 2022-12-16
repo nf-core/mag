@@ -218,43 +218,46 @@ workflow MAG {
         ch_raw_short_reads
     )
     ch_versions = ch_versions.mix(FASTQC_RAW.out.versions.first())
+    if ( !params.skip_clipping ) {
+        if ( params.clip_tool == 'fastp' ) {
+            ch_clipmerge_out = FASTP (
+                ch_raw_short_reads,
+                params.fastp_save_trimmed_fail,
+                []
+            )
+            ch_short_reads = FASTP.out.reads
+            ch_versions = ch_versions.mix(FASTP.out.versions.first())
 
-    if ( params.clip_tool == 'fastp' ) {
-        ch_clipmerge_out = FASTP (
-            ch_raw_short_reads,
-            params.fastp_save_trimmed_fail,
-            []
-        )
-        ch_short_reads = FASTP.out.reads
-        ch_versions = ch_versions.mix(FASTP.out.versions.first())
+        } else if ( params.clip_tool == 'adapterremoval' ) {
 
-    } else if ( params.clip_tool == 'adapterremoval' ) {
+            // due to strange output file scheme in AR2, have to manually separate
+            // SE/PE to allow correct pulling of reads after.
+            ch_adapterremoval_in = ch_raw_short_reads
+                .branch {
+                        single: it[0]['single_end']
+                        paired: !it[0]['single_end']
+                    }
 
-        // due to strange output file scheme in AR2, have to manually separate
-        // SE/PE to allow correct pulling of reads after.
-        ch_adapterremoval_in = ch_raw_short_reads
-            .branch {
-                    single: it[0]['single_end']
-                    paired: !it[0]['single_end']
+            ADAPTERREMOVAL_PE ( ch_adapterremoval_in.paired, [] )
+            ADAPTERREMOVAL_SE ( ch_adapterremoval_in.single, [] )
+
+            // pair1 and 2 come for PE data from separate output channels, so bring
+            // this back together again here
+            ch_adapterremoval_pe_out = Channel.empty()
+            ch_adapterremoval_pe_out = ADAPTERREMOVAL_PE.out.pair1_truncated
+                .join(ADAPTERREMOVAL_PE.out.pair2_truncated)
+                .map {
+                    [ it[0], [it[1], it[2]] ]
                 }
 
-        ADAPTERREMOVAL_PE ( ch_adapterremoval_in.paired, [] )
-        ADAPTERREMOVAL_SE ( ch_adapterremoval_in.single, [] )
+            ch_short_reads = Channel.empty()
+            ch_short_reads = ch_short_reads.mix(ADAPTERREMOVAL_SE.out.singles_truncated, ch_adapterremoval_pe_out)
 
-        // pair1 and 2 come for PE data from separate output channels, so bring
-        // this back together again here
-        ch_adapterremoval_pe_out = Channel.empty()
-        ch_adapterremoval_pe_out = ADAPTERREMOVAL_PE.out.pair1_truncated
-            .join(ADAPTERREMOVAL_PE.out.pair2_truncated)
-            .map {
-                [ it[0], [it[1], it[2]] ]
-            }
+            ch_versions = ch_versions.mix(ADAPTERREMOVAL_PE.out.versions.first(), ADAPTERREMOVAL_SE.out.versions.first())
 
-        ch_short_reads = Channel.empty()
-        ch_short_reads = ch_short_reads.mix(ADAPTERREMOVAL_SE.out.singles_truncated, ch_adapterremoval_pe_out)
-
-        ch_versions = ch_versions.mix(ADAPTERREMOVAL_PE.out.versions.first(), ADAPTERREMOVAL_SE.out.versions.first())
-
+        }
+    } else {
+        ch_short_reads = ch_raw_short_reads
     }
 
     if (params.host_fasta){
@@ -286,10 +289,12 @@ workflow MAG {
         ch_versions = ch_versions.mix(BOWTIE2_PHIX_REMOVAL_ALIGN.out.versions.first())
     }
 
-    FASTQC_TRIMMED (
-        ch_short_reads
-    )
-    ch_versions = ch_versions.mix(FASTQC_TRIMMED.out.versions)
+    if (!(params.keep_phix && params.skip_clipping && !(params.host_genome || params.host_fasta))) {
+        FASTQC_TRIMMED (
+            ch_short_reads
+        )
+        ch_versions = ch_versions.mix(FASTQC_TRIMMED.out.versions)
+    }
 
     /*
     ================================================================================
@@ -722,17 +727,24 @@ workflow MAG {
 
     ch_multiqc_readprep = Channel.empty()
 
-    if ( params.clip_tool == "fastp") {
-        ch_multiqc_readprep = ch_multiqc_readprep.mix(FASTP.out.json.collect{it[1]}.ifEmpty([]))
-    } else if ( params.clip_tool == "adapterremoval" ) {
-        ch_multiqc_readprep = ch_multiqc_readprep.mix(ADAPTERREMOVAL_PE.out.log.collect{it[1]}.ifEmpty([]), ADAPTERREMOVAL_SE.out.log.collect{it[1]}.ifEmpty([]))
+    if (!params.skip_clipping) {
+        if ( params.clip_tool == "fastp") {
+            ch_multiqc_readprep = ch_multiqc_readprep.mix(FASTP.out.json.collect{it[1]}.ifEmpty([]))
+        } else if ( params.clip_tool == "adapterremoval" ) {
+            ch_multiqc_readprep = ch_multiqc_readprep.mix(ADAPTERREMOVAL_PE.out.log.collect{it[1]}.ifEmpty([]), ADAPTERREMOVAL_SE.out.log.collect{it[1]}.ifEmpty([]))
+        }
+    }
+
+    ch_fastqc_trimmed_multiqc = Channel.empty()
+    if (!(params.keep_phix && params.skip_clipping && !(params.host_genome || params.host_fasta))) {
+        ch_fastqc_trimmed_multiqc = FASTQC_TRIMMED.out.zip.collect{it[1]}.ifEmpty([])
     }
 
     MULTIQC (
         ch_multiqc_files.collect(),
         ch_multiqc_custom_config.collect().ifEmpty([]),
         FASTQC_RAW.out.zip.collect{it[1]}.ifEmpty([]),
-        FASTQC_TRIMMED.out.zip.collect{it[1]}.ifEmpty([]),
+        ch_fastqc_trimmed_multiqc.collect().ifEmpty([]),
         ch_bowtie2_removal_host_multiqc.collect{it[1]}.ifEmpty([]),
         ch_quast_multiqc.collect().ifEmpty([]),
         ch_bowtie2_assembly_multiqc.collect().ifEmpty([]),
