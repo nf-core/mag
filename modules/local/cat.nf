@@ -20,7 +20,7 @@ process CAT {
     path "versions.yml"                    , emit: versions
 
     script:
-    def official_taxonomy = params.cat_official_taxonomy ? "--official_taxonomy" : ""
+    def official_taxonomy = params.cat_official_taxonomy ? "--only_official" : ""
     """
     CAT bins -b "bins/" -d database/ -t taxonomy/ -n "${task.cpus}" -s .fa --top 6 -o "${meta.assembler}-${meta.binner}-${meta.id}" --I_know_what_Im_doing
     CAT add_names -i "${meta.assembler}-${meta.binner}-${meta.id}.ORF2LCA.txt" -o "${meta.assembler}-${meta.binner}-${meta.id}.ORF2LCA.names.txt" -t taxonomy/ ${official_taxonomy}
