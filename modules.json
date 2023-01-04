@@ -7,7 +7,7 @@
                 "nf-core": {
                     "adapterremoval": {
                         "branch": "master",
-                        "git_sha": "879d42c5e28661fe0a5e744c9e2c515868f9e08a",
+                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
                         "installed_by": ["modules"]
                     },
                     "bcftools/consensus": {

@@ -241,17 +241,8 @@ workflow MAG {
             ADAPTERREMOVAL_PE ( ch_adapterremoval_in.paired, [] )
             ADAPTERREMOVAL_SE ( ch_adapterremoval_in.single, [] )
 
-            // pair1 and 2 come for PE data from separate output channels, so bring
-            // this back together again here
-            ch_adapterremoval_pe_out = Channel.empty()
-            ch_adapterremoval_pe_out = ADAPTERREMOVAL_PE.out.pair1_truncated
-                .join(ADAPTERREMOVAL_PE.out.pair2_truncated)
-                .map {
-                    [ it[0], [it[1], it[2]] ]
-                }
-
             ch_short_reads = Channel.empty()
-            ch_short_reads = ch_short_reads.mix(ADAPTERREMOVAL_SE.out.singles_truncated, ch_adapterremoval_pe_out)
+            ch_short_reads = ch_short_reads.mix(ADAPTERREMOVAL_SE.out.singles_truncated, ADAPTERREMOVAL_PE.out.paired_truncated)
 
             ch_versions = ch_versions.mix(ADAPTERREMOVAL_PE.out.versions.first(), ADAPTERREMOVAL_SE.out.versions.first())
 
@@ -731,7 +722,7 @@ workflow MAG {
         if ( params.clip_tool == "fastp") {
             ch_multiqc_readprep = ch_multiqc_readprep.mix(FASTP.out.json.collect{it[1]}.ifEmpty([]))
         } else if ( params.clip_tool == "adapterremoval" ) {
-            ch_multiqc_readprep = ch_multiqc_readprep.mix(ADAPTERREMOVAL_PE.out.log.collect{it[1]}.ifEmpty([]), ADAPTERREMOVAL_SE.out.log.collect{it[1]}.ifEmpty([]))
+            ch_multiqc_readprep = ch_multiqc_readprep.mix(ADAPTERREMOVAL_PE.out.settings.collect{it[1]}.ifEmpty([]), ADAPTERREMOVAL_SE.out.settings.collect{it[1]}.ifEmpty([]))
         }
     }
 
