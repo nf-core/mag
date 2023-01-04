@@ -27,12 +27,12 @@
                     },
                     "concoct/concoct": {
                         "branch": "master",
-                        "git_sha": "038be4287743ec3afd8fdf7eb06039d7407bb631",
+                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
                         "installed_by": ["fasta_binning_concoct"]
                     },
                     "concoct/concoctcoveragetable": {
                         "branch": "master",
-                        "git_sha": "89e8693515a236855b8479e9d1e419ba03a89280",
+                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
                         "installed_by": ["fasta_binning_concoct"]
                     },
                     "concoct/cutupfasta": {
@@ -42,12 +42,12 @@
                     },
                     "concoct/extractfastabins": {
                         "branch": "master",
-                        "git_sha": "c7e2aed122bd7042e2c2720f06e692c7d71787b8",
+                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
                         "installed_by": ["fasta_binning_concoct"]
                     },
                     "concoct/mergecutupclustering": {
                         "branch": "master",
-                        "git_sha": "038be4287743ec3afd8fdf7eb06039d7407bb631",
+                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
                         "installed_by": ["fasta_binning_concoct"]
                     },
                     "custom/dumpsoftwareversions": {
@@ -57,12 +57,12 @@
                     },
                     "dastool/dastool": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905",
+                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
                         "installed_by": ["modules"]
                     },
                     "dastool/fastatocontig2bin": {
                         "branch": "master",
-                        "git_sha": "90aef30f432332bdf0ce9f4b9004aa5d5c4960bb",
+                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
                         "installed_by": ["modules"]
                     },
                     "fastp": {
@@ -82,22 +82,22 @@
                     },
                     "gunzip": {
                         "branch": "master",
-                        "git_sha": "90aef30f432332bdf0ce9f4b9004aa5d5c4960bb",
+                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
                         "installed_by": ["modules"]
                     },
                     "maxbin2": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905",
+                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
                         "installed_by": ["modules"]
                     },
                     "metabat2/jgisummarizebamcontigdepths": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905",
+                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
                         "installed_by": ["modules"]
                     },
                     "metabat2/metabat2": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905",
+                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
                         "installed_by": ["modules"]
                     },
                     "multiqc": {
@@ -107,7 +107,7 @@
                     },
                     "prodigal": {
                         "branch": "master",
-                        "git_sha": "90aef30f432332bdf0ce9f4b9004aa5d5c4960bb",
+                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
                         "installed_by": ["modules"]
                     },
                     "prokka": {
@@ -117,12 +117,12 @@
                     },
                     "pydamage/analyze": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905",
+                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
                         "installed_by": ["modules"]
                     },
                     "pydamage/filter": {
                         "branch": "master",
-                        "git_sha": "90aef30f432332bdf0ce9f4b9004aa5d5c4960bb",
+                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
                         "installed_by": ["modules"]
                     },
                     "samtools/faidx": {
