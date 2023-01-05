@@ -222,6 +222,7 @@ workflow MAG {
         if ( params.clip_tool == 'fastp' ) {
             ch_clipmerge_out = FASTP (
                 ch_raw_short_reads,
+                [],
                 params.fastp_save_trimmed_fail,
                 []
             )
