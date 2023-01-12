@@ -302,8 +302,12 @@
                 "clip_tool": {
                     "type": "string",
                     "default": "fastp",
-                    "description": "Specify which adapter clipping tool to use. Options: 'fastp', 'adapterremoval'",
+                    "description": "Specify which adapter clipping tool to use.",
                     "enum": ["fastp", "adapterremoval"]
+                },
+                "clip_save_reads": {
+                    "type": "boolean",
+                    "description": "Specify to save the resulting clipped FASTQ files to --outdir."
                 },
                 "reads_minlength": {
                     "type": "integer",
@@ -651,7 +655,7 @@
                     "type": "number",
                     "default": 0.5,
                     "description": "Specify single-copy gene score threshold for bin refinement.",
-                    "help_text": "Score threshold for single-copy gene selection algorithm to keep selecting bins, with a value ranging from 0-1.\n\nFor description of scoring algorithm, see: Sieber, Christian M. K., et al. 2018. Nature Microbiology 3 (7): 836–43. https://doi.org/10.1038/s41564-018-0171-1.\n\n> Modifies DAS Tool parameter --score_threshold\n"
+                    "help_text": "Score threshold for single-copy gene selection algorithm to keep selecting bins, with a value ranging from 0-1.\n\nFor description of scoring algorithm, see: Sieber, Christian M. K., et al. 2018. Nature Microbiology 3 (7): 836\u201343. https://doi.org/10.1038/s41564-018-0171-1.\n\n> Modifies DAS Tool parameter --score_threshold\n"
                 },
                 "postbinning_input": {
                     "type": "string",
