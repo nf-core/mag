@@ -423,18 +423,15 @@
                     "description": "Genome reference used to remove ONT Lambda contaminant reads."
                 },
                 "save_lambdaremoved_reads": {
-                    "type": "string",
-                    "default": "false",
+                    "type": "boolean",
                     "description": "Specify to save input FASTQ files with lamba reads removed  to --outdir."
                 },
                 "save_porechop_reads": {
-                    "type": "string",
-                    "default": "false",
+                    "type": "boolean",
                     "description": "Specify to save the resulting clipped FASTQ files to --outdir."
                 },
                 "save_filtlong_reads": {
-                    "type": "string",
-                    "default": "false",
+                    "type": "boolean",
                     "description": "Specify to save the resulting length filtered FASTQ files to --outdir."
                 }
             }
