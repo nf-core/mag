@@ -15,7 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
-- [#340](https://github.com/nf-core/mag/pull/340),[#368](https://github.com/nf-core/mag/pull/368) - Update to nf-core 2.7.1 `TEMPLATE` (by @jfy133, @d4straub)
+- [#340](https://github.com/nf-core/mag/pull/340),[#368](https://github.com/nf-core/mag/pull/368),[#373](https://github.com/nf-core/mag/pull/373) - Update to nf-core 2.7.2 `TEMPLATE` (by @jfy133, @d4straub, @skrakau)
+- [#373](https://github.com/nf-core/mag/pull/373) - Removed parameter `--enable_conda`. Updated local modules to new conda syntax and updated nf-core modules (by @skrakau)
 
 ### `Fixed`
 
@@ -26,9 +27,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Dependencies`
 
-| Tool  | Previous version | New version |
-| ----- | ---------------- | ----------- |
-| BUSCO | 5.1.0            | 5.4.3       |
+| Tool      | Previous version | New version |
+| --------- | ---------------- | ----------- |
+| BUSCO     | 5.1.0            | 5.4.3       |
+| BCFtools  | 1.14             | 1.16        |
+| Freebayes | 1.3.5            | 1.3.6       |
+| SAMtools  | 1.15             | 1.16.1      |
 
 ## v2.2.1 - 2022/08/25
 
