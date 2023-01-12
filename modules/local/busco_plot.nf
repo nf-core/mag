@@ -1,7 +1,7 @@
 process BUSCO_PLOT {
     tag "${meta.assembler}-${meta.binner}-${meta.id}"
 
-    conda (params.enable_conda ? "bioconda::busco=5.1.0" : null)
+    conda "bioconda::busco=5.1.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/busco:5.1.0--py_1' :
         'quay.io/biocontainers/busco:5.1.0--py_1' }"
