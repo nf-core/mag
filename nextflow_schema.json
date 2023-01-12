@@ -165,6 +165,12 @@
                     "fa_icon": "fas fa-question-circle",
                     "hidden": true
                 },
+                "version": {
+                    "type": "boolean",
+                    "description": "Display version and exit.",
+                    "fa_icon": "fas fa-question-circle",
+                    "hidden": true
+                },
                 "publish_dir_mode": {
                     "type": "string",
                     "default": "copy",
@@ -206,7 +212,7 @@
                     "type": "string",
                     "description": "Incoming hook URL for messaging service",
                     "fa_icon": "fas fa-people-group",
-                    "help_text": "Incoming hook URL for messaging service. Currently, only MS Teams is supported.",
+                    "help_text": "Incoming hook URL for messaging service. Currently, MS Teams and Slack are supported.",
                     "hidden": true
                 },
                 "multiqc_config": {
@@ -246,12 +252,6 @@
                     "description": "Show all params when using `--help`",
                     "hidden": true,
                     "help_text": "By default, parameters set as _hidden_ in the schema are not shown on the command line when a user runs with `--help`. Specifying this option will tell the pipeline to show all parameters."
-                },
-                "enable_conda": {
-                    "type": "boolean",
-                    "description": "Run this workflow with Conda. You can also use '-profile conda' instead of providing this parameter.",
-                    "hidden": true,
-                    "fa_icon": "fas fa-bacon"
                 }
             }
         },
@@ -367,6 +367,10 @@
                     "default": "${baseDir}/assets/data/GCA_002596845.1_ASM259684v1_genomic.fna.gz",
                     "description": "Genome reference used to remove Illumina PhiX contaminant reads.",
                     "hidden": true
+                },
+                "skip_clipping": {
+                    "type": "boolean",
+                    "description": "Skip read preprocessing using fastp or adapterremoval."
                 }
             }
         },
@@ -442,6 +446,10 @@
                     "type": "boolean",
                     "description": "Save the CAT database generated when specified by `--cat_db_generate`.",
                     "help_text": "Useful to allow reproducibility, as old versions of prebuild CAT databases do not always remain accessible and underlying NCBI taxonomy and nr databases change."
+                },
+                "cat_official_taxonomy": {
+                    "type": "boolean",
+                    "description": "Only return official taxonomic ranks (Kingdom, Phylum, etc.) when running CAT."
                 },
                 "gtdb": {
                     "type": "string",
@@ -567,6 +575,10 @@
                     "type": "boolean",
                     "description": "Skip MaxBin2 Binning"
                 },
+                "skip_concoct": {
+                    "type": "boolean",
+                    "description": "Skip CONCOCT Binning"
+                },
                 "min_contig_size": {
                     "type": "integer",
                     "default": 1500,
@@ -645,7 +657,7 @@
                     "type": "number",
                     "default": 0.5,
                     "description": "Specify single-copy gene score threshold for bin refinement.",
-                    "help_text": "Score threshold for single-copy gene selection algorithm to keep selecting bins, with a value ranging from 0-1.\n\nFor description of scoring algorithm, see: Sieber, Christian M. K., et al. 2018. Nature Microbiology 3 (7): 836\u201343. https://doi.org/10.1038/s41564-018-0171-1.\n\n> Modifies DAS Tool parameter --score_threshold\n"
+                    "help_text": "Score threshold for single-copy gene selection algorithm to keep selecting bins, with a value ranging from 0-1.\n\nFor description of scoring algorithm, see: Sieber, Christian M. K., et al. 2018. Nature Microbiology 3 (7): 836–43. https://doi.org/10.1038/s41564-018-0171-1.\n\n> Modifies DAS Tool parameter --score_threshold\n"
                 },
                 "postbinning_input": {
                     "type": "string",
@@ -653,6 +665,11 @@
                     "description": "Specify which binning output is sent for downstream annotation, taxonomic classification, bin quality control etc.",
                     "help_text": "`raw_bins_only`: only bins (and unbinned contigs) from the binners.\n`refined_bins_only`:  only bins (and unbinned contigs) from the bin refinement step .\n`both`: bins and unbinned contigs from both the binning and bin refinement steps.",
                     "enum": ["raw_bins_only", "refined_bins_only", "both"]
+                },
+                "busco_clean": {
+                    "type": "boolean",
+                    "description": "Enable clean-up of temporary files created during BUSCO runs.",
+                    "help_text": "By default, BUSCO creates a large number of intermediate files every run. This may cause problems on some clusters which have file number limits in plate, particularly with large numbers of bins. Enabling this option cleans these files, reducing the total file count of the work directory."
                 },
                 "save_checkm_data": {
                     "type": "boolean",

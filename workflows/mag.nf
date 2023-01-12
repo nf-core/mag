@@ -71,7 +71,7 @@ include { KRAKEN2_DB_PREPARATION                              } from '../modules
 include { KRAKEN2                                             } from '../modules/local/kraken2'
 include { KRONA_DB                                            } from '../modules/local/krona_db'
 include { KRONA                                               } from '../modules/local/krona'
-include { POOL_SINGLE_READS                                   } from '../modules/local/pool_single_reads'
+include { POOL_SINGLE_READS as POOL_SHORT_SINGLE_READS        } from '../modules/local/pool_single_reads'
 include { POOL_PAIRED_READS                                   } from '../modules/local/pool_paired_reads'
 include { POOL_SINGLE_READS as POOL_LONG_READS                } from '../modules/local/pool_single_reads'
 include { MEGAHIT                                             } from '../modules/local/megahit'
@@ -83,6 +83,7 @@ include { QUAST_BINS_SUMMARY                                  } from '../modules
 include { CAT_DB                                              } from '../modules/local/cat_db'
 include { CAT_DB_GENERATE                                     } from '../modules/local/cat_db_generate'
 include { CAT                                                 } from '../modules/local/cat'
+include { CAT_SUMMARY                                         } from "../modules/local/cat_summary"
 include { BIN_SUMMARY                                         } from '../modules/local/bin_summary'
 include { COMBINE_TSV as COMBINE_SUMMARY_TSV                  } from '../modules/local/combine_tsv'
 include { MULTIQC                                             } from '../modules/local/multiqc'
@@ -231,43 +232,38 @@ workflow MAG {
         ch_raw_short_reads
     )
     ch_versions = ch_versions.mix(FASTQC_RAW.out.versions.first())
+    if ( !params.skip_clipping ) {
+        if ( params.clip_tool == 'fastp' ) {
+            ch_clipmerge_out = FASTP (
+                ch_raw_short_reads,
+                [],
+                params.fastp_save_trimmed_fail,
+                []
+            )
+            ch_short_reads = FASTP.out.reads
+            ch_versions = ch_versions.mix(FASTP.out.versions.first())
 
-    if ( params.clip_tool == 'fastp' ) {
-        ch_clipmerge_out = FASTP (
-            ch_raw_short_reads,
-            params.fastp_save_trimmed_fail,
-            []
-        )
-        ch_short_reads = FASTP.out.reads
-        ch_versions = ch_versions.mix(FASTP.out.versions.first())
+        } else if ( params.clip_tool == 'adapterremoval' ) {
 
-    } else if ( params.clip_tool == 'adapterremoval' ) {
+            // due to strange output file scheme in AR2, have to manually separate
+            // SE/PE to allow correct pulling of reads after.
+            ch_adapterremoval_in = ch_raw_short_reads
+                .branch {
+                        single: it[0]['single_end']
+                        paired: !it[0]['single_end']
+                    }
 
-        // due to strange output file scheme in AR2, have to manually separate
-        // SE/PE to allow correct pulling of reads after.
-        ch_adapterremoval_in = ch_raw_short_reads
-            .branch {
-                    single: it[0]['single_end']
-                    paired: !it[0]['single_end']
-                }
+            ADAPTERREMOVAL_PE ( ch_adapterremoval_in.paired, [] )
+            ADAPTERREMOVAL_SE ( ch_adapterremoval_in.single, [] )
 
-        ADAPTERREMOVAL_PE ( ch_adapterremoval_in.paired, [] )
-        ADAPTERREMOVAL_SE ( ch_adapterremoval_in.single, [] )
+            ch_short_reads = Channel.empty()
+            ch_short_reads = ch_short_reads.mix(ADAPTERREMOVAL_SE.out.singles_truncated, ADAPTERREMOVAL_PE.out.paired_truncated)
 
-        // pair1 and 2 come for PE data from separate output channels, so bring
-        // this back together again here
-        ch_adapterremoval_pe_out = Channel.empty()
-        ch_adapterremoval_pe_out = ADAPTERREMOVAL_PE.out.pair1_truncated
-            .join(ADAPTERREMOVAL_PE.out.pair2_truncated)
-            .map {
-                [ it[0], [it[1], it[2]] ]
-            }
+            ch_versions = ch_versions.mix(ADAPTERREMOVAL_PE.out.versions.first(), ADAPTERREMOVAL_SE.out.versions.first())
 
-        ch_short_reads = Channel.empty()
-        ch_short_reads = ch_short_reads.mix(ADAPTERREMOVAL_SE.out.singles_truncated, ch_adapterremoval_pe_out)
-
-        ch_versions = ch_versions.mix(ADAPTERREMOVAL_PE.out.versions.first(), ADAPTERREMOVAL_SE.out.versions.first())
-
+        }
+    } else {
+        ch_short_reads = ch_raw_short_reads
     }
 
     if (params.host_fasta){
@@ -299,10 +295,12 @@ workflow MAG {
         ch_versions = ch_versions.mix(BOWTIE2_PHIX_REMOVAL_ALIGN.out.versions.first())
     }
 
-    FASTQC_TRIMMED (
-        ch_short_reads
-    )
-    ch_versions = ch_versions.mix(FASTQC_TRIMMED.out.versions)
+    if (!(params.keep_phix && params.skip_clipping && !(params.host_genome || params.host_fasta))) {
+        FASTQC_TRIMMED (
+            ch_short_reads
+        )
+        ch_versions = ch_versions.mix(FASTQC_TRIMMED.out.versions)
+    }
 
     /*
     ================================================================================
@@ -444,8 +442,8 @@ workflow MAG {
         // short reads
         if (!params.single_end && (!params.skip_spades || !params.skip_spadeshybrid)){
             if (params.single_end){
-                POOL_SINGLE_READS ( ch_short_reads_grouped )
-                ch_short_reads_spades = POOL_SINGLE_READS.out.reads
+                POOL_SHORT_SINGLE_READS ( ch_short_reads_grouped )
+                ch_short_reads_spades = POOL_SHORT_SINGLE_READS.out.reads
             } else {
                 POOL_PAIRED_READS ( ch_short_reads_grouped )
                 ch_short_reads_spades = POOL_PAIRED_READS.out.reads
@@ -573,7 +571,8 @@ workflow MAG {
         * DAS Tool: binning refinement
         */
 
-        if ( params.refine_bins_dastool && !params.skip_metabat2 && !params.skip_maxbin2 ) {
+        // If any two of the binners are both skipped at once, do not run because DAS_Tool needs at least one
+        if ( params.refine_bins_dastool ) {
 
             BINNING_REFINEMENT ( BINNING_PREPARATION.out.grouped_mappings, BINNING.out.bins, BINNING.out.metabat2depths, ch_short_reads )
             ch_versions = ch_versions.mix(BINNING_REFINEMENT.out.versions)
@@ -592,6 +591,7 @@ workflow MAG {
                 ch_combinedepthtsvs_for_binsummary   = BINNING.out.depths_summary.mix(BINNING_REFINEMENT.out.refined_depths_summary)
                 ch_input_for_binsummary              = COMBINE_SUMMARY_TSV ( ch_combinedepthtsvs_for_binsummary.collect() ).combined
             }
+
         } else {
                 ch_input_for_postbinning_bins        = BINNING.out.bins
                 ch_input_for_postbinning_bins_unbins = BINNING.out.bins.mix(BINNING.out.unbinned)
@@ -671,7 +671,11 @@ workflow MAG {
             ch_input_for_postbinning_bins,
             ch_cat_db
         )
+        CAT_SUMMARY(
+            CAT.out.tax_classification.collect()
+        )
         ch_versions = ch_versions.mix(CAT.out.versions.first())
+        ch_versions = ch_versions.mix(CAT_SUMMARY.out.versions.first())
 
         /*
          * GTDB-tk: taxonomic classifications using GTDB reference
@@ -747,33 +751,39 @@ workflow MAG {
 
     MULTIQC (
         ch_multiqc_files.collect(),
-        ch_multiqc_config.collect().ifEmpty([]),
-        ch_multiqc_custom_config.collect().ifEmpty([]),
-        ch_multiqc_logo.collect().ifEmpty([])
+        ch_multiqc_config.toList(),
+        ch_multiqc_custom_config.toList(),
+        ch_multiqc_logo.toList()
     )
     */
 
     ch_multiqc_readprep = Channel.empty()
 
-    if ( params.clip_tool == "fastp") {
-        ch_multiqc_readprep = ch_multiqc_readprep.mix(FASTP.out.json.collect{it[1]}.ifEmpty([]))
-    } else if ( params.clip_tool == "adapterremoval" ) {
-        ch_multiqc_readprep = ch_multiqc_readprep.mix(ADAPTERREMOVAL_PE.out.log.collect{it[1]}.ifEmpty([]), ADAPTERREMOVAL_SE.out.log.collect{it[1]}.ifEmpty([]))
+    if (!params.skip_clipping) {
+        if ( params.clip_tool == "fastp") {
+            ch_multiqc_readprep = ch_multiqc_readprep.mix(FASTP.out.json.collect{it[1]}.ifEmpty([]))
+        } else if ( params.clip_tool == "adapterremoval" ) {
+            ch_multiqc_readprep = ch_multiqc_readprep.mix(ADAPTERREMOVAL_PE.out.settings.collect{it[1]}.ifEmpty([]), ADAPTERREMOVAL_SE.out.settings.collect{it[1]}.ifEmpty([]))
+        }
+    }
+
+    ch_fastqc_trimmed_multiqc = Channel.empty()
+    if (!(params.keep_phix && params.skip_clipping && !(params.host_genome || params.host_fasta))) {
+        ch_fastqc_trimmed_multiqc = FASTQC_TRIMMED.out.zip.collect{it[1]}.ifEmpty([])
     }
 
     MULTIQC (
         ch_multiqc_files.collect(),
         ch_multiqc_custom_config.collect().ifEmpty([]),
         FASTQC_RAW.out.zip.collect{it[1]}.ifEmpty([]),
-        FASTQC_TRIMMED.out.zip.collect{it[1]}.ifEmpty([]),
+        ch_fastqc_trimmed_multiqc.collect().ifEmpty([]),
         ch_bowtie2_removal_host_multiqc.collect{it[1]}.ifEmpty([]),
         ch_quast_multiqc.collect().ifEmpty([]),
         ch_bowtie2_assembly_multiqc.collect().ifEmpty([]),
         ch_busco_multiqc.collect().ifEmpty([]),
-        ch_multiqc_readprep.collect().ifEmpty([]),
+        ch_multiqc_readprep.collect().ifEmpty([])
     )
     multiqc_report = MULTIQC.out.report.toList()
-    ch_versions    = ch_versions.mix(MULTIQC.out.versions)
 }
 
 /*
@@ -788,7 +798,7 @@ workflow.onComplete {
     }
     NfcoreTemplate.summary(workflow, params, log, busco_failed_bins)
     if (params.hook_url) {
-        NfcoreTemplate.adaptivecard(workflow, params, summary_params, projectDir, log)
+        NfcoreTemplate.IM_notification(workflow, params, summary_params, projectDir, log)
     }
 }
 
