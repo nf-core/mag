@@ -368,6 +368,10 @@
                     "type": "boolean",
                     "description": "Save the read IDs of removed host reads."
                 },
+                "save_hostremoved_reads": {
+                    "type": "boolean",
+                    "description": "Specify to save input FASTQ files with host reads removed to --outdir."
+                },
                 "keep_phix": {
                     "type": "boolean",
                     "description": "Keep reads similar to the Illumina internal standard PhiX genome."
@@ -381,6 +385,10 @@
                 "skip_clipping": {
                     "type": "boolean",
                     "description": "Skip read preprocessing using fastp or adapterremoval."
+                },
+                "save_phixremoved_reads": {
+                    "type": "boolean",
+                    "description": "Specify to save input FASTQ files with phiX reads removed to --outdir."
                 }
             }
         },
@@ -419,6 +427,21 @@
                     "default": "${baseDir}/assets/data/GCA_000840245.1_ViralProj14204_genomic.fna.gz",
                     "hidden": true,
                     "description": "Genome reference used to remove ONT Lambda contaminant reads."
+                },
+                "save_lambdaremoved_reads": {
+                    "type": "string",
+                    "default": "false",
+                    "description": "Specify to save input FASTQ files with lamba reads removed  to --outdir."
+                },
+                "save_porechop_reads": {
+                    "type": "string",
+                    "default": "false",
+                    "description": "Specify to save the resulting clipped FASTQ files to --outdir."
+                },
+                "save_filtlong_reads": {
+                    "type": "string",
+                    "default": "false",
+                    "description": "Specify to save the resulting length filtered FASTQ files to --outdir."
                 }
             }
         },
