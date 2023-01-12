@@ -1,7 +1,7 @@
 process GTDBTK_CLASSIFY {
     tag "${meta.assembler}-${meta.binner}-${meta.id}"
 
-    conda (params.enable_conda ? "bioconda::gtdbtk=1.5.0" : null)
+    conda "bioconda::gtdbtk=1.5.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/gtdbtk:1.5.0--pyhdfd78af_0' :
         'quay.io/biocontainers/gtdbtk:1.5.0--pyhdfd78af_0' }"
