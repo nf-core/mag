@@ -651,8 +651,8 @@
                 "checkm_db": {
                     "type": "string",
                     "default": "None",
-                    "description": "Path to local folder containing already downloaded and uncompressed CheckM database. Recommended to prevent re-download for every sample.",
-                    "help_text": "It is highly recommended to download the CheckM database yourself and use this parameter. This can be downloaded as per the [CheckM documentation](https://github.com/Ecogenomics/CheckM/wiki/Installation#required-reference-data). \n\nHowever, the pipeline can also download this for you if not specified, and you can save the resulting directory into your output directory by specifying `--save_checkm_data`. You should move this directory to somewhere else on your machine (and supply back to the pipeline in future runs again with `--checkm_db`."
+                    "description": "Path to local folder containing already downloaded and uncompressed CheckM database.",
+                    "help_text": "The pipeline can also download this for you if not specified, and you can save the resulting directory into your output directory by specifying `--save_checkm_data`. You should move this directory to somewhere else on your machine (and supply back to the pipeline in future runs again with `--checkm_db`."
                 },
                 "save_checkm_data": {
                     "type": "boolean",

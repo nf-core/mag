@@ -12,7 +12,7 @@
                     },
                     "aria2": {
                         "branch": "master",
-                        "git_sha": "5fde85e8f65546f1aa69b40bf8fc045c6e579a20",
+                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/aria2/aria2.diff"
                     },
@@ -33,12 +33,12 @@
                     },
                     "checkm/lineagewf": {
                         "branch": "master",
-                        "git_sha": "622378fed9af12e02d7077472a21a19644aca9aa",
+                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
                         "installed_by": ["modules"]
                     },
                     "checkm/qa": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905",
+                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
                         "installed_by": ["modules"]
                     },
                     "concoct/concoct": {
