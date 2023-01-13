@@ -64,9 +64,10 @@ workflow BINNING_REFINEMENT {
                                             [ meta_new, fastatocontig2bin ]
                                     }
                                     .groupTuple(by: 0)
-                                    .dump(tag: "fastatocontigbin_for_dastool")
 
-    ch_input_for_dastool = ch_contigs_for_dastool.join(ch_fastatocontig2bin_for_dastool, by: 0, failOnMismatch: true)
+    // Note: do not `failOnMismatch` on join here, in some cases e.g. MAXBIN2 will fail if no bins, so cannot join!
+    // Only want to join for DAS_Tool on bins that 'exist'
+    ch_input_for_dastool = ch_contigs_for_dastool.join(ch_fastatocontig2bin_for_dastool, by: 0)
 
     ch_versions = ch_versions.mix(DASTOOL_FASTATOCONTIG2BIN_METABAT2.out.versions.first())
     ch_versions = ch_versions.mix(DASTOOL_FASTATOCONTIG2BIN_MAXBIN2.out.versions.first())

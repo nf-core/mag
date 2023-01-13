@@ -1,7 +1,7 @@
 process MEGAHIT {
     tag "$meta.id"
 
-    conda (params.enable_conda ? "bioconda::megahit=1.2.9" : null)
+    conda "bioconda::megahit=1.2.9"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/megahit:1.2.9--h2e03b76_1' :
         'quay.io/biocontainers/megahit:1.2.9--h2e03b76_1' }"

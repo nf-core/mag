@@ -8,14 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Added`
 
 - [#353](https://github.com/nf-core/mag/pull/353) - Added the busco_clean parameter to optionally clean each BUSCO directory after a successful
-- [#361](https://github.com/nf-core/mag/pull/361) - Added the skip_clipping parameter to skip read preprocessing with fastp or adapterremoval. Running the pipeline with skip_clipping, keep_phix and without specifying a host genome or fasta file skips the FASTQC_TRIMMED process.
+- [#361](https://github.com/nf-core/mag/pull/361) - Added the skip_clipping parameter to skip read preprocessing with fastp or adapterremoval. Running the pipeline with skip_clipping, keep_phix and without specifying a host genome or fasta file skips the FASTQC_TRIMMED process
 - [#365](https://github.com/nf-core/mag/pull/365) - Adds CONCOCT as an additional (optional) binning tool
 - [#366](https://github.com/nf-core/mag/pull/366) - Added CAT_SUMMARISE process and cat_official_taxonomy parameter.
 - [#372](https://github.com/nf-core/mag/pull/372) - Allow CAT_DB to take an extracted database as well as a tar.gz file.
 
 ### `Changed`
 
-- [#340](https://github.com/nf-core/mag/pull/340) - Update to nf-core 2.6.1 `TEMPLATE`
+- [#340](https://github.com/nf-core/mag/pull/340),[#368](https://github.com/nf-core/mag/pull/368),[#373](https://github.com/nf-core/mag/pull/373) - Update to nf-core 2.7.2 `TEMPLATE`
+- [#373](https://github.com/nf-core/mag/pull/373) - Removed parameter `--enable_conda`. Updated local modules to new conda syntax and updated nf-core modules.
 
 ### `Fixed`
 
@@ -26,9 +27,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Dependencies`
 
-| Tool  | Previous version | New version |
-| ----- | ---------------- | ----------- |
-| BUSCO | 5.1.0            | 5.4.3       |
+| Tool      | Previous version | New version |
+| --------- | ---------------- | ----------- |
+| BUSCO     | 5.1.0            | 5.4.3       |
+| BCFtools  | 1.14             | 1.16        |
+| Freebayes | 1.3.5            | 1.3.6       |
+| SAMtools  | 1.15             | 1.16.1      |
 
 ## v2.2.1 - 2022/08/25
 

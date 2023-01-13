@@ -1,7 +1,7 @@
 process PORECHOP {
     tag "$meta.id"
 
-    conda (params.enable_conda ? "bioconda::porechop=0.2.3_seqan2.1.1" : null)
+    conda "bioconda::porechop=0.2.3_seqan2.1.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/porechop:0.2.3_seqan2.1.1--py36h2d50403_3' :
         'quay.io/biocontainers/porechop:0.2.3_seqan2.1.1--py36h2d50403_3' }"
