@@ -299,7 +299,7 @@
                     "description": "Specify which adapter clipping tool to use.",
                     "enum": ["fastp", "adapterremoval"]
                 },
-                "clip_save_reads": {
+                "save_clipped_reads": {
                     "type": "boolean",
                     "description": "Specify to save the resulting clipped FASTQ files to --outdir."
                 },
