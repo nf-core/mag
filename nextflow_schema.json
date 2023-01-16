@@ -296,8 +296,12 @@
                 "clip_tool": {
                     "type": "string",
                     "default": "fastp",
-                    "description": "Specify which adapter clipping tool to use. Options: 'fastp', 'adapterremoval'",
+                    "description": "Specify which adapter clipping tool to use.",
                     "enum": ["fastp", "adapterremoval"]
+                },
+                "save_clipped_reads": {
+                    "type": "boolean",
+                    "description": "Specify to save the resulting clipped FASTQ files to --outdir."
                 },
                 "reads_minlength": {
                     "type": "integer",
@@ -358,6 +362,10 @@
                     "type": "boolean",
                     "description": "Save the read IDs of removed host reads."
                 },
+                "save_hostremoved_reads": {
+                    "type": "boolean",
+                    "description": "Specify to save input FASTQ files with host reads removed to --outdir."
+                },
                 "keep_phix": {
                     "type": "boolean",
                     "description": "Keep reads similar to the Illumina internal standard PhiX genome."
@@ -371,6 +379,10 @@
                 "skip_clipping": {
                     "type": "boolean",
                     "description": "Skip read preprocessing using fastp or adapterremoval."
+                },
+                "save_phixremoved_reads": {
+                    "type": "boolean",
+                    "description": "Specify to save input FASTQ files with phiX reads removed to --outdir."
                 }
             }
         },
@@ -409,6 +421,18 @@
                     "default": "${baseDir}/assets/data/GCA_000840245.1_ViralProj14204_genomic.fna.gz",
                     "hidden": true,
                     "description": "Genome reference used to remove ONT Lambda contaminant reads."
+                },
+                "save_lambdaremoved_reads": {
+                    "type": "boolean",
+                    "description": "Specify to save input FASTQ files with lamba reads removed  to --outdir."
+                },
+                "save_porechop_reads": {
+                    "type": "boolean",
+                    "description": "Specify to save the resulting clipped FASTQ files to --outdir."
+                },
+                "save_filtlong_reads": {
+                    "type": "boolean",
+                    "description": "Specify to save the resulting length filtered FASTQ files to --outdir."
                 }
             }
         },
@@ -459,7 +483,7 @@
                 },
                 "gtdbtk_min_completeness": {
                     "type": "number",
-                    "default": 50,
+                    "default": 50.0,
                     "description": "Min. bin completeness (in %) required to apply GTDB-tk classification.",
                     "help_text": "Completeness assessed with BUSCO analysis (100% - %Missing). Must be greater than 0 (min. 0.01) to avoid GTDB-tk errors. If too low, GTDB-tk classification results can be impaired due to not enough marker genes!",
                     "minimum": 0.01,
@@ -467,7 +491,7 @@
                 },
                 "gtdbtk_max_contamination": {
                     "type": "number",
-                    "default": 10,
+                    "default": 10.0,
                     "description": "Max. bin contamination (in %) allowed to apply GTDB-tk classification.",
                     "help_text": "Contamination approximated based on BUSCO analysis (%Complete and duplicated). If too high, GTDB-tk classification results can be impaired due to contamination!",
                     "minimum": 0,
@@ -475,7 +499,7 @@
                 },
                 "gtdbtk_min_perc_aa": {
                     "type": "number",
-                    "default": 10,
+                    "default": 10.0,
                     "description": "Min. fraction of AA (in %) in the MSA for bins to be kept.",
                     "minimum": 0,
                     "maximum": 100
@@ -489,7 +513,7 @@
                 },
                 "gtdbtk_pplacer_cpus": {
                     "type": "number",
-                    "default": 1,
+                    "default": 1.0,
                     "description": "Number of CPUs used for the by GTDB-Tk run tool pplacer.",
                     "help_text": "A low number of CPUs helps to reduce the memory required/reported by GTDB-Tk. See also the [GTDB-Tk documentation](https://ecogenomics.github.io/GTDBTk/faq.html#gtdb-tk-reaches-the-memory-limit-pplacer-crashes)."
                 },
@@ -667,7 +691,7 @@
                     "type": "number",
                     "default": 0.5,
                     "description": "Specify single-copy gene score threshold for bin refinement.",
-                    "help_text": "Score threshold for single-copy gene selection algorithm to keep selecting bins, with a value ranging from 0-1.\n\nFor description of scoring algorithm, see: Sieber, Christian M. K., et al. 2018. Nature Microbiology 3 (7): 836–43. https://doi.org/10.1038/s41564-018-0171-1.\n\n> Modifies DAS Tool parameter --score_threshold\n"
+                    "help_text": "Score threshold for single-copy gene selection algorithm to keep selecting bins, with a value ranging from 0-1.\n\nFor description of scoring algorithm, see: Sieber, Christian M. K., et al. 2018. Nature Microbiology 3 (7): 836\u201343. https://doi.org/10.1038/s41564-018-0171-1.\n\n> Modifies DAS Tool parameter --score_threshold\n"
                 },
                 "postbinning_input": {
                     "type": "string",
