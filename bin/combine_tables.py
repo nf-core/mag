@@ -49,7 +49,25 @@ def main(args=None):
         )  # assuming depths for all bins are given
 
     if args.checkm_summary:
-        use_columns = ["Bin Id", "Marker lineage", "# genomes", "# markers", "# marker sets", "Completeness", "Contamination", "Strain heterogeneity", "Coding density", "Translation table", "# predicted genes", "0", "1", "2", "3", "4", "5+"]
+        use_columns = [
+            "Bin Id",
+            "Marker lineage",
+            "# genomes",
+            "# markers",
+            "# marker sets",
+            "Completeness",
+            "Contamination",
+            "Strain heterogeneity",
+            "Coding density",
+            "Translation table",
+            "# predicted genes",
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5+",
+        ]
         checkm_results = pd.read_csv(args.checkm_summary, usecols=use_columns, sep="\t")
         checkm_results["Bin Id"] = checkm_results["Bin Id"] + ".fa"
         if not bins.equals(checkm_results["Bin Id"].sort_values().reset_index(drop=True)):
