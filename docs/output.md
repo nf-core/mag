@@ -468,6 +468,7 @@ By default, nf-core/mag runs CheckM with the `check_lineage` workflow that place
   - `[assembler]-[binner]-[sample/group]_qa.txt`: Detailed statistics about bins informing completeness and contamamination scores (output of `checkm qa`). This should normally be your main file to use to evaluate your results.
   - `[assembler]-[binner]-[sample/group]_wf.tsv`: Overall summary file for completeness and contamination (output of `checkm lineage_wf`).
   - `[assembler]-[binner]-[sample/group]/`: intermediate files for CheckM results, including CheckM generated annotations, log, lineage markers etc.
+  - `checkm_summary.tsv`: A summary table of the CheckM results for all bins (output of `checkm qa`).
 
 </details>
 
@@ -561,7 +562,7 @@ Whole genome annotation is the process of identifying features of interest in a 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `GenomeBinning/bin_summary.tsv`: Summary of bin sequencing depths together with BUSCO, QUAST and GTDB-Tk results, if at least one of the later was generated. This will also include refined bins if `--refine_bins_dastool` binning refinement is performed.
+- `GenomeBinning/bin_summary.tsv`: Summary of bin sequencing depths together with BUSCO, CheckM, QUAST and GTDB-Tk results, if at least one of the later was generated. This will also include refined bins if `--refine_bins_dastool` binning refinement is performed. Note that in contrast to the other tools, for CheckM the bin name given in the column "Bin Id" does not contain the ".fa" extension.
 
 </details>
 
