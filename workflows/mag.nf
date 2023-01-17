@@ -85,7 +85,7 @@ include { CAT_DB_GENERATE                                     } from '../modules
 include { CAT                                                 } from '../modules/local/cat'
 include { CAT_SUMMARY                                         } from "../modules/local/cat_summary"
 include { BIN_SUMMARY                                         } from '../modules/local/bin_summary'
-include { COMBINE_TSV                                         } from '../modules/local/combine_tsv'
+include { COMBINE_TSV as COMBINE_SUMMARY_TSV                  } from '../modules/local/combine_tsv'
 include { MULTIQC                                             } from '../modules/local/multiqc'
 
 //
@@ -96,6 +96,7 @@ include { BINNING_PREPARATION } from '../subworkflows/local/binning_preparation'
 include { BINNING             } from '../subworkflows/local/binning'
 include { BINNING_REFINEMENT  } from '../subworkflows/local/binning_refinement'
 include { BUSCO_QC            } from '../subworkflows/local/busco_qc'
+include { CHECKM_QC           } from '../subworkflows/local/checkm_qc'
 include { GTDBTK              } from '../subworkflows/local/gtdbtk'
 include { ANCIENT_DNA_ASSEMLY_VALIDATION } from '../subworkflows/local/ancient_dna'
 
@@ -108,6 +109,7 @@ include { ANCIENT_DNA_ASSEMLY_VALIDATION } from '../subworkflows/local/ancient_d
 //
 // MODULE: Installed directly from nf-core/modules
 //
+include { ARIA2 as ARIA2_UNTAR                   } from '../modules/nf-core/aria2/main'
 include { FASTQC as FASTQC_RAW                   } from '../modules/nf-core/fastqc/main'
 include { FASTQC as FASTQC_TRIMMED               } from '../modules/nf-core/fastqc/main'
 include { FASTP                                  } from '../modules/nf-core/fastp/main'
@@ -148,6 +150,10 @@ if (params.busco_download_path) {
     ch_busco_download_folder = Channel.empty()
 }
 
+if(params.checkm_db) {
+    ch_checkm_db = file(params.checkm_db, checkIfExists: true)
+}
+
 if(params.centrifuge_db){
     ch_centrifuge_db_file = Channel
         .value(file( "${params.centrifuge_db}" ))
@@ -179,7 +185,7 @@ if (!params.keep_lambda) {
         .value(file( "${params.lambda_reference}" ))
 }
 
-gtdb = params.skip_busco ? false : params.gtdb
+gtdb = params.skip_binqc ? false : params.gtdb
 if (gtdb) {
     ch_gtdb = Channel
         .value(file( "${gtdb}" ))
@@ -200,6 +206,14 @@ def busco_failed_bins = [:]
 workflow MAG {
 
     ch_versions = Channel.empty()
+
+    // Get checkM database if not supplied
+
+    if ( !params.checkm_db ) {
+        ARIA2_UNTAR ("https://data.ace.uq.edu.au/public/CheckM_databases/checkm_data_2015_01_16.tar.gz")
+        ch_checkm_db = ARIA2_UNTAR.out.downloaded_file
+     }
+
 
     //
     // SUBWORKFLOW: Read in samplesheet, validate and stage input files
@@ -506,6 +520,7 @@ workflow MAG {
 
     ch_bowtie2_assembly_multiqc = Channel.empty()
     ch_busco_summary            = Channel.empty()
+    ch_checkm_summary           = Channel.empty()
     ch_busco_multiqc            = Channel.empty()
 
 
@@ -574,7 +589,7 @@ workflow MAG {
                 ch_input_for_postbinning_bins        = BINNING.out.bins.mix(BINNING_REFINEMENT.out.refined_bins)
                 ch_input_for_postbinning_bins_unbins = BINNING.out.bins.mix(BINNING.out.unbinned,BINNING_REFINEMENT.out.refined_bins,BINNING_REFINEMENT.out.refined_unbins)
                 ch_combinedepthtsvs_for_binsummary   = BINNING.out.depths_summary.mix(BINNING_REFINEMENT.out.refined_depths_summary)
-                ch_input_for_binsummary              = COMBINE_TSV ( ch_combinedepthtsvs_for_binsummary.collect() ).combined
+                ch_input_for_binsummary              = COMBINE_SUMMARY_TSV ( ch_combinedepthtsvs_for_binsummary.collect() ).combined
             }
 
         } else {
@@ -583,15 +598,21 @@ workflow MAG {
                 ch_input_for_binsummary              = BINNING.out.depths_summary
         }
 
-        if (!params.skip_busco){
+        /*
+        * Bin QC subworkflows: for checking bin completeness with either BUSCO or CHECKM
+        */
+
+        // Results in: [ [meta], path_to_bin.fa ]
+        ch_input_bins_for_qc = ch_input_for_postbinning_bins_unbins.transpose()
+
+        if (!params.skip_binqc && params.binqc_tool == 'busco'){
             /*
             * BUSCO subworkflow: Quantitative measures for the assessment of genome assembly
             */
-            ch_input_bins_busco = ch_input_for_postbinning_bins_unbins.transpose()
             BUSCO_QC (
                 ch_busco_db_file,
                 ch_busco_download_folder,
-                ch_input_bins_busco
+                ch_input_bins_for_qc
             )
             ch_busco_summary = BUSCO_QC.out.summary
             ch_busco_multiqc = BUSCO_QC.out.multiqc
@@ -602,6 +623,23 @@ workflow MAG {
                 .splitCsv(sep: '\t')
                 .map { bin, error -> if (!bin.contains(".unbinned.")) busco_failed_bins[bin] = error }
         }
+
+        if (!params.skip_binqc && params.binqc_tool == 'checkm'){
+            /*
+            * CheckM subworkflow: Quantitative measures for the assessment of genome assembly
+            */
+            CHECKM_QC (
+                ch_input_bins_for_qc.groupTuple().dump(tag: "checkminput"),
+                ch_checkm_db
+            )
+            ch_checkm_summary = CHECKM_QC.out.summary
+
+            // TODO custom output parsing? Add to MultiQC?
+
+            ch_versions = ch_versions.mix(CHECKM_QC.out.versions.first())
+
+        }
+
 
         ch_quast_bins_summary = Channel.empty()
         if (!params.skip_quast){
@@ -647,16 +685,18 @@ workflow MAG {
             GTDBTK (
                 ch_input_for_postbinning_bins_unbins,
                 ch_busco_summary,
+                ch_checkm_summary,
                 ch_gtdb
             )
             ch_versions = ch_versions.mix(GTDBTK.out.versions.first())
             ch_gtdbtk_summary = GTDBTK.out.summary
         }
 
-        if (!params.skip_busco || !params.skip_quast || gtdb){
+        if ( ( !params.skip_binqc ) || !params.skip_quast || gtdb){
             BIN_SUMMARY (
                 ch_input_for_binsummary,
                 ch_busco_summary.ifEmpty([]),
+                ch_checkm_summary.ifEmpty([]),
                 ch_quast_bins_summary.ifEmpty([]),
                 ch_gtdbtk_summary.ifEmpty([])
             )

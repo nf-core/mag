@@ -2,12 +2,13 @@ process BIN_SUMMARY {
 
     conda "conda-forge::pandas=1.1.5"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/pandas:1.1.5' :
-        'quay.io/biocontainers/pandas:1.1.5' }"
+        'https://depot.galaxyproject.org/singularity/pandas:1.4.3' :
+        'quay.io/biocontainers/pandas:1.4.3' }"
 
     input:
     path(bin_depths)
     path(busco_sum)
+    path(checkm_sum)
     path(quast_sum)
     path(gtdbtk_sum)
 
@@ -17,11 +18,13 @@ process BIN_SUMMARY {
 
     script:
     def busco_summary  = busco_sum.sort().size() > 0 ?  "--busco_summary ${busco_sum}" : ""
+    def checkm_summary = checkm_sum.sort().size() > 0 ?  "--checkm_summary ${checkm_sum}" : ""
     def quast_summary  = quast_sum.sort().size() > 0 ?  "--quast_summary ${quast_sum}" : ""
     def gtdbtk_summary = gtdbtk_sum.sort().size() > 0 ? "--gtdbtk_summary ${gtdbtk_sum}" : ""
     """
     combine_tables.py --depths_summary ${bin_depths} \
                     $busco_summary \
+                    $checkm_summary \
                     $quast_summary \
                     $gtdbtk_summary \
                     --out bin_summary.tsv

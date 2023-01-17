@@ -434,7 +434,7 @@ For each bin or refined bin the median sequencing depth is computed based on the
 
 </details>
 
-If the parameter `--save_busco_reference` is set, additionally the used BUSCO lineage datasets are stored in the output directy.
+If the parameter `--save_busco_reference` is set, additionally the used BUSCO lineage datasets are stored in the output directory.
 
 <details markdown="1">
 <summary>Output files</summary>
@@ -454,6 +454,35 @@ Besides the reference files or output files created by BUSCO, the following summ
   - `busco_summary.tsv`: A summary table of the BUSCO results, with % of marker genes found. If run in automated lineage selection mode, both the results for the selected domain and for the selected more specific lineage will be given, if available.
 
 </details>
+
+### QC for metagenome assembled genomes with CheckM
+
+[CheckM](https://ecogenomics.github.io/CheckM/) CheckM provides a set of tools for assessing the quality of genomes recovered from isolates, single cells, or metagenomes. It provides robust estimates of genome completeness and contamination by using collocated sets of genes that are ubiquitous and single-copy within a phylogenetic lineage
+
+By default, nf-core/mag runs CheckM with the `check_lineage` workflow that places genome bins on a reference tree to define lineage-marker sets, to check for completeness and contamination based on lineage-specific marker genes. and then subsequently runs `qa` to generate the summary files.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `GenomeBinning/QC/CheckM/`
+  - `[assembler]-[binner]-[sample/group]_qa.txt`: Detailed statistics about bins informing completeness and contamamination scores (output of `checkm qa`). This should normally be your main file to use to evaluate your results.
+  - `[assembler]-[binner]-[sample/group]_wf.tsv`: Overall summary file for completeness and contamination (output of `checkm lineage_wf`).
+  - `[assembler]-[binner]-[sample/group]/`: intermediate files for CheckM results, including CheckM generated annotations, log, lineage markers etc.
+  - `checkm_summary.tsv`: A summary table of the CheckM results for all bins (output of `checkm qa`).
+
+</details>
+
+If the parameter `--save_checkm_reference` is set, additionally the used the CheckM reference datasets are stored in the output directory.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `GenomeBinning/QC/CheckM/`
+  - `checkm_downloads/`: All CheckM reference files downloaded from the CheckM FTP server, when not supplied by the user.
+    - `checkm_data_2015_01_16/*`: a range of directories and files required for CheckM to run.
+
+</details>
+
 ## Taxonomic classification of binned genomes
 
 ### CAT
@@ -533,7 +562,7 @@ Whole genome annotation is the process of identifying features of interest in a 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `GenomeBinning/bin_summary.tsv`: Summary of bin sequencing depths together with BUSCO, QUAST and GTDB-Tk results, if at least one of the later was generated. This will also include refined bins if `--refine_bins_dastool` binning refinement is performed.
+- `GenomeBinning/bin_summary.tsv`: Summary of bin sequencing depths together with BUSCO, CheckM, QUAST and GTDB-Tk results, if at least one of the later was generated. This will also include refined bins if `--refine_bins_dastool` binning refinement is performed. Note that in contrast to the other tools, for CheckM the bin name given in the column "Bin Id" does not contain the ".fa" extension.
 
 </details>
 

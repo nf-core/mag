@@ -104,17 +104,17 @@ class WorkflowMag {
         }
 
         // Check if BUSCO parameters combinations are valid
-        if (params.skip_busco) {
+        if (params.skip_binqc && params.binqc_tool == 'busco') {
             if (params.busco_reference) {
-                log.error 'Both --skip_busco and --busco_reference are specified! Invalid combination, please specify either --skip_busco or --busco_reference.'
+                log.error 'Both --skip_binqc and --busco_reference are specified! Invalid combination, please specify either --skip_binqc or --binqc_tool \'busco\' with --busco_reference.'
                 System.exit(1)
             }
             if (params.busco_download_path) {
-                log.error 'Both --skip_busco and --busco_download_path are specified! Invalid combination, please specify either --skip_busco or --busco_download_path.'
+                log.error 'Both --skip_binqc and --busco_download_path are specified! Invalid combination, please specify either --skip_binqc or --binqc_tool \'busco\' with --busco_download_path.'
                 System.exit(1)
             }
             if (params.busco_auto_lineage_prok) {
-                log.error 'Both --skip_busco and --busco_auto_lineage_prok are specified! Invalid combination, please specify either --skip_busco or --busco_auto_lineage_prok.'
+                log.error 'Both --skip_binqc and --busco_auto_lineage_prok are specified! Invalid combination, please specify either --skip_binqc or --binqc_tool \'busco\' with --busco_auto_lineage_prok.'
                 System.exit(1)
             }
         }
@@ -127,8 +127,8 @@ class WorkflowMag {
             System.exit(1)
         }
 
-        if (params.skip_busco && params.gtdb) {
-            log.warn '--skip_busco and --gtdb are specified! GTDB-tk will be omitted because GTDB-tk bin classification requires bin filtering based on BUSCO QC results to avoid GTDB-tk errors.'
+        if (params.skip_binqc && params.gtdb) {
+            log.warn '--skip_binqc and --gtdb are specified! GTDB-tk will be omitted because GTDB-tk bin classification requires bin filtering based on BUSCO QC results to avoid GTDB-tk errors.'
         }
 
         // Check if CAT parameters are valid
