@@ -23,8 +23,7 @@ process MEGAHIT {
         """
         megahit $args -t "${task.cpus}" -m $mem $input -o MEGAHIT --out-prefix "MEGAHIT-${meta.id}"
 
-        ## Repair contig names to make Prokka (<37chars) DAS_Tool (no spaces) happy
-        cat "MEGAHIT/MEGAHIT-${meta.id}.contigs.fa" | sed '/>/s/ .*//g' | gzip > "MEGAHIT/MEGAHIT-${meta.id}.contigs.fa.gz"
+        gzip -c "MEGAHIT/MEGAHIT-${meta.id}.contigs.fa" > "MEGAHIT/MEGAHIT-${meta.id}.contigs.fa.gz"
 
         cat <<-END_VERSIONS > versions.yml
         "${task.process}":

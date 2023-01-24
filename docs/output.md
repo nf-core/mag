@@ -375,7 +375,7 @@ DAS Tool will remove contigs from bins that do not pass additional filtering cri
 
 By default, only the raw bins (and unbinned contigs) from the actual binning methods, but not from the binning refinement with DAS Tool, will be used for downstream bin quality control, annotation and taxonomic classification. The parameter `--postbinning_input` can be used to change this behaviour.
 
-⚠️ Due to ability to perform downstream QC of both raw and refined bins in parallel (via `--postbinning_input)`, bin names in DAS Tools's `*_allBins.eval` file will include `Refined`. However for this particular file, they _actually_ refer to the 'raw' input bins. The pipeline renames the input files prior to running DASTool to ensure they can be disambuguated from the original bin files in the downstream QC steps.
+⚠️ Due to ability to perform downstream QC of both raw and refined bins in parallel (via `--postbinning_input)`, bin names in DAS Tools's `*_allBins.eval` file will include `Refined`. However for this particular file, they _actually_ refer to the 'raw' input bins. The pipeline renames the input files prior to running DASTool to ensure they can be disambiguated from the original bin files in the downstream QC steps.
 
 ### Bin sequencing depth
 

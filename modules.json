@@ -73,12 +73,12 @@
                     },
                     "dastool/dastool": {
                         "branch": "master",
-                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
+                        "git_sha": "8ffb8ec8e49aafe43240b652147d70d56f150b3c",
                         "installed_by": ["modules"]
                     },
                     "dastool/fastatocontig2bin": {
                         "branch": "master",
-                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
+                        "git_sha": "8ffb8ec8e49aafe43240b652147d70d56f150b3c",
                         "installed_by": ["modules"]
                     },
                     "fastp": {
