@@ -16,12 +16,7 @@ if(hasExtension(params.input, "csv")){
         .from(file(params.input))
         .splitCsv(header: true)
         .map { row ->
-                if (row.size() == 5) {
                     if (row.long_reads) hybrid = true
-                } else {
-                    log.error "Input samplesheet contains row with ${row.size()} column(s). Expects 5."
-                    System.exit(1)
-                }
             }
 }
 
@@ -115,6 +110,7 @@ include { FASTQC as FASTQC_TRIMMED               } from '../modules/nf-core/fast
 include { FASTP                                  } from '../modules/nf-core/fastp/main'
 include { ADAPTERREMOVAL as ADAPTERREMOVAL_PE    } from '../modules/nf-core/adapterremoval/main'
 include { ADAPTERREMOVAL as ADAPTERREMOVAL_SE    } from '../modules/nf-core/adapterremoval/main'
+include { CAT_FASTQ                              } from '../modules/nf-core/cat/fastq/main'
 include { PRODIGAL                               } from '../modules/nf-core/prodigal/main'
 include { PROKKA                                 } from '../modules/nf-core/prokka/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS            } from '../modules/nf-core/custom/dumpsoftwareversions/main'
@@ -212,8 +208,7 @@ workflow MAG {
     if ( !params.checkm_db ) {
         ARIA2_UNTAR ("https://data.ace.uq.edu.au/public/CheckM_databases/checkm_data_2015_01_16.tar.gz")
         ch_checkm_db = ARIA2_UNTAR.out.downloaded_file
-     }
-
+    }
 
     //
     // SUBWORKFLOW: Read in samplesheet, validate and stage input files
@@ -240,7 +235,7 @@ workflow MAG {
                 params.fastp_save_trimmed_fail,
                 []
             )
-            ch_short_reads = FASTP.out.reads
+            ch_short_reads_prepped = FASTP.out.reads
             ch_versions = ch_versions.mix(FASTP.out.versions.first())
 
         } else if ( params.clip_tool == 'adapterremoval' ) {
@@ -256,14 +251,14 @@ workflow MAG {
             ADAPTERREMOVAL_PE ( ch_adapterremoval_in.paired, [] )
             ADAPTERREMOVAL_SE ( ch_adapterremoval_in.single, [] )
 
-            ch_short_reads = Channel.empty()
-            ch_short_reads = ch_short_reads.mix(ADAPTERREMOVAL_SE.out.singles_truncated, ADAPTERREMOVAL_PE.out.paired_truncated)
+            ch_short_reads_prepped = Channel.empty()
+            ch_short_reads_prepped = ch_short_reads.mix(ADAPTERREMOVAL_SE.out.singles_truncated, ADAPTERREMOVAL_PE.out.paired_truncated)
 
             ch_versions = ch_versions.mix(ADAPTERREMOVAL_PE.out.versions.first(), ADAPTERREMOVAL_SE.out.versions.first())
 
         }
     } else {
-        ch_short_reads = ch_raw_short_reads
+        ch_short_reads_prepped = ch_raw_short_reads
     }
 
     if (params.host_fasta){
@@ -275,12 +270,14 @@ workflow MAG {
     ch_bowtie2_removal_host_multiqc = Channel.empty()
     if (params.host_fasta || params.host_genome){
         BOWTIE2_HOST_REMOVAL_ALIGN (
-            ch_short_reads,
+            ch_short_reads_prepped,
             ch_host_bowtie2index
         )
-        ch_short_reads = BOWTIE2_HOST_REMOVAL_ALIGN.out.reads
+        ch_short_reads_hostremoved = BOWTIE2_HOST_REMOVAL_ALIGN.out.reads
         ch_bowtie2_removal_host_multiqc = BOWTIE2_HOST_REMOVAL_ALIGN.out.log
         ch_versions = ch_versions.mix(BOWTIE2_HOST_REMOVAL_ALIGN.out.versions.first())
+    } else {
+        ch_short_reads_hostremoved = ch_short_reads_prepped
     }
 
     if(!params.keep_phix) {
@@ -288,19 +285,44 @@ workflow MAG {
             ch_phix_db_file
         )
         BOWTIE2_PHIX_REMOVAL_ALIGN (
-            ch_short_reads,
+            ch_short_reads_hostremoved,
             BOWTIE2_PHIX_REMOVAL_BUILD.out.index
         )
-        ch_short_reads = BOWTIE2_PHIX_REMOVAL_ALIGN.out.reads
+        ch_short_reads_phixremoved = BOWTIE2_PHIX_REMOVAL_ALIGN.out.reads
         ch_versions = ch_versions.mix(BOWTIE2_PHIX_REMOVAL_ALIGN.out.versions.first())
+    } else {
+        ch_short_reads_phixremoved = ch_short_reads_hostremoved
     }
 
     if (!(params.keep_phix && params.skip_clipping && !(params.host_genome || params.host_fasta))) {
         FASTQC_TRIMMED (
-            ch_short_reads
+            ch_short_reads_phixremoved
         )
         ch_versions = ch_versions.mix(FASTQC_TRIMMED.out.versions)
     }
+
+    // Run/Lane merging
+
+    ch_short_reads_forcat = ch_short_reads_phixremoved
+        .map {
+            meta, reads ->
+                def meta_new = meta.clone()
+                meta_new.remove('run')
+            [ meta_new, reads ]
+        }
+        .groupTuple()
+        .dump()
+        .branch {
+            meta, reads ->
+                cat:       ( meta.single_end && reads.size() == 1 ) || ( !meta.single_end && reads.size() >= 2 )
+                skip_cat: true // Can skip merging if only single lanes
+        }
+
+        // TODO Failing because array list as reads into Kraken/SPADes; possibly nothing going to skip cat when it should?
+        CAT_FASTQ ( ch_short_reads_forcat.cat.map{ meta, reads -> [ meta, reads.flatten() ]}.dump(tag: "cat") )
+
+        ch_short_reads = Channel.empty()
+        ch_short_reads = CAT_FASTQ.out.reads.mix( ch_short_reads_forcat.skip_cat )
 
     /*
     ================================================================================
