@@ -668,7 +668,7 @@ workflow MAG {
             ch_cat_db = CAT_DB_GENERATE.out.db
         }
         CAT (
-            ch_input_for_postbinning_bins,
+            ch_input_for_postbinning_bins_unbins,
             ch_cat_db
         )
         CAT_SUMMARY(
