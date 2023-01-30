@@ -629,7 +629,7 @@ workflow MAG {
             * CheckM subworkflow: Quantitative measures for the assessment of genome assembly
             */
             CHECKM_QC (
-                ch_input_bins_for_qc.groupTuple().dump(tag: "checkminput"),
+                ch_input_bins_for_qc.groupTuple()
                 ch_checkm_db
             )
             ch_checkm_summary = CHECKM_QC.out.summary
