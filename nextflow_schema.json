@@ -458,8 +458,8 @@
                 },
                 "cat_db": {
                     "type": "string",
-                    "description": "Database for taxonomic classification of metagenome assembled genomes.",
-                    "help_text": "E.g. https://tbb.bio.uu.nl/bastiaan/CAT_prepare/CAT_prepare_20210107.tar.gz. This parameter is mutually exclusive with `--cat_db_generate`. The zipped file needs to contain a folder named `*taxonomy*` and `*database*` that hold the respective files."
+                    "description": "Database for taxonomic classification of metagenome assembled genomes. Can be either a zipped file or a directory containing the extracted output of such.",
+                    "help_text": "E.g. https://tbb.bio.uu.nl/bastiaan/CAT_prepare/CAT_prepare_20210107.tar.gz. This parameter is mutually exclusive with `--cat_db_generate`. The file needs to contain a folder named `*taxonomy*` and `*database*` that hold the respective files."
                 },
                 "cat_db_generate": {
                     "type": "boolean",
