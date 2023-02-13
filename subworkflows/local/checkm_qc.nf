@@ -23,7 +23,7 @@ workflow CHECKM_QC {
                                     }
 
     CHECKM_LINEAGEWF ( ch_bins_for_checkmlineagewf.reads, ch_bins_for_checkmlineagewf.ext, checkm_db )
-    ch_versions = ch_versions.mix(CHECKM_LINEAGEWF.out.versions)
+    ch_versions = ch_versions.mix(CHECKM_LINEAGEWF.out.versions.first())
 
     ch_checkmqa_input = CHECKM_LINEAGEWF.out.checkm_output
         .join(CHECKM_LINEAGEWF.out.marker_file)
@@ -33,7 +33,7 @@ workflow CHECKM_QC {
         }
 
     CHECKM_QA ( ch_checkmqa_input, [] )
-    ch_versions = ch_versions.mix(CHECKM_QA.out.versions)
+    ch_versions = ch_versions.mix(CHECKM_QA.out.versions.first())
 
     // TODO Check output files published correctly
 
