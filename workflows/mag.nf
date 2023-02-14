@@ -155,6 +155,12 @@ if(params.checkm_db) {
     ch_checkm_db = file(params.checkm_db, checkIfExists: true)
 }
 
+if (params.gunc_db) {
+    ch_gunc_db = file(params.gunc_db, checkIfExists: true)
+} else {
+    ch_gunc_db = Channel.empty()
+}
+
 if(params.centrifuge_db){
     ch_centrifuge_db_file = Channel
         .value(file( "${params.centrifuge_db}" ))

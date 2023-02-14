@@ -4,7 +4,7 @@
 
 include { GUNC_DOWNLOADDB   } from '../../modules/nf-core/gunc/downloaddb/main'
 include { GUNC_RUN          } from '../../modules/nf-core/gunc/run/main'
-include { GUNC_MERGECHECKM  } from '../../modules/nf-core/gunc/mergecheckm/combine_tsv'
+include { GUNC_MERGECHECKM  } from '../../modules/nf-core/gunc/mergecheckm'
 
 workflow GUNC_QC {
     take:
