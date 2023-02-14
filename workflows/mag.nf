@@ -98,7 +98,7 @@ include { BINNING_REFINEMENT  } from '../subworkflows/local/binning_refinement'
 include { BUSCO_QC            } from '../subworkflows/local/busco_qc'
 include { CHECKM_QC           } from '../subworkflows/local/checkm_qc'
 include { GTDBTK              } from '../subworkflows/local/gtdbtk'
-include { ANCIENT_DNA_ASSEMLY_VALIDATION } from '../subworkflows/local/ancient_dna'
+include { ANCIENT_DNA_ASSEMBLY_VALIDATION } from '../subworkflows/local/ancient_dna'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -537,8 +537,8 @@ workflow MAG {
     */
 
     if (params.ancient_dna){
-        ANCIENT_DNA_ASSEMLY_VALIDATION(BINNING_PREPARATION.out.grouped_mappings)
-        ch_versions = ch_versions.mix(ANCIENT_DNA_ASSEMLY_VALIDATION.out.versions.first())
+        ANCIENT_DNA_ASSEMBLY_VALIDATION(BINNING_PREPARATION.out.grouped_mappings)
+        ch_versions = ch_versions.mix(ANCIENT_DNA_ASSEMBLY_VALIDATION.out.versions.first())
     }
 
     /*
@@ -552,7 +552,7 @@ workflow MAG {
         if (params.ancient_dna) {
             BINNING (
                 BINNING_PREPARATION.out.grouped_mappings
-                    .join(ANCIENT_DNA_ASSEMLY_VALIDATION.out.contigs_recalled)
+                    .join(ANCIENT_DNA_ASSEMBLY_VALIDATION.out.contigs_recalled)
                     .map{ it -> [ it[0], it[4], it[2], it[3] ] }, // [meta, contigs_recalled, bam, bais]
                 ch_short_reads
             )
@@ -675,7 +675,7 @@ workflow MAG {
             CAT.out.tax_classification.collect()
         )
         ch_versions = ch_versions.mix(CAT.out.versions.first())
-        ch_versions = ch_versions.mix(CAT_SUMMARY.out.versions.first())
+        ch_versions = ch_versions.mix(CAT_SUMMARY.out.versions)
 
         /*
          * GTDB-tk: taxonomic classifications using GTDB reference
