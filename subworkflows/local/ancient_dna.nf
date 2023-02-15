@@ -6,7 +6,7 @@ include { PYDAMAGE_ANALYZE }                                                    
 include { PYDAMAGE_FILTER }                                                              from '../../modules/nf-core/pydamage/filter/main'
 include { SAMTOOLS_FAIDX as FAIDX}                                                       from '../../modules/nf-core/samtools/faidx/main'
 
-workflow ANCIENT_DNA_ASSEMLY_VALIDATION {
+workflow ANCIENT_DNA_ASSEMBLY_VALIDATION {
     take:
         input //channel: [val(meta), path(contigs), path(bam), path(bam_index)]
     main:
