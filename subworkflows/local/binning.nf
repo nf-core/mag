@@ -19,7 +19,6 @@ include { MAG_DEPTHS                            } from '../../modules/local/mag_
 include { MAG_DEPTHS_PLOT                       } from '../../modules/local/mag_depths_plot'          addParams( options: params.mag_depths_plot_options    )
 include { MAG_DEPTHS_SUMMARY                    } from '../../modules/local/mag_depths_summary'       addParams( options: params.mag_depths_summary_options )
 include { FASTA_BINNING_CONCOCT                 } from '../../subworkflows/nf-core/fasta_binning_concoct/main'
-include { DOMAIN_CLASSIFICATION                 } from '../../subworkflows/local/domain_classification.nf'
 
 /*
  * Get number of columns in file (first line)
@@ -191,16 +190,6 @@ workflow BINNING {
     // Group final binned contigs per sample for final output
     ch_binning_results_gunzipped_final = ch_binning_results_gunzipped.groupTuple(by: 0)
     ch_binning_results_gzipped_final   = ch_binning_results_gzipped_final.groupTuple(by: 0)
-
-    if ( params.bin_domain_classification ) {
-        ch_assemblies_for_tiara = assemblies
-        .map { meta, assembly, bams, bais ->
-                def meta_new = meta.clone()
-                [ meta_new, assembly ]
-            }
-
-        DOMAIN_CLASSIFICATION ( assemblies, ch_binning_results_gunzipped_final )
-    }
 
     emit:
     bins                                         = ch_binning_results_gunzipped_final

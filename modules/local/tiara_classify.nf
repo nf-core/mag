@@ -6,11 +6,15 @@ process TIARA_CLASSIFY {
         'quay.io/biocontainers/mulled-v2-1021c2bc41756fa99bc402f461dad0d1c35358c1:b0c847e4fb89c343b04036e33b2daa19c4152cf5-0' }"
 
     input:
-    tuple val(meta), path(classification), path(contig2bin)
+    tuple val(meta), path(classification), path(contig2bin), path(bins)
 
     output:
-    tuple val(meta), path("eukarya/*.fa") , emit: eukarya_bins, optional: true
-    tuple val(meta), path("prokarya/*.fa"), emit: prokarya_bins, optional: true
+    tuple val(meta), path("eukarya/*.fa"),   emit: eukarya_bins, optional: true
+    tuple val(meta), path("prokarya/*.fa"),  emit: prokarya_bins, optional: true
+    tuple val(meta), path("bacteria/*.fa"),  emit: bacteria_bins, optional: true
+    tuple val(meta), path("archaea/*.fa"),   emit: archaea_bins, optional: true
+    tuple val(meta), path("organelle/*.fa"), emit: organelle_bins, optional: true
+    tuple val(meta), path("unknown/*.fa"),   emit: unknown_bins, optional: true
 
     script:
     def args = task.ext.args ?: ""
@@ -21,5 +25,21 @@ process TIARA_CLASSIFY {
         --contig_to_bin ${contig2bin} \
         ${args} \
         --output_prefix ${prefix}
+
+    mkdir eukarya
+    mkdir prokarya
+    mkdir bacteria
+    mkdir archaea
+    mkdir organelle
+    mkdir unknown
+
+    while IFS=\$"\t" read bin domain; do
+        find -L . -name "\${bin}*" -exec mv {} \${domain}/ \\;
+    done < bin2classification.tsv
+
+    cat <<-END_VERSIONS > versions.yml
+        r-base: \$(R --version | head -n 1 | grep -Eo '[0-9.]+ ')
+        r-tidyverse: \$(cat tidyverse_version.txt)
+    END_VERSIONS
     """
 }

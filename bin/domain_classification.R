@@ -46,62 +46,75 @@ if(!(args$assembler %in% c("MEGAHIT", "SPAdes"))) {
     stop("Invalid assembler provided.")
 }
 
-classifications <- read_tsv(args$classification_file, na = c("NA", "n/a"))
-
-## DASTOOL_FASTATOCONTIG2BIN drops everything after a space in contig names, which MEGAHIT uses
-## Modify Tiara classifications contig IDs accordingly so we can merge
-if(args$assembler == "MEGAHIT"){
-    classifications$sequence_id <- str_split(classifications$sequence_id, " ", simplify = TRUE)[,1]
-}
-
-contig_to_bin <- read_tsv(args$contig_to_bin, col_names = c("sequence_id", "BinID"))
-
-## combination of left_join and filter collectively eliminate unclassified contigs
-classifications <- classifications |>
-    left_join(contig_to_bin) |>
-    filter(!is.na(BinID)) |>
-    select(sequence_id,
-            BinID,
-            Archaea = arc,
-            Bacteria = bac,
-            Eukarya = euk,
-            Organelle = org,
-            Unknown = unk1)
-
-if(args$join_prokaryotes) {
-    classifications <- classifications |>
-        mutate(Prokarya = Archaea + Bacteria) |>
-        select(sequence_id, BinID, Prokarya, Eukarya, Organelle, Unknown)
-    n_classifications <- 4
-} else {
-    n_classifications <- 5
-}
-
-find_classification <- function(softmax_values, join_prokaryotes = TRUE) {
+find_classification <- function(probabilities, join_prokaryotes = TRUE) {
     if(join_prokaryotes) {
         classifications <- c("prokarya", "eukarya", "organelle", "unknown")
     } else {
         classifications <- c("archaea", "bacteria", "eukarya", "organelle", "unknown")
     }
-    return(classifications[which.max(softmax_values)])
+    return(classifications[which.max(probabilities)])
 }
 
-## Identify the columns to softmax
-prob_columns <- 2:(2 + n_classifications - 1)
+classify_bins <- function(tiara, contig2bin, join_prokaryotes, assembler){
+    ## DASTOOL_FASTATOCONTIG2BIN drops everything after a space in contig names, which MEGAHIT uses
+    ## Modify Tiara classifications contig IDs accordingly so we can merge
+    if(assembler == "MEGAHIT"){
+        tiara$sequence_id <- str_split(tiara$sequence_id, " ", simplify = TRUE)[,1]
+    }
+    if(join_prokaryotes) {
+        n_classifications <- 4
+    } else {
+        n_classifications <- 5
+    }
 
-## Calculate softmax probabilites based on summed bin probabilities for each category
-softmax_probabilities <- classifications |>
-    group_by(BinID) |>
-    summarise(across(all_of(prob_columns), sum), .groups = "drop") |>
-    rowwise() |>
-    mutate(denominator = sum(exp(c_across(all_of(prob_columns))))) |>
-    mutate(across(all_of(prob_columns), \(x) exp(x)/denominator),
-            classification = find_classification(c_across(all_of(prob_columns)),
-                                join_prokaryotes = args$join_prokaryotes)) |>
-    select(-denominator)
+    ## combination of left_join and filter collectively eliminate unclassified contigs
+    tiara <- tiara |>
+        left_join(contig2bin) |>
+        filter(!is.na(BinID)) |>
+        select(sequence_id,
+                BinID,
+                Archaea = arc,
+                Bacteria = bac,
+                Eukarya = euk,
+                Organelle = org,
+                Unknown = unk1)
+
+    if(join_prokaryotes) {
+        tiara <- tiara |>
+            mutate(Prokarya = Archaea + Bacteria) |>
+            select(sequence_id, BinID, Prokarya, Eukarya, Organelle, Unknown)
+    }
+
+    ## Identify the columns to softmax
+    prob_columns <- 2:(2 + n_classifications - 1)
+
+    ## Calculate softmax probabilites based on summed bin probabilities for each category
+    softmax_probabilities <- tiara |>
+        group_by(BinID) |>
+        summarise(across(all_of(prob_columns), sum), .groups = "drop") |>
+        rowwise() |>
+        mutate(denominator = sum(exp(c_across(all_of(prob_columns))))) |>
+        mutate(across(all_of(prob_columns), \(x) exp(x)/denominator),
+                classification = find_classification(c_across(all_of(prob_columns)),
+                                    join_prokaryotes = join_prokaryotes)) |>
+        select(-denominator)
+
+    return(softmax_probabilities)
+}
+
+classifications <- read_tsv(args$classification_file, na = c("NA", "n/a"))
+contig_to_bin <- read_tsv(args$contig_to_bin, col_names = c("sequence_id", "BinID"))
+results <- classify_bins(tiara = classifications,
+                            contig2bin = contig_to_bin,
+                            join_prokaryotes = args$join_prokaryotes,
+                            assembler = args$assembler)
 
 ## Keep just the classifications so we can loop over more easily
-softmax_classifications <- select(softmax_probabilities, BinID, classification)
+results_basic <- select(results, BinID, classification)
 
-write_tsv(softmax_probabilities, paste0(args$output_prefix, ".binclassification.tsv"))
-write_tsv(softmax_classifications, "bin2classification.tsv")
+## write outputs
+write_tsv(results, paste0(args$output_prefix, ".binclassification.tsv"))
+write_tsv(results_basic, "bin2classification.tsv", col_names = FALSE)
+
+## write out package versions
+packageVersion("tidyverse") |> as.character() |> writeLines("tidyverse_version.txt")
