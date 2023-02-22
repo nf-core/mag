@@ -26,6 +26,7 @@ def parse_args(args=None):
     parser.add_argument("-a", "--assembler", required=True, type=str, help="Assembler name.")
     parser.add_argument("-i", "--id", required=True, type=str, help="Sample or group id.")
     parser.add_argument("-m", "--binner", required=True, type=str, help="Binning method.")
+    parser.add_argument("-c", "--domain", required=True, type=str, help="Taxonomic domain of bin.")
     return parser.parse_args(args)
 
 
@@ -56,7 +57,7 @@ def main(args=None):
 
     # Initialize output files
     n_samples = len(sample_names)
-    with open(args.assembler + "-" + args.binner + "-" + args.id + "-binDepths.tsv", "w") as outfile:
+    with open(args.assembler + "-" + args.domain + "-" + args.binner + "-" + args.id + "-binDepths.tsv", "w") as outfile:
         print("bin", "\t".join(sample_names), sep="\t", file=outfile)
 
     # for each bin, access contig depths and compute mean bin depth (for all samples)
@@ -77,7 +78,7 @@ def main(args=None):
                         all_depths[sample].append(contig_depths[sample])
 
         binname = os.path.basename(file)
-        with open(args.assembler + "-" + args.binner + "-" + args.id + "-binDepths.tsv", "a") as outfile:
+        with open(args.assembler + "-" + args.domain + "_" + args.binner + "-" + args.id + "-binDepths.tsv", "a") as outfile:
             print(
                 binname,
                 "\t".join(str(statistics.median(sample_depths)) for sample_depths in all_depths),

@@ -19,6 +19,7 @@ include { MAG_DEPTHS                            } from '../../modules/local/mag_
 include { MAG_DEPTHS_PLOT                       } from '../../modules/local/mag_depths_plot'          addParams( options: params.mag_depths_plot_options    )
 include { MAG_DEPTHS_SUMMARY                    } from '../../modules/local/mag_depths_summary'       addParams( options: params.mag_depths_summary_options )
 include { FASTA_BINNING_CONCOCT                 } from '../../subworkflows/nf-core/fasta_binning_concoct/main'
+include { DOMAIN_CLASSIFICATION                 } from '../../subworkflows/local/domain_classification'
 
 /*
  * Get number of columns in file (first line)
@@ -144,32 +145,59 @@ workflow BINNING {
 
     GUNZIP_UNBINS ( ch_split_fasta_results_transposed )
     ch_splitfasta_results_gunzipped = GUNZIP_UNBINS.out.gunzip
+        .map { meta, bins ->
+            meta_new = meta.clone()
+            meta_new.domain = 'unclassified'
+            [meta_new, bins]
+        }
     ch_versions = ch_versions.mix(GUNZIP_UNBINS.out.versions.first())
 
+    // Group final binned contigs per sample for final output
+    ch_binning_results_gunzipped_final = ch_binning_results_gunzipped.groupTuple(by: 0)
+    ch_binning_results_gzipped_final   = ch_binning_results_gzipped_final.groupTuple(by: 0)
+
+    ch_binning_results_classified = Channel.empty()
+    if ( params.bin_domain_classification ) {
+        ch_assemblies_for_tiara = assemblies
+            .map { meta, assembly, bam, bai ->
+                [meta, assembly]
+            }
+        DOMAIN_CLASSIFICATION ( ch_assemblies_for_tiara, ch_binning_results_gunzipped_final )
+        ch_versions = ch_versions.mix(DOMAIN_CLASSIFICATION.out.versions)
+        ch_binning_results_classified = DOMAIN_CLASSIFICATION.out.classified_bins
+    } else {
+        ch_binning_results_classified = ch_binning_results_gunzipped
+            .map { meta, bins ->
+                meta_new = meta.clone()
+                meta_new.domain = 'unclassified'
+                [meta_new, bins]
+            }
+    }
+
     // Compute bin depths for different samples (according to `binning_map_mode`)
-    // Have to remove binner meta before joining with according depths files,
-    // as required for MAG_DEPTHS, but we can add  'binner'
-    // info again based on file name and finally group by
-    // 'assembler', 'id', 'binner'
-    ch_depth_input = ch_binning_results_gunzipped
+    // Create a new meta joining key first, but clone meta so that
+    // we retain the information about binners and domain classification
+    ch_depth_input = ch_binning_results_classified
         .mix(ch_splitfasta_results_gunzipped )
-        .map { meta, bin ->
-            def meta_new = meta.clone()
-            meta_new.remove('binner')
-            [ meta_new, bin ]
+        .groupTuple(by: 0)
+        .map { meta, bins ->
+            def meta_join = meta.clone()
+            meta_join.remove('binner')
+            meta_join.remove('domain')
+            [ meta_join, meta, bins ]
         }
-        .groupTuple (by: 0 )
         .join( METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS.out.depth, by: 0 )
         .transpose()
-        .map { meta, bin, contig_depths_file ->
-            def meta_new = meta.clone()
-            meta_new['binner'] = bin.name.split("-")[1]
-            [ meta_new, bin, contig_depths_file ]
+        .map { meta_join, meta, bin, contig_depths_file ->
+            [ meta, bin, contig_depths_file ]
         }
         .groupTuple (by: [0,2] )
 
+    // need meta (binner + domain), bins, depths
     MAG_DEPTHS ( ch_depth_input )
     ch_versions = ch_versions.mix(MAG_DEPTHS.out.versions)
+    ch_depths = MAG_DEPTHS.out.depths
+    ch_depths.view()
 
     // Plot bin depths heatmap for each assembly and mapped samples (according to `binning_map_mode`)
     // create file containing group information for all samples
@@ -187,9 +215,6 @@ workflow BINNING {
     ch_versions = ch_versions.mix( MAG_DEPTHS_PLOT.out.versions )
     ch_versions = ch_versions.mix( MAG_DEPTHS_SUMMARY.out.versions )
 
-    // Group final binned contigs per sample for final output
-    ch_binning_results_gunzipped_final = ch_binning_results_gunzipped.groupTuple(by: 0)
-    ch_binning_results_gzipped_final   = ch_binning_results_gzipped_final.groupTuple(by: 0)
 
     emit:
     bins                                         = ch_binning_results_gunzipped_final

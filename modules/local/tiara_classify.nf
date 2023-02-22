@@ -15,6 +15,7 @@ process TIARA_CLASSIFY {
     tuple val(meta), path("archaea/*.fa"),   emit: archaea_bins, optional: true
     tuple val(meta), path("organelle/*.fa"), emit: organelle_bins, optional: true
     tuple val(meta), path("unknown/*.fa"),   emit: unknown_bins, optional: true
+    path 'versions.yml',                     emit: versions
 
     script:
     def args = task.ext.args ?: ""

@@ -145,6 +145,11 @@
                         "branch": "master",
                         "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
                         "installed_by": ["modules"]
+                    },
+                    "tiara/tiara": {
+                        "branch": "master",
+                        "git_sha": "b268007117e7a54974f8aded2b586d5669a715fc",
+                        "installed_by": ["modules"]
                     }
                 }
             },
