@@ -26,13 +26,23 @@ workflow GUNC_QC {
     GUNC_RUN ( ch_bins, ch_db_for_gunc )
     ch_versions.mix( GUNC_RUN.out.versions )
 
+    // Make sure to keep directory in sync with modules.conf
+    GUNC_RUN.out.maxcss_level_tsv
+        .map{it[1]}
+        .collectFile(name: "gunc_summary.tsv", keepHeader: true, storeDir: "${params.outdir}/GenomeBinning/QC/")
+
     if ( params.binqc_tool == 'checkm' ) {
 
         ch_input_to_mergecheckm = GUNC_RUN.out.maxcss_level_tsv
                                     .combine(ch_checkm_table, by: 0)
 
         GUNC_MERGECHECKM ( ch_input_to_mergecheckm )
-        ch_versions.mix( GUNC_MERGECHECM.out.versions )
+        ch_versions.mix( GUNC_MERGECHECKM.out.versions )
+
+    // Make sure to keep directory in sync with modules.conf
+    GUNC_MERGECHECKM.out.tsv
+        .map{it[1]}
+        .collectFile(name: "gunc_checkm_summary.tsv", keepHeader: true, storeDir: "${params.outdir}/GenomeBinning/QC/")
     }
 
     emit:

@@ -706,7 +706,8 @@
                 },
                 "gunc_db": {
                     "type": "string",
-                    "default": null
+                    "default": "None",
+                    "description": "Specify a path to a pre-downloaded GUNC dmnd database file"
                 },
                 "gunc_database_type": {
                     "type": "string",

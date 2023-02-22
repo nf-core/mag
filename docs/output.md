@@ -455,7 +455,9 @@ Besides the reference files or output files created by BUSCO, the following summ
 
 </details>
 
-### QC for metagenome assembled genomes with CheckM
+### QC for metagenome assembled genomes
+
+#### CheckM
 
 [CheckM](https://ecogenomics.github.io/CheckM/) CheckM provides a set of tools for assessing the quality of genomes recovered from isolates, single cells, or metagenomes. It provides robust estimates of genome completeness and contamination by using collocated sets of genes that are ubiquitous and single-copy within a phylogenetic lineage
 
@@ -482,6 +484,28 @@ If the parameter `--save_checkm_reference` is set, additionally the used the Che
     - `checkm_data_2015_01_16/*`: a range of directories and files required for CheckM to run.
 
 </details>
+
+#### GUNC
+
+[Genome UNClutterer (GUNC)](https://grp-bork.embl-community.io/gunc/index.html) is a tool for detection of chimerism and contamination in prokaryotic genomes resulting from mis-binning of genomic contigs from unrelated lineages. It does so by applying an entropy based score on taxonomic assignment and contig location of all genes in a genome. It is generally considered as a additional complement to CheckM results.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `GenomeBinning/QC/gunc_summary.tsv`
+- `GenomeBinning/QC/gunc_checkm_summary.tsv`
+- `[gunc-database].dmnd`
+- `GUNC/`
+  - `raw/`
+    - `[assembler]-[binner]-[sample/group]/GUNC_checkM.merged.tsv`: Per sample GUNC [output](https://grp-bork.embl-community.io/gunc/output.html) containing with taxonomic and completeness QC statistics.
+  - `checkmmerged/`
+    - `[assembler]-[binner]-[sample/group]/GUNC.progenomes_2.1.maxCSS_level.tsv`: Per sample GUNC output merged with output from [CheckM](#checkm)
+
+</details>
+
+GUNC will be run if specified with `--run_gunc` as a standalone, unless CheckM is also activate via `--qc_tool 'checkm'`, in which case GUNC output will be merged with the CheckM output using `gunc merge_checkm`.
+
+If `--gunc_save_db` is specified, the output directory will also contain the requested database (progenomes, or GTDB) in DIAMOND format.
 
 ## Taxonomic classification of binned genomes
 
