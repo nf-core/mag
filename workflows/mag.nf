@@ -97,6 +97,7 @@ include { BINNING             } from '../subworkflows/local/binning'
 include { BINNING_REFINEMENT  } from '../subworkflows/local/binning_refinement'
 include { BUSCO_QC            } from '../subworkflows/local/busco_qc'
 include { CHECKM_QC           } from '../subworkflows/local/checkm_qc'
+include { GUNC_QC             } from '../subworkflows/local/gunc_qc'
 include { GTDBTK              } from '../subworkflows/local/gtdbtk'
 include { ANCIENT_DNA_ASSEMBLY_VALIDATION } from '../subworkflows/local/ancient_dna'
 
@@ -152,6 +153,12 @@ if (params.busco_download_path) {
 
 if(params.checkm_db) {
     ch_checkm_db = file(params.checkm_db, checkIfExists: true)
+}
+
+if (params.gunc_db) {
+    ch_gunc_db = file(params.gunc_db, checkIfExists: true)
+} else {
+    ch_gunc_db = Channel.empty()
 }
 
 if(params.centrifuge_db){
@@ -599,7 +606,7 @@ workflow MAG {
         }
 
         /*
-        * Bin QC subworkflows: for checking bin completeness with either BUSCO or CHECKM
+        * Bin QC subworkflows: for checking bin completeness with either BUSCO, CHECKM, and/or GUNC
         */
 
         // Results in: [ [meta], path_to_bin.fa ]
@@ -635,11 +642,17 @@ workflow MAG {
             ch_checkm_summary = CHECKM_QC.out.summary
 
             // TODO custom output parsing? Add to MultiQC?
-
-            ch_versions = ch_versions.mix(CHECKM_QC.out.versions.first())
+            ch_versions = ch_versions.mix(CHECKM_QC.out.versions)
 
         }
 
+        if ( params.run_gunc && params.binqc_tool == 'checkm' ) {
+            GUNC_QC ( ch_input_bins_for_qc, ch_gunc_db, CHECKM_QC.out.checkm_tsv )
+            ch_versions = ch_versions.mix( GUNC_QC.out.versions )
+        } else if ( params.run_gunc ) {
+            GUNC_QC ( ch_input_bins_for_qc, ch_gunc_db, [] )
+            ch_versions = ch_versions.mix( GUNC_QC.out.versions )
+        }
 
         ch_quast_bins_summary = Channel.empty()
         if (!params.skip_quast){
