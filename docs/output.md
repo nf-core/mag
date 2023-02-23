@@ -416,7 +416,9 @@ For each bin or refined bin the median sequencing depth is computed based on the
 
 </details>
 
-### QC for metagenome assembled genomes with BUSCO
+### QC for metagenome assembled genomes
+
+#### BUSCO
 
 [BUSCO](https://busco.ezlab.org/) is a tool used to assess the completeness of a genome assembly. It is run on all the genome bins and high quality contigs obtained by the applied binning and/or binning refinement methods (depending on the `--postbinning_input` parameter). By default, BUSCO is run in automated lineage selection mode in which it first tries to select the domain and then a more specific lineage based on phylogenetic placement. If available, result files for both the selected domain lineage and the selected more specific lineage are placed in the output directory. If a lineage dataset is specified already with `--busco_reference`, only results for this specific lineage will be generated.
 
@@ -454,8 +456,6 @@ Besides the reference files or output files created by BUSCO, the following summ
   - `busco_summary.tsv`: A summary table of the BUSCO results, with % of marker genes found. If run in automated lineage selection mode, both the results for the selected domain and for the selected more specific lineage will be given, if available.
 
 </details>
-
-### QC for metagenome assembled genomes
 
 #### CheckM
 
