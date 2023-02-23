@@ -99,7 +99,6 @@ include { BUSCO_QC            } from '../subworkflows/local/busco_qc'
 include { CHECKM_QC           } from '../subworkflows/local/checkm_qc'
 include { GTDBTK              } from '../subworkflows/local/gtdbtk'
 include { ANCIENT_DNA_ASSEMBLY_VALIDATION } from '../subworkflows/local/ancient_dna'
-include { DOMAIN_CLASSIFICATION           } from '../subworkflows/local/domain_classification.nf'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -564,14 +563,9 @@ workflow MAG {
             )
         }
 
-        if ( params.bin_domain_classification ) {
-            DOMAIN_CLASSIFICATION ( ch_assemblies, BINNING.out.bins )
-        }
-
         ch_bowtie2_assembly_multiqc = BINNING_PREPARATION.out.bowtie2_assembly_multiqc
         ch_versions = ch_versions.mix(BINNING_PREPARATION.out.bowtie2_version.first())
         ch_versions = ch_versions.mix(BINNING.out.versions)
-        ch_versions = ch_versions.mix(DOMAIN_CLASSIFICATION.out.versions)
 
         /*
         * DAS Tool: binning refinement
