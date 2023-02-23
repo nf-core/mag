@@ -99,6 +99,7 @@ include { BUSCO_QC            } from '../subworkflows/local/busco_qc'
 include { CHECKM_QC           } from '../subworkflows/local/checkm_qc'
 include { GTDBTK              } from '../subworkflows/local/gtdbtk'
 include { ANCIENT_DNA_ASSEMBLY_VALIDATION } from '../subworkflows/local/ancient_dna'
+include { DEPTHS              } from '../subworkflows/local/depths'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -209,10 +210,10 @@ workflow MAG {
 
     // Get checkM database if not supplied
 
-    if ( !params.checkm_db ) {
+    if ( !params.checkm_db && params.binqc_tool == "checkm" ) {
         ARIA2_UNTAR ("https://data.ace.uq.edu.au/public/CheckM_databases/checkm_data_2015_01_16.tar.gz")
         ch_checkm_db = ARIA2_UNTAR.out.downloaded_file
-     }
+    }
 
 
     //
@@ -574,45 +575,68 @@ workflow MAG {
         // If any two of the binners are both skipped at once, do not run because DAS_Tool needs at least one
         if ( params.refine_bins_dastool ) {
 
-            BINNING_REFINEMENT ( BINNING_PREPARATION.out.grouped_mappings, BINNING.out.bins, BINNING.out.metabat2depths, ch_short_reads )
+            ch_refined_bins = Channel.empty()
+
+            if(params.bin_domain_classification) {
+                // bins which cannot be classified ('unknown') get fed into binning refinement
+                // but also could putatively be eukaryotic so keep separate as well
+                ch_prokarya_bins_dastool = BINNING.out.bins
+                    .filter { meta, bins ->
+                        meta.domain in ["bacteria", "archaea", "prokarya", "organelle", "unknown"]
+                    }
+
+                ch_eukarya_bins_dastool = BINNING.out.bins
+                    .filter { meta, bins ->
+                        meta.domain in ["eukarya", "unknown"]
+                    }
+
+                BINNING_REFINEMENT ( BINNING_PREPARATION.out.grouped_mappings, ch_prokarya_bins_dastool, BINNING.out.metabat2depths, ch_short_reads )
+
+                ch_refined_bins = ch_eukarya_bins_dastool.mix(BINNING_REFINEMENT.out.refined_bins)
+                ch_refined_unbins = BINNING.out.bins.mix(BINNING_REFINEMENT.out.refined_unbins)
+            } else {
+                BINNING_REFINEMENT ( BINNING_PREPARATION.out.grouped_mappings, BINNING.out.bins, BINNING.out.metabat2depths, ch_short_reads )
+                ch_refined_bins = BINNING_REFINEMENT.out.refined_bins
+                ch_refined_unbins = BINNING_REFINEMENT.out.refined_unbins
+            }
+
             ch_versions = ch_versions.mix(BINNING_REFINEMENT.out.versions)
 
             if ( params.postbinning_input == 'raw_bins_only' ) {
                 ch_input_for_postbinning_bins        = BINNING.out.bins
                 ch_input_for_postbinning_bins_unbins = BINNING.out.bins.mix(BINNING.out.unbinned)
-                ch_input_for_binsummary              = BINNING.out.depths_summary
             } else if ( params.postbinning_input == 'refined_bins_only' ) {
-                ch_input_for_postbinning_bins        = BINNING_REFINEMENT.out.refined_bins
-                ch_input_for_postbinning_bins_unbins = BINNING_REFINEMENT.out.refined_bins.mix(BINNING_REFINEMENT.out.refined_unbins)
-                ch_input_for_binsummary              = BINNING_REFINEMENT.out.refined_depths_summary
-            } else if (params.postbinning_input == 'both') {
-                ch_input_for_postbinning_bins        = BINNING.out.bins.mix(BINNING_REFINEMENT.out.refined_bins)
-                ch_input_for_postbinning_bins_unbins = BINNING.out.bins.mix(BINNING.out.unbinned,BINNING_REFINEMENT.out.refined_bins,BINNING_REFINEMENT.out.refined_unbins)
-                ch_combinedepthtsvs_for_binsummary   = BINNING.out.depths_summary.mix(BINNING_REFINEMENT.out.refined_depths_summary)
-                ch_input_for_binsummary              = COMBINE_SUMMARY_TSV ( ch_combinedepthtsvs_for_binsummary.collect() ).combined
+                ch_input_for_postbinning_bins        = ch_refined_bins
+                ch_input_for_postbinning_bins_unbins = ch_refined_bins.mix(ch_refined_unbins)
+            } else if ( params.postbinning_input == 'both' ) {
+                ch_all_bins = BINNING.out.bins.mix(ch_refined_bins)
+                ch_input_for_postbinning_bins        = ch_all_bins
+                ch_input_for_postbinning_bins_unbins = ch_all_bins.mix(BINNING.out.unbinned, BINNING_REFINEMENT.out.refined_unbins)
             }
-
         } else {
-                ch_input_for_postbinning_bins        = BINNING.out.bins
-                ch_input_for_postbinning_bins_unbins = BINNING.out.bins.mix(BINNING.out.unbinned)
-                ch_input_for_binsummary              = BINNING.out.depths_summary
+            ch_input_for_postbinning_bins        = BINNING.out.bins
+            ch_input_for_postbinning_bins_unbins = BINNING.out.bins.mix(BINNING.out.unbinned)
         }
+
+        DEPTHS ( ch_input_for_postbinning_bins_unbins, BINNING.out.metabat2depths, ch_short_reads )
+        ch_input_for_binsummary = DEPTHS.out.depths_summary
+        ch_versions = ch_versions.mix(DEPTHS.out.versions)
 
         /*
         * Bin QC subworkflows: for checking bin completeness with either BUSCO or CHECKM
         */
 
-        // Results in: [ [meta], path_to_bin.fa ]
-        ch_input_bins_for_qc = ch_input_for_postbinning_bins_unbins.transpose()
-
         if (!params.skip_binqc && params.binqc_tool == 'busco'){
             /*
             * BUSCO subworkflow: Quantitative measures for the assessment of genome assembly
             */
+
+            ch_input_bins_for_busco = ch_input_for_postbinning_bins_unbins.transpose()
+
             BUSCO_QC (
                 ch_busco_db_file,
                 ch_busco_download_folder,
-                ch_input_bins_for_qc
+                ch_input_bins_for_busco
             )
             ch_busco_summary = BUSCO_QC.out.summary
             ch_busco_multiqc = BUSCO_QC.out.multiqc
@@ -628,8 +652,18 @@ workflow MAG {
             /*
             * CheckM subworkflow: Quantitative measures for the assessment of genome assembly
             */
+
+            if (params.bin_domain_classification){
+                ch_input_bins_for_checkm = ch_input_for_postbinning_bins_unbins
+                    .filter { meta, bins ->
+                        meta.domain in ["bacteria", "archaea", "prokarya", "organelle", "unknown"]
+                    }
+            } else {
+                ch_input_bins_for_checkm = ch_input_for_postbinning_bins_unbins
+            }
+
             CHECKM_QC (
-                ch_input_bins_for_qc.groupTuple(),
+                ch_input_for_postbinning_bins_unbins,
                 ch_checkm_db
             )
             ch_checkm_summary = CHECKM_QC.out.summary
@@ -639,7 +673,6 @@ workflow MAG {
             ch_versions = ch_versions.mix(CHECKM_QC.out.versions.first())
 
         }
-
 
         ch_quast_bins_summary = Channel.empty()
         if (!params.skip_quast){
@@ -682,8 +715,18 @@ workflow MAG {
          */
         ch_gtdbtk_summary = Channel.empty()
         if ( gtdb ){
+
+            if(params.bin_domain_classification) {
+                ch_gtdb_bins = ch_input_for_postbinning_bins_unbins
+                    .filter { meta, bins ->
+                        meta.domain in ["bacteria", "archaea", "prokarya", "organelle", "unknown"]
+                    }
+            } else {
+                ch_gtdb_bins = ch_input_for_postbinning_bins_unbins
+            }
+
             GTDBTK (
-                ch_input_for_postbinning_bins_unbins,
+                ch_gtdb_bins,
                 ch_busco_summary,
                 ch_checkm_summary,
                 ch_gtdb
@@ -705,14 +748,23 @@ workflow MAG {
         /*
          * Prokka: Genome annotation
          */
-        ch_bins_for_prokka = ch_input_for_postbinning_bins_unbins.transpose()
+
+
+        if (!params.skip_prokka){
+            ch_bins_for_prokka = ch_input_for_postbinning_bins_unbins.transpose()
             .map { meta, bin ->
                 def meta_new = meta.clone()
                 meta_new.id  = bin.getBaseName()
                 [ meta_new, bin ]
             }
 
-        if (!params.skip_prokka){
+            if(params.bin_domain_classification) {
+                ch_bins_for_prokka = ch_bins_for_prokka
+                    .filter { meta, bin ->
+                        meta.domain in ["bacteria", "archaea", "prokarya", "organelle", "unknown"]
+                    }
+            }
+
             PROKKA (
                 ch_bins_for_prokka,
                 [],
@@ -748,7 +800,6 @@ workflow MAG {
     ch_multiqc_files = ch_multiqc_files.mix(ch_quast_multiqc.collect().ifEmpty([]))
     ch_multiqc_files = ch_multiqc_files.mix(ch_bowtie2_assembly_multiqc.collect().ifEmpty([]))
     ch_multiqc_files = ch_multiqc_files.mix(ch_busco_multiqc.collect().ifEmpty([]))
-
     MULTIQC (
         ch_multiqc_files.collect(),
         ch_multiqc_config.toList(),

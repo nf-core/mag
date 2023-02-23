@@ -8,17 +8,10 @@ include { DASTOOL_FASTATOCONTIG2BIN as DASTOOL_FASTATOCONTIG2BIN_CONCOCT  } from
 include { DASTOOL_DASTOOL                                                 } from '../../modules/nf-core/dastool/dastool/main.nf'
 include { RENAME_PREDASTOOL                                               } from '../../modules/local/rename_predastool'
 include { RENAME_POSTDASTOOL                                              } from '../../modules/local/rename_postdastool'
-include { MAG_DEPTHS as MAG_DEPTHS_REFINED                                } from '../../modules/local/mag_depths'
-include { MAG_DEPTHS_PLOT as MAG_DEPTHS_PLOT_REFINED                      } from '../../modules/local/mag_depths_plot'
-include { MAG_DEPTHS_SUMMARY as MAG_DEPTHS_SUMMARY_REFINED                } from '../../modules/local/mag_depths_summary'
 
 /*
  * Get number of columns in file (first line)
  */
-def getColNo(filename) {
-    lines  = file(filename).readLines()
-    return lines[0].split('\t').size()
-}
 
 workflow BINNING_REFINEMENT {
     take:
@@ -87,6 +80,7 @@ workflow BINNING_REFINEMENT {
                 if (bin.name != "unbinned.fa") {
                     def meta_new = meta.clone()
                     meta_new['binner'] = 'DASTool'
+                    meta_new['domain'] = 'prokarya'
                     [ meta_new, bin ]
                 }
             }
@@ -97,46 +91,11 @@ workflow BINNING_REFINEMENT {
             meta, bins ->
                 def meta_new = meta.clone()
                 meta_new['binner'] = 'DASTool'
+                neta_new['domain'] = 'unclassified'
                 [ meta_new, bins ]
             }
 
     RENAME_POSTDASTOOL ( ch_input_for_renamedastool )
-
-    // We have to strip the meta to be able to combine with the original
-    // depths file to run MAG_DEPTH
-    ch_input_for_magdepth = ch_dastool_bins_newmeta
-        .mix( RENAME_POSTDASTOOL.out.refined_unbins )
-        .map {
-                meta, refinedbins ->
-                def meta_new = meta.clone()
-                meta_new.remove('binner')
-                [ meta_new, refinedbins ]
-        }
-        .transpose()
-        .groupTuple (by: 0 )
-        .join( depths, by: 0 )
-        .map {
-            meta, bins, contig_depths_file ->
-                def meta_new = meta.clone()
-                meta_new['binner'] = 'DASTool'
-                [ meta_new, bins, contig_depths_file ]
-        }
-
-    MAG_DEPTHS_REFINED ( ch_input_for_magdepth )
-
-    // Plot bin depths heatmap for each assembly and mapped samples (according to `binning_map_mode`)
-    // create file containing group information for all samples
-    ch_sample_groups = reads
-        .collectFile(name:'sample_groups.tsv'){ meta, reads -> meta.id + '\t' + meta.group + '\n' }
-
-    // Filter MAG depth files: use only those for plotting that contain depths for > 2 samples
-    ch_mag_depths_plot_refined = MAG_DEPTHS_REFINED.out.depths
-        .map { meta, bin_depths_file ->
-            if (getColNo(bin_depths_file) > 2) [ meta, bin_depths_file ]
-        }
-
-    MAG_DEPTHS_PLOT_REFINED ( ch_mag_depths_plot_refined, ch_sample_groups.collect() )
-    MAG_DEPTHS_SUMMARY_REFINED ( MAG_DEPTHS_REFINED.out.depths.map{it[1]}.collect() )
 
     emit:
     refined_bins                = ch_dastool_bins_newmeta
