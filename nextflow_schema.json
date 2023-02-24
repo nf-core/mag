@@ -627,7 +627,9 @@
                     "help_text": "Bowtie2 alignment mode options, for example: `--very-fast` , `--very-sensitive-local -N 1` , ..."
                 },
                 "bin_domain_classification": {
-                    "type": "boolean"
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable domain-level (prokaryote or eukaryote) classification of bins using Tiara. Processes which are domain-specific will then only receive bins matching the domain requirement."
                 },
                 "tiara_min_length": {
                     "type": "integer",
