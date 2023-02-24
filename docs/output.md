@@ -392,7 +392,6 @@ Tiara is a contig classifier that identifies the domain (prokarya, eukarya) of c
 
 </details>
 
-
 ### Bin sequencing depth
 
 For each bin or refined bin the median sequencing depth is computed based on the corresponding contig depths.

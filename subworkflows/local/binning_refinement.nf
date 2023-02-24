@@ -17,8 +17,6 @@ workflow BINNING_REFINEMENT {
     take:
     contigs
     bins           // channel: [ val(meta), path(bins) ]
-    depths
-    reads
 
     main:
     ch_versions = Channel.empty()
@@ -100,7 +98,5 @@ workflow BINNING_REFINEMENT {
     emit:
     refined_bins                = ch_dastool_bins_newmeta
     refined_unbins              = RENAME_POSTDASTOOL.out.refined_unbins
-    refined_depths              = MAG_DEPTHS_REFINED.out.depths
-    refined_depths_summary      = MAG_DEPTHS_SUMMARY_REFINED.out.summary
     versions                    = ch_versions
 }

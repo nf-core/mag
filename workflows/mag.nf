@@ -597,12 +597,12 @@ workflow MAG {
                         meta.domain in ["eukarya", "unknown"]
                     }
 
-                BINNING_REFINEMENT ( BINNING_PREPARATION.out.grouped_mappings, ch_prokarya_bins_dastool, BINNING.out.metabat2depths, ch_short_reads )
+                BINNING_REFINEMENT ( BINNING_PREPARATION.out.grouped_mappings, ch_prokarya_bins_dastool )
 
                 ch_refined_bins = ch_eukarya_bins_dastool.mix(BINNING_REFINEMENT.out.refined_bins)
                 ch_refined_unbins = BINNING.out.bins.mix(BINNING_REFINEMENT.out.refined_unbins)
             } else {
-                BINNING_REFINEMENT ( BINNING_PREPARATION.out.grouped_mappings, BINNING.out.bins, BINNING.out.metabat2depths, ch_short_reads )
+                BINNING_REFINEMENT ( BINNING_PREPARATION.out.grouped_mappings, BINNING.out.bins )
                 ch_refined_bins = BINNING_REFINEMENT.out.refined_bins
                 ch_refined_unbins = BINNING_REFINEMENT.out.refined_unbins
             }
@@ -692,7 +692,7 @@ workflow MAG {
             } else {
                 ch_input_bins_for_gunc = ch_input_for_postbinning_bins_unbins
             }
-            
+
             GUNC_QC ( ch_input_bins_for_gunc, ch_gunc_db, [] )
             ch_versions = ch_versions.mix( GUNC_QC.out.versions )
         }
