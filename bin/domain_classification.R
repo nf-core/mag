@@ -99,6 +99,26 @@ classify_bins <- function(tiara, contig2bin, join_prokaryotes, assembler){
                                     join_prokaryotes = join_prokaryotes)) |>
         select(-denominator)
 
+    ## A bin may have no classified contigs if all contigs are below the minimum
+    ## Tiara length threshold
+    unclassified_bins <- contig2bin$BinID[!(contig2bin$BinID %in% softmax_probabilities$BinID)]
+
+    ## Assign these as unclassified
+    if(length(unclassified_bins) > 0) {
+        for(bin in unclassified_bins) {
+            if(join_prokaryotes == TRUE){
+                row <- tibble(
+                    BinID = bin, Prokarya = NA, Eukarya = NA, Organelle = NA, Unknown = NA, classification = "Unknown"
+                )
+            } else {
+                row <- tibble(
+                    BinID = bin, Bacteria = NA, Archaea = NA, Eukarya = NA, Organelle = NA, Unknown = NA, classification = "Unknown"
+                )
+            }
+            softmax_probabilities <- bind_rows(softmax_probabilities, row)
+        }
+    }
+
     return(softmax_probabilities)
 }
 

@@ -9,13 +9,14 @@ process TIARA_CLASSIFY {
     tuple val(meta), path(classification), path(contig2bin), path(bins)
 
     output:
-    tuple val(meta), path("eukarya/*.fa"),   emit: eukarya_bins, optional: true
-    tuple val(meta), path("prokarya/*.fa"),  emit: prokarya_bins, optional: true
-    tuple val(meta), path("bacteria/*.fa"),  emit: bacteria_bins, optional: true
-    tuple val(meta), path("archaea/*.fa"),   emit: archaea_bins, optional: true
-    tuple val(meta), path("organelle/*.fa"), emit: organelle_bins, optional: true
-    tuple val(meta), path("unknown/*.fa"),   emit: unknown_bins, optional: true
-    path 'versions.yml',                     emit: versions
+    tuple val(meta), path("eukarya/*.fa"),            emit: eukarya_bins, optional: true
+    tuple val(meta), path("prokarya/*.fa"),           emit: prokarya_bins, optional: true
+    tuple val(meta), path("bacteria/*.fa"),           emit: bacteria_bins, optional: true
+    tuple val(meta), path("archaea/*.fa"),            emit: archaea_bins, optional: true
+    tuple val(meta), path("organelle/*.fa"),          emit: organelle_bins, optional: true
+    tuple val(meta), path("unknown/*.fa"),            emit: unknown_bins, optional: true
+    tuple val(meta), path("*.binclassification.tsv"), emit: bin_classifications
+    path 'versions.yml',                              emit: versions
 
     script:
     def args = task.ext.args ?: ""

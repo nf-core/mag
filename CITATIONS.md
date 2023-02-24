@@ -116,6 +116,10 @@
 
   > Nurk, S., Meleshko, D., Korobeynikov, A., & Pevzner, P. A. (2017). metaSPAdes: a new versatile metagenomic assembler. Genome research, 27(5), 824-834. doi: 10.1101/gr.213959.116.
 
+- [Tiara](https://doi.org/10.1093/bioinformatics/btab672)
+
+  > Karlicki, M., Antonowicz, S., Karnkowska, A., 2022. Tiara: deep learning-based classification system for eukaryotic sequences. Bioinformatics 38, 344–350. doi: 10.1093/bioinformatics/btab672
+
 ## Data
 
 - [Full-size test data](https://doi.org/10.1038/s41587-019-0191-2)

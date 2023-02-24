@@ -5,6 +5,7 @@
 include { TIARA_TIARA                                                  } from '../../modules/nf-core/tiara/tiara/main'
 include { TIARA_CLASSIFY                                               } from '../../modules/local/tiara_classify'
 include { DASTOOL_FASTATOCONTIG2BIN as DASTOOL_FASTATOCONTIG2BIN_TIARA } from '../../modules/nf-core/dastool/fastatocontig2bin/main'
+include { COMBINE_TSV as TIARA_SUMMARY                                 } from '../../modules/local/combine_tsv'
 
 workflow DOMAIN_CLASSIFICATION {
     take:
@@ -88,6 +89,14 @@ workflow DOMAIN_CLASSIFICATION {
         .mix(ch_archaea_bins)
         .mix(ch_organelle_bins)
         .mix(ch_unknown_bins)
+
+    ch_bin_classifications = TIARA_CLASSIFY.out.bin_classifications
+        .map { meta, classification ->
+            [ classification ]
+        }
+        .collect()
+
+    TIARA_SUMMARY(ch_bin_classifications)
 
     emit:
     classified_bins = ch_classified_bins
