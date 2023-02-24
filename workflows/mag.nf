@@ -694,6 +694,7 @@ workflow MAG {
             } else {
                 ch_input_bins_for_gunc = ch_input_bins_for_qc
             }
+        }
 
         ch_quast_bins_summary = Channel.empty()
         if (!params.skip_quast){
