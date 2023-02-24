@@ -633,6 +633,8 @@ workflow MAG {
         * Bin QC subworkflows: for checking bin completeness with either BUSCO, CHECKM, and/or GUNC
         */
 
+        ch_input_bins_for_qc = ch_input_for_postbinning_bins_unbins.transpose()
+
         if (!params.skip_binqc && params.binqc_tool == 'busco'){
             /*
             * BUSCO subworkflow: Quantitative measures for the assessment of genome assembly
@@ -661,16 +663,16 @@ workflow MAG {
             */
 
             if (params.bin_domain_classification){
-                ch_input_bins_for_checkm = ch_input_for_postbinning_bins_unbins
+                ch_input_bins_for_checkm = ch_input_bins_for_qc
                     .filter { meta, bins ->
                         meta.domain in ["bacteria", "archaea", "prokarya", "organelle", "unknown"]
                     }
             } else {
-                ch_input_bins_for_checkm = ch_input_for_postbinning_bins_unbins
+                ch_input_bins_for_checkm = ch_input_bins_for_qc
             }
 
             CHECKM_QC (
-                ch_input_bins_for_checkm,
+                ch_input_bins_for_checkm.groupTuple(),
                 ch_checkm_db
             )
             ch_checkm_summary = CHECKM_QC.out.summary
@@ -690,12 +692,8 @@ workflow MAG {
                         meta.domain in ["bacteria", "archaea", "prokarya", "organelle", "unknown"]
                     }
             } else {
-                ch_input_bins_for_gunc = ch_input_for_postbinning_bins_unbins
+                ch_input_bins_for_gunc = ch_input_bins_for_qc
             }
-
-            GUNC_QC ( ch_input_bins_for_gunc, ch_gunc_db, [] )
-            ch_versions = ch_versions.mix( GUNC_QC.out.versions )
-        }
 
         ch_quast_bins_summary = Channel.empty()
         if (!params.skip_quast){
