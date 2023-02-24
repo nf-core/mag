@@ -707,6 +707,26 @@
                     "description": "Specify which binning output is sent for downstream annotation, taxonomic classification, bin quality control etc.",
                     "help_text": "`raw_bins_only`: only bins (and unbinned contigs) from the binners.\n`refined_bins_only`:  only bins (and unbinned contigs) from the bin refinement step .\n`both`: bins and unbinned contigs from both the binning and bin refinement steps.",
                     "enum": ["raw_bins_only", "refined_bins_only", "both"]
+                },
+                "run_gunc": {
+                    "type": "boolean",
+                    "description": "Turn on GUNC genome chimerism checks"
+                },
+                "gunc_db": {
+                    "type": "string",
+                    "default": "None",
+                    "description": "Specify a path to a pre-downloaded GUNC dmnd database file"
+                },
+                "gunc_database_type": {
+                    "type": "string",
+                    "default": "progenomes",
+                    "description": "Specify which database to auto-download if not supplying own",
+                    "enum": ["progenomes", "gtdb"]
+                },
+                "gunc_save_db": {
+                    "type": "boolean",
+                    "description": "Save the used GUNC reference files downloaded when not using --gunc_db parameter.",
+                    "help_text": "If specified, the corresponding DIAMOND file downloaded from the GUNC server will be stored in your output directory alongside your GUNC results."
                 }
             }
         },
