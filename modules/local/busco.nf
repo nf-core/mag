@@ -32,13 +32,9 @@ process BUSCO {
     if (params.busco_reference)
         lineage_dataset_provided = "Y"
 
-    def busco_clean = "N"
-    if (params.busco_clean)
-        busco_clean = "Y"
+    def busco_clean = params.busco_clean ? "Y" : "N"
 
-    def p = "--auto-lineage"
-    if (params.busco_reference){
-        p = "--lineage_dataset dataset/${db}"
+    def p = params.busco_reference ? "--lineage_dataset dataset/${db}": "--auto-lineage"
     } else {
         if (params.busco_auto_lineage_prok)
             p = "--auto-lineage-prok"
