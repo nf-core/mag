@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
+- [#350](https://github.com/nf-core/mag/pull/350) - Adds support for CheckM as alternative bin completeness and QC tool (added by @jfy133 and @skrakau)
 - [#353](https://github.com/nf-core/mag/pull/353) - Added the busco_clean parameter to optionally clean each BUSCO directory after a successful (by @prototaxites)
 - [#361](https://github.com/nf-core/mag/pull/361) - Added the skip_clipping parameter to skip read preprocessing with fastp or adapterremoval. Running the pipeline with skip_clipping, keep_phix and without specifying a host genome or fasta file skips the FASTQC_TRIMMED process (by @prototaxites)
 - [#365](https://github.com/nf-core/mag/pull/365) - Added CONCOCT as an additional (optional) binning tool (by @jfy133)
@@ -19,7 +20,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#340](https://github.com/nf-core/mag/pull/340),[#368](https://github.com/nf-core/mag/pull/368),[#373](https://github.com/nf-core/mag/pull/373) - Update to nf-core 2.7.2 `TEMPLATE` (by @jfy133, @d4straub, @skrakau)
 - [#373](https://github.com/nf-core/mag/pull/373) - Removed parameter `--enable_conda`. Updated local modules to new conda syntax and updated nf-core modules (by @skrakau)
-- [#350](https://github.com/nf-core/mag/pull/350) - Adds support for CheckM as alternative bin completeness and QC tool (added by @jfy133 and @skrakau)
 - [#385](https://github.com/nf-core/mag/pull/385) - CAT also now runs on unbinned contigs as well as binned contigs (added by @jfy133)
 
 ### `Fixed`
