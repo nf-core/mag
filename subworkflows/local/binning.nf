@@ -2,10 +2,6 @@
  * Binning with MetaBAT2 and MaxBin2
  */
 
-params.mag_depths_options                           = [:]
-params.mag_depths_plot_options                      = [:]
-params.mag_depths_summary_options                   = [:]
-
 include { METABAT2_METABAT2                     } from '../../modules/nf-core/metabat2/metabat2/main'
 include { METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS  } from '../../modules/nf-core/metabat2/jgisummarizebamcontigdepths/main'
 include { MAXBIN2                               } from '../../modules/nf-core/maxbin2/main'
@@ -15,9 +11,9 @@ include { GUNZIP as GUNZIP_UNBINS               } from '../../modules/nf-core/gu
 include { CONVERT_DEPTHS                        } from '../../modules/local/convert_depths'
 include { ADJUST_MAXBIN2_EXT                    } from '../../modules/local/adjust_maxbin2_ext'
 include { SPLIT_FASTA                           } from '../../modules/local/split_fasta'
-include { MAG_DEPTHS                            } from '../../modules/local/mag_depths'               addParams( options: params.mag_depths_options         )
-include { MAG_DEPTHS_PLOT                       } from '../../modules/local/mag_depths_plot'          addParams( options: params.mag_depths_plot_options    )
-include { MAG_DEPTHS_SUMMARY                    } from '../../modules/local/mag_depths_summary'       addParams( options: params.mag_depths_summary_options )
+include { MAG_DEPTHS                            } from '../../modules/local/mag_depths'
+include { MAG_DEPTHS_PLOT                       } from '../../modules/local/mag_depths_plot'
+include { MAG_DEPTHS_SUMMARY                    } from '../../modules/local/mag_depths_summary'
 include { FASTA_BINNING_CONCOCT                 } from '../../subworkflows/nf-core/fasta_binning_concoct/main'
 
 /*

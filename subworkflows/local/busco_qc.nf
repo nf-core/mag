@@ -2,15 +2,10 @@
  * BUSCO: Quantitative measures for the assessment of genome assembly
  */
 
-params.busco_db_options            = [:]
-params.busco_options               = [:]
-params.busco_save_download_options = [:]
-params.busco_summary_options       = [:]
-
-include { BUSCO_DB_PREPARATION            } from '../../modules/local/busco_db_preparation'        addParams( options: params.busco_db_options            )
-include { BUSCO                           } from '../../modules/local/busco'                       addParams( options: params.busco_options               )
-include { BUSCO_SAVE_DOWNLOAD             } from '../../modules/local/busco_save_download'         addParams( options: params.busco_save_download_options )
-include { BUSCO_SUMMARY                   } from '../../modules/local/busco_summary'               addParams( options: params.busco_summary_options       )
+include { BUSCO_DB_PREPARATION            } from '../../modules/local/busco_db_preparation'
+include { BUSCO                           } from '../../modules/local/busco'
+include { BUSCO_SAVE_DOWNLOAD             } from '../../modules/local/busco_save_download'
+include { BUSCO_SUMMARY                   } from '../../modules/local/busco_summary'
 
 workflow BUSCO_QC {
     take:
