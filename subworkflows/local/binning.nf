@@ -2,22 +2,19 @@
  * Binning with MetaBAT2 and MaxBin2
  */
 
-params.mag_depths_options                           = [:]
-params.mag_depths_plot_options                      = [:]
-params.mag_depths_summary_options                   = [:]
-
-include { METABAT2_METABAT2                     } from '../../modules/nf-core/modules/metabat2/metabat2/main'
-include { METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS  } from '../../modules/nf-core/modules/metabat2/jgisummarizebamcontigdepths/main'
-include { MAXBIN2                               } from '../../modules/nf-core/modules/maxbin2/main'
-include { GUNZIP as GUNZIP_BINS                 } from '../../modules/nf-core/modules/gunzip/main'
-include { GUNZIP as GUNZIP_UNBINS               } from '../../modules/nf-core/modules/gunzip/main'
+include { METABAT2_METABAT2                     } from '../../modules/nf-core/metabat2/metabat2/main'
+include { METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS  } from '../../modules/nf-core/metabat2/jgisummarizebamcontigdepths/main'
+include { MAXBIN2                               } from '../../modules/nf-core/maxbin2/main'
+include { GUNZIP as GUNZIP_BINS                 } from '../../modules/nf-core/gunzip/main'
+include { GUNZIP as GUNZIP_UNBINS               } from '../../modules/nf-core/gunzip/main'
 
 include { CONVERT_DEPTHS                        } from '../../modules/local/convert_depths'
 include { ADJUST_MAXBIN2_EXT                    } from '../../modules/local/adjust_maxbin2_ext'
 include { SPLIT_FASTA                           } from '../../modules/local/split_fasta'
-include { MAG_DEPTHS                            } from '../../modules/local/mag_depths'               addParams( options: params.mag_depths_options         )
-include { MAG_DEPTHS_PLOT                       } from '../../modules/local/mag_depths_plot'          addParams( options: params.mag_depths_plot_options    )
-include { MAG_DEPTHS_SUMMARY                    } from '../../modules/local/mag_depths_summary'       addParams( options: params.mag_depths_summary_options )
+include { MAG_DEPTHS                            } from '../../modules/local/mag_depths'
+include { MAG_DEPTHS_PLOT                       } from '../../modules/local/mag_depths_plot'
+include { MAG_DEPTHS_SUMMARY                    } from '../../modules/local/mag_depths_summary'
+include { FASTA_BINNING_CONCOCT                 } from '../../subworkflows/nf-core/fasta_binning_concoct/main'
 
 /*
  * Get number of columns in file (first line)
@@ -100,8 +97,29 @@ workflow BINNING {
         ch_binning_results_gzipped_final = ch_binning_results_gzipped_final.mix( ADJUST_MAXBIN2_EXT.out.renamed_bins )
         ch_versions = ch_versions.mix(MAXBIN2.out.versions)
     }
+    if ( !params.skip_concoct ){
 
-    // split fastq files, depending
+        ch_concoct_input = assemblies
+                            .map { meta, bins, bams, bais ->
+                                def meta_new = meta.clone()
+                                meta_new['binner'] = 'CONCOCT'
+
+                                [ meta_new, bins, bams, bais ]
+                            }
+                            .multiMap {
+                                meta, bins, bams, bais ->
+                                    bins: [ meta, bins ]
+                                    bams: [ meta, bams, bais ]
+                            }
+
+        FASTA_BINNING_CONCOCT ( ch_concoct_input )
+        ch_final_bins_for_gunzip = ch_final_bins_for_gunzip.mix( FASTA_BINNING_CONCOCT.out.bins.transpose() )
+        ch_binning_results_gzipped_final = ch_binning_results_gzipped_final.mix( FASTA_BINNING_CONCOCT.out.bins )
+        ch_versions = ch_versions.mix(FASTA_BINNING_CONCOCT.out.versions)
+    }
+
+    // decide which unbinned fasta files to further filter, depending on which binners selected
+    // NOTE: CONCOCT does not produce 'unbins' itself, therefore not included here.
     if ( !params.skip_metabat2 & params.skip_maxbin2 ) {
         ch_input_splitfasta = METABAT2_METABAT2.out.unbinned
     } else if ( params.skip_metabat2 & !params.skip_maxbin2 ) {
@@ -126,8 +144,8 @@ workflow BINNING {
 
     // Compute bin depths for different samples (according to `binning_map_mode`)
     // Have to remove binner meta before joining with according depths files,
-    // as required for MAG_DEPTHS, but we can add  'binner' 
-    // info again based on file name and finally group by 
+    // as required for MAG_DEPTHS, but we can add  'binner'
+    // info again based on file name and finally group by
     // 'assembler', 'id', 'binner'
     ch_depth_input = ch_binning_results_gunzipped
         .mix(ch_splitfasta_results_gunzipped )

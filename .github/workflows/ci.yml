@@ -10,7 +10,10 @@ on:
 
 env:
   NXF_ANSI_LOG: false
-  CAPSULE_LOG: none
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}"
+  cancel-in-progress: true
 
 jobs:
   test:
@@ -20,27 +23,22 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        # Nextflow versions
-        include:
-          # Test pipeline minimum Nextflow version
-          - NXF_VER: "21.10.3"
-            NXF_EDGE: ""
-          # Test latest edge release of Nextflow
-          - NXF_VER: ""
-            NXF_EDGE: "1"
+        NXF_VER:
+          - "22.10.1"
+          - "latest-everything"
     steps:
+      - name: Free some space
+        run: |
+          sudo rm -rf "/usr/local/share/boost"
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+
       - name: Check out pipeline code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Install Nextflow
-        env:
-          NXF_VER: ${{ matrix.NXF_VER }}
-          # Uncomment only if the edge release is more recent than the latest stable release
-          # See https://github.com/nextflow-io/nextflow/issues/2467
-          # NXF_EDGE: ${{ matrix.NXF_EDGE }}
-        run: |
-          wget -qO- get.nextflow.io | bash
-          sudo mv nextflow /usr/local/bin/
+        uses: nf-core/setup-nextflow@v1
+        with:
+          version: "${{ matrix.NXF_VER }}"
 
       - name: Run pipeline with test data
         run: |
@@ -65,6 +63,11 @@ jobs:
             test_binrefinement,
           ]
     steps:
+      - name: Free some space
+        run: |
+          sudo rm -rf "/usr/local/share/boost"
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+
       - name: Check out pipeline code
         uses: actions/checkout@v2
 
@@ -76,3 +79,33 @@ jobs:
       - name: Run pipeline with ${{ matrix.profile }} test profile
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile ${{ matrix.profile }},docker --outdir ./results
+
+  checkm:
+    name: Run single test to checkm due to database download
+    # Only run on push if this is the nf-core dev branch (merged PRs)
+    if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/mag') }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Free some space
+        run: |
+          sudo rm -rf "/usr/local/share/boost"
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+
+      - name: Check out pipeline code
+        uses: actions/checkout@v2
+
+      - name: Install Nextflow
+        run: |
+          wget -qO- get.nextflow.io | bash
+          sudo mv nextflow /usr/local/bin/
+
+      - name: Download and prepare CheckM database
+        run: |
+          mkdir -p databases/checkm
+          wget https://data.ace.uq.edu.au/public/CheckM_databases/checkm_data_2015_01_16.tar.gz -P databases/checkm
+          tar xzvf databases/checkm/checkm_data_2015_01_16.tar.gz -C databases/checkm/
+
+      - name: Run pipeline with ${{ matrix.profile }} test profile
+        run: |
+          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --outdir ./results --binqc_tool checkm --checkm_db databases/checkm

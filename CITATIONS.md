@@ -34,6 +34,14 @@
 
   > Kim, D., Song, L., Breitwieser, F. P., & Salzberg, S. L. (2016). Centrifuge: rapid and sensitive classification of metagenomic sequences. Genome research, 26(12), 1721-1729. doi: 10.1101/gr.210641.116.
 
+- [CheckM](https://doi.org/10.1101/gr.186072.114)
+
+  > Parks, D. H., Imelfort, M., Skennerton, C. T., Hugenholtz, P., & Tyson, G. W. (2015). CheckM: assessing the quality of microbial genomes recovered from isolates, single cells, and metagenomes. Genome Research, 25(7), 1043–1055. doi: 10.1101/gr.186072.114
+
+- [CONCOCT](https://doi.org/10.1038/nmeth.3103)
+
+  > Alneberg, J., Bjarnason, B. S., de Bruijn, I., Schirmer, M., Quick, J., Ijaz, U. Z., Lahti, L., Loman, N. J., Andersson, A. F., & Quince, C. (2014). Binning metagenomic contigs by coverage and composition. Nature Methods, 11(11), 1144–1146. doi: 10.1038/nmeth.3103
+
 - [DAS Tool](https://doi.org/10.1038/s41564-018-0171-1)
 
   > Sieber, C. M. K., et al. 2018. "Recovery of Genomes from Metagenomes via a Dereplication, Aggregation and Scoring Strategy." Nature Microbiology 3 (7): 836-43. doi: 10.1038/s41564-018-0171-1
@@ -53,6 +61,10 @@
 - [GTDB-Tk](https://doi.org/10.1093/bioinformatics/btz848)
 
   > Chaumeil, P. A., Mussig, A. J., Hugenholtz, P., & Parks, D. H. (2020). GTDB-Tk: a toolkit to classify genomes with the Genome Taxonomy Database. Bioinformatics , 36(6), 1925–1927. doi: 10.1093/bioinformatics/btz848.
+
+- [GUNC](https://doi.org/10.1186/s13059-021-02393-0.)
+
+  > Orakov, A., Fullam, A., Coelho, A. P., Khedkar, S., Szklarczyk, D., Mende, D. R., Schmidt, T. S. B., and Bork, P.. 2021. “GUNC: Detection of Chimerism and Contamination in Prokaryotic Genomes.” Genome Biology 22 (1): 178. doi: 10.1186/s13059-021-02393-0.
 
 - [Kraken2](https://doi.org/10.1186/s13059-019-1891-0)
 

@@ -41,8 +41,11 @@ if (params.input) { ch_input = file(params.input) } else { exit 1, 'Input sample
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-ch_multiqc_config        = file("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
-ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
+ch_multiqc_config          = file("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
+ch_multiqc_custom_config   = params.multiqc_config ? Channel.fromPath( params.multiqc_config, checkIfExists: true ) : Channel.empty()
+ch_multiqc_logo            = params.multiqc_logo   ? Channel.fromPath( params.multiqc_logo, checkIfExists: true ) : Channel.empty()
+// Currently not used as using local version of MultiQC
+//ch_multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -68,7 +71,7 @@ include { KRAKEN2_DB_PREPARATION                              } from '../modules
 include { KRAKEN2                                             } from '../modules/local/kraken2'
 include { KRONA_DB                                            } from '../modules/local/krona_db'
 include { KRONA                                               } from '../modules/local/krona'
-include { POOL_SINGLE_READS                                   } from '../modules/local/pool_single_reads'
+include { POOL_SINGLE_READS as POOL_SHORT_SINGLE_READS        } from '../modules/local/pool_single_reads'
 include { POOL_PAIRED_READS                                   } from '../modules/local/pool_paired_reads'
 include { POOL_SINGLE_READS as POOL_LONG_READS                } from '../modules/local/pool_single_reads'
 include { MEGAHIT                                             } from '../modules/local/megahit'
@@ -80,8 +83,9 @@ include { QUAST_BINS_SUMMARY                                  } from '../modules
 include { CAT_DB                                              } from '../modules/local/cat_db'
 include { CAT_DB_GENERATE                                     } from '../modules/local/cat_db_generate'
 include { CAT                                                 } from '../modules/local/cat'
+include { CAT_SUMMARY                                         } from "../modules/local/cat_summary"
 include { BIN_SUMMARY                                         } from '../modules/local/bin_summary'
-include { COMBINE_TSV                                         } from '../modules/local/combine_tsv'
+include { COMBINE_TSV as COMBINE_SUMMARY_TSV                  } from '../modules/local/combine_tsv'
 include { MULTIQC                                             } from '../modules/local/multiqc'
 
 //
@@ -92,8 +96,10 @@ include { BINNING_PREPARATION } from '../subworkflows/local/binning_preparation'
 include { BINNING             } from '../subworkflows/local/binning'
 include { BINNING_REFINEMENT  } from '../subworkflows/local/binning_refinement'
 include { BUSCO_QC            } from '../subworkflows/local/busco_qc'
+include { CHECKM_QC           } from '../subworkflows/local/checkm_qc'
+include { GUNC_QC             } from '../subworkflows/local/gunc_qc'
 include { GTDBTK              } from '../subworkflows/local/gtdbtk'
-include { ANCIENT_DNA_ASSEMLY_VALIDATION } from '../subworkflows/local/ancient_dna'
+include { ANCIENT_DNA_ASSEMBLY_VALIDATION } from '../subworkflows/local/ancient_dna'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -104,14 +110,15 @@ include { ANCIENT_DNA_ASSEMLY_VALIDATION } from '../subworkflows/local/ancient_d
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { FASTQC as FASTQC_RAW                   } from '../modules/nf-core/modules/fastqc/main'
-include { FASTQC as FASTQC_TRIMMED               } from '../modules/nf-core/modules/fastqc/main'
-include { FASTP                                  } from '../modules/nf-core/modules/fastp/main'
-include { ADAPTERREMOVAL as ADAPTERREMOVAL_PE    } from '../modules/nf-core/modules/adapterremoval/main'
-include { ADAPTERREMOVAL as ADAPTERREMOVAL_SE    } from '../modules/nf-core/modules/adapterremoval/main'
-include { PRODIGAL                               } from '../modules/nf-core/modules/prodigal/main'
-include { PROKKA                                 } from '../modules/nf-core/modules/prokka/main'
-include { CUSTOM_DUMPSOFTWAREVERSIONS            } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
+include { ARIA2 as ARIA2_UNTAR                   } from '../modules/nf-core/aria2/main'
+include { FASTQC as FASTQC_RAW                   } from '../modules/nf-core/fastqc/main'
+include { FASTQC as FASTQC_TRIMMED               } from '../modules/nf-core/fastqc/main'
+include { FASTP                                  } from '../modules/nf-core/fastp/main'
+include { ADAPTERREMOVAL as ADAPTERREMOVAL_PE    } from '../modules/nf-core/adapterremoval/main'
+include { ADAPTERREMOVAL as ADAPTERREMOVAL_SE    } from '../modules/nf-core/adapterremoval/main'
+include { PRODIGAL                               } from '../modules/nf-core/prodigal/main'
+include { PROKKA                                 } from '../modules/nf-core/prokka/main'
+include { CUSTOM_DUMPSOFTWAREVERSIONS            } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 
 ////////////////////////////////////////////////////
 /* --  Create channel for reference databases  -- */
@@ -142,6 +149,16 @@ if (params.busco_download_path) {
         .value(file( "${params.busco_download_path}" ))
 } else {
     ch_busco_download_folder = Channel.empty()
+}
+
+if(params.checkm_db) {
+    ch_checkm_db = file(params.checkm_db, checkIfExists: true)
+}
+
+if (params.gunc_db) {
+    ch_gunc_db = file(params.gunc_db, checkIfExists: true)
+} else {
+    ch_gunc_db = Channel.empty()
 }
 
 if(params.centrifuge_db){
@@ -175,7 +192,7 @@ if (!params.keep_lambda) {
         .value(file( "${params.lambda_reference}" ))
 }
 
-gtdb = params.skip_busco ? false : params.gtdb
+gtdb = params.skip_binqc ? false : params.gtdb
 if (gtdb) {
     ch_gtdb = Channel
         .value(file( "${gtdb}" ))
@@ -197,6 +214,14 @@ workflow MAG {
 
     ch_versions = Channel.empty()
 
+    // Get checkM database if not supplied
+
+    if ( !params.checkm_db ) {
+        ARIA2_UNTAR ("https://data.ace.uq.edu.au/public/CheckM_databases/checkm_data_2015_01_16.tar.gz")
+        ch_checkm_db = ARIA2_UNTAR.out.downloaded_file
+     }
+
+
     //
     // SUBWORKFLOW: Read in samplesheet, validate and stage input files
     //
@@ -214,43 +239,38 @@ workflow MAG {
         ch_raw_short_reads
     )
     ch_versions = ch_versions.mix(FASTQC_RAW.out.versions.first())
+    if ( !params.skip_clipping ) {
+        if ( params.clip_tool == 'fastp' ) {
+            ch_clipmerge_out = FASTP (
+                ch_raw_short_reads,
+                [],
+                params.fastp_save_trimmed_fail,
+                []
+            )
+            ch_short_reads = FASTP.out.reads
+            ch_versions = ch_versions.mix(FASTP.out.versions.first())
 
-    if ( params.clip_tool == 'fastp' ) {
-        ch_clipmerge_out = FASTP (
-            ch_raw_short_reads,
-            params.fastp_save_trimmed_fail,
-            []
-        )
-        ch_short_reads = FASTP.out.reads
-        ch_versions = ch_versions.mix(FASTP.out.versions.first())
+        } else if ( params.clip_tool == 'adapterremoval' ) {
 
-    } else if ( params.clip_tool == 'adapterremoval' ) {
+            // due to strange output file scheme in AR2, have to manually separate
+            // SE/PE to allow correct pulling of reads after.
+            ch_adapterremoval_in = ch_raw_short_reads
+                .branch {
+                        single: it[0]['single_end']
+                        paired: !it[0]['single_end']
+                    }
 
-        // due to strange output file scheme in AR2, have to manually separate
-        // SE/PE to allow correct pulling of reads after.
-        ch_adapterremoval_in = ch_raw_short_reads
-            .branch {
-                    single: it[0]['single_end']
-                    paired: !it[0]['single_end']
-                }
+            ADAPTERREMOVAL_PE ( ch_adapterremoval_in.paired, [] )
+            ADAPTERREMOVAL_SE ( ch_adapterremoval_in.single, [] )
 
-        ADAPTERREMOVAL_PE ( ch_adapterremoval_in.paired, [] )
-        ADAPTERREMOVAL_SE ( ch_adapterremoval_in.single, [] )
+            ch_short_reads = Channel.empty()
+            ch_short_reads = ch_short_reads.mix(ADAPTERREMOVAL_SE.out.singles_truncated, ADAPTERREMOVAL_PE.out.paired_truncated)
 
-        // pair1 and 2 come for PE data from separate output channels, so bring
-        // this back together again here
-        ch_adapterremoval_pe_out = Channel.empty()
-        ch_adapterremoval_pe_out = ADAPTERREMOVAL_PE.out.pair1_truncated
-            .join(ADAPTERREMOVAL_PE.out.pair2_truncated)
-            .map {
-                [ it[0], [it[1], it[2]] ]
-            }
+            ch_versions = ch_versions.mix(ADAPTERREMOVAL_PE.out.versions.first(), ADAPTERREMOVAL_SE.out.versions.first())
 
-        ch_short_reads = Channel.empty()
-        ch_short_reads = ch_short_reads.mix(ADAPTERREMOVAL_SE.out.singles_truncated, ch_adapterremoval_pe_out)
-
-        ch_versions = ch_versions.mix(ADAPTERREMOVAL_PE.out.versions.first(), ADAPTERREMOVAL_SE.out.versions.first())
-
+        }
+    } else {
+        ch_short_reads = ch_raw_short_reads
     }
 
     if (params.host_fasta){
@@ -282,10 +302,12 @@ workflow MAG {
         ch_versions = ch_versions.mix(BOWTIE2_PHIX_REMOVAL_ALIGN.out.versions.first())
     }
 
-    FASTQC_TRIMMED (
-        ch_short_reads
-    )
-    ch_versions = ch_versions.mix(FASTQC_TRIMMED.out.versions)
+    if (!(params.keep_phix && params.skip_clipping && !(params.host_genome || params.host_fasta))) {
+        FASTQC_TRIMMED (
+            ch_short_reads
+        )
+        ch_versions = ch_versions.mix(FASTQC_TRIMMED.out.versions)
+    }
 
     /*
     ================================================================================
@@ -427,8 +449,8 @@ workflow MAG {
         // short reads
         if (!params.single_end && (!params.skip_spades || !params.skip_spadeshybrid)){
             if (params.single_end){
-                POOL_SINGLE_READS ( ch_short_reads_grouped )
-                ch_short_reads_spades = POOL_SINGLE_READS.out.reads
+                POOL_SHORT_SINGLE_READS ( ch_short_reads_grouped )
+                ch_short_reads_spades = POOL_SHORT_SINGLE_READS.out.reads
             } else {
                 POOL_PAIRED_READS ( ch_short_reads_grouped )
                 ch_short_reads_spades = POOL_PAIRED_READS.out.reads
@@ -505,6 +527,7 @@ workflow MAG {
 
     ch_bowtie2_assembly_multiqc = Channel.empty()
     ch_busco_summary            = Channel.empty()
+    ch_checkm_summary           = Channel.empty()
     ch_busco_multiqc            = Channel.empty()
 
 
@@ -521,8 +544,8 @@ workflow MAG {
     */
 
     if (params.ancient_dna){
-        ANCIENT_DNA_ASSEMLY_VALIDATION(BINNING_PREPARATION.out.grouped_mappings)
-        ch_versions = ch_versions.mix(ANCIENT_DNA_ASSEMLY_VALIDATION.out.versions.first())
+        ANCIENT_DNA_ASSEMBLY_VALIDATION(BINNING_PREPARATION.out.grouped_mappings)
+        ch_versions = ch_versions.mix(ANCIENT_DNA_ASSEMBLY_VALIDATION.out.versions.first())
     }
 
     /*
@@ -536,7 +559,7 @@ workflow MAG {
         if (params.ancient_dna) {
             BINNING (
                 BINNING_PREPARATION.out.grouped_mappings
-                    .join(ANCIENT_DNA_ASSEMLY_VALIDATION.out.contigs_recalled)
+                    .join(ANCIENT_DNA_ASSEMBLY_VALIDATION.out.contigs_recalled)
                     .map{ it -> [ it[0], it[4], it[2], it[3] ] }, // [meta, contigs_recalled, bam, bais]
                 ch_short_reads
             )
@@ -555,7 +578,8 @@ workflow MAG {
         * DAS Tool: binning refinement
         */
 
-        if ( params.refine_bins_dastool && !params.skip_metabat2 && !params.skip_maxbin2 ) {
+        // If any two of the binners are both skipped at once, do not run because DAS_Tool needs at least one
+        if ( params.refine_bins_dastool ) {
 
             BINNING_REFINEMENT ( BINNING_PREPARATION.out.grouped_mappings, BINNING.out.bins, BINNING.out.metabat2depths, ch_short_reads )
             ch_versions = ch_versions.mix(BINNING_REFINEMENT.out.versions)
@@ -572,23 +596,30 @@ workflow MAG {
                 ch_input_for_postbinning_bins        = BINNING.out.bins.mix(BINNING_REFINEMENT.out.refined_bins)
                 ch_input_for_postbinning_bins_unbins = BINNING.out.bins.mix(BINNING.out.unbinned,BINNING_REFINEMENT.out.refined_bins,BINNING_REFINEMENT.out.refined_unbins)
                 ch_combinedepthtsvs_for_binsummary   = BINNING.out.depths_summary.mix(BINNING_REFINEMENT.out.refined_depths_summary)
-                ch_input_for_binsummary              = COMBINE_TSV ( ch_combinedepthtsvs_for_binsummary.collect() ).combined
+                ch_input_for_binsummary              = COMBINE_SUMMARY_TSV ( ch_combinedepthtsvs_for_binsummary.collect() ).combined
             }
+
         } else {
                 ch_input_for_postbinning_bins        = BINNING.out.bins
                 ch_input_for_postbinning_bins_unbins = BINNING.out.bins.mix(BINNING.out.unbinned)
                 ch_input_for_binsummary              = BINNING.out.depths_summary
         }
 
-        if (!params.skip_busco){
+        /*
+        * Bin QC subworkflows: for checking bin completeness with either BUSCO, CHECKM, and/or GUNC
+        */
+
+        // Results in: [ [meta], path_to_bin.fa ]
+        ch_input_bins_for_qc = ch_input_for_postbinning_bins_unbins.transpose()
+
+        if (!params.skip_binqc && params.binqc_tool == 'busco'){
             /*
             * BUSCO subworkflow: Quantitative measures for the assessment of genome assembly
             */
-            ch_input_bins_busco = ch_input_for_postbinning_bins_unbins.transpose()
             BUSCO_QC (
                 ch_busco_db_file,
                 ch_busco_download_folder,
-                ch_input_bins_busco
+                ch_input_bins_for_qc
             )
             ch_busco_summary = BUSCO_QC.out.summary
             ch_busco_multiqc = BUSCO_QC.out.multiqc
@@ -598,6 +629,29 @@ workflow MAG {
                 .failed_bin
                 .splitCsv(sep: '\t')
                 .map { bin, error -> if (!bin.contains(".unbinned.")) busco_failed_bins[bin] = error }
+        }
+
+        if (!params.skip_binqc && params.binqc_tool == 'checkm'){
+            /*
+            * CheckM subworkflow: Quantitative measures for the assessment of genome assembly
+            */
+            CHECKM_QC (
+                ch_input_bins_for_qc.groupTuple(),
+                ch_checkm_db
+            )
+            ch_checkm_summary = CHECKM_QC.out.summary
+
+            // TODO custom output parsing? Add to MultiQC?
+            ch_versions = ch_versions.mix(CHECKM_QC.out.versions)
+
+        }
+
+        if ( params.run_gunc && params.binqc_tool == 'checkm' ) {
+            GUNC_QC ( ch_input_bins_for_qc, ch_gunc_db, CHECKM_QC.out.checkm_tsv )
+            ch_versions = ch_versions.mix( GUNC_QC.out.versions )
+        } else if ( params.run_gunc ) {
+            GUNC_QC ( ch_input_bins_for_qc, ch_gunc_db, [] )
+            ch_versions = ch_versions.mix( GUNC_QC.out.versions )
         }
 
         ch_quast_bins_summary = Channel.empty()
@@ -627,10 +681,14 @@ workflow MAG {
             ch_cat_db = CAT_DB_GENERATE.out.db
         }
         CAT (
-            ch_input_for_postbinning_bins,
+            ch_input_for_postbinning_bins_unbins,
             ch_cat_db
         )
+        CAT_SUMMARY(
+            CAT.out.tax_classification.collect()
+        )
         ch_versions = ch_versions.mix(CAT.out.versions.first())
+        ch_versions = ch_versions.mix(CAT_SUMMARY.out.versions)
 
         /*
          * GTDB-tk: taxonomic classifications using GTDB reference
@@ -640,16 +698,18 @@ workflow MAG {
             GTDBTK (
                 ch_input_for_postbinning_bins_unbins,
                 ch_busco_summary,
+                ch_checkm_summary,
                 ch_gtdb
             )
             ch_versions = ch_versions.mix(GTDBTK.out.versions.first())
             ch_gtdbtk_summary = GTDBTK.out.summary
         }
 
-        if (!params.skip_busco || !params.skip_quast || gtdb){
+        if ( ( !params.skip_binqc ) || !params.skip_quast || gtdb){
             BIN_SUMMARY (
                 ch_input_for_binsummary,
                 ch_busco_summary.ifEmpty([]),
+                ch_checkm_summary.ifEmpty([]),
                 ch_quast_bins_summary.ifEmpty([]),
                 ch_gtdbtk_summary.ifEmpty([])
             )
@@ -685,6 +745,10 @@ workflow MAG {
     workflow_summary    = WorkflowMag.paramsSummaryMultiqc(workflow, summary_params)
     ch_workflow_summary = Channel.value(workflow_summary)
 
+    // Currently not used due to local MultiQC module
+    //methods_description    = WorkflowMag.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description)
+    //ch_methods_description = Channel.value(methods_description)
+
     ch_multiqc_files = Channel.empty()
     ch_multiqc_files = ch_multiqc_files.mix(Channel.from(ch_multiqc_config))
     ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
@@ -699,31 +763,40 @@ workflow MAG {
     ch_multiqc_files = ch_multiqc_files.mix(ch_busco_multiqc.collect().ifEmpty([]))
 
     MULTIQC (
-        ch_multiqc_files.collect()
+        ch_multiqc_files.collect(),
+        ch_multiqc_config.toList(),
+        ch_multiqc_custom_config.toList(),
+        ch_multiqc_logo.toList()
     )
     */
 
     ch_multiqc_readprep = Channel.empty()
 
-    if ( params.clip_tool == "fastp") {
-        ch_multiqc_readprep = ch_multiqc_readprep.mix(FASTP.out.json.collect{it[1]}.ifEmpty([]))
-    } else if ( params.clip_tool == "adapterremoval" ) {
-        ch_multiqc_readprep = ch_multiqc_readprep.mix(ADAPTERREMOVAL_PE.out.log.collect{it[1]}.ifEmpty([]), ADAPTERREMOVAL_SE.out.log.collect{it[1]}.ifEmpty([]))
+    if (!params.skip_clipping) {
+        if ( params.clip_tool == "fastp") {
+            ch_multiqc_readprep = ch_multiqc_readprep.mix(FASTP.out.json.collect{it[1]}.ifEmpty([]))
+        } else if ( params.clip_tool == "adapterremoval" ) {
+            ch_multiqc_readprep = ch_multiqc_readprep.mix(ADAPTERREMOVAL_PE.out.settings.collect{it[1]}.ifEmpty([]), ADAPTERREMOVAL_SE.out.settings.collect{it[1]}.ifEmpty([]))
+        }
+    }
+
+    ch_fastqc_trimmed_multiqc = Channel.empty()
+    if (!(params.keep_phix && params.skip_clipping && !(params.host_genome || params.host_fasta))) {
+        ch_fastqc_trimmed_multiqc = FASTQC_TRIMMED.out.zip.collect{it[1]}.ifEmpty([])
     }
 
     MULTIQC (
         ch_multiqc_files.collect(),
         ch_multiqc_custom_config.collect().ifEmpty([]),
         FASTQC_RAW.out.zip.collect{it[1]}.ifEmpty([]),
-        FASTQC_TRIMMED.out.zip.collect{it[1]}.ifEmpty([]),
+        ch_fastqc_trimmed_multiqc.collect().ifEmpty([]),
         ch_bowtie2_removal_host_multiqc.collect{it[1]}.ifEmpty([]),
         ch_quast_multiqc.collect().ifEmpty([]),
         ch_bowtie2_assembly_multiqc.collect().ifEmpty([]),
         ch_busco_multiqc.collect().ifEmpty([]),
-        ch_multiqc_readprep.collect().ifEmpty([]),
+        ch_multiqc_readprep.collect().ifEmpty([])
     )
     multiqc_report = MULTIQC.out.report.toList()
-    ch_versions    = ch_versions.mix(MULTIQC.out.versions)
 }
 
 /*
@@ -737,6 +810,9 @@ workflow.onComplete {
         NfcoreTemplate.email(workflow, params, summary_params, projectDir, log, multiqc_report, busco_failed_bins)
     }
     NfcoreTemplate.summary(workflow, params, log, busco_failed_bins)
+    if (params.hook_url) {
+        NfcoreTemplate.IM_notification(workflow, params, summary_params, projectDir, log)
+    }
 }
 
 /*

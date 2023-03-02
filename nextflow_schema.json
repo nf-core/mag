@@ -165,6 +165,12 @@
                     "fa_icon": "fas fa-question-circle",
                     "hidden": true
                 },
+                "version": {
+                    "type": "boolean",
+                    "description": "Display version and exit.",
+                    "fa_icon": "fas fa-question-circle",
+                    "hidden": true
+                },
                 "publish_dir_mode": {
                     "type": "string",
                     "default": "copy",
@@ -202,11 +208,29 @@
                     "fa_icon": "fas fa-palette",
                     "hidden": true
                 },
+                "hook_url": {
+                    "type": "string",
+                    "description": "Incoming hook URL for messaging service",
+                    "fa_icon": "fas fa-people-group",
+                    "help_text": "Incoming hook URL for messaging service. Currently, MS Teams and Slack are supported.",
+                    "hidden": true
+                },
                 "multiqc_config": {
                     "type": "string",
                     "description": "Custom config file to supply to MultiQC.",
                     "fa_icon": "fas fa-cog",
                     "hidden": true
+                },
+                "multiqc_logo": {
+                    "type": "string",
+                    "description": "Custom logo file to supply to MultiQC. File name must also be set in the MultiQC config file",
+                    "fa_icon": "fas fa-image",
+                    "hidden": true
+                },
+                "multiqc_methods_description": {
+                    "type": "string",
+                    "description": "Custom MultiQC yaml file containing HTML including a methods description.",
+                    "fa_icon": "fas fa-cog"
                 },
                 "tracedir": {
                     "type": "string",
@@ -228,12 +252,6 @@
                     "description": "Show all params when using `--help`",
                     "hidden": true,
                     "help_text": "By default, parameters set as _hidden_ in the schema are not shown on the command line when a user runs with `--help`. Specifying this option will tell the pipeline to show all parameters."
-                },
-                "enable_conda": {
-                    "type": "boolean",
-                    "description": "Run this workflow with Conda. You can also use '-profile conda' instead of providing this parameter.",
-                    "hidden": true,
-                    "fa_icon": "fas fa-bacon"
                 }
             }
         },
@@ -278,8 +296,12 @@
                 "clip_tool": {
                     "type": "string",
                     "default": "fastp",
-                    "description": "Specify which adapter clipping tool to use. Options: 'fastp', 'adapterremoval'",
+                    "description": "Specify which adapter clipping tool to use.",
                     "enum": ["fastp", "adapterremoval"]
+                },
+                "save_clipped_reads": {
+                    "type": "boolean",
+                    "description": "Specify to save the resulting clipped FASTQ files to --outdir."
                 },
                 "reads_minlength": {
                     "type": "integer",
@@ -340,6 +362,10 @@
                     "type": "boolean",
                     "description": "Save the read IDs of removed host reads."
                 },
+                "save_hostremoved_reads": {
+                    "type": "boolean",
+                    "description": "Specify to save input FASTQ files with host reads removed to --outdir."
+                },
                 "keep_phix": {
                     "type": "boolean",
                     "description": "Keep reads similar to the Illumina internal standard PhiX genome."
@@ -349,6 +375,14 @@
                     "default": "${baseDir}/assets/data/GCA_002596845.1_ASM259684v1_genomic.fna.gz",
                     "description": "Genome reference used to remove Illumina PhiX contaminant reads.",
                     "hidden": true
+                },
+                "skip_clipping": {
+                    "type": "boolean",
+                    "description": "Skip read preprocessing using fastp or adapterremoval."
+                },
+                "save_phixremoved_reads": {
+                    "type": "boolean",
+                    "description": "Specify to save input FASTQ files with phiX reads removed to --outdir."
                 }
             }
         },
@@ -387,6 +421,18 @@
                     "default": "${baseDir}/assets/data/GCA_000840245.1_ViralProj14204_genomic.fna.gz",
                     "hidden": true,
                     "description": "Genome reference used to remove ONT Lambda contaminant reads."
+                },
+                "save_lambdaremoved_reads": {
+                    "type": "boolean",
+                    "description": "Specify to save input FASTQ files with lamba reads removed  to --outdir."
+                },
+                "save_porechop_reads": {
+                    "type": "boolean",
+                    "description": "Specify to save the resulting clipped FASTQ files to --outdir."
+                },
+                "save_filtlong_reads": {
+                    "type": "boolean",
+                    "description": "Specify to save the resulting length filtered FASTQ files to --outdir."
                 }
             }
         },
@@ -412,8 +458,8 @@
                 },
                 "cat_db": {
                     "type": "string",
-                    "description": "Database for taxonomic classification of metagenome assembled genomes.",
-                    "help_text": "E.g. https://tbb.bio.uu.nl/bastiaan/CAT_prepare/CAT_prepare_20210107.tar.gz. This parameter is mutually exclusive with `--cat_db_generate`. The zipped file needs to contain a folder named `*taxonomy*` and `*database*` that hold the respective files."
+                    "description": "Database for taxonomic classification of metagenome assembled genomes. Can be either a zipped file or a directory containing the extracted output of such.",
+                    "help_text": "E.g. https://tbb.bio.uu.nl/bastiaan/CAT_prepare/CAT_prepare_20210107.tar.gz. This parameter is mutually exclusive with `--cat_db_generate`. The file needs to contain a folder named `*taxonomy*` and `*database*` that hold the respective files."
                 },
                 "cat_db_generate": {
                     "type": "boolean",
@@ -424,6 +470,10 @@
                     "type": "boolean",
                     "description": "Save the CAT database generated when specified by `--cat_db_generate`.",
                     "help_text": "Useful to allow reproducibility, as old versions of prebuild CAT databases do not always remain accessible and underlying NCBI taxonomy and nr databases change."
+                },
+                "cat_official_taxonomy": {
+                    "type": "boolean",
+                    "description": "Only return official taxonomic ranks (Kingdom, Phylum, etc.) when running CAT."
                 },
                 "gtdb": {
                     "type": "string",
@@ -549,6 +599,10 @@
                     "type": "boolean",
                     "description": "Skip MaxBin2 Binning"
                 },
+                "skip_concoct": {
+                    "type": "boolean",
+                    "description": "Skip CONCOCT Binning"
+                },
                 "min_contig_size": {
                     "type": "integer",
                     "default": 1500,
@@ -584,9 +638,15 @@
             "description": "",
             "default": "",
             "properties": {
-                "skip_busco": {
+                "skip_binqc": {
                     "type": "boolean",
-                    "description": "Disable bin QC with BUSCO."
+                    "description": "Disable bin QC with BUSCO or CheckM."
+                },
+                "binqc_tool": {
+                    "type": "string",
+                    "default": "busco",
+                    "description": "Specify which tool for bin quality-control validation to use.",
+                    "enum": ["busco", "checkm"]
                 },
                 "busco_reference": {
                     "type": "string",
@@ -607,6 +667,22 @@
                     "description": "Save the used BUSCO lineage datasets provided via --busco_reference or downloaded when not using --busco_reference or --busco_download_path.",
                     "help_text": "Useful to allow reproducibility, as BUSCO datasets are frequently updated and old versions do not always remain accessible."
                 },
+                "busco_clean": {
+                    "type": "boolean",
+                    "description": "Enable clean-up of temporary files created during BUSCO runs.",
+                    "help_text": "By default, BUSCO creates a large number of intermediate files every run. This may cause problems on some clusters which have file number limits in plate, particularly with large numbers of bins. Enabling this option cleans these files, reducing the total file count of the work directory."
+                },
+                "checkm_db": {
+                    "type": "string",
+                    "default": "None",
+                    "description": "Path to local folder containing already downloaded and uncompressed CheckM database.",
+                    "help_text": "The pipeline can also download this for you if not specified, and you can save the resulting directory into your output directory by specifying `--save_checkm_data`. You should move this directory to somewhere else on your machine (and supply back to the pipeline in future runs again with `--checkm_db`."
+                },
+                "save_checkm_data": {
+                    "type": "boolean",
+                    "description": "Save the used CheckM reference files downloaded when not using --checkm_db parameter.",
+                    "help_text": "If specified, the directories and files decompressed from the `tar.gz` file downloaded from the [CheckM FTP server](https://data.ace.uq.edu.au/public/CheckM_databases/) will be stored in your output directory alongside your CheckM results."
+                },
                 "refine_bins_dastool": {
                     "type": "boolean",
                     "description": "Turn on bin refinement using DAS Tool."
@@ -623,6 +699,26 @@
                     "description": "Specify which binning output is sent for downstream annotation, taxonomic classification, bin quality control etc.",
                     "help_text": "`raw_bins_only`: only bins (and unbinned contigs) from the binners.\n`refined_bins_only`:  only bins (and unbinned contigs) from the bin refinement step .\n`both`: bins and unbinned contigs from both the binning and bin refinement steps.",
                     "enum": ["raw_bins_only", "refined_bins_only", "both"]
+                },
+                "run_gunc": {
+                    "type": "boolean",
+                    "description": "Turn on GUNC genome chimerism checks"
+                },
+                "gunc_db": {
+                    "type": "string",
+                    "default": "None",
+                    "description": "Specify a path to a pre-downloaded GUNC dmnd database file"
+                },
+                "gunc_database_type": {
+                    "type": "string",
+                    "default": "progenomes",
+                    "description": "Specify which database to auto-download if not supplying own",
+                    "enum": ["progenomes", "gtdb"]
+                },
+                "gunc_save_db": {
+                    "type": "boolean",
+                    "description": "Save the used GUNC reference files downloaded when not using --gunc_db parameter.",
+                    "help_text": "If specified, the corresponding DIAMOND file downloaded from the GUNC server will be stored in your output directory alongside your GUNC results."
                 }
             }
         },

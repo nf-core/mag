@@ -2,6 +2,8 @@
 // This file holds several functions specific to the workflow/mag.nf in the nf-core/mag pipeline
 //
 
+import groovy.text.SimpleTemplateEngine
+
 class WorkflowMag {
 
     //
@@ -83,35 +85,40 @@ class WorkflowMag {
             }
         }
 
-        // Check if at least two binners were applied in order to run DAS Tool for bin refinment
-        // (needs to be adjusted in case additional binners are added)
-        if (params.refine_bins_dastool && params.skip_metabat2 ) {
-            log.error 'Both --refine_bins_dastool and --skip_metabat2 are specified! Invalid combination, bin refinement requires MetaBAT2 and MaxBin2 binning results.'
-            System.exit(1)
+        // Check MetaBAT2 inputs
+        if ( !params.skip_metabat2 && params.min_contig_size < 1500 ) {
+            log.warn "Specified min. contig size under minimum for MetaBAT2. MetaBAT2 will be run with 1500 (other binners not affected). You supplied: --min_contig_size ${params.min_contig_size}"
         }
-        if (params.refine_bins_dastool && params.skip_maxbin2 ) {
-            log.error 'Both --refine_bins_dastool and --skip_maxbin2 are specified! Invalid combination, bin refinement requires MetaBAT2 and MaxBin2 binning results.'
+
+        // Check more than one binner is run for bin refinement  (required DAS by Tool)
+        // If the number of run binners (i.e., number of not-skipped) is more than one, otherwise throw an error
+        if ( params.refine_bins_dastool && !([ params.skip_metabat2, params.skip_maxbin2, params.skip_concoct ].count(false) > 1) ) {
+            log.error 'Bin refinement with --refine_bins_dastool requires at least two binners to be running (not skipped). Check input.'
             System.exit(1)
         }
 
         // Check that bin refinement is actually turned on if any of the refined bins are requested for downstream
         if (!params.refine_bins_dastool && params.postbinning_input != 'raw_bins_only') {
-            log.error 'The parameter '--postbinning_input ${params.postbinning_input}' for downstream steps can only be specified if bin refinement is activated with --refine_bins_dastool! Check input.'
+            log.error 'The parameter '--postbinning_input ${ params.postbinning_input }' for downstream steps can only be specified if bin refinement is activated with --refine_bins_dastool! Check input.'
             System.exit(1)
         }
 
         // Check if BUSCO parameters combinations are valid
-        if (params.skip_busco) {
+        if (params.skip_binqc && params.binqc_tool == 'checkm') {
+            log.error 'Both --skip_binqc and --binqc_tool \'checkm\' are specified! Invalid combination, please specify either --skip_binqc or --binqc_tool.'
+            System.exit(1)
+        }
+        if (params.skip_binqc) {
             if (params.busco_reference) {
-                log.error 'Both --skip_busco and --busco_reference are specified! Invalid combination, please specify either --skip_busco or --busco_reference.'
+                log.error 'Both --skip_binqc and --busco_reference are specified! Invalid combination, please specify either --skip_binqc or --binqc_tool \'busco\' with --busco_reference.'
                 System.exit(1)
             }
             if (params.busco_download_path) {
-                log.error 'Both --skip_busco and --busco_download_path are specified! Invalid combination, please specify either --skip_busco or --busco_download_path.'
+                log.error 'Both --skip_binqc and --busco_download_path are specified! Invalid combination, please specify either --skip_binqc or --binqc_tool \'busco\' with --busco_download_path.'
                 System.exit(1)
             }
             if (params.busco_auto_lineage_prok) {
-                log.error 'Both --skip_busco and --busco_auto_lineage_prok are specified! Invalid combination, please specify either --skip_busco or --busco_auto_lineage_prok.'
+                log.error 'Both --skip_binqc and --busco_auto_lineage_prok are specified! Invalid combination, please specify either --skip_binqc or --binqc_tool \'busco\' with --busco_auto_lineage_prok.'
                 System.exit(1)
             }
         }
@@ -124,8 +131,8 @@ class WorkflowMag {
             System.exit(1)
         }
 
-        if (params.skip_busco && params.gtdb) {
-            log.warn '--skip_busco and --gtdb are specified! GTDB-tk will be omitted because GTDB-tk bin classification requires bin filtering based on BUSCO QC results to avoid GTDB-tk errors.'
+        if (params.skip_binqc && params.gtdb) {
+            log.warn '--skip_binqc and --gtdb are specified! GTDB-tk will be omitted because GTDB-tk bin classification requires bin filtering based on BUSCO or CheckM QC results to avoid GTDB-tk errors.'
         }
 
         // Check if CAT parameters are valid
@@ -164,6 +171,35 @@ class WorkflowMag {
         yaml_file_text        += 'data: |\n'
         yaml_file_text        += "${summary_section}"
         return yaml_file_text
+    }
+
+    public static String methodsDescriptionText(run_workflow, mqc_methods_yaml) {
+        // Convert  to a named map so can be used as with familar NXF ${workflow} variable syntax in the MultiQC YML file
+        def meta = [:]
+        meta.workflow = run_workflow.toMap()
+        meta['manifest_map'] = run_workflow.manifest.toMap()
+
+        meta['doi_text'] = meta.manifest_map.doi ? "(doi: <a href=\'https://doi.org/${meta.manifest_map.doi}\'>${meta.manifest_map.doi}</a>)" : ''
+        meta['nodoi_text'] = meta.manifest_map.doi ? '' : '<li>If available, make sure to update the text to include the Zenodo DOI of version of the pipeline used. </li>'
+
+        def methods_text = mqc_methods_yaml.text
+
+        def engine =  new SimpleTemplateEngine()
+        def description_html = engine.createTemplate(methods_text).make(meta)
+
+        return description_html
+    }//
+    // Exit pipeline if incorrect --genome key provided
+    //
+    private static void genomeExistsError(params, log) {
+        if (params.genomes && params.genome && !params.genomes.containsKey(params.genome)) {
+            log.error '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n' +
+                "  Genome '${params.genome}' not found in any config files provided to the pipeline.\n" +
+                '  Currently, the available genome keys are:\n' +
+                "  ${params.genomes.keySet().join(', ')}\n" +
+                '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
+            System.exit(1)
+        }
     }
 
 }

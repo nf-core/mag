@@ -2,9 +2,10 @@
  * Binning with MetaBAT2 and MaxBin2
  */
 
-include { DASTOOL_FASTATOCONTIG2BIN as DASTOOL_FASTATOCONTIG2BIN_METABAT2 } from '../../modules/nf-core/modules/dastool/fastatocontig2bin/main.nf'
-include { DASTOOL_FASTATOCONTIG2BIN as DASTOOL_FASTATOCONTIG2BIN_MAXBIN2  } from '../../modules/nf-core/modules/dastool/fastatocontig2bin/main.nf'
-include { DASTOOL_DASTOOL                                                 } from '../../modules/nf-core/modules/dastool/dastool/main.nf'
+include { DASTOOL_FASTATOCONTIG2BIN as DASTOOL_FASTATOCONTIG2BIN_METABAT2 } from '../../modules/nf-core/dastool/fastatocontig2bin/main.nf'
+include { DASTOOL_FASTATOCONTIG2BIN as DASTOOL_FASTATOCONTIG2BIN_MAXBIN2  } from '../../modules/nf-core/dastool/fastatocontig2bin/main.nf'
+include { DASTOOL_FASTATOCONTIG2BIN as DASTOOL_FASTATOCONTIG2BIN_CONCOCT  } from '../../modules/nf-core/dastool/fastatocontig2bin/main.nf'
+include { DASTOOL_DASTOOL                                                 } from '../../modules/nf-core/dastool/dastool/main.nf'
 include { RENAME_PREDASTOOL                                               } from '../../modules/local/rename_predastool'
 include { RENAME_POSTDASTOOL                                              } from '../../modules/local/rename_postdastool'
 include { MAG_DEPTHS as MAG_DEPTHS_REFINED                                } from '../../modules/local/mag_depths'
@@ -41,18 +42,21 @@ workflow BINNING_REFINEMENT {
                                         .branch {
                                             metabat2: it[0]['binner'] == 'MetaBAT2'
                                             maxbin2:  it[0]['binner'] == 'MaxBin2'
+                                            concoct:  it[0]['binner'] == 'CONCOCT'
                                         }
 
     // Generate DASTool auxilary files
     DASTOOL_FASTATOCONTIG2BIN_METABAT2 ( ch_bins_for_fastatocontig2bin.metabat2, "fa")
     // MaxBin2 bin extension was changed to 'fa' as well in RENAME_PREDASTOOL
     DASTOOL_FASTATOCONTIG2BIN_MAXBIN2 ( ch_bins_for_fastatocontig2bin.maxbin2, "fa")
+    DASTOOL_FASTATOCONTIG2BIN_CONCOCT ( ch_bins_for_fastatocontig2bin.concoct, "fa")
 
     // Run DASTOOL
     ch_fastatocontig2bin_for_dastool = Channel.empty()
     ch_fastatocontig2bin_for_dastool = ch_fastatocontig2bin_for_dastool
                                     .mix(DASTOOL_FASTATOCONTIG2BIN_METABAT2.out.fastatocontig2bin)
                                     .mix(DASTOOL_FASTATOCONTIG2BIN_MAXBIN2.out.fastatocontig2bin)
+                                    .mix(DASTOOL_FASTATOCONTIG2BIN_CONCOCT.out.fastatocontig2bin)
                                     .map {
                                         meta, fastatocontig2bin ->
                                             def meta_new = meta.clone()
@@ -61,10 +65,13 @@ workflow BINNING_REFINEMENT {
                                     }
                                     .groupTuple(by: 0)
 
+    // Note: do not `failOnMismatch` on join here, in some cases e.g. MAXBIN2 will fail if no bins, so cannot join!
+    // Only want to join for DAS_Tool on bins that 'exist'
     ch_input_for_dastool = ch_contigs_for_dastool.join(ch_fastatocontig2bin_for_dastool, by: 0)
 
     ch_versions = ch_versions.mix(DASTOOL_FASTATOCONTIG2BIN_METABAT2.out.versions.first())
     ch_versions = ch_versions.mix(DASTOOL_FASTATOCONTIG2BIN_MAXBIN2.out.versions.first())
+    ch_versions = ch_versions.mix(DASTOOL_FASTATOCONTIG2BIN_CONCOCT.out.versions.first())
 
     // Run DAStool
     DASTOOL_DASTOOL(ch_input_for_dastool, [], [])

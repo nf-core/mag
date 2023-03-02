@@ -1,10 +1,10 @@
 process BUSCO {
     tag "${bin}"
 
-    conda (params.enable_conda ? "bioconda::busco=5.1.0" : null)
+    conda "bioconda::busco=5.4.3"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/busco:5.1.0--py_1' :
-        'quay.io/biocontainers/busco:5.1.0--py_1' }"
+        'https://depot.galaxyproject.org/singularity/busco:5.4.3--pyhdfd78af_0':
+        'quay.io/biocontainers/busco:5.4.3--pyhdfd78af_0' }"
 
     input:
     tuple val(meta), path(bin)
@@ -24,13 +24,9 @@ process BUSCO {
     path "versions.yml"                                                                 , emit: versions
 
     script:
-    def cp_augustus_config = "Y"
-    if( workflow.profile.toString().indexOf("conda") != -1)
-        cp_augustus_config = "N"
-
-    def lineage_dataset_provided = "N"
-    if (params.busco_reference)
-        lineage_dataset_provided = "Y"
+    def cp_augustus_config = workflow.profile.toString().indexOf("conda") != -1 ? "N" : "Y"
+    def lineage_dataset_provided = params.busco_reference ? "Y" : "N"
+    def busco_clean = params.busco_clean ? "Y" : "N"
 
     def p = "--auto-lineage"
     if (params.busco_reference){
@@ -120,6 +116,10 @@ process BUSCO {
                     break
                 done
 
+            elif egrep -q \$'INFO:\t\\S+ selected' ${bin}_busco.log && egrep -q \$'INFO:\tNo marker genes were found. Root lineage \\S+ is kept' ${bin}_busco.log ; then
+                echo "Domain could be selected by BUSCO, but no more specific lineage."
+                cp BUSCO/short_summary.specific.\${db_name_spec}.BUSCO.txt short_summary.domain.\${db_name_spec}.${bin}.txt
+
             elif egrep -q \$'INFO:\t\\S+ selected' ${bin}_busco.log && egrep -q \$'INFO:\tNot enough markers were placed on the tree \\([0-9]*\\). Root lineage \\S+ is kept' ${bin}_busco.log ; then
                 echo "Domain could be selected by BUSCO, but no more specific lineage."
                 cp BUSCO/short_summary.specific.\${db_name_spec}.BUSCO.txt short_summary.domain.\${db_name_spec}.${bin}.txt
@@ -175,6 +175,13 @@ process BUSCO {
     # additionally output genes predicted with Prodigal (GFF3)
     if [ -f BUSCO/logs/prodigal_out.log ]; then
         mv BUSCO/logs/prodigal_out.log "${bin}_prodigal.gff"
+    fi
+
+    # if needed delete temporary BUSCO files
+    if [ ${busco_clean} ]; then
+        find . -depth -type d -name "augustus_config" -execdir rm -rf "{}" \\;
+        find . -depth -type d -name "auto_lineage" -execdir rm -rf "{}" \\;
+        find . -depth -type d -name "run_*" -execdir rm -rf "{}" +
     fi
 
     cat <<-END_VERSIONS > versions.yml
