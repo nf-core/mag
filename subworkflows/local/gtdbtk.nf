@@ -2,12 +2,9 @@
  * GTDB-Tk bin classification, using BUSCO QC to filter bins
  */
 
-params.gtdbtk_classify_options = [:]
-params.gtdbtk_summary_options  = [:]
-
 include { GTDBTK_DB_PREPARATION } from '../../modules/local/gtdbtk_db_preparation'
-include { GTDBTK_CLASSIFY       } from '../../modules/local/gtdbtk_classify'         addParams( options: params.gtdbtk_classify_options )
-include { GTDBTK_SUMMARY        } from '../../modules/local/gtdbtk_summary'          addParams( options: params.gtdbtk_summary_options  )
+include { GTDBTK_CLASSIFY       } from '../../modules/local/gtdbtk_classify'
+include { GTDBTK_SUMMARY        } from '../../modules/local/gtdbtk_summary'
 
 workflow GTDBTK {
     take:
