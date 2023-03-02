@@ -100,6 +100,7 @@ We thank the following people for their extensive assistance in the development 
 - [Maxime Garcia](https://github.com/MaxUlysse)
 - [Michael L Heuer](https://github.com/heuermh)
 - [Alex Hübner](https://github.com/alexhbnr)
+- [Jim Downie](https://github.com/prototaxites)
 
 ## Contributions and Support
 
