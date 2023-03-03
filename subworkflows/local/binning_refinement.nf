@@ -21,6 +21,15 @@ workflow BINNING_REFINEMENT {
     main:
     ch_versions = Channel.empty()
 
+    // remove domain information, will add it back later
+    // everything here is either unclassified or a prokaryote
+    ch_bins = bins
+        .map { meta, bins ->
+            meta_new = meta.clone()
+            meta_new.remove('domain')
+            [meta_new, bins]
+        }
+
     // Drop unnecessary files
     ch_contigs_for_dastool = contigs
                                 .map {
@@ -29,7 +38,7 @@ workflow BINNING_REFINEMENT {
                                         [ meta_new, assembly ]
                                 }
 
-    ch_bins_for_fastatocontig2bin = RENAME_PREDASTOOL(bins).renamed_bins
+    ch_bins_for_fastatocontig2bin = RENAME_PREDASTOOL(ch_bins).renamed_bins
                                         .branch {
                                             metabat2: it[0]['binner'] == 'MetaBAT2'
                                             maxbin2:  it[0]['binner'] == 'MaxBin2'
@@ -78,18 +87,23 @@ workflow BINNING_REFINEMENT {
                 if (bin.name != "unbinned.fa") {
                     def meta_new = meta.clone()
                     meta_new['binner'] = 'DASTool'
-                    meta_new['domain'] = 'prokarya'
                     [ meta_new, bin ]
                 }
             }
         .groupTuple()
+        .map {
+            meta, bins ->
+                def meta_new = meta.clone()
+                meta_new['domain'] = params.bin_domain_classification ? 'prokarya' : 'unclassified'
+                [ meta_new, bins ]
+            }
 
     ch_input_for_renamedastool = DASTOOL_DASTOOL.out.bins
         .map {
             meta, bins ->
                 def meta_new = meta.clone()
                 meta_new['binner'] = 'DASTool'
-                neta_new['domain'] = 'unclassified'
+                meta_new['domain'] = params.bin_domain_classification ? 'prokarya' : 'unclassified'
                 [ meta_new, bins ]
             }
 

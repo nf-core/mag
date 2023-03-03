@@ -45,10 +45,10 @@ if input_file.endswith(".gz"):
                 )
             # contigs to retain and pool
             elif length >= min_length_to_retain_contig:
-                pooled.append(SeqRecord(Seq(sequence, generic_dna), id=name))
+                pooled.append(SeqRecord(Seq(sequence, generic_dna), id=name, description=""))
             # remaining sequences
             else:
-                remaining.append(SeqRecord(Seq(sequence, generic_dna), id=name))
+                remaining.append(SeqRecord(Seq(sequence, generic_dna), id=name, description=""))
 else:
     with open(input_file) as f:
         fasta_sequences = SeqIO.parse(f, "fasta")
@@ -64,10 +64,10 @@ else:
                 )
             # contigs to retain and pool
             elif length >= min_length_to_retain_contig:
-                pooled.append(SeqRecord(Seq(sequence, generic_dna), id=name))
+                pooled.append(SeqRecord(Seq(sequence, generic_dna), id=name, description=""))
             # remaining sequences
             else:
-                remaining.append(SeqRecord(Seq(sequence, generic_dna), id=name))
+                remaining.append(SeqRecord(Seq(sequence, generic_dna), id=name, description=""))
 
 # Sort sequences above threshold by length
 df_above_threshold.sort_values(by=["length"], ascending=False, inplace=True)
@@ -77,10 +77,10 @@ df_above_threshold.reset_index(drop=True, inplace=True)
 for index, row in df_above_threshold.iterrows():
     if index + 1 <= max_sequences:
         print("write " + out_base + "." + str(index + 1) + ".fa")
-        out = SeqRecord(Seq(row["seq"], generic_dna), id=row["id"])
+        out = SeqRecord(Seq(row["seq"], generic_dna), id=row["id"], description = "")
         SeqIO.write(out, out_base + "." + str(index + 1) + ".fa", "fasta")
     else:
-        pooled.append(SeqRecord(Seq(row["seq"], generic_dna), id=row["id"]))
+        pooled.append(SeqRecord(Seq(row["seq"], generic_dna), id=row["id"], description = ""))
 
 print("write " + out_base + ".pooled.fa")
 SeqIO.write(pooled, out_base + ".pooled.fa", "fasta")

@@ -12,7 +12,6 @@ include { CONVERT_DEPTHS                        } from '../../modules/local/conv
 include { ADJUST_MAXBIN2_EXT                    } from '../../modules/local/adjust_maxbin2_ext'
 include { SPLIT_FASTA                           } from '../../modules/local/split_fasta'
 include { FASTA_BINNING_CONCOCT                 } from '../../subworkflows/nf-core/fasta_binning_concoct/main'
-include { DOMAIN_CLASSIFICATION                 } from '../../subworkflows/local/domain_classification'
 
 workflow BINNING {
     take:
@@ -126,38 +125,17 @@ workflow BINNING {
 
     GUNZIP_BINS ( ch_final_bins_for_gunzip )
     ch_binning_results_gunzipped = GUNZIP_BINS.out.gunzip
-    ch_versions = ch_versions.mix(GUNZIP_BINS.out.versions.first())
+        .groupTuple(by: 0)
 
     GUNZIP_UNBINS ( ch_split_fasta_results_transposed )
     ch_splitfasta_results_gunzipped = GUNZIP_UNBINS.out.gunzip
-        .map { meta, bins ->
-            meta_new = meta.clone()
-            meta_new.domain = 'unclassified'
-            [meta_new, bins]
-        }
         .groupTuple(by: 0)
+
+    ch_versions = ch_versions.mix(GUNZIP_BINS.out.versions.first())
     ch_versions = ch_versions.mix(GUNZIP_UNBINS.out.versions.first())
 
-    ch_binning_results_classified = Channel.empty()
-    if ( params.bin_domain_classification ) {
-        ch_assemblies_for_tiara = assemblies
-            .map { meta, assembly, bam, bai ->
-                [meta, assembly]
-            }
-        DOMAIN_CLASSIFICATION ( ch_assemblies_for_tiara, ch_binning_results_gunzipped.groupTuple(by: 0) )
-        ch_binning_results_classified = DOMAIN_CLASSIFICATION.out.classified_bins
-        ch_versions = ch_versions.mix(DOMAIN_CLASSIFICATION.out.versions)
-    } else {
-        ch_binning_results_classified = ch_binning_results_gunzipped.groupTuple(by: 0)
-            .map { meta, bins ->
-                meta_new = meta.clone()
-                meta_new.domain = 'unclassified'
-                [meta_new, bins]
-            }
-    }
-
     emit:
-    bins                                         = ch_binning_results_classified
+    bins                                         = ch_binning_results_gunzipped
     bins_gz                                      = ch_binning_results_gzipped_final
     unbinned                                     = ch_splitfasta_results_gunzipped
     unbinned_gz                                  = SPLIT_FASTA.out.unbinned

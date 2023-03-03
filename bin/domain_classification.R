@@ -108,11 +108,11 @@ classify_bins <- function(tiara, contig2bin, join_prokaryotes, assembler){
         for(bin in unclassified_bins) {
             if(join_prokaryotes == TRUE){
                 row <- tibble(
-                    BinID = bin, Prokarya = NA, Eukarya = NA, Organelle = NA, Unknown = NA, classification = "Unknown"
+                    BinID = bin, Prokarya = NA, Eukarya = NA, Organelle = NA, Unknown = NA, classification = "unknown"
                 )
             } else {
                 row <- tibble(
-                    BinID = bin, Bacteria = NA, Archaea = NA, Eukarya = NA, Organelle = NA, Unknown = NA, classification = "Unknown"
+                    BinID = bin, Bacteria = NA, Archaea = NA, Eukarya = NA, Organelle = NA, Unknown = NA, classification = "unknown"
                 )
             }
             softmax_probabilities <- bind_rows(softmax_probabilities, row)
@@ -124,6 +124,7 @@ classify_bins <- function(tiara, contig2bin, join_prokaryotes, assembler){
 
 classifications <- read_tsv(args$classification_file, na = c("NA", "n/a"))
 contig_to_bin <- read_tsv(args$contig_to_bin, col_names = c("sequence_id", "BinID"))
+
 results <- classify_bins(tiara = classifications,
                             contig2bin = contig_to_bin,
                             join_prokaryotes = args$join_prokaryotes,
