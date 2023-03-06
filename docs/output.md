@@ -347,7 +347,7 @@ Files in these two folders contain all contigs of an assembly.
   - `stats/[assembler]-[binner]-[sample/group]_*.args`: List of arguments used in CONCOCT execution.
   - </details>
 
-All the files and contigs in these folders will be assessed by QUAST and BUSCO.
+All the files and contigs in these folders will be assessed by QUAST and BUSCO, if the parameter `--postbinning_input` is not set to `refined_bins_only`.
 
 Note that CONCOCT does not output what it considers 'unbinned' contigs, therefore no 'discarded' contigs are produced here. You may still need to do your own manual curation of the resulting bins.
 
@@ -518,7 +518,7 @@ If the parameter `--save_checkm_reference` is set, additionally the used the Che
 
 </details>
 
-GUNC will be run if specified with `--run_gunc` as a standalone, unless CheckM is also activate via `--qc_tool 'checkm'`, in which case GUNC output will be merged with the CheckM output using `gunc merge_checkm`.
+GUNC will be run if specified with `--run_gunc` as a standalone, unless CheckM is also activated via `--qc_tool 'checkm'`, in which case GUNC output will be merged with the CheckM output using `gunc merge_checkm`.
 
 If `--gunc_save_db` is specified, the output directory will also contain the requested database (progenomes, or GTDB) in DIAMOND format.
 

@@ -71,7 +71,7 @@ Again, by default, the group information is only used to compute co-abundances f
 The typical command for running the pipeline is as follows:
 
 ```bash
-nextflow run nf-core/mag --input samplesheet.csv --outdir <OUTDIR> --host_genome GRCh37 -profile docker
+nextflow run nf-core/mag --input samplesheet.csv --outdir <OUTDIR> -profile docker
 ```
 
 This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.
