@@ -77,10 +77,10 @@ df_above_threshold.reset_index(drop=True, inplace=True)
 for index, row in df_above_threshold.iterrows():
     if index + 1 <= max_sequences:
         print("write " + out_base + "." + str(index + 1) + ".fa")
-        out = SeqRecord(Seq(row["seq"], generic_dna), id=row["id"], description = "")
+        out = SeqRecord(Seq(row["seq"], generic_dna), id=row["id"], description="")
         SeqIO.write(out, out_base + "." + str(index + 1) + ".fa", "fasta")
     else:
-        pooled.append(SeqRecord(Seq(row["seq"], generic_dna), id=row["id"], description = ""))
+        pooled.append(SeqRecord(Seq(row["seq"], generic_dna), id=row["id"], description=""))
 
 print("write " + out_base + ".pooled.fa")
 SeqIO.write(pooled, out_base + ".pooled.fa", "fasta")
