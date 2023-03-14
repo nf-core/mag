@@ -216,7 +216,7 @@ workflow MAG {
 
     // Get checkM database if not supplied
 
-    if ( !skip_binqc && params.binqc_tool == 'checkm' && !params.checkm_db ) {
+    if ( !params.skip_binqc && params.binqc_tool == 'checkm' && !params.checkm_db ) {
         ARIA2_UNTAR ("https://data.ace.uq.edu.au/public/CheckM_databases/checkm_data_2015_01_16.tar.gz")
         ch_checkm_db = ARIA2_UNTAR.out.downloaded_file
     }
