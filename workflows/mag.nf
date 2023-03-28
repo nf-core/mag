@@ -312,15 +312,19 @@ workflow MAG {
     }
 
     if ( params.bbnorm ) {
-        SEQTK_MERGEPE (
-            ch_short_reads.filter { ! it[0].single_end }
-        )
-        ch_versions = ch_versions.mix(SEQTK_MERGEPE.out.versions.first())
-        SEQTK_MERGEPE.out.reads
-            .mix(ch_short_reads.filter { it[0].single_end })
-            .map { [ [ id: sprintf("group%s", it[0].group), group: it[0].group, single_end: true ], it[1] ] }
-            .groupTuple()
-            .set { ch_bbnorm }
+        if ( params.coassemble_group ) {
+            SEQTK_MERGEPE (
+                ch_short_reads.filter { ! it[0].single_end } // Not needed now, but will when mix of pe and se is allowed
+            )
+            ch_versions = ch_versions.mix(SEQTK_MERGEPE.out.versions.first())
+            SEQTK_MERGEPE.out.reads
+                .mix(ch_short_reads.filter { it[0].single_end })
+                .map { [ [ id: sprintf("group%s", it[0].group), group: it[0].group, single_end: true ], it[1] ] }
+                .groupTuple()
+                .set { ch_bbnorm }
+        } else {
+            ch_bbnorm = ch_short_reads
+        }
         BBMAP_BBNORM ( ch_bbnorm )
         ch_versions = ch_versions.mix(BBMAP_BBNORM.out.versions)
         ch_short_reads_assembly = BBMAP_BBNORM.out.fastq
