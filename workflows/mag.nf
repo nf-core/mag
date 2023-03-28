@@ -113,6 +113,8 @@ include { ANCIENT_DNA_ASSEMBLY_VALIDATION } from '../subworkflows/local/ancient_
 include { ARIA2 as ARIA2_UNTAR                   } from '../modules/nf-core/aria2/main'
 include { FASTQC as FASTQC_RAW                   } from '../modules/nf-core/fastqc/main'
 include { FASTQC as FASTQC_TRIMMED               } from '../modules/nf-core/fastqc/main'
+include { SEQTK_MERGEPE                          } from '../modules/nf-core/seqtk/mergepe/main'
+include { BBMAP_BBNORM                           } from '../modules/nf-core/bbmap/bbnorm/main'
 include { FASTP                                  } from '../modules/nf-core/fastp/main'
 include { ADAPTERREMOVAL as ADAPTERREMOVAL_PE    } from '../modules/nf-core/adapterremoval/main'
 include { ADAPTERREMOVAL as ADAPTERREMOVAL_SE    } from '../modules/nf-core/adapterremoval/main'
@@ -309,6 +311,23 @@ workflow MAG {
         ch_versions = ch_versions.mix(FASTQC_TRIMMED.out.versions)
     }
 
+    if ( params.bbnorm ) {
+        SEQTK_MERGEPE (
+            ch_short_reads.filter { ! it[0].single_end }
+        )
+        ch_versions = ch_versions.mix(SEQTK_MERGEPE.out.versions.first())
+        SEQTK_MERGEPE.out.reads
+            .mix(ch_short_reads.filter { it[0].single_end })
+            .map { [ [ id: sprintf("group%s", it[0].group), group: it[0].group, single_end: true ], it[1] ] }
+            .groupTuple()
+            .set { ch_bbnorm }
+        BBMAP_BBNORM ( ch_bbnorm )
+        ch_versions = ch_versions.mix(BBMAP_BBNORM.out.versions)
+        ch_short_reads_assembly = BBMAP_BBNORM.out.fastq
+    } else {
+        ch_short_reads_assembly = ch_short_reads
+    }
+
     /*
     ================================================================================
                                     Preprocessing and QC for long reads
@@ -402,7 +421,7 @@ workflow MAG {
     if (params.coassemble_group) {
         // short reads
         // group and set group as new id
-        ch_short_reads_grouped = ch_short_reads
+        ch_short_reads_grouped = ch_short_reads_assembly
             .map { meta, reads -> [ meta.group, meta, reads ] }
             .groupTuple(by: 0)
             .map { group, metas, reads ->
@@ -425,10 +444,14 @@ workflow MAG {
                 [ meta, reads.collect { it } ]
             }
     } else {
-        ch_short_reads_grouped = ch_short_reads
-            .map { meta, reads ->
-                    if (!params.single_end){ [ meta, [reads[0]], [reads[1]] ] }
-                    else [ meta, [reads], [] ] }
+        ch_short_reads_grouped = ch_short_reads_assembly
+            .filter { it[0].single_end }
+            .map { meta, reads -> [ meta, [ reads ], [] ] }
+            .mix (
+                ch_short_reads_assembly
+                    .filter { ! it[0].single_end }
+                    .map { meta, reads -> [ meta, [ reads[0] ], [ reads[1] ] ] }
+            )
     }
 
     ch_assemblies = Channel.empty()
