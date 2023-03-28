@@ -20,14 +20,15 @@ process SPADES {
     script:
     def args = task.ext.args ?: ''
     maxmem = task.memory.toGiga()
+    def readstr = meta.single_end ? "--12 ${reads}" : "-1 1 ${reads[0]} -2 ${reads[1]}"
+
     if ( params.spades_fix_cpus == -1 || task.cpus == params.spades_fix_cpus )
         """
         metaspades.py \
             $args \
             --threads "${task.cpus}" \
             --memory $maxmem \
-            --pe1-1 ${reads[0]} \
-            --pe1-2 ${reads[1]} \
+            ${readstr} \
             -o spades
         mv spades/assembly_graph_with_scaffolds.gfa SPAdes-${meta.id}_graph.gfa
         mv spades/scaffolds.fasta SPAdes-${meta.id}_scaffolds.fasta

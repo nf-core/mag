@@ -452,6 +452,7 @@ workflow MAG {
                     .filter { ! it[0].single_end }
                     .map { meta, reads -> [ meta, [ reads[0] ], [ reads[1] ] ] }
             )
+        ch_long_reads_grouped = ch_long_reads
     }
 
     ch_assemblies = Channel.empty()
@@ -468,27 +469,37 @@ workflow MAG {
     }
 
     // Co-assembly: pool reads for SPAdes
-    if (params.coassemble_group) {
-        // short reads
-        if (!params.single_end && (!params.skip_spades || !params.skip_spadeshybrid)){
-            if (params.single_end){
-                POOL_SHORT_SINGLE_READS ( ch_short_reads_grouped )
-                ch_short_reads_spades = POOL_SHORT_SINGLE_READS.out.reads
-            } else {
-                POOL_PAIRED_READS ( ch_short_reads_grouped )
-                ch_short_reads_spades = POOL_PAIRED_READS.out.reads
-            }
+    ch_short_reads_assembly.view { "assembly: ${it}" }
+    ch_short_reads_grouped.view { "grouped: ${it}" }
+    if ( ! params.skip_spades || ! params.skip_spadeshybrid ){
+        if (params.coassemble_group) {
+            // This appears a bit unnecessary since spades is not called with single end reads
+            POOL_SHORT_SINGLE_READS (
+                ch_short_reads_grouped
+                    .filter { it[0].single_end }
+            )
+            POOL_PAIRED_READS (
+                ch_short_reads_grouped
+                    .filter { ! it[0].single_end }
+            )
+            POOL_SHORT_SINGLE_READS
+                .mix(POOL_PAIRED_READS)
+                .set { ch_short_reads_spades }
+        } else {
+            ch_short_reads_spades = ch_short_reads_assembly
         }
         // long reads
         if (!params.single_end && !params.skip_spadeshybrid){
             POOL_LONG_READS ( ch_long_reads_grouped )
             ch_long_reads_spades = POOL_LONG_READS.out.reads
+        } else {
+            ch_long_reads_spades = Channel.empty()
         }
     } else {
-        ch_short_reads_spades = ch_short_reads
-        ch_long_reads_spades = ch_long_reads
-            .map { meta, reads -> [ meta, [reads] ] }
+        ch_short_reads_spades = Channel.empty()
+        ch_long_reads_spades  = Channel.empty()
     }
+    ch_short_reads_spades.view { "spades: ${it}" }
 
     if (!params.single_end && !params.skip_spades){
         SPADES ( ch_short_reads_spades )
