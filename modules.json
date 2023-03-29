@@ -96,6 +96,11 @@
                         "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
                         "installed_by": ["modules"]
                     },
+                    "gtdbtk/classifywf": {
+                        "branch": "master",
+                        "git_sha": "57d1d24ab9c1d6d63dae939accf6680b35dfd4bf",
+                        "installed_by": ["modules"]
+                    },
                     "gunc/downloaddb": {
                         "branch": "master",
                         "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",

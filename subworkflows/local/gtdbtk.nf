@@ -3,7 +3,7 @@
  */
 
 include { GTDBTK_DB_PREPARATION } from '../../modules/local/gtdbtk_db_preparation'
-include { GTDBTK_CLASSIFY       } from '../../modules/local/gtdbtk_classify'
+include { GTDBTK_CLASSIFYWF     } from '../../modules/nf-core/gtdbtk/classifywf/main'
 include { GTDBTK_SUMMARY        } from '../../modules/local/gtdbtk_summary'
 
 workflow GTDBTK {
