@@ -313,10 +313,14 @@ workflow MAG {
 
     if ( params.bbnorm ) {
         if ( params.coassemble_group ) {
+            // Merge pairs, to be able to treat them as single ends when calling bbnorm. This prepares
+            // for dropping the single_end parameter, but keeps assembly modules as they are, i.e. not
+            // accepting a mix of single end and pairs.
             SEQTK_MERGEPE (
-                ch_short_reads.filter { ! it[0].single_end } // Not needed now, but will when mix of pe and se is allowed
+                ch_short_reads.filter { ! it[0].single_end }
             )
             ch_versions = ch_versions.mix(SEQTK_MERGEPE.out.versions.first())
+            // Combine the merge pairs with any single end libraries. Set the meta.single_end to true (used by the bbnorm module).
             SEQTK_MERGEPE.out.reads
                 .mix(ch_short_reads.filter { it[0].single_end })
                 .map { [ [ id: sprintf("group%s", it[0].group), group: it[0].group, single_end: true ], it[1] ] }
@@ -429,12 +433,13 @@ workflow MAG {
             .map { meta, reads -> [ meta.group, meta, reads ] }
             .groupTuple(by: 0)
             .map { group, metas, reads ->
-                    def meta = [:]
-                    meta.id          = "group-$group"
-                    meta.group       = group
-                    meta.single_end  = params.single_end
-                    if (!params.single_end) [ meta, reads.collect { it[0] }, reads.collect { it[1] } ]
-                    else [ meta, reads.collect { it }, [] ]
+                def assemble_as_single = params.single_end || ( params.bbnorm && params.coassemble_group )
+                def meta         = [:]
+                meta.id          = "group-$group"
+                meta.group       = group
+                meta.single_end  = assemble_as_single
+                if ( assemble_as_single ) [ meta, reads.collect { it }, [] ]
+                else [ meta, reads.collect { it[0] }, reads.collect { it[1] } ]
             }
         // long reads
         // group and set group as new id
@@ -473,22 +478,23 @@ workflow MAG {
     }
 
     // Co-assembly: pool reads for SPAdes
-    ch_short_reads_assembly.view { "assembly: ${it}" }
-    ch_short_reads_grouped.view { "grouped: ${it}" }
     if ( ! params.skip_spades || ! params.skip_spadeshybrid ){
-        if (params.coassemble_group) {
-            // This appears a bit unnecessary since spades is not called with single end reads
-            POOL_SHORT_SINGLE_READS (
-                ch_short_reads_grouped
-                    .filter { it[0].single_end }
-            )
-            POOL_PAIRED_READS (
-                ch_short_reads_grouped
-                    .filter { ! it[0].single_end }
-            )
-            POOL_SHORT_SINGLE_READS
-                .mix(POOL_PAIRED_READS)
-                .set { ch_short_reads_spades }
+        if ( params.coassemble_group ) {
+            if ( params.bbnorm ) {
+                ch_short_reads_spades = ch_short_reads_grouped.map { [ it[0], it[1] ] }
+            } else {
+                POOL_SHORT_SINGLE_READS (
+                    ch_short_reads_grouped
+                        .filter { it[0].single_end }
+                )
+                POOL_PAIRED_READS (
+                    ch_short_reads_grouped
+                        .filter { ! it[0].single_end }
+                )
+                POOL_SHORT_SINGLE_READS.out.reads
+                    .mix(POOL_PAIRED_READS.out.reads)
+                    .set { ch_short_reads_spades }
+            }
         } else {
             ch_short_reads_spades = ch_short_reads_assembly
         }
@@ -503,7 +509,6 @@ workflow MAG {
         ch_short_reads_spades = Channel.empty()
         ch_long_reads_spades  = Channel.empty()
     }
-    ch_short_reads_spades.view { "spades: ${it}" }
 
     if (!params.single_end && !params.skip_spades){
         SPADES ( ch_short_reads_spades )
