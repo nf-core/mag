@@ -60,19 +60,19 @@ workflow GTDBTK {
         }
 
     GTDBTK_DB_PREPARATION ( gtdb )
-    GTDBTK_CLASSIFY (
+    GTDBTK_CLASSIFYWF (
         ch_filtered_bins.passed.groupTuple(),
         GTDBTK_DB_PREPARATION.out
     )
 
     GTDBTK_SUMMARY (
         ch_filtered_bins.discarded.map{it[1]}.collect().ifEmpty([]),
-        GTDBTK_CLASSIFY.out.summary.collect().ifEmpty([]),
-        GTDBTK_CLASSIFY.out.filtered.collect().ifEmpty([]),
-        GTDBTK_CLASSIFY.out.failed.collect().ifEmpty([])
+        GTDBTK_CLASSIFYWF.out.summary.collect().ifEmpty([]),
+        GTDBTK_CLASSIFYWF.out.filtered.collect().ifEmpty([]),
+        GTDBTK_CLASSIFYWF.out.failed.collect().ifEmpty([])
     )
 
     emit:
     summary     = GTDBTK_SUMMARY.out.summary
-    versions    = GTDBTK_CLASSIFY.out.versions
+    versions    = GTDBTK_CLASSIFYWF.out.versions
 }
