@@ -20,7 +20,7 @@ process SPADES {
     script:
     def args = task.ext.args ?: ''
     maxmem = task.memory.toGiga()
-    def readstr = meta.single_end ? "--12 ${reads}" : "-1 ${reads[0]} -2 ${reads[1]}"
+    def readstr = meta.single_end ? "--12 ${reads}" : "-pe1-1 ${reads[0]} -pe1-2 ${reads[1]}"
 
     if ( params.spades_fix_cpus == -1 || task.cpus == params.spades_fix_cpus )
         """
