@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
-- [#NN](https://github.com/nf-core/mag/pull/NN) - Adds support for normalization of read depth with BBNorm (added by @erikrikarddaniel and @fabianegli)
+- [#422](https://github.com/nf-core/mag/pull/422) - Adds support for normalization of read depth with BBNorm (added by @erikrikarddaniel and @fabianegli)
 
 ### `Changed`
 
