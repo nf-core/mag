@@ -14,6 +14,10 @@
 
   > Schubert, M., Lindgreen, S., and Orlando, L. 2016. "AdapterRemoval v2: Rapid Adapter Trimming, Identification, and Read Merging." BMC Research Notes 9 (February): 88. doi: 10.1186/s13104-016-1900-2
 
+- [BBnorm/BBTools](http://sourceforge.net/projects/bbmap/)
+
+  > Only citable by the Sourceforge URL.
+
 - [BCFtools](https://doi.org/10.1093/gigascience/giab008)
 
   > Danecek, Petr, et al. "Twelve years of SAMtools and BCFtools." Gigascience 10.2 (2021): giab008. doi: 10.1093/gigascience/giab008
