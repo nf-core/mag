@@ -493,7 +493,6 @@ workflow MAG {
                 )
                 POOL_SHORT_SINGLE_READS.out.reads
                     .mix(POOL_PAIRED_READS.out.reads)
-                    .set { ch_short_reads_spades }
             }
         } else {
             ch_short_reads_spades = ch_short_reads_assembly
