@@ -491,7 +491,7 @@ workflow MAG {
                     ch_short_reads_grouped
                         .filter { ! it[0].single_end }
                 )
-                POOL_SHORT_SINGLE_READS.out.reads
+                ch_short_reads_spades = POOL_SHORT_SINGLE_READS.out.reads
                     .mix(POOL_PAIRED_READS.out.reads)
             }
         } else {
