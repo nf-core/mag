@@ -16,8 +16,6 @@
 
 - [BBnorm/BBTools](http://sourceforge.net/projects/bbmap/)
 
-  > Only citable by the Sourceforge URL.
-
 - [BCFtools](https://doi.org/10.1093/gigascience/giab008)
 
   > Danecek, Petr, et al. "Twelve years of SAMtools and BCFtools." Gigascience 10.2 (2021): giab008. doi: 10.1093/gigascience/giab008
