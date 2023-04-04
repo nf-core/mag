@@ -313,14 +313,14 @@ workflow MAG {
 
     if ( params.bbnorm ) {
         if ( params.coassemble_group ) {
-            // Merge pairs, to be able to treat them as single ends when calling bbnorm. This prepares
+            // Interleave pairs, to be able to treat them as single ends when calling bbnorm. This prepares
             // for dropping the single_end parameter, but keeps assembly modules as they are, i.e. not
             // accepting a mix of single end and pairs.
             SEQTK_MERGEPE (
                 ch_short_reads.filter { ! it[0].single_end }
             )
             ch_versions = ch_versions.mix(SEQTK_MERGEPE.out.versions.first())
-            // Combine the merge pairs with any single end libraries. Set the meta.single_end to true (used by the bbnorm module).
+            // Combine the interleaved pairs with any single end libraries. Set the meta.single_end to true (used by the bbnorm module).
             SEQTK_MERGEPE.out.reads
                 .mix(ch_short_reads.filter { it[0].single_end })
                 .map { [ [ id: sprintf("group%s", it[0].group), group: it[0].group, single_end: true ], it[1] ] }
