@@ -397,6 +397,11 @@
                     "type": "integer",
                     "default": 5,
                     "description": "Set BBnorm minimum depth to this number."
+                },
+                "save_bbnorm_reads": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Save normalized read files to output directory."
                 }
             }
         },

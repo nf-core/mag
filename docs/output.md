@@ -133,7 +133,7 @@ NanoPlot is used to calculate various metrics and plots about the quality and le
 
 If the pipeline is called with the `--bbnorm` option, it will normalize sequencing depth by removing reads to 1) reduce coverage of very abundant kmers and 2) delete very rare kmers (see `--bbnorm_target` and `--bbnorm_min` parameters).
 When called in conjunction with `--coassemble_group`, BBnorm will operate on interleaved (merged) FastQ files, producing only a single output file.
-The resulting FastQ files are save together with log output.
+If the `--save_bbnorm_reads` parameter is set, the resulting FastQ files are saved together with log output.
 
 <details markdown="1">
 <summary>Output files</summary>
