@@ -20,6 +20,8 @@ process SPADES {
     script:
     def args = task.ext.args ?: ''
     maxmem = task.memory.toGiga()
+    // The -s option is not supported for metaspades. Each time this is called with `meta.single_end` it's because
+    // read depth was normalized with BBNorm, which actually outputs pairs, but in an interleaved file.
     def readstr = meta.single_end ? "--12 ${reads}" : "-1 ${reads[0]} -2 ${reads[1]}"
 
     if ( params.spades_fix_cpus == -1 || task.cpus == params.spades_fix_cpus )
