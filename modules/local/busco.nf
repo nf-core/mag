@@ -178,7 +178,7 @@ process BUSCO {
     fi
 
     # if needed delete temporary BUSCO files
-    if [ ${busco_clean} ]; then
+    if [ ${busco_clean} = "Y" ]; then
         find . -depth -type d -name "augustus_config" -execdir rm -rf "{}" \\;
         find . -depth -type d -name "auto_lineage" -execdir rm -rf "{}" \\;
         find . -depth -type d -name "run_*" -execdir rm -rf "{}" +
