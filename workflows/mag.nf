@@ -792,7 +792,6 @@ workflow MAG {
          * Prokka: Genome annotation
          */
 
-
         if (!params.skip_prokka){
             ch_bins_for_prokka = ch_input_for_postbinning_bins_unbins.transpose()
             .map { meta, bin ->
