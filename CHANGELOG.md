@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fix duplicated Zenodo badge in README (by @jfy133)
 - Fix CheckM database always downloading, regardless if CheckM is selected (by @jfy133)
+- Fix bug with busco_clean parameter, where it is always activated (by @prototaxites)
 
 ### `Dependencies`
 
@@ -37,6 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#373](https://github.com/nf-core/mag/pull/373) - Removed parameter `--enable_conda`. Updated local modules to new conda syntax and updated nf-core modules (by @skrakau)
 - [#385](https://github.com/nf-core/mag/pull/385) - CAT also now runs on unbinned contigs as well as binned contigs (added by @jfy133)
 - [#399](https://github.com/nf-core/mag/pull/399/files) - Removed undocumented BUSCO_PLOT process (previously generated `*.busco_figure.png` plots unsuitable for metagenomics) (by @skrakau).
+- [#416](https://github.com/nf-core/mag/pull/416) - Use GTDBTK_CLASSIFYWF nf-core module instead of local module (added by @alxndrdiaz)
 
 ### `Fixed`
 
