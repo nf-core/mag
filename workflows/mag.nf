@@ -205,7 +205,7 @@ workflow MAG {
 
     // Get checkM database if not supplied
 
-    if ( !params.checkm_db ) {
+    if ( !params.skip_binqc && params.binqc_tool == 'checkm' && !params.checkm_db ) {
         ARIA2_UNTAR ("https://data.ace.uq.edu.au/public/CheckM_databases/checkm_data_2015_01_16.tar.gz")
         ch_checkm_db = ARIA2_UNTAR.out.downloaded_file
     }
@@ -303,26 +303,35 @@ workflow MAG {
 
     // Run/Lane merging
 
-    ch_short_reads_forcat = ch_short_reads_phixremoved
-        .map {
-            meta, reads ->
-                def meta_new = meta.clone()
-                meta_new.remove('run')
-            [ meta_new, reads ]
-        }
-        .groupTuple()
-        .dump()
-        .branch {
-            meta, reads ->
-                cat:       ( meta.single_end && reads.size() == 1 ) || ( !meta.single_end && reads.size() >= 2 )
-                skip_cat: true // Can skip merging if only single lanes
-        }
+    if ( !params.skip_run_merging ) {
+        ch_short_reads_forcat = ch_short_reads_phixremoved
+            .map {
+                meta, reads ->
+                    def meta_new = meta.clone()
+                    meta_new.remove('run')
+                [ meta_new, reads ]
+            }
+            .groupTuple()
+            .branch {
+                meta, reads ->
+                    cat:       ( meta.single_end && reads.size() == 1 ) || ( !meta.single_end && reads.size() >= 2 )
+                    skip_cat: true // Can skip merging if only single lanes
+            }
 
         // TODO Failing because array list as reads into Kraken/SPADes; possibly nothing going to skip cat when it should?
-        CAT_FASTQ ( ch_short_reads_forcat.cat.map{ meta, reads -> [ meta, reads.flatten() ]}.dump(tag: "cat") )
+        CAT_FASTQ ( ch_short_reads_forcat.cat.map{ meta, reads -> [ meta, reads.flatten() ]} )
 
         ch_short_reads = Channel.empty()
-        ch_short_reads = CAT_FASTQ.out.reads.mix( ch_short_reads_forcat.skip_cat )
+        ch_short_reads = CAT_FASTQ.out.reads.mix( ch_short_reads_forcat.skip_cat ).dump(tag: "helli")
+    } else {
+        ch_short_reads = ch_short_reads_phixremoved
+            .map {
+                meta, reads ->
+                    def meta_new = meta.clone()
+                    meta_new.remove('run')
+                [ meta_new, reads ]
+            }
+    }
 
     /*
     ================================================================================
@@ -355,6 +364,7 @@ workflow MAG {
     // join long and short reads by sample name
     ch_short_reads_tmp = ch_short_reads
         .map { meta, sr -> [ meta.id, meta, sr ] }
+
 
     ch_short_and_long_reads = ch_long_reads
         .map { meta, lr -> [ meta.id, meta, lr ] }
@@ -442,7 +452,7 @@ workflow MAG {
     } else {
         ch_short_reads_grouped = ch_short_reads
             .map { meta, reads ->
-                    if (!params.single_end){ [ meta, [reads[0]], [reads[1]] ] }
+                    if (!params.single_end){ [ meta, [reads.flatten()[0]], [reads.flatten()[1]] ] }
                     else [ meta, [reads], [] ] }
     }
 
