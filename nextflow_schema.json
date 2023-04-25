@@ -346,13 +346,13 @@
                 },
                 "host_genome": {
                     "type": "string",
-                    "help_text": "This parameter is mutually exclusive with `--host_genome`. Host read removal is done with Bowtie2. \nBoth the iGenomes FASTA file as well as corresponding, already pre-built Bowtie 2 index files will be used.",
+                    "help_text": "This parameter is mutually exclusive with `--host_fasta`. Host read removal is done with Bowtie2. \nBoth the iGenomes FASTA file as well as corresponding, already pre-built Bowtie 2 index files will be used.",
                     "description": "Name of iGenomes reference for host contamination removal."
                 },
                 "host_fasta": {
                     "type": "string",
                     "description": "Fasta reference file for host contamination removal.",
-                    "help_text": "This parameter is mutually exclusive with `--host_fasta`. The reference can be masked. Host read removal is done with Bowtie2."
+                    "help_text": "This parameter is mutually exclusive with `--host_genome`. The reference can be masked. Host read removal is done with Bowtie2."
                 },
                 "host_removal_verysensitive": {
                     "type": "boolean",
