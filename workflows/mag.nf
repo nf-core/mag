@@ -325,7 +325,6 @@ workflow MAG {
                 .mix(ch_short_reads.filter { it[0].single_end })
                 .map { [ [ id: sprintf("group%s", it[0].group), group: it[0].group, single_end: true ], it[1] ] }
                 .groupTuple()
-                .set { ch_bbnorm }
         } else {
             ch_bbnorm = ch_short_reads
         }
