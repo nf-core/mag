@@ -321,7 +321,7 @@ workflow MAG {
             )
             ch_versions = ch_versions.mix(SEQTK_MERGEPE.out.versions.first())
             // Combine the interleaved pairs with any single end libraries. Set the meta.single_end to true (used by the bbnorm module).
-            SEQTK_MERGEPE.out.reads
+             ch_bbnorm = SEQTK_MERGEPE.out.reads
                 .mix(ch_short_reads.filter { it[0].single_end })
                 .map { [ [ id: sprintf("group%s", it[0].group), group: it[0].group, single_end: true ], it[1] ] }
                 .groupTuple()
