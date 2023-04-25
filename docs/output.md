@@ -138,8 +138,8 @@ If the `--save_bbnorm_reads` parameter is set, the resulting FastQ files are sav
 <details markdown="1">
 <summary>Output files</summary>
 
-- `bbmap/bbnorm/[sample]\*.fastq.gz
-- `bbmap/bbnorm/log/[sample].bbnorm.log
+- `bbmap/bbnorm/[sample]\*.fastq.gz`
+- `bbmap/bbnorm/log/[sample].bbnorm.log`
 
 ## Taxonomic classification of trimmed reads
 
