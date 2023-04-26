@@ -144,7 +144,6 @@ If the `--save_bbnorm_reads` parameter is set, the resulting FastQ files are sav
 
 </details>
 
-
 ## Taxonomic classification of trimmed reads
 
 ### Kraken
