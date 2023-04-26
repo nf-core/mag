@@ -12,6 +12,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 - [Quality control](#quality-control) of input reads - trimming and contaminant removal
 - [Taxonomic classification of trimmed reads](#taxonomic-classification-of-trimmed-reads)
+- [Digital sequencing normalisation](#digital-normalization-with-BBnorm)
 - [Assembly](#assembly) of trimmed reads
 - [Protein-coding gene prediction](#gene-prediction) of assemblies
 - [Binning and binning refinement](#binning-and-binning-refinement) of assembled contigs
@@ -140,6 +141,8 @@ If the `--save_bbnorm_reads` parameter is set, the resulting FastQ files are sav
 
 - `bbmap/bbnorm/[sample]\*.fastq.gz`
 - `bbmap/bbnorm/log/[sample].bbnorm.log`
+
+</details>
 
 ## Taxonomic classification of trimmed reads
 
