@@ -16,6 +16,11 @@
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/aria2/aria2.diff"
                     },
+                    "bbmap/bbnorm": {
+                        "branch": "master",
+                        "git_sha": "c7f047d51b29a49aff34b86d059291ae43d1f296",
+                        "installed_by": ["modules"]
+                    },
                     "bcftools/consensus": {
                         "branch": "master",
                         "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
@@ -162,6 +167,11 @@
                         "installed_by": ["modules"]
                     },
                     "samtools/faidx": {
+                        "branch": "master",
+                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
+                        "installed_by": ["modules"]
+                    },
+                    "seqtk/mergepe": {
                         "branch": "master",
                         "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
                         "installed_by": ["modules"]

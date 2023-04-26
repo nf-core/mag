@@ -17,7 +17,7 @@ process MEGAHIT {
 
     script:
     def args = task.ext.args ?: ''
-    def input = params.single_end ? "-r \"" + reads1.join(",") + "\"" : "-1 \"" + reads1.join(",") + "\" -2 \"" + reads2.join(",") + "\""
+    def input = meta.single_end ? "-r \"" + reads1.join(",") + "\"" : "-1 \"" + reads1.join(",") + "\" -2 \"" + reads2.join(",") + "\""
     mem = task.memory.toBytes()
     if ( !params.megahit_fix_cpu_1 || task.cpus == 1 )
         """
