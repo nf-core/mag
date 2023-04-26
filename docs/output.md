@@ -12,6 +12,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 - [Quality control](#quality-control) of input reads - trimming and contaminant removal
 - [Taxonomic classification of trimmed reads](#taxonomic-classification-of-trimmed-reads)
+- [Digital sequencing normalisation](#digital-normalization-with-BBnorm)
 - [Assembly](#assembly) of trimmed reads
 - [Protein-coding gene prediction](#gene-prediction) of assemblies
 - [Binning and binning refinement](#binning-and-binning-refinement) of assembled contigs
@@ -126,6 +127,20 @@ NanoPlot is used to calculate various metrics and plots about the quality and le
 - `QC_longreads/NanoPlot/[sample]/`
   - `raw_*.[png/html/txt]`: Plots and reports for raw data
   - `filtered_*.[png/html/txt]`: Plots and reports for filtered data
+
+</details>
+
+## Digital normalization with BBnorm
+
+If the pipeline is called with the `--bbnorm` option, it will normalize sequencing depth of libraries prior assembly by removing reads to 1) reduce coverage of very abundant kmers and 2) delete very rare kmers (see `--bbnorm_target` and `--bbnorm_min` parameters).
+When called in conjunction with `--coassemble_group`, BBnorm will operate on interleaved (merged) FastQ files, producing only a single output file.
+If the `--save_bbnorm_reads` parameter is set, the resulting FastQ files are saved together with log output.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `bbmap/bbnorm/[sample]\*.fastq.gz`
+- `bbmap/bbnorm/log/[sample].bbnorm.log`
 
 </details>
 
