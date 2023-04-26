@@ -173,7 +173,7 @@
                     },
                     "tiara/tiara": {
                         "branch": "master",
-                        "git_sha": "d91e3d3d4806179065b087b91ff36c11976bf233",
+                        "git_sha": "d91e3d3d4806179065b087b91ff36c11976bf233"
                     },
                     "seqtk/mergepe": {
                         "branch": "master",
