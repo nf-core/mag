@@ -695,7 +695,7 @@
                     "default": "https://data.ace.uq.edu.au/public/CheckM_databases/checkm_data_2015_01_16.tar.gz",
                     "hidden": true,
                     "description": "URL pointing to checkM database for auto download, if local path not supplied.",
-                    "help_text": "You can use this parameter to point to an online copy of the  checkM database TAR archive that the pipeline will use for auto download if a local path is not supplied to `--checkm_db`."
+                    "help_text": "You can use this parameter to point to an online copy of the checkM database TAR archive that the pipeline will use for auto download if a local path is not supplied to `--checkm_db`."
                 },
                 "checkm_db": {
                     "type": "string",
