@@ -4,6 +4,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## v2.3.1dev - [date]
+
 ### `Added`
 
 - [#422](https://github.com/nf-core/mag/pull/422) - Adds support for normalization of read depth with BBNorm (added by @erikrikarddaniel and @fabianegli)
@@ -21,10 +22,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Dependencies`
 
-| Tool      | Previous version | New version |
-| --------- | ---------------- | ----------- |
-| BCFtools  | 1.16             | 1.17        |
-| SAMtools  | 1.16.1           | 1.17        |
+| Tool     | Previous version | New version |
+| -------- | ---------------- | ----------- |
+| BCFtools | 1.16             | 1.17        |
+| SAMtools | 1.16.1           | 1.17        |
 
 ## v2.3.0 - [2023/03/02]
 
