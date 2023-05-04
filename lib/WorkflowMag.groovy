@@ -90,7 +90,7 @@ class WorkflowMag {
 
         // Check that bin refinement is actually turned on if any of the refined bins are requested for downstream
         if (!params.refine_bins_dastool && params.postbinning_input != 'raw_bins_only') {
-            Nextflow.error('The parameter '--postbinning_input ${ params.postbinning_input }' for downstream steps can only be specified if bin refinement is activated with --refine_bins_dastool! Check input.')
+            Nextflow.error("The parameter --postbinning_input ${ params.postbinning_input }' for downstream steps can only be specified if bin refinement is activated with --refine_bins_dastool! Check input.")
         }
 
         // Check if BUSCO parameters combinations are valid
