@@ -19,7 +19,7 @@ if(hasExtension(params.input, "csv")){
                 if (row.size() == 5) {
                     if (row.long_reads) hybrid = true
                 } else {
-                    Nextflow.error("Input samplesheet contains row with ${row.size()} column(s). Expects 5.")
+                    error("Input samplesheet contains row with ${row.size()} column(s). Expects 5.")
                 }
             }
 }
