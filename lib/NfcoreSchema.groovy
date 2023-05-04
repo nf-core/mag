@@ -119,7 +119,7 @@ class NfcoreSchema {
         for (specifiedParam in params.keySet()) {
             // nextflow params
             if (nf_params.contains(specifiedParam)) {
-                Nextflow.error("ERROR: You used a core Nextflow option with two hyphens: '--${specifiedParam}'. Please resubmit with '-${specifiedParam}'")
+                log.error "ERROR: You used a core Nextflow option with two hyphens: '--${specifiedParam}'. Please resubmit with '-${specifiedParam}'"
                 has_error = true
             }
             // unexpected params
@@ -158,7 +158,7 @@ class NfcoreSchema {
             schema.validate(params_json)
         } catch (ValidationException e) {
             println ''
-            Nextflow.error('ERROR: Validation of pipeline parameters failed!')
+            log.error 'ERROR: Validation of pipeline parameters failed!'
             JSONObject exceptionJSON = e.toJSON()
             printExceptions(exceptionJSON, params_json, log, enums)
             println ''
@@ -340,11 +340,11 @@ class NfcoreSchema {
             def m = ex_json['message'] =~ /required key \[([^\]]+)\] not found/
             // Missing required param
             if (m.matches()) {
-                Nextflow.error("* Missing required parameter: --${m[0][1]}")
+                log.error "* Missing required parameter: --${m[0][1]}"
             }
             // Other base-level error
             else if (ex_json['pointerToViolation'] == '#') {
-                Nextflow.error("* ${ex_json['message']}")
+                log.error "* ${ex_json['message']}"
             }
             // Error with specific param
             else {
@@ -353,12 +353,12 @@ class NfcoreSchema {
                 if (enums.containsKey(param)) {
                     def error_msg = "* --${param}: '${param_val}' is not a valid choice (Available choices"
                     if (enums[param].size() > limit) {
-                        Nextflow.error("${error_msg} (${limit} of ${enums[param].size()}): ${enums[param][0..limit-1].join(', ')}, ... )")
+                        log.error "${error_msg} (${limit} of ${enums[param].size()}): ${enums[param][0..limit-1].join(', ')}, ... )"
                     } else {
-                        Nextflow.error("${error_msg}: ${enums[param].join(', ')})")
+                        log.error "${error_msg}: ${enums[param].join(', ')})"
                     }
                 } else {
-                    Nextflow.error("* --${param}: ${ex_json['message']} (${param_val})")
+                    log.error "* --${param}: ${ex_json['message']} (${param_val})"
                 }
             }
         }
