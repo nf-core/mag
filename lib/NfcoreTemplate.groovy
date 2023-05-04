@@ -54,10 +54,13 @@ class NfcoreTemplate {
     //
     // Construct and send completion email
     //
-    public static void email(workflow, params, summary_params, projectDir, log, multiqc_report=[]) {
+    public static void email(workflow, params, summary_params, projectDir, log, multiqc_report=[], busco_failed_bins = [:]) {
 
         // Set up the e-mail variables
         def subject = "[$workflow.manifest.name] Successful: $workflow.runName"
+        if (busco_failed_bins.size() > 0) {
+            subject = "[$workflow.manifest.name] Partially successful: For ${busco_failed_bins.size()} bin(s) the BUSCO analysis failed because no genes where found or placements failed: $workflow.runName"
+        }
         if (!workflow.success) {
             subject = "[$workflow.manifest.name] FAILED: $workflow.runName"
         }
@@ -91,6 +94,7 @@ class NfcoreTemplate {
         email_fields['commandLine']  = workflow.commandLine
         email_fields['projectDir']   = workflow.projectDir
         email_fields['summary']      = summary << misc_fields
+        email_fields['busco_failed_bins'] = busco_failed_bins.keySet()
 
         // On success try attach the multiqc report
         def mqc_report = null
@@ -225,8 +229,34 @@ class NfcoreTemplate {
     //
     // Print pipeline summary on completion
     //
-    public static void summary(workflow, params, log) {
+    public static void summary(workflow, params, log, busco_failed_bins = [:]) {
         Map colors = logColours(params.monochrome_logs)
+
+        if (busco_failed_bins.size() > 0) {
+            def failed_bins_no_genes = ''
+            def failed_bins_placements_failed = ''
+            def count_no_genes = 0
+            def count_placements_failed = 0
+            for (bin in busco_failed_bins) {
+                if (bin.value == "No genes"){
+                    count_no_genes += 1
+                    failed_bins_no_genes += "    ${bin.key}\n"
+                }
+                if (bin.value == "Placements failed"){
+                    count_placements_failed += 1
+                    failed_bins_placements_failed += "    ${bin.key}\n"
+                }
+            }
+            if (params.busco_reference)
+                log.info "-${colors.purple}[$workflow.manifest.name]${colors.yellow} For ${busco_failed_bins.size()} bin(s) BUSCO did not find any matching genes:\n${failed_bins_no_genes}See ${params.outdir}/GenomeBinning/QC/BUSCO/[bin]_busco.log for further information.${colors.reset}-"
+            else {
+                if (count_no_genes > 0)
+                    log.info "-${colors.purple}[$workflow.manifest.name]${colors.yellow} For ${count_no_genes} bin(s) the BUSCO analysis failed because no BUSCO genes could be found:\n${failed_bins_no_genes}See ${params.outdir}/GenomeBinning/QC/BUSCO/[bin]_busco.err and ${params.outdir}/GenomeBinning/QC/BUSCO/[bin]_busco.log for further information.${colors.reset}-"
+                if (count_placements_failed > 0)
+                    log.info "-${colors.purple}[$workflow.manifest.name]${colors.yellow} For ${count_placements_failed} bin(s) the BUSCO analysis using automated lineage selection failed due to failed placements:\n${failed_bins_placements_failed}See ${params.outdir}/GenomeBinning/QC/BUSCO/[bin]_busco.err and ${params.outdir}/GenomeBinning/QC/BUSCO/[bin]_busco.log for further information. Results for selected domain are still used.${colors.reset}-"
+            }
+        }
+
         if (workflow.success) {
             if (workflow.stats.ignoredCount == 0) {
                 log.info "-${colors.purple}[$workflow.manifest.name]${colors.green} Pipeline completed successfully${colors.reset}-"
