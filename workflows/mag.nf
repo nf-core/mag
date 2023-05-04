@@ -219,7 +219,7 @@ workflow MAG {
     // Get checkM database if not supplied
 
     if ( !params.skip_binqc && params.binqc_tool == 'checkm' && !params.checkm_db ) {
-        ARIA2_UNTAR (params.checkm_db_url)
+        ARIA2_UNTAR (params.checkm_download_url)
         ch_checkm_db = ARIA2_UNTAR.out.downloaded_file
     }
 
