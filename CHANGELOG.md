@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Changed`
 
 - [#429](https://github.com/nf-core/mag/pull/429) Replaced hardcoded CheckM database auto-download URL to a parameter (reported by @erikrikarddaniel and fixed by @jfy133)
+
 ### `Fixed`
 
 - Fix duplicated Zenodo badge in README (by @jfy133)
