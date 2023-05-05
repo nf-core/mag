@@ -119,7 +119,7 @@ class NfcoreSchema {
         for (specifiedParam in params.keySet()) {
             // nextflow params
             if (nf_params.contains(specifiedParam)) {
-                errorOR: You used a core Nextflow option with two hyphens: '--${specifiedParam}'. Please resubmit with '-${specifiedParam}'"
+                log.error "ERROR: You used a core Nextflow option with two hyphens: '--${specifiedParam}'. Please resubmit with '-${specifiedParam}'"
                 has_error = true
             }
             // unexpected params
@@ -158,7 +158,7 @@ class NfcoreSchema {
             schema.validate(params_json)
         } catch (ValidationException e) {
             println ''
-            errorOR: Validation of pipeline parameters failed!'
+            log.error 'Validation of pipeline parameters failed!'
             JSONObject exceptionJSON = e.toJSON()
             printExceptions(exceptionJSON, params_json, log, enums)
             println ''
