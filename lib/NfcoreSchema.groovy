@@ -158,7 +158,7 @@ class NfcoreSchema {
             schema.validate(params_json)
         } catch (ValidationException e) {
             println ''
-            log.error 'Validation of pipeline parameters failed!'
+            log.error 'ERROR: Validation of pipeline parameters failed!'
             JSONObject exceptionJSON = e.toJSON()
             printExceptions(exceptionJSON, params_json, log, enums)
             println ''
@@ -179,7 +179,7 @@ class NfcoreSchema {
         }
 
         if (has_error) {
-            error('Exiting!')
+            Nextflow.error('Exiting!')
         }
     }
 
@@ -340,11 +340,11 @@ class NfcoreSchema {
             def m = ex_json['message'] =~ /required key \[([^\]]+)\] not found/
             // Missing required param
             if (m.matches()) {
-                errorissing required parameter: --${m[0][1]}"
+                log.error "* Missing required parameter: --${m[0][1]}"
             }
             // Other base-level error
             else if (ex_json['pointerToViolation'] == '#') {
-                error{ex_json['message']}"
+                log.error "* ${ex_json['message']}"
             }
             // Error with specific param
             else {
@@ -353,12 +353,12 @@ class NfcoreSchema {
                 if (enums.containsKey(param)) {
                     def error_msg = "* --${param}: '${param_val}' is not a valid choice (Available choices"
                     if (enums[param].size() > limit) {
-                        errorrror_msg} (${limit} of ${enums[param].size()}): ${enums[param][0..limit-1].join(', ')}, ... )"
+                        log.error "${error_msg} (${limit} of ${enums[param].size()}): ${enums[param][0..limit-1].join(', ')}, ... )"
                     } else {
-                        errorrror_msg}: ${enums[param].join(', ')})"
+                        log.error "${error_msg}: ${enums[param].join(', ')})"
                     }
                 } else {
-                    error-${param}: ${ex_json['message']} (${param_val})"
+                    log.error "* --${param}: ${ex_json['message']} (${param_val})"
                 }
             }
         }
