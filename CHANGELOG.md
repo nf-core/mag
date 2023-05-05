@@ -12,13 +12,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Changed`
 
 - [#428](https://github.com/nf-core/mag/pull/428) - Update to nf-core 2.8 `TEMPLATE` (by @jfy133)
+- [#429](https://github.com/nf-core/mag/pull/429) - Replaced hardcoded CheckM database auto-download URL to a parameter (reported by @erikrikarddaniel and fixed by @jfy133)
 
 ### `Fixed`
 
-- Fix duplicated Zenodo badge in README (by @jfy133)
-- Fix CheckM database always downloading, regardless if CheckM is selected (by @jfy133)
-- Fix bug with busco_clean parameter, where it is always activated (by @prototaxites)
-- [#426](https://github.com/nf-core/mag/pull/426) - Fixed typo in help text for parameters `--host_genome` and `--host_fasta` (by @ tillenglert)
+- [#400](https://github.com/nf-core/mag/pull/400) - Fix duplicated Zenodo badge in README (by @jfy133)
+- [#406](https://github.com/nf-core/mag/pull/406) - Fix CheckM database always downloading, regardless if CheckM is selected (by @jfy133)
+- [#419](https://github.com/nf-core/mag/pull/419) - Fix bug with busco_clean parameter, where it is always activated (by @prototaxites)
+- [#426](https://github.com/nf-core/mag/pull/426) - Fixed typo in help text for parameters `--host_genome` and `--host_fasta` (by @tillenglert)
 
 ### `Dependencies`
 
