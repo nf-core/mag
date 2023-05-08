@@ -35,8 +35,6 @@ workflow BINNING_PREPARATION {
             .map { id, assembly_meta, assembly, index, reads_meta, reads -> [ assembly_meta, assembly, index, reads_meta, reads ] }
     }
 
-    ch_bowtie2_input.dump(tag: "bowtie_assmebly_align_input")
-
     BOWTIE2_ASSEMBLY_ALIGN ( ch_bowtie2_input )
     // group mappings for one assembly
     ch_grouped_mappings = BOWTIE2_ASSEMBLY_ALIGN.out.mappings

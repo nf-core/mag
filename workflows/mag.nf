@@ -327,13 +327,13 @@ workflow MAG {
                     skip_cat: true // Can skip merging if only single lanes
             }
 
-        CAT_FASTQ ( ch_short_reads_forcat.cat.map{ meta, reads -> [ meta, reads.flatten() ]}.dump(tag: "pre_runmerge") )
+        CAT_FASTQ ( ch_short_reads_forcat.cat.map{ meta, reads -> [ meta, reads.flatten() ]} )
 
         ch_short_reads = Channel.empty()
-        ch_short_reads = CAT_FASTQ.out.reads.mix( ch_short_reads_forcat.skip_cat ).map{ meta, reads -> [ meta, reads.flatten() ]}.dump(tag: "post_runmerge_out")
+        ch_short_reads = CAT_FASTQ.out.reads.mix( ch_short_reads_forcat.skip_cat ).map{ meta, reads -> [ meta, reads.flatten() ]}
         ch_versions    = ch_versions.mix(CAT_FASTQ.out.versions.first())
     } else {
-        ch_short_reads = ch_short_reads_phixremoved.dump(tag: "skip_runmerge_out")
+        ch_short_reads = ch_short_reads_phixremoved
             .map {
                 meta, reads ->
                     def meta_new = meta.clone()
