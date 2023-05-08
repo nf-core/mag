@@ -2,6 +2,7 @@
 // This file holds several functions specific to the workflow/mag.nf in the nf-core/mag pipeline
 //
 
+import nextflow.Nextflow
 import groovy.text.SimpleTemplateEngine
 
 class WorkflowMag {
@@ -12,22 +13,18 @@ class WorkflowMag {
     public static void initialise(params, log, hybrid) {
         // Check if binning mapping mode is valid
         if (!['all', 'group', 'own'].contains(params.binning_map_mode)) {
-            log.error "Invalid parameter '--binning_map_mode ${params.binning_map_mode}'. Valid values are 'all', 'group' or 'own'."
-            System.exit(1)
+            Nextflow.error("Invalid parameter '--binning_map_mode ${params.binning_map_mode}'. Valid values are 'all', 'group' or 'own'.")
         }
         if (params.coassemble_group && params.binning_map_mode == 'own') {
-            log.error "Invalid combination of parameter '--binning_map_mode own' and parameter '--coassemble_group'. Select either 'all' or 'group' mapping mode when performing group-wise co-assembly."
-            System.exit(1)
+            Nextflow.error("Invalid combination of parameter '--binning_map_mode own' and parameter '--coassemble_group'. Select either 'all' or 'group' mapping mode when performing group-wise co-assembly.")
         }
 
         // Check if specified cpus for SPAdes are available
         if ( params.spades_fix_cpus > params.max_cpus ) {
-            log.error "Invalid parameter '--spades_fix_cpus ${params.spades_fix_cpus}', max cpus are '${params.max_cpus}'."
-            System.exit(1)
+            Nextflow.error("Invalid parameter '--spades_fix_cpus ${params.spades_fix_cpus}', max cpus are '${params.max_cpus}'.")
         }
         if ( params.spadeshybrid_fix_cpus > params.max_cpus ) {
-            log.error "Invalid parameter '--spadeshybrid_fix_cpus ${params.spadeshybrid_fix_cpus}', max cpus are '${params.max_cpus}'."
-            System.exit(1)
+            Nextflow.error("Invalid parameter '--spadeshybrid_fix_cpus ${params.spadeshybrid_fix_cpus}', max cpus are '${params.max_cpus}'.")
         }
         // Check if settings concerning reproducibility of used tools are consistent and print warning if not
         if (params.megahit_fix_cpu_1 || params.spades_fix_cpus != -1 || params.spadeshybrid_fix_cpus != -1) {
@@ -52,8 +49,7 @@ class WorkflowMag {
 
         // Check if parameters for host contamination removal are valid
         if ( params.host_fasta && params.host_genome) {
-            log.error 'Both host fasta reference and iGenomes genome are specified to remove host contamination! Invalid combination, please specify either --host_fasta or --host_genome.'
-            System.exit(1)
+            Nextflow.error('Both host fasta reference and iGenomes genome are specified to remove host contamination! Invalid combination, please specify either --host_fasta or --host_genome.')
         }
         if ( hybrid && (params.host_fasta || params.host_genome) ) {
             log.warn 'Host read removal is only applied to short reads. Long reads might be filtered indirectly by Filtlong, which is set to use read qualities estimated based on k-mer matches to the short, already filtered reads.'
@@ -63,25 +59,21 @@ class WorkflowMag {
         }
         if ( params.host_genome ) {
             if (!params.genomes) {
-                log.error 'No config file containing genomes provided!'
-                System.exit(1)
+                Nextflow.error('No config file containing genomes provided!')
             }
             // Check if host genome exists in the config file
             if (!params.genomes.containsKey(params.host_genome)) {
-                log.error '=============================================================================\n' +
+                Nextflow.error('=============================================================================\n' +
                         "  Host genome '${params.host_genome}' not found in any config files provided to the pipeline.\n" +
                         '  Currently, the available genome keys are:\n' +
                         "  ${params.genomes.keySet().join(', ')}\n" +
-                        '==================================================================================='
-                System.exit(1)
+                        '===================================================================================')
             }
             if ( !params.genomes[params.host_genome].fasta ) {
-                log.error "No fasta file specified for the host genome ${params.host_genome}!"
-                System.exit(1)
+                Nextflow.error("No fasta file specified for the host genome ${params.host_genome}!")
             }
             if ( !params.genomes[params.host_genome].bowtie2 ) {
-                log.error "No Bowtie 2 index file specified for the host genome ${params.host_genome}!"
-                System.exit(1)
+                Nextflow.error("No Bowtie 2 index file specified for the host genome ${params.host_genome}!")
             }
         }
 
@@ -93,42 +85,34 @@ class WorkflowMag {
         // Check more than one binner is run for bin refinement  (required DAS by Tool)
         // If the number of run binners (i.e., number of not-skipped) is more than one, otherwise throw an error
         if ( params.refine_bins_dastool && !([ params.skip_metabat2, params.skip_maxbin2, params.skip_concoct ].count(false) > 1) ) {
-            log.error 'Bin refinement with --refine_bins_dastool requires at least two binners to be running (not skipped). Check input.'
-            System.exit(1)
+            Nextflow.error('Bin refinement with --refine_bins_dastool requires at least two binners to be running (not skipped). Check input.')
         }
 
         // Check that bin refinement is actually turned on if any of the refined bins are requested for downstream
         if (!params.refine_bins_dastool && params.postbinning_input != 'raw_bins_only') {
-            log.error 'The parameter '--postbinning_input ${ params.postbinning_input }' for downstream steps can only be specified if bin refinement is activated with --refine_bins_dastool! Check input.'
-            System.exit(1)
+            Nextflow.error("The parameter '--postbinning_input ${ params.postbinning_input }' for downstream steps can only be specified if bin refinement is activated with --refine_bins_dastool! Check input.")
         }
 
         // Check if BUSCO parameters combinations are valid
         if (params.skip_binqc && params.binqc_tool == 'checkm') {
-            log.error 'Both --skip_binqc and --binqc_tool \'checkm\' are specified! Invalid combination, please specify either --skip_binqc or --binqc_tool.'
-            System.exit(1)
+            Nextflow.error('Both --skip_binqc and --binqc_tool \'checkm\' are specified! Invalid combination, please specify either --skip_binqc or --binqc_tool.')
         }
         if (params.skip_binqc) {
             if (params.busco_reference) {
-                log.error 'Both --skip_binqc and --busco_reference are specified! Invalid combination, please specify either --skip_binqc or --binqc_tool \'busco\' with --busco_reference.'
-                System.exit(1)
+                Nextflow.error('Both --skip_binqc and --busco_reference are specified! Invalid combination, please specify either --skip_binqc or --binqc_tool \'busco\' with --busco_reference.')
             }
             if (params.busco_download_path) {
-                log.error 'Both --skip_binqc and --busco_download_path are specified! Invalid combination, please specify either --skip_binqc or --binqc_tool \'busco\' with --busco_download_path.'
-                System.exit(1)
+                Nextflow.error('Both --skip_binqc and --busco_download_path are specified! Invalid combination, please specify either --skip_binqc or --binqc_tool \'busco\' with --busco_download_path.')
             }
             if (params.busco_auto_lineage_prok) {
-                log.error 'Both --skip_binqc and --busco_auto_lineage_prok are specified! Invalid combination, please specify either --skip_binqc or --binqc_tool \'busco\' with --busco_auto_lineage_prok.'
-                System.exit(1)
+                Nextflow.error('Both --skip_binqc and --busco_auto_lineage_prok are specified! Invalid combination, please specify either --skip_binqc or --binqc_tool \'busco\' with --busco_auto_lineage_prok.')
             }
         }
         if (params.busco_reference && params.busco_download_path) {
-            log.error 'Both --busco_reference and --busco_download_path are specified! Invalid combination, please specify either --busco_reference or --busco_download_path.'
-            System.exit(1)
+            Nextflow.error('Both --busco_reference and --busco_download_path are specified! Invalid combination, please specify either --busco_reference or --busco_download_path.')
         }
         if (params.busco_auto_lineage_prok && params.busco_reference) {
-            log.error 'Both --busco_auto_lineage_prok and --busco_reference are specified! Invalid combination, please specify either --busco_auto_lineage_prok or --busco_reference.'
-            System.exit(1)
+            Nextflow.error('Both --busco_auto_lineage_prok and --busco_reference are specified! Invalid combination, please specify either --busco_auto_lineage_prok or --busco_reference.')
         }
 
         if (params.skip_binqc && params.gtdb) {
@@ -137,12 +121,10 @@ class WorkflowMag {
 
         // Check if CAT parameters are valid
         if (params.cat_db && params.cat_db_generate) {
-            log.error 'Invalid combination of parameters --cat_db and --cat_db_generate is specified! Please specify either --cat_db or --cat_db_generate.'
-            System.exit(1)
+            Nextflow.error('Invalid combination of parameters --cat_db and --cat_db_generate is specified! Please specify either --cat_db or --cat_db_generate.')
         }
         if (params.save_cat_db && !params.cat_db_generate) {
-            log.error 'Invalid parameter combination: parameter --save_cat_db specified, but not --cat_db_generate! Note also that the parameter --save_cat_db does not work in combination with --cat_db.'
-            System.exit(1)
+            Nextflow.error('Invalid parameter combination: parameter --save_cat_db specified, but not --cat_db_generate! Note also that the parameter --save_cat_db does not work in combination with --cat_db.')
         }
     }
 
@@ -188,17 +170,19 @@ class WorkflowMag {
         def description_html = engine.createTemplate(methods_text).make(meta)
 
         return description_html
-    }//
+    }
+
+    //
     // Exit pipeline if incorrect --genome key provided
     //
     private static void genomeExistsError(params, log) {
         if (params.genomes && params.genome && !params.genomes.containsKey(params.genome)) {
-            log.error '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n' +
+            def error_string = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
                 "  Genome '${params.genome}' not found in any config files provided to the pipeline.\n" +
-                '  Currently, the available genome keys are:\n' +
-                "  ${params.genomes.keySet().join(', ')}\n" +
-                '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
-            System.exit(1)
+                "  Currently, the available genome keys are:\n" +
+                "  ${params.genomes.keySet().join(", ")}\n" +
+                "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+            Nextflow.error(error_string)
         }
     }
 

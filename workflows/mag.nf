@@ -17,6 +17,9 @@ if(hasExtension(params.input, "csv")){
         .splitCsv(header: true)
         .map { row ->
                     if (row.long_reads) hybrid = true
+                } else {
+                    error("Input samplesheet contains row with ${row.size()} column(s). Expects 6.")
+                }
             }
 }
 
@@ -108,6 +111,8 @@ include { ANCIENT_DNA_ASSEMBLY_VALIDATION } from '../subworkflows/local/ancient_
 include { ARIA2 as ARIA2_UNTAR                   } from '../modules/nf-core/aria2/main'
 include { FASTQC as FASTQC_RAW                   } from '../modules/nf-core/fastqc/main'
 include { FASTQC as FASTQC_TRIMMED               } from '../modules/nf-core/fastqc/main'
+include { SEQTK_MERGEPE                          } from '../modules/nf-core/seqtk/mergepe/main'
+include { BBMAP_BBNORM                           } from '../modules/nf-core/bbmap/bbnorm/main'
 include { FASTP                                  } from '../modules/nf-core/fastp/main'
 include { ADAPTERREMOVAL as ADAPTERREMOVAL_PE    } from '../modules/nf-core/adapterremoval/main'
 include { ADAPTERREMOVAL as ADAPTERREMOVAL_SE    } from '../modules/nf-core/adapterremoval/main'
@@ -213,7 +218,7 @@ workflow MAG {
     // Get checkM database if not supplied
 
     if ( !params.skip_binqc && params.binqc_tool == 'checkm' && !params.checkm_db ) {
-        ARIA2_UNTAR ("https://data.ace.uq.edu.au/public/CheckM_databases/checkm_data_2015_01_16.tar.gz")
+        ARIA2_UNTAR (params.checkm_download_url)
         ch_checkm_db = ARIA2_UNTAR.out.downloaded_file
     }
 
@@ -325,7 +330,6 @@ workflow MAG {
                     skip_cat: true // Can skip merging if only single lanes
             }
 
-        // TODO Failing because array list as reads into Kraken/SPADes; possibly nothing going to skip cat when it should?
         CAT_FASTQ ( ch_short_reads_forcat.cat.map{ meta, reads -> [ meta, reads.flatten() ]}.dump(tag: "pre_runmerge") )
 
         ch_short_reads = Channel.empty()
@@ -339,6 +343,30 @@ workflow MAG {
                     meta_new.remove('run')
                 [ meta_new, reads ]
             }
+    }
+
+    if ( params.bbnorm ) {
+        if ( params.coassemble_group ) {
+            // Interleave pairs, to be able to treat them as single ends when calling bbnorm. This prepares
+            // for dropping the single_end parameter, but keeps assembly modules as they are, i.e. not
+            // accepting a mix of single end and pairs.
+            SEQTK_MERGEPE (
+                ch_short_reads.filter { ! it[0].single_end }
+            )
+            ch_versions = ch_versions.mix(SEQTK_MERGEPE.out.versions.first())
+            // Combine the interleaved pairs with any single end libraries. Set the meta.single_end to true (used by the bbnorm module).
+                ch_bbnorm = SEQTK_MERGEPE.out.reads
+                    .mix(ch_short_reads.filter { it[0].single_end })
+                    .map { [ [ id: sprintf("group%s", it[0].group), group: it[0].group, single_end: true ], it[1] ] }
+                    .groupTuple()
+        } else {
+            ch_bbnorm = ch_short_reads
+        }
+        BBMAP_BBNORM ( ch_bbnorm )
+        ch_versions = ch_versions.mix(BBMAP_BBNORM.out.versions)
+        ch_short_reads_assembly = BBMAP_BBNORM.out.fastq
+    } else {
+        ch_short_reads_assembly = ch_short_reads
     }
 
     /*
@@ -435,16 +463,17 @@ workflow MAG {
     if (params.coassemble_group) {
         // short reads
         // group and set group as new id
-        ch_short_reads_grouped = ch_short_reads
+        ch_short_reads_grouped = ch_short_reads_assembly
             .map { meta, reads -> [ meta.group, meta, reads ] }
             .groupTuple(by: 0)
             .map { group, metas, reads ->
-                    def meta = [:]
-                    meta.id          = "group-$group"
-                    meta.group       = group
-                    meta.single_end  = params.single_end
-                    if (!params.single_end) [ meta, reads.collect { it[0] }, reads.collect { it[1] } ]
-                    else [ meta, reads.collect { it }, [] ]
+                def assemble_as_single = params.single_end || ( params.bbnorm && params.coassemble_group )
+                def meta         = [:]
+                meta.id          = "group-$group"
+                meta.group       = group
+                meta.single_end  = assemble_as_single
+                if ( assemble_as_single ) [ meta, reads.collect { it }, [] ]
+                else [ meta, reads.collect { it[0] }, reads.collect { it[1] } ]
             }
         // long reads
         // group and set group as new id
@@ -458,10 +487,15 @@ workflow MAG {
                 [ meta, reads.collect { it } ]
             }
     } else {
-        ch_short_reads_grouped = ch_short_reads
-            .map { meta, reads ->
-                    if (!params.single_end){ [ meta, [reads.flatten()[0]], [reads.flatten()[1]] ] }
-                    else [ meta, [reads], [] ] }
+        ch_short_reads_grouped = ch_short_reads_assembly
+            .filter { it[0].single_end }
+            .map { meta, reads -> [ meta, [ reads ], [] ] }
+            .mix (
+                ch_short_reads_assembly
+                    .filter { ! it[0].single_end }
+                    .map { meta, reads -> [ meta, [ reads[0] ], [ reads[1] ] ] }
+            )
+        ch_long_reads_grouped = ch_long_reads
     }
 
     ch_assemblies = Channel.empty()
@@ -478,26 +512,35 @@ workflow MAG {
     }
 
     // Co-assembly: pool reads for SPAdes
-    if (params.coassemble_group) {
-        // short reads
-        if (!params.single_end && (!params.skip_spades || !params.skip_spadeshybrid)){
-            if (params.single_end){
-                POOL_SHORT_SINGLE_READS ( ch_short_reads_grouped )
-                ch_short_reads_spades = POOL_SHORT_SINGLE_READS.out.reads
+    if ( ! params.skip_spades || ! params.skip_spadeshybrid ){
+        if ( params.coassemble_group ) {
+            if ( params.bbnorm ) {
+                ch_short_reads_spades = ch_short_reads_grouped.map { [ it[0], it[1] ] }
             } else {
-                POOL_PAIRED_READS ( ch_short_reads_grouped )
-                ch_short_reads_spades = POOL_PAIRED_READS.out.reads
+                POOL_SHORT_SINGLE_READS (
+                    ch_short_reads_grouped
+                        .filter { it[0].single_end }
+                )
+                POOL_PAIRED_READS (
+                    ch_short_reads_grouped
+                        .filter { ! it[0].single_end }
+                )
+                ch_short_reads_spades = POOL_SHORT_SINGLE_READS.out.reads
+                    .mix(POOL_PAIRED_READS.out.reads)
             }
+        } else {
+            ch_short_reads_spades = ch_short_reads_assembly
         }
         // long reads
         if (!params.single_end && !params.skip_spadeshybrid){
             POOL_LONG_READS ( ch_long_reads_grouped )
             ch_long_reads_spades = POOL_LONG_READS.out.reads
+        } else {
+            ch_long_reads_spades = Channel.empty()
         }
     } else {
-        ch_short_reads_spades = ch_short_reads
-        ch_long_reads_spades = ch_long_reads
-            .map { meta, reads -> [ meta, [reads] ] }
+        ch_short_reads_spades = Channel.empty()
+        ch_long_reads_spades  = Channel.empty()
     }
 
     if (!params.single_end && !params.skip_spades){

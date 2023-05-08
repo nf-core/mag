@@ -346,13 +346,13 @@
                 },
                 "host_genome": {
                     "type": "string",
-                    "help_text": "This parameter is mutually exclusive with `--host_genome`. Host read removal is done with Bowtie2. \nBoth the iGenomes FASTA file as well as corresponding, already pre-built Bowtie 2 index files will be used.",
+                    "help_text": "This parameter is mutually exclusive with `--host_fasta`. Host read removal is done with Bowtie2. \nBoth the iGenomes FASTA file as well as corresponding, already pre-built Bowtie 2 index files will be used.",
                     "description": "Name of iGenomes reference for host contamination removal."
                 },
                 "host_fasta": {
                     "type": "string",
                     "description": "Fasta reference file for host contamination removal.",
-                    "help_text": "This parameter is mutually exclusive with `--host_fasta`. The reference can be masked. Host read removal is done with Bowtie2."
+                    "help_text": "This parameter is mutually exclusive with `--host_genome`. The reference can be masked. Host read removal is done with Bowtie2."
                 },
                 "host_removal_verysensitive": {
                     "type": "boolean",
@@ -387,6 +387,24 @@
                 "skip_run_merging": {
                     "type": "boolean",
                     "description": "Specify to not merge multi-run samples after phix/host-removal steps and prior-assembly."
+                },
+                "bbnorm": {
+                    "type": "boolean",
+                    "description": "Run BBnorm to normalize sequence depth."
+                },
+                "bbnorm_target": {
+                    "type": "integer",
+                    "default": 100,
+                    "description": "Set BBnorm target maximum depth to this number."
+                },
+                "bbnorm_min": {
+                    "type": "integer",
+                    "default": 5,
+                    "description": "Set BBnorm minimum depth to this number."
+                },
+                "save_bbnorm_reads": {
+                    "type": "boolean",
+                    "description": "Save normalized read files to output directory."
                 }
             }
         },
@@ -675,6 +693,13 @@
                     "type": "boolean",
                     "description": "Enable clean-up of temporary files created during BUSCO runs.",
                     "help_text": "By default, BUSCO creates a large number of intermediate files every run. This may cause problems on some clusters which have file number limits in plate, particularly with large numbers of bins. Enabling this option cleans these files, reducing the total file count of the work directory."
+                },
+                "checkm_download_url": {
+                    "type": "string",
+                    "default": "https://data.ace.uq.edu.au/public/CheckM_databases/checkm_data_2015_01_16.tar.gz",
+                    "hidden": true,
+                    "description": "URL pointing to checkM database for auto download, if local path not supplied.",
+                    "help_text": "You can use this parameter to point to an online copy of the checkM database TAR archive that the pipeline will use for auto download if a local path is not supplied to `--checkm_db`."
                 },
                 "checkm_db": {
                     "type": "string",

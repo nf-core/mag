@@ -14,6 +14,8 @@
 
   > Schubert, M., Lindgreen, S., and Orlando, L. 2016. "AdapterRemoval v2: Rapid Adapter Trimming, Identification, and Read Merging." BMC Research Notes 9 (February): 88. doi: 10.1186/s13104-016-1900-2
 
+- [BBnorm/BBTools](http://sourceforge.net/projects/bbmap/)
+
 - [BCFtools](https://doi.org/10.1093/gigascience/giab008)
 
   > Danecek, Petr, et al. "Twelve years of SAMtools and BCFtools." Gigascience 10.2 (2021): giab008. doi: 10.1093/gigascience/giab008
@@ -115,6 +117,8 @@
 - [SAMtools](https://doi.org/10.1093/bioinformatics/btp352)
 
   > Li, H., Handsaker, B., Wysoker, A., Fennell, T., Ruan, J., Homer, N., … 1000 Genome Project Data Processing Subgroup. (2009). The Sequence Alignment/Map format and SAMtools. Bioinformatics , 25(16), 2078–2079. doi: 10.1093/bioinformatics/btp352.
+
+- [Seqtk](https://github.com/lh3/seqtk)
 
 - [SPAdes](https://doi.org/10.1101/gr.213959.116)
 
