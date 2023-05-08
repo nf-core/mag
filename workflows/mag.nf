@@ -16,10 +16,7 @@ if(hasExtension(params.input, "csv")){
         .from(file(params.input))
         .splitCsv(header: true)
         .map { row ->
-                    if (row.long_reads) hybrid = true
-                } else {
-                    error("Input samplesheet contains row with ${row.size()} column(s). Expects 6.")
-                }
+                if (row.long_reads) hybrid = true
             }
 }
 
