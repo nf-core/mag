@@ -326,12 +326,13 @@ workflow MAG {
             }
 
         // TODO Failing because array list as reads into Kraken/SPADes; possibly nothing going to skip cat when it should?
-        CAT_FASTQ ( ch_short_reads_forcat.cat.map{ meta, reads -> [ meta, reads.flatten() ]} )
+        CAT_FASTQ ( ch_short_reads_forcat.cat.map{ meta, reads -> [ meta, reads.flatten() ]}.dump(tag: "pre_runmerge") )
 
         ch_short_reads = Channel.empty()
-        ch_short_reads = CAT_FASTQ.out.reads.mix( ch_short_reads_forcat.skip_cat ).dump(tag: "helli")
+        ch_short_reads = CAT_FASTQ.out.reads.mix( ch_short_reads_forcat.skip_cat ).map{ meta, reads -> [ meta, reads.flatten() ]}.dump(tag: "post_runmerge_out")
+        ch_versions    = ch_versions.mix(CAT_FASTQ.out.versions.first())
     } else {
-        ch_short_reads = ch_short_reads_phixremoved
+        ch_short_reads = ch_short_reads_phixremoved.dump(tag: "skip_runmerge_out")
             .map {
                 meta, reads ->
                     def meta_new = meta.clone()

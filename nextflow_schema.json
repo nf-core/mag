@@ -383,6 +383,10 @@
                 "save_phixremoved_reads": {
                     "type": "boolean",
                     "description": "Specify to save input FASTQ files with phiX reads removed to --outdir."
+                },
+                "skip_run_merging": {
+                    "type": "boolean",
+                    "description": "Specify to not merge multi-run samples after phix/host-removal steps and prior-assembly."
                 }
             }
         },
