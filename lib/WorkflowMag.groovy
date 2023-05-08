@@ -16,7 +16,7 @@ class WorkflowMag {
             Nextflow.error("Invalid parameter '--binning_map_mode ${params.binning_map_mode}'. Valid values are 'all', 'group' or 'own'.")
         }
         if (params.coassemble_group && params.binning_map_mode == 'own') {
-           Nextflow.error("Invalid combination of parameter '--binning_map_mode own' and parameter '--coassemble_group'. Select either 'all' or 'group' mapping mode when performing group-wise co-assembly.")
+            Nextflow.error("Invalid combination of parameter '--binning_map_mode own' and parameter '--coassemble_group'. Select either 'all' or 'group' mapping mode when performing group-wise co-assembly.")
         }
 
         // Check if specified cpus for SPAdes are available
