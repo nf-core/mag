@@ -24,17 +24,9 @@ process BUSCO {
     path "versions.yml"                                                                 , emit: versions
 
     script:
-    def cp_augustus_config = "Y"
-    if( workflow.profile.toString().indexOf("conda") != -1)
-        cp_augustus_config = "N"
-
-    def lineage_dataset_provided = "N"
-    if (params.busco_reference)
-        lineage_dataset_provided = "Y"
-
-    def busco_clean = "N"
-    if (params.busco_clean)
-        busco_clean = "Y"
+    def cp_augustus_config = workflow.profile.toString().indexOf("conda") != -1 ? "N" : "Y"
+    def lineage_dataset_provided = params.busco_reference ? "Y" : "N"
+    def busco_clean = params.busco_clean ? "Y" : "N"
 
     def p = "--auto-lineage"
     if (params.busco_reference){

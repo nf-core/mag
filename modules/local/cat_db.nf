@@ -15,10 +15,15 @@ process CAT_DB {
 
     script:
     """
-    mkdir catDB
-    tar -xf ${database} -C catDB
-    mv `find catDB/ -type d -name "*taxonomy*"` taxonomy/
-    mv `find catDB/ -type d -name "*database*"` database/
+    if [[ ${database} != *.tar.gz ]]; then
+        ln -sr `find ${database}/ -type d -name "*taxonomy*"` taxonomy
+        ln -sr `find ${database}/ -type d -name "*database*"` database
+    else
+        mkdir catDB
+        tar -xf ${database} -C catDB
+        mv `find catDB/ -type d -name "*taxonomy*"` taxonomy/
+        mv `find catDB/ -type d -name "*database*"` database/
+    fi
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

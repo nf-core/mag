@@ -9,7 +9,7 @@ include { COMBINE_TSV as COMBINE_CHECKM_TSV } from '../../modules/local/combine_
 workflow CHECKM_QC {
     take:
     bins       // channel: [ val(meta), path(bin) ]
-    checkm_db  // TODO do proper input checks in mag.nf! Add to checkParams etc.,
+    checkm_db
 
     main:
     ch_versions = Channel.empty()
@@ -23,7 +23,7 @@ workflow CHECKM_QC {
                                     }
 
     CHECKM_LINEAGEWF ( ch_bins_for_checkmlineagewf.reads, ch_bins_for_checkmlineagewf.ext, checkm_db )
-    ch_versions = ch_versions.mix(CHECKM_LINEAGEWF.out.versions)
+    ch_versions = ch_versions.mix(CHECKM_LINEAGEWF.out.versions.first())
 
     ch_checkmqa_input = CHECKM_LINEAGEWF.out.checkm_output
         .join(CHECKM_LINEAGEWF.out.marker_file)
@@ -33,9 +33,7 @@ workflow CHECKM_QC {
         }
 
     CHECKM_QA ( ch_checkmqa_input, [] )
-    ch_versions = ch_versions.mix(CHECKM_QA.out.versions)
-
-    // TODO Check output files published correctly
+    ch_versions = ch_versions.mix(CHECKM_QA.out.versions.first())
 
     COMBINE_CHECKM_TSV ( CHECKM_QA.out.output.map{it[1]}.collect() )
 

@@ -104,7 +104,11 @@ class WorkflowMag {
         }
 
         // Check if BUSCO parameters combinations are valid
-        if (params.skip_binqc && params.binqc_tool == 'busco') {
+        if (params.skip_binqc && params.binqc_tool == 'checkm') {
+            log.error 'Both --skip_binqc and --binqc_tool \'checkm\' are specified! Invalid combination, please specify either --skip_binqc or --binqc_tool.'
+            System.exit(1)
+        }
+        if (params.skip_binqc) {
             if (params.busco_reference) {
                 log.error 'Both --skip_binqc and --busco_reference are specified! Invalid combination, please specify either --skip_binqc or --binqc_tool \'busco\' with --busco_reference.'
                 System.exit(1)
@@ -128,7 +132,7 @@ class WorkflowMag {
         }
 
         if (params.skip_binqc && params.gtdb) {
-            log.warn '--skip_binqc and --gtdb are specified! GTDB-tk will be omitted because GTDB-tk bin classification requires bin filtering based on BUSCO QC results to avoid GTDB-tk errors.'
+            log.warn '--skip_binqc and --gtdb are specified! GTDB-tk will be omitted because GTDB-tk bin classification requires bin filtering based on BUSCO or CheckM QC results to avoid GTDB-tk errors.'
         }
 
         // Check if CAT parameters are valid

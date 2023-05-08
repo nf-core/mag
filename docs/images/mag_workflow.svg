@@ -5,7 +5,7 @@
    viewBox="0 0 320.14583 150.81249"
    version="1.1"
    id="svg8"
-   inkscape:version="1.2.1 (1:1.2.1+202210291243+9c6d41e410)"
+   inkscape:version="1.2.2 (1:1.2.2+202212051552+b0a8486541)"
    sodipodi:docname="mag_workflow.svg"
    inkscape:export-filename="mag_workflow.png"
    inkscape:export-xdpi="289.40701"
@@ -289,7 +289,7 @@
        y2="103.70081"
        gradientUnits="userSpaceOnUse" />
     <linearGradient
-       gradientTransform="matrix(0.26133044,0,0,0.09562261,199.70924,-111.05546)"
+       gradientTransform="matrix(0.26133044,0,0,0.09562261,199.70924,-103.11175)"
        inkscape:collect="always"
        xlink:href="#linearGradient5668"
        id="linearGradient5670-9-6-3-2-2"
@@ -353,7 +353,7 @@
        xlink:href="#linearGradient5668"
        id="linearGradient3830"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0,-0.23240631,0.08434043,0,168.64441,108.24493)"
+       gradientTransform="matrix(0,-0.23240631,0.08434043,0,168.64441,97.661593)"
        x1="75"
        y1="103.70081"
        x2="105"
@@ -363,7 +363,7 @@
        xlink:href="#linearGradient5668"
        id="linearGradient3965"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0,-0.23240631,0.08434043,0,189.81108,108.24493)"
+       gradientTransform="matrix(0,-0.23240631,0.08434043,0,189.81108,97.661593)"
        x1="75"
        y1="103.70081"
        x2="105"
@@ -377,13 +377,13 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.89801677"
-     inkscape:cx="594.0869"
-     inkscape:cy="385.29347"
+     inkscape:cx="358.01113"
+     inkscape:cy="366.91965"
      inkscape:document-units="mm"
-     inkscape:current-layer="g6248"
+     inkscape:current-layer="g15274"
      showgrid="false"
      inkscape:window-width="1920"
-     inkscape:window-height="1043"
+     inkscape:window-height="1016"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
@@ -1407,19 +1407,19 @@
          style="fill:url(#linearGradient5670-9-6-3-2-02-0-5);fill-opacity:1;stroke:#000000;stroke-width:0.0362571;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal" />
       <g
          id="g15274"
-         transform="translate(-78.042851,165.34787)">
+         transform="translate(-78.042851,154.76453)">
         <path
            inkscape:export-ydpi="289.40701"
            inkscape:export-xdpi="289.40701"
            inkscape:connector-curvature="0"
            id="path5662-9-86-3-39-3"
-           d="m 219.27856,-101.36405 7e-5,-9.5964 0.22336,0.63179 c 1.9944,5.64128 3.03673,7.02433 6.59381,8.74923 l 0.91192,0.44222 -0.87091,0.5013 c -1.63636,0.941892 -2.38328,1.474242 -3.22576,2.299012 -1.09218,1.06925 -2.02321,2.62851 -2.99468,5.01541 -0.21024,0.51653 -0.43977,1.07746 -0.51007,1.24651 -0.1099,0.26425 -0.1278,-1.03826 -0.12774,-9.289072 z"
+           d="m 219.27856,-93.420343 7e-5,-9.596397 0.22336,0.63179 c 1.9944,5.641277 3.03673,7.024327 6.59381,8.749227 l 0.91192,0.44222 -0.87091,0.5013 c -1.63636,0.941892 -2.38328,1.474242 -3.22576,2.299012 -1.09218,1.06925 -2.02321,2.62851 -2.99468,5.01541 -0.21024,0.51653 -0.43977,1.07746 -0.51007,1.24651 -0.1099,0.26425 -0.1278,-1.03826 -0.12774,-9.289072 z"
            style="fill:url(#linearGradient5670-9-6-3-2-2);fill-opacity:1;stroke:#000000;stroke-width:0.05;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal" />
         <g
            inkscape:export-ydpi="289.40701"
            inkscape:export-xdpi="289.40701"
            id="g4802-5"
-           transform="translate(143.1274,-262.65459)">
+           transform="translate(143.1274,-254.71088)">
           <g
              id="g3566-2"
              transform="translate(18.774259)">
@@ -1476,7 +1476,7 @@
            inkscape:export-ydpi="289.40701"
            inkscape:export-xdpi="289.40701"
            ry="1.528429"
-           y="73.379021"
+           y="62.795689"
            x="150.20613"
            height="24.352978"
            width="37.306007"
@@ -1484,7 +1484,7 @@
            style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.340915;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal" />
         <g
            id="g15217"
-           transform="translate(-40.31832,151.6471)">
+           transform="translate(-40.31832,141.06376)">
           <g
              id="g15205"
              transform="translate(0,0.0327192)">
@@ -1549,7 +1549,7 @@
       </g>
       <g
          id="g860"
-         transform="translate(1.0583333,-13.758332)">
+         transform="translate(1.0583333,-24.341666)">
         <rect
            inkscape:export-ydpi="289.40701"
            inkscape:export-xdpi="289.40701"
@@ -2209,15 +2209,15 @@
          inkscape:export-xdpi="289.40701"
          ry="2.9414928"
          y="-210.00197"
-         x="91.899841"
-         height="45.447086"
-         width="84.916855"
+         x="81.316505"
+         height="45.447083"
+         width="95.500191"
          id="rect4728-6-3"
          style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.483;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
          transform="rotate(90)" />
       <g
          id="g4134"
-         transform="translate(31.0114,50.764465)">
+         transform="translate(31.0114,40.710298)">
         <text
            xml:space="preserve"
            style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.52778px;line-height:1;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
@@ -2271,7 +2271,7 @@
              sodipodi:role="line">MaxBin2</tspan></text>
         <g
            id="g2539"
-           transform="translate(110.93518,-163.87148)">
+           transform="translate(110.93518,-155.93399)">
           <ellipse
              transform="matrix(0.31320571,0.94968531,0.94968531,-0.31320571,0,0)"
              style="opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#808080;stroke-width:0.75;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
@@ -2403,22 +2403,45 @@
              sodipodi:arc-type="arc"
              d="m 137.54579,191.1357 a 3.6926136,3.5400603 0 0 1 -0.32916,1.46104" />
         </g>
+        <g
+           id="g2913"
+           transform="translate(0,-2.1166665)">
+          <rect
+             ry="2.4688616"
+             y="63.638634"
+             x="140.82114"
+             height="4.9377232"
+             width="31.519596"
+             id="rect4770-6-1-7-0-3-3"
+             style="fill:#24af63;fill-opacity:1;stroke:#000000;stroke-width:0.296403;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal" />
+          <text
+             id="text4774-3-1-6-5"
+             y="67.229904"
+             x="148.50856"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.175px;line-height:0.25;font-family:Arial;-inkscape-font-specification:Arial;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+             xml:space="preserve"><tspan
+               style="font-size:3.175px;stroke-width:0.264583"
+               y="67.229904"
+               x="148.50856"
+               id="tspan4772-2-9-7-6"
+               sodipodi:role="line">CONCOCT</tspan></text>
+        </g>
       </g>
       <text
          xml:space="preserve"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.52778px;line-height:1;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
          x="187.56822"
-         y="143.76317"
+         y="138.4715"
          id="text4732-0-6-5-6"
          inkscape:export-xdpi="289.40701"
          inkscape:export-ydpi="289.40701"><tspan
            sodipodi:role="line"
            x="187.56822"
-           y="143.76317"
+           y="138.4715"
            style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.52778px;line-height:1;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';text-align:center;text-anchor:middle;stroke-width:0.264583"
            id="tspan5207">Evaluation</tspan></text>
       <g
-         transform="translate(142.49403,-80.009357)"
+         transform="translate(142.49403,-85.301024)"
          id="g3493">
         <rect
            style="opacity:1;fill:#24af63;fill-opacity:1;stroke:#000000;stroke-width:0.296403;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
@@ -2441,10 +2464,10 @@
              style="font-size:3.175px;stroke-width:0.264583">BUSCO</tspan></text>
       </g>
       <g
-         transform="translate(142.19576,-80.009357)"
+         transform="translate(142.19576,-85.301024)"
          id="g3498">
         <rect
-           style="opacity:1;fill:#24af63;fill-opacity:1;stroke:#000000;stroke-width:0.296403;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
+           style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.296403;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
            id="rect4770-6-1-7-0-1-3-2"
            width="31.519596"
            height="4.9377232"
@@ -2464,10 +2487,10 @@
              style="font-size:3.175px;stroke-width:0.264583">CheckM</tspan></text>
       </g>
       <g
-         transform="translate(142.26519,-73.275887)"
+         transform="translate(142.26519,-78.567554)"
          id="g3498-3">
         <rect
-           style="opacity:1;fill:#24af63;fill-opacity:1;stroke:#000000;stroke-width:0.296403;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
+           style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.296403;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
            id="rect4770-6-1-7-0-1-3-2-6"
            width="31.519596"
            height="4.9377232"
@@ -2482,6 +2505,29 @@
            id="text4774-3-1-7-1-9-7"><tspan
              sodipodi:role="line"
              id="tspan4772-2-9-0-1-3-5"
+             x="39.888378"
+             y="235.9169"
+             style="font-size:3.175px;stroke-width:0.264583">GUNC</tspan></text>
+      </g>
+      <g
+         transform="translate(142.26519,-71.511408)"
+         id="g3498-3-3">
+        <rect
+           style="opacity:1;fill:#24af63;fill-opacity:1;stroke:#000000;stroke-width:0.296403;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
+           id="rect4770-6-1-7-0-1-3-2-6-6"
+           width="31.519596"
+           height="4.9377232"
+           x="29.636772"
+           y="232.37988"
+           ry="2.4688616" />
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.175px;line-height:0.25;font-family:Arial;-inkscape-font-specification:Arial;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+           x="39.888378"
+           y="235.9169"
+           id="text4774-3-1-7-1-9-7-7"><tspan
+             sodipodi:role="line"
+             id="tspan4772-2-9-0-1-3-5-5"
              x="39.888378"
              y="235.9169"
              style="font-size:3.175px;stroke-width:0.264583">QUAST</tspan></text>
@@ -2517,7 +2563,7 @@
            y="65.938919">v2.3.0</tspan></text>
       <g
          id="g1307"
-         transform="translate(-33.816969,122.7549)">
+         transform="translate(-33.816969,120.10905)">
         <text
            xml:space="preserve"
            style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.52778px;line-height:1;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
@@ -2591,7 +2637,7 @@
          inkscape:export-xdpi="289.40701"
          inkscape:connector-curvature="0"
          id="path5662-9-86-3-39-97-1-6-2-6-0"
-         d="m 177.19237,91.899869 -8.46414,-6e-5 0.55722,-0.19864 c 4.97566,-1.77374 6.19556,-3.75896 7.71694,-6.92234 l 0.39004,-0.81099 0.44216,0.77453 c 2.12084,3.16806 4.27599,5.64746 6.45142,6.59029 0.45558,0.18696 0.95033,0.39108 1.09944,0.45362 0.23307,0.0976 -0.91576,0.11364 -8.19308,0.11359 z"
+         d="m 177.19237,81.316535 -8.46414,-6e-5 0.55722,-0.19864 c 4.97566,-1.77374 6.19556,-3.75896 7.71694,-6.92234 l 0.39004,-0.81099 0.44216,0.77453 c 2.12084,3.16806 4.27599,5.64746 6.45142,6.59029 0.45558,0.18696 0.95033,0.39108 1.09944,0.45362 0.23307,0.0976 -0.91576,0.11364 -8.19308,0.11359 z"
          style="fill:url(#linearGradient3830);fill-opacity:1;stroke:#000000;stroke-width:0.052239;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
          sodipodi:nodetypes="scssccccs" />
       <path
@@ -2599,7 +2645,7 @@
          inkscape:export-xdpi="289.40701"
          inkscape:connector-curvature="0"
          id="path5662-9-86-3-39-97-1-6-2-6-0-6"
-         d="m 198.35904,91.899869 -8.46414,-6e-5 0.55722,-0.19864 c 4.97566,-1.77374 6.19556,-3.75896 7.71694,-6.92234 l 0.39004,-0.81099 0.44216,0.77453 c 2.12084,3.16806 4.27599,5.64746 6.45142,6.59029 0.45558,0.18696 0.95033,0.39108 1.09944,0.45362 0.23307,0.0976 -0.91576,0.11364 -8.19308,0.11359 z"
+         d="m 198.35904,81.316535 -8.46414,-6e-5 0.55722,-0.19864 c 4.97566,-1.77374 6.19556,-3.75896 7.71694,-6.92234 l 0.39004,-0.81099 0.44216,0.77453 c 2.12084,3.16806 4.27599,5.64746 6.45142,6.59029 0.45558,0.18696 0.95033,0.39108 1.09944,0.45362 0.23307,0.0976 -0.91576,0.11364 -8.19308,0.11359 z"
          style="fill:url(#linearGradient3965);fill-opacity:1;stroke:#000000;stroke-width:0.052239;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
          sodipodi:nodetypes="scssccccs" />
     </g>

@@ -1,10 +1,10 @@
 process GTDBTK_SUMMARY {
 
 
-    conda "conda-forge::pandas=1.1.5"
+    conda "conda-forge::pandas=1.4.3"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/pandas:1.1.5' :
-        'quay.io/biocontainers/pandas:1.1.5' }"
+        'https://depot.galaxyproject.org/singularity/pandas:1.4.3' :
+        'quay.io/biocontainers/pandas:1.4.3' }"
 
     input:
     path(qc_discarded_bins)

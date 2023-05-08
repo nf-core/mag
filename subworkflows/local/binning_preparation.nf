@@ -2,11 +2,8 @@
  * Binning preparation with Bowtie2
  */
 
-params.bowtie2_build_options      = [:]
-params.bowtie2_align_options      = [:]
-
-include { BOWTIE2_ASSEMBLY_BUILD    } from '../../modules/local/bowtie2_assembly_build'   addParams( options: params.bowtie2_build_options      )
-include { BOWTIE2_ASSEMBLY_ALIGN    } from '../../modules/local/bowtie2_assembly_align'   addParams( options: params.bowtie2_align_options      )
+include { BOWTIE2_ASSEMBLY_BUILD    } from '../../modules/local/bowtie2_assembly_build'
+include { BOWTIE2_ASSEMBLY_ALIGN    } from '../../modules/local/bowtie2_assembly_align'
 
 workflow BINNING_PREPARATION {
     take:
