@@ -329,11 +329,11 @@ workflow MAG {
 
         CAT_FASTQ ( ch_short_reads_forcat.cat.map{ meta, reads -> [ meta, reads.flatten() ]} )
 
-        ch_short_reads = Channel.empty()
-        ch_short_reads = CAT_FASTQ.out.reads.mix( ch_short_reads_forcat.skip_cat ).map{ meta, reads -> [ meta, reads.flatten() ]}
+        ch_short_reads_runmerged = Channel.empty()
+        ch_short_reads_runmerged = CAT_FASTQ.out.reads.mix( ch_short_reads_forcat.skip_cat ).map{ meta, reads -> [ meta, reads.flatten() ]}
         ch_versions    = ch_versions.mix(CAT_FASTQ.out.versions.first())
     } else {
-        ch_short_reads = ch_short_reads_phixremoved
+        ch_short_reads_runmerged = ch_short_reads_phixremoved
             .map {
                 meta, reads ->
                     def meta_new = meta.clone()
@@ -348,22 +348,22 @@ workflow MAG {
             // for dropping the single_end parameter, but keeps assembly modules as they are, i.e. not
             // accepting a mix of single end and pairs.
             SEQTK_MERGEPE (
-                ch_short_reads.filter { ! it[0].single_end }
+                ch_short_reads_runmerged.filter { ! it[0].single_end }
             )
             ch_versions = ch_versions.mix(SEQTK_MERGEPE.out.versions.first())
             // Combine the interleaved pairs with any single end libraries. Set the meta.single_end to true (used by the bbnorm module).
                 ch_bbnorm = SEQTK_MERGEPE.out.reads
-                    .mix(ch_short_reads.filter { it[0].single_end })
+                    .mix(ch_short_reads_runmerged.filter { it[0].single_end })
                     .map { [ [ id: sprintf("group%s", it[0].group), group: it[0].group, single_end: true ], it[1] ] }
                     .groupTuple()
         } else {
-            ch_bbnorm = ch_short_reads
+            ch_bbnorm = ch_short_reads_runmerged
         }
         BBMAP_BBNORM ( ch_bbnorm )
         ch_versions = ch_versions.mix(BBMAP_BBNORM.out.versions)
-        ch_short_reads_assembly = BBMAP_BBNORM.out.fastq
+        ch_short_reads = BBMAP_BBNORM.out.fastq
     } else {
-        ch_short_reads_assembly = ch_short_reads
+        ch_short_reads = ch_short_reads_runmerged
     }
 
     /*
