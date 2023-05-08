@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 2.3.1dev [date]
+## v2.3.1dev - [date]
 
 ### `Added`
 
@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
+- [#428](https://github.com/nf-core/mag/pull/428) - Update to nf-core 2.8 `TEMPLATE` (by @jfy133)
 - [#429](https://github.com/nf-core/mag/pull/429) - Replaced hardcoded CheckM database auto-download URL to a parameter (reported by @erikrikarddaniel and fixed by @jfy133)
 
 ### `Fixed`
@@ -21,6 +22,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#426](https://github.com/nf-core/mag/pull/426) - Fixed typo in help text for parameters `--host_genome` and `--host_fasta` (by @tillenglert)
 
 ### `Dependencies`
+
+| Tool     | Previous version | New version |
+| -------- | ---------------- | ----------- |
+| BCFtools | 1.16             | 1.17        |
+| SAMtools | 1.16.1           | 1.17        |
 
 ## v2.3.0 - [2023/03/02]
 
