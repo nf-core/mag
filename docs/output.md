@@ -394,18 +394,19 @@ By default, only the raw bins (and unbinned contigs) from the actual binning met
 
 ### Tiara
 
-Tiara is a contig classifier that identifies the domain (prokarya, eukarya) of contigs within a file. This is used in this pipeline to find the most likely domain classification of each bin or unbin based on its contig identities.
+Tiara is a contig classifier that identifies the domain (prokarya, eukarya) of contigs within an assembly. This is used in this pipeline to rapidly and with few resources identify the most likely domain classification of each bin or unbin based on its contig identities.
 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `GenomeBinning/Tiara/`
+- `Taxonomy/Tiara/`
   - `[assembler]-[sample/group].tiara.txt` - Tiara output classifications (with probabilities) for all contigs within the specified sample/group assembly
-  - `[assembler]-[binner]-[bin_type]-[sample/group].binclassification.tsv` - Final classification of each bin/unbin based on the classification probabilities of each contig within the bin.
   - `log/log_[assembler]-[sample/group].txt` - log file detailing the parameters used by the Tiara model for contig classification.
 - `GenomeBinning/tiara_summary.tsv` - Summary of Tiara domain classification for all bins.
 
 </details>
+
+Typically, you would use `tiara_summary.tsv` as the primary file to see which bins or unbins have been classified to which domains at a glance, whereas `[assembler]-[sample/group].tiara.txt` provides classifications for each contig.
 
 ### Bin sequencing depth
 

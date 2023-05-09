@@ -615,9 +615,9 @@ workflow MAG {
 
         if ( params.bin_domain_classification ) {
             DOMAIN_CLASSIFICATION ( ch_assemblies, BINNING.out.bins, BINNING.out.unbinned )
-            ch_binning_results_bins = DOMAIN_CLASSIFICATION.out.classified_bins
+            ch_binning_results_bins   = DOMAIN_CLASSIFICATION.out.classified_bins
             ch_binning_results_unbins = DOMAIN_CLASSIFICATION.out.classified_unbins
-            ch_versions = ch_versions.mix(DOMAIN_CLASSIFICATION.out.versions)
+            ch_versions               = ch_versions.mix(DOMAIN_CLASSIFICATION.out.versions)
         } else {
             ch_binning_results_bins = BINNING.out.bins
                 .map { meta, bins ->
@@ -727,7 +727,7 @@ workflow MAG {
             if (params.bin_domain_classification){
                 ch_input_bins_for_checkm = ch_input_bins_for_qc
                     .filter { meta, bins ->
-                        meta.domain in ["bacteria", "archaea", "prokarya", "organelle", "unknown"]
+                        meta.domain != "eukarya"
                     }
             } else {
                 ch_input_bins_for_checkm = ch_input_bins_for_qc
@@ -751,7 +751,7 @@ workflow MAG {
             if (params.bin_domain_classification){
                 ch_input_bins_for_gunc = ch_input_for_postbinning_bins_unbins
                     .filter { meta, bins ->
-                        meta.domain in ["bacteria", "archaea", "prokarya", "organelle", "unknown"]
+                        meta.domain != "eukarya"
                     }
             } else {
                 ch_input_bins_for_gunc = ch_input_bins_for_qc
@@ -803,7 +803,7 @@ workflow MAG {
             if(params.bin_domain_classification) {
                 ch_gtdb_bins = ch_input_for_postbinning_bins_unbins
                     .filter { meta, bins ->
-                        meta.domain in ["bacteria", "archaea", "prokarya", "organelle", "unknown"]
+                        meta.domain != "eukarya"
                     }
             } else {
                 ch_gtdb_bins = ch_input_for_postbinning_bins_unbins
@@ -844,7 +844,7 @@ workflow MAG {
             if(params.bin_domain_classification) {
                 ch_bins_for_prokka = ch_bins_for_prokka
                     .filter { meta, bin ->
-                        meta.domain in ["bacteria", "archaea", "prokarya", "organelle", "unknown"]
+                        meta.domain != "eukarya"
                     }
             }
 

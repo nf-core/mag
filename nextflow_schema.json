@@ -10,7 +10,10 @@
             "type": "object",
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should find input data and save output data.",
-            "required": ["input", "outdir"],
+            "required": [
+                "input",
+                "outdir"
+            ],
             "properties": {
                 "input": {
                     "type": "string",
@@ -177,7 +180,14 @@
                     "description": "Method used to save pipeline results to output directory.",
                     "help_text": "The Nextflow `publishDir` option specifies which intermediate files should be saved to the output directory. This option tells the pipeline what method should be used to move these files. See [Nextflow docs](https://www.nextflow.io/docs/latest/process.html#publishdir) for details.",
                     "fa_icon": "fas fa-copy",
-                    "enum": ["symlink", "rellink", "link", "copy", "copyNoFollow", "move"],
+                    "enum": [
+                        "symlink",
+                        "rellink",
+                        "link",
+                        "copy",
+                        "copyNoFollow",
+                        "move"
+                    ],
                     "hidden": true
                 },
                 "email_on_fail": {
@@ -297,7 +307,10 @@
                     "type": "string",
                     "default": "fastp",
                     "description": "Specify which adapter clipping tool to use.",
-                    "enum": ["fastp", "adapterremoval"]
+                    "enum": [
+                        "fastp",
+                        "adapterremoval"
+                    ]
                 },
                 "save_clipped_reads": {
                     "type": "boolean",
@@ -400,7 +413,6 @@
                 },
                 "save_bbnorm_reads": {
                     "type": "boolean",
-                    "default": false,
                     "description": "Save normalized read files to output directory."
                 }
             }
@@ -502,7 +514,7 @@
                 },
                 "gtdbtk_min_completeness": {
                     "type": "number",
-                    "default": 50.0,
+                    "default": 50,
                     "description": "Min. bin completeness (in %) required to apply GTDB-tk classification.",
                     "help_text": "Completeness assessed with BUSCO analysis (100% - %Missing). Must be greater than 0 (min. 0.01) to avoid GTDB-tk errors. If too low, GTDB-tk classification results can be impaired due to not enough marker genes!",
                     "minimum": 0.01,
@@ -510,7 +522,7 @@
                 },
                 "gtdbtk_max_contamination": {
                     "type": "number",
-                    "default": 10.0,
+                    "default": 10,
                     "description": "Max. bin contamination (in %) allowed to apply GTDB-tk classification.",
                     "help_text": "Contamination approximated based on BUSCO analysis (%Complete and duplicated). If too high, GTDB-tk classification results can be impaired due to contamination!",
                     "minimum": 0,
@@ -518,7 +530,7 @@
                 },
                 "gtdbtk_min_perc_aa": {
                     "type": "number",
-                    "default": 10.0,
+                    "default": 10,
                     "description": "Min. fraction of AA (in %) in the MSA for bins to be kept.",
                     "minimum": 0,
                     "maximum": 100
@@ -532,7 +544,7 @@
                 },
                 "gtdbtk_pplacer_cpus": {
                     "type": "number",
-                    "default": 1.0,
+                    "default": 1,
                     "description": "Number of CPUs used for the by GTDB-Tk run tool pplacer.",
                     "help_text": "A low number of CPUs helps to reduce the memory required/reported by GTDB-Tk. See also the [GTDB-Tk documentation](https://ecogenomics.github.io/GTDBTk/faq.html#gtdb-tk-reaches-the-memory-limit-pplacer-crashes)."
                 },
@@ -647,8 +659,13 @@
                 },
                 "bin_domain_classification": {
                     "type": "boolean",
-                    "default": false,
                     "description": "Enable domain-level (prokaryote or eukaryote) classification of bins using Tiara. Processes which are domain-specific will then only receive bins matching the domain requirement."
+                },
+                "bin_domain_classification_tool": {
+                    "type": "string",
+                    "default": "tiara",
+                    "description": "Specify which tool to use for domain classification of bins. Currently only 'tiara' is implemented.",
+                    "hidden": true
                 },
                 "tiara_min_length": {
                     "type": "integer",
@@ -675,7 +692,10 @@
                     "type": "string",
                     "default": "busco",
                     "description": "Specify which tool for bin quality-control validation to use.",
-                    "enum": ["busco", "checkm"]
+                    "enum": [
+                        "busco",
+                        "checkm"
+                    ]
                 },
                 "busco_reference": {
                     "type": "string",
@@ -720,14 +740,18 @@
                     "type": "number",
                     "default": 0.5,
                     "description": "Specify single-copy gene score threshold for bin refinement.",
-                    "help_text": "Score threshold for single-copy gene selection algorithm to keep selecting bins, with a value ranging from 0-1.\n\nFor description of scoring algorithm, see: Sieber, Christian M. K., et al. 2018. Nature Microbiology 3 (7): 836\u201343. https://doi.org/10.1038/s41564-018-0171-1.\n\n> Modifies DAS Tool parameter --score_threshold\n"
+                    "help_text": "Score threshold for single-copy gene selection algorithm to keep selecting bins, with a value ranging from 0-1.\n\nFor description of scoring algorithm, see: Sieber, Christian M. K., et al. 2018. Nature Microbiology 3 (7): 836–43. https://doi.org/10.1038/s41564-018-0171-1.\n\n> Modifies DAS Tool parameter --score_threshold\n"
                 },
                 "postbinning_input": {
                     "type": "string",
                     "default": "raw_bins_only",
                     "description": "Specify which binning output is sent for downstream annotation, taxonomic classification, bin quality control etc.",
                     "help_text": "`raw_bins_only`: only bins (and unbinned contigs) from the binners.\n`refined_bins_only`:  only bins (and unbinned contigs) from the bin refinement step .\n`both`: bins and unbinned contigs from both the binning and bin refinement steps.",
-                    "enum": ["raw_bins_only", "refined_bins_only", "both"]
+                    "enum": [
+                        "raw_bins_only",
+                        "refined_bins_only",
+                        "both"
+                    ]
                 },
                 "run_gunc": {
                     "type": "boolean",
@@ -742,7 +766,10 @@
                     "type": "string",
                     "default": "progenomes",
                     "description": "Specify which database to auto-download if not supplying own",
-                    "enum": ["progenomes", "gtdb"]
+                    "enum": [
+                        "progenomes",
+                        "gtdb"
+                    ]
                 },
                 "gunc_save_db": {
                     "type": "boolean",
