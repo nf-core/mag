@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix CheckM database always downloading, regardless if CheckM is selected (by @jfy133)
 - Fix bug with busco_clean parameter, where it is always activated (by @prototaxites)
 - [#426](https://github.com/nf-core/mag/pull/426) - Fixed typo in help text for parameters `--host_genome` and `--host_fasta` (by @ tillenglert)
+- [#435](https://github.com/nf-core/mag/pull/426) - Fixed version inconsistency between conda and containers for GTDBTK_CLASSIFYWF (by @jfy133)
 
 ### `Dependencies`
 
