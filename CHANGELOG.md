@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 2.3.1dev [date]
+## v2.3.1dev - [date]
 
 ### `Added`
 
@@ -11,15 +11,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
+- [#428](https://github.com/nf-core/mag/pull/428) - Update to nf-core 2.8 `TEMPLATE` (by @jfy133)
+- [#429](https://github.com/nf-core/mag/pull/429) - Replaced hardcoded CheckM database auto-download URL to a parameter (reported by @erikrikarddaniel, fix by @jfy133)
+
 ### `Fixed`
 
 - Fix duplicated Zenodo badge in README (by @jfy133)
 - Fix CheckM database always downloading, regardless if CheckM is selected (by @jfy133)
 - Fix bug with busco_clean parameter, where it is always activated (by @prototaxites)
 - [#426](https://github.com/nf-core/mag/pull/426) - Fixed typo in help text for parameters `--host_genome` and `--host_fasta` (by @ tillenglert)
-- [#435](https://github.com/nf-core/mag/pull/426) - Fixed version inconsistency between conda and containers for GTDBTK_CLASSIFYWF (by @jfy133)
+- [#400](https://github.com/nf-core/mag/pull/400) - Fix duplicated Zenodo badge in README (by @jfy133)
+- [#406](https://github.com/nf-core/mag/pull/406) - Fix CheckM database always downloading, regardless if CheckM is selected (by @jfy133)
+- [#419](https://github.com/nf-core/mag/pull/419) - Fix bug with busco_clean parameter, where it is always activated (by @prototaxites)
+- [#426](https://github.com/nf-core/mag/pull/426) - Fixed typo in help text for parameters `--host_genome` and `--host_fasta` (by @tillenglert)
+- [#429](https://github.com/nf-core/mag/pull/429) - Replaced hardcoded CheckM database auto-download URL to a parameter (reported by @erikrikarddaniel, fix by @jfy133)
+- [#434](https://github.com/nf-core/mag/pull/434) - Fix location of samplesheet for AWS full tests (reported by @Lfulcrum, fix by @jfy133)
+- [#438](https://github.com/nf-core/mag/pull/438) - Fixed version inconsistency between conda and containers for GTDBTK_CLASSIFYWF (by @jfy133)
 
 ### `Dependencies`
+
+| Tool     | Previous version | New version |
+| -------- | ---------------- | ----------- |
+| BCFtools | 1.16             | 1.17        |
+| SAMtools | 1.16.1           | 1.17        |
 
 ## v2.3.0 - [2023/03/02]
 
