@@ -28,7 +28,7 @@ if(hasExtension(params.input, "csv")){
 WorkflowMag.initialise(params, log, hybrid)
 
 // Check input path parameters to see if they exist
-def checkPathParamList = [ params.input, params.multiqc_config, params.phix_reference, params.host_fasta, params.centrifuge_db, params.kraken2_db, params.cat_db, params.gtdb, params.lambda_reference, params.busco_reference ]
+def checkPathParamList = [ params.input, params.multiqc_config, params.phix_reference, params.host_fasta, params.centrifuge_db, params.kraken2_db, params.cat_db, params.gtdb_db, params.lambda_reference, params.busco_reference ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
 // Check mandatory parameters
@@ -193,12 +193,14 @@ if (!params.keep_lambda) {
         .value(file( "${params.lambda_reference}" ))
 }
 
-gtdb = params.skip_binqc ? false : params.gtdb
-if (gtdb) {
-    ch_gtdb = Channel
-        .value(file( "${gtdb}" ))
-} else {
+if ( params.skip_binqc || params.skip_gtdb ) {
+    print("SHOULDN'T BE DOWNLOADING")
     ch_gtdb = Channel.empty()
+} else {
+    println( !params.skip_binqc || !params.skip_gtdb )
+    println("DOWNLOADING")
+    ch_gtdb = Channel
+                .value(file(params.gtdb_db))
 }
 
 /*
@@ -734,7 +736,7 @@ workflow MAG {
          * GTDB-tk: taxonomic classifications using GTDB reference
          */
         ch_gtdbtk_summary = Channel.empty()
-        if ( gtdb ){
+        if ( !params.skip_binqc || !params.skip_gtdb ){
             GTDBTK (
                 ch_input_for_postbinning_bins_unbins,
                 ch_busco_summary,
@@ -745,7 +747,7 @@ workflow MAG {
             ch_gtdbtk_summary = GTDBTK.out.summary
         }
 
-        if ( ( !params.skip_binqc ) || !params.skip_quast || gtdb){
+        if ( ( !params.skip_binqc ) || !params.skip_quast || (!params.skip_binqc || !params.skip_gtdb)){
             BIN_SUMMARY (
                 ch_input_for_binsummary,
                 ch_busco_summary.ifEmpty([]),

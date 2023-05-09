@@ -493,7 +493,11 @@
                     "type": "boolean",
                     "description": "Only return official taxonomic ranks (Kingdom, Phylum, etc.) when running CAT."
                 },
-                "gtdb": {
+                "skip_gtdb": {
+                    "type": "boolean",
+                    "description": "Turns off GTDB classification of bins.",
+                },
+                "gtdb_db": {
                     "type": "string",
                     "default": "https://data.gtdb.ecogenomic.org/releases/release202/202.0/auxillary_files/gtdbtk_r202_data.tar.gz",
                     "description": "GTDB database for taxonomic classification of bins with GTDB-tk.",
