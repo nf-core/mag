@@ -66,13 +66,65 @@ workflow INPUT_CHECK {
         ch_raw_long_reads = Channel.empty()
     }
 
+    if ( params.assembly_input ) {
+        ch_input_assembly_rows = Channel
+            .from(file(params.assembly_input))
+            .splitCsv(header: true)
+            .map { row ->
+                    if (row.size() == 3) {
+                        def id        = row.id
+                        def assembler = row.assembler ?:  false
+                        def assembly  = row.fasta ? file(row.fasta, checkIfExists: true) : false
+                        // Check if given combination is valid
+                        if (!assembly) exit 1, "Invalid input assembly samplesheet: fasta can not be empty."
+                        if (!assembler) exit 1, "Invalid input assembly samplesheet: assembler can not be empty."
+                        return [ id, assembler, assembly ]
+                    } else {
+                        exit 1, "Input samplesheet contains row with ${row.size()} column(s). Expects 3."
+                    }
+                }
+        // separate short and long reads
+        ch_input_assemblies = ch_input_assembly_rows
+            .map { id, assembler, assembly ->
+                        def meta = [:]
+                        meta.id        = params.coassemble_group ? "group-$id" : id
+                        meta.group     = group
+                        meta.assembler = assembler
+                        return [ meta, [ assembly ] ]
+                }
+    } else {
+        ch_input_assembly_rows = Channel.empty()
+        ch_input_assemblies    = Channel.empty()
+    }
+
     // Ensure sample IDs are unique
     ch_input_rows
         .map { id, group, sr1, sr2, lr -> id }
         .toList()
         .map { ids -> if( ids.size() != ids.unique().size() ) {exit 1, "ERROR: input samplesheet contains duplicated sample IDs!" } }
 
+    ch_input_assembly_rows
+        .map { group, assembler, assembly -> group }
+        .toList()
+        .map { ids -> if( ids.size() != ids.unique().size() ) {exit 1, "ERROR: input assembly samplesheet contains duplicated sample IDs!" } }
+
+    // If assembly csv file supplied, additionally ensure groups are all represented between reads and assemblies
+    if ( params.assembly_input ) {
+        ch_read_ids = ch_input_rows
+            .map { id, group, sr1, sr2, lr -> id }
+            .toList()
+            .unique()
+
+        ch_assembly_ids = ch_input_assembly_rows
+            .map { group, assembler, assembly -> group }
+            .toList()
+            .unique()
+
+
+    }
+
     emit:
-    raw_short_reads = ch_raw_short_reads
-    raw_long_reads  = ch_raw_long_reads
+    raw_short_reads  = ch_raw_short_reads
+    raw_long_reads   = ch_raw_long_reads
+    input_assemblies = ch_input_assemblies
 }
