@@ -398,7 +398,6 @@ workflow MAG {
     ch_short_reads_tmp = ch_short_reads
         .map { meta, sr -> [ meta.id, meta, sr ] }
 
-
     ch_short_and_long_reads = ch_long_reads
         .map { meta, lr -> [ meta.id, meta, lr ] }
         .join(ch_short_reads_tmp, by: 0)
