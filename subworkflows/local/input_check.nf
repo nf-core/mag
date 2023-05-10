@@ -66,7 +66,10 @@ workflow INPUT_CHECK {
         ch_raw_long_reads = Channel.empty()
     }
 
-    if ( params.assembly_input ) {
+    if (params.assembly_input) {
+        // check if
+        if(!hasExtension(params.input, "csv")) { exit 1, "ERROR: when supplying assemblies with --assembly_input, reads must be supplied using a CSV!"}
+
         ch_input_assembly_rows = Channel
             .from(file(params.assembly_input))
             .splitCsv(header: true)
@@ -83,14 +86,19 @@ workflow INPUT_CHECK {
                         exit 1, "Input samplesheet contains row with ${row.size()} column(s). Expects 3."
                     }
                 }
-        // separate short and long reads
+
+        // build meta map
         ch_input_assemblies = ch_input_assembly_rows
-            .map { id, assembler, assembly ->
-                        def meta = [:]
-                        meta.id        = params.coassemble_group ? "group-$id" : id
-                        meta.group     = group
-                        meta.assembler = assembler
-                        return [ meta, [ assembly ] ]
+            .map { id, assembler, fasta ->
+                    def meta       = [:]
+                    if (params.binning_map_mode == "group") {
+                        meta.id    = "group-$id"
+                    } else {
+                        meta.id    = id
+                    }
+                    meta.group = id
+                    meta.assembler = assembler
+                    return [ meta, [ fasta ] ]
                 }
     } else {
         ch_input_assembly_rows = Channel.empty()
@@ -103,24 +111,26 @@ workflow INPUT_CHECK {
         .toList()
         .map { ids -> if( ids.size() != ids.unique().size() ) {exit 1, "ERROR: input samplesheet contains duplicated sample IDs!" } }
 
-    ch_input_assembly_rows
-        .map { group, assembler, assembly -> group }
-        .toList()
-        .map { ids -> if( ids.size() != ids.unique().size() ) {exit 1, "ERROR: input assembly samplesheet contains duplicated sample IDs!" } }
-
     // If assembly csv file supplied, additionally ensure groups are all represented between reads and assemblies
-    if ( params.assembly_input ) {
+    if (params.assembly_input) {
         ch_read_ids = ch_input_rows
-            .map { id, group, sr1, sr2, lr -> id }
-            .toList()
+            .map { id, group, sr1, sr2, lr -> params.binning_map_mode == "group" ? group : id }
             .unique()
+            .toList()
+            .sort()
 
         ch_assembly_ids = ch_input_assembly_rows
-            .map { group, assembler, assembly -> group }
-            .toList()
+            .map { id, assembler, assembly -> id }
             .unique()
+            .toList()
+            .sort()
 
-
+        ch_read_ids.cross(ch_assembly_ids)
+            .map { ids1, ids2 ->
+                if (ids1.sort() != ids2.sort()) {
+                    exit 1, "ERROR: supplied IDs in read and assembly CSV files do not match!"
+                }
+            }
     }
 
     emit:

@@ -242,6 +242,7 @@ workflow MAG {
     )
     ch_versions = ch_versions.mix(FASTQC_RAW.out.versions.first())
 
+    ch_bowtie2_removal_host_multiqc = Channel.empty()
     if ( !params.assembly_input ) {
         if ( !params.skip_clipping ) {
             if ( params.clip_tool == 'fastp' ) {
@@ -283,7 +284,7 @@ workflow MAG {
             )
             ch_host_bowtie2index = BOWTIE2_HOST_REMOVAL_BUILD.out.index
         }
-        ch_bowtie2_removal_host_multiqc = Channel.empty()
+
         if (params.host_fasta || params.host_genome){
             BOWTIE2_HOST_REMOVAL_ALIGN (
                 ch_short_reads,
@@ -824,18 +825,21 @@ workflow MAG {
     */
 
     ch_multiqc_readprep = Channel.empty()
-
-    if (!params.skip_clipping) {
-        if ( params.clip_tool == "fastp") {
-            ch_multiqc_readprep = ch_multiqc_readprep.mix(FASTP.out.json.collect{it[1]}.ifEmpty([]))
-        } else if ( params.clip_tool == "adapterremoval" ) {
-            ch_multiqc_readprep = ch_multiqc_readprep.mix(ADAPTERREMOVAL_PE.out.settings.collect{it[1]}.ifEmpty([]), ADAPTERREMOVAL_SE.out.settings.collect{it[1]}.ifEmpty([]))
+    if (!params.assembly_input) {
+        if (!params.skip_clipping) {
+            if ( params.clip_tool == "fastp") {
+                ch_multiqc_readprep = ch_multiqc_readprep.mix(FASTP.out.json.collect{it[1]}.ifEmpty([]))
+            } else if ( params.clip_tool == "adapterremoval" ) {
+                ch_multiqc_readprep = ch_multiqc_readprep.mix(ADAPTERREMOVAL_PE.out.settings.collect{it[1]}.ifEmpty([]), ADAPTERREMOVAL_SE.out.settings.collect{it[1]}.ifEmpty([]))
+            }
         }
     }
 
     ch_fastqc_trimmed_multiqc = Channel.empty()
-    if (!(params.keep_phix && params.skip_clipping && !(params.host_genome || params.host_fasta))) {
-        ch_fastqc_trimmed_multiqc = FASTQC_TRIMMED.out.zip.collect{it[1]}.ifEmpty([])
+    if (!params.assembly_input) {
+        if (!(params.keep_phix && params.skip_clipping && !(params.host_genome || params.host_fasta))) {
+            ch_fastqc_trimmed_multiqc = FASTQC_TRIMMED.out.zip.collect{it[1]}.ifEmpty([])
+        }
     }
 
     MULTIQC (
