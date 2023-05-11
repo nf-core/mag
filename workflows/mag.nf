@@ -194,11 +194,8 @@ if (!params.keep_lambda) {
 }
 
 if ( params.skip_binqc || params.skip_gtdb ) {
-    print("SHOULDN'T BE DOWNLOADING")
     ch_gtdb = Channel.empty()
 } else {
-    println( !params.skip_binqc || !params.skip_gtdb )
-    println("DOWNLOADING")
     ch_gtdb = Channel
                 .value(file(params.gtdb_db))
 }

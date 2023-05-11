@@ -59,10 +59,16 @@ workflow GTDBTK {
                 return [it[0], it[1]]
         }
 
-    GTDBTK_DB_PREPARATION ( gtdb )
+    if ( gtdb.isDirectory ) {
+        ch_gtdb_dir = gtdb
+    } else {
+        GTDBTK_DB_PREPARATION ( gtdb )
+        ch_gtdb_dir = GTDBTK_DB_PREPARATION.out
+    }
+
     GTDBTK_CLASSIFYWF (
         ch_filtered_bins.passed.groupTuple(),
-        GTDBTK_DB_PREPARATION.out
+        ch_gtdb_dir
     )
 
     GTDBTK_SUMMARY (

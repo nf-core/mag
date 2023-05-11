@@ -500,7 +500,7 @@
                 "gtdb_db": {
                     "type": "string",
                     "default": "https://data.gtdb.ecogenomic.org/releases/release202/202.0/auxillary_files/gtdbtk_r202_data.tar.gz",
-                    "description": "GTDB database for taxonomic classification of bins with GTDB-tk.",
+                    "description": "GTDB database for taxonomic classification of bins with GTDB-tk. Can be either uncompressed directory, local .tar.gz archive, or URL",
                     "help_text": "For information which GTDB reference databases are compatible with the used GTDB-tk version see https://ecogenomics.github.io/GTDBTk/installing/index.html#gtdb-tk-reference-data."
                 },
                 "gtdbtk_min_completeness": {
