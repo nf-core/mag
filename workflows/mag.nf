@@ -215,7 +215,7 @@ workflow MAG {
 
     ch_versions = Channel.empty()
     ch_mag_logo = Channel.fromPath("$projectDir/assets/nf-core-mag_logo_light.png")
-    
+
     // Get checkM database if not supplied
 
     if ( !params.skip_binqc && params.binqc_tool == 'checkm' && !params.checkm_db ) {
@@ -836,7 +836,7 @@ workflow MAG {
         ch_bowtie2_assembly_multiqc.collect().ifEmpty([]),
         ch_busco_multiqc.collect().ifEmpty([]),
         ch_multiqc_additional.collect().ifEmpty([]),
-        ch_mag_logo.collect().ifEmpty([])
+        ch_mag_logo.collect().ifEmpty([]),
         ch_multiqc_readprep.collect().ifEmpty([])
     )
     multiqc_report = MULTIQC.out.report.toList()
