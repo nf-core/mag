@@ -68,7 +68,7 @@ workflow INPUT_CHECK {
 
     if (params.assembly_input) {
         // check if
-        if(!hasExtension(params.input, "csv")) { exit 1, "ERROR: when supplying assemblies with --assembly_input, reads must be supplied using a CSV!"}
+        if(!hasExtension(params.input, "csv")) { exit 1, "ERROR: when supplying assemblies with --assembly_input, reads must be supplied using a CSV!" }
 
         ch_input_assembly_rows = Channel
             .from(file(params.assembly_input))
