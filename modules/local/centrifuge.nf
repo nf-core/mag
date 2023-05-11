@@ -13,18 +13,20 @@ process CENTRIFUGE {
     output:
     tuple val("centrifuge"), val(meta), path("results.krona"), emit: results_for_krona
     path "report.txt"                                        , emit: report
-    path "kreport.txt"                                       , emit: kreport
+    tuple val(meta), path("*kreport.txt")                     , emit: kreport
     path "versions.yml"                                      , emit: versions
 
     script:
     def input = meta.single_end ? "-U \"${reads}\"" :  "-1 \"${reads[0]}\" -2 \"${reads[1]}\""
+    prefix = task.ext.prefix ?: "${meta.id}"
+
     """
     centrifuge -x "${db_name}" \
         -p ${task.cpus} \
         --report-file report.txt \
         -S results.txt \
         $input
-    centrifuge-kreport -x "${db_name}" results.txt > kreport.txt
+    centrifuge-kreport -x "${db_name}" results.txt > ${prefix}.centrifuge_kreport.txt
     cat results.txt | cut -f 1,3 > results.krona
 
     cat <<-END_VERSIONS > versions.yml

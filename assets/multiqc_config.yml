@@ -38,8 +38,38 @@ top_modules:
       info: "After trimming and, if requested, contamination removal."
       path_filters:
         - "*trimmed*"
-  - "kraken2"
-  - "bowtie2"
+  - "bowtie2":
+      name: "Bowtie2: PhiX removal"
+      info: "Mapping statistics of reads mapped against PhiX and subsequently removed."
+      path_filters:
+        - "*.phix_removed.bowtie2.log"
+  - "bowtie2":
+      name: "Bowtie2: host removal"
+      info: "Mapping statistics of reads mapped against host genome and subsequently removed."
+      path_filters:
+        - "*.host_removed.bowtie2.log"
+  - "bowtie2":
+      name: "Bowtie2: assembly"
+      info: "Mapping statistics of reads mapped against assemblies."
+      path_filters:
+        - "*.assembly.bowtie2.log"
+  - "kraken":
+      name: "Kraken2"
+      anchor: "Kraken2"
+      target: "Kraken2"
+      doi: "10.1101/gr.210641.116"
+      path_filters:
+        - "*.kraken2_report.txt"
+  - "kraken":
+    name: "Centrifuge"
+    anchor: "centrifuge"
+    target: "Centrifuge"
+    doi: "10.1101/gr.210641.116"
+    info: "is a very rapid and memory-efficient system for the classification of DNA sequences from microbial samples. The system uses a novel indexing scheme based on the Burrows-Wheeler transform (BWT) and the Ferragina-Manzini (FM) index. Note: Figure title"
+    extra: "ℹ️: plot title will say Kraken2 due to Centrifuge producing the same output format as Kraken. If activated, see the actual Kraken2 results in the section above."
+    path_filters:
+      - "*.centrifuge.kreport.txt"
+  - "porechop"
   - "bcftools"
   - custom_content
   - "busco":

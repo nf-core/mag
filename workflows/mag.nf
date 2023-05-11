@@ -40,11 +40,10 @@ if (params.input) { ch_input = file(params.input) } else { exit 1, 'Input sample
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-ch_multiqc_config          = file("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
+ch_multiqc_config          = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
 ch_multiqc_custom_config   = params.multiqc_config ? Channel.fromPath( params.multiqc_config, checkIfExists: true ) : Channel.empty()
-ch_multiqc_logo            = params.multiqc_logo   ? Channel.fromPath( params.multiqc_logo, checkIfExists: true ) : Channel.empty()
-// Currently not used as using local version of MultiQC
-//ch_multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
+ch_multiqc_logo            = params.multiqc_logo   ? Channel.fromPath( params.multiqc_logo, checkIfExists: true ) : Channel.fromPath("$projectDir/assets/nf-core-mag_logo_light.png")
+ch_multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -85,7 +84,6 @@ include { CAT                                                 } from '../modules
 include { CAT_SUMMARY                                         } from "../modules/local/cat_summary"
 include { BIN_SUMMARY                                         } from '../modules/local/bin_summary'
 include { COMBINE_TSV as COMBINE_SUMMARY_TSV                  } from '../modules/local/combine_tsv'
-include { MULTIQC                                             } from '../modules/local/multiqc'
 
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
@@ -120,6 +118,7 @@ include { ADAPTERREMOVAL as ADAPTERREMOVAL_SE    } from '../modules/nf-core/adap
 include { PRODIGAL                               } from '../modules/nf-core/prodigal/main'
 include { PROKKA                                 } from '../modules/nf-core/prokka/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS            } from '../modules/nf-core/custom/dumpsoftwareversions/main'
+include { MULTIQC                                } from '../modules/nf-core/multiqc/main'
 
 ////////////////////////////////////////////////////
 /* --  Create channel for reference databases  -- */
@@ -214,7 +213,6 @@ def busco_failed_bins = [:]
 workflow MAG {
 
     ch_versions = Channel.empty()
-    ch_mag_logo = Channel.fromPath("$projectDir/assets/nf-core-mag_logo_light.png")
 
     // Get checkM database if not supplied
 
@@ -240,6 +238,7 @@ workflow MAG {
         ch_raw_short_reads
     )
     ch_versions = ch_versions.mix(FASTQC_RAW.out.versions.first())
+
     if ( !params.skip_clipping ) {
         if ( params.clip_tool == 'fastp' ) {
             ch_clipmerge_out = FASTP (
@@ -250,6 +249,7 @@ workflow MAG {
             )
             ch_short_reads = FASTP.out.reads
             ch_versions = ch_versions.mix(FASTP.out.versions.first())
+
 
         } else if ( params.clip_tool == 'adapterremoval' ) {
 
@@ -280,14 +280,13 @@ workflow MAG {
         )
         ch_host_bowtie2index = BOWTIE2_HOST_REMOVAL_BUILD.out.index
     }
-    ch_bowtie2_removal_host_multiqc = Channel.empty()
+
     if (params.host_fasta || params.host_genome){
         BOWTIE2_HOST_REMOVAL_ALIGN (
             ch_short_reads,
             ch_host_bowtie2index
         )
         ch_short_reads = BOWTIE2_HOST_REMOVAL_ALIGN.out.reads
-        ch_bowtie2_removal_host_multiqc = BOWTIE2_HOST_REMOVAL_ALIGN.out.log
         ch_versions = ch_versions.mix(BOWTIE2_HOST_REMOVAL_ALIGN.out.versions.first())
     }
 
@@ -540,7 +539,6 @@ workflow MAG {
     ch_quast_multiqc = Channel.empty()
     if (!params.skip_quast){
         QUAST ( ch_assemblies )
-        ch_quast_multiqc = QUAST.out.qc
         ch_versions = ch_versions.mix(QUAST.out.versions.first())
     }
 
@@ -564,13 +562,8 @@ workflow MAG {
     ================================================================================
     */
 
-
-    ch_bowtie2_assembly_multiqc = Channel.empty()
     ch_busco_summary            = Channel.empty()
     ch_checkm_summary           = Channel.empty()
-    ch_busco_multiqc            = Channel.empty()
-
-
 
     BINNING_PREPARATION (
         ch_assemblies,
@@ -610,7 +603,6 @@ workflow MAG {
             )
         }
 
-        ch_bowtie2_assembly_multiqc = BINNING_PREPARATION.out.bowtie2_assembly_multiqc
         ch_versions = ch_versions.mix(BINNING_PREPARATION.out.bowtie2_version.first())
         ch_versions = ch_versions.mix(BINNING.out.versions)
 
@@ -662,7 +654,6 @@ workflow MAG {
                 ch_input_bins_for_qc
             )
             ch_busco_summary = BUSCO_QC.out.summary
-            ch_busco_multiqc = BUSCO_QC.out.multiqc
             ch_versions = ch_versions.mix(BUSCO_QC.out.versions.first())
             // process information if BUSCO analysis failed for individual bins due to no matching genes
             BUSCO_QC.out
@@ -681,7 +672,6 @@ workflow MAG {
             )
             ch_checkm_summary = CHECKM_QC.out.summary
 
-            // TODO custom output parsing? Add to MultiQC?
             ch_versions = ch_versions.mix(CHECKM_QC.out.versions)
 
         }
@@ -789,55 +779,30 @@ workflow MAG {
     //methods_description    = WorkflowMag.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description)
     //ch_methods_description = Channel.value(methods_description)
 
+    // TODO: Add if/else statemetns around calls, add missing tools (bcftools, proka)
     ch_multiqc_files = Channel.empty()
-    ch_multiqc_files = ch_multiqc_files.mix(Channel.from(ch_multiqc_config))
     ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
+    //ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
     ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
-    /* //This is the template input with the nf-core module
-    ch_multiqc_files = ch_multiqc_files.mix(FASTQC_RAW.out.zip.collect{it[1]}.ifEmpty([]))
-    ch_multiqc_files = ch_multiqc_files.mix(FASTP.out.json.collect{it[1]}.ifEmpty([]))
-    ch_multiqc_files = ch_multiqc_files.mix(FASTQC_TRIMMED.out.zip.collect{it[1]}.ifEmpty([]))
-    ch_multiqc_files = ch_multiqc_files.mix(ch_bowtie2_removal_host_multiqc.collect{it[1]}.ifEmpty([]))
-    ch_multiqc_files = ch_multiqc_files.mix(ch_quast_multiqc.collect().ifEmpty([]))
-    ch_multiqc_files = ch_multiqc_files.mix(ch_bowtie2_assembly_multiqc.collect().ifEmpty([]))
-    ch_multiqc_files = ch_multiqc_files.mix(ch_busco_multiqc.collect().ifEmpty([]))
+    ch_multiqc_files = ch_multiqc_files.mix(FASTQC_RAW.out.zip).collect{it[1]}.ifEmpty([])
+    ch_multiqc_files = ch_multiqc_files.mix(FASTP.out.json).collect{it[1]}.ifEmpty([])
+    ch_multiqc_files = ch_multiqc_files.mix(ADAPTERREMOVAL_PE.out.settings,ADAPTERREMOVAL_SE.out.settings).collect{it[1]}.ifEmpty([])
+    ch_multiqc_files = ch_multiqc_files.mix(BOWTIE2_HOST_REMOVAL_ALIGN.out.log).collect{it[1]}.ifEmpty([])
+    ch_multiqc_files = ch_multiqc_files.mix(BOWTIE2_PHIX_REMOVAL_ALIGN.out.log).collect{it[1]}.ifEmpty([])
+    ch_multiqc_files = ch_multiqc_files.mix(FASTQC_TRIMMED.out.zip).collect{it[1]}.ifEmpty([])
+    ch_multiqc_files = ch_multiqc_files.mix(CENTRIFUGE.out.kreport).collect{it[1]}.ifEmpty([])
+    ch_multiqc_files = ch_multiqc_files.mix(KRAKEN2.out.report).collect{it[1]}.ifEmpty([])
+    ch_multiqc_files = ch_multiqc_files.mix(QUAST.out.qc).collect().ifEmpty([])
+    ch_multiqc_files = ch_multiqc_files.mix(BINNING_PREPARATION.out.bowtie2_assembly_multiqc).collect().ifEmpty([])
+    ch_multiqc_files = ch_multiqc_files.mix(BUSCO_QC.out.multiqc).collect{it[1]}.ifEmpty([])
 
     MULTIQC (
-        ch_multiqc_files.collect(),
+        ch_multiqc_files.dump(tag: "mqc_collect").collect(),
         ch_multiqc_config.toList(),
         ch_multiqc_custom_config.toList(),
         ch_multiqc_logo.toList()
     )
-    */
 
-    ch_multiqc_readprep = Channel.empty()
-
-    if (!params.skip_clipping) {
-        if ( params.clip_tool == "fastp") {
-            ch_multiqc_readprep = ch_multiqc_readprep.mix(FASTP.out.json.collect{it[1]}.ifEmpty([]))
-        } else if ( params.clip_tool == "adapterremoval" ) {
-            ch_multiqc_readprep = ch_multiqc_readprep.mix(ADAPTERREMOVAL_PE.out.settings.collect{it[1]}.ifEmpty([]), ADAPTERREMOVAL_SE.out.settings.collect{it[1]}.ifEmpty([]))
-        }
-    }
-
-    ch_fastqc_trimmed_multiqc = Channel.empty()
-    if (!(params.keep_phix && params.skip_clipping && !(params.host_genome || params.host_fasta))) {
-        ch_fastqc_trimmed_multiqc = FASTQC_TRIMMED.out.zip.collect{it[1]}.ifEmpty([])
-    }
-
-
-    MULTIQC (
-        ch_multiqc_files.collect(),
-        ch_multiqc_custom_config.collect().ifEmpty([]),
-        FASTQC_RAW.out.zip.collect{it[1]}.ifEmpty([]),
-        ch_fastqc_trimmed_multiqc.collect().ifEmpty([]),
-        ch_bowtie2_removal_host_multiqc.collect{it[1]}.ifEmpty([]),
-        ch_quast_multiqc.collect().ifEmpty([]),
-        ch_bowtie2_assembly_multiqc.collect().ifEmpty([]),
-        ch_busco_multiqc.collect().ifEmpty([]),
-        ch_mag_logo.collect().ifEmpty([]),
-        ch_multiqc_readprep.collect().ifEmpty([])
-    )
     multiqc_report = MULTIQC.out.report.toList()
 }
 
