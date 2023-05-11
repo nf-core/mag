@@ -1,7 +1,7 @@
 process NANOPLOT {
     tag "$meta.id"
 
-    conda (params.enable_conda ? "bioconda::nanoplot=1.26.3" : null)
+    conda "bioconda::nanoplot=1.26.3"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/nanoplot:1.26.3--py_0' :
         'quay.io/biocontainers/nanoplot:1.26.3--py_0' }"
@@ -16,8 +16,8 @@ process NANOPLOT {
     path "versions.yml" , emit: versions
 
     script:
-    def prefix = task.ext.suffix ? "-p ${task.ext.suffix}_" : ''
-    def title  = task.ext.suffix ? "${meta.id}_${task.ext.suffix}" : "${meta.id}"
+    def prefix = task.ext.prefix ? "-p ${task.ext.prefix}_" : ''
+    def title  = task.ext.prefix ? "${meta.id}_${task.ext.prefix}" : "${meta.id}"
     """
     NanoPlot -t ${task.cpus} \
             ${prefix} \

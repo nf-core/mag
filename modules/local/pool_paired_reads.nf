@@ -1,10 +1,10 @@
 process POOL_PAIRED_READS {
     tag "$meta.id"
 
-    conda (params.enable_conda ? "conda-forge::sed=4.7" : null)
+    conda "conda-forge::sed=4.7"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://containers.biocontainers.pro/s3/SingImgsRepo/biocontainers/v1.2.0_cv1/biocontainers_v1.2.0_cv1.img' :
-        'biocontainers/biocontainers:v1.2.0_cv1' }"
+        'https://depot.galaxyproject.org/singularity/ubuntu:20.04' :
+        'docker.io/ubuntu:20.04' }"
 
     input:
     tuple val(meta), path(reads1), path(reads2)

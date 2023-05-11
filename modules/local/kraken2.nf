@@ -1,7 +1,7 @@
 process KRAKEN2 {
     tag "${meta.id}-${db_name}"
 
-    conda (params.enable_conda ? "bioconda::kraken2=2.0.8_beta" : null)
+    conda "bioconda::kraken2=2.0.8_beta"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/kraken2:2.0.8_beta--pl526hc9558a2_2' :
         'quay.io/biocontainers/kraken2:2.0.8_beta--pl526hc9558a2_2' }"

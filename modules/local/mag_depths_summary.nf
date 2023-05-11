@@ -1,21 +1,22 @@
 process MAG_DEPTHS_SUMMARY {
 
-    conda (params.enable_conda ? "conda-forge::pandas=1.1.5" : null)
+    conda "conda-forge::pandas=1.4.3"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/pandas:1.1.5' :
-        'quay.io/biocontainers/pandas:1.1.5' }"
+        'https://depot.galaxyproject.org/singularity/pandas:1.4.3' :
+        'quay.io/biocontainers/pandas:1.4.3' }"
 
     input:
     path(mag_depths)
 
     output:
-    path("bin_depths_summary.tsv"), emit: summary
-    path "versions.yml"           , emit: versions
+    path("${prefix}.tsv"), emit: summary
+    path "versions.yml"  , emit: versions
 
     script:
+    prefix = task.ext.prefix ?: "bin_depths_summary"
     """
     get_mag_depths_summary.py --depths ${mag_depths} \
-                            --out "bin_depths_summary.tsv"
+                            --out "${prefix}.tsv"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

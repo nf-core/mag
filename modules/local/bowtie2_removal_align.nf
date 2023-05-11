@@ -2,9 +2,9 @@
  * Bowtie2 for read removal
  */
 process BOWTIE2_REMOVAL_ALIGN {
-    tag "${meta.id}-${task.ext.suffix}"
+    tag "$meta.id"
 
-    conda (params.enable_conda ? "bioconda::bowtie2=2.4.2" : null)
+    conda "bioconda::bowtie2=2.4.2"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/bowtie2:2.4.2--py38h1c8e9b9_1' :
         'quay.io/biocontainers/bowtie2:2.4.2--py38h1c8e9b9_1' }"
@@ -21,15 +21,15 @@ process BOWTIE2_REMOVAL_ALIGN {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix    = task.ext.suffix ? "${meta.id}.${task.ext.suffix}" : "${meta.id}"
-    def sensitivity = params.host_removal_verysensitive ? "--very-sensitive" : "--sensitive"
-    def save_ids = params.host_removal_save_ids ? "Y" : "N"
+    def args2 = task.ext.args2 ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def save_ids = (args2.contains('--host_removal_save_ids')) ? "Y" : "N"
     if (!meta.single_end){
         """
         bowtie2 -p ${task.cpus} \
                 -x ${index[0].getSimpleName()} \
                 -1 "${reads[0]}" -2 "${reads[1]}" \
-                $sensitivity \
+                $args \
                 --un-conc-gz ${prefix}.unmapped_%.fastq.gz \
                 --al-conc-gz ${prefix}.mapped_%.fastq.gz \
                 1> /dev/null \
@@ -50,7 +50,7 @@ process BOWTIE2_REMOVAL_ALIGN {
         bowtie2 -p ${task.cpus} \
                 -x ${index[0].getSimpleName()} \
                 -U ${reads} \
-                $sensitivity \
+                $args \
                 --un-gz ${prefix}.unmapped.fastq.gz \
                 --al-gz ${prefix}.mapped.fastq.gz \
                 1> /dev/null \

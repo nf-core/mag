@@ -3,21 +3,100 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v2.2.0dev
+## v2.3.1dev - [date]
+
+### `Added`
+
+- [#422](https://github.com/nf-core/mag/pull/422) - Adds support for normalization of read depth with BBNorm (added by @erikrikarddaniel and @fabianegli)
+
+### `Changed`
+
+- [#428](https://github.com/nf-core/mag/pull/428) - Update to nf-core 2.8 `TEMPLATE` (by @jfy133)
+- [#429](https://github.com/nf-core/mag/pull/429) - Replaced hardcoded CheckM database auto-download URL to a parameter (reported by @erikrikarddaniel, fix by @jfy133)
+
+### `Fixed`
+
+- [#400](https://github.com/nf-core/mag/pull/400) - Fix duplicated Zenodo badge in README (by @jfy133)
+- [#406](https://github.com/nf-core/mag/pull/406) - Fix CheckM database always downloading, regardless if CheckM is selected (by @jfy133)
+- [#419](https://github.com/nf-core/mag/pull/419) - Fix bug with busco_clean parameter, where it is always activated (by @prototaxites)
+- [#426](https://github.com/nf-core/mag/pull/426) - Fixed typo in help text for parameters `--host_genome` and `--host_fasta` (by @tillenglert)
+- [#429](https://github.com/nf-core/mag/pull/429) - Replaced hardcoded CheckM database auto-download URL to a parameter (reported by @erikrikarddaniel, fix by @jfy133)
+- [#434](https://github.com/nf-core/mag/pull/434) - Fix location of samplesheet for AWS full tests (reported by @Lfulcrum, fix by @jfy133)
+
+### `Dependencies`
+
+| Tool     | Previous version | New version |
+| -------- | ---------------- | ----------- |
+| BCFtools | 1.16             | 1.17        |
+| SAMtools | 1.16.1           | 1.17        |
+
+## v2.3.0 - [2023/03/02]
+
+### `Added`
+
+- [#350](https://github.com/nf-core/mag/pull/350) - Adds support for CheckM as alternative bin completeness and QC tool (added by @jfy133 and @skrakau)
+- [#353](https://github.com/nf-core/mag/pull/353) - Added the busco_clean parameter to optionally clean each BUSCO directory after a successful (by @prototaxites)
+- [#361](https://github.com/nf-core/mag/pull/361) - Added the skip_clipping parameter to skip read preprocessing with fastp or adapterremoval. Running the pipeline with skip_clipping, keep_phix and without specifying a host genome or fasta file skips the FASTQC_TRIMMED process (by @prototaxites)
+- [#365](https://github.com/nf-core/mag/pull/365) - Added CONCOCT as an additional (optional) binning tool (by @jfy133)
+- [#366](https://github.com/nf-core/mag/pull/366) - Added CAT_SUMMARISE process and cat_official_taxonomy parameter (by @prototaxites)
+- [#372](https://github.com/nf-core/mag/pull/372) - Allow CAT_DB to take an extracted database as well as a tar.gz file (by @prototaxites).
+- [#380](https://github.com/nf-core/mag/pull/380) - Added support for saving processed reads (clipped, host removed etc.) to results directory (by @jfy133)
+- [#394](https://github.com/nf-core/mag/pull/394) - Added GUNC for additional chimeric bin/contamination QC (added by @jfy133)
+
+### `Changed`
+
+- [#340](https://github.com/nf-core/mag/pull/340),[#368](https://github.com/nf-core/mag/pull/368),[#373](https://github.com/nf-core/mag/pull/373) - Update to nf-core 2.7.2 `TEMPLATE` (by @jfy133, @d4straub, @skrakau)
+- [#373](https://github.com/nf-core/mag/pull/373) - Removed parameter `--enable_conda`. Updated local modules to new conda syntax and updated nf-core modules (by @skrakau)
+- [#385](https://github.com/nf-core/mag/pull/385) - CAT also now runs on unbinned contigs as well as binned contigs (added by @jfy133)
+- [#399](https://github.com/nf-core/mag/pull/399/files) - Removed undocumented BUSCO_PLOT process (previously generated `*.busco_figure.png` plots unsuitable for metagenomics) (by @skrakau).
+- [#416](https://github.com/nf-core/mag/pull/416) - Use GTDBTK_CLASSIFYWF nf-core module instead of local module (added by @alxndrdiaz)
+
+### `Fixed`
+
+- [#345](https://github.com/nf-core/mag/pull/345) - Bowtie2 mode changed to global alignment for ancient DNA mode (`--very-sensitive` mode) to prevent soft clipping at the end of reads when running in local mode. (by @maxibor)
+- [#349](https://github.com/nf-core/mag/pull/349) - Add a warning that pipeline will reset minimum contig size to 1500 specifically MetaBAT2 process, if a user supplies below this threshold. (by @jfy133)
+- [#352](https://github.com/nf-core/mag/pull/352) - Escape the case in the BUSCO module that BUSCO can just detect a root lineage but is not able to find any marker genes (by @alexhbnr)
+- [#355](https://github.com/nf-core/mag/pull/355) - Include error code 21 for retrying with higher memory for SPAdes and hybridSPAdes (by @mglubber)
+
+### `Dependencies`
+
+| Tool      | Previous version | New version |
+| --------- | ---------------- | ----------- |
+| BUSCO     | 5.1.0            | 5.4.3       |
+| BCFtools  | 1.14             | 1.16        |
+| Freebayes | 1.3.5            | 1.3.6       |
+| SAMtools  | 1.15             | 1.16.1      |
+
+## v2.2.1 - 2022/08/25
+
+### `Added`
+
+### `Changed`
+
+### `Fixed`
+
+- [#328](https://github.com/nf-core/mag/pull/328) - Fix too many symbolic links issue in local convert_depths module (reported by @ChristophKnapp and fixed by @apeltzer, @jfy133)
+- [#329](https://github.com/nf-core/mag/pull/329) - Each sample now gets it's own result directory for PyDamage analysis and filter (reported and fixed by @maxibor)
+
+### `Dependencies`
+
+## v2.2.0 - 2022/06/14
 
 ### `Added`
 
 - [#263](https://github.com/nf-core/mag/pull/263) - Restructure binning subworkflow in preparation for aDNA workflow and extended binning
 - [#247](https://github.com/nf-core/mag/pull/247) - Add ancient DNA subworkflow
 - [#263](https://github.com/nf-core/mag/pull/263) - Add MaxBin2 as second contig binning tool
-- [#284](https://github.com/nf-core/mag/pull/285) - Add AdapterRemoval2 as an alternative read trimmer
+- [#285](https://github.com/nf-core/mag/pull/285) - Add AdapterRemoval2 as an alternative read trimmer
+- [#291](https://github.com/nf-core/mag/pull/291) - Add DAS Tool for bin refinement
+- [#319](https://github.com/nf-core/mag/pull/319) - Activate pipeline-specific institutional nf-core/configs
 
 ### `Changed`
 
-- [#269](https://github.com/nf-core/mag/pull/269),[#283](https://github.com/nf-core/mag/pull/283),[#289](https://github.com/nf-core/mag/pull/289) - Update to nf-core 2.3.2 `TEMPLATE`
+- [#269](https://github.com/nf-core/mag/pull/269),[#283](https://github.com/nf-core/mag/pull/283),[#289](https://github.com/nf-core/mag/pull/289),[#302](https://github.com/nf-core/mag/pull/302) - Update to nf-core 2.4 `TEMPLATE`
 - [#286](https://github.com/nf-core/mag/pull/286) - Cite our publication instead of the preprint
-- [#299](https://github.com/nf-core/mag/pull/299) - Add extra results folder `GenomeBinning/depths` for `[assembler]-[sample/group]-depth.txt.gz`, `bin_depths_summary.tsv` and `[assembler]-[binner]-[sample/group]-binDepths.heatmap.png`
-- [#302](https://github.com/nf-core/mag/pull/302) - Update to nf-core 2.4 `TEMPLATE`
+- [#291](https://github.com/nf-core/mag/pull/291), [#299](https://github.com/nf-core/mag/pull/299) - Add extra results folder `GenomeBinning/depths/contigs` for `[assembler]-[sample/group]-depth.txt.gz`, and `GenomeBinning/depths/bins` for `bin_depths_summary.tsv` and `[assembler]-[binner]-[sample/group]-binDepths.heatmap.png`
+- [#315](https://github.com/nf-core/mag/pull/315) - Replace base container for standard shell tools to fix problems with running on Google Cloud
 
 ### `Fixed`
 
@@ -25,14 +104,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#305](https://github.com/nf-core/mag/pull/305) - Add missing Bowtie2 version for process `BOWTIE2_PHIX_REMOVAL_ALIGN` to `software_versions.yml`
 - [#307](https://github.com/nf-core/mag/pull/307) - Fix retrieval of GTDB-Tk version (note about newer version caused error in `CUSTOM_DUMPSOFTWAREVERSIONS`)
 - [#309](https://github.com/nf-core/mag/pull/309) - Fix publishing of BUSCO `busco_downloads/` folder, i.e. publish only when `--save_busco_reference` is specified
+- [#321](https://github.com/nf-core/mag/pull/321) - Fix parameter processing in `BOWTIE2_REMOVAL_ALIGN` (which was erroneously for `BOWTIE2_PHIX_REMOVAL_ALIGN`)
 
 ### `Dependencies`
 
-| Tool     | Previous version | New version |
-| -------- | ---------------- | ----------- |
-| bcftools | 1.13             | 1.14        |
-| samtools | 1.14             | 1.15        |
-| pydamage | 0.62             | 0.70        |
+| Tool    | Previous version | New version |
+| ------- | ---------------- | ----------- |
+| fastp   | 0.20.1           | 0.23.2      |
+| MultiQC | 1.11             | 1.12        |
 
 ## v2.1.1 - 2021/11/25
 

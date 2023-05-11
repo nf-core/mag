@@ -1,7 +1,7 @@
 process CENTRIFUGE {
     tag "${meta.id}-${db_name}"
 
-    conda (params.enable_conda ? "bioconda::centrifuge=1.0.4_beta" : null)
+    conda "bioconda::centrifuge=1.0.4_beta"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/centrifuge:1.0.4_beta--he513fc3_5' :
         'quay.io/biocontainers/centrifuge:1.0.4_beta--he513fc3_5' }"
