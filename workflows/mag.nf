@@ -835,7 +835,6 @@ workflow MAG {
         ch_quast_multiqc.collect().ifEmpty([]),
         ch_bowtie2_assembly_multiqc.collect().ifEmpty([]),
         ch_busco_multiqc.collect().ifEmpty([]),
-        ch_multiqc_additional.collect().ifEmpty([]),
         ch_mag_logo.collect().ifEmpty([]),
         ch_multiqc_readprep.collect().ifEmpty([])
     )
