@@ -31,34 +31,44 @@ Please note the following additional requirements:
 
 ### Samplesheet input file
 
-Alternatively, to assign different groups or to include long reads for hybrid assembly with metaSPAdes, you can specify a CSV samplesheet input file that contains the paths to your FASTQ files and additional metadata. Furthermore the pipeline will also run perform run- or lane-wise concatenation, in cases where you may have a sample or library sequenced with the same sequencing configuration across multiple runs. This happens after short read QC (adapter clipping, host/PhiX removal etc.), and prior to normalisation, taxonomic profiling, and assembly.
+Alternatively, to assign different groups or to include long reads for hybrid assembly with metaSPAdes, you can specify a CSV samplesheet input file that contains the paths to your FASTQ files and additional metadata. Furthermore when a `run` column is present, the pipeline will also run perform run- or lane-wise concatenation, for cases where you may have a sample or library sequenced with the same sequencing configuration across multiple runs. The optional run merging happens after short read QC (adapter clipping, host/PhiX removal etc.), and prior to normalisation, taxonomic profiling, and assembly.
 
-This CSV file should contain the following columns:
+At a minimum CSV file should contain the following columns:
 
-`sample,run,group,short_reads_1,short_reads_2,long_reads`
+`sample,group,short_reads_1,short_reads_2,long_reads`
 
 The path to `long_reads` and `short_reads_2` is optional. Valid examples could look like the following:
 
 ```bash
-sample,run,group,short_reads_1,short_reads_2,long_reads
-sample1,1,0,data/sample1_R1.fastq.gz,data/sample1_R2.fastq.gz,data/sample1.fastq.gz
-sample2,1,0,data/sample2_R1.fastq.gz,data/sample2_R2.fastq.gz,data/sample2.fastq.gz
-sample3,,1,data/sample3_R1.fastq.gz,data/sample3_R2.fastq.gz,
+sample,group,short_reads_1,short_reads_2,long_reads
+sample1,0,data/sample1_R1.fastq.gz,data/sample1_R2.fastq.gz,data/sample1.fastq.gz
+sample2,0,data/sample2_R1.fastq.gz,data/sample2_R2.fastq.gz,data/sample2.fastq.gz
+sample3,1,data/sample3_R1.fastq.gz,data/sample3_R2.fastq.gz,
 ```
 
 or
 
 ```bash
-sample,run,group,short_reads_1,short_reads_2,long_reads
-sample1,1,0,data/sample1.fastq.gz,,
-sample2,1,0,data/sample2.fastq.gz,,
+sample,group,short_reads_1,short_reads_2,long_reads
+sample1,0,data/sample1.fastq.gz,,
+sample2,0,data/sample2.fastq.gz,,
+```
+
+or to additionally to perform run merging of two runs of sample1:
+
+```bash
+sample,group,short_reads_1,short_reads_2,long_reads
+sample1,1,data/sample1_R1.fastq.gz,data/sample1_R2.fastq.gz,data/sample1.fastq.gz
+sample1,2,data/sample1_R1.fastq.gz,data/sample1_R2.fastq.gz,data/sample1.fastq.gz
+sample2,0,data/sample2_R1.fastq.gz,data/sample2_R2.fastq.gz,data/sample2.fastq.gz
+sample3,1,data/sample3_R1.fastq.gz,data/sample3_R2.fastq.gz,
 ```
 
 Please note the following requirements:
 
-- 6 comma-seperated columns
+- a minimum 5 of comma-seperated columns
 - Valid file extension: `.csv`
-- Must contain the header `sample,run,group,short_reads_1,short_reads_2,long_reads`
+- Must contain the header `sample,group,short_reads_1,short_reads_2,long_reads` (where `run` can be optionally added)
 - Run IDs must be unique within a multi-run sample. A sample with multiple runs will be automatically concatenated.
 - FastQ files must be compressed (`.fastq.gz`, `.fq.gz`)
 - `long_reads` can only be provided in combination with paired-end short read data
