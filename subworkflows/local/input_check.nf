@@ -14,7 +14,7 @@ workflow INPUT_CHECK {
             .from(file(params.input))
             .splitCsv(header: true)
             .map { row ->
-                    if (row.size() == 6) {
+                    if (row.size() >= 5) {
                         def id = row.sample
                         def run = row.run
                         def group = row.group
@@ -22,13 +22,14 @@ workflow INPUT_CHECK {
                         def sr2 = row.short_reads_2 ? file(row.short_reads_2, checkIfExists: true) : false
                         def lr = row.long_reads ? file(row.long_reads, checkIfExists: true) : false
                         // Check if given combination is valid
+                        if (run != null && run == "") exit 1, "ERROR: Please check input samplesheet -> Column 'run' contains an empty field. Either remove column 'run' or fill each field with a value."
                         if (!sr1) exit 1, "Invalid input samplesheet: short_reads_1 can not be empty."
                         if (!sr2 && lr) exit 1, "Invalid input samplesheet: invalid combination of single-end short reads and long reads provided! SPAdes does not support single-end data and thus hybrid assembly cannot be performed."
                         if (!sr2 && !params.single_end) exit 1, "Invalid input samplesheet: single-end short reads provided, but command line parameter `--single_end` is false. Note that either only single-end or only paired-end reads must provided."
                         if (sr2 && params.single_end) exit 1, "Invalid input samplesheet: paired-end short reads provided, but command line parameter `--single_end` is true. Note that either only single-end or only paired-end reads must provided."
                         return [ id, run, group, sr1, sr2, lr ]
                     } else {
-                        exit 1, "Input samplesheet contains row with ${row.size()} column(s). Expects 6."
+                        exit 1, "Input samplesheet contains row with ${row.size()} column(s). Expects at least 5."
                     }
                 }
         // separate short and long reads
@@ -36,7 +37,7 @@ workflow INPUT_CHECK {
             .map { id, run, group, sr1, sr2, lr ->
                         def meta = [:]
                         meta.id           = id
-                        meta.run          = run
+                        meta.run          = run == null ? "0" : run
                         meta.group        = group
                         meta.single_end   = params.single_end
                         if (params.single_end)
@@ -49,7 +50,7 @@ workflow INPUT_CHECK {
                         if (lr) {
                             def meta = [:]
                             meta.id           = id
-                            meta.run          = run
+                            meta.run          = row.run == null ? "0" : row.run
                             meta.group        = group
                             return [ meta, lr ]
                         }
@@ -61,7 +62,7 @@ workflow INPUT_CHECK {
             .map { row ->
                         def meta = [:]
                         meta.id           = row[0]
-                        meta.run          = row[1]
+                        meta.run          = 0
                         meta.group        = 0
                         meta.single_end   = params.single_end
                         return [ meta, row[1] ]

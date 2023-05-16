@@ -312,35 +312,25 @@ workflow MAG {
 
     // Run/Lane merging
 
-    if ( !params.skip_run_merging ) {
-        ch_short_reads_forcat = ch_short_reads_phixremoved
-            .map {
-                meta, reads ->
-                    def meta_new = meta.clone()
-                    meta_new.remove('run')
-                [ meta_new, reads ]
-            }
-            .groupTuple()
-            .branch {
-                meta, reads ->
-                    cat:       ( meta.single_end && reads.size() == 1 ) || ( !meta.single_end && reads.size() >= 2 )
-                    skip_cat: true // Can skip merging if only single lanes
-            }
+    ch_short_reads_forcat = ch_short_reads_phixremoved
+        .map {
+            meta, reads ->
+                def meta_new = meta.clone()
+                meta_new.remove('run')
+            [ meta_new, reads ]
+        }
+        .groupTuple()
+        .branch {
+            meta, reads ->
+                cat:       ( meta.single_end && reads.size() == 1 ) || ( !meta.single_end && reads.size() >= 2 )
+                skip_cat: true // Can skip merging if only single lanes
+        }
 
-        CAT_FASTQ ( ch_short_reads_forcat.cat.map{ meta, reads -> [ meta, reads.flatten() ]} )
+    CAT_FASTQ ( ch_short_reads_forcat.cat.map{ meta, reads -> [ meta, reads.flatten() ]} )
 
         ch_short_reads = Channel.empty()
         ch_short_reads = CAT_FASTQ.out.reads.mix( ch_short_reads_forcat.skip_cat ).map{ meta, reads -> [ meta, reads.flatten() ]}
         ch_versions    = ch_versions.mix(CAT_FASTQ.out.versions.first())
-    } else {
-        ch_short_reads = ch_short_reads_phixremoved
-            .map {
-                meta, reads ->
-                    def meta_new = meta.clone()
-                    meta_new.remove('run')
-                [ meta_new, reads ]
-            }
-    }
 
     if ( params.bbnorm ) {
         if ( params.coassemble_group ) {
