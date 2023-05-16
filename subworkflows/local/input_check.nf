@@ -50,7 +50,7 @@ workflow INPUT_CHECK {
                         if (lr) {
                             def meta = [:]
                             meta.id           = id
-                            meta.run          = row.run == null ? "0" : row.run
+                            meta.run          = run == null ? "0" : run
                             meta.group        = group
                             return [ meta, lr ]
                         }
