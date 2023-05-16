@@ -194,7 +194,7 @@ if (!params.keep_lambda) {
 }
 
 if ( params.skip_binqc || params.skip_gtdb ) {
-    gtdb_db = Channel.empty()
+    gtdb_db = null
 } else {
     // Don't check if exists, as can be URL
     gtdb_db = file(params.gtdb_db)
