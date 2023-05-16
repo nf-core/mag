@@ -196,8 +196,8 @@ if (!params.keep_lambda) {
 if ( params.skip_binqc || params.skip_gtdb ) {
     ch_gtdb = Channel.empty()
 } else {
-    ch_gtdb = Channel
-                .value(file(params.gtdb_db))
+    // Don't check if exists, as can be URL
+    gtdb_db = file(params.gtdb_db)
 }
 
 /*
@@ -738,7 +738,7 @@ workflow MAG {
                 ch_input_for_postbinning_bins_unbins,
                 ch_busco_summary,
                 ch_checkm_summary,
-                ch_gtdb
+                gtdb_db,
             )
             ch_versions = ch_versions.mix(GTDBTK.out.versions.first())
             ch_gtdbtk_summary = GTDBTK.out.summary

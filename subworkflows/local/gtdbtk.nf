@@ -59,11 +59,17 @@ workflow GTDBTK {
                 return [it[0], it[1]]
         }
 
-    if ( gtdb.isDirectory ) {
-        ch_gtdb_dir = gtdb
+    if ( gtdb.isDirectory() ) {
+        // Extract a database name based on input path to ensure cardinality matching for classifywf
+        ch_gtdb_dir = Channel
+                        .fromPath(gtdb, checkIfExists: true)
+                        .map{
+                            [ it.toString().split('/').last(), it ]
+                        }
+                        .collect()
     } else {
         GTDBTK_DB_PREPARATION ( gtdb )
-        ch_gtdb_dir = GTDBTK_DB_PREPARATION.out
+        ch_gtdb_dir = GTDBTK_DB_PREPARATION.out.db
     }
 
     GTDBTK_CLASSIFYWF (
@@ -73,7 +79,7 @@ workflow GTDBTK {
 
     GTDBTK_SUMMARY (
         ch_filtered_bins.discarded.map{it[1]}.collect().ifEmpty([]),
-        GTDBTK_CLASSIFYWF.out.summary.collect().ifEmpty([]),
+        GTDBTK_CLASSIFYWF.out.summary.collect(),
         GTDBTK_CLASSIFYWF.out.filtered.collect().ifEmpty([]),
         GTDBTK_CLASSIFYWF.out.failed.collect().ifEmpty([])
     )
