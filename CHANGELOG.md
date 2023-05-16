@@ -18,7 +18,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#436](https://github.com/nf-core/mag/pull/429) - `--gtdb` parameter is split into `--skip_gtdb` and `--gtdb_db` to allow finer control over GTDB database retrieval (by @jfy133)
 - [#436](https://github.com/nf-core/mag/pull/429) - `--skip_gtdb` can also support directory input of an pre-uncompressed GTDB archive (by @jfy133)
 
-
 ### `Fixed`
 
 - [#400](https://github.com/nf-core/mag/pull/400) - Fix duplicated Zenodo badge in README (by @jfy133)

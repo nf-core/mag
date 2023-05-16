@@ -495,7 +495,7 @@
                 },
                 "skip_gtdb": {
                     "type": "boolean",
-                    "description": "Turns off GTDB classification of bins.",
+                    "description": "Turns off GTDB classification of bins."
                 },
                 "gtdb_db": {
                     "type": "string",
