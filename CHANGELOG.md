@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#428](https://github.com/nf-core/mag/pull/428) - Update to nf-core 2.8 `TEMPLATE` (by @jfy133)
 - [#429](https://github.com/nf-core/mag/pull/429) - Replaced hardcoded CheckM database auto-download URL to a parameter (reported by @erikrikarddaniel and fixed by @jfy133)
+- [#443](https://github.com/nf-core/mag/pull/443) - Moved BUSCO bash code to script (by @jfy133)
 
 ### `Fixed`
 
