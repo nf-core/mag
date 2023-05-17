@@ -6,7 +6,7 @@
 
 ## Input specifications
 
-The input data can be passed to nf-core/mag in two possible ways using the `--input` parameter.
+The input data can be passed to nf-core/mag in three possible ways, either using the `--input` or `--assembly_input` parameters.
 
 ### Direct FASTQ input (short reads only)
 
@@ -65,6 +65,53 @@ Please note the following requirements:
 - If single-end reads are specified, the command line parameter `--single_end` must be specified as well
 
 Again, by default, the group information is only used to compute co-abundances for the binning step, but not for group-wise co-assembly (see the parameter docs for [`--coassemble_group`](https://nf-co.re/mag/parameters#coassemble_group) and [`--binning_map_mode`](https://nf-co.re/mag/parameters#binning_map_mode) for more information about how this group information can be used).
+
+### Supplying pre-computed assemblies
+
+It is also possible to run nf-core/mag on pre-computed assemblies, by supplying a CSV file to the parameter `--assembly_input` in addition to the raw reads supplied to `--input`. Supplying assembly input skips all read pre-processing and assembly, jumping straight to the binning stage of the pipeline.
+
+The assembly CSV file should contain the following columns:
+
+`id,assembler,fasta`
+
+Where `id` is the ID of the assembly, `assembler` is the assembler used to produce the assembly (one of `MEGAHIT`, `SPAdes`, or `SPAdesHybrid`), and `fasta` is the path to the assembly fasta file.
+
+The value of the `id` column should be set depending on the desired `--binning_map_mode`. If `--binning_map_mode` is set to "own", then the values should match those in the `id` column of the `--input` CSV. If `--binning_map_mode` is set to "group", then the values should match those in the `group` column of a `--input` CSV.
+
+For the below `--input` CSV, valid options could be:
+
+```bash
+sample,group,short_reads_1,short_reads_2,long_reads
+sample1,group0,data/sample1_R1.fastq.gz,data/sample1_R2.fastq.gz,data/sample1.fastq.gz
+sample2,group0,data/sample2_R1.fastq.gz,data/sample2_R2.fastq.gz,data/sample2.fastq.gz
+sample3,group1,data/sample3_R1.fastq.gz,data/sample3_R2.fastq.gz,
+```
+
+If using `--binning_map_mode "own"`:
+
+```bash
+id,assembler,fasta
+sample1,MEGAHIT,MEGAHIT-sample1_contigs.fa.gz
+sample1,SPAdes,SPAdes-sample1_contigs.fasta.gz
+sample2,MEGAHIT,MEGAHIT-sample2.contigs.fa.gz
+sample2,SPAdes,SPAdes-sample2_contigs.fasta.gz
+sample3,MEGAHIT,MEGAHIT-sample3.contigs.fa.gz
+sample3,SPAdes,SPAdes-sample3_contigs.fasta.gz
+```
+
+If using `--binning_map_mode "group"`:
+
+```bash
+id,assembler,fasta
+group0,MEGAHIT,MEGAHIT-group0_contigs.fa.gz
+group0,SPAdes,SPAdes-group0_contigs.fasta.gz
+group1,MEGAHIT,MEGAHIT-group1.contigs.fa.gz
+group1,SPAdes,SPAdes-group1_contigs.fasta.gz
+```
+
+If using `--binning_map_mode "all"`, either of the above formats is fine.
+
+When supplying pre-computed assemblies, reads **must** also be provided in the CSV input format to `--input`, and should be the reads used to build the assemblies. As long reads are only used for assembly, any long read fastq files listed in the reads CSV are ignored.
 
 ## Running the pipeline
 
