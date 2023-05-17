@@ -52,36 +52,22 @@ ch_multiqc_logo            = params.multiqc_logo   ? Channel.fromPath( params.mu
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-//
-// MODULE: Local to the pipeline
-//
-include { QUAST                                               } from '../modules/local/quast'
-include { QUAST_BINS                                          } from '../modules/local/quast_bins'
-include { QUAST_BINS_SUMMARY                                  } from '../modules/local/quast_bins_summary'
-include { CAT_DB                                              } from '../modules/local/cat_db'
-include { CAT_DB_GENERATE                                     } from '../modules/local/cat_db_generate'
-include { CAT                                                 } from '../modules/local/cat'
-include { CAT_SUMMARY                                         } from "../modules/local/cat_summary"
-include { BIN_SUMMARY                                         } from '../modules/local/bin_summary'
-include { COMBINE_TSV as COMBINE_SUMMARY_TSV                  } from '../modules/local/combine_tsv'
-include { MULTIQC                                             } from '../modules/local/multiqc'
-
-//
-// SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
-//
-include { INPUT_CHECK                     } from '../subworkflows/local/input_check'
-include { SHORT_READ_PREPROCESS           } from '../subworkflows/local/short_read_preprocess'
-include { LONG_READ_PREPROCESS            } from '../subworkflows/local/long_read_preprocess'
-include { SHORT_READ_TAXONOMY             } from '../subworkflows/local/short_read_taxonomy'
-include { ASSEMBLY                        } from '../subworkflows/local/assembly'
-include { BINNING_PREPARATION             } from '../subworkflows/local/binning_preparation'
-include { BINNING                         } from '../subworkflows/local/binning'
-include { BINNING_REFINEMENT              } from '../subworkflows/local/binning_refinement'
-include { BUSCO_QC                        } from '../subworkflows/local/busco_qc'
-include { CHECKM_QC                       } from '../subworkflows/local/checkm_qc'
-include { GUNC_QC                         } from '../subworkflows/local/gunc_qc'
-include { GTDBTK                          } from '../subworkflows/local/gtdbtk'
-include { ANCIENT_DNA_ASSEMBLY_VALIDATION } from '../subworkflows/local/ancient_dna'
+include { BIN_SUMMARY                        } from '../modules/local/bin_summary'
+include { COMBINE_TSV as COMBINE_SUMMARY_TSV } from '../modules/local/combine_tsv'
+include { MULTIQC                            } from '../modules/local/multiqc'
+include { INPUT_CHECK                        } from '../subworkflows/local/input_check'
+include { SHORT_READ_PREPROCESS              } from '../subworkflows/local/short_read_preprocess'
+include { LONG_READ_PREPROCESS               } from '../subworkflows/local/long_read_preprocess'
+include { SHORT_READ_TAXONOMY                } from '../subworkflows/local/short_read_taxonomy'
+include { ASSEMBLY                           } from '../subworkflows/local/assembly'
+include { ASSEMBLY_QC                        } from '../subworkflows/local/assembly_qc'
+include { BINNING_PREPARATION                } from '../subworkflows/local/binning_preparation'
+include { BINNING                            } from '../subworkflows/local/binning'
+include { BINNING_REFINEMENT                 } from '../subworkflows/local/binning_refinement'
+include { ANCIENT_DNA_ASSEMBLY_VALIDATION    } from '../subworkflows/local/ancient_dna'
+include { BIN_QC                             } from '../subworkflows/local/bin_qc'
+include { BIN_TAXONOMY                       } from '../subworkflows/local/bin_taxonomy'
+include { ANNOTATION                         } from '../subworkflows/local/annotation'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -89,56 +75,8 @@ include { ANCIENT_DNA_ASSEMBLY_VALIDATION } from '../subworkflows/local/ancient_
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-//
-// MODULE: Installed directly from nf-core/modules
-//
-include { ARIA2 as ARIA2_UNTAR                   } from '../modules/nf-core/aria2/main'
 include { FASTQC as FASTQC_RAW                   } from '../modules/nf-core/fastqc/main'
-include { PRODIGAL                               } from '../modules/nf-core/prodigal/main'
-include { PROKKA                                 } from '../modules/nf-core/prokka/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS            } from '../modules/nf-core/custom/dumpsoftwareversions/main'
-
-////////////////////////////////////////////////////
-/* --  Create channel for reference databases  -- */
-////////////////////////////////////////////////////
-
-if(params.busco_reference){
-    ch_busco_db_file = Channel
-        .value(file( "${params.busco_reference}" ))
-} else {
-    ch_busco_db_file = Channel.empty()
-}
-if (params.busco_download_path) {
-    ch_busco_download_folder = Channel
-        .value(file( "${params.busco_download_path}" ))
-} else {
-    ch_busco_download_folder = Channel.empty()
-}
-
-if(params.checkm_db) {
-    ch_checkm_db = file(params.checkm_db, checkIfExists: true)
-}
-
-if (params.gunc_db) {
-    ch_gunc_db = file(params.gunc_db, checkIfExists: true)
-} else {
-    ch_gunc_db = Channel.empty()
-}
-
-if(params.cat_db){
-    ch_cat_db_file = Channel
-        .value(file( "${params.cat_db}" ))
-} else {
-    ch_cat_db_file = Channel.empty()
-}
-
-gtdb = params.skip_binqc ? false : params.gtdb
-if (gtdb) {
-    ch_gtdb = Channel
-        .value(file( "${gtdb}" ))
-} else {
-    ch_gtdb = Channel.empty()
-}
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -153,13 +91,6 @@ def busco_failed_bins = [:]
 workflow MAG {
 
     ch_versions = Channel.empty()
-
-    // Get checkM database if not supplied
-
-    if ( !params.skip_binqc && params.binqc_tool == 'checkm' && !params.checkm_db ) {
-        ARIA2_UNTAR (params.checkm_download_url)
-        ch_checkm_db = ARIA2_UNTAR.out.downloaded_file
-    }
 
     //
     // SUBWORKFLOW: Read in samplesheet, validate and stage input files
@@ -225,30 +156,12 @@ workflow MAG {
     */
 
     ch_assemblies = Channel.empty()
-    ASSEMBLY(ch_short_reads_assembly, ch_long_reads)
+    ASSEMBLY ( ch_short_reads_assembly, ch_long_reads )
     ch_assemblies = ch_assemblies.mix(ch_input_assemblies, ASSEMBLY.out.assemblies)
     ch_versions   = ch_versions.mix(ASSEMBLY.out.versions)
 
-    ch_quast_multiqc = Channel.empty()
-    if (!params.skip_quast){
-        QUAST ( ch_assemblies )
-        ch_quast_multiqc = QUAST.out.qc
-        ch_versions      = ch_versions.mix(QUAST.out.versions.first())
-    }
-
-    /*
-    ================================================================================
-                                    Predict proteins
-    ================================================================================
-    */
-
-    if (!params.skip_prodigal){
-        PRODIGAL (
-            ch_assemblies,
-            'gff'
-        )
-        ch_versions = ch_versions.mix(PRODIGAL.out.versions.first())
-    }
+    ASSEMBLY_QC ( ch_assemblies )
+    ch_versions = ch_versions.mix(ASSEMBLY_QC.out.versions)
 
     /*
     ================================================================================
@@ -256,13 +169,10 @@ workflow MAG {
     ================================================================================
     */
 
-
     ch_bowtie2_assembly_multiqc = Channel.empty()
     ch_busco_summary            = Channel.empty()
     ch_checkm_summary           = Channel.empty()
     ch_busco_multiqc            = Channel.empty()
-
-
 
     BINNING_PREPARATION (
         ch_assemblies,
@@ -341,129 +251,41 @@ workflow MAG {
         * Bin QC subworkflows: for checking bin completeness with either BUSCO, CHECKM, and/or GUNC
         */
 
-        // Results in: [ [meta], path_to_bin.fa ]
-        ch_input_bins_for_qc = ch_input_for_postbinning_bins_unbins.transpose()
+        BIN_QC(ch_input_for_postbinning_bins_unbins)
+        ch_versions = ch_versions.mix(BIN_QC.out.versions)
 
+        // process information if BUSCO analysis failed for individual bins due to no matching genes
         if (!params.skip_binqc && params.binqc_tool == 'busco'){
-            /*
-            * BUSCO subworkflow: Quantitative measures for the assessment of genome assembly
-            */
-            BUSCO_QC (
-                ch_busco_db_file,
-                ch_busco_download_folder,
-                ch_input_bins_for_qc
-            )
-            ch_busco_summary = BUSCO_QC.out.summary
-            ch_busco_multiqc = BUSCO_QC.out.multiqc
-            ch_versions = ch_versions.mix(BUSCO_QC.out.versions.first())
-            // process information if BUSCO analysis failed for individual bins due to no matching genes
-            BUSCO_QC.out
-                .failed_bin
+            BIN_QC.out
+                .busco_failed_bins
                 .splitCsv(sep: '\t')
                 .map { bin, error -> if (!bin.contains(".unbinned.")) busco_failed_bins[bin] = error }
         }
+        
+        /*
+        * Bin taxonomy subworkflows: for assigning taxonomy to bins with either GTDB-Tk or CAT
+        */
 
-        if (!params.skip_binqc && params.binqc_tool == 'checkm'){
-            /*
-            * CheckM subworkflow: Quantitative measures for the assessment of genome assembly
-            */
-            CHECKM_QC (
-                ch_input_bins_for_qc.groupTuple(),
-                ch_checkm_db
-            )
-            ch_checkm_summary = CHECKM_QC.out.summary
-
-            // TODO custom output parsing? Add to MultiQC?
-            ch_versions = ch_versions.mix(CHECKM_QC.out.versions)
-
-        }
-
-        if ( params.run_gunc && params.binqc_tool == 'checkm' ) {
-            GUNC_QC ( ch_input_bins_for_qc, ch_gunc_db, CHECKM_QC.out.checkm_tsv )
-            ch_versions = ch_versions.mix( GUNC_QC.out.versions )
-        } else if ( params.run_gunc ) {
-            GUNC_QC ( ch_input_bins_for_qc, ch_gunc_db, [] )
-            ch_versions = ch_versions.mix( GUNC_QC.out.versions )
-        }
-
-        ch_quast_bins_summary = Channel.empty()
-        if (!params.skip_quast){
-            ch_input_for_quast_bins = ch_input_for_postbinning_bins_unbins
-                                        .groupTuple()
-                                        .map{
-                                            meta, reads ->
-                                                def new_reads = reads.flatten()
-                                                [meta, new_reads]
-                                            }
-            QUAST_BINS ( ch_input_for_quast_bins )
-            ch_versions = ch_versions.mix(QUAST_BINS.out.versions.first())
-            QUAST_BINS_SUMMARY ( QUAST_BINS.out.quast_bin_summaries.collect() )
-            ch_quast_bins_summary = QUAST_BINS_SUMMARY.out.summary
-        }
+        BIN_TAXONOMY(ch_input_for_postbinning_bins_unbins, BIN_QC.out.busco_summary, BIN_QC.out.checkm_summary)
+        ch_versions = ch_versions.mix(BIN_TAXONOMY.out.versions)
 
         /*
-         * CAT: Bin Annotation Tool (BAT) are pipelines for the taxonomic classification of long DNA sequences and metagenome assembled genomes (MAGs/bins)
-         */
-        ch_cat_db = Channel.empty()
-        if (params.cat_db){
-            CAT_DB ( ch_cat_db_file )
-            ch_cat_db = CAT_DB.out.db
-        } else if (params.cat_db_generate){
-            CAT_DB_GENERATE ()
-            ch_cat_db = CAT_DB_GENERATE.out.db
-        }
-        CAT (
-            ch_input_for_postbinning_bins_unbins,
-            ch_cat_db
-        )
-        CAT_SUMMARY(
-            CAT.out.tax_classification.collect()
-        )
-        ch_versions = ch_versions.mix(CAT.out.versions.first())
-        ch_versions = ch_versions.mix(CAT_SUMMARY.out.versions)
+        * Annotation subworkflows: Prodigal and Prokka
+        */
+        ANNOTATION(ch_input_for_postbinning_bins_unbins, ch_assemblies)
+        ch_versions = ch_versions.mix(ANNOTATION.out.versions)
 
         /*
-         * GTDB-tk: taxonomic classifications using GTDB reference
-         */
-        ch_gtdbtk_summary = Channel.empty()
-        if ( gtdb ){
-            GTDBTK (
-                ch_input_for_postbinning_bins_unbins,
-                ch_busco_summary,
-                ch_checkm_summary,
-                ch_gtdb
-            )
-            ch_versions = ch_versions.mix(GTDBTK.out.versions.first())
-            ch_gtdbtk_summary = GTDBTK.out.summary
-        }
-
+        * Bin summary
+        */
         if ( ( !params.skip_binqc ) || !params.skip_quast || gtdb){
             BIN_SUMMARY (
                 ch_input_for_binsummary,
-                ch_busco_summary.ifEmpty([]),
-                ch_checkm_summary.ifEmpty([]),
-                ch_quast_bins_summary.ifEmpty([]),
-                ch_gtdbtk_summary.ifEmpty([])
+                BIN_QC.out.busco_summary.ifEmpty([]),
+                BIN_QC.out.checkm_summary.ifEmpty([]),
+                BIN_QC.out.quast_bins_summary.ifEmpty([]),
+                BIN_TAXONOMY.out.gtdbtk_summary.ifEmpty([])
             )
-        }
-
-        /*
-         * Prokka: Genome annotation
-         */
-        ch_bins_for_prokka = ch_input_for_postbinning_bins_unbins.transpose()
-            .map { meta, bin ->
-                def meta_new = meta.clone()
-                meta_new.id  = bin.getBaseName()
-                [ meta_new, bin ]
-            }
-
-        if (!params.skip_prokka){
-            PROKKA (
-                ch_bins_for_prokka,
-                [],
-                []
-            )
-            ch_versions = ch_versions.mix(PROKKA.out.versions.first())
         }
     }
 
@@ -508,9 +330,9 @@ workflow MAG {
         FASTQC_RAW.out.zip.collect{it[1]}.ifEmpty([]),
         SHORT_READ_PREPROCESS.out.multiqc_fastqc_trimmed.collect().ifEmpty([]),
         SHORT_READ_PREPROCESS.out.multiqc_bowtie2_removal_host.collect{it[1]}.ifEmpty([]),
-        ch_quast_multiqc.collect().ifEmpty([]),
+        ASSEMBLY_QC.out.quast_multiqc.collect().ifEmpty([]),
         ch_bowtie2_assembly_multiqc.collect().ifEmpty([]),
-        ch_busco_multiqc.collect().ifEmpty([]),
+        BIN_QC.out.busco_multiqc.collect().ifEmpty([]),
         SHORT_READ_PREPROCESS.out.multiqc_readprep.collect().ifEmpty([])
     )
     multiqc_report = MULTIQC.out.report.toList()

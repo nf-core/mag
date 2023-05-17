@@ -75,7 +75,7 @@ workflow SHORT_READ_PREPROCESS {
         }
     }
 
-    if (params.host_fasta){
+    if (params.host_fasta  && !params.assembly_input){
         BOWTIE2_HOST_REMOVAL_BUILD (
             ch_host_fasta
         )
@@ -92,7 +92,7 @@ workflow SHORT_READ_PREPROCESS {
         ch_versions = ch_versions.mix(BOWTIE2_HOST_REMOVAL_ALIGN.out.versions.first())
     }
 
-    if(!params.keep_phix) {
+    if(!params.keep_phix && !params.assembly_input) {
         BOWTIE2_PHIX_REMOVAL_BUILD (
             ch_phix_db_file
         )

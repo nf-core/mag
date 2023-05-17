@@ -1,9 +1,9 @@
-include { POOL_SINGLE_READS as POOL_SHORT_SINGLE_READS        } from '../../modules/local/pool_single_reads'
-include { POOL_PAIRED_READS                                   } from '../../modules/local/pool_paired_reads'
-include { POOL_SINGLE_READS as POOL_LONG_READS                } from '../../modules/local/pool_single_reads'
-include { MEGAHIT                                             } from '../../modules/local/megahit'
-include { SPADES                                              } from '../../modules/local/spades'
-include { SPADESHYBRID                                        } from '../../modules/local/spadeshybrid'
+include { POOL_SINGLE_READS as POOL_SHORT_SINGLE_READS } from '../../modules/local/pool_single_reads'
+include { POOL_PAIRED_READS                            } from '../../modules/local/pool_paired_reads'
+include { POOL_SINGLE_READS as POOL_LONG_READS         } from '../../modules/local/pool_single_reads'
+include { MEGAHIT                                      } from '../../modules/local/megahit'
+include { SPADES                                       } from '../../modules/local/spades'
+include { SPADESHYBRID                                 } from '../../modules/local/spadeshybrid'
 
 workflow ASSEMBLY {
     take:
@@ -128,6 +128,6 @@ workflow ASSEMBLY {
     }
 
     emit:
-    assemblies = ch_assemblies
-    versions   = ch_versions
+    assemblies    = ch_assemblies
+    versions      = ch_versions
 }
