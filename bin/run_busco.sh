@@ -9,13 +9,13 @@ lineage_dataset_provided=$6
 busco_clean=$7
 
 # ensure augustus has write access to config directory
-if [ ${cp_augustus_config} = "Y" ] ; then
+if [ ${cp_augustus_config} = "Y" ]; then
     cp -r /usr/local/config/ augustus_config/
     export AUGUSTUS_CONFIG_PATH=augustus_config
 fi
 
 # place db in extra folder to ensure BUSCO recognizes it as path (instead of downloading it)
-if [ ${lineage_dataset_provided} = "Y" ] ; then
+if [ ${lineage_dataset_provided} = "Y" ]; then
     mkdir dataset
     mv ${db} dataset/
 fi
@@ -30,7 +30,7 @@ if busco ${p} \
     --mode genome \
     --in ${bin} \
     --cpu ${task_cpus} \
-    --out "BUSCO" > ${bin}_busco.log 2> ${bin}_busco.err; then
+    --out "BUSCO" >${bin}_busco.log 2>${bin}_busco.err; then
 
     # get name of used specific lineage dataset
     summaries=(BUSCO/short_summary.specific.*.BUSCO.txt)
@@ -38,7 +38,7 @@ if busco ${p} \
         echo "ERROR: none or multiple 'BUSCO/short_summary.specific.*.BUSCO.txt' files found. Expected one."
         exit 1
     fi
-    [[ $summaries =~ BUSCO/short_summary.specific.(.*).BUSCO.txt ]];
+    [[ $summaries =~ BUSCO/short_summary.specific.(.*).BUSCO.txt ]]
     db_name_spec="${BASH_REMATCH[1]}"
     most_spec_db=${db_name_spec}
     echo "Used specific lineage dataset: ${db_name_spec}"
@@ -48,17 +48,17 @@ if busco ${p} \
 
         # if lineage dataset is provided, BUSCO analysis does not fail in case no genes can be found as when using the auto selection setting
         # report bin as failed to allow consistent warnings within the pipeline for both settings
-        if egrep -q $'WARNING:\tBUSCO did not find any match.' ${bin}_busco.log ; then
+        if egrep -q $'WARNING:\tBUSCO did not find any match.' ${bin}_busco.log; then
             echo "WARNING: BUSCO could not find any genes for the provided lineage dataset! See also ${bin}_busco.log."
-            echo -e "${bin}\tNo genes" > "${bin}_busco.failed_bin.txt"
+            echo -e "${bin}\tNo genes" >"${bin}_busco.failed_bin.txt"
         fi
     else
         # auto lineage selection
-        if { egrep -q $'INFO:\t\\S+ selected' ${bin}_busco.log \
-            && egrep -q $'INFO:\tLineage \\S+ is selected, supported by ' ${bin}_busco.log ; } || \
-            { egrep -q $'INFO:\t\\S+ selected' ${bin}_busco.log \
-            && egrep -q $'INFO:\tThe results from the Prodigal gene predictor indicate that your data belongs to the mollicutes clade. Testing subclades...' ${bin}_busco.log \
-            && egrep -q $'INFO:\tUsing local lineages directory ' ${bin}_busco.log ; }; then
+        if { egrep -q $'INFO:\t\\S+ selected' ${bin}_busco.log &&
+            egrep -q $'INFO:\tLineage \\S+ is selected, supported by ' ${bin}_busco.log; } ||
+            { egrep -q $'INFO:\t\\S+ selected' ${bin}_busco.log &&
+                egrep -q $'INFO:\tThe results from the Prodigal gene predictor indicate that your data belongs to the mollicutes clade. Testing subclades...' ${bin}_busco.log &&
+                egrep -q $'INFO:\tUsing local lineages directory ' ${bin}_busco.log; }; then
             # the second statement is necessary, because certain mollicute clades use a different genetic code, are not part of the BUSCO placement tree, are tested separately
             # and cause different log messages
             echo "Domain and specific lineage could be selected by BUSCO."
@@ -71,7 +71,7 @@ if busco ${p} \
                 cp BUSCO/short_summary.specific.${db_name_spec}.BUSCO.txt short_summary.domain.${db_name_spec}.${bin}.txt
                 db_name_gen=${db_name_spec}
             else
-                [[ $summaries_gen =~ BUSCO/short_summary.generic.(.*).BUSCO.txt ]];
+                [[ $summaries_gen =~ BUSCO/short_summary.generic.(.*).BUSCO.txt ]]
                 db_name_gen="${BASH_REMATCH[1]}"
                 echo "Used generic lineage dataset: ${db_name_gen}"
                 cp BUSCO/short_summary.generic.${db_name_gen}.BUSCO.txt short_summary.domain.${db_name_gen}.${bin}.txt
@@ -86,15 +86,15 @@ if busco ${p} \
                 break
             done
 
-        elif egrep -q $'INFO:\t\\S+ selected' ${bin}_busco.log && egrep -q $'INFO:\tNo marker genes were found. Root lineage \\S+ is kept' ${bin}_busco.log ; then
+        elif egrep -q $'INFO:\t\\S+ selected' ${bin}_busco.log && egrep -q $'INFO:\tNo marker genes were found. Root lineage \\S+ is kept' ${bin}_busco.log; then
             echo "Domain could be selected by BUSCO, but no more specific lineage."
             cp BUSCO/short_summary.specific.${db_name_spec}.BUSCO.txt short_summary.domain.${db_name_spec}.${bin}.txt
 
-        elif egrep -q $'INFO:\t\\S+ selected' ${bin}_busco.log && egrep -q $'INFO:\tNot enough markers were placed on the tree \\([0-9]*\\). Root lineage \\S+ is kept' ${bin}_busco.log ; then
+        elif egrep -q $'INFO:\t\\S+ selected' ${bin}_busco.log && egrep -q $'INFO:\tNot enough markers were placed on the tree \\([0-9]*\\). Root lineage \\S+ is kept' ${bin}_busco.log; then
             echo "Domain could be selected by BUSCO, but no more specific lineage."
             cp BUSCO/short_summary.specific.${db_name_spec}.BUSCO.txt short_summary.domain.${db_name_spec}.${bin}.txt
 
-        elif egrep -q $'INFO:\t\\S+ selected' ${bin}_busco.log && egrep -q $'INFO:\tRunning virus detection pipeline' ${bin}_busco.log ; then
+        elif egrep -q $'INFO:\t\\S+ selected' ${bin}_busco.log && egrep -q $'INFO:\tRunning virus detection pipeline' ${bin}_busco.log; then
             # TODO double-check if selected dataset is not one of bacteria_*, archaea_*, eukaryota_*?
             echo "Domain could not be selected by BUSCO, but virus dataset was selected."
             cp BUSCO/short_summary.specific.${db_name_spec}.BUSCO.txt short_summary.specific_lineage.${db_name_spec}.${bin}.txt
@@ -113,16 +113,16 @@ if busco ${p} \
         break
     done
 
-elif egrep -q $'ERROR:\tNo genes were recognized by BUSCO' ${bin}_busco.err ; then
+elif egrep -q $'ERROR:\tNo genes were recognized by BUSCO' ${bin}_busco.err; then
     echo "WARNING: BUSCO analysis failed due to no recognized genes! See also ${bin}_busco.err."
-    echo -e "${bin}\tNo genes" > "${bin}_busco.failed_bin.txt"
+    echo -e "${bin}\tNo genes" >"${bin}_busco.failed_bin.txt"
 
-elif egrep -q $'INFO:\t\\S+ selected' ${bin}_busco.log && egrep -q $'ERROR:\tPlacements failed' ${bin}_busco.err ; then
+elif egrep -q $'INFO:\t\\S+ selected' ${bin}_busco.log && egrep -q $'ERROR:\tPlacements failed' ${bin}_busco.err; then
     echo "WARNING: BUSCO analysis failed due to failed placements! See also ${bin}_busco.err. Still using results for selected generic lineage dataset."
-    echo -e "${bin}\tPlacements failed" > "${bin}_busco.failed_bin.txt"
+    echo -e "${bin}\tPlacements failed" >"${bin}_busco.failed_bin.txt"
 
     message=$(egrep $'INFO:\t\\S+ selected' ${bin}_busco.log)
-    [[ $message =~ INFO:[[:space:]]([_[:alnum:]]+)[[:space:]]selected ]];
+    [[ $message =~ INFO:[[:space:]]([_[:alnum:]]+)[[:space:]]selected ]]
     db_name_gen="${BASH_REMATCH[1]}"
     most_spec_db=${db_name_gen}
     echo "Used generic lineage dataset: ${db_name_gen}"
@@ -149,7 +149,7 @@ fi
 
 # if needed delete temporary BUSCO files
 if [ ${busco_clean} = "Y" ]; then
-    find . -depth -type d -name "augustus_config" -execdir rm -rf "{}" \\;
-    find . -depth -type d -name "auto_lineage" -execdir rm -rf "{}" \\;
+    find . -depth -type d -name "augustus_config" -execdir rm -rf "{}" \;
+    find . -depth -type d -name "auto_lineage" -execdir rm -rf "{}" \;
     find . -depth -type d -name "run_*" -execdir rm -rf "{}" +
 fi
