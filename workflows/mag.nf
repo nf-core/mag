@@ -55,27 +55,6 @@ ch_multiqc_logo            = params.multiqc_logo   ? Channel.fromPath( params.mu
 //
 // MODULE: Local to the pipeline
 //
-include { BOWTIE2_REMOVAL_BUILD as BOWTIE2_HOST_REMOVAL_BUILD } from '../modules/local/bowtie2_removal_build'
-include { BOWTIE2_REMOVAL_ALIGN as BOWTIE2_HOST_REMOVAL_ALIGN } from '../modules/local/bowtie2_removal_align'
-include { BOWTIE2_REMOVAL_BUILD as BOWTIE2_PHIX_REMOVAL_BUILD } from '../modules/local/bowtie2_removal_build'
-include { BOWTIE2_REMOVAL_ALIGN as BOWTIE2_PHIX_REMOVAL_ALIGN } from '../modules/local/bowtie2_removal_align'
-include { PORECHOP                                            } from '../modules/local/porechop'
-include { NANOLYSE                                            } from '../modules/local/nanolyse'
-include { FILTLONG                                            } from '../modules/local/filtlong'
-include { NANOPLOT as NANOPLOT_RAW                            } from '../modules/local/nanoplot'
-include { NANOPLOT as NANOPLOT_FILTERED                       } from '../modules/local/nanoplot'
-include { CENTRIFUGE_DB_PREPARATION                           } from '../modules/local/centrifuge_db_preparation'
-include { CENTRIFUGE                                          } from '../modules/local/centrifuge'
-include { KRAKEN2_DB_PREPARATION                              } from '../modules/local/kraken2_db_preparation'
-include { KRAKEN2                                             } from '../modules/local/kraken2'
-include { KRONA_DB                                            } from '../modules/local/krona_db'
-include { KRONA                                               } from '../modules/local/krona'
-include { POOL_SINGLE_READS as POOL_SHORT_SINGLE_READS        } from '../modules/local/pool_single_reads'
-include { POOL_PAIRED_READS                                   } from '../modules/local/pool_paired_reads'
-include { POOL_SINGLE_READS as POOL_LONG_READS                } from '../modules/local/pool_single_reads'
-include { MEGAHIT                                             } from '../modules/local/megahit'
-include { SPADES                                              } from '../modules/local/spades'
-include { SPADESHYBRID                                        } from '../modules/local/spadeshybrid'
 include { QUAST                                               } from '../modules/local/quast'
 include { QUAST_BINS                                          } from '../modules/local/quast_bins'
 include { QUAST_BINS_SUMMARY                                  } from '../modules/local/quast_bins_summary'
@@ -90,14 +69,18 @@ include { MULTIQC                                             } from '../modules
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { INPUT_CHECK         } from '../subworkflows/local/input_check'
-include { BINNING_PREPARATION } from '../subworkflows/local/binning_preparation'
-include { BINNING             } from '../subworkflows/local/binning'
-include { BINNING_REFINEMENT  } from '../subworkflows/local/binning_refinement'
-include { BUSCO_QC            } from '../subworkflows/local/busco_qc'
-include { CHECKM_QC           } from '../subworkflows/local/checkm_qc'
-include { GUNC_QC             } from '../subworkflows/local/gunc_qc'
-include { GTDBTK              } from '../subworkflows/local/gtdbtk'
+include { INPUT_CHECK                     } from '../subworkflows/local/input_check'
+include { SHORT_READ_PREPROCESS           } from '../subworkflows/local/short_read_preprocess'
+include { LONG_READ_PREPROCESS            } from '../subworkflows/local/long_read_preprocess'
+include { SHORT_READ_TAXONOMY             } from '../subworkflows/local/short_read_taxonomy'
+include { ASSEMBLY                        } from '../subworkflows/local/assembly'
+include { BINNING_PREPARATION             } from '../subworkflows/local/binning_preparation'
+include { BINNING                         } from '../subworkflows/local/binning'
+include { BINNING_REFINEMENT              } from '../subworkflows/local/binning_refinement'
+include { BUSCO_QC                        } from '../subworkflows/local/busco_qc'
+include { CHECKM_QC                       } from '../subworkflows/local/checkm_qc'
+include { GUNC_QC                         } from '../subworkflows/local/gunc_qc'
+include { GTDBTK                          } from '../subworkflows/local/gtdbtk'
 include { ANCIENT_DNA_ASSEMBLY_VALIDATION } from '../subworkflows/local/ancient_dna'
 
 /*
@@ -111,12 +94,6 @@ include { ANCIENT_DNA_ASSEMBLY_VALIDATION } from '../subworkflows/local/ancient_
 //
 include { ARIA2 as ARIA2_UNTAR                   } from '../modules/nf-core/aria2/main'
 include { FASTQC as FASTQC_RAW                   } from '../modules/nf-core/fastqc/main'
-include { FASTQC as FASTQC_TRIMMED               } from '../modules/nf-core/fastqc/main'
-include { SEQTK_MERGEPE                          } from '../modules/nf-core/seqtk/mergepe/main'
-include { BBMAP_BBNORM                           } from '../modules/nf-core/bbmap/bbnorm/main'
-include { FASTP                                  } from '../modules/nf-core/fastp/main'
-include { ADAPTERREMOVAL as ADAPTERREMOVAL_PE    } from '../modules/nf-core/adapterremoval/main'
-include { ADAPTERREMOVAL as ADAPTERREMOVAL_SE    } from '../modules/nf-core/adapterremoval/main'
 include { PRODIGAL                               } from '../modules/nf-core/prodigal/main'
 include { PROKKA                                 } from '../modules/nf-core/prokka/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS            } from '../modules/nf-core/custom/dumpsoftwareversions/main'
@@ -124,20 +101,6 @@ include { CUSTOM_DUMPSOFTWAREVERSIONS            } from '../modules/nf-core/cust
 ////////////////////////////////////////////////////
 /* --  Create channel for reference databases  -- */
 ////////////////////////////////////////////////////
-
-if ( params.host_genome ) {
-    host_fasta = params.genomes[params.host_genome].fasta ?: false
-    ch_host_fasta = Channel
-        .value(file( "${host_fasta}" ))
-    host_bowtie2index = params.genomes[params.host_genome].bowtie2 ?: false
-    ch_host_bowtie2index = Channel
-        .value(file( "${host_bowtie2index}/*" ))
-} else if ( params.host_fasta ) {
-    ch_host_fasta = Channel
-        .value(file( "${params.host_fasta}" ))
-} else {
-    ch_host_fasta = Channel.empty()
-}
 
 if(params.busco_reference){
     ch_busco_db_file = Channel
@@ -162,35 +125,11 @@ if (params.gunc_db) {
     ch_gunc_db = Channel.empty()
 }
 
-if(params.centrifuge_db){
-    ch_centrifuge_db_file = Channel
-        .value(file( "${params.centrifuge_db}" ))
-} else {
-    ch_centrifuge_db_file = Channel.empty()
-}
-
-if(params.kraken2_db){
-    ch_kraken2_db_file = Channel
-        .value(file( "${params.kraken2_db}" ))
-} else {
-    ch_kraken2_db_file = Channel.empty()
-}
-
 if(params.cat_db){
     ch_cat_db_file = Channel
         .value(file( "${params.cat_db}" ))
 } else {
     ch_cat_db_file = Channel.empty()
-}
-
-if(!params.keep_phix) {
-    ch_phix_db_file = Channel
-        .value(file( "${params.phix_reference}" ))
-}
-
-if (!params.keep_lambda) {
-    ch_nanolyse_db = Channel
-        .value(file( "${params.lambda_reference}" ))
 }
 
 gtdb = params.skip_binqc ? false : params.gtdb
@@ -222,7 +161,6 @@ workflow MAG {
         ch_checkm_db = ARIA2_UNTAR.out.downloaded_file
     }
 
-
     //
     // SUBWORKFLOW: Read in samplesheet, validate and stage input files
     //
@@ -242,103 +180,17 @@ workflow MAG {
     )
     ch_versions = ch_versions.mix(FASTQC_RAW.out.versions.first())
 
-    ch_bowtie2_removal_host_multiqc = Channel.empty()
+    ch_short_reads_preprocess = params.assembly_input ? Channel.empty() : ch_raw_short_reads
+
+    SHORT_READ_PREPROCESS(ch_short_reads_preprocess)
+    ch_versions = ch_versions.mix(SHORT_READ_PREPROCESS.out.versions)
+
     if ( !params.assembly_input ) {
-        if ( !params.skip_clipping ) {
-            if ( params.clip_tool == 'fastp' ) {
-                ch_clipmerge_out = FASTP (
-                    ch_raw_short_reads,
-                    [],
-                    params.fastp_save_trimmed_fail,
-                    []
-                )
-                ch_short_reads = FASTP.out.reads
-                ch_versions = ch_versions.mix(FASTP.out.versions.first())
-
-            } else if ( params.clip_tool == 'adapterremoval' ) {
-
-                // due to strange output file scheme in AR2, have to manually separate
-                // SE/PE to allow correct pulling of reads after.
-                ch_adapterremoval_in = ch_raw_short_reads
-                    .branch {
-                            single: it[0]['single_end']
-                            paired: !it[0]['single_end']
-                        }
-
-                ADAPTERREMOVAL_PE ( ch_adapterremoval_in.paired, [] )
-                ADAPTERREMOVAL_SE ( ch_adapterremoval_in.single, [] )
-
-                ch_short_reads = Channel.empty()
-                ch_short_reads = ch_short_reads.mix(ADAPTERREMOVAL_SE.out.singles_truncated, ADAPTERREMOVAL_PE.out.paired_truncated)
-
-                ch_versions = ch_versions.mix(ADAPTERREMOVAL_PE.out.versions.first(), ADAPTERREMOVAL_SE.out.versions.first())
-
-            }
-        } else {
-            ch_short_reads = ch_raw_short_reads
-        }
-
-        if (params.host_fasta){
-            BOWTIE2_HOST_REMOVAL_BUILD (
-                ch_host_fasta
-            )
-            ch_host_bowtie2index = BOWTIE2_HOST_REMOVAL_BUILD.out.index
-        }
-
-        if (params.host_fasta || params.host_genome){
-            BOWTIE2_HOST_REMOVAL_ALIGN (
-                ch_short_reads,
-                ch_host_bowtie2index
-            )
-            ch_short_reads = BOWTIE2_HOST_REMOVAL_ALIGN.out.reads
-            ch_bowtie2_removal_host_multiqc = BOWTIE2_HOST_REMOVAL_ALIGN.out.log
-            ch_versions = ch_versions.mix(BOWTIE2_HOST_REMOVAL_ALIGN.out.versions.first())
-        }
-
-        if(!params.keep_phix) {
-            BOWTIE2_PHIX_REMOVAL_BUILD (
-                ch_phix_db_file
-            )
-            BOWTIE2_PHIX_REMOVAL_ALIGN (
-                ch_short_reads,
-                BOWTIE2_PHIX_REMOVAL_BUILD.out.index
-            )
-            ch_short_reads = BOWTIE2_PHIX_REMOVAL_ALIGN.out.reads
-            ch_versions = ch_versions.mix(BOWTIE2_PHIX_REMOVAL_ALIGN.out.versions.first())
-        }
-
-        if (!(params.keep_phix && params.skip_clipping && !(params.host_genome || params.host_fasta))) {
-            FASTQC_TRIMMED (
-                ch_short_reads
-            )
-            ch_versions = ch_versions.mix(FASTQC_TRIMMED.out.versions)
-        }
-
-        if ( params.bbnorm ) {
-            if ( params.coassemble_group ) {
-                // Interleave pairs, to be able to treat them as single ends when calling bbnorm. This prepares
-                // for dropping the single_end parameter, but keeps assembly modules as they are, i.e. not
-                // accepting a mix of single end and pairs.
-                SEQTK_MERGEPE (
-                    ch_short_reads.filter { ! it[0].single_end }
-                )
-                ch_versions = ch_versions.mix(SEQTK_MERGEPE.out.versions.first())
-                // Combine the interleaved pairs with any single end libraries. Set the meta.single_end to true (used by the bbnorm module).
-                ch_bbnorm = SEQTK_MERGEPE.out.reads
-                    .mix(ch_short_reads.filter { it[0].single_end })
-                    .map { [ [ id: sprintf("group%s", it[0].group), group: it[0].group, single_end: true ], it[1] ] }
-                    .groupTuple()
-            } else {
-                ch_bbnorm = ch_short_reads
-            }
-            BBMAP_BBNORM ( ch_bbnorm )
-            ch_versions = ch_versions.mix(BBMAP_BBNORM.out.versions)
-            ch_short_reads_assembly = BBMAP_BBNORM.out.fastq
-        } else {
-            ch_short_reads_assembly = ch_short_reads
-        }
+        ch_short_reads            = SHORT_READ_PREPROCESS.out.short_reads
+        ch_short_reads_assembly   = SHORT_READ_PREPROCESS.out.short_reads_assembly
     } else {
-        ch_short_reads = ch_raw_short_reads
+        ch_short_reads            = ch_raw_short_reads
+        ch_short_reads_assembly   = Channel.empty()
     }
 
     /*
@@ -346,86 +198,25 @@ workflow MAG {
                                     Preprocessing and QC for long reads
     ================================================================================
     */
-    NANOPLOT_RAW (
-        ch_raw_long_reads
-    )
-    ch_versions = ch_versions.mix(NANOPLOT_RAW.out.versions.first())
 
-    ch_long_reads = ch_raw_long_reads
+    ch_long_reads_preprocess = params.assembly_input ? Channel.empty() : ch_raw_long_reads
+
+    LONG_READ_PREPROCESS(ch_long_reads_preprocess, ch_short_reads)
+    ch_versions = ch_versions.mix(LONG_READ_PREPROCESS.out.versions)
 
     if ( !params.assembly_input ) {
-        if (!params.skip_adapter_trimming) {
-            PORECHOP (
-                ch_raw_long_reads
-            )
-            ch_long_reads = PORECHOP.out.reads
-            ch_versions = ch_versions.mix(PORECHOP.out.versions.first())
-        }
-
-        if (!params.keep_lambda) {
-            NANOLYSE (
-                ch_long_reads,
-                ch_nanolyse_db
-            )
-            ch_long_reads = NANOLYSE.out.reads
-            ch_versions = ch_versions.mix(NANOLYSE.out.versions.first())
-        }
-
-        // join long and short reads by sample name
-        ch_short_reads_tmp = ch_short_reads
-            .map { meta, sr -> [ meta.id, meta, sr ] }
-
-        ch_short_and_long_reads = ch_long_reads
-            .map { meta, lr -> [ meta.id, meta, lr ] }
-            .join(ch_short_reads_tmp, by: 0)
-            .map { id, meta_lr, lr, meta_sr, sr -> [ meta_lr, lr, sr[0], sr[1] ] }  // should not occur for single-end, since SPAdes (hybrid) does not support single-end
-
-        FILTLONG (
-            ch_short_and_long_reads
-        )
-        ch_long_reads = FILTLONG.out.reads
-        ch_versions = ch_versions.mix(FILTLONG.out.versions.first())
-
-        NANOPLOT_FILTERED (
-            ch_long_reads
-        )
+        ch_long_reads = LONG_READ_PREPROCESS.out.long_reads
+    } else {
+        ch_long_reads = Channel.empty()
     }
-
     /*
     ================================================================================
                                     Taxonomic information
     ================================================================================
     */
-    CENTRIFUGE_DB_PREPARATION ( ch_centrifuge_db_file )
-    CENTRIFUGE (
-        ch_short_reads,
-        CENTRIFUGE_DB_PREPARATION.out.db
-    )
-    ch_versions = ch_versions.mix(CENTRIFUGE.out.versions.first())
 
-    KRAKEN2_DB_PREPARATION (
-        ch_kraken2_db_file
-    )
-    KRAKEN2 (
-        ch_short_reads,
-        KRAKEN2_DB_PREPARATION.out.db
-    )
-    ch_versions = ch_versions.mix(KRAKEN2.out.versions.first())
-
-    if (( params.centrifuge_db || params.kraken2_db ) && !params.skip_krona){
-        KRONA_DB ()
-        ch_tax_classifications = CENTRIFUGE.out.results_for_krona.mix(KRAKEN2.out.results_for_krona)
-            . map { classifier, meta, report ->
-                def meta_new = meta.clone()
-                meta_new.classifier  = classifier
-                [ meta_new, report ]
-            }
-        KRONA (
-            ch_tax_classifications,
-            KRONA_DB.out.db.collect()
-        )
-        ch_versions = ch_versions.mix(KRONA.out.versions.first())
-    }
+    SHORT_READ_TAXONOMY(ch_short_reads)
+    ch_versions = ch_versions.mix(SHORT_READ_TAXONOMY.out.versions)
 
     /*
     ================================================================================
@@ -433,129 +224,16 @@ workflow MAG {
     ================================================================================
     */
 
-    if ( !params.assembly_input ) {
-        // Co-assembly: prepare grouping for MEGAHIT and for pooling for SPAdes
-        if (params.coassemble_group) {
-            // short reads
-            // group and set group as new id
-            ch_short_reads_grouped = ch_short_reads_assembly
-                .map { meta, reads -> [ meta.group, meta, reads ] }
-                .groupTuple(by: 0)
-                .map { group, metas, reads ->
-                    def assemble_as_single = params.single_end || ( params.bbnorm && params.coassemble_group )
-                    def meta         = [:]
-                    meta.id          = "group-$group"
-                    meta.group       = group
-                    meta.single_end  = assemble_as_single
-                    if ( assemble_as_single ) [ meta, reads.collect { it }, [] ]
-                    else [ meta, reads.collect { it[0] }, reads.collect { it[1] } ]
-                }
-            // long reads
-            // group and set group as new id
-            ch_long_reads_grouped = ch_long_reads
-                .map { meta, reads -> [ meta.group, meta, reads ] }
-                .groupTuple(by: 0)
-                .map { group, metas, reads ->
-                    def meta = [:]
-                    meta.id          = "group-$group"
-                    meta.group       = group
-                    [ meta, reads.collect { it } ]
-                }
-        } else {
-            ch_short_reads_grouped = ch_short_reads_assembly
-                .filter { it[0].single_end }
-                .map { meta, reads -> [ meta, [ reads ], [] ] }
-                .mix (
-                    ch_short_reads_assembly
-                        .filter { ! it[0].single_end }
-                        .map { meta, reads -> [ meta, [ reads[0] ], [ reads[1] ] ] }
-                )
-            ch_long_reads_grouped = ch_long_reads
-        }
-
-        ch_assemblies = Channel.empty()
-        if (!params.skip_megahit){
-            MEGAHIT ( ch_short_reads_grouped )
-            ch_megahit_assemblies = MEGAHIT.out.assembly
-                .map { meta, assembly ->
-                    def meta_new = meta.clone()
-                    meta_new.assembler  = "MEGAHIT"
-                    [ meta_new, assembly ]
-                }
-            ch_assemblies = ch_assemblies.mix(ch_megahit_assemblies)
-            ch_versions = ch_versions.mix(MEGAHIT.out.versions.first())
-        }
-
-        // Co-assembly: pool reads for SPAdes
-        if ( ! params.skip_spades || ! params.skip_spadeshybrid ){
-            if ( params.coassemble_group ) {
-                if ( params.bbnorm ) {
-                    ch_short_reads_spades = ch_short_reads_grouped.map { [ it[0], it[1] ] }
-                } else {
-                    POOL_SHORT_SINGLE_READS (
-                        ch_short_reads_grouped
-                            .filter { it[0].single_end }
-                    )
-                    POOL_PAIRED_READS (
-                        ch_short_reads_grouped
-                            .filter { ! it[0].single_end }
-                    )
-                    ch_short_reads_spades = POOL_SHORT_SINGLE_READS.out.reads
-                        .mix(POOL_PAIRED_READS.out.reads)
-                }
-            } else {
-                ch_short_reads_spades = ch_short_reads_assembly
-            }
-            // long reads
-            if (!params.single_end && !params.skip_spadeshybrid){
-                POOL_LONG_READS ( ch_long_reads_grouped )
-                ch_long_reads_spades = POOL_LONG_READS.out.reads
-            } else {
-                ch_long_reads_spades = Channel.empty()
-            }
-        } else {
-            ch_short_reads_spades = Channel.empty()
-            ch_long_reads_spades  = Channel.empty()
-        }
-
-        if (!params.single_end && !params.skip_spades){
-            SPADES ( ch_short_reads_spades )
-            ch_spades_assemblies = SPADES.out.assembly
-                .map { meta, assembly ->
-                    def meta_new = meta.clone()
-                    meta_new.assembler  = "SPAdes"
-                    [ meta_new, assembly ]
-                }
-            ch_assemblies = ch_assemblies.mix(ch_spades_assemblies)
-            ch_versions = ch_versions.mix(SPADES.out.versions.first())
-        }
-
-        if (!params.single_end && !params.skip_spadeshybrid){
-            ch_short_reads_spades_tmp = ch_short_reads_spades
-                .map { meta, reads -> [ meta.id, meta, reads ] }
-            ch_reads_spadeshybrid = ch_long_reads_spades
-                .map { meta, reads -> [ meta.id, meta, reads ] }
-                .combine(ch_short_reads_spades_tmp, by: 0)
-                .map { id, meta_long, long_reads, meta_short, short_reads -> [ meta_short, long_reads, short_reads ] }
-            SPADESHYBRID ( ch_reads_spadeshybrid )
-            ch_spadeshybrid_assemblies = SPADESHYBRID.out.assembly
-                .map { meta, assembly ->
-                    def meta_new = meta.clone()
-                    meta_new.assembler  = "SPAdesHybrid"
-                    [ meta_new, assembly ]
-                }
-            ch_assemblies = ch_assemblies.mix(ch_spadeshybrid_assemblies)
-            ch_versions = ch_versions.mix(SPADESHYBRID.out.versions.first())
-        }
-    } else {
-        ch_assemblies = ch_input_assemblies
-    }
+    ch_assemblies = Channel.empty()
+    ASSEMBLY(ch_short_reads_assembly, ch_long_reads)
+    ch_assemblies = ch_assemblies.mix(ch_input_assemblies, ASSEMBLY.out.assemblies)
+    ch_versions   = ch_versions.mix(ASSEMBLY.out.versions)
 
     ch_quast_multiqc = Channel.empty()
     if (!params.skip_quast){
         QUAST ( ch_assemblies )
         ch_quast_multiqc = QUAST.out.qc
-        ch_versions = ch_versions.mix(QUAST.out.versions.first())
+        ch_versions      = ch_versions.mix(QUAST.out.versions.first())
     }
 
     /*
@@ -824,34 +502,16 @@ workflow MAG {
     )
     */
 
-    ch_multiqc_readprep = Channel.empty()
-    if (!params.assembly_input) {
-        if (!params.skip_clipping) {
-            if ( params.clip_tool == "fastp") {
-                ch_multiqc_readprep = ch_multiqc_readprep.mix(FASTP.out.json.collect{it[1]}.ifEmpty([]))
-            } else if ( params.clip_tool == "adapterremoval" ) {
-                ch_multiqc_readprep = ch_multiqc_readprep.mix(ADAPTERREMOVAL_PE.out.settings.collect{it[1]}.ifEmpty([]), ADAPTERREMOVAL_SE.out.settings.collect{it[1]}.ifEmpty([]))
-            }
-        }
-    }
-
-    ch_fastqc_trimmed_multiqc = Channel.empty()
-    if (!params.assembly_input) {
-        if (!(params.keep_phix && params.skip_clipping && !(params.host_genome || params.host_fasta))) {
-            ch_fastqc_trimmed_multiqc = FASTQC_TRIMMED.out.zip.collect{it[1]}.ifEmpty([])
-        }
-    }
-
     MULTIQC (
         ch_multiqc_files.collect(),
         ch_multiqc_custom_config.collect().ifEmpty([]),
         FASTQC_RAW.out.zip.collect{it[1]}.ifEmpty([]),
-        ch_fastqc_trimmed_multiqc.collect().ifEmpty([]),
-        ch_bowtie2_removal_host_multiqc.collect{it[1]}.ifEmpty([]),
+        SHORT_READ_PREPROCESS.out.multiqc_fastqc_trimmed.collect().ifEmpty([]),
+        SHORT_READ_PREPROCESS.out.multiqc_bowtie2_removal_host.collect{it[1]}.ifEmpty([]),
         ch_quast_multiqc.collect().ifEmpty([]),
         ch_bowtie2_assembly_multiqc.collect().ifEmpty([]),
         ch_busco_multiqc.collect().ifEmpty([]),
-        ch_multiqc_readprep.collect().ifEmpty([])
+        SHORT_READ_PREPROCESS.out.multiqc_readprep.collect().ifEmpty([])
     )
     multiqc_report = MULTIQC.out.report.toList()
 }
