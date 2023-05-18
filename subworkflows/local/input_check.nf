@@ -67,21 +67,22 @@ workflow INPUT_CHECK {
     }
 
     if (params.assembly_input) {
-        // check if
+        // check if we have supplied reads as a CSV file
         if(!hasExtension(params.input, "csv")) { exit 1, "ERROR: when supplying assemblies with --assembly_input, reads must be supplied using a CSV!" }
 
         ch_input_assembly_rows = Channel
             .from(file(params.assembly_input))
             .splitCsv(header: true)
             .map { row ->
-                    if (row.size() == 3) {
+                    if (row.size() == 4) {
                         def id        = row.id
+                        def group     = row.group
                         def assembler = row.assembler ?:  false
                         def assembly  = row.fasta ? file(row.fasta, checkIfExists: true) : false
                         // Check if given combination is valid
                         if (!assembly) exit 1, "Invalid input assembly samplesheet: fasta can not be empty."
                         if (!assembler) exit 1, "Invalid input assembly samplesheet: assembler can not be empty."
-                        return [ id, assembler, assembly ]
+                        return [ id, group, assembler, assembly ]
                     } else {
                         exit 1, "Input samplesheet contains row with ${row.size()} column(s). Expects 3."
                     }
@@ -89,14 +90,10 @@ workflow INPUT_CHECK {
 
         // build meta map
         ch_input_assemblies = ch_input_assembly_rows
-            .map { id, assembler, fasta ->
+            .map { id, group, assembler, fasta ->
                     def meta       = [:]
-                    if (params.binning_map_mode == "group") {
-                        meta.id    = "group-$id"
-                    } else {
-                        meta.id    = id
-                    }
-                    meta.group = id
+                    meta.id    = params.coassemble_group? "group-$group" : id
+                    meta.group = group
                     meta.assembler = assembler
                     return [ meta, [ fasta ] ]
                 }
@@ -114,13 +111,13 @@ workflow INPUT_CHECK {
     // If assembly csv file supplied, additionally ensure groups are all represented between reads and assemblies
     if (params.assembly_input) {
         ch_read_ids = ch_input_rows
-            .map { id, group, sr1, sr2, lr -> params.binning_map_mode == "group" ? group : id }
+            .map { id, group, sr1, sr2, lr -> params.coassemble_group ? group : id }
             .unique()
             .toList()
             .sort()
 
         ch_assembly_ids = ch_input_assembly_rows
-            .map { id, assembler, assembly -> id }
+            .map { id, group, assembler, assembly -> params.coassemble_group ? group : id }
             .unique()
             .toList()
             .sort()

@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#434](https://github.com/nf-core/mag/pull/434) - Fix location of samplesheet for AWS full tests (reported by @Lfulcrum, fix by @jfy133)
 - [#438](https://github.com/nf-core/mag/pull/438) - Fixed version inconsistency between conda and containers for GTDBTK_CLASSIFYWF (by @jfy133)
 - [#446](https://github.com/nf-core/mag/pull/446) - Reorganise main workflow code into subworkflows for increased modularity (by @prototaxites)
+- [#439](https://github.com/nf-core/mag/pull/445) - Fix bug in assembly input (by @prototaxites)
 
 ### `Dependencies`
 
