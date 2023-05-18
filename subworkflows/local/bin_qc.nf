@@ -39,12 +39,12 @@ workflow BIN_QC {
         ch_gunc_db = Channel.empty()
     }
 
-    ch_versions = Channel.empty()
-
-    ch_busco_multiqc = Channel.empty()
-    ch_busco_summary = Channel.empty()
-    ch_checkm_summary = Channel.empty()
+    ch_versions           = Channel.empty()
+    ch_busco_multiqc      = Channel.empty()
+    ch_busco_summary      = Channel.empty()
+    ch_checkm_summary     = Channel.empty()
     ch_quast_bins_summary = Channel.empty()
+    ch_busco_failed_bins  = Channel.empty()
 
     bins_unbins_transposed = bins_unbins.transpose()
 
@@ -102,7 +102,7 @@ workflow BIN_QC {
     emit:
     busco_summary      = ch_busco_summary
     busco_multiqc      = ch_busco_multiqc
-    busco_failed_bins  = BUSCO_QC.out.failed_bin
+    busco_failed_bins  = ch_busco_failed_bins
     checkm_summary     = ch_checkm_summary
     quast_bins_summary = ch_quast_bins_summary
     versions           = ch_versions

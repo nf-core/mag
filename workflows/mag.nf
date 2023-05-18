@@ -113,7 +113,7 @@ workflow MAG {
 
     ch_short_reads_preprocess = params.assembly_input ? Channel.empty() : ch_raw_short_reads
 
-    SHORT_READ_PREPROCESS(ch_short_reads_preprocess)
+    SHORT_READ_PREPROCESS ( ch_short_reads_preprocess )
     ch_versions = ch_versions.mix(SHORT_READ_PREPROCESS.out.versions)
 
     if ( !params.assembly_input ) {
@@ -132,7 +132,10 @@ workflow MAG {
 
     ch_long_reads_preprocess = params.assembly_input ? Channel.empty() : ch_raw_long_reads
 
-    LONG_READ_PREPROCESS(ch_long_reads_preprocess, ch_short_reads)
+    LONG_READ_PREPROCESS (
+        ch_long_reads_preprocess,
+        ch_short_reads
+    )
     ch_versions = ch_versions.mix(LONG_READ_PREPROCESS.out.versions)
 
     if ( !params.assembly_input ) {
@@ -146,7 +149,7 @@ workflow MAG {
     ================================================================================
     */
 
-    SHORT_READ_TAXONOMY(ch_short_reads)
+    SHORT_READ_TAXONOMY ( ch_short_reads )
     ch_versions = ch_versions.mix(SHORT_READ_TAXONOMY.out.versions)
 
     /*
@@ -156,7 +159,10 @@ workflow MAG {
     */
 
     ch_assemblies = Channel.empty()
-    ASSEMBLY ( ch_short_reads_assembly, ch_long_reads )
+    ASSEMBLY (
+        ch_short_reads_assembly,
+        ch_long_reads
+    )
     ch_assemblies = ch_assemblies.mix(ch_input_assemblies, ASSEMBLY.out.assemblies)
     ch_versions   = ch_versions.mix(ASSEMBLY.out.versions)
 
@@ -251,7 +257,7 @@ workflow MAG {
         * Bin QC subworkflows: for checking bin completeness with either BUSCO, CHECKM, and/or GUNC
         */
 
-        BIN_QC(ch_input_for_postbinning_bins_unbins)
+        BIN_QC ( ch_input_for_postbinning_bins_unbins )
         ch_versions = ch_versions.mix(BIN_QC.out.versions)
 
         // process information if BUSCO analysis failed for individual bins due to no matching genes
@@ -261,18 +267,25 @@ workflow MAG {
                 .splitCsv(sep: '\t')
                 .map { bin, error -> if (!bin.contains(".unbinned.")) busco_failed_bins[bin] = error }
         }
-        
+
         /*
         * Bin taxonomy subworkflows: for assigning taxonomy to bins with either GTDB-Tk or CAT
         */
 
-        BIN_TAXONOMY(ch_input_for_postbinning_bins_unbins, BIN_QC.out.busco_summary, BIN_QC.out.checkm_summary)
+        BIN_TAXONOMY (
+            ch_input_for_postbinning_bins_unbins,
+            BIN_QC.out.busco_summary,
+            BIN_QC.out.checkm_summary
+        )
         ch_versions = ch_versions.mix(BIN_TAXONOMY.out.versions)
 
         /*
         * Annotation subworkflows: Prodigal and Prokka
         */
-        ANNOTATION(ch_input_for_postbinning_bins_unbins, ch_assemblies)
+        ANNOTATION (
+            ch_input_for_postbinning_bins_unbins,
+            ch_assemblies
+        )
         ch_versions = ch_versions.mix(ANNOTATION.out.versions)
 
         /*
