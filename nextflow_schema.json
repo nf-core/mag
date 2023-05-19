@@ -708,7 +708,6 @@
                 },
                 "checkm_db": {
                     "type": "string",
-                    "default": "None",
                     "description": "Path to local folder containing already downloaded and uncompressed CheckM database.",
                     "help_text": "The pipeline can also download this for you if not specified, and you can save the resulting directory into your output directory by specifying `--save_checkm_data`. You should move this directory to somewhere else on your machine (and supply back to the pipeline in future runs again with `--checkm_db`."
                 },
@@ -740,7 +739,6 @@
                 },
                 "gunc_db": {
                     "type": "string",
-                    "default": "None",
                     "description": "Specify a path to a pre-downloaded GUNC dmnd database file"
                 },
                 "gunc_database_type": {
