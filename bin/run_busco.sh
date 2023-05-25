@@ -147,6 +147,9 @@ if [ -f BUSCO/logs/prodigal_out.log ]; then
     mv BUSCO/logs/prodigal_out.log "${bin}_prodigal.gff"
 fi
 
+# output value of most_spec_db
+echo ${most_spec_db} > info_most_spec_db.txt
+
 # if needed delete temporary BUSCO files
 if [ ${busco_clean} = "Y" ]; then
     find . -depth -type d -name "augustus_config" -execdir rm -rf "{}" \;

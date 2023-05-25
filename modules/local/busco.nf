@@ -39,6 +39,7 @@ process BUSCO {
     }
     """
     run_busco.sh "${p}" "${cp_augustus_config}" "${db}" "${bin}" ${task.cpus} "${lineage_dataset_provided}" "${busco_clean}"
+    most_spec_db=\$(<info_most_spec_db.txt)
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
