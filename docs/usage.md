@@ -57,11 +57,11 @@ sample2,0,data/sample2.fastq.gz,,
 or to additionally to perform run merging of two runs of sample1:
 
 ```bash
-sample,group,short_reads_1,short_reads_2,long_reads
-sample1,1,data/sample1_R1.fastq.gz,data/sample1_R2.fastq.gz,data/sample1.fastq.gz
-sample1,2,data/sample1_R1.fastq.gz,data/sample1_R2.fastq.gz,data/sample1.fastq.gz
-sample2,0,data/sample2_R1.fastq.gz,data/sample2_R2.fastq.gz,data/sample2.fastq.gz
-sample3,1,data/sample3_R1.fastq.gz,data/sample3_R2.fastq.gz,
+sample,run,group,short_reads_1,short_reads_2,long_reads
+sample1,1,0,data/sample1_R1.fastq.gz,data/sample1_R2.fastq.gz,data/sample1.fastq.gz
+sample1,2,0,data/sample1_R1.fastq.gz,data/sample1_R2.fastq.gz,data/sample1.fastq.gz
+sample2,0,0,data/sample2_R1.fastq.gz,data/sample2_R2.fastq.gz,data/sample2.fastq.gz
+sample3,1,0,data/sample3_R1.fastq.gz,data/sample3_R2.fastq.gz,
 ```
 
 Please note the following requirements:
