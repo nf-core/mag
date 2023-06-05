@@ -112,7 +112,7 @@ workflow INPUT_CHECK {
     // Note: do not need to check for PE/SE mismatch, as checks above do not allow mixing
     ch_input_rows
         .groupTuple(by: 0)
-        .map { id, run, group, sr1, sr2, lr -> if( run.size() != run.unique().size() ) { { error("ERROR: input samplesheet contains duplicated sample or run IDs (within a sample)! Check samplesheet for sample id: ${id}") } }
+        .map { id, run, group, sr1, sr2, lr -> if( run.size() != run.unique().size() ) { { error("ERROR: input samplesheet contains duplicated sample or run IDs (within a sample)! Check samplesheet for sample id: ${id}") } } }
 
     // If assembly csv file supplied, additionally ensure groups are all represented between reads and assemblies
     if (params.assembly_input) {
