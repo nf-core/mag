@@ -617,9 +617,9 @@ Optional, only running when parameter `-profile ancient_dna` is specified.
 <summary>Output files</summary>
 
 - `Ancient_DNA/pydamage/analyze`
-  - `[sample/group]/pydamage_results/pydamage_results.csv`: PyDamage raw result tabular file in `.csv` format. Format described here: [pydamage.readthedocs.io/en/0.62/output.html](https://pydamage.readthedocs.io/en/0.62/output.html)
+  - `[assembler]_[sample/group]/pydamage_results/pydamage_results.csv`: PyDamage raw result tabular file in `.csv` format. Format described here: [pydamage.readthedocs.io/en/0.62/output.html](https://pydamage.readthedocs.io/en/0.62/output.html)
 - `Ancient_DNA/pydamage/filter`
-  - `[sample/group]/pydamage_results/pydamage_results.csv`: PyDamage filtered result tabular file in `.csv` format. Format described here: [pydamage.readthedocs.io/en/0.62/output.html](https://pydamage.readthedocs.io/en/0.62/output.html)
+  - `[assembler]_[sample/group]/pydamage_results/pydamage_results.csv`: PyDamage filtered result tabular file in `.csv` format. Format described here: [pydamage.readthedocs.io/en/0.62/output.html](https://pydamage.readthedocs.io/en/0.62/output.html)
 
 </details>
 
@@ -631,11 +631,11 @@ Because of aDNA damage, _de novo_ assemblers sometimes struggle to call a correc
 <summary>Output files</summary>
 
 - `variant_calling/consensus`
-  - `[sample/group].fa`: contigs sequence with re-called consensus from read-to-contig alignment
+  - `[assembler]_[sample/group].fa`: contigs sequence with re-called consensus from read-to-contig alignment
 - `variant_calling/unfiltered`
-  - `[sample/group].vcf.gz`: raw variant calls of the reads aligned back to the contigs.
+  - `[assembler]_[sample/group].vcf.gz`: raw variant calls of the reads aligned back to the contigs.
 - `variant_calling/filtered`
-  - `[sample/group].filtered.vcf.gz`: quality filtered variant calls of the reads aligned back to the contigs.
+  - `[assembler]_[sample/group].filtered.vcf.gz`: quality filtered variant calls of the reads aligned back to the contigs.
 
 </details>
 
