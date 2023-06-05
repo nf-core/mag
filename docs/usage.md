@@ -6,7 +6,7 @@
 
 ## Input specifications
 
-The input data can be passed to nf-core/mag in two possible ways using the `--input` parameter.
+The input data can be passed to nf-core/mag in three possible ways, either using the `--input` or `--assembly_input` parameters.
 
 ### Direct FASTQ input (short reads only)
 
@@ -76,6 +76,47 @@ Please note the following requirements:
 - If single-end reads are specified, the command line parameter `--single_end` must be specified as well
 
 Again, by default, the group information is only used to compute co-abundances for the binning step, but not for group-wise co-assembly (see the parameter docs for [`--coassemble_group`](https://nf-co.re/mag/parameters#coassemble_group) and [`--binning_map_mode`](https://nf-co.re/mag/parameters#binning_map_mode) for more information about how this group information can be used).
+
+### Supplying pre-computed assemblies
+
+It is also possible to run nf-core/mag on pre-computed assemblies, by supplying a CSV file to the parameter `--assembly_input` in addition to the raw reads supplied to `--input`. Supplying assembly input skips all read pre-processing and assembly, jumping straight to the binning stage of the pipeline.
+
+The assembly CSV file should contain the following columns:
+
+`id,group,assembler,fasta`
+
+Where `id` is the ID of the assembly, group is the assembly/binning group (see samplesheet information section for more details), `assembler` is the assembler used to produce the assembly (one of `MEGAHIT`, `SPAdes`, or `SPAdesHybrid`), and `fasta` is the path to the assembly fasta file. The exact information required for each supplied assembly depends on whether the assemblies provided are single assemblies or group-wise co-assemblies. For the following example `--input` CSV:
+
+```bash
+sample,group,short_reads_1,short_reads_2,long_reads
+sample1,0,data/sample1_R1.fastq.gz,data/sample1_R2.fastq.gz,
+sample2,0,data/sample2_R1.fastq.gz,data/sample2_R2.fastq.gz,
+sample3,1,data/sample3_R1.fastq.gz,data/sample3_R2.fastq.gz,
+```
+
+If the assemblies are single assemblies, then the `id` and `group` columns should match those supplied in the `-input` read CSV files for each read set:
+
+```bash
+id,group,assembler,fasta
+sample1,0,MEGAHIT,MEGAHIT-sample1.contigs.fa.gz
+sample1,0,SPAdes,SPAdes-sample1.fasta.gz
+sample2,0,MEGAHIT,MEGAHIT-sample2.contigs.fa.gz
+sample2,0,SPAdes,SPAdes-sample2.contigs.fasta.gz
+sample3,1,MEGAHIT,MEGAHIT-sample3.contigs.fa.gz
+sample3,1,SPAdes,SPAdes-sample3.contigs.fasta.gz
+```
+
+If the assemblies are co-assemblies, the parameter `--coassemble_group` should additionally be specified. In this case, the `id` column should uniquely identify the assembly, while `group` should match those specified in the `--input` CSV file:
+
+```bash
+id,group,assembler,fasta
+group-0,0,MEGAHIT,MEGAHIT-group-0.contigs.fa.gz
+group-0,0,SPAdes,SPAdes-group-0.contigs.fasta.gz
+group-1,1,MEGAHIT,MEGAHIT-group-1.contigs.fa.gz
+group-1,1,SPAdes,SPAdes-group-1.contigs.fasta.gz
+```
+
+When supplying pre-computed assemblies, reads **must** also be provided in the CSV input format to `--input`, and should be the reads used to build the assemblies, i.e., adapter-removed, run-merged etc.. Preprocessing steps will not be ran on raw reads when pre-computed assemblies are supplied. As long reads are only used for assembly, any long read fastq files listed in the reads CSV are ignored.
 
 ## Running the pipeline
 

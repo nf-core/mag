@@ -71,13 +71,73 @@ workflow INPUT_CHECK {
         ch_raw_long_reads = Channel.empty()
     }
 
+    if (params.assembly_input) {
+        // check if we have supplied reads as a CSV file
+        if(!hasExtension(params.input, "csv")) { exit 1, "ERROR: when supplying assemblies with --assembly_input, reads must be supplied using a CSV!" }
+
+        ch_input_assembly_rows = Channel
+            .from(file(params.assembly_input))
+            .splitCsv(header: true)
+            .map { row ->
+                    if (row.size() == 4) {
+                        def id        = row.id
+                        def group     = row.group
+                        def assembler = row.assembler ?:  false
+                        def assembly  = row.fasta ? file(row.fasta, checkIfExists: true) : false
+                        // Check if given combination is valid
+                        if (!assembly) exit 1, "Invalid input assembly samplesheet: fasta can not be empty."
+                        if (!assembler) exit 1, "Invalid input assembly samplesheet: assembler can not be empty."
+                        return [ id, group, assembler, assembly ]
+                    } else {
+                        exit 1, "Input samplesheet contains row with ${row.size()} column(s). Expects 3."
+                    }
+                }
+
+        // build meta map
+        ch_input_assemblies = ch_input_assembly_rows
+            .map { id, group, assembler, fasta ->
+                    def meta       = [:]
+                    meta.id    = params.coassemble_group? "group-$group" : id
+                    meta.group = group
+                    meta.assembler = assembler
+                    return [ meta, [ fasta ] ]
+                }
+    } else {
+        ch_input_assembly_rows = Channel.empty()
+        ch_input_assemblies    = Channel.empty()
+    }
+
     // Ensure run IDs are unique within samples (also prevents duplicated sample names)
+
     // Note: do not need to check for PE/SE mismatch, as checks above do not allow mixing
     ch_input_rows
         .groupTuple(by: 0)
-        .map { id, run, group, sr1, sr2, lr -> if( run.size() != run.unique().size() ) {exit 1, "ERROR: input samplesheet contains duplicated sample or run IDs (within a sample)! Check samplesheet for sample id: ${id}" } }
+        .map { id, run, group, sr1, sr2, lr -> if( run.size() != run.unique().size() ) { { error("ERROR: input samplesheet contains duplicated sample or run IDs (within a sample)! Check samplesheet for sample id: ${id}") } } }
+
+    // If assembly csv file supplied, additionally ensure groups are all represented between reads and assemblies
+    if (params.assembly_input) {
+        ch_read_ids = ch_input_rows
+            .map { id, group, sr1, sr2, lr -> params.coassemble_group ? group : id }
+            .unique()
+            .toList()
+            .sort()
+
+        ch_assembly_ids = ch_input_assembly_rows
+            .map { id, group, assembler, assembly -> params.coassemble_group ? group : id }
+            .unique()
+            .toList()
+            .sort()
+
+        ch_read_ids.cross(ch_assembly_ids)
+            .map { ids1, ids2 ->
+                if (ids1.sort() != ids2.sort()) {
+                    exit 1, "ERROR: supplied IDs in read and assembly CSV files do not match!"
+                }
+            }
+    }
 
     emit:
-    raw_short_reads = ch_raw_short_reads
-    raw_long_reads  = ch_raw_long_reads
+    raw_short_reads  = ch_raw_short_reads
+    raw_long_reads   = ch_raw_long_reads
+    input_assemblies = ch_input_assemblies
 }
