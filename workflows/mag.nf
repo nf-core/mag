@@ -656,7 +656,7 @@ workflow MAG {
 
                 ch_eukarya_bins_dastool = ch_binning_results_bins
                     .filter { meta, bins ->
-                        meta.domain in ["eukarya", "unknown"]
+                        meta.domain in ["eukarya"]
                     }
 
                 BINNING_REFINEMENT ( BINNING_PREPARATION.out.grouped_mappings, ch_prokarya_bins_dastool )
