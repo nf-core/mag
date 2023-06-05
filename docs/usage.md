@@ -116,7 +116,7 @@ group-1,1,MEGAHIT,MEGAHIT-group-1.contigs.fa.gz
 group-1,1,SPAdes,SPAdes-group-1.contigs.fasta.gz
 ```
 
-When supplying pre-computed assemblies, reads **must** also be provided in the CSV input format to `--input`, and should be the reads used to build the assemblies. As long reads are only used for assembly, any long read fastq files listed in the reads CSV are ignored.
+When supplying pre-computed assemblies, reads **must** also be provided in the CSV input format to `--input`, and should be the reads used to build the assemblies, i.e., adapter-removed, run-merged etc.. Preprocessing steps will not be ran on raw reads when pre-computed assemblies are supplied. As long reads are only used for assembly, any long read fastq files listed in the reads CSV are ignored.
 
 ## Running the pipeline
 
