@@ -13,36 +13,27 @@ workflow BINNING_PREPARATION {
     main:
     // build bowtie2 index for all assemblies
     BOWTIE2_ASSEMBLY_BUILD ( assemblies )
-    reads.dump(tag: "binning_prep_reads")
+
     // combine assemblies with sample reads for binning depending on specified mapping mode
     if (params.binning_map_mode == 'all'){
         // combine assemblies with reads of all samples
         ch_bowtie2_input = BOWTIE2_ASSEMBLY_BUILD.out.assembly_index
-            .dump(tag: "binning_map_mode_all_pre_combine")
             .combine(reads)
-            .dump(tag: "binning_map_mode_all")
     } else if (params.binning_map_mode == 'group'){
         // combine assemblies with reads of samples from same group
-        ch_reads_bowtie2 = reads.dump(tag: "binning_map_mode_group_pre_map").map{ meta, reads -> [ meta.group, meta, reads ] }.dump(tag: "binning_map_mode_group_post_map")
-        // PRINTS POST_MAP HERE, DOESN'T PRINT COMBINE
+        ch_reads_bowtie2 = reads.map{ meta, reads -> [ meta.group, meta, reads ] }
         ch_bowtie2_input = BOWTIE2_ASSEMBLY_BUILD.out.assembly_index
-            .dump(tag: "binning_map_mode_group_assembly_build_premap_combine")
             .map { meta, assembly, index -> [ meta.group, meta, assembly, index ] }
-            .dump(tag: "binning_map_mode_group_assembly_build_precombine")
             .combine(ch_reads_bowtie2, by: 0)
-            .dump(tag: "binning_map_mode_group_assembly_build_premap")
             .map { group, assembly_meta, assembly, index, reads_meta, reads -> [ assembly_meta, assembly, index, reads_meta, reads ] }
-            .dump(tag: "binning_map_mode_group_assembly_build_postmap")
 
     } else {
         // combine assemblies (not co-assembled) with reads from own sample
-        ch_reads_bowtie2 = reads.dump(tag: "ch_reads_bowtie2_premap").map{ meta, reads -> [ meta.id, meta, reads ] }
+        ch_reads_bowtie2 = reads.map{ meta, reads -> [ meta.id, meta, reads ] }
         ch_bowtie2_input = BOWTIE2_ASSEMBLY_BUILD.out.assembly_index
-            .dump(tag: "index")
             .map { meta, assembly, index -> [ meta.id, meta, assembly, index ] }
             .combine(ch_reads_bowtie2, by: 0)
             .map { id, assembly_meta, assembly, index, reads_meta, reads -> [ assembly_meta, assembly, index, reads_meta, reads ] }
-            .dump(tag: "binning_map_mode_none")
 
     }
 

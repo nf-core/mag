@@ -223,7 +223,7 @@ workflow MAG {
     // SUBWORKFLOW: Read in samplesheet, validate and stage input files
     //
     INPUT_CHECK ()
-    ch_raw_short_reads  = INPUT_CHECK.out.raw_short_reads.dump(tag: "input_check_short")
+    ch_raw_short_reads  = INPUT_CHECK.out.raw_short_reads
     ch_raw_long_reads   = INPUT_CHECK.out.raw_long_reads
     ch_input_assemblies = INPUT_CHECK.out.input_assemblies
 
@@ -329,7 +329,7 @@ workflow MAG {
                     skip_cat: true // Can skip merging if only single lanes
             }
 
-        CAT_FASTQ ( ch_short_reads_forcat.cat.map { meta, reads -> [ meta, reads.flatten() ]} ).dump(tag: "cat_fastq")
+        CAT_FASTQ ( ch_short_reads_forcat.cat.map { meta, reads -> [ meta, reads.flatten() ]} )
 
             ch_short_reads = Channel.empty()
             ch_short_reads = CAT_FASTQ.out.reads.mix( ch_short_reads_forcat.skip_cat ).map { meta, reads -> [ meta, reads.flatten() ]}
@@ -366,7 +366,6 @@ workflow MAG {
                                 meta_new.remove('run')
                             [ meta_new, reads ]
                         }
-                        .dump(tag: "ch_raw_short_reads_run_dropped")
     }
 
     /*
@@ -380,14 +379,12 @@ workflow MAG {
     ch_versions = ch_versions.mix(NANOPLOT_RAW.out.versions.first())
 
     ch_long_reads = ch_raw_long_reads
-                        .dump(tag: "longread_pre_run_drop")
                         .map {
                         meta, reads ->
                             def meta_new = meta.clone()
                             meta_new.remove('run')
                         [ meta_new, reads ]
                     }
-                    .dump(tag: "ch_raw_long_reads")
 
     if ( !params.assembly_input ) {
         if (!params.skip_adapter_trimming) {
@@ -434,14 +431,8 @@ workflow MAG {
     */
     CENTRIFUGE_DB_PREPARATION ( ch_centrifuge_db_file )
 
-    ch_short_reads.dump(tag: "ch_short_reads")
-    // ASSEMBLY:        [DUMP: ch_short_reads] [['id':'test_minigut', 'run':'0', 'group':'0', 'single_end':false], [/nf-core/test-datasets/raw/mag/test_data/test_minigut_R1.fastq.gz, /nf-core/test-datasets/raw/mag/test_data/test_minigut_R2.fastq.gz]]
-        // IDENTIFIED PROBLEM: WHERE IS RUN COMING FROM? SHOULD BE DROPPPED AT THIS POINT!
-    // ASSEMBLY FIXED?: [DUMP: ch_short_reads] [['id':'test_minigut', 'group':'0', 'single_end':false],            [/nf-core/test-datasets/raw/mag/test_data/test_minigut_R1.fastq.gz,                                                /nf-core/test-datasets/raw/mag/test_data/test_minigut_R2.fastq.gz]]
-    // MULTIRUN:        [DUMP: ch_short_reads] [['id':'test_minigut', 'group':'0', 'single_end':false],            [/home/james/git/jfy133/nf-core-mag/testing/work/45/77c2a5f0979adc369cb3c52905c88e/test_minigut_1.merged.fastq.gz, /home/james/git/jfy133/nf-core-mag/testing/work/45/77c2a5f0979adc369cb3c52905c88e/test_minigut_2.merged.fastq.gz]]
-    // NORMAL:          [DUMP: ch_short_reads] [['id':'test_minigut', 'group':'0', 'single_end':false],            [/home/james/git/jfy133/nf-core-mag/testing/work/ca/20d09b388b1bc00a25ef8d42aed922/test_minigut_1.merged.fastq.gz, /home/james/git/jfy133/nf-core-mag/testing/work/ca/20d09b388b1bc00a25ef8d42aed922/test_minigut_2.merged.fastq.gz]]
     CENTRIFUGE (
-        ch_short_reads.dump(tag: "ch_short_reads_centrifuge"),
+        ch_short_reads,
         CENTRIFUGE_DB_PREPARATION.out.db
     )
     ch_versions = ch_versions.mix(CENTRIFUGE.out.versions.first())
@@ -450,7 +441,7 @@ workflow MAG {
         ch_kraken2_db_file
     )
     KRAKEN2 (
-        ch_short_reads.dump(tag: "ch_short_reads_kraken"),
+        ch_short_reads,
         KRAKEN2_DB_PREPARATION.out.db
     )
     ch_versions = ch_versions.mix(KRAKEN2.out.versions.first())
@@ -594,7 +585,7 @@ workflow MAG {
             ch_versions = ch_versions.mix(SPADESHYBRID.out.versions.first())
         }
     } else {
-        ch_assemblies = ch_input_assemblies.dump(tag: "ch_input_assemblies")
+        ch_assemblies = ch_input_assemblies
     }
 
     ch_quast_multiqc = Channel.empty()
@@ -630,12 +621,9 @@ workflow MAG {
     ch_checkm_summary           = Channel.empty()
     ch_busco_multiqc            = Channel.empty()
 
-    // TODO TRY DUMPING HERE?
-    // `.map` 623 and later?
-
     BINNING_PREPARATION (
         ch_assemblies,
-        ch_short_reads.dump(tag: "ch_short_reads_binning_preparation") // TODO PROBLEM COMING WITHIN HERE? -> FAILING BEFORE THERE, NO DUMP FROM WITHIN BEING PRINTED
+        ch_short_reads
     )
 
     /*
@@ -667,7 +655,7 @@ workflow MAG {
         } else {
             BINNING (
                 BINNING_PREPARATION.out.grouped_mappings,
-                ch_short_reads.dump(tag: "ch_short_Reads_binning")
+                ch_short_reads
             )
         }
 
@@ -682,7 +670,11 @@ workflow MAG {
         // If any two of the binners are both skipped at once, do not run because DAS_Tool needs at least one
         if ( params.refine_bins_dastool ) {
 
-            BINNING_REFINEMENT ( BINNING_PREPARATION.out.grouped_mappings, BINNING.out.bins, BINNING.out.metabat2depths, ch_short_reads.dump(tag: "ch_short_reads_binning_refinement") )
+            BINNING_REFINEMENT (
+                BINNING_PREPARATION.out.grouped_mappings,
+                BINNING.out.bins,
+                BINNING.out.metabat2depths, ch_short_reads
+            )
             ch_versions = ch_versions.mix(BINNING_REFINEMENT.out.versions)
 
             if ( params.postbinning_input == 'raw_bins_only' ) {
