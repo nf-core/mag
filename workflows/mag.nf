@@ -254,7 +254,7 @@ workflow MAG {
                 ch_versions = ch_versions.mix(FASTP.out.versions.first())
 
             } else if ( params.clip_tool == 'adapterremoval' ) {
-            
+
                 // due to strange output file scheme in AR2, have to manually separate
                 // SE/PE to allow correct pulling of reads after.
                 ch_adapterremoval_in = ch_raw_short_reads
@@ -792,28 +792,51 @@ workflow MAG {
     //methods_description    = WorkflowMag.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description)
     //ch_methods_description = Channel.value(methods_description)
 
-    // TODO: Add if/else statemetns around calls, add missing tools (bcftools, proka)
     ch_multiqc_files = Channel.empty()
     ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
-    //ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
     ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
+
     ch_multiqc_files = ch_multiqc_files.mix(FASTQC_RAW.out.zip).collect{it[1]}.ifEmpty([])
-    ch_multiqc_files = ch_multiqc_files.mix(FASTP.out.json).collect{it[1]}.ifEmpty([])
-    ch_multiqc_files = ch_multiqc_files.mix(ADAPTERREMOVAL_PE.out.settings,ADAPTERREMOVAL_SE.out.settings).collect{it[1]}.ifEmpty([])
-    ch_multiqc_files = ch_multiqc_files.mix(BOWTIE2_HOST_REMOVAL_ALIGN.out.log).collect{it[1]}.ifEmpty([])
-    ch_multiqc_files = ch_multiqc_files.mix(BOWTIE2_PHIX_REMOVAL_ALIGN.out.log).collect{it[1]}.ifEmpty([])
-    ch_multiqc_files = ch_multiqc_files.mix(FASTQC_TRIMMED.out.zip).collect{it[1]}.ifEmpty([])
-    ch_multiqc_files = ch_multiqc_files.mix(CENTRIFUGE.out.kreport).collect{it[1]}.ifEmpty([])
-    ch_multiqc_files = ch_multiqc_files.mix(KRAKEN2.out.report).collect{it[1]}.ifEmpty([])
-    ch_multiqc_files = ch_multiqc_files.mix(QUAST.out.qc).collect().ifEmpty([])
-    ch_multiqc_files = ch_multiqc_files.mix(BINNING_PREPARATION.out.bowtie2_assembly_multiqc).collect().ifEmpty([])
-    ch_multiqc_files = ch_multiqc_files.mix(BUSCO_QC.out.multiqc).collect{it[1]}.ifEmpty([])
 
     if (!params.assembly_input) {
+
+        if ( !params.skip_clipping && params.clip_tool == 'adapterremoval' ) {
+            ch_multiqc_files = ch_multiqc_files.mix(ADAPTERREMOVAL_PE.out.settings, ADAPTERREMOVAL_SE.out.settings).collect{it[1]}.ifEmpty([])
+        } else if ( !params.skip_clipping && params.clip_tool == 'fastp' )  {
+            ch_multiqc_files = ch_multiqc_files.mix(FASTP.out.json).collect{it[1]}.ifEmpty([])
+        }
+
         if (!(params.keep_phix && params.skip_clipping && !(params.host_genome || params.host_fasta))) {
             ch_multiqc_files = ch_multiqc_files.mix(FASTQC_TRIMMED.out.zip).collect{it[1]}.ifEmpty([])
         }
+
+        if ( params.host_fasta || params.host_genome ) {
+            ch_multiqc_files = ch_multiqc_files.mix(BOWTIE2_HOST_REMOVAL_ALIGN.out.log).collect{it[1]}.ifEmpty([])
+        }
+
+        if(!params.keep_phix) {
+            ch_multiqc_files = ch_multiqc_files.mix(BOWTIE2_PHIX_REMOVAL_ALIGN.out.log).collect{it[1]}.ifEmpty([])
+        }
+
     }
+
+    ch_multiqc_files = ch_multiqc_files.mix(CENTRIFUGE.out.kreport).collect{it[1]}.ifEmpty([])
+    ch_multiqc_files = ch_multiqc_files.mix(KRAKEN2.out.report).collect{it[1]}.ifEmpty([])
+
+    if (!params.skip_quast){
+        ch_multiqc_files = ch_multiqc_files.mix(QUAST.out.qc).collect().ifEmpty([])
+    }
+
+    ch_multiqc_files = ch_multiqc_files.mix(BINNING_PREPARATION.out.bowtie2_assembly_multiqc).collect().ifEmpty([])
+
+    if (!params.skip_binning){
+        ch_multiqc_files = ch_multiqc_files.mix(PROKKA.out.txt).collect().ifEmpty([])
+    }
+
+    if (!params.skip_binqc && params.binqc_tool == 'busco'){
+        ch_multiqc_files = ch_multiqc_files.mix(BUSCO_QC.out.multiqc).collect{it[1]}.ifEmpty([])
+    }
+
 
     MULTIQC (
         ch_multiqc_files.dump(tag: "mqc_collect").collect(),
