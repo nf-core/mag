@@ -643,32 +643,20 @@ workflow MAG {
 
         // If any two of the binners are both skipped at once, do not run because DAS_Tool needs at least one
         if ( params.refine_bins_dastool ) {
+            ch_prokarya_bins_dastool = ch_binning_results_bins
+                .filter { meta, bins ->
+                    meta.domain != "eukarya"
+                }
 
-            ch_refined_bins = Channel.empty()
+            ch_eukarya_bins_dastool = ch_binning_results_bins
+                .filter { meta, bins ->
+                    meta.domain == "eukarya"
+                }
 
-            if(params.bin_domain_classification) {
-                // bins which cannot be classified ('unknown') get fed into binning refinement
-                // but also could putatively be eukaryotic so keep separate as well
-                ch_prokarya_bins_dastool = ch_binning_results_bins
-                    .filter { meta, bins ->
-                        meta.domain in ["bacteria", "archaea", "prokarya", "organelle", "unknown"]
-                    }
+            BINNING_REFINEMENT ( BINNING_PREPARATION.out.grouped_mappings, ch_prokarya_bins_dastool )
 
-                ch_eukarya_bins_dastool = ch_binning_results_bins
-                    .filter { meta, bins ->
-                        meta.domain in ["eukarya"]
-                    }
-
-                BINNING_REFINEMENT ( BINNING_PREPARATION.out.grouped_mappings, ch_prokarya_bins_dastool )
-
-                ch_refined_bins = ch_eukarya_bins_dastool.mix(BINNING_REFINEMENT.out.refined_bins)
-                ch_refined_unbins = ch_binning_results_unbins.mix(BINNING_REFINEMENT.out.refined_unbins)
-            } else {
-                BINNING_REFINEMENT ( BINNING_PREPARATION.out.grouped_mappings, ch_binning_results_bins )
-                ch_refined_bins = BINNING_REFINEMENT.out.refined_bins
-                ch_refined_unbins = BINNING_REFINEMENT.out.refined_unbins
-            }
-
+            ch_refined_bins = ch_eukarya_bins_dastool.mix(BINNING_REFINEMENT.out.refined_bins)
+            ch_refined_unbins = ch_binning_results_unbins.mix(BINNING_REFINEMENT.out.refined_unbins)
             ch_versions = ch_versions.mix(BINNING_REFINEMENT.out.versions)
 
             if ( params.postbinning_input == 'raw_bins_only' ) {
@@ -724,14 +712,10 @@ workflow MAG {
             * CheckM subworkflow: Quantitative measures for the assessment of genome assembly
             */
 
-            if (params.bin_domain_classification){
-                ch_input_bins_for_checkm = ch_input_bins_for_qc
-                    .filter { meta, bins ->
-                        meta.domain != "eukarya"
-                    }
-            } else {
-                ch_input_bins_for_checkm = ch_input_bins_for_qc
-            }
+            ch_input_bins_for_checkm = ch_input_bins_for_qc
+                .filter { meta, bins ->
+                    meta.domain != "eukarya"
+                }
 
             CHECKM_QC (
                 ch_input_bins_for_checkm.groupTuple(),
@@ -748,14 +732,12 @@ workflow MAG {
             GUNC_QC ( ch_input_bins_for_checkm, ch_gunc_db, CHECKM_QC.out.checkm_tsv )
             ch_versions = ch_versions.mix( GUNC_QC.out.versions )
         } else if ( params.run_gunc ) {
-            if (params.bin_domain_classification){
-                ch_input_bins_for_gunc = ch_input_for_postbinning_bins_unbins
-                    .filter { meta, bins ->
-                        meta.domain != "eukarya"
-                    }
-            } else {
-                ch_input_bins_for_gunc = ch_input_bins_for_qc
-            }
+            ch_input_bins_for_gunc = ch_input_for_postbinning_bins_unbins
+                .filter { meta, bins ->
+                    meta.domain != "eukarya"
+                }
+            GUNC_QC ( ch_input_bins_for_qc, ch_gunc_db, [] )
+            ch_versions = ch_versions.mix( GUNC_QC.out.versions )
         }
 
         ch_quast_bins_summary = Channel.empty()
@@ -800,14 +782,10 @@ workflow MAG {
         ch_gtdbtk_summary = Channel.empty()
         if ( gtdb ){
 
-            if(params.bin_domain_classification) {
-                ch_gtdb_bins = ch_input_for_postbinning_bins_unbins
-                    .filter { meta, bins ->
-                        meta.domain != "eukarya"
-                    }
-            } else {
-                ch_gtdb_bins = ch_input_for_postbinning_bins_unbins
-            }
+            ch_gtdb_bins = ch_input_for_postbinning_bins_unbins
+                .filter { meta, bins ->
+                    meta.domain != "eukarya"
+                }
 
             GTDBTK (
                 ch_gtdb_bins,
@@ -841,12 +819,10 @@ workflow MAG {
                 [ meta_new, bin ]
             }
 
-            if(params.bin_domain_classification) {
-                ch_bins_for_prokka = ch_bins_for_prokka
-                    .filter { meta, bin ->
-                        meta.domain != "eukarya"
-                    }
-            }
+            ch_bins_for_prokka = ch_bins_for_prokka
+                .filter { meta, bin ->
+                    meta.domain != "eukarya"
+                }
 
             PROKKA (
                 ch_bins_for_prokka,
