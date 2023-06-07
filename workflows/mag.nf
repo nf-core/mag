@@ -358,7 +358,10 @@ workflow MAG {
         } else {
             ch_short_reads_assembly = ch_short_reads
         }
+    } else {
+        ch_short_reads = ch_raw_short_reads
     }
+
     /*
     ================================================================================
                                     Preprocessing and QC for long reads
