@@ -117,7 +117,7 @@ workflow INPUT_CHECK {
     // If assembly csv file supplied, additionally ensure groups are all represented between reads and assemblies
     if (params.assembly_input) {
         ch_read_ids = ch_input_rows
-            .map { id, group, sr1, sr2, lr -> params.coassemble_group ? group : id }
+            .map { id, run, group, sr1, sr2, lr -> params.coassemble_group ? group : id }
             .unique()
             .toList()
             .sort()

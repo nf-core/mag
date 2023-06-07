@@ -224,7 +224,7 @@ workflow MAG {
     //
     INPUT_CHECK ()
     ch_raw_short_reads  = INPUT_CHECK.out.raw_short_reads.dump(tag: "input_check_short")
-    ch_raw_long_reads   = INPUT_CHECK.out.raw_long_reads.dump(tag: "input_check_long")
+    ch_raw_long_reads   = INPUT_CHECK.out.raw_long_reads
     ch_input_assemblies = INPUT_CHECK.out.input_assemblies
 
     /*
@@ -329,7 +329,7 @@ workflow MAG {
                     skip_cat: true // Can skip merging if only single lanes
             }
 
-        CAT_FASTQ ( ch_short_reads_forcat.cat.map { meta, reads -> [ meta, reads.flatten() ]} )
+        CAT_FASTQ ( ch_short_reads_forcat.cat.map { meta, reads -> [ meta, reads.flatten() ]} ).dump(tag: "cat_fastq")
 
             ch_short_reads = Channel.empty()
             ch_short_reads = CAT_FASTQ.out.reads.mix( ch_short_reads_forcat.skip_cat ).map { meta, reads -> [ meta, reads.flatten() ]}
@@ -379,7 +379,15 @@ workflow MAG {
     )
     ch_versions = ch_versions.mix(NANOPLOT_RAW.out.versions.first())
 
-    ch_long_reads = ch_raw_long_reads.dump(tag: "ch_raw_long_reads")
+    ch_long_reads = ch_raw_long_reads
+                        .dump(tag: "longread_pre_run_drop")
+                        .map {
+                        meta, reads ->
+                            def meta_new = meta.clone()
+                            meta_new.remove('run')
+                        [ meta_new, reads ]
+                    }
+                    .dump(tag: "ch_raw_long_reads")
 
     if ( !params.assembly_input ) {
         if (!params.skip_adapter_trimming) {
@@ -756,6 +764,7 @@ workflow MAG {
                                                 def new_reads = reads.flatten()
                                                 [meta, new_reads]
                                             }
+
             QUAST_BINS ( ch_input_for_quast_bins )
             ch_versions = ch_versions.mix(QUAST_BINS.out.versions.first())
             QUAST_BINS_SUMMARY ( QUAST_BINS.out.quast_bin_summaries.collect() )
