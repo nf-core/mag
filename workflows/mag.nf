@@ -669,7 +669,7 @@ workflow MAG {
             BINNING_REFINEMENT ( BINNING_PREPARATION.out.grouped_mappings, ch_prokarya_bins_dastool )
 
             ch_refined_bins = ch_eukarya_bins_dastool.mix(BINNING_REFINEMENT.out.refined_bins)
-            ch_refined_unbins = ch_binning_results_unbins.mix(BINNING_REFINEMENT.out.refined_unbins)
+            ch_refined_unbins = BINNING_REFINEMENT.out.refined_unbins
             ch_versions = ch_versions.mix(BINNING_REFINEMENT.out.versions)
 
             if ( params.postbinning_input == 'raw_bins_only' ) {
@@ -703,12 +703,10 @@ workflow MAG {
             * BUSCO subworkflow: Quantitative measures for the assessment of genome assembly
             */
 
-            ch_input_bins_for_busco = ch_input_for_postbinning_bins_unbins.transpose()
-
             BUSCO_QC (
                 ch_busco_db_file,
                 ch_busco_download_folder,
-                ch_input_bins_for_busco
+                ch_input_bins_for_qc
             )
             ch_busco_summary = BUSCO_QC.out.summary
             ch_busco_multiqc = BUSCO_QC.out.multiqc
@@ -831,11 +829,9 @@ workflow MAG {
                 meta_new.id  = bin.getBaseName()
                 [ meta_new, bin ]
             }
-
-            ch_bins_for_prokka = ch_bins_for_prokka
-                .filter { meta, bin ->
-                    meta.domain != "eukarya"
-                }
+            .filter { meta, bin ->
+                meta.domain != "eukarya"
+            }
 
             PROKKA (
                 ch_bins_for_prokka,

@@ -655,7 +655,8 @@
                 },
                 "bin_domain_classification": {
                     "type": "boolean",
-                    "description": "Enable domain-level (prokaryote or eukaryote) classification of bins using Tiara. Processes which are domain-specific will then only receive bins matching the domain requirement."
+                    "description": "Enable domain-level (prokaryote or eukaryote) classification of bins using Tiara. Processes which are domain-specific will then only receive bins matching the domain requirement.",
+                    "help_text": "Enable this if it is likely that your metagenome samples contain a mixture of eukaryotic and prokaryotic genomes. This will ensure that prokaryote-only steps only receive putatively prokaryotic genomes, and vice-versa. Additionally, may improve the performance of DAS Tool by ensuring it only receives prokaryotic genomes."
                 },
                 "bin_domain_classification_tool": {
                     "type": "string",
