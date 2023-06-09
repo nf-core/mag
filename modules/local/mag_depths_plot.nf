@@ -11,14 +11,14 @@ process MAG_DEPTHS_PLOT {
     path(sample_groups)
 
     output:
-    tuple val(meta), path("${meta.assembler}-${meta.binner}-${meta.id}-binDepths.heatmap.png"), emit: heatmap
+    tuple val(meta), path("${meta.assembler}-${meta.domain}-${meta.binner}-${meta.id}-binDepths.heatmap.png"), emit: heatmap
     path "versions.yml"                                                                       , emit: versions
 
     script:
     """
     plot_mag_depths.py --bin_depths ${depths} \
                     --groups ${sample_groups} \
-                    --out "${meta.assembler}-${meta.binner}-${meta.id}-binDepths.heatmap.png"
+                    --out "${meta.assembler}-${meta.domain}-${meta.binner}-${meta.id}-binDepths.heatmap.png"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
