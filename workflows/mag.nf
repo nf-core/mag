@@ -123,6 +123,7 @@ include { CAT_FASTQ                              } from '../modules/nf-core/cat/
 include { PRODIGAL                               } from '../modules/nf-core/prodigal/main'
 include { PROKKA                                 } from '../modules/nf-core/prokka/main'
 include { MMSEQS_DATABASES                       } from '../modules/nf-core/mmseqs/databases/main'
+include { METAEUK_EASYPREDICT                    } from '../modules/nf-core/metaeuk/easypredict/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS            } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 include { MULTIQC                                } from '../modules/nf-core/multiqc/main'
 
