@@ -130,6 +130,11 @@ class WorkflowMag {
         if (params.save_cat_db && !params.cat_db_generate) {
             Nextflow.error('Invalid parameter combination: parameter --save_cat_db specified, but not --cat_db_generate! Note also that the parameter --save_cat_db does not work in combination with --cat_db.')
         }
+
+        // Chech MetaEuk db paramaters
+        if (params.metaeuk_mmseq_db && params.metaeuk_db) {
+            Nextflow.error('Invalid parameter combination: both --metaeuk_mmseq_db and --metaeuk_local_db are specified! Invalid combination, please specify either --metaeuk_mmseq_db or --metaeuk_local_db.')
+        }
     }
 
     //

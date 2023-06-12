@@ -158,6 +158,11 @@
                         "git_sha": "f1591b35cc7b21b333d1226daa9986c173fe9afc",
                         "installed_by": ["modules"]
                     },
+                    "mmseqs/databases": {
+                        "branch": "master",
+                        "git_sha": "262167cf9d21159f305ef77efda194f8d209911b",
+                        "installed_by": ["modules"]
+                    },
                     "multiqc": {
                         "branch": "master",
                         "git_sha": "f2d63bd5b68925f98f572eed70993d205cc694b7",

@@ -612,8 +612,8 @@
                 }
             }
         },
-        "gene_prediction_options": {
-            "title": "Gene prediction options",
+        "gene_prediction_and_annotation_options": {
+            "title": "Gene prediction and annotation options",
             "type": "object",
             "description": "",
             "default": "",
@@ -621,6 +621,25 @@
                 "skip_prodigal": {
                     "type": "boolean",
                     "description": "Skip Prodigal gene prediction"
+                },
+                "skip_prokka": {
+                    "type": "boolean",
+                    "description": "Skip Prokka genome annotation."
+                },
+                "skip_metaeuk": {
+                    "type": "string",
+                    "default": "false",
+                    "description": "Skip MetaEuk gene prediction and annotation"
+                },
+                "metaeuk_mmseq_db": {
+                    "type": "string",
+                    "default": null,
+                    "help_text": "mmseqs2 lists a large number of databases, not all of which are appropriate for use with MetaEuk. MetaEuk requires protein inputs, so you should select one of the Aminoacid or Profile options."
+                },
+                "metaeuk_db": {
+                    "type": "string",
+                    "default": null,
+                    "help_text": "One option would be the databases from the MetaEuk publication (https://wwwuser.gwdg.de/~compbiol/metaeuk/), however it should be noted that these are focused on marine Eukaryotes."
                 }
             }
         },
@@ -712,10 +731,6 @@
                     "type": "integer",
                     "default": 3000,
                     "description": "Minimum contig length for Tiara to use for domain classification. For accurate classification, should be longer than 3000 bp."
-                },
-                "skip_prokka": {
-                    "type": "boolean",
-                    "description": "Skip Prokka genome annotation."
                 }
             }
         },
@@ -898,7 +913,7 @@
             "$ref": "#/definitions/assembly_options"
         },
         {
-            "$ref": "#/definitions/gene_prediction_options"
+            "$ref": "#/definitions/gene_prediction_and_annotation_options"
         },
         {
             "$ref": "#/definitions/virus_identification_options"
