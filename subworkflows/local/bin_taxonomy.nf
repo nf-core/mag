@@ -43,16 +43,17 @@ workflow BIN_TAXONOMY {
     * CAT: Bin Annotation Tool (BAT) are pipelines for the taxonomic classification of long DNA sequences and metagenome assembled genomes (MAGs/bins)
     */
 
-    CAT (
-        bins_unbins_transposed,
-        ch_cat_db
-    )
-    CAT_SUMMARY(
-        CAT.out.tax_classification.collect()
-    )
-    ch_versions = ch_versions.mix(CAT.out.versions.first())
-    ch_versions = ch_versions.mix(CAT_SUMMARY.out.versions)
-
+    if (params.cat_db || params.cat_db_generate) {
+        CAT (
+            bins_unbins_transposed,
+            ch_cat_db
+        )
+        CAT_SUMMARY(
+            CAT.out.tax_classification.collect()
+        )
+        ch_versions = ch_versions.mix(CAT.out.versions.first())
+        ch_versions = ch_versions.mix(CAT_SUMMARY.out.versions)
+    }
     /*
     * GTDB-tk: taxonomic classifications using GTDB reference
     */

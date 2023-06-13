@@ -26,6 +26,7 @@ workflow BINNING_PREPARATION {
             .map { meta, assembly, index -> [ meta.group, meta, assembly, index ] }
             .combine(ch_reads_bowtie2, by: 0)
             .map { group, assembly_meta, assembly, index, reads_meta, reads -> [ assembly_meta, assembly, index, reads_meta, reads ] }
+
     } else {
         // combine assemblies (not co-assembled) with reads from own sample
         ch_reads_bowtie2 = reads.map{ meta, reads -> [ meta.id, meta, reads ] }
@@ -33,6 +34,7 @@ workflow BINNING_PREPARATION {
             .map { meta, assembly, index -> [ meta.id, meta, assembly, index ] }
             .combine(ch_reads_bowtie2, by: 0)
             .map { id, assembly_meta, assembly, index, reads_meta, reads -> [ assembly_meta, assembly, index, reads_meta, reads ] }
+
     }
 
     BOWTIE2_ASSEMBLY_ALIGN ( ch_bowtie2_input )

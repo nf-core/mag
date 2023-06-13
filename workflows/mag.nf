@@ -16,11 +16,7 @@ if(hasExtension(params.input, "csv")){
         .from(file(params.input))
         .splitCsv(header: true)
         .map { row ->
-                if (row.size() == 5) {
-                    if (row.long_reads) hybrid = true
-                } else {
-                    error("Input samplesheet contains row with ${row.size()} column(s). Expects 5.")
-                }
+                if (row.long_reads) hybrid = true
             }
 }
 
@@ -68,6 +64,8 @@ include { ANCIENT_DNA_ASSEMBLY_VALIDATION    } from '../subworkflows/local/ancie
 include { BIN_QC                             } from '../subworkflows/local/bin_qc'
 include { BIN_TAXONOMY                       } from '../subworkflows/local/bin_taxonomy'
 include { ANNOTATION                         } from '../subworkflows/local/annotation'
+include { DOMAIN_CLASSIFICATION              } from '../subworkflows/local/domain_classification'
+include { DEPTHS                             } from '../subworkflows/local/depths'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -75,8 +73,8 @@ include { ANNOTATION                         } from '../subworkflows/local/annot
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { FASTQC as FASTQC_RAW                   } from '../modules/nf-core/fastqc/main'
-include { CUSTOM_DUMPSOFTWAREVERSIONS            } from '../modules/nf-core/custom/dumpsoftwareversions/main'
+include { FASTQC as FASTQC_RAW               } from '../modules/nf-core/fastqc/main'
+include { CUSTOM_DUMPSOFTWAREVERSIONS        } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -121,6 +119,12 @@ workflow MAG {
         ch_short_reads_assembly   = SHORT_READ_PREPROCESS.out.short_reads_assembly
     } else {
         ch_short_reads            = ch_raw_short_reads
+            .map {
+                meta, reads ->
+                    def meta_new = meta.clone()
+                    meta_new.remove('run')
+                    [ meta_new, reads ]
+                }
         ch_short_reads_assembly   = Channel.empty()
     }
 
@@ -208,7 +212,7 @@ workflow MAG {
             BINNING (
                 BINNING_PREPARATION.out.grouped_mappings
                     .join(ANCIENT_DNA_ASSEMBLY_VALIDATION.out.contigs_recalled)
-                    .map{ it -> [ it[0], it[4], it[2], it[3] ] }, // [meta, contigs_recalled, bam, bais]
+                    .map { it -> [ it[0], it[4], it[2], it[3] ] }, // [meta, contigs_recalled, bam, bais]
                 ch_short_reads
             )
         } else {
@@ -216,6 +220,26 @@ workflow MAG {
                 BINNING_PREPARATION.out.grouped_mappings,
                 ch_short_reads
             )
+        }
+
+        if ( params.bin_domain_classification ) {
+            DOMAIN_CLASSIFICATION ( ch_assemblies, BINNING.out.bins, BINNING.out.unbinned )
+            ch_binning_results_bins   = DOMAIN_CLASSIFICATION.out.classified_bins
+            ch_binning_results_unbins = DOMAIN_CLASSIFICATION.out.classified_unbins
+            ch_versions               = ch_versions.mix(DOMAIN_CLASSIFICATION.out.versions)
+        } else {
+            ch_binning_results_bins = BINNING.out.bins
+                .map { meta, bins ->
+                    meta_new = meta.clone()
+                    meta_new.domain = 'unclassified'
+                    [meta_new, bins]
+                }
+            ch_binning_results_unbins = BINNING.out.unbinned
+                .map { meta, bins ->
+                    meta_new = meta.clone()
+                    meta_new.domain = 'unclassified'
+                    [meta_new, bins]
+                }
         }
 
         ch_bowtie2_assembly_multiqc = BINNING_PREPARATION.out.bowtie2_assembly_multiqc
@@ -228,30 +252,42 @@ workflow MAG {
 
         // If any two of the binners are both skipped at once, do not run because DAS_Tool needs at least one
         if ( params.refine_bins_dastool ) {
+            ch_prokarya_bins_dastool = ch_binning_results_bins
+                .filter { meta, bins ->
+                    meta.domain != "eukarya"
+                }
 
-            BINNING_REFINEMENT ( BINNING_PREPARATION.out.grouped_mappings, BINNING.out.bins, BINNING.out.metabat2depths, ch_short_reads )
+            ch_eukarya_bins_dastool = ch_binning_results_bins
+                .filter { meta, bins ->
+                    meta.domain == "eukarya"
+                }
+
+            BINNING_REFINEMENT ( BINNING_PREPARATION.out.grouped_mappings, ch_prokarya_bins_dastool )
+
+            ch_refined_bins = ch_eukarya_bins_dastool.mix(BINNING_REFINEMENT.out.refined_bins)
+            ch_refined_unbins = BINNING_REFINEMENT.out.refined_unbins
+
             ch_versions = ch_versions.mix(BINNING_REFINEMENT.out.versions)
 
             if ( params.postbinning_input == 'raw_bins_only' ) {
-                ch_input_for_postbinning_bins        = BINNING.out.bins
-                ch_input_for_postbinning_bins_unbins = BINNING.out.bins.mix(BINNING.out.unbinned)
-                ch_input_for_binsummary              = BINNING.out.depths_summary
+                ch_input_for_postbinning_bins        = ch_binning_results_bins
+                ch_input_for_postbinning_bins_unbins = ch_binning_results_bins.mix(ch_binning_results_unbins)
             } else if ( params.postbinning_input == 'refined_bins_only' ) {
-                ch_input_for_postbinning_bins        = BINNING_REFINEMENT.out.refined_bins
-                ch_input_for_postbinning_bins_unbins = BINNING_REFINEMENT.out.refined_bins.mix(BINNING_REFINEMENT.out.refined_unbins)
-                ch_input_for_binsummary              = BINNING_REFINEMENT.out.refined_depths_summary
-            } else if (params.postbinning_input == 'both') {
-                ch_input_for_postbinning_bins        = BINNING.out.bins.mix(BINNING_REFINEMENT.out.refined_bins)
-                ch_input_for_postbinning_bins_unbins = BINNING.out.bins.mix(BINNING.out.unbinned,BINNING_REFINEMENT.out.refined_bins,BINNING_REFINEMENT.out.refined_unbins)
-                ch_combinedepthtsvs_for_binsummary   = BINNING.out.depths_summary.mix(BINNING_REFINEMENT.out.refined_depths_summary)
-                ch_input_for_binsummary              = COMBINE_SUMMARY_TSV ( ch_combinedepthtsvs_for_binsummary.collect() ).combined
+                ch_input_for_postbinning_bins        = ch_refined_bins
+                ch_input_for_postbinning_bins_unbins = ch_refined_bins.mix(ch_refined_unbins)
+            } else if ( params.postbinning_input == 'both' ) {
+                ch_all_bins = ch_binning_results_bins.mix(ch_refined_bins)
+                ch_input_for_postbinning_bins        = ch_all_bins
+                ch_input_for_postbinning_bins_unbins = ch_all_bins.mix(ch_binning_results_unbins).mix(ch_refined_unbins)
             }
-
         } else {
-                ch_input_for_postbinning_bins        = BINNING.out.bins
-                ch_input_for_postbinning_bins_unbins = BINNING.out.bins.mix(BINNING.out.unbinned)
-                ch_input_for_binsummary              = BINNING.out.depths_summary
+            ch_input_for_postbinning_bins        = ch_binning_results_bins
+            ch_input_for_postbinning_bins_unbins = ch_binning_results_bins.mix(ch_binning_results_unbins)
         }
+
+        DEPTHS ( ch_input_for_postbinning_bins_unbins, BINNING.out.metabat2depths, ch_short_reads )
+        ch_input_for_binsummary = DEPTHS.out.depths_summary
+        ch_versions = ch_versions.mix(DEPTHS.out.versions)
 
         /*
         * Bin QC subworkflows: for checking bin completeness with either BUSCO, CHECKM, and/or GUNC
@@ -268,7 +304,7 @@ workflow MAG {
                 .map { bin, error -> if (!bin.contains(".unbinned.")) busco_failed_bins[bin] = error }
         }
 
-        /*
+                /*
         * Bin taxonomy subworkflows: for assigning taxonomy to bins with either GTDB-Tk or CAT
         */
 
@@ -328,7 +364,6 @@ workflow MAG {
     ch_multiqc_files = ch_multiqc_files.mix(ch_quast_multiqc.collect().ifEmpty([]))
     ch_multiqc_files = ch_multiqc_files.mix(ch_bowtie2_assembly_multiqc.collect().ifEmpty([]))
     ch_multiqc_files = ch_multiqc_files.mix(ch_busco_multiqc.collect().ifEmpty([]))
-
     MULTIQC (
         ch_multiqc_files.collect(),
         ch_multiqc_config.toList(),

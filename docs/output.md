@@ -392,6 +392,22 @@ By default, only the raw bins (and unbinned contigs) from the actual binning met
 
 ⚠️ Due to ability to perform downstream QC of both raw and refined bins in parallel (via `--postbinning_input)`, bin names in DAS Tools's `*_allBins.eval` file will include `Refined`. However for this particular file, they _actually_ refer to the 'raw' input bins. The pipeline renames the input files prior to running DASTool to ensure they can be disambiguated from the original bin files in the downstream QC steps.
 
+### Tiara
+
+Tiara is a contig classifier that identifies the domain (prokarya, eukarya) of contigs within an assembly. This is used in this pipeline to rapidly and with few resources identify the most likely domain classification of each bin or unbin based on its contig identities.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `Taxonomy/Tiara/`
+  - `[assembler]-[sample/group].tiara.txt` - Tiara output classifications (with probabilities) for all contigs within the specified sample/group assembly
+  - `log/log_[assembler]-[sample/group].txt` - log file detailing the parameters used by the Tiara model for contig classification.
+- `GenomeBinning/tiara_summary.tsv` - Summary of Tiara domain classification for all bins.
+
+</details>
+
+Typically, you would use `tiara_summary.tsv` as the primary file to see which bins or unbins have been classified to which domains at a glance, whereas `[assembler]-[sample/group].tiara.txt` provides classifications for each contig.
+
 ### Bin sequencing depth
 
 For each bin or refined bin the median sequencing depth is computed based on the corresponding contig depths.
@@ -617,9 +633,9 @@ Optional, only running when parameter `-profile ancient_dna` is specified.
 <summary>Output files</summary>
 
 - `Ancient_DNA/pydamage/analyze`
-  - `[sample/group]/pydamage_results/pydamage_results.csv`: PyDamage raw result tabular file in `.csv` format. Format described here: [pydamage.readthedocs.io/en/0.62/output.html](https://pydamage.readthedocs.io/en/0.62/output.html)
+  - `[assembler]_[sample/group]/pydamage_results/pydamage_results.csv`: PyDamage raw result tabular file in `.csv` format. Format described here: [pydamage.readthedocs.io/en/0.62/output.html](https://pydamage.readthedocs.io/en/0.62/output.html)
 - `Ancient_DNA/pydamage/filter`
-  - `[sample/group]/pydamage_results/pydamage_results.csv`: PyDamage filtered result tabular file in `.csv` format. Format described here: [pydamage.readthedocs.io/en/0.62/output.html](https://pydamage.readthedocs.io/en/0.62/output.html)
+  - `[assembler]_[sample/group]/pydamage_results/pydamage_results.csv`: PyDamage filtered result tabular file in `.csv` format. Format described here: [pydamage.readthedocs.io/en/0.62/output.html](https://pydamage.readthedocs.io/en/0.62/output.html)
 
 </details>
 
@@ -631,11 +647,11 @@ Because of aDNA damage, _de novo_ assemblers sometimes struggle to call a correc
 <summary>Output files</summary>
 
 - `variant_calling/consensus`
-  - `[sample/group].fa`: contigs sequence with re-called consensus from read-to-contig alignment
+  - `[assembler]_[sample/group].fa`: contigs sequence with re-called consensus from read-to-contig alignment
 - `variant_calling/unfiltered`
-  - `[sample/group].vcf.gz`: raw variant calls of the reads aligned back to the contigs.
+  - `[assembler]_[sample/group].vcf.gz`: raw variant calls of the reads aligned back to the contigs.
 - `variant_calling/filtered`
-  - `[sample/group].filtered.vcf.gz`: quality filtered variant calls of the reads aligned back to the contigs.
+  - `[assembler]_[sample/group].filtered.vcf.gz`: quality filtered variant calls of the reads aligned back to the contigs.
 
 </details>
 
