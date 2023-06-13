@@ -67,7 +67,8 @@ workflow SHORT_READ_PREPROCESS {
             ADAPTERREMOVAL_PE ( ch_adapterremoval_in.paired, [] )
             ADAPTERREMOVAL_SE ( ch_adapterremoval_in.single, [] )
 
-            ch_short_reads_prepped = ch_short_reads.mix(ADAPTERREMOVAL_SE.out.singles_truncated, ADAPTERREMOVAL_PE.out.paired_truncated)
+            ch_short_reads_prepped = Channel.empty()
+            ch_short_reads_prepped = ch_short_reads_prepped.mix(ADAPTERREMOVAL_SE.out.singles_truncated, ADAPTERREMOVAL_PE.out.paired_truncated)
             ch_multiqc_readprep = ch_multiqc_readprep.mix (
                 ADAPTERREMOVAL_PE.out.settings.collect{it[1]}.ifEmpty([]),
                 ADAPTERREMOVAL_SE.out.settings.collect{it[1]}.ifEmpty([])
