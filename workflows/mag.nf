@@ -16,11 +16,7 @@ if(hasExtension(params.input, "csv")){
         .from(file(params.input))
         .splitCsv(header: true)
         .map { row ->
-                if (row.size() == 5) {
-                    if (row.long_reads) hybrid = true
-                } else {
-                    error("Input samplesheet contains row with ${row.size()} column(s). Expects 5.")
-                }
+                if (row.long_reads) hybrid = true
             }
 }
 
@@ -97,6 +93,8 @@ include { CHECKM_QC           } from '../subworkflows/local/checkm_qc'
 include { GUNC_QC             } from '../subworkflows/local/gunc_qc'
 include { GTDBTK              } from '../subworkflows/local/gtdbtk'
 include { ANCIENT_DNA_ASSEMBLY_VALIDATION } from '../subworkflows/local/ancient_dna'
+include { DOMAIN_CLASSIFICATION } from '../subworkflows/local/domain_classification'
+include { DEPTHS              } from '../subworkflows/local/depths'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -115,6 +113,7 @@ include { BBMAP_BBNORM                           } from '../modules/nf-core/bbma
 include { FASTP                                  } from '../modules/nf-core/fastp/main'
 include { ADAPTERREMOVAL as ADAPTERREMOVAL_PE    } from '../modules/nf-core/adapterremoval/main'
 include { ADAPTERREMOVAL as ADAPTERREMOVAL_SE    } from '../modules/nf-core/adapterremoval/main'
+include { CAT_FASTQ                              } from '../modules/nf-core/cat/fastq/main'
 include { PRODIGAL                               } from '../modules/nf-core/prodigal/main'
 include { PROKKA                                 } from '../modules/nf-core/prokka/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS            } from '../modules/nf-core/custom/dumpsoftwareversions/main'
@@ -250,7 +249,7 @@ workflow MAG {
                     params.fastp_save_trimmed_fail,
                     []
                 )
-                ch_short_reads = FASTP.out.reads
+                ch_short_reads_prepped = FASTP.out.reads
                 ch_versions = ch_versions.mix(FASTP.out.versions.first())
 
             } else if ( params.clip_tool == 'adapterremoval' ) {
@@ -266,14 +265,13 @@ workflow MAG {
                 ADAPTERREMOVAL_PE ( ch_adapterremoval_in.paired, [] )
                 ADAPTERREMOVAL_SE ( ch_adapterremoval_in.single, [] )
 
-                ch_short_reads = Channel.empty()
-                ch_short_reads = ch_short_reads.mix(ADAPTERREMOVAL_SE.out.singles_truncated, ADAPTERREMOVAL_PE.out.paired_truncated)
+            ch_short_reads_prepped = Channel.empty()
+            ch_short_reads_prepped = ch_short_reads_prepped.mix(ADAPTERREMOVAL_SE.out.singles_truncated, ADAPTERREMOVAL_PE.out.paired_truncated)
 
                 ch_versions = ch_versions.mix(ADAPTERREMOVAL_PE.out.versions.first(), ADAPTERREMOVAL_SE.out.versions.first())
-
             }
         } else {
-            ch_short_reads = ch_raw_short_reads
+            ch_short_reads_prepped = ch_raw_short_reads
         }
 
         if (params.host_fasta){
@@ -282,15 +280,17 @@ workflow MAG {
             )
             ch_host_bowtie2index = BOWTIE2_HOST_REMOVAL_BUILD.out.index
         }
-
+        ch_bowtie2_removal_host_multiqc = Channel.empty()
         if (params.host_fasta || params.host_genome){
             BOWTIE2_HOST_REMOVAL_ALIGN (
-                ch_short_reads,
+                ch_short_reads_prepped,
                 ch_host_bowtie2index
             )
-            ch_short_reads = BOWTIE2_HOST_REMOVAL_ALIGN.out.reads
+            ch_short_reads_hostremoved = BOWTIE2_HOST_REMOVAL_ALIGN.out.reads
             ch_bowtie2_removal_host_multiqc = BOWTIE2_HOST_REMOVAL_ALIGN.out.log
             ch_versions = ch_versions.mix(BOWTIE2_HOST_REMOVAL_ALIGN.out.versions.first())
+        } else {
+            ch_short_reads_hostremoved = ch_short_reads_prepped
         }
 
         if(!params.keep_phix) {
@@ -298,19 +298,43 @@ workflow MAG {
                 ch_phix_db_file
             )
             BOWTIE2_PHIX_REMOVAL_ALIGN (
-                ch_short_reads,
+                ch_short_reads_hostremoved,
                 BOWTIE2_PHIX_REMOVAL_BUILD.out.index
             )
-            ch_short_reads = BOWTIE2_PHIX_REMOVAL_ALIGN.out.reads
+            ch_short_reads_phixremoved = BOWTIE2_PHIX_REMOVAL_ALIGN.out.reads
             ch_versions = ch_versions.mix(BOWTIE2_PHIX_REMOVAL_ALIGN.out.versions.first())
+        } else {
+            ch_short_reads_phixremoved = ch_short_reads_hostremoved
         }
 
         if (!(params.keep_phix && params.skip_clipping && !(params.host_genome || params.host_fasta))) {
             FASTQC_TRIMMED (
-                ch_short_reads
+                ch_short_reads_phixremoved
             )
             ch_versions = ch_versions.mix(FASTQC_TRIMMED.out.versions)
         }
+
+        // Run/Lane merging
+
+        ch_short_reads_forcat = ch_short_reads_phixremoved
+            .map {
+                meta, reads ->
+                    def meta_new = meta.clone()
+                    meta_new.remove('run')
+                [ meta_new, reads ]
+            }
+            .groupTuple()
+            .branch {
+                meta, reads ->
+                    cat:       ( meta.single_end && reads.size() == 1 ) || ( !meta.single_end && reads.size() >= 2 )
+                    skip_cat: true // Can skip merging if only single lanes
+            }
+
+        CAT_FASTQ ( ch_short_reads_forcat.cat.map { meta, reads -> [ meta, reads.flatten() ]} )
+
+            ch_short_reads = Channel.empty()
+            ch_short_reads = CAT_FASTQ.out.reads.mix( ch_short_reads_forcat.skip_cat ).map { meta, reads -> [ meta, reads.flatten() ]}
+            ch_versions    = ch_versions.mix(CAT_FASTQ.out.versions.first())
 
         if ( params.bbnorm ) {
             if ( params.coassemble_group ) {
@@ -322,10 +346,10 @@ workflow MAG {
                 )
                 ch_versions = ch_versions.mix(SEQTK_MERGEPE.out.versions.first())
                 // Combine the interleaved pairs with any single end libraries. Set the meta.single_end to true (used by the bbnorm module).
-                ch_bbnorm = SEQTK_MERGEPE.out.reads
-                    .mix(ch_short_reads.filter { it[0].single_end })
-                    .map { [ [ id: sprintf("group%s", it[0].group), group: it[0].group, single_end: true ], it[1] ] }
-                    .groupTuple()
+                    ch_bbnorm = SEQTK_MERGEPE.out.reads
+                        .mix(ch_short_reads.filter { it[0].single_end })
+                        .map { [ [ id: sprintf("group%s", it[0].group), group: it[0].group, single_end: true ], it[1] ] }
+                        .groupTuple()
             } else {
                 ch_bbnorm = ch_short_reads
             }
@@ -337,6 +361,12 @@ workflow MAG {
         }
     } else {
         ch_short_reads = ch_raw_short_reads
+                        .map {
+                            meta, reads ->
+                                def meta_new = meta.clone()
+                                meta_new.remove('run')
+                            [ meta_new, reads ]
+                        }
     }
 
     /*
@@ -350,6 +380,12 @@ workflow MAG {
     ch_versions = ch_versions.mix(NANOPLOT_RAW.out.versions.first())
 
     ch_long_reads = ch_raw_long_reads
+                        .map {
+                        meta, reads ->
+                            def meta_new = meta.clone()
+                            meta_new.remove('run')
+                        [ meta_new, reads ]
+                    }
 
     if ( !params.assembly_input ) {
         if (!params.skip_adapter_trimming) {
@@ -395,6 +431,7 @@ workflow MAG {
     ================================================================================
     */
     CENTRIFUGE_DB_PREPARATION ( ch_centrifuge_db_file )
+
     CENTRIFUGE (
         ch_short_reads,
         CENTRIFUGE_DB_PREPARATION.out.db
@@ -437,6 +474,7 @@ workflow MAG {
             // short reads
             // group and set group as new id
             ch_short_reads_grouped = ch_short_reads_assembly
+                .dump {tag: "ch_short_reads_asssembly"}
                 .map { meta, reads -> [ meta.group, meta, reads ] }
                 .groupTuple(by: 0)
                 .map { group, metas, reads ->
@@ -531,10 +569,12 @@ workflow MAG {
         if (!params.single_end && !params.skip_spadeshybrid){
             ch_short_reads_spades_tmp = ch_short_reads_spades
                 .map { meta, reads -> [ meta.id, meta, reads ] }
+
             ch_reads_spadeshybrid = ch_long_reads_spades
                 .map { meta, reads -> [ meta.id, meta, reads ] }
                 .combine(ch_short_reads_spades_tmp, by: 0)
                 .map { id, meta_long, long_reads, meta_short, short_reads -> [ meta_short, long_reads, short_reads ] }
+
             SPADESHYBRID ( ch_reads_spadeshybrid )
             ch_spadeshybrid_assemblies = SPADESHYBRID.out.assembly
                 .map { meta, assembly ->
@@ -606,7 +646,7 @@ workflow MAG {
             BINNING (
                 BINNING_PREPARATION.out.grouped_mappings
                     .join(ANCIENT_DNA_ASSEMBLY_VALIDATION.out.contigs_recalled)
-                    .map{ it -> [ it[0], it[4], it[2], it[3] ] }, // [meta, contigs_recalled, bam, bais]
+                    .map { it -> [ it[0], it[4], it[2], it[3] ] }, // [meta, contigs_recalled, bam, bais]
                 ch_short_reads
             )
         } else {
@@ -614,6 +654,26 @@ workflow MAG {
                 BINNING_PREPARATION.out.grouped_mappings,
                 ch_short_reads
             )
+        }
+
+        if ( params.bin_domain_classification ) {
+            DOMAIN_CLASSIFICATION ( ch_assemblies, BINNING.out.bins, BINNING.out.unbinned )
+            ch_binning_results_bins   = DOMAIN_CLASSIFICATION.out.classified_bins
+            ch_binning_results_unbins = DOMAIN_CLASSIFICATION.out.classified_unbins
+            ch_versions               = ch_versions.mix(DOMAIN_CLASSIFICATION.out.versions)
+        } else {
+            ch_binning_results_bins = BINNING.out.bins
+                .map { meta, bins ->
+                    meta_new = meta.clone()
+                    meta_new.domain = 'unclassified'
+                    [meta_new, bins]
+                }
+            ch_binning_results_unbins = BINNING.out.unbinned
+                .map { meta, bins ->
+                    meta_new = meta.clone()
+                    meta_new.domain = 'unclassified'
+                    [meta_new, bins]
+                }
         }
 
         ch_versions = ch_versions.mix(BINNING_PREPARATION.out.bowtie2_version.first())
@@ -625,42 +685,54 @@ workflow MAG {
 
         // If any two of the binners are both skipped at once, do not run because DAS_Tool needs at least one
         if ( params.refine_bins_dastool ) {
+            ch_prokarya_bins_dastool = ch_binning_results_bins
+                .filter { meta, bins ->
+                    meta.domain != "eukarya"
+                }
 
-            BINNING_REFINEMENT ( BINNING_PREPARATION.out.grouped_mappings, BINNING.out.bins, BINNING.out.metabat2depths, ch_short_reads )
+            ch_eukarya_bins_dastool = ch_binning_results_bins
+                .filter { meta, bins ->
+                    meta.domain == "eukarya"
+                }
+
+            BINNING_REFINEMENT ( BINNING_PREPARATION.out.grouped_mappings, ch_prokarya_bins_dastool )
+
+            ch_refined_bins = ch_eukarya_bins_dastool.mix(BINNING_REFINEMENT.out.refined_bins)
+            ch_refined_unbins = BINNING_REFINEMENT.out.refined_unbins
+
             ch_versions = ch_versions.mix(BINNING_REFINEMENT.out.versions)
 
             if ( params.postbinning_input == 'raw_bins_only' ) {
-                ch_input_for_postbinning_bins        = BINNING.out.bins
-                ch_input_for_postbinning_bins_unbins = BINNING.out.bins.mix(BINNING.out.unbinned)
-                ch_input_for_binsummary              = BINNING.out.depths_summary
+                ch_input_for_postbinning_bins        = ch_binning_results_bins
+                ch_input_for_postbinning_bins_unbins = ch_binning_results_bins.mix(ch_binning_results_unbins)
             } else if ( params.postbinning_input == 'refined_bins_only' ) {
-                ch_input_for_postbinning_bins        = BINNING_REFINEMENT.out.refined_bins
-                ch_input_for_postbinning_bins_unbins = BINNING_REFINEMENT.out.refined_bins.mix(BINNING_REFINEMENT.out.refined_unbins)
-                ch_input_for_binsummary              = BINNING_REFINEMENT.out.refined_depths_summary
-            } else if (params.postbinning_input == 'both') {
-                ch_input_for_postbinning_bins        = BINNING.out.bins.mix(BINNING_REFINEMENT.out.refined_bins)
-                ch_input_for_postbinning_bins_unbins = BINNING.out.bins.mix(BINNING.out.unbinned,BINNING_REFINEMENT.out.refined_bins,BINNING_REFINEMENT.out.refined_unbins)
-                ch_combinedepthtsvs_for_binsummary   = BINNING.out.depths_summary.mix(BINNING_REFINEMENT.out.refined_depths_summary)
-                ch_input_for_binsummary              = COMBINE_SUMMARY_TSV ( ch_combinedepthtsvs_for_binsummary.collect() ).combined
+                ch_input_for_postbinning_bins        = ch_refined_bins
+                ch_input_for_postbinning_bins_unbins = ch_refined_bins.mix(ch_refined_unbins)
+            } else if ( params.postbinning_input == 'both' ) {
+                ch_all_bins = ch_binning_results_bins.mix(ch_refined_bins)
+                ch_input_for_postbinning_bins        = ch_all_bins
+                ch_input_for_postbinning_bins_unbins = ch_all_bins.mix(ch_binning_results_unbins).mix(ch_refined_unbins)
             }
-
         } else {
-                ch_input_for_postbinning_bins        = BINNING.out.bins
-                ch_input_for_postbinning_bins_unbins = BINNING.out.bins.mix(BINNING.out.unbinned)
-                ch_input_for_binsummary              = BINNING.out.depths_summary
+            ch_input_for_postbinning_bins        = ch_binning_results_bins
+            ch_input_for_postbinning_bins_unbins = ch_binning_results_bins.mix(ch_binning_results_unbins)
         }
+
+        DEPTHS ( ch_input_for_postbinning_bins_unbins, BINNING.out.metabat2depths, ch_short_reads )
+        ch_input_for_binsummary = DEPTHS.out.depths_summary
+        ch_versions = ch_versions.mix(DEPTHS.out.versions)
 
         /*
         * Bin QC subworkflows: for checking bin completeness with either BUSCO, CHECKM, and/or GUNC
         */
 
-        // Results in: [ [meta], path_to_bin.fa ]
         ch_input_bins_for_qc = ch_input_for_postbinning_bins_unbins.transpose()
 
         if (!params.skip_binqc && params.binqc_tool == 'busco'){
             /*
             * BUSCO subworkflow: Quantitative measures for the assessment of genome assembly
             */
+
             BUSCO_QC (
                 ch_busco_db_file,
                 ch_busco_download_folder,
@@ -679,8 +751,14 @@ workflow MAG {
             /*
             * CheckM subworkflow: Quantitative measures for the assessment of genome assembly
             */
+
+            ch_input_bins_for_checkm = ch_input_bins_for_qc
+                .filter { meta, bins ->
+                    meta.domain != "eukarya"
+                }
+
             CHECKM_QC (
-                ch_input_bins_for_qc.groupTuple(),
+                ch_input_bins_for_checkm.groupTuple(),
                 ch_checkm_db
             )
             ch_checkm_summary = CHECKM_QC.out.summary
@@ -690,9 +768,13 @@ workflow MAG {
         }
 
         if ( params.run_gunc && params.binqc_tool == 'checkm' ) {
-            GUNC_QC ( ch_input_bins_for_qc, ch_gunc_db, CHECKM_QC.out.checkm_tsv )
+            GUNC_QC ( ch_input_bins_for_checkm, ch_gunc_db, CHECKM_QC.out.checkm_tsv )
             ch_versions = ch_versions.mix( GUNC_QC.out.versions )
         } else if ( params.run_gunc ) {
+            ch_input_bins_for_gunc = ch_input_for_postbinning_bins_unbins
+                .filter { meta, bins ->
+                    meta.domain != "eukarya"
+                }
             GUNC_QC ( ch_input_bins_for_qc, ch_gunc_db, [] )
             ch_versions = ch_versions.mix( GUNC_QC.out.versions )
         }
@@ -701,11 +783,12 @@ workflow MAG {
         if (!params.skip_quast){
             ch_input_for_quast_bins = ch_input_for_postbinning_bins_unbins
                                         .groupTuple()
-                                        .map{
+                                        .map {
                                             meta, reads ->
                                                 def new_reads = reads.flatten()
                                                 [meta, new_reads]
                                             }
+
             QUAST_BINS ( ch_input_for_quast_bins )
             ch_versions = ch_versions.mix(QUAST_BINS.out.versions.first())
             QUAST_BINS_SUMMARY ( QUAST_BINS.out.quast_bin_summaries.collect() )
@@ -738,8 +821,14 @@ workflow MAG {
          */
         ch_gtdbtk_summary = Channel.empty()
         if ( gtdb ){
+
+            ch_gtdb_bins = ch_input_for_postbinning_bins_unbins
+                .filter { meta, bins ->
+                    meta.domain != "eukarya"
+                }
+
             GTDBTK (
-                ch_input_for_postbinning_bins_unbins,
+                ch_gtdb_bins,
                 ch_busco_summary,
                 ch_checkm_summary,
                 ch_gtdb
@@ -761,14 +850,18 @@ workflow MAG {
         /*
          * Prokka: Genome annotation
          */
-        ch_bins_for_prokka = ch_input_for_postbinning_bins_unbins.transpose()
+
+        if (!params.skip_prokka){
+            ch_bins_for_prokka = ch_input_for_postbinning_bins_unbins.transpose()
             .map { meta, bin ->
                 def meta_new = meta.clone()
                 meta_new.id  = bin.getBaseName()
                 [ meta_new, bin ]
             }
+            .filter { meta, bin ->
+                meta.domain != "eukarya"
+            }
 
-        if (!params.skip_prokka){
             PROKKA (
                 ch_bins_for_prokka,
                 [],
@@ -795,7 +888,6 @@ workflow MAG {
     ch_multiqc_files = Channel.empty()
     ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
     ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
-
     ch_multiqc_files = ch_multiqc_files.mix(FASTQC_RAW.out.zip).collect{it[1]}.ifEmpty([])
 
     if (!params.assembly_input) {

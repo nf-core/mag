@@ -392,6 +392,22 @@ By default, only the raw bins (and unbinned contigs) from the actual binning met
 
 ⚠️ Due to ability to perform downstream QC of both raw and refined bins in parallel (via `--postbinning_input)`, bin names in DAS Tools's `*_allBins.eval` file will include `Refined`. However for this particular file, they _actually_ refer to the 'raw' input bins. The pipeline renames the input files prior to running DASTool to ensure they can be disambiguated from the original bin files in the downstream QC steps.
 
+### Tiara
+
+Tiara is a contig classifier that identifies the domain (prokarya, eukarya) of contigs within an assembly. This is used in this pipeline to rapidly and with few resources identify the most likely domain classification of each bin or unbin based on its contig identities.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `Taxonomy/Tiara/`
+  - `[assembler]-[sample/group].tiara.txt` - Tiara output classifications (with probabilities) for all contigs within the specified sample/group assembly
+  - `log/log_[assembler]-[sample/group].txt` - log file detailing the parameters used by the Tiara model for contig classification.
+- `GenomeBinning/tiara_summary.tsv` - Summary of Tiara domain classification for all bins.
+
+</details>
+
+Typically, you would use `tiara_summary.tsv` as the primary file to see which bins or unbins have been classified to which domains at a glance, whereas `[assembler]-[sample/group].tiara.txt` provides classifications for each contig.
+
 ### Bin sequencing depth
 
 For each bin or refined bin the median sequencing depth is computed based on the corresponding contig depths.
