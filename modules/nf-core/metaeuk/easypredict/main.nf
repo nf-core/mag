@@ -26,6 +26,7 @@ process METAEUK_EASYPREDICT {
     prefix = task.ext.prefix ?: "${meta.id}"
     """
     if [ -d $database ]; then
+        ## if supplying an mmseqs database as a directory, metaeuk requires the basename of the database
         DBBASE=`find ${database}/ -name "*.version" -exec sh -c 'file=\$(basename {}); echo \${file%%.*}' \\;`
         DB=`echo "${database}/\${DBBASE}"`
     else
