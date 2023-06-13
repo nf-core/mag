@@ -894,7 +894,7 @@ workflow MAG {
     if (!params.assembly_input) {
 
         if ( !params.skip_clipping && params.clip_tool == 'adapterremoval' ) {
-            ch_multiqc_files = ch_multiqc_files.mix(ADAPTERREMOVAL_PE.out.settings, ADAPTERREMOVAL_SE.out.settings.collect{it[1]}.ifEmpty([]))
+            ch_multiqc_files = ch_multiqc_files.mix(ADAPTERREMOVAL_PE.out.settings.collect{it[1]}.ifEmpty([]), ADAPTERREMOVAL_SE.out.settings.collect{it[1]}.ifEmpty([]))
         } else if ( !params.skip_clipping && params.clip_tool == 'fastp' )  {
             ch_multiqc_files = ch_multiqc_files.mix(FASTP.out.json.collect{it[1]}.dump(tag: "fastp").ifEmpty([]))
         }
