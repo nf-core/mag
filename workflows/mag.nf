@@ -921,7 +921,7 @@ workflow MAG {
 
     ch_multiqc_files = ch_multiqc_files.mix(BINNING_PREPARATION.out.bowtie2_assembly_multiqc).collect().ifEmpty([])
 
-    if (!params.skip_binning){
+    if (!params.skip_binning && !params.skip_prokka){
         ch_multiqc_files = ch_multiqc_files.mix(PROKKA.out.txt).collect().ifEmpty([])
     }
 
