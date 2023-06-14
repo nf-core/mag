@@ -22,21 +22,13 @@ def getColNo(filename) {
 
 workflow BINNING_REFINEMENT {
     take:
-    contigs
+    ch_contigs_for_dastool // channel: [ val(meta), path(contigs) ]
     bins           // channel: [ val(meta), path(bins) ]
     depths
     reads
 
     main:
     ch_versions = Channel.empty()
-
-    // Drop unnecessary files
-    ch_contigs_for_dastool = contigs
-                                .map {
-                                    meta, assembly, bams, bais ->
-                                        def meta_new = meta.clone()
-                                        [ meta_new, assembly ]
-                                }
 
     ch_bins_for_fastatocontig2bin = RENAME_PREDASTOOL(bins).renamed_bins
                                         .branch {
