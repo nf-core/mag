@@ -881,7 +881,6 @@ workflow MAG {
     workflow_summary    = WorkflowMag.paramsSummaryMultiqc(workflow, summary_params)
     ch_workflow_summary = Channel.value(workflow_summary)
 
-    // Currently not used due to local MultiQC module
     methods_description    = WorkflowMag.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description)
     ch_methods_description = Channel.value(methods_description)
 
