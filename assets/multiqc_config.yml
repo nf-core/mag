@@ -132,7 +132,7 @@ table_columns_visible:
   "Kraken2": False
   "Centrifuge": False
   "QUAST":
-    L75: True
+    N75: True
     L50: True
     L75: True
     "Largest contig": True
