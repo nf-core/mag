@@ -582,13 +582,13 @@ workflow MAG {
         if ( params.refine_bins_dastool ) {
 
             if (params.ancient_dna) {
-                contigs_ch = ANCIENT_DNA_ASSEMBLY_VALIDATION.out.contigs_recalled
+                ch_contigs_for_binrefinement = ANCIENT_DNA_ASSEMBLY_VALIDATION.out.contigs_recalled
             } else {
-                contigs_ch = BINNING_PREPARATION.out.grouped_mappings
+                ch_contigs_for_binrefinement = BINNING_PREPARATION.out.grouped_mappings
                     .map{ meta, contigs, bam, bai -> [ meta, contigs ] }
             }
 
-            BINNING_REFINEMENT ( contigs_ch, BINNING.out.bins, BINNING.out.metabat2depths, ch_short_reads )
+            BINNING_REFINEMENT ( ch_contigs_for_binrefinement, BINNING.out.bins, BINNING.out.metabat2depths, ch_short_reads )
             ch_versions = ch_versions.mix(BINNING_REFINEMENT.out.versions)
 
             if ( params.postbinning_input == 'raw_bins_only' ) {
