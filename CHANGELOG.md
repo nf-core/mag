@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Added`
 
 - [#353](https://github.com/nf-core/mag/pull/353) - Added the busco_clean parameter to optionally clean each BUSCO directory after a successful
-- [#364](https://github.com/nf-core/mag/pull/364) - Added the geNomad tool/module for viral classification of assemblies
+- [#364](https://github.com/nf-core/mag/pull/364) - Added geNomad nf-core modules for identifying viruses in assemblies
 
 ### `Changed`
 

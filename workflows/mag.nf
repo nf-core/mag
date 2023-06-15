@@ -86,7 +86,6 @@ include { QUAST_BINS_SUMMARY                                  } from '../modules
 include { CAT_DB                                              } from '../modules/local/cat_db'
 include { CAT_DB_GENERATE                                     } from '../modules/local/cat_db_generate'
 include { CAT                                                 } from '../modules/local/cat'
-include { GENOMAD                                             } from '../modules/local/genomad'
 include { BIN_SUMMARY                                         } from '../modules/local/bin_summary'
 include { COMBINE_TSV                                         } from '../modules/local/combine_tsv'
 include { MULTIQC                                             } from '../modules/local/multiqc'
@@ -99,6 +98,7 @@ include { BINNING_PREPARATION } from '../subworkflows/local/binning_preparation'
 include { BINNING             } from '../subworkflows/local/binning'
 include { BINNING_REFINEMENT  } from '../subworkflows/local/binning_refinement'
 include { BUSCO_QC            } from '../subworkflows/local/busco_qc'
+include { GENOMAD             } from '../subworkflows/local/genomad'
 include { GTDBTK              } from '../subworkflows/local/gtdbtk'
 include { ANCIENT_DNA_ASSEMLY_VALIDATION } from '../subworkflows/local/ancient_dna'
 
@@ -183,10 +183,9 @@ if (!params.keep_lambda) {
 }
 
 if (params.genomad_db){
-    ch_genomad_db_file = Channel
-        .value(file( "${params.genomad_db}" ))
+    ch_genomad_db = file(params.genomad_db, checkIfExists: true)
 } else {
-    ch_genomad_db_file = Channel.empty()
+    ch_genomad_db = Channel.empty()
 }
 
 gtdb = params.skip_busco ? false : params.gtdb
@@ -512,12 +511,12 @@ workflow MAG {
 
     /*
     ================================================================================
-                                    Virus classification
+                                    Virus identification
     ================================================================================
     */
 
-    if (params.virus_classification){
-        GENOMAD(ch_assemblies, ch_genomad_db_file)
+    if (params.run_genomad){
+        GENOMAD(ch_assemblies, ch_genomad_db)
         ch_versions = ch_versions.mix(GENOMAD.out.versions.first())
     }
 
