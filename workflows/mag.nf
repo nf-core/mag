@@ -582,7 +582,7 @@ workflow MAG {
         if ( params.refine_bins_dastool ) {
 
             if (params.ancient_dna) {
-                contigs_ch = ANCIENT_DNA_ASSEMLY_VALIDATION.out.contigs_recalled
+                contigs_ch = ANCIENT_DNA_ASSEMBLY_VALIDATION.out.contigs_recalled
             } else {
                 contigs_ch = BINNING_PREPARATION.out.grouped_mappings
                     .map{ meta, contigs, bam, bai -> [ meta, contigs ] }
