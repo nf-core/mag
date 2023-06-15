@@ -22,7 +22,7 @@ run_modules:
   - bowtie2
   - busco
   - quast
-  - kraken2
+  - kraken
   - bcftools
   - prokka
 
@@ -42,17 +42,17 @@ top_modules:
       name: "Bowtie2: PhiX removal"
       info: "Mapping statistics of reads mapped against PhiX and subsequently removed."
       path_filters:
-        - "*.phix_removed.bowtie2.log"
+        - "*_phix_removed.bowtie2.log"
   - "bowtie2":
       name: "Bowtie2: host removal"
       info: "Mapping statistics of reads mapped against host genome and subsequently removed."
       path_filters:
-        - "*.host_removed.bowtie2.log"
+        - "*_host_removed.bowtie2.log"
   - "bowtie2":
       name: "Bowtie2: assembly"
       info: "Mapping statistics of reads mapped against assemblies."
       path_filters:
-        - "*.assembly.bowtie2.log"
+        - "*.bowtie2.log"
   - "kraken":
       name: "Kraken2"
       anchor: "Kraken2"
@@ -61,14 +61,14 @@ top_modules:
       path_filters:
         - "*.kraken2_report.txt"
   - "kraken":
-    name: "Centrifuge"
-    anchor: "centrifuge"
-    target: "Centrifuge"
-    doi: "10.1101/gr.210641.116"
-    info: "is a very rapid and memory-efficient system for the classification of DNA sequences from microbial samples. The system uses a novel indexing scheme based on the Burrows-Wheeler transform (BWT) and the Ferragina-Manzini (FM) index. Note: Figure title"
-    extra: "ℹ️: plot title will say Kraken2 due to Centrifuge producing the same output format as Kraken. If activated, see the actual Kraken2 results in the section above."
-    path_filters:
-      - "*.centrifuge.kreport.txt"
+      name: "Centrifuge"
+      anchor: "centrifuge"
+      target: "Centrifuge"
+      doi: "10.1101/gr.210641.116"
+      info: "is a very rapid and memory-efficient system for the classification of DNA sequences from microbial samples. The system uses a novel indexing scheme based on the Burrows-Wheeler transform (BWT) and the Ferragina-Manzini (FM) index. Note: Figure title"
+      extra: "ℹ️: plot title will say Kraken2 due to Centrifuge producing the same output format as Kraken. If activated, see the actual Kraken2 results in the section above."
+      path_filters:
+        - "*.centrifuge_kreport.txt"
   - "porechop"
   - "bcftools"
   - custom_content
@@ -92,7 +92,9 @@ sp:
   host_removal:
     fn: "host_removal_metrics.tsv"
   adapterRemoval:
-    fn: "*_ar2_*.log"
+    fn: "*_ar2.settings"
+  kraken:
+    fn_re: ".*[kraken2|centrifuge].*report.txt"
 
 extra_fn_clean_exts:
   - ".bowtie2"
@@ -101,3 +103,6 @@ extra_fn_clean_exts:
 custom_logo: "nf-core-mag_logo_light.png"
 custom_logo_url: https://github.com/nf-core/mag/
 custom_logo_title: "nf-core/mag"
+
+## Tool specific configuration
+prokka_fn_snames: True

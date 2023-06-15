@@ -882,57 +882,60 @@ workflow MAG {
     ch_workflow_summary = Channel.value(workflow_summary)
 
     // Currently not used due to local MultiQC module
-    //methods_description    = WorkflowMag.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description)
-    //ch_methods_description = Channel.value(methods_description)
+    methods_description    = WorkflowMag.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description)
+    ch_methods_description = Channel.value(methods_description)
 
     ch_multiqc_files = Channel.empty()
-    ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml').dump(tag: "summar"))
-    ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect().dump(tag: "dumpsoft"))
+    ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
+    ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
+    ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
 
-    ch_multiqc_files = ch_multiqc_files.mix(FASTQC_RAW.out.zip.collect{it[1]}.dump(tag: "fqc_raw").ifEmpty([]))
+    ch_multiqc_files = ch_multiqc_files.mix(FASTQC_RAW.out.zip.collect{it[1]}.ifEmpty([]))
 
     if (!params.assembly_input) {
 
         if ( !params.skip_clipping && params.clip_tool == 'adapterremoval' ) {
-            ch_multiqc_files = ch_multiqc_files.mix(ADAPTERREMOVAL_PE.out.settings, ADAPTERREMOVAL_SE.out.settings.collect{it[1]}.ifEmpty([]))
+            ch_multiqc_files = ch_multiqc_files.mix(ADAPTERREMOVAL_PE.out.settings.collect{it[1]}.ifEmpty([]))
+            ch_multiqc_files = ch_multiqc_files.mix(ADAPTERREMOVAL_SE.out.settings.collect{it[1]}.ifEmpty([]))
+
         } else if ( !params.skip_clipping && params.clip_tool == 'fastp' )  {
-            ch_multiqc_files = ch_multiqc_files.mix(FASTP.out.json.collect{it[1]}.dump(tag: "fastp").ifEmpty([]))
+            ch_multiqc_files = ch_multiqc_files.mix(FASTP.out.json.collect{it[1]}.ifEmpty([]))
         }
 
         if (!(params.keep_phix && params.skip_clipping && !(params.host_genome || params.host_fasta))) {
-            ch_multiqc_files = ch_multiqc_files.mix(FASTQC_TRIMMED.out.zip.collect{it[1]}.dump(tag: "fqc_trim").ifEmpty([]))
+            ch_multiqc_files = ch_multiqc_files.mix(FASTQC_TRIMMED.out.zip.collect{it[1]}.ifEmpty([]))
         }
 
         if ( params.host_fasta || params.host_genome ) {
-            ch_multiqc_files = ch_multiqc_files.mix(BOWTIE2_HOST_REMOVAL_ALIGN.out.log.collect{it[1]}.dump(tag: "human").ifEmpty([]))
+            ch_multiqc_files = ch_multiqc_files.mix(BOWTIE2_HOST_REMOVAL_ALIGN.out.log.collect{it[1]}.ifEmpty([]).dump(tag: "bt2_hostremoval"))
         }
 
         if(!params.keep_phix) {
-            ch_multiqc_files = ch_multiqc_files.mix(BOWTIE2_PHIX_REMOVAL_ALIGN.out.log.collect{it[1]}.dump(tag: "phix").ifEmpty([]))
+            ch_multiqc_files = ch_multiqc_files.mix(BOWTIE2_PHIX_REMOVAL_ALIGN.out.log.collect{it[1]}.ifEmpty([]))
         }
 
     }
 
-    ch_multiqc_files = ch_multiqc_files.mix(CENTRIFUGE.out.kreport.collect{it[1]}.dump(tag: "centri").ifEmpty([]))
-    ch_multiqc_files = ch_multiqc_files.mix(KRAKEN2.out.report.collect{it[1]}.dump(tag: "k2").ifEmpty([]))
+    ch_multiqc_files = ch_multiqc_files.mix(CENTRIFUGE.out.kreport.collect{it[1]}.ifEmpty([]))
+    ch_multiqc_files = ch_multiqc_files.mix(KRAKEN2.out.report.collect{it[1]}.ifEmpty([]))
 
     if (!params.skip_quast){
-        ch_multiqc_files = ch_multiqc_files.mix(QUAST.out.qc.collect().dump(tag: "quast").ifEmpty([]))
+        ch_multiqc_files = ch_multiqc_files.mix(QUAST.out.qc.collect().ifEmpty([]))
     }
 
-    ch_multiqc_files = ch_multiqc_files.mix(BINNING_PREPARATION.out.bowtie2_assembly_multiqc.collect().dump(tag: "bin_prep").ifEmpty([]))
+    ch_multiqc_files = ch_multiqc_files.mix(BINNING_PREPARATION.out.bowtie2_assembly_multiqc.collect().ifEmpty([]))
 
     if (!params.skip_binning && !params.skip_prokka){
-        ch_multiqc_files = ch_multiqc_files.mix(PROKKA.out.txt.collect{it[1]}.dump(tag: "prokka").ifEmpty([]))
+        ch_multiqc_files = ch_multiqc_files.mix(PROKKA.out.txt.collect{it[1]}.ifEmpty([]))
     }
 
     if (!params.skip_binqc && params.binqc_tool == 'busco'){
-        ch_multiqc_files = ch_multiqc_files.mix(BUSCO_QC.out.multiqc.collect().dump(tag: "busco_Qc").ifEmpty([]))
+        ch_multiqc_files = ch_multiqc_files.mix(BUSCO_QC.out.multiqc.collect().ifEmpty([]).dump(tag: "busco"))
     }
 
 
     MULTIQC (
-        ch_multiqc_files.collect().dump(tag: "mqc_collect"),
+        ch_multiqc_files.collect(),
         ch_multiqc_config.toList(),
         ch_multiqc_custom_config.toList(),
         ch_multiqc_logo.toList()
