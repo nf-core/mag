@@ -26,6 +26,7 @@ run_modules:
   - bcftools
   - prokka
 
+## Module order
 top_modules:
   - "fastqc":
       name: "FastQC: raw reads"
@@ -88,6 +89,7 @@ custom_data:
       title: "Bowtie 2: reads mapped against host reference"
       ylab: "# Reads"
 
+## Sample name cleaning
 sp:
   host_removal:
     fn: "host_removal_metrics.tsv"
@@ -96,13 +98,116 @@ sp:
   kraken:
     fn_re: ".*[kraken2|centrifuge].*report.txt"
 
+## File name cleaning
 extra_fn_clean_exts:
   - ".bowtie2"
   - "_ar2"
+  - "host_removed"
+  - "phix_removed"
+  - "centrifuge_kreport"
 
+## Prettification
 custom_logo: "nf-core-mag_logo_light.png"
 custom_logo_url: https://github.com/nf-core/mag/
 custom_logo_title: "nf-core/mag"
 
 ## Tool specific configuration
 prokka_fn_snames: True
+
+## General Stats customisation
+table_columns_visible:
+  "FastQC: raw reads":
+    avg_sequence_length: True
+  "FastQC: after preprocessing":
+    avg_sequence_length: True
+  "fastp":
+    pct_duplication: False
+    after_filtering_q30_rate: False
+    after_filtering_q30_bases: False
+    filtering_result_passed_filter_reads: 3300
+    after_filtering_gc_content: False
+    pct_surviving: True
+    pct_adapter: True
+  "Bowtie2: assembly": False
+  "Kraken2": False
+  "Centrifuge": False
+  "QUAST":
+    L75: True
+    L50: True
+    L75: True
+    "Largest contig": True
+    "Total length": False
+    N50: False
+  "Prokka": False
+
+table_columns_placement:
+  "FastQC: raw reads":
+    percent_duplicates: 1000
+    percent_gc: 1100
+    avg_sequence_length: 1200
+    median_sequence_length: 1300
+    total_sequences: 1400
+    percent_fails: 1500
+  "FastQC: after preprocessing":
+    percent_duplicates: 2000
+    percent_gc: 2100
+    avg_sequence_length: 2200
+    median_sequence_length: 2300
+    total_sequences: 2400
+    percent_fails: 2500
+  "fastp":
+    pct_duplication: 3000
+    after_filtering_q30_rate: 3100
+    after_filtering_q30_bases: 3200
+    filtering_result_passed_filter_reads: 3300
+    after_filtering_gc_content: 3400
+    pct_surviving: 3500
+    pct_adapter: 3600
+  "Adapter Removal":
+    percent_aligned: 4000
+    aligned_total: 4100
+    percent_discarded: 4200
+  "Bowtie2: PhiX removal":
+    overall_alignment_rate: 5000
+  "Bowtie2: host removal":
+    overall_alignment_rate: 6000
+  "Bowtie2: assembly":
+    overall_alignment_rate: 7000
+  "Kraken2":
+    "% root": 8000
+    "% Top 5": 8100
+    "% Unclassified": 8200
+  "Centrifuge":
+    "% root": 9000
+    "% Top 5": 9100
+    "% Unclassified": 9200
+  QUAST:
+    "N50": 10000
+    "Total length": 11000
+  Prokka:
+    contigs: 20000
+    bases: 21000
+    CDS: 22000
+    organism: 23000
+
+table_columns_name:
+  "FastQC: raw reads":
+    percent_duplicates: "% Dups (raw)"
+    percent_gc: "% GC (raw)"
+    avg_sequence_length: "Avg. length (raw)"
+    median_sequence_length: "Median length (raw)"
+    total_sequences: "M Seqs (raw)"
+    percent_fails: "% Fails (raw)"
+  "FastQC: after preprocessing":
+    percent_duplicates: "% Dups (processed)"
+    percent_gc: "% GC (processed)"
+    avg_sequence_length: "Avg. length (processed)"
+    median_sequence_length: "Median length (processed)"
+    total_sequences: "M Seqs (processed)"
+    percent_fails: "% Fails (processed)"
+  "Bowtie2: PhiX removal":
+    overall_alignment_rate: "% Aligned (PhiX)"
+  "Bowtie2: host removal":
+    overall_alignment_rate: "% Aligned (Host)"
+  "Bowtie2: assembly":
+    overall_alignment_rate: "% Aligned (Assem.)"

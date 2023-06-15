@@ -474,7 +474,6 @@ workflow MAG {
             // short reads
             // group and set group as new id
             ch_short_reads_grouped = ch_short_reads_assembly
-                .dump {tag: "ch_short_reads_asssembly"}
                 .map { meta, reads -> [ meta.group, meta, reads ] }
                 .groupTuple(by: 0)
                 .map { group, metas, reads ->
@@ -906,7 +905,7 @@ workflow MAG {
         }
 
         if ( params.host_fasta || params.host_genome ) {
-            ch_multiqc_files = ch_multiqc_files.mix(BOWTIE2_HOST_REMOVAL_ALIGN.out.log.collect{it[1]}.ifEmpty([]).dump(tag: "bt2_hostremoval"))
+            ch_multiqc_files = ch_multiqc_files.mix(BOWTIE2_HOST_REMOVAL_ALIGN.out.log.collect{it[1]}.ifEmpty([]))
         }
 
         if(!params.keep_phix) {
@@ -929,7 +928,7 @@ workflow MAG {
     }
 
     if (!params.skip_binqc && params.binqc_tool == 'busco'){
-        ch_multiqc_files = ch_multiqc_files.mix(BUSCO_QC.out.multiqc.collect().ifEmpty([]).dump(tag: "busco"))
+        ch_multiqc_files = ch_multiqc_files.mix(BUSCO_QC.out.multiqc.collect().ifEmpty([]))
     }
 
 
