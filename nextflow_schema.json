@@ -785,9 +785,9 @@
                     "default": 0.5,
                     "description": "PyDamage accuracy threshold"
                 },
-                "run_ancient_damagecorrection": {
+                "skip_ancient_damagecorrection": {
                     "type": "boolean",
-                    "description": "activate damage correction of ancient contigs using variant and consensus calling"
+                    "description": "deactivate damage correction of ancient contigs using variant and consensus calling"
                 },
                 "freebayes_ploidy": {
                     "type": "integer",
