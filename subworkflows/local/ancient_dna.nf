@@ -10,31 +10,44 @@ workflow ANCIENT_DNA_ASSEMBLY_VALIDATION {
     take:
         input //channel: [val(meta), path(contigs), path(bam), path(bam_index)]
     main:
+        ch_versions = Channel.empty()
+
         PYDAMAGE_ANALYZE(input.map {item -> [item[0], item[2], item[3]]})
         PYDAMAGE_FILTER(PYDAMAGE_ANALYZE.out.csv)
-        FAIDX(input.map { item -> [ item[0], item[1] ] })
-        freebayes_input = input.join(FAIDX.out.fai) // [val(meta), path(contigs), path(bam), path(bam_index), path(fai)]
-        FREEBAYES (freebayes_input.map { item -> [item[0], item[2], item[3], [], [], []] },
-                    freebayes_input.map { item -> item[1] },
-                    freebayes_input.map { item -> item[4] },
-                    [],
-                    [],
-                    [] )
+        ch_versions = ch_versions.mix(PYDAMAGE_ANALYZE.out.versions.first())
 
-        BCFTOOLS_INDEX_PRE(FREEBAYES.out.vcf)
-        BCFTOOLS_VIEW(FREEBAYES.out.vcf.join(BCFTOOLS_INDEX_PRE.out.tbi), [], [], [])
-        BCFTOOLS_INDEX_POST(BCFTOOLS_VIEW.out.vcf)
-        BCFTOOLS_CONSENSUS(BCFTOOLS_VIEW.out.vcf
-                                .join(BCFTOOLS_INDEX_POST.out.tbi)
-                                .join(input.map { item -> [ item[0], item[1] ] }))
+        if ( !params.run_ancient_damagecorrection ) {
+            ch_corrected_contigs = Channel.empty()
+        }
 
-        ch_versions = Channel.empty()
-        ch_versions = PYDAMAGE_ANALYZE.out.versions.first()
-        ch_versions = ch_versions.mix(FAIDX.out.versions.first())
-        ch_versions = ch_versions.mix(FREEBAYES.out.versions.first())
-        ch_versions = ch_versions.mix(BCFTOOLS_CONSENSUS.out.versions.first())
+        if ( params.run_ancient_damagecorrection ) {
+            FAIDX(input.map { item -> [ item[0], item[1] ] })
+            freebayes_input = input.join(FAIDX.out.fai) // [val(meta), path(contigs), path(bam), path(bam_index), path(fai)]
+            FREEBAYES (freebayes_input.map { item -> [item[0], item[2], item[3], [], [], []] },
+                        freebayes_input.map { item -> item[1] },
+                        freebayes_input.map { item -> item[4] },
+                        [],
+                        [],
+                        [] )
+
+            BCFTOOLS_INDEX_PRE(FREEBAYES.out.vcf)
+            BCFTOOLS_VIEW(FREEBAYES.out.vcf.join(BCFTOOLS_INDEX_PRE.out.tbi), [], [], [])
+            BCFTOOLS_INDEX_POST(BCFTOOLS_VIEW.out.vcf)
+            BCFTOOLS_CONSENSUS(BCFTOOLS_VIEW.out.vcf
+                                    .join(BCFTOOLS_INDEX_POST.out.tbi)
+                                    .join(input.map { item -> [ item[0], item[1] ] }))
+
+            ch_corrected_contigs = BCFTOOLS_CONSENSUS.out.fasta
+
+            ch_versions = ch_versions.mix(FAIDX.out.versions.first())
+            ch_versions = ch_versions.mix(FREEBAYES.out.versions.first())
+            ch_versions = ch_versions.mix(BCFTOOLS_CONSENSUS.out.versions.first())
+        }
+
+
+
     emit:
-        contigs_recalled          = BCFTOOLS_CONSENSUS.out.fasta // channel: [ val(meta), path(fasta) ]
+        contigs_recalled          = ch_corrected_contigs // channel: [ val(meta), path(fasta) ]
         pydamage_results          = PYDAMAGE_ANALYZE.out.csv     // channel: [ val(meta), path(csv) ]
         pydamage_filtered_results = PYDAMAGE_FILTER.out.csv      // channel: [ val(meta), path(csv) ]
         versions                  = ch_versions                  // channel: [ versions.yml ]
