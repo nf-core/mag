@@ -10,7 +10,7 @@ process QUAST_BINS {
     tuple val(meta), path(bins)
 
     output:
-    path "QUAST/*", type: 'dir'
+    path "QUAST/*", type: 'dir'     , emit: dir
     path "QUAST/*-quast_summary.tsv", emit: quast_bin_summaries
     path "versions.yml"             , emit: versions
 

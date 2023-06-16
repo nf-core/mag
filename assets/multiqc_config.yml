@@ -74,7 +74,16 @@ top_modules:
   - custom_content
   - "busco":
       info: "assesses genome assembly and annotation completeness with Benchmarking Universal Single-Copy Orthologs. In case BUSCO's automated lineage selection was used, only generic results for the selected domain are shown and only for genome bins and kept, unbinned contigs for which the BUSCO analysis was successfull, i.e. not for contigs for which no BUSCO genes could be found. Bins for which a specific virus lineage was selected are also not shown."
-  - "quast"
+  - "quast":
+      name: "QUAST: assembly"
+      info: "Assembly statistics of raw assemblies."
+      path_filters:
+        - "*rawassemblies.tsv"
+  - "quast":
+      name: "QUAST: bins"
+      info: "Assembly statistics of binned assemblies."
+      path_filters_exclude:
+        - "*rawassemblies.tsv"
   - "prokka"
 
 custom_data:
@@ -96,6 +105,8 @@ sp:
     fn: "*_ar2.settings"
   kraken:
     fn_re: ".*[kraken2|centrifuge].*report.txt"
+  quast:
+    fn_re: "report.*.tsv"
 
 ## File name cleaning
 extra_fn_clean_exts:
@@ -131,7 +142,14 @@ table_columns_visible:
   "Bowtie2: assembly": False
   "Kraken2": False
   "Centrifuge": False
-  "QUAST":
+  "QUAST: assembly":
+    N75: True
+    L50: True
+    L75: True
+    "Largest contig": True
+    "Total length": False
+    N50: False
+  "QUAST: bins":
     N75: True
     L50: True
     L75: True
@@ -181,7 +199,10 @@ table_columns_placement:
     "% root": 9000
     "% Top 5": 9100
     "% Unclassified": 9200
-  QUAST:
+  "QUAST: assembly":
+    "N50": 10000
+    "Total length": 11000
+  "QUAST: bins":
     "N50": 10000
     "Total length": 11000
   Prokka:

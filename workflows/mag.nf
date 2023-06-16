@@ -918,7 +918,11 @@ workflow MAG {
     ch_multiqc_files = ch_multiqc_files.mix(KRAKEN2.out.report.collect{it[1]}.ifEmpty([]))
 
     if (!params.skip_quast){
-        ch_multiqc_files = ch_multiqc_files.mix(QUAST.out.qc.collect().ifEmpty([]))
+        ch_multiqc_files = ch_multiqc_files.mix(QUAST.out.report.collect().ifEmpty([]))
+
+        if ( !params.skip_binning ) {
+            ch_multiqc_files = ch_multiqc_files.mix(QUAST_BINS.out.dir.collect().ifEmpty([]))
+        }
     }
 
     ch_multiqc_files = ch_multiqc_files.mix(BINNING_PREPARATION.out.bowtie2_assembly_multiqc.collect().ifEmpty([]))
