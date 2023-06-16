@@ -14,7 +14,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 - [Taxonomic classification of trimmed reads](#taxonomic-classification-of-trimmed-reads)
 - [Assembly](#assembly) of trimmed reads
 - [Protein-coding gene prediction](#gene-prediction) of assemblies
-- [Viral classification](#viral-classification-of-assemblies) of assemblies
+- [Virus identification](#virus-identification-in-assemblies) of assemblies
 - [Binning and binning refinement](#binning-and-binning-refinement) of assembled contigs
 - [Taxonomic classification of binned genomes](#taxonomic-classification-of-binned-genomes)
 - [Genome annotation of binned genomes](#genome-annotation-of-binned-genomes)
@@ -255,7 +255,7 @@ Protein-coding genes are predicted for each assembly.
 
 </details>
 
-## Viral classification of assemblies
+## Virus identification in assemblies
 
 ### geNomad
 
@@ -264,11 +264,13 @@ Protein-coding genes are predicted for each assembly.
 <details markdown="1">
 <summary>Output files</summary>
 
-- `Taxonomy/geNomad/[sample/group]/`
+- `VirusIdentification/geNomad/[sample/group]/`
   - `[sample/group]_annotate`
     - `[sample/group]_taxonomy.tsv`: Taxonomic assignment data
   - `[sample/group]_aggregated_classification`
     - `[sample/group]_aggregated_classification.tsv`: Sequence classification in tabular format
+  - `[sample/group]_find_proviruses`
+    - `[sample/group]_provirus.tsv`: Characteristics of proviruses identified by geNomad
   - `[sample/group]_summary`
     - `[sample/group]_virus_summary.tsv`: Virus classification summary file in tabular format
     - `[sample/group]_plasmid_summary.tsv`: Plasmid classification summary file in tabular format

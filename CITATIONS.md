@@ -50,9 +50,9 @@
 
   > Garrison E, Marth G. Haplotype-based variant detection from short-read sequencing. arXiv preprint arXiv:1207.3907 [q-bio.GN] 2012
 
-- [geNomad](https://doi.org/10.5281/zenodo.7015982)
+- [geNomad](https://doi.org/10.1101/2023.03.05.531206)
 
-  > Antônio Camargo. (2022). apcamargo/genomad: geNomad v1.2.0 (v1.2.0). Zenodo.doi: 10.5281/zenodo.7324808
+  > Camargo, A. P., et al. (2023). You can move, but you can’t hide: identification of mobile genetic elements with geNomad. bioRxiv preprint. doi: https://doi.org/10.1101/2023.03.05.531206
 
 - [GTDB-Tk](https://doi.org/10.1093/bioinformatics/btz848)
 
