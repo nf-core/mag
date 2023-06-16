@@ -147,15 +147,15 @@ table_columns_visible:
     L50: True
     L75: True
     "Largest contig": True
-    "Total length": False
-    N50: False
+    "Total length": True
+    N50: True
   "QUAST: bins":
     N75: True
     L50: True
     L75: True
     "Largest contig": True
-    "Total length": False
-    N50: False
+    "Total length": True
+    N50: True
   "Prokka": False
 
 table_columns_placement:
@@ -232,3 +232,10 @@ table_columns_name:
     overall_alignment_rate: "% Aligned (Host)"
   "Bowtie2: assembly":
     overall_alignment_rate: "% Aligned (Assem.)"
+
+custom_table_header_config:
+  general_stats_table:
+    "Total length":
+      hidden: True
+    N50:
+      hidden: True
