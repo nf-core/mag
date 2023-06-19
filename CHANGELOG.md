@@ -3,6 +3,12 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.3.1 - [2023-06-19]
+
+### `Fixed`
+
+- [#458](https://github.com/nf-core/mag/pull/458) - Correct the major issue of binning refinement being performed on uncorrected contigs instead of aDNA consensus recalled contigs (issue [#449](https://github.com/nf-core/mag/issues/449))
+
 ## v2.3.0 - [2023/03/02]
 
 ### `Added`
