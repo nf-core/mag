@@ -581,7 +581,14 @@ workflow MAG {
         // If any two of the binners are both skipped at once, do not run because DAS_Tool needs at least one
         if ( params.refine_bins_dastool ) {
 
-            BINNING_REFINEMENT ( BINNING_PREPARATION.out.grouped_mappings, BINNING.out.bins, BINNING.out.metabat2depths, ch_short_reads )
+            if (params.ancient_dna) {
+                ch_contigs_for_binrefinement = ANCIENT_DNA_ASSEMBLY_VALIDATION.out.contigs_recalled
+            } else {
+                ch_contigs_for_binrefinement = BINNING_PREPARATION.out.grouped_mappings
+                    .map{ meta, contigs, bam, bai -> [ meta, contigs ] }
+            }
+
+            BINNING_REFINEMENT ( ch_contigs_for_binrefinement, BINNING.out.bins, BINNING.out.metabat2depths, ch_short_reads )
             ch_versions = ch_versions.mix(BINNING_REFINEMENT.out.versions)
 
             if ( params.postbinning_input == 'raw_bins_only' ) {
