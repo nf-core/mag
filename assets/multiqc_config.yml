@@ -51,8 +51,9 @@ top_modules:
   - "bowtie2":
       name: "Bowtie2: assembly"
       info: "Mapping statistics of reads mapped against assemblies."
-      path_filters:
-        - "*.bowtie2.log"
+      path_filters_exclude:
+        - "*_host_removed.bowtie2.log"
+        - "*_phix_removed.bowtie2.log"
   - "kraken":
       name: "Kraken2"
       anchor: "Kraken2"
