@@ -176,13 +176,14 @@
                         "git_sha": "371eff7748d769c2ddc8bd593773523a364a52fe",
                         "installed_by": ["modules"]
                     },
-                    "tiara/tiara": {
-                        "branch": "master",
-                        "git_sha": "d91e3d3d4806179065b087b91ff36c11976bf233"
-                    },
                     "seqtk/mergepe": {
                         "branch": "master",
                         "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
+                        "installed_by": ["modules"]
+                    },
+                    "tiara/tiara": {
+                        "branch": "master",
+                        "git_sha": "d91e3d3d4806179065b087b91ff36c11976bf233",
                         "installed_by": ["modules"]
                     }
                 }

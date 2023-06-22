@@ -641,7 +641,7 @@ Optional, only running when parameter `-profile ancient_dna` is specified.
 
 ### `variant_calling`
 
-Because of aDNA damage, _de novo_ assemblers sometimes struggle to call a correct consensus on the contig sequence. To avoid this situation, the consensus is re-called with a variant calling software using the reads aligned back to the contigs
+Because of aDNA damage, _de novo_ assemblers sometimes struggle to call a correct consensus on the contig sequence. To avoid this situation, the consensus is optionally re-called with a variant calling software using the reads aligned back to the contigs when `--run_ancient_damagecorrection` is supplied.
 
 <details markdown="1">
 <summary>Output files</summary>

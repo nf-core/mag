@@ -647,7 +647,7 @@ workflow MAG {
 
     if (!params.skip_binning){
 
-        if (params.ancient_dna) {
+        if (params.ancient_dna && params.run_ancient_damagecorrection) {
             BINNING (
                 BINNING_PREPARATION.out.grouped_mappings
                     .join(ANCIENT_DNA_ASSEMBLY_VALIDATION.out.contigs_recalled)
