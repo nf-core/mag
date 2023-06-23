@@ -25,7 +25,6 @@ workflow BINNING_REFINEMENT {
     // everything here is either unclassified or a prokaryote
     ch_bins = bins
         .map { meta, bins ->
-            def meta_new = meta.clone()
             def meta_new = meta - meta.subMap('domain')
             [meta_new, bins]
         }
