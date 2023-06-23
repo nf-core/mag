@@ -3,6 +3,13 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.3.2 - [2023-06-23]
+
+### `Fixed`
+
+- [#461](https://github.com/nf-core/mag/pull/461) - Fix full-size AWS test profile paths (by @jfy133)
+- [#461](https://github.com/nf-core/mag/pull/461) - Fix pyDamage results being overwritten (reported by @alexhbnr, fix by @jfy133)
+
 ## v2.3.1 - [2023-06-19]
 
 ### `Fixed`
