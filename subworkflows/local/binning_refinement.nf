@@ -15,7 +15,7 @@ include { RENAME_POSTDASTOOL                                              } from
 
 workflow BINNING_REFINEMENT {
     take:
-    contigs
+    ch_contigs_for_dastool // channel: [ val(meta), path(contigs) ]
     bins           // channel: [ val(meta), path(bins) ]
 
     main:
@@ -25,12 +25,12 @@ workflow BINNING_REFINEMENT {
     // everything here is either unclassified or a prokaryote
     ch_bins = bins
         .map { meta, bins ->
-            meta_new = meta.clone()
-            meta_new.remove('domain')
+            def meta_new = meta.clone()
+            def meta_new = meta - meta.subMap('domain')
             [meta_new, bins]
         }
 
-    // Drop unnecessary files
+    // Drop unnecessary contig files, and prepare bins
     ch_contigs_for_dastool = contigs
                                 .map {
                                     meta, assembly, bams, bais ->
