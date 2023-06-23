@@ -44,7 +44,7 @@ workflow BINNING_PREPARATION {
         .map { meta, assembly, bams, bais -> [ meta, assembly.sort()[0], bams, bais ] }     // multiple symlinks to the same assembly -> use first of sorted list
 
     emit:
-    bowtie2_assembly_multiqc = BOWTIE2_ASSEMBLY_ALIGN.out.log.map { assembly_meta, reads_meta, log -> if (assembly_meta.id == reads_meta.id) {return [ log ]} }
+    bowtie2_assembly_multiqc = BOWTIE2_ASSEMBLY_ALIGN.out.log.map { assembly_meta, reads_meta, log -> [ log ] }
     bowtie2_version          = BOWTIE2_ASSEMBLY_ALIGN.out.versions
     grouped_mappings         = ch_grouped_mappings
 }
