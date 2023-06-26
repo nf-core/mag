@@ -10,12 +10,14 @@ process QUAST {
     tuple val(meta), path(assembly)
 
     output:
-    path "QUAST/*"     , emit: qc
-    path "versions.yml", emit: versions
+    path "QUAST/*"                       , emit: qc
+    path "QUAST/report_rawassemblies.tsv", emit: report
+    path "versions.yml"                  , emit: versions
 
     script:
     """
     metaquast.py --threads "${task.cpus}" --rna-finding --max-ref-number 0 -l "${meta.assembler}-${meta.id}" "${assembly}" -o "QUAST"
+    cp QUAST/report.tsv QUAST/report_rawassemblies.tsv
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
