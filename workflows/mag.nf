@@ -647,6 +647,7 @@ workflow MAG {
 
     if (!params.skip_binning){
 
+        // Make sure if running aDNA subworkflow to use the damage-corrected contigs for higher accuracy
         if (params.ancient_dna && params.run_ancient_damagecorrection) {
             BINNING (
                 BINNING_PREPARATION.out.grouped_mappings
@@ -663,8 +664,14 @@ workflow MAG {
 
         if ( params.bin_domain_classification ) {
 
-            // TODO QUESTION ch_Assemblies here should be damage corrected if aDNA?
-            DOMAIN_CLASSIFICATION ( ch_assemblies, BINNING.out.bins, BINNING.out.unbinned )
+            // Make sure if running aDNA subworkflow to use the damage-corrected contigs for higher accuracy
+            if (params.ancient_dna && params.run_ancient_damagecorrection) {
+                ch_assemblies_for_domainclassification = ANCIENT_DNA_ASSEMBLY_VALIDATION.out.contigs_recalled
+            } else {
+                ch_assemblies_for_domainclassification = ch_assemblies
+            }
+
+            DOMAIN_CLASSIFICATION ( ch_assemblies_for_domainclassification.dump(tag: "TEST"), BINNING.out.bins, BINNING.out.unbinned )
             ch_binning_results_bins   = DOMAIN_CLASSIFICATION.out.classified_bins
             ch_binning_results_unbins = DOMAIN_CLASSIFICATION.out.classified_unbins
             ch_versions               = ch_versions.mix(DOMAIN_CLASSIFICATION.out.versions)
