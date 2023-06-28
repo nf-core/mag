@@ -18,6 +18,9 @@ class WorkflowMag {
         if (params.coassemble_group && params.binning_map_mode == 'own') {
             Nextflow.error("Invalid combination of parameter '--binning_map_mode own' and parameter '--coassemble_group'. Select either 'all' or 'group' mapping mode when performing group-wise co-assembly.")
         }
+        if (params.ancient_dna && params.binning_map_mode != 'own') {
+            Nextflow.error("Invalid combination of parameter '--binning_map_mode' and parameter '--ancient_dna'. Ancient DNA mode can only be executed with --binning_map_mode own. You supplied: --binning_map_mode ${params.binning_map_mode}")
+        }
 
         // Check if specified cpus for SPAdes are available
         if ( params.spades_fix_cpus > params.max_cpus ) {
