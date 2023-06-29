@@ -635,7 +635,7 @@ workflow MAG {
     */
 
     if (params.ancient_dna){
-        ANCIENT_DNA_ASSEMBLY_VALIDATION(BINNING_PREPARATION.out.grouped_mappings.dump(tag: "GROUPED_MAPPINGS"))
+        ANCIENT_DNA_ASSEMBLY_VALIDATION(BINNING_PREPARATION.out.grouped_mappings)
         ch_versions = ch_versions.mix(ANCIENT_DNA_ASSEMBLY_VALIDATION.out.versions.first())
     }
 
@@ -664,12 +664,12 @@ workflow MAG {
 
         if ( params.bin_domain_classification ) {
 
-            // // Make sure if running aDNA subworkflow to use the damage-corrected contigs for higher accuracy
-            // if (params.ancient_dna && params.run_ancient_damagecorrection) {
-            //     ch_assemblies_for_domainclassification = ANCIENT_DNA_ASSEMBLY_VALIDATION.out.contigs_recalled
-            // } else {
+            // Make sure if running aDNA subworkflow to use the damage-corrected contigs for higher accuracy
+            if (params.ancient_dna && !params.skip_ancient_damagecorrection) {
+                ch_assemblies_for_domainclassification = ANCIENT_DNA_ASSEMBLY_VALIDATION.out.contigs_recalled
+            } else {
                 ch_assemblies_for_domainclassification = ch_assemblies
-            // }
+            }
 
             DOMAIN_CLASSIFICATION ( ch_assemblies_for_domainclassification, BINNING.out.bins, BINNING.out.unbinned )
             ch_binning_results_bins   = DOMAIN_CLASSIFICATION.out.classified_bins

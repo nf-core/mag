@@ -28,6 +28,10 @@ workflow BINNING_REFINEMENT {
             def meta_new = meta - meta.subMap('domain')
             [meta_new, bins]
         }
+        .groupTuple()
+        .map {
+            meta, bins -> [meta, bins.flatten()]
+        }
 
     // prepare bins
     ch_bins_for_fastatocontig2bin = RENAME_PREDASTOOL(ch_bins).renamed_bins
