@@ -641,7 +641,8 @@ workflow MAG {
 
     if (!params.skip_binning){
 
-        if (params.ancient_dna && params.run_ancient_damagecorrection) {
+        // Make sure if running aDNA subworkflow to use the damage-corrected contigs for higher accuracy
+        if (params.ancient_dna && !params.skip_ancient_damagecorrection) {
             BINNING (
                 BINNING_PREPARATION.out.grouped_mappings
                     .join(ANCIENT_DNA_ASSEMBLY_VALIDATION.out.contigs_recalled)
@@ -656,10 +657,20 @@ workflow MAG {
         }
 
         if ( params.bin_domain_classification ) {
-            DOMAIN_CLASSIFICATION ( ch_assemblies, BINNING.out.bins, BINNING.out.unbinned )
+
+            // Make sure if running aDNA subworkflow to use the damage-corrected contigs for higher accuracy
+            if (params.ancient_dna && !params.skip_ancient_damagecorrection) {
+                ch_assemblies_for_domainclassification = ANCIENT_DNA_ASSEMBLY_VALIDATION.out.contigs_recalled
+            } else {
+                ch_assemblies_for_domainclassification = ch_assemblies
+            }
+
+            DOMAIN_CLASSIFICATION ( ch_assemblies_for_domainclassification, BINNING.out.bins, BINNING.out.unbinned )
             ch_binning_results_bins   = DOMAIN_CLASSIFICATION.out.classified_bins
             ch_binning_results_unbins = DOMAIN_CLASSIFICATION.out.classified_unbins
             ch_versions               = ch_versions.mix(DOMAIN_CLASSIFICATION.out.versions)
+
+
         } else {
             ch_binning_results_bins = BINNING.out.bins
                 .map { meta, bins ->
@@ -694,7 +705,14 @@ workflow MAG {
                     meta.domain == "eukarya"
                 }
 
-            BINNING_REFINEMENT ( BINNING_PREPARATION.out.grouped_mappings, ch_prokarya_bins_dastool )
+            if (params.ancient_dna) {
+                ch_contigs_for_binrefinement = ANCIENT_DNA_ASSEMBLY_VALIDATION.out.contigs_recalled
+            } else {
+                ch_contigs_for_binrefinement = BINNING_PREPARATION.out.grouped_mappings
+                    .map{ meta, contigs, bam, bai -> [ meta, contigs ] }
+            }
+
+            BINNING_REFINEMENT ( ch_contigs_for_binrefinement, ch_prokarya_bins_dastool )
 
             ch_refined_bins = ch_eukarya_bins_dastool.mix(BINNING_REFINEMENT.out.refined_bins)
             ch_refined_unbins = BINNING_REFINEMENT.out.refined_unbins

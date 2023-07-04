@@ -28,6 +28,7 @@ workflow BINNING_PREPARATION {
             .map { group, assembly_meta, assembly, index, reads_meta, reads -> [ assembly_meta, assembly, index, reads_meta, reads ] }
 
     } else {
+        // i.e. --binning_map_mode 'own'
         // combine assemblies (not co-assembled) with reads from own sample
         ch_reads_bowtie2 = reads.map{ meta, reads -> [ meta.id, meta, reads ] }
         ch_bowtie2_input = BOWTIE2_ASSEMBLY_BUILD.out.assembly_index
