@@ -617,7 +617,7 @@ workflow MAG {
     ch_busco_summary            = Channel.empty()
     ch_checkm_summary           = Channel.empty()
 
-    if ( !skip_binning || params.ancient_dna ) {
+    if ( !params.skip_binning || params.ancient_dna ) {
         BINNING_PREPARATION (
             ch_assemblies,
             ch_short_reads
@@ -688,8 +688,10 @@ workflow MAG {
                 }
         }
 
-        ch_versions = ch_versions.mix(BINNING_PREPARATION.out.bowtie2_version.first())
-        ch_versions = ch_versions.mix(BINNING.out.versions)
+        if ( !params.skip_binning || params.ancient_dna ) {
+            ch_versions = ch_versions.mix(BINNING_PREPARATION.out.bowtie2_version.first())
+            ch_versions = ch_versions.mix(BINNING.out.versions)
+        }
 
         /*
         * DAS Tool: binning refinement
@@ -945,7 +947,9 @@ workflow MAG {
         }
     }
 
-    ch_multiqc_files = ch_multiqc_files.mix(BINNING_PREPARATION.out.bowtie2_assembly_multiqc.collect().ifEmpty([]))
+    if ( !params.skip_binning || params.ancient_dna ) {
+        ch_multiqc_files = ch_multiqc_files.mix(BINNING_PREPARATION.out.bowtie2_assembly_multiqc.collect().ifEmpty([]))
+    }
 
     if (!params.skip_binning && !params.skip_prokka){
         ch_multiqc_files = ch_multiqc_files.mix(PROKKA.out.txt.collect{it[1]}.ifEmpty([]))
