@@ -617,10 +617,12 @@ workflow MAG {
     ch_busco_summary            = Channel.empty()
     ch_checkm_summary           = Channel.empty()
 
-    BINNING_PREPARATION (
-        ch_assemblies,
-        ch_short_reads
-    )
+    if ( !skip_binning || params.ancient_dna ) {
+        BINNING_PREPARATION (
+            ch_assemblies,
+            ch_short_reads
+        )
+    }
 
     /*
     ================================================================================
