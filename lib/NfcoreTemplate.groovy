@@ -54,10 +54,11 @@ class NfcoreTemplate {
     //
     // Construct and send completion email
     //
-    public static void email(workflow, params, summary_params, projectDir, log, multiqc_report=[]) {
+    public static void email(workflow, params, summary_params, projectDir, log, multiqc_report=[], busco_failed_bins = [:]) {
 
         // Set up the e-mail variables
         def subject = "[$workflow.manifest.name] Successful: $workflow.runName"
+
         if (!workflow.success) {
             subject = "[$workflow.manifest.name] FAILED: $workflow.runName"
         }
@@ -91,6 +92,7 @@ class NfcoreTemplate {
         email_fields['commandLine']  = workflow.commandLine
         email_fields['projectDir']   = workflow.projectDir
         email_fields['summary']      = summary << misc_fields
+        email_fields['busco_failed_bins'] = busco_failed_bins.keySet()
 
         // On success try attach the multiqc report
         def mqc_report = null
@@ -225,7 +227,7 @@ class NfcoreTemplate {
     //
     // Print pipeline summary on completion
     //
-    public static void summary(workflow, params, log) {
+    public static void summary(workflow, params, log, busco_failed_bins = [:]) {
         Map colors = logColours(params.monochrome_logs)
         if (workflow.success) {
             if (workflow.stats.ignoredCount == 0) {
