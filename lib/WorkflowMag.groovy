@@ -10,7 +10,7 @@ class WorkflowMag {
     //
     // Check and validate parameters
     //
-  
+
     public static void initialise(params, log, hybrid) {
         // Check if binning mapping mode is valid
         if (!['all', 'group', 'own'].contains(params.binning_map_mode)) {
@@ -199,7 +199,7 @@ class WorkflowMag {
 
         // Pipeline DOI
         meta["doi_text"] = meta.manifest_map.doi ? "(doi: <a href=\'https://doi.org/${meta.manifest_map.doi}\'>${meta.manifest_map.doi}</a>)" : ""
-        meta["nodoi_text"] = meta.manifest_map.doi ? "": "<li>If available, make sure to update the text to include the Zenodo DOI of version of the pipeline used. </li>"
+        meta["nodoi_text"] = meta.manifest_map.doi ? "" : "<li>If available, make sure to update the text to include the Zenodo DOI of version of the pipeline used. </li>"
 
         // Tool references
         meta["tool_citations"] = ""
