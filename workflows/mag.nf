@@ -229,7 +229,6 @@ workflow MAG {
     //
 
     INPUT_CHECK ()
-    ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
     ch_raw_short_reads  = INPUT_CHECK.out.raw_short_reads
     ch_raw_long_reads   = INPUT_CHECK.out.raw_long_reads
     ch_input_assemblies = INPUT_CHECK.out.input_assemblies
