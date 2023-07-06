@@ -622,6 +622,7 @@ workflow MAG {
             ch_assemblies,
             ch_short_reads
         )
+        ch_versions = ch_versions.mix(BINNING_PREPARATION.out.bowtie2_version.first())
     }
 
     /*
@@ -657,6 +658,7 @@ workflow MAG {
                 ch_short_reads
             )
         }
+        ch_versions = ch_versions.mix(BINNING.out.versions)
 
         if ( params.bin_domain_classification ) {
 
@@ -688,11 +690,6 @@ workflow MAG {
                 }
         }
 
-        if ( !params.skip_binning || params.ancient_dna ) {
-            ch_versions = ch_versions.mix(BINNING_PREPARATION.out.bowtie2_version.first())
-            ch_versions = ch_versions.mix(BINNING.out.versions)
-        }
-
         /*
         * DAS Tool: binning refinement
         */
@@ -717,10 +714,8 @@ workflow MAG {
             }
 
             BINNING_REFINEMENT ( ch_contigs_for_binrefinement, ch_prokarya_bins_dastool )
-
             ch_refined_bins = ch_eukarya_bins_dastool.mix(BINNING_REFINEMENT.out.refined_bins)
             ch_refined_unbins = BINNING_REFINEMENT.out.refined_unbins
-
             ch_versions = ch_versions.mix(BINNING_REFINEMENT.out.versions)
 
             if ( params.postbinning_input == 'raw_bins_only' ) {
