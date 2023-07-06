@@ -617,10 +617,13 @@ workflow MAG {
     ch_busco_summary            = Channel.empty()
     ch_checkm_summary           = Channel.empty()
 
-    BINNING_PREPARATION (
-        ch_assemblies,
-        ch_short_reads
-    )
+    if ( !params.skip_binning || params.ancient_dna ) {
+        BINNING_PREPARATION (
+            ch_assemblies,
+            ch_short_reads
+        )
+        ch_versions = ch_versions.mix(BINNING_PREPARATION.out.bowtie2_version.first())
+    }
 
     /*
     ================================================================================
@@ -655,6 +658,7 @@ workflow MAG {
                 ch_short_reads
             )
         }
+        ch_versions = ch_versions.mix(BINNING.out.versions)
 
         if ( params.bin_domain_classification ) {
 
@@ -686,9 +690,6 @@ workflow MAG {
                 }
         }
 
-        ch_versions = ch_versions.mix(BINNING_PREPARATION.out.bowtie2_version.first())
-        ch_versions = ch_versions.mix(BINNING.out.versions)
-
         /*
         * DAS Tool: binning refinement
         */
@@ -713,10 +714,8 @@ workflow MAG {
             }
 
             BINNING_REFINEMENT ( ch_contigs_for_binrefinement, ch_prokarya_bins_dastool )
-
             ch_refined_bins = ch_eukarya_bins_dastool.mix(BINNING_REFINEMENT.out.refined_bins)
             ch_refined_unbins = BINNING_REFINEMENT.out.refined_unbins
-
             ch_versions = ch_versions.mix(BINNING_REFINEMENT.out.versions)
 
             if ( params.postbinning_input == 'raw_bins_only' ) {
@@ -943,13 +942,15 @@ workflow MAG {
         }
     }
 
-    ch_multiqc_files = ch_multiqc_files.mix(BINNING_PREPARATION.out.bowtie2_assembly_multiqc.collect().ifEmpty([]))
+    if ( !params.skip_binning || params.ancient_dna ) {
+        ch_multiqc_files = ch_multiqc_files.mix(BINNING_PREPARATION.out.bowtie2_assembly_multiqc.collect().ifEmpty([]))
+    }
 
     if (!params.skip_binning && !params.skip_prokka){
         ch_multiqc_files = ch_multiqc_files.mix(PROKKA.out.txt.collect{it[1]}.ifEmpty([]))
     }
 
-    if (!params.skip_binqc && params.binqc_tool == 'busco'){
+    if (!params.skip_binning && !params.skip_binqc && params.binqc_tool == 'busco'){
         ch_multiqc_files = ch_multiqc_files.mix(BUSCO_QC.out.multiqc.collect().ifEmpty([]))
     }
 
