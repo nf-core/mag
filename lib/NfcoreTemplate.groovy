@@ -33,15 +33,32 @@ class NfcoreTemplate {
     }
 
     //
+    // Generate version string
+    //
+    public static String version(workflow) {
+        String version_string = ""
+
+        if (workflow.manifest.version) {
+            def prefix_v = workflow.manifest.version[0] != 'v' ? 'v' : ''
+            version_string += "${prefix_v}${workflow.manifest.version}"
+        }
+
+        if (workflow.commitId) {
+            def git_shortsha = workflow.commitId.substring(0, 7)
+            version_string += "-g${git_shortsha}"
+        }
+
+        return version_string
+    }
+
+    //
     // Construct and send completion email
     //
     public static void email(workflow, params, summary_params, projectDir, log, multiqc_report=[], busco_failed_bins = [:]) {
 
         // Set up the e-mail variables
         def subject = "[$workflow.manifest.name] Successful: $workflow.runName"
-        if (busco_failed_bins.size() > 0) {
-            subject = "[$workflow.manifest.name] Partially successful: For ${busco_failed_bins.size()} bin(s) the BUSCO analysis failed because no genes where found or placements failed: $workflow.runName"
-        }
+
         if (!workflow.success) {
             subject = "[$workflow.manifest.name] FAILED: $workflow.runName"
         }
@@ -64,7 +81,7 @@ class NfcoreTemplate {
         misc_fields['Nextflow Compile Timestamp'] = workflow.nextflow.timestamp
 
         def email_fields = [:]
-        email_fields['version']      = workflow.manifest.version
+        email_fields['version']      = NfcoreTemplate.version(workflow)
         email_fields['runName']      = workflow.runName
         email_fields['success']      = workflow.success
         email_fields['dateComplete'] = workflow.complete
@@ -113,7 +130,7 @@ class NfcoreTemplate {
         def email_html    = html_template.toString()
 
         // Render the sendmail template
-        def max_multiqc_email_size = params.max_multiqc_email_size as nextflow.util.MemoryUnit
+        def max_multiqc_email_size = (params.containsKey('max_multiqc_email_size') ? params.max_multiqc_email_size : 0) as nextflow.util.MemoryUnit
         def smail_fields           = [ email: email_address, subject: subject, email_txt: email_txt, email_html: email_html, projectDir: "$projectDir", mqcFile: mqc_report, mqcMaxSize: max_multiqc_email_size.toBytes() ]
         def sf                     = new File("$projectDir/assets/sendmail_template.txt")
         def sendmail_template      = engine.createTemplate(sf).make(smail_fields)
@@ -150,10 +167,10 @@ class NfcoreTemplate {
     }
 
     //
-    // Construct and send adaptive card
-    // https://adaptivecards.io
+    // Construct and send a notification to a web server as JSON
+    // e.g. Microsoft Teams and Slack
     //
-    public static void adaptivecard(workflow, params, summary_params, projectDir, log) {
+    public static void IM_notification(workflow, params, summary_params, projectDir, log) {
         def hook_url = params.hook_url
 
         def summary = [:]
@@ -174,7 +191,7 @@ class NfcoreTemplate {
         misc_fields['nxf_timestamp']                        = workflow.nextflow.timestamp
 
         def msg_fields = [:]
-        msg_fields['version']      = workflow.manifest.version
+        msg_fields['version']      = NfcoreTemplate.version(workflow)
         msg_fields['runName']      = workflow.runName
         msg_fields['success']      = workflow.success
         msg_fields['dateComplete'] = workflow.complete
@@ -182,13 +199,16 @@ class NfcoreTemplate {
         msg_fields['exitStatus']   = workflow.exitStatus
         msg_fields['errorMessage'] = (workflow.errorMessage ?: 'None')
         msg_fields['errorReport']  = (workflow.errorReport ?: 'None')
-        msg_fields['commandLine']  = workflow.commandLine
+        msg_fields['commandLine']  = workflow.commandLine.replaceFirst(/ +--hook_url +[^ ]+/, "")
         msg_fields['projectDir']   = workflow.projectDir
         msg_fields['summary']      = summary << misc_fields
 
         // Render the JSON template
         def engine       = new groovy.text.GStringTemplateEngine()
-        def hf = new File("$projectDir/assets/adaptivecard.json")
+        // Different JSON depending on the service provider
+        // Defaults to "Adaptive Cards" (https://adaptivecards.io), except Slack which has its own format
+        def json_path     = hook_url.contains("hooks.slack.com") ? "slackreport.json" : "adaptivecard.json"
+        def hf            = new File("$projectDir/assets/${json_path}")
         def json_template = engine.createTemplate(hf).make(msg_fields)
         def json_message  = json_template.toString()
 
@@ -209,37 +229,11 @@ class NfcoreTemplate {
     //
     public static void summary(workflow, params, log, busco_failed_bins = [:]) {
         Map colors = logColours(params.monochrome_logs)
-
-        if (busco_failed_bins.size() > 0) {
-            def failed_bins_no_genes = ''
-            def failed_bins_placements_failed = ''
-            def count_no_genes = 0
-            def count_placements_failed = 0
-            for (bin in busco_failed_bins) {
-                if (bin.value == "No genes"){
-                    count_no_genes += 1
-                    failed_bins_no_genes += "    ${bin.key}\n"
-                }
-                if (bin.value == "Placements failed"){
-                    count_placements_failed += 1
-                    failed_bins_placements_failed += "    ${bin.key}\n"
-                }
-            }
-            if (params.busco_reference)
-                log.info "-${colors.purple}[$workflow.manifest.name]${colors.yellow} For ${busco_failed_bins.size()} bin(s) BUSCO did not find any matching genes:\n${failed_bins_no_genes}See ${params.outdir}/GenomeBinning/QC/BUSCO/[bin]_busco.log for further information.${colors.reset}-"
-            else {
-                if (count_no_genes > 0)
-                    log.info "-${colors.purple}[$workflow.manifest.name]${colors.yellow} For ${count_no_genes} bin(s) the BUSCO analysis failed because no BUSCO genes could be found:\n${failed_bins_no_genes}See ${params.outdir}/GenomeBinning/QC/BUSCO/[bin]_busco.err and ${params.outdir}/GenomeBinning/QC/BUSCO/[bin]_busco.log for further information.${colors.reset}-"
-                if (count_placements_failed > 0)
-                    log.info "-${colors.purple}[$workflow.manifest.name]${colors.yellow} For ${count_placements_failed} bin(s) the BUSCO analysis using automated lineage selection failed due to failed placements:\n${failed_bins_placements_failed}See ${params.outdir}/GenomeBinning/QC/BUSCO/[bin]_busco.err and ${params.outdir}/GenomeBinning/QC/BUSCO/[bin]_busco.log for further information. Results for selected domain are still used.${colors.reset}-"
-            }
-        }
-
         if (workflow.success) {
             if (workflow.stats.ignoredCount == 0) {
                 log.info "-${colors.purple}[$workflow.manifest.name]${colors.green} Pipeline completed successfully${colors.reset}-"
             } else {
-                log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} Pipeline completed successfully, but with errored process(es) ${colors.reset}-"
+                log.info "-${colors.purple}[$workflow.manifest.name]${colors.yellow} Pipeline completed successfully, but with errored process(es) ${colors.reset}-"
             }
         } else {
             log.info "-${colors.purple}[$workflow.manifest.name]${colors.red} Pipeline completed with errors${colors.reset}-"
@@ -327,6 +321,7 @@ class NfcoreTemplate {
     //
     public static String logo(workflow, monochrome_logs) {
         Map colors = logColours(monochrome_logs)
+        String workflow_version = NfcoreTemplate.version(workflow)
         String.format(
             """\n
             ${dashedLine(monochrome_logs)}
@@ -335,7 +330,7 @@ class NfcoreTemplate {
             ${colors.blue}  |\\ | |__  __ /  ` /  \\ |__) |__         ${colors.yellow}}  {${colors.reset}
             ${colors.blue}  | \\| |       \\__, \\__/ |  \\ |___     ${colors.green}\\`-._,-`-,${colors.reset}
                                                     ${colors.green}`._,._,\'${colors.reset}
-            ${colors.purple}  ${workflow.manifest.name} v${workflow.manifest.version}${colors.reset}
+            ${colors.purple}  ${workflow.manifest.name} ${workflow_version}${colors.reset}
             ${dashedLine(monochrome_logs)}
             """.stripIndent()
         )

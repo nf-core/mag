@@ -1,7 +1,7 @@
 process SPADES {
     tag "$meta.id"
 
-    conda (params.enable_conda ? "bioconda::spades=3.15.3" : null)
+    conda "bioconda::spades=3.15.3"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/spades:3.15.3--h95f258a_0' :
         'quay.io/biocontainers/spades:3.15.3--h95f258a_0' }"
@@ -20,14 +20,17 @@ process SPADES {
     script:
     def args = task.ext.args ?: ''
     maxmem = task.memory.toGiga()
+    // The -s option is not supported for metaspades. Each time this is called with `meta.single_end` it's because
+    // read depth was normalized with BBNorm, which actually outputs pairs, but in an interleaved file.
+    def readstr = meta.single_end ? "--12 ${reads}" : "-1 ${reads[0]} -2 ${reads[1]}"
+
     if ( params.spades_fix_cpus == -1 || task.cpus == params.spades_fix_cpus )
         """
         metaspades.py \
             $args \
             --threads "${task.cpus}" \
             --memory $maxmem \
-            --pe1-1 ${reads[0]} \
-            --pe1-2 ${reads[1]} \
+            ${readstr} \
             -o spades
         mv spades/assembly_graph_with_scaffolds.gfa SPAdes-${meta.id}_graph.gfa
         mv spades/scaffolds.fasta SPAdes-${meta.id}_scaffolds.fasta

@@ -1,7 +1,7 @@
 process MEGAHIT {
     tag "$meta.id"
 
-    conda (params.enable_conda ? "bioconda::megahit=1.2.9" : null)
+    conda "bioconda::megahit=1.2.9"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/megahit:1.2.9--h2e03b76_1' :
         'quay.io/biocontainers/megahit:1.2.9--h2e03b76_1' }"
@@ -17,11 +17,12 @@ process MEGAHIT {
 
     script:
     def args = task.ext.args ?: ''
-    def input = params.single_end ? "-r \"" + reads1.join(",") + "\"" : "-1 \"" + reads1.join(",") + "\" -2 \"" + reads2.join(",") + "\""
+    def input = meta.single_end ? "-r \"" + reads1.join(",") + "\"" : "-1 \"" + reads1.join(",") + "\" -2 \"" + reads2.join(",") + "\""
     mem = task.memory.toBytes()
     if ( !params.megahit_fix_cpu_1 || task.cpus == 1 )
         """
         megahit $args -t "${task.cpus}" -m $mem $input -o MEGAHIT --out-prefix "MEGAHIT-${meta.id}"
+
         gzip -c "MEGAHIT/MEGAHIT-${meta.id}.contigs.fa" > "MEGAHIT/MEGAHIT-${meta.id}.contigs.fa.gz"
 
         cat <<-END_VERSIONS > versions.yml

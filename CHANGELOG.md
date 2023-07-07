@@ -3,29 +3,95 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## dev
+## 2.4.0dev - [date]
 
 ### `Added`
 
-- [#353](https://github.com/nf-core/mag/pull/353) - Added the busco_clean parameter to optionally clean each BUSCO directory after a successful
+- [#395](https://github.com/nf-core/mag/pull/395) - Add support for fast domain-level classification of bins using Tiara, to allow bins to be separated into eukaryotic and prokaryotic-specific processes.
+- [#422](https://github.com/nf-core/mag/pull/422) - Adds support for normalization of read depth with BBNorm (added by @erikrikarddaniel and @fabianegli)
+- [#439](https://github.com/nf-core/mag/pull/439) - Adds ability to enter the pipeline at the binning stage by providing a CSV of pre-computed assemblies (by @prototaxites)
+- [#459](https://github.com/nf-core/mag/pull/459) - Adds ability to skip damage correction step in the ancient DNA workflow and just run pyDamage (by @jfy133)
 - [#364](https://github.com/nf-core/mag/pull/364) - Added geNomad nf-core modules for identifying viruses in assemblies
 
 ### `Changed`
 
-- [#340](https://github.com/nf-core/mag/pull/340) - Update to nf-core 2.6.1 `TEMPLATE`
+- [#428](https://github.com/nf-core/mag/pull/428) - Update to nf-core 2.8 `TEMPLATE` (by @jfy133)
+- [#429](https://github.com/nf-core/mag/pull/429) - Replaced hardcoded CheckM database auto-download URL to a parameter (reported by @erikrikarddaniel, fix by @jfy133)
+- [#441](https://github.com/nf-core/mag/pull/441) - Deactivated CONCOCT in AWS 'full test' due to very long runtime (fix by @jfy133).
+- [#442](https://github.com/nf-core/mag/pull/442) - Remove warning when BUSCO finds no genes in bins, as this can be expected in some datasets (reported by @Lumimar, fix by @jfy133).
+- [#444](https://github.com/nf-core/mag/pull/444) - Moved BUSCO bash code to script (by @jfy133)
+- [#428](https://github.com/nf-core/mag/pull/429) - Update to nf-core 2.9 `TEMPLATE` (by @jfy133)
 
 ### `Fixed`
 
-- [#345](https://github.com/nf-core/mag/pull/345) - Bowtie2 mode changed to global alignment for ancient DNA mode (`--very-sensitive` mode) to prevent soft clipping at the end of reads when running in local mode.
-- [#349](https://github.com/nf-core/mag/pull/349) - Add a warning that pipeline will reset minimum contig size to 1500 specifically MetaBAT2 process, if a user supplies below this threshold.
-- [#352](https://github.com/nf-core/mag/pull/352) - Escape the case in the BUSCO module that BUSCO can just detect a root lineage but is not able to find any marker genes
-- [#355](https://github.com/nf-core/mag/pull/355) - Include error code 21 for retrying with higher memory for SPAdes and hybridSPAdes
+- [#400](https://github.com/nf-core/mag/pull/400) - Fix duplicated Zenodo badge in README (by @jfy133)
+- [#406](https://github.com/nf-core/mag/pull/406) - Fix CheckM database always downloading, regardless if CheckM is selected (by @jfy133)
+- [#419](https://github.com/nf-core/mag/pull/419) - Fix bug with busco_clean parameter, where it is always activated (by @prototaxites)
+- [#426](https://github.com/nf-core/mag/pull/426) - Fixed typo in help text for parameters `--host_genome` and `--host_fasta` (by @tillenglert)
+- [#434](https://github.com/nf-core/mag/pull/434) - Fix location of samplesheet for AWS full tests (reported by @Lfulcrum, fix by @jfy133)
+- [#438](https://github.com/nf-core/mag/pull/438) - Fixed version inconsistency between conda and containers for GTDBTK_CLASSIFYWF (by @jfy133)
+- [#439](https://github.com/nf-core/mag/pull/445) - Fix bug in assembly input (by @prototaxites)
+- [#447](https://github.com/nf-core/mag/pull/447) - Remove `default: None` from parameter schema (by @drpatelh)
+- [#449](https://github.com/nf-core/mag/pull/447) - Fix results file overwriting in Ancient DNA workflow (reported by @alexhbnr, fix by @jfy133)
+- [#470](https://github.com/nf-core/mag/pull/470) - Fix binning preparation from running even when binning was requested to be skipped (reported by @prototaxites, fix by @jfy133)
 
 ### `Dependencies`
 
-| Tool  | Previous version | New version |
-| ----- | ---------------- | ----------- |
-| BUSCO | 5.1.0            | 5.4.3       |
+| Tool     | Previous version | New version |
+| -------- | ---------------- | ----------- |
+| BCFtools | 1.16             | 1.17        |
+| SAMtools | 1.16.1           | 1.17        |
+
+## v2.3.2 - [2023-06-23]
+
+### `Fixed`
+
+- [#461](https://github.com/nf-core/mag/pull/461) - Fix full-size AWS test profile paths (by @jfy133)
+- [#461](https://github.com/nf-core/mag/pull/461) - Fix pyDamage results being overwritten (reported by @alexhbnr, fix by @jfy133)
+
+## v2.3.1 - [2023-06-19]
+
+### `Fixed`
+
+- [#458](https://github.com/nf-core/mag/pull/458) - Correct the major issue in ancient DNA workflow of binning refinement being performed on uncorrected contigs instead of aDNA consensus recalled contigs (issue [#449](https://github.com/nf-core/mag/issues/449))
+- [#451](https://github.com/nf-core/mag/pull/451) - Fix results file overwriting in Ancient DNA workflow (reported by @alexhbnr, fix by @jfy133, and integrated by @maxibor in [#458](https://github.com/nf-core/mag/pull/458) )
+
+## v2.3.0 - [2023/03/02]
+
+### `Added`
+
+- [#350](https://github.com/nf-core/mag/pull/350) - Adds support for CheckM as alternative bin completeness and QC tool (added by @jfy133 and @skrakau)
+- [#353](https://github.com/nf-core/mag/pull/353) - Added the busco_clean parameter to optionally clean each BUSCO directory after a successful (by @prototaxites)
+- [#361](https://github.com/nf-core/mag/pull/361) - Added the skip_clipping parameter to skip read preprocessing with fastp or adapterremoval. Running the pipeline with skip_clipping, keep_phix and without specifying a host genome or fasta file skips the FASTQC_TRIMMED process (by @prototaxites)
+- [#365](https://github.com/nf-core/mag/pull/365) - Added CONCOCT as an additional (optional) binning tool (by @jfy133)
+- [#366](https://github.com/nf-core/mag/pull/366) - Added CAT_SUMMARISE process and cat_official_taxonomy parameter (by @prototaxites)
+- [#372](https://github.com/nf-core/mag/pull/372) - Allow CAT_DB to take an extracted database as well as a tar.gz file (by @prototaxites).
+- [#380](https://github.com/nf-core/mag/pull/380) - Added support for saving processed reads (clipped, host removed etc.) to results directory (by @jfy133)
+- [#394](https://github.com/nf-core/mag/pull/394) - Added GUNC for additional chimeric bin/contamination QC (added by @jfy133)
+
+### `Changed`
+
+- [#340](https://github.com/nf-core/mag/pull/340),[#368](https://github.com/nf-core/mag/pull/368),[#373](https://github.com/nf-core/mag/pull/373) - Update to nf-core 2.7.2 `TEMPLATE` (by @jfy133, @d4straub, @skrakau)
+- [#373](https://github.com/nf-core/mag/pull/373) - Removed parameter `--enable_conda`. Updated local modules to new conda syntax and updated nf-core modules (by @skrakau)
+- [#385](https://github.com/nf-core/mag/pull/385) - CAT also now runs on unbinned contigs as well as binned contigs (added by @jfy133)
+- [#399](https://github.com/nf-core/mag/pull/399/files) - Removed undocumented BUSCO_PLOT process (previously generated `*.busco_figure.png` plots unsuitable for metagenomics) (by @skrakau).
+- [#416](https://github.com/nf-core/mag/pull/416) - Use GTDBTK_CLASSIFYWF nf-core module instead of local module (added by @alxndrdiaz)
+
+### `Fixed`
+
+- [#345](https://github.com/nf-core/mag/pull/345) - Bowtie2 mode changed to global alignment for ancient DNA mode (`--very-sensitive` mode) to prevent soft clipping at the end of reads when running in local mode. (by @maxibor)
+- [#349](https://github.com/nf-core/mag/pull/349) - Add a warning that pipeline will reset minimum contig size to 1500 specifically MetaBAT2 process, if a user supplies below this threshold. (by @jfy133)
+- [#352](https://github.com/nf-core/mag/pull/352) - Escape the case in the BUSCO module that BUSCO can just detect a root lineage but is not able to find any marker genes (by @alexhbnr)
+- [#355](https://github.com/nf-core/mag/pull/355) - Include error code 21 for retrying with higher memory for SPAdes and hybridSPAdes (by @mglubber)
+
+### `Dependencies`
+
+| Tool      | Previous version | New version |
+| --------- | ---------------- | ----------- |
+| BUSCO     | 5.1.0            | 5.4.3       |
+| BCFtools  | 1.14             | 1.16        |
+| Freebayes | 1.3.5            | 1.3.6       |
+| SAMtools  | 1.15             | 1.16.1      |
 
 ## v2.2.1 - 2022/08/25
 

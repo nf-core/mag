@@ -14,6 +14,8 @@
 
   > Schubert, M., Lindgreen, S., and Orlando, L. 2016. "AdapterRemoval v2: Rapid Adapter Trimming, Identification, and Read Merging." BMC Research Notes 9 (February): 88. doi: 10.1186/s13104-016-1900-2
 
+- [BBnorm/BBTools](http://sourceforge.net/projects/bbmap/)
+
 - [BCFtools](https://doi.org/10.1093/gigascience/giab008)
 
   > Danecek, Petr, et al. "Twelve years of SAMtools and BCFtools." Gigascience 10.2 (2021): giab008. doi: 10.1093/gigascience/giab008
@@ -34,6 +36,14 @@
 
   > Kim, D., Song, L., Breitwieser, F. P., & Salzberg, S. L. (2016). Centrifuge: rapid and sensitive classification of metagenomic sequences. Genome research, 26(12), 1721-1729. doi: 10.1101/gr.210641.116.
 
+- [CheckM](https://doi.org/10.1101/gr.186072.114)
+
+  > Parks, D. H., Imelfort, M., Skennerton, C. T., Hugenholtz, P., & Tyson, G. W. (2015). CheckM: assessing the quality of microbial genomes recovered from isolates, single cells, and metagenomes. Genome Research, 25(7), 1043–1055. doi: 10.1101/gr.186072.114
+
+- [CONCOCT](https://doi.org/10.1038/nmeth.3103)
+
+  > Alneberg, J., Bjarnason, B. S., de Bruijn, I., Schirmer, M., Quick, J., Ijaz, U. Z., Lahti, L., Loman, N. J., Andersson, A. F., & Quince, C. (2014). Binning metagenomic contigs by coverage and composition. Nature Methods, 11(11), 1144–1146. doi: 10.1038/nmeth.3103
+
 - [DAS Tool](https://doi.org/10.1038/s41564-018-0171-1)
 
   > Sieber, C. M. K., et al. 2018. "Recovery of Genomes from Metagenomes via a Dereplication, Aggregation and Scoring Strategy." Nature Microbiology 3 (7): 836-43. doi: 10.1038/s41564-018-0171-1
@@ -43,6 +53,8 @@
   > Chen, S., Zhou, Y., Chen, Y., & Gu, J. (2018). fastp: an ultra-fast all-in-one FASTQ preprocessor. Bioinformatics , 34(17), i884–i890. doi: 10.1093/bioinformatics/bty560.
 
 - [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
+
+  > Andrews, S. (2010). FastQC: A Quality Control Tool for High Throughput Sequence Data [Online]. Available online https://www.bioinformatics.babraham.ac.uk/projects/fastqc/.
 
 - [Filtlong](https://github.com/rrwick/Filtlong)
 
@@ -57,6 +69,10 @@
 - [GTDB-Tk](https://doi.org/10.1093/bioinformatics/btz848)
 
   > Chaumeil, P. A., Mussig, A. J., Hugenholtz, P., & Parks, D. H. (2020). GTDB-Tk: a toolkit to classify genomes with the Genome Taxonomy Database. Bioinformatics , 36(6), 1925–1927. doi: 10.1093/bioinformatics/btz848.
+
+- [GUNC](https://doi.org/10.1186/s13059-021-02393-0.)
+
+  > Orakov, A., Fullam, A., Coelho, A. P., Khedkar, S., Szklarczyk, D., Mende, D. R., Schmidt, T. S. B., and Bork, P.. 2021. “GUNC: Detection of Chimerism and Contamination in Prokaryotic Genomes.” Genome Biology 22 (1): 178. doi: 10.1186/s13059-021-02393-0.
 
 - [Kraken2](https://doi.org/10.1186/s13059-019-1891-0)
 
@@ -108,9 +124,15 @@
 
   > Li, H., Handsaker, B., Wysoker, A., Fennell, T., Ruan, J., Homer, N., … 1000 Genome Project Data Processing Subgroup. (2009). The Sequence Alignment/Map format and SAMtools. Bioinformatics , 25(16), 2078–2079. doi: 10.1093/bioinformatics/btp352.
 
+- [Seqtk](https://github.com/lh3/seqtk)
+
 - [SPAdes](https://doi.org/10.1101/gr.213959.116)
 
   > Nurk, S., Meleshko, D., Korobeynikov, A., & Pevzner, P. A. (2017). metaSPAdes: a new versatile metagenomic assembler. Genome research, 27(5), 824-834. doi: 10.1101/gr.213959.116.
+
+- [Tiara](https://doi.org/10.1093/bioinformatics/btab672)
+
+  > Karlicki, M., Antonowicz, S., Karnkowska, A., 2022. Tiara: deep learning-based classification system for eukaryotic sequences. Bioinformatics 38, 344–350. doi: 10.1093/bioinformatics/btab672
 
 ## Data
 
@@ -133,5 +155,8 @@
 
 - [Docker](https://dl.acm.org/doi/10.5555/2600239.2600241)
 
+  > Merkel, D. (2014). Docker: lightweight linux containers for consistent development and deployment. Linux Journal, 2014(239), 2. doi: 10.5555/2600239.2600241.
+
 - [Singularity](https://pubmed.ncbi.nlm.nih.gov/28494014/)
+
   > Kurtzer GM, Sochat V, Bauer MW. Singularity: Scientific containers for mobility of compute. PLoS One. 2017 May 11;12(5):e0177459. doi: 10.1371/journal.pone.0177459. eCollection 2017. PubMed PMID: 28494014; PubMed Central PMCID: PMC5426675.

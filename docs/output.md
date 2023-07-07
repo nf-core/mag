@@ -12,6 +12,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 - [Quality control](#quality-control) of input reads - trimming and contaminant removal
 - [Taxonomic classification of trimmed reads](#taxonomic-classification-of-trimmed-reads)
+- [Digital sequencing normalisation](#digital-normalization-with-BBnorm)
 - [Assembly](#assembly) of trimmed reads
 - [Protein-coding gene prediction](#gene-prediction) of assemblies
 - [Virus identification](#virus-identification-in-assemblies) of assemblies
@@ -67,7 +68,7 @@ FastQC is run for visualising the general quality metrics of the sequencing runs
 <summary>Output files</summary>
 
 - `QC_shortreads/adapterremoval/[sample]/`
-  - `[sample]_ar2.log`: AdapterRemoval log file (normally called `.settings` by AdapterRemoval.)
+  - `[sample]_ar2.settings`: AdapterRemoval log file.
 
 </details>
 
@@ -127,6 +128,20 @@ NanoPlot is used to calculate various metrics and plots about the quality and le
 - `QC_longreads/NanoPlot/[sample]/`
   - `raw_*.[png/html/txt]`: Plots and reports for raw data
   - `filtered_*.[png/html/txt]`: Plots and reports for filtered data
+
+</details>
+
+## Digital normalization with BBnorm
+
+If the pipeline is called with the `--bbnorm` option, it will normalize sequencing depth of libraries prior assembly by removing reads to 1) reduce coverage of very abundant kmers and 2) delete very rare kmers (see `--bbnorm_target` and `--bbnorm_min` parameters).
+When called in conjunction with `--coassemble_group`, BBnorm will operate on interleaved (merged) FastQ files, producing only a single output file.
+If the `--save_bbnorm_reads` parameter is set, the resulting FastQ files are saved together with log output.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `bbmap/bbnorm/[sample]\*.fastq.gz`
+- `bbmap/bbnorm/log/[sample].bbnorm.log`
 
 </details>
 
@@ -248,10 +263,10 @@ Protein-coding genes are predicted for each assembly.
 <summary>Output files</summary>
 
 - `Prodigal/`
-  - `[sample/group].gff`: Gene Coordinates in GFF format
-  - `[sample/group].faa`: The protein translation file consists of all the proteins from all the sequences in multiple FASTA format.
-  - `[sample/group].fna`: Nucleotide sequences of the predicted proteins using the DNA alphabet, not mRNA (so you will see 'T' in the output and not 'U').
-  - `[sample/group]_all.txt`: Information about start positions of genes.
+  - `[sample/group].gff.gz`: Gene Coordinates in GFF format
+  - `[sample/group].faa.gz`: The protein translation file consists of all the proteins from all the sequences in multiple FASTA format.
+  - `[sample/group].fna.gz`: Nucleotide sequences of the predicted proteins using the DNA alphabet, not mRNA (so you will see 'T' in the output and not 'U').
+  - `[sample/group]_all.txt.gz`: Information about start positions of genes.
 
 </details>
 
@@ -361,11 +376,33 @@ All the files in this folder contain small and/or unbinned contigs that are not 
 
 Files in these two folders contain all contigs of an assembly.
 
+### CONCOCT
+
+[CONCOCT](https://github.com/BinPro/CONCOCT) performs unsupervised binning of metagenomic contigs by using nucleotide composition, coverage data in multiple samples and linkage data from paired end reads.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `GenomeBinning/CONCOCT/`
+  - `bins/[assembler]-[binner]-[sample/group].*.fa.gz`: Genome bins retrieved from input assembly
+  - `stats/[assembler]-[binner]-[sample/group].csv`: Table indicating which contig goes with which cluster bin.
+  - `stats/[assembler]-[binner]-[sample/group]*_gt1000.csv`: Various intermediate PCA statistics used for clustering.
+  - `stats/[assembler]-[binner]-[sample/group]_*.tsv`: Coverage statistics of each sub-contig cut up by CONOCOCT prior in an intermediate step prior to binning. Likely not useful in most cases.
+  - `stats/[assembler]-[binner]-[sample/group].log.txt`: CONCOCT execution log file.
+  - `stats/[assembler]-[binner]-[sample/group]_*.args`: List of arguments used in CONCOCT execution.
+  - </details>
+
+All the files and contigs in these folders will be assessed by QUAST and BUSCO, if the parameter `--postbinning_input` is not set to `refined_bins_only`.
+
+Note that CONCOCT does not output what it considers 'unbinned' contigs, therefore no 'discarded' contigs are produced here. You may still need to do your own manual curation of the resulting bins.
+
 ### DAS Tool
 
 [DAS Tool](https://github.com/cmks/DAS_Tool) is an automated binning refinement method that integrates the results of a flexible number of binning algorithms to calculate an optimized, non-redundant set of bins from a single assembly. nf-core/mag uses this tool to attempt to further improve bins based on combining the MetaBAT2 and MaxBin2 binning output, assuming sufficient quality is met for those bins.
 
 DAS Tool will remove contigs from bins that do not pass additional filtering criteria, and will discard redundant lower-quality output from binners that represent the same estimated 'organism', until the single highest quality bin is represented.
+
+> ⚠️ If DAS Tool does not find any bins passing your selected threshold it will exit with an error. Such an error is 'ignored' by nf-core/mag, therefore you will not find files in the `GenomeBinning/DASTool/` results directory for that particular sample.
 
 <details markdown="1">
 <summary>Output files</summary>
@@ -383,7 +420,23 @@ DAS Tool will remove contigs from bins that do not pass additional filtering cri
 
 By default, only the raw bins (and unbinned contigs) from the actual binning methods, but not from the binning refinement with DAS Tool, will be used for downstream bin quality control, annotation and taxonomic classification. The parameter `--postbinning_input` can be used to change this behaviour.
 
-⚠️ Due to ability to perform downstream QC of both raw and refined bins in parallel (via `--postbinning_input)`, bin names in DAS Tools's `*_allBins.eval` file will include `Refined`. However for this particular file, they _actually_ refer to the 'raw' input bins. The pipeline renames the input files prior to running DASTool to ensure they can be disambuguated from the original bin files in the downstream QC steps.
+⚠️ Due to ability to perform downstream QC of both raw and refined bins in parallel (via `--postbinning_input)`, bin names in DAS Tools's `*_allBins.eval` file will include `Refined`. However for this particular file, they _actually_ refer to the 'raw' input bins. The pipeline renames the input files prior to running DASTool to ensure they can be disambiguated from the original bin files in the downstream QC steps.
+
+### Tiara
+
+Tiara is a contig classifier that identifies the domain (prokarya, eukarya) of contigs within an assembly. This is used in this pipeline to rapidly and with few resources identify the most likely domain classification of each bin or unbin based on its contig identities.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `Taxonomy/Tiara/`
+  - `[assembler]-[sample/group].tiara.txt` - Tiara output classifications (with probabilities) for all contigs within the specified sample/group assembly
+  - `log/log_[assembler]-[sample/group].txt` - log file detailing the parameters used by the Tiara model for contig classification.
+- `GenomeBinning/tiara_summary.tsv` - Summary of Tiara domain classification for all bins.
+
+</details>
+
+Typically, you would use `tiara_summary.tsv` as the primary file to see which bins or unbins have been classified to which domains at a glance, whereas `[assembler]-[sample/group].tiara.txt` provides classifications for each contig.
 
 ### Bin sequencing depth
 
@@ -424,7 +477,9 @@ For each bin or refined bin the median sequencing depth is computed based on the
 
 </details>
 
-### QC for metagenome assembled genomes with BUSCO
+### QC for metagenome assembled genomes
+
+#### BUSCO
 
 [BUSCO](https://busco.ezlab.org/) is a tool used to assess the completeness of a genome assembly. It is run on all the genome bins and high quality contigs obtained by the applied binning and/or binning refinement methods (depending on the `--postbinning_input` parameter). By default, BUSCO is run in automated lineage selection mode in which it first tries to select the domain and then a more specific lineage based on phylogenetic placement. If available, result files for both the selected domain lineage and the selected more specific lineage are placed in the output directory. If a lineage dataset is specified already with `--busco_reference`, only results for this specific lineage will be generated.
 
@@ -442,7 +497,7 @@ For each bin or refined bin the median sequencing depth is computed based on the
 
 </details>
 
-If the parameter `--save_busco_reference` is set, additionally the used BUSCO lineage datasets are stored in the output directy.
+If the parameter `--save_busco_reference` is set, additionally the used BUSCO lineage datasets are stored in the output directory.
 
 <details markdown="1">
 <summary>Output files</summary>
@@ -462,6 +517,57 @@ Besides the reference files or output files created by BUSCO, the following summ
   - `busco_summary.tsv`: A summary table of the BUSCO results, with % of marker genes found. If run in automated lineage selection mode, both the results for the selected domain and for the selected more specific lineage will be given, if available.
 
 </details>
+
+#### CheckM
+
+[CheckM](https://ecogenomics.github.io/CheckM/) CheckM provides a set of tools for assessing the quality of genomes recovered from isolates, single cells, or metagenomes. It provides robust estimates of genome completeness and contamination by using collocated sets of genes that are ubiquitous and single-copy within a phylogenetic lineage
+
+By default, nf-core/mag runs CheckM with the `check_lineage` workflow that places genome bins on a reference tree to define lineage-marker sets, to check for completeness and contamination based on lineage-specific marker genes. and then subsequently runs `qa` to generate the summary files.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `GenomeBinning/QC/CheckM/`
+  - `[assembler]-[binner]-[sample/group]_qa.txt`: Detailed statistics about bins informing completeness and contamamination scores (output of `checkm qa`). This should normally be your main file to use to evaluate your results.
+  - `[assembler]-[binner]-[sample/group]_wf.tsv`: Overall summary file for completeness and contamination (output of `checkm lineage_wf`).
+  - `[assembler]-[binner]-[sample/group]/`: intermediate files for CheckM results, including CheckM generated annotations, log, lineage markers etc.
+  - `checkm_summary.tsv`: A summary table of the CheckM results for all bins (output of `checkm qa`).
+
+</details>
+
+If the parameter `--save_checkm_reference` is set, additionally the used the CheckM reference datasets are stored in the output directory.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `GenomeBinning/QC/CheckM/`
+  - `checkm_downloads/`: All CheckM reference files downloaded from the CheckM FTP server, when not supplied by the user.
+    - `checkm_data_2015_01_16/*`: a range of directories and files required for CheckM to run.
+
+</details>
+
+#### GUNC
+
+[Genome UNClutterer (GUNC)](https://grp-bork.embl-community.io/gunc/index.html) is a tool for detection of chimerism and contamination in prokaryotic genomes resulting from mis-binning of genomic contigs from unrelated lineages. It does so by applying an entropy based score on taxonomic assignment and contig location of all genes in a genome. It is generally considered as a additional complement to CheckM results.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `GenomeBinning/QC/gunc_summary.tsv`
+- `GenomeBinning/QC/gunc_checkm_summary.tsv`
+- `[gunc-database].dmnd`
+- `GUNC/`
+  - `raw/`
+    - `[assembler]-[binner]-[sample/group]/GUNC_checkM.merged.tsv`: Per sample GUNC [output](https://grp-bork.embl-community.io/gunc/output.html) containing with taxonomic and completeness QC statistics.
+  - `checkmmerged/`
+    - `[assembler]-[binner]-[sample/group]/GUNC.progenomes_2.1.maxCSS_level.tsv`: Per sample GUNC output merged with output from [CheckM](#checkm)
+
+</details>
+
+GUNC will be run if specified with `--run_gunc` as a standalone, unless CheckM is also activated via `--qc_tool 'checkm'`, in which case GUNC output will be merged with the CheckM output using `gunc merge_checkm`.
+
+If `--gunc_save_db` is specified, the output directory will also contain the requested database (progenomes, or GTDB) in DIAMOND format.
+
 ## Taxonomic classification of binned genomes
 
 ### CAT
@@ -541,7 +647,7 @@ Whole genome annotation is the process of identifying features of interest in a 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `GenomeBinning/bin_summary.tsv`: Summary of bin sequencing depths together with BUSCO, QUAST and GTDB-Tk results, if at least one of the later was generated. This will also include refined bins if `--refine_bins_dastool` binning refinement is performed.
+- `GenomeBinning/bin_summary.tsv`: Summary of bin sequencing depths together with BUSCO, CheckM, QUAST and GTDB-Tk results, if at least one of the later was generated. This will also include refined bins if `--refine_bins_dastool` binning refinement is performed. Note that in contrast to the other tools, for CheckM the bin name given in the column "Bin Id" does not contain the ".fa" extension.
 
 </details>
 
@@ -557,25 +663,25 @@ Optional, only running when parameter `-profile ancient_dna` is specified.
 <summary>Output files</summary>
 
 - `Ancient_DNA/pydamage/analyze`
-  - `[sample/group]/pydamage_results/pydamage_results.csv`: PyDamage raw result tabular file in `.csv` format. Format described here: [pydamage.readthedocs.io/en/0.62/output.html](https://pydamage.readthedocs.io/en/0.62/output.html)
+  - `[assembler]_[sample/group]/pydamage_results/pydamage_results.csv`: PyDamage raw result tabular file in `.csv` format. Format described here: [pydamage.readthedocs.io/en/0.62/output.html](https://pydamage.readthedocs.io/en/0.62/output.html)
 - `Ancient_DNA/pydamage/filter`
-  - `[sample/group]/pydamage_results/pydamage_results.csv`: PyDamage filtered result tabular file in `.csv` format. Format described here: [pydamage.readthedocs.io/en/0.62/output.html](https://pydamage.readthedocs.io/en/0.62/output.html)
+  - `[assembler]_[sample/group]/pydamage_results/pydamage_results.csv`: PyDamage filtered result tabular file in `.csv` format. Format described here: [pydamage.readthedocs.io/en/0.62/output.html](https://pydamage.readthedocs.io/en/0.62/output.html)
 
 </details>
 
 ### `variant_calling`
 
-Because of aDNA damage, _de novo_ assemblers sometimes struggle to call a correct consensus on the contig sequence. To avoid this situation, the consensus is re-called with a variant calling software using the reads aligned back to the contigs
+Because of aDNA damage, _de novo_ assemblers sometimes struggle to call a correct consensus on the contig sequence. To avoid this situation, the consensus is optionally re-called with a variant calling software using the reads aligned back to the contigs when `--run_ancient_damagecorrection` is supplied.
 
 <details markdown="1">
 <summary>Output files</summary>
 
 - `variant_calling/consensus`
-  - `[sample/group].fa`: contigs sequence with re-called consensus from read-to-contig alignment
+  - `[assembler]_[sample/group].fa`: contigs sequence with re-called consensus from read-to-contig alignment
 - `variant_calling/unfiltered`
-  - `[sample/group].vcf.gz`: raw variant calls of the reads aligned back to the contigs.
+  - `[assembler]_[sample/group].vcf.gz`: raw variant calls of the reads aligned back to the contigs.
 - `variant_calling/filtered`
-  - `[sample/group].filtered.vcf.gz`: quality filtered variant calls of the reads aligned back to the contigs.
+  - `[assembler]_[sample/group].filtered.vcf.gz`: quality filtered variant calls of the reads aligned back to the contigs.
 
 </details>
 
@@ -594,6 +700,21 @@ Because of aDNA damage, _de novo_ assemblers sometimes struggle to call a correc
 [MultiQC](http://multiqc.info) is a visualization tool that generates a single HTML report summarising all samples in your project. Most of the pipeline QC results are visualised in the report and further statistics are available in the report data directory.
 
 Results generated by MultiQC collate pipeline QC from supported tools e.g. FastQC. The pipeline has special steps which also allow the software versions to be reported in the MultiQC output for future traceability. For more information about how to use MultiQC reports, see <http://multiqc.info>.
+
+The general stats table at the top of the table will by default only display the most relevant pre- and post-processing statistics prior to assembly, i.e., FastQC, fastp/Adapter removal, and Bowtie2 PhiX and host removal mapping results.
+
+Note that the FastQC raw and processed columns are right next to each other for improved visual comparability, however the processed columns represent the input reads _after_ fastp/Adapter Removal processing (the dedicated columns of which come directly after the two FastQC set of columns). Hover your cursor over each column name to see the which tool the column is derived from.
+
+Summary tool-specific plots and tables of following tools are currently displayed (if activated):
+
+- FastQC (pre- and post-trimming)
+- fastp
+- Adapter Removal
+- bowtie2
+- BUSCO
+- QUAST
+- Kraken2 / Centrifuge
+- PROKKA
 
 ### Pipeline information
 
