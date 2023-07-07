@@ -93,7 +93,7 @@ include { BINNING_PREPARATION } from '../subworkflows/local/binning_preparation'
 include { BINNING             } from '../subworkflows/local/binning'
 include { BINNING_REFINEMENT  } from '../subworkflows/local/binning_refinement'
 include { BUSCO_QC            } from '../subworkflows/local/busco_qc'
-include { GENOMAD             } from '../subworkflows/local/genomad'
+include { VIRUS_IDENTIFICATION} from '../subworkflows/local/virus_identification'
 include { CHECKM_QC           } from '../subworkflows/local/checkm_qc'
 include { GUNC_QC             } from '../subworkflows/local/gunc_qc'
 include { GTDBTK              } from '../subworkflows/local/gtdbtk'
@@ -628,7 +628,7 @@ workflow MAG {
     */
 
     if (params.run_genomad){
-        GENOMAD(ch_assemblies, ch_genomad_db)
+        VIRUS_IDENTIFICATION(ch_assemblies, ch_genomad_db)
         ch_versions = ch_versions.mix(GENOMAD.out.versions.first())
     }
 
