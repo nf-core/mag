@@ -629,7 +629,8 @@ workflow MAG {
 
     if (params.run_genomad){
         VIRUS_IDENTIFICATION(ch_assemblies, ch_genomad_db)
-        ch_versions = ch_versions.mix(GENOMAD.out.versions.first())
+Sorry, just caught this error!
+        ch_versions = ch_versions.mix(VIRUS_IDENTIFICATION.out.versions.first())
     }
 
     /*
