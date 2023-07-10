@@ -569,8 +569,8 @@
                 },
                 "genomad_db": {
                     "type": "string",
-                    "default": "https://portal.nersc.gov/genomad/__data__/genomad_db_v1.1.tar.gz",
-                    "description": "Database for virus classification with geNomad"
+                    "description": "Database for virus classification with geNomad",
+                    "help_text": "Must be a directory containing the uncompressed contents from https://portal.nersc.gov/genomad/__data__/genomad_db_v1.1.tar.gz"
                 }
             }
         },
@@ -631,7 +631,7 @@
             "properties": {
                 "run_genomad": {
                     "type": "boolean",
-                    "description": "Identify viral sequences in assemblies"
+                    "description": "Identify viral sequences in assemblies using geNomad"
                 },
                 "genomad_min_score": {
                     "type": "number",
