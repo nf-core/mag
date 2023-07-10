@@ -5,7 +5,7 @@
 include { GENOMAD_DOWNLOAD   } from '../../modules/nf-core/genomad/download/main'
 include { GENOMAD_ENDTOEND   } from '../../modules/nf-core/genomad/endtoend/main'
 
-workflow GENOMAD {
+workflow VIRUS_IDENTIFICATION {
     take:
     ch_assemblies   // [ [ meta] , fasta    ], input scaffolds (mandatory)
     ch_genomad_db   // [ db                 ], presupplied geNomad database (optional)
