@@ -593,7 +593,7 @@ workflow MAG {
     } else {
         ch_assemblies_split = ch_input_assemblies
             .branch { meta, assembly ->
-                gzipped: assembly.getExtension() == "gz"
+                gzipped: assembly[0].getExtension() == "gz"
                 ungzip: true
             }
 
