@@ -31,7 +31,7 @@ log.info logo + paramsSummaryLog(workflow) + citation
 WorkflowMag.initialise(params, log, hybrid)
 
 // Check input path parameters to see if they exist
-def checkPathParamList = [ params.input, params.multiqc_config, params.phix_reference, params.host_fasta, params.centrifuge_db, params.kraken2_db, params.cat_db, params.gtdb, params.lambda_reference, params.busco_reference ]
+def checkPathParamList = [ params.input, params.multiqc_config, params.phix_reference, params.host_fasta, params.centrifuge_db, params.kraken2_db, params.cat_db, params.gtdb_db, params.lambda_reference, params.busco_reference ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
 /*
@@ -195,7 +195,7 @@ if (!params.keep_lambda) {
         .value(file( "${params.lambda_reference}" ))
 }
 
-gtdb = params.skip_binqc || params.skip_gtdbtk ? false : params.gtdb
+gtdb = params.skip_binqc || params.skip_gtdbtk ? false : params.gtdb_db
 if (gtdb) {
 
     ch_gtdb = Channel
@@ -843,7 +843,7 @@ workflow MAG {
          * GTDB-tk: taxonomic classifications using GTDB reference
          */
 
-        if ( !skip_gtdbtk ) {
+        if ( !params.skip_gtdbtk ) {
 
             ch_gtdbtk_summary = Channel.empty()
             if ( gtdb ){
@@ -862,6 +862,8 @@ workflow MAG {
                 ch_versions = ch_versions.mix(GTDBTK.out.versions.first())
                 ch_gtdbtk_summary = GTDBTK.out.summary
             }
+        } else {
+            ch_gtdbtk_summary = Channel.empty()
         }
 
         if ( ( !params.skip_binqc ) || !params.skip_quast || !params.skip_gtdbtk){
