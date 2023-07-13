@@ -74,8 +74,8 @@ workflow GTDBTK {
     }
 
     GTDBTK_CLASSIFYWF (
-        ch_filtered_bins.passed.groupTuple(),
-        ch_db_for_gtdbtk
+        ch_filtered_bins.passed.groupTuple().dump(tag: "BINS"),
+        ch_db_for_gtdbtk.dump(tag: "SHOULD_BE_GTDB_DB")
     )
 
     GTDBTK_SUMMARY (

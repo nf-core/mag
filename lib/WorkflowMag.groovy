@@ -120,7 +120,7 @@ class WorkflowMag {
         }
 
         if (params.skip_binqc && !params.skip_gtdbtk) {
-            log.warn '--skip_binqc is specified, but --skip_gtdbtk is not! GTDB-tk will be omitted because GTDB-tk bin classification requires bin filtering based on BUSCO or CheckM QC results to avoid GTDB-tk errors.'
+            log.warn '--skip_binqc is specified, but --skip_gtdbtk is explictly set to run! GTDB-tk will be omitted because GTDB-tk bin classification requires bin filtering based on BUSCO or CheckM QC results to avoid GTDB-tk errors.'
         }
 
         // Check if CAT parameters are valid

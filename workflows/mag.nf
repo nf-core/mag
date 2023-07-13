@@ -195,11 +195,11 @@ if (!params.keep_lambda) {
         .value(file( "${params.lambda_reference}" ))
 }
 
-gtdb = params.skip_binqc || params.skip_gtdbtk ? false : params.gtdb_db
+gtdb = ( params.skip_binqc || params.skip_gtdbtk ) ? false : params.gtdb_db
 if (gtdb) {
 
     ch_gtdb = Channel
-        .value(file( "${gtdb}", checkIfExists))
+        .value(file( "${gtdb}", checkIfExists: true))
 
 } else {
     ch_gtdb = Channel.empty()
