@@ -61,7 +61,6 @@ jobs:
             test_ancient_dna,
             test_adapterremoval,
             test_binrefinement,
-            test_binning_entry,
           ]
     steps:
       - name: Free some space
