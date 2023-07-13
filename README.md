@@ -34,7 +34,6 @@ The pipeline then:
 - performs metagenome binning using [MetaBAT2](https://bitbucket.org/berkeleylab/metabat/src/master/), [MaxBin2](https://sourceforge.net/projects/maxbin2/), and/or with [CONCOCT](https://github.com/BinPro/CONCOCT), and checks the quality of the genome bins using [Busco](https://busco.ezlab.org/), or [CheckM](https://ecogenomics.github.io/CheckM/), and optionally [GUNC](https://grp-bork.embl-community.io/gunc/).
 - optionally refines bins with [DAS Tool](https://github.com/cmks/DAS_Tool)
 - assigns taxonomy to bins using [GTDB-Tk](https://github.com/Ecogenomics/GTDBTk) and/or [CAT](https://github.com/dutilh/CAT) and optionally identifies viruses in assemblies using [geNomad](https://github.com/apcamargo/genomad)
-- (optionally) identifies viruses in assemblies using [geNomad](https://github.com/apcamargo/genomad)
 
 Furthermore, the pipeline creates various reports in the results directory specified, including a [MultiQC](https://multiqc.info/) report summarizing some of the findings and software versions.
 
