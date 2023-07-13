@@ -191,10 +191,12 @@ if (!params.keep_lambda) {
         .value(file( "${params.lambda_reference}" ))
 }
 
-gtdb = params.skip_binqc ? false : params.gtdb
+gtdb = params.skip_binqc || params.skip_gtdbtk ? false : params.gtdb
 if (gtdb) {
+
     ch_gtdb = Channel
-        .value(file( "${gtdb}" ))
+        .value(file( "${gtdb}", checkIfExists))
+
 } else {
     ch_gtdb = Channel.empty()
 }
@@ -836,25 +838,29 @@ workflow MAG {
         /*
          * GTDB-tk: taxonomic classifications using GTDB reference
          */
-        ch_gtdbtk_summary = Channel.empty()
-        if ( gtdb ){
 
-            ch_gtdb_bins = ch_input_for_postbinning_bins_unbins
-                .filter { meta, bins ->
-                    meta.domain != "eukarya"
-                }
+        if ( !skip_gtdbtk ) {
 
-            GTDBTK (
-                ch_gtdb_bins,
-                ch_busco_summary,
-                ch_checkm_summary,
-                ch_gtdb
-            )
-            ch_versions = ch_versions.mix(GTDBTK.out.versions.first())
-            ch_gtdbtk_summary = GTDBTK.out.summary
+            ch_gtdbtk_summary = Channel.empty()
+            if ( gtdb ){
+
+                ch_gtdb_bins = ch_input_for_postbinning_bins_unbins
+                    .filter { meta, bins ->
+                        meta.domain != "eukarya"
+                    }
+
+                GTDBTK (
+                    ch_gtdb_bins,
+                    ch_busco_summary,
+                    ch_checkm_summary,
+                    ch_gtdb
+                )
+                ch_versions = ch_versions.mix(GTDBTK.out.versions.first())
+                ch_gtdbtk_summary = GTDBTK.out.summary
+            }
         }
 
-        if ( ( !params.skip_binqc ) || !params.skip_quast || gtdb){
+        if ( ( !params.skip_binqc ) || !params.skip_quast || !params.skip_gtdbtk){
             BIN_SUMMARY (
                 ch_input_for_binsummary,
                 ch_busco_summary.ifEmpty([]),

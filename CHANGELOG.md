@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#422](https://github.com/nf-core/mag/pull/422) - Adds support for normalization of read depth with BBNorm (added by @erikrikarddaniel and @fabianegli)
 - [#439](https://github.com/nf-core/mag/pull/439) - Adds ability to enter the pipeline at the binning stage by providing a CSV of pre-computed assemblies (by @prototaxites)
 - [#459](https://github.com/nf-core/mag/pull/459) - Adds ability to skip damage correction step in the ancient DNA workflow and just run pyDamage (by @jfy133)
+- [#437](https://github.com/nf-core/mag/pull/429) - `--gtdb` parameter is split into `--skip_gtdbtk` and `--gtdb_db` to allow finer control over GTDB database retrieval (by @jfy133)
+- [#437](https://github.com/nf-core/mag/pull/429) - `--gtdb_db` also now supports directory input of an pre-uncompressed GTDB archive directory (by @jfy133)
 
 ### `Changed`
 
