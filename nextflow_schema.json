@@ -248,11 +248,6 @@
                     "description": "Custom MultiQC yaml file containing HTML including a methods description.",
                     "fa_icon": "fas fa-cog"
                 },
-                "schema_ignore_params": {
-                    "type": "string",
-                    "hidden": true,
-                    "default": "genomes"
-                },
                 "validate_params": {
                     "type": "boolean",
                     "description": "Boolean whether to validate parameters against the schema at runtime",
