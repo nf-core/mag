@@ -1,10 +1,14 @@
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    VALIDATE INPUTS
+    PRINT PARAMS SUMMARY
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
+include { paramsSummaryLog; paramsSummaryMap } from 'plugin/nf-validation'
+
+def logo = NfcoreTemplate.logo(workflow, params.monochrome_logs)
+def citation = '\n' + WorkflowMain.citation(workflow) + '\n'
+def summary_params = paramsSummaryMap(workflow)
 
 // Check already if long reads are provided
 def hasExtension(it, extension) {
@@ -20,15 +24,15 @@ if(hasExtension(params.input, "csv")){
             }
 }
 
+// Print parameter summary log to screen
+log.info logo + paramsSummaryLog(workflow) + citation
+
 // Validate input parameters
 WorkflowMag.initialise(params, log, hybrid)
 
 // Check input path parameters to see if they exist
 def checkPathParamList = [ params.input, params.multiqc_config, params.phix_reference, params.host_fasta, params.centrifuge_db, params.kraken2_db, params.cat_db, params.gtdb, params.lambda_reference, params.busco_reference ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
-
-// Check mandatory parameters
-if (params.input) { ch_input = file(params.input) } else { exit 1, 'Input samplesheet not specified!' }
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -225,6 +229,7 @@ workflow MAG {
     //
     // SUBWORKFLOW: Read in samplesheet, validate and stage input files
     //
+
     INPUT_CHECK ()
     ch_raw_short_reads  = INPUT_CHECK.out.raw_short_reads
     ch_raw_long_reads   = INPUT_CHECK.out.raw_long_reads
@@ -619,10 +624,13 @@ workflow MAG {
     ch_busco_summary            = Channel.empty()
     ch_checkm_summary           = Channel.empty()
 
-    BINNING_PREPARATION (
-        ch_assemblies,
-        ch_short_reads
-    )
+    if ( !params.skip_binning || params.ancient_dna ) {
+        BINNING_PREPARATION (
+            ch_assemblies,
+            ch_short_reads
+        )
+        ch_versions = ch_versions.mix(BINNING_PREPARATION.out.bowtie2_version.first())
+    }
 
     /*
     ================================================================================
@@ -657,6 +665,7 @@ workflow MAG {
                 ch_short_reads
             )
         }
+        ch_versions = ch_versions.mix(BINNING.out.versions)
 
         if ( params.bin_domain_classification ) {
 
@@ -688,9 +697,6 @@ workflow MAG {
                 }
         }
 
-        ch_versions = ch_versions.mix(BINNING_PREPARATION.out.bowtie2_version.first())
-        ch_versions = ch_versions.mix(BINNING.out.versions)
-
         /*
         * DAS Tool: binning refinement
         */
@@ -715,10 +721,8 @@ workflow MAG {
             }
 
             BINNING_REFINEMENT ( ch_contigs_for_binrefinement, ch_prokarya_bins_dastool )
-
             ch_refined_bins = ch_eukarya_bins_dastool.mix(BINNING_REFINEMENT.out.refined_bins)
             ch_refined_unbins = BINNING_REFINEMENT.out.refined_unbins
-
             ch_versions = ch_versions.mix(BINNING_REFINEMENT.out.versions)
 
             if ( params.postbinning_input == 'raw_bins_only' ) {
@@ -904,7 +908,7 @@ workflow MAG {
     workflow_summary    = WorkflowMag.paramsSummaryMultiqc(workflow, summary_params)
     ch_workflow_summary = Channel.value(workflow_summary)
 
-    methods_description    = WorkflowMag.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description)
+    methods_description    = WorkflowMag.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description, params)
     ch_methods_description = Channel.value(methods_description)
 
     ch_multiqc_files = Channel.empty()
@@ -949,13 +953,15 @@ workflow MAG {
         }
     }
 
-    ch_multiqc_files = ch_multiqc_files.mix(BINNING_PREPARATION.out.bowtie2_assembly_multiqc.collect().ifEmpty([]))
+    if ( !params.skip_binning || params.ancient_dna ) {
+        ch_multiqc_files = ch_multiqc_files.mix(BINNING_PREPARATION.out.bowtie2_assembly_multiqc.collect().ifEmpty([]))
+    }
 
     if (!params.skip_binning && !params.skip_prokka){
         ch_multiqc_files = ch_multiqc_files.mix(PROKKA.out.txt.collect{it[1]}.ifEmpty([]))
     }
 
-    if (!params.skip_binqc && params.binqc_tool == 'busco'){
+    if (!params.skip_binning && !params.skip_binqc && params.binqc_tool == 'busco'){
         ch_multiqc_files = ch_multiqc_files.mix(BUSCO_QC.out.multiqc.collect().ifEmpty([]))
     }
 
