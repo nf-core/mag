@@ -75,6 +75,7 @@ include { POOL_SINGLE_READS as POOL_LONG_READS                } from '../modules
 include { MEGAHIT                                             } from '../modules/local/megahit'
 include { SPADES                                              } from '../modules/local/spades'
 include { SPADESHYBRID                                        } from '../modules/local/spadeshybrid'
+include { GUNZIP as GUNZIP_ASSEMBLIES                         } from '../modules/nf-core/gunzip'
 include { QUAST                                               } from '../modules/local/quast'
 include { QUAST_BINS                                          } from '../modules/local/quast_bins'
 include { QUAST_BINS_SUMMARY                                  } from '../modules/local/quast_bins_summary'
@@ -598,7 +599,17 @@ workflow MAG {
             ch_versions = ch_versions.mix(SPADESHYBRID.out.versions.first())
         }
     } else {
-        ch_assemblies = ch_input_assemblies
+        ch_assemblies_split = ch_input_assemblies
+            .branch { meta, assembly ->
+                gzipped: assembly[0].getExtension() == "gz"
+                ungzip: true
+            }
+
+        GUNZIP_ASSEMBLIES(ch_assemblies_split.gzipped)
+        ch_versions = ch_versions.mix(GUNZIP_ASSEMBLIES.out.versions)
+
+        ch_assemblies = Channel.empty()
+        ch_assemblies = ch_assemblies.mix(ch_assemblies_split.ungzip, GUNZIP_ASSEMBLIES.out.gunzip)
     }
 
     ch_quast_multiqc = Channel.empty()
