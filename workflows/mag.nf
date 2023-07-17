@@ -638,7 +638,7 @@ workflow MAG {
     ================================================================================
     */
 
-    if (params.run_genomad){
+    if (params.run_virus_identification){
         VIRUS_IDENTIFICATION(ch_assemblies, ch_genomad_db)
         ch_versions = ch_versions.mix(VIRUS_IDENTIFICATION.out.versions.first())
     }
