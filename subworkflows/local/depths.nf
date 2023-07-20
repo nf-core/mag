@@ -2,7 +2,7 @@ params.mag_depths_options                           = [:]
 params.mag_depths_plot_options                      = [:]
 params.mag_depths_summary_options                   = [:]
 
-include { MAG_DEPTHS                            } from '../../modules/local/mag_depths' 
+include { MAG_DEPTHS                            } from '../../modules/local/mag_depths'
 include { MAG_DEPTHS_PLOT                       } from '../../modules/local/mag_depths_plot'
 include { MAG_DEPTHS_SUMMARY                    } from '../../modules/local/mag_depths_summary'
 
@@ -28,19 +28,17 @@ workflow DEPTHS {
     // we retain the information about binners and domain classification
     ch_depth_input = bins_unbins
         .map { meta, bins ->
-            def meta_join = meta.clone()
-            meta_join.remove('binner')
-            meta_join.remove('domain')
+            def meta_join = meta - meta.subMap('binner','domain')
             [ meta_join, meta, bins ]
         }
         .combine( depths, by: 0 )
         .map { meta_join, meta, bins, contig_depths_file ->
-            def meta_new = meta.clone()
-            meta_new.remove('domain')
+            def meta_new = meta - meta.subMap('domain')
             [ meta_new, bins, contig_depths_file ]
         }
         .transpose()
         .groupTuple(by: [0,2])
+
 
     MAG_DEPTHS ( ch_depth_input )
     ch_versions = ch_versions.mix(MAG_DEPTHS.out.versions)

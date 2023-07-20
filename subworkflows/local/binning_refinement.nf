@@ -55,8 +55,7 @@ workflow BINNING_REFINEMENT {
                                     .mix(DASTOOL_FASTATOCONTIG2BIN_CONCOCT.out.fastatocontig2bin)
                                     .map {
                                         meta, fastatocontig2bin ->
-                                            def meta_new = meta.clone()
-                                            meta_new.remove('binner')
+                                            def meta_new = meta - meta.subMap('binner')
                                             [ meta_new, fastatocontig2bin ]
                                     }
                                     .groupTuple(by: 0)
@@ -81,8 +80,7 @@ workflow BINNING_REFINEMENT {
         .map {
             meta, bin ->
                 if (bin.name != "unbinned.fa") {
-                    def meta_new = meta.clone()
-                    meta_new['binner'] = 'DASTool'
+                    def meta_new = meta + [binner: 'DASTool']
                     [ meta_new, bin ]
                 }
             }

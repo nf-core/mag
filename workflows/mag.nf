@@ -325,8 +325,7 @@ workflow MAG {
         ch_short_reads_forcat = ch_short_reads_phixremoved
             .map {
                 meta, reads ->
-                    def meta_new = meta.clone()
-                    meta_new.remove('run')
+                    def meta_new = meta - meta.subMap('run')
                 [ meta_new, reads ]
             }
             .groupTuple()
@@ -369,8 +368,7 @@ workflow MAG {
         ch_short_reads = ch_raw_short_reads
                         .map {
                             meta, reads ->
-                                def meta_new = meta.clone()
-                                meta_new.remove('run')
+                                def meta_new = meta - meta.subMap('run')
                             [ meta_new, reads ]
                         }
     }
@@ -388,8 +386,7 @@ workflow MAG {
     ch_long_reads = ch_raw_long_reads
                         .map {
                         meta, reads ->
-                            def meta_new = meta.clone()
-                            meta_new.remove('run')
+                            def meta_new = meta - meta.subMap('run')
                         [ meta_new, reads ]
                     }
 
@@ -692,16 +689,14 @@ workflow MAG {
 
 
         } else {
-            ch_binning_results_bins = BINNING.out.bins
+            ch_binning_results_bins = BINNING.out.bins.dump(tag: 'BINNING.out.bins')
                 .map { meta, bins ->
-                    meta_new = meta.clone()
-                    meta_new.domain = 'unclassified'
+                    def meta_new = meta + [domain: 'unclassified']
                     [meta_new, bins]
                 }
-            ch_binning_results_unbins = BINNING.out.unbinned
+            ch_binning_results_unbins = BINNING.out.unbinned.dump(tag: 'BINNING.out.unbins')
                 .map { meta, bins ->
-                    meta_new = meta.clone()
-                    meta_new.domain = 'unclassified'
+                    def meta_new = meta + [domain: 'unclassified']
                     [meta_new, bins]
                 }
         }

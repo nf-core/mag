@@ -40,9 +40,7 @@ workflow TIARA {
     ch_contigs_to_bin_tiara = DASTOOL_FASTATOCONTIG2BIN_TIARA.out.fastatocontig2bin
         .combine(ch_tiara_input, by: 0)
         .map { meta, contig2bin, bins ->
-            def meta_join = meta.clone()
-            meta_join.remove('binner')
-            meta_join.remove('bin')
+            def meta_new = meta - meta.subMap('binner', 'bin')
             [ meta_join, meta, contig2bin, bins ]
         }
 
@@ -109,8 +107,7 @@ workflow TIARA {
             meta.bin == "bins"
         }
         .map { meta, bins ->
-            def meta_new = meta.clone()
-            meta_new.remove('bin')
+            def meta_new = meta - meta.subMap('bin')
             [meta_new, bins]
         }
 
@@ -119,8 +116,7 @@ workflow TIARA {
             meta.bin == "unbins"
         }
         .map { meta, bins ->
-            def meta_new = meta.clone()
-            meta_new.remove('bin')
+            def meta_new = meta - meta.subMap('bin')
             [meta_new, bins]
         }
 
