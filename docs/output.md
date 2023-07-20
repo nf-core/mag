@@ -279,23 +279,23 @@ Protein-coding genes are predicted for each assembly.
 <details markdown="1">
 <summary>Output files</summary>
 
-- `VirusIdentification/geNomad/[sample/group]/`
-  - `[sample/group]_annotate`
-    - `[sample/group]_taxonomy.tsv`: Taxonomic assignment data
-  - `[sample/group]_aggregated_classification`
-    - `[sample/group]_aggregated_classification.tsv`: Sequence classification in tabular format
-  - `[sample/group]_find_proviruses`
-    - `[sample/group]_provirus.tsv`: Characteristics of proviruses identified by geNomad
-  - `[sample/group]_summary`
-    - `[sample/group]_virus_summary.tsv`: Virus classification summary file in tabular format
-    - `[sample/group]_plasmid_summary.tsv`: Plasmid classification summary file in tabular format
-    - `[sample/group]_viruses_genes.tsv`: Virus gene annotation data in tabular format
-    - `[sample/group]_plasmids_genes.tsv`: Plasmid gene annotation data in tabular format
-    - `[sample/group]_viruses.fna`: Virus nucleotide sequences in FASTA format
-    - `[sample/group]_plasmids.fna`: Plasmid nucleotide sequences in FASTA format
-    - `[sample/group]_viruses_proteins.faa`: Virus protein sequences in FASTA format
-    - `[sample/group]_plasmids_proteins.faa`: Plasmid protein sequences in FASTA format
-  - `[sample/group].log`: Plain text log file detailing the steps executed by geNomad (annotate, find-proviruses, marker-classification, nn-classification, aggregated-classification and summary)
+- `VirusIdentification/geNomad/[assembler]-[sample/group]*/`
+  - `[assembler]-[sample/group]*_annotate`
+    - `[assembler]-[sample/group]*_taxonomy.tsv`: Taxonomic assignment data
+  - `[assembler]-[sample/group]*_aggregated_classification`
+    - `[assembler]-[sample/group]*_aggregated_classification.tsv`: Sequence classification in tabular format
+  - `[assembler]-[sample/group]*_find_proviruses`
+    - `[assembler]-[sample/group]*_provirus.tsv`: Characteristics of proviruses identified by geNomad
+  - `[assembler]-[sample/group]*_summary`
+    - `[assembler]-[sample/group]*_virus_summary.tsv`: Virus classification summary file in tabular format
+    - `[assembler]-[sample/group]*_plasmid_summary.tsv`: Plasmid classification summary file in tabular format
+    - `[assembler]-[sample/group]*_viruses_genes.tsv`: Virus gene annotation data in tabular format
+    - `[assembler]-[sample/group]*_plasmids_genes.tsv`: Plasmid gene annotation data in tabular format
+    - `[assembler]-[sample/group]*_viruses.fna`: Virus nucleotide sequences in FASTA format
+    - `[assembler]-[sample/group]*_plasmids.fna`: Plasmid nucleotide sequences in FASTA format
+    - `[assembler]-[sample/group]*_viruses_proteins.faa`: Virus protein sequences in FASTA format
+    - `[assembler]-[sample/group]*_plasmids_proteins.faa`: Plasmid protein sequences in FASTA format
+  - `[assembler]-[sample/group]*.log`: Plain text log file detailing the steps executed by geNomad (annotate, find-proviruses, marker-classification, nn-classification, aggregated-classification and summary)
 
 </details>
 
