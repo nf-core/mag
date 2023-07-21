@@ -921,8 +921,7 @@ workflow MAG {
         if (!params.skip_prokka){
             ch_bins_for_prokka = ch_input_for_postbinning_bins_unbins.transpose()
             .map { meta, bin ->
-                def meta_new = meta.clone()
-                meta_new.id  = bin.getBaseName()
+                def meta_new = meta + [id: bin.getBaseName()]
                 [ meta_new, bin ]
             }
             .filter { meta, bin ->
@@ -941,6 +940,10 @@ workflow MAG {
             ch_bins_for_metaeuk = ch_input_for_postbinning_bins_unbins.transpose()
                 .filter { meta, bin ->
                     meta.domain in ["eukarya", "unclassified"]
+                }
+                .map { meta, bin ->
+                    def meta_new = meta + [id: bin.getBaseName()]
+                    [ meta_new, bin ]
                 }
 
             METAEUK_EASYPREDICT (ch_bins_for_metaeuk, ch_metaeuk_db)

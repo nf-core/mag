@@ -135,6 +135,9 @@ class WorkflowMag {
         if (params.metaeuk_mmseqs_db && params.metaeuk_db) {
             Nextflow.error('Invalid parameter combination: both --metaeuk_mmseqs_db and --metaeuk_db are specified! Please specify either --metaeuk_mmseqs_db or --metaeuk_db.')
         }
+        if (params.save_mmseqs_db && !params.metaeuk_mmseqs_db) {
+            Nextflow.error('Invalid parameter combination: --save_mmseqs_db but no database has been requested for download with --metaeuk_mmseqs_db!')
+        }
     }
 
     //

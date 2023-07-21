@@ -626,7 +626,7 @@ Whole genome annotation is the process of identifying features of interest in a 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `Prokka/[assembler]/[bin]/`
+- `Annotation/Prokka/[assembler]/[bin]/`
   - `[bin].gff`: annotation in GFF3 format, containing both sequences and annotations
   - `[bin].gbk`: annotation in GenBank format, containing both sequences and annotations
   - `[bin].fna`: nucleotide FASTA file of the input contig sequences
@@ -639,6 +639,21 @@ Whole genome annotation is the process of identifying features of interest in a 
   - `[bin].log`: contains all the output that Prokka produced during its run
   - `[bin].txt`: statistics relating to the annotated features found
   - `[bin].tsv`: tab-separated file of all features (locus_tag, ftype, len_bp, gene, EC_number, COG, product)
+
+</details>
+
+### MetaEuk
+
+In cases where eukaryotic genomes are recovered in binning, [MetaEuk](https://github.com/soedinglab/metaeuk) is also available to annotate eukaryotic genomes quickly with standards-compliant output files.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `Annotation/MetaEuk/[assembler]/[bin]/`
+  - `[bin].fas`: fasta file of protein sequences identified by MetaEuk
+  - `[bin].codon.fas`: fasta file of nucleotide sequences corresponding to the protein sequences fasta
+  - `[bin].headersMap.tsv`: tab-separated table containing the information from each header in the fasta files
+  - `[bin].gff`: annotation in GFF3 format
 
 </details>
 
