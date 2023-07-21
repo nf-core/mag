@@ -133,7 +133,7 @@ class WorkflowMag {
 
         // Chech MetaEuk db paramaters
         if (params.metaeuk_mmseq_db && params.metaeuk_db) {
-            Nextflow.error('Invalid parameter combination: both --metaeuk_mmseq_db and --metaeuk_local_db are specified! Invalid combination, please specify either --metaeuk_mmseq_db or --metaeuk_local_db.')
+            Nextflow.error('Invalid parameter combination: both --metaeuk_mmseq_db and --metaeuk_local_db are specified! Please specify either --metaeuk_mmseq_db or --metaeuk_db.')
         }
     }
 

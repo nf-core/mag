@@ -160,7 +160,7 @@
                     },
                     "metaeuk/easypredict": {
                         "branch": "master",
-                        "git_sha": "a920d735623c58205f3f46600c468b6952291dfb",
+                        "git_sha": "30d06da5bd7ae67be32758bf512cd75a4325d386",
                         "installed_by": ["modules"]
                     },
                     "mmseqs/databases": {

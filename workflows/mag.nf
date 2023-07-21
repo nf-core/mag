@@ -939,7 +939,7 @@ workflow MAG {
         if (!params.skip_metaeuk && (params.metaeuk_db || params.metaeuk_mmseq_db)) {
             ch_bins_for_metaeuk = ch_input_for_postbinning_bins_unbins.transpose()
                 .filter { meta, bin ->
-                    meta.domain in ["eukarya", "unclassified"]
+                    meta.domain in ["eukarya"]
                 }
 
             METAEUK_EASYPREDICT (ch_bins_for_metaeuk, ch_metaeuk_db)
