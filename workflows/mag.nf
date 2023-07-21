@@ -454,8 +454,7 @@ workflow MAG {
         KRONA_DB ()
         ch_tax_classifications = CENTRIFUGE.out.results_for_krona.mix(KRAKEN2.out.results_for_krona)
             . map { classifier, meta, report ->
-                def meta_new = meta.clone()
-                meta_new.classifier  = classifier
+                def meta_new = meta + [classifer: classifier]
                 [ meta_new, report ]
             }
         KRONA (
@@ -516,8 +515,7 @@ workflow MAG {
             MEGAHIT ( ch_short_reads_grouped )
             ch_megahit_assemblies = MEGAHIT.out.assembly
                 .map { meta, assembly ->
-                    def meta_new = meta.clone()
-                    meta_new.assembler  = "MEGAHIT"
+                    def meta_new = meta + [assember: 'MEGAHIT']
                     [ meta_new, assembly ]
                 }
             ch_assemblies = ch_assemblies.mix(ch_megahit_assemblies)
@@ -560,8 +558,7 @@ workflow MAG {
             SPADES ( ch_short_reads_spades )
             ch_spades_assemblies = SPADES.out.assembly
                 .map { meta, assembly ->
-                    def meta_new = meta.clone()
-                    meta_new.assembler  = "SPAdes"
+                    def meta_new = meta + [assembler: 'SPAdes']
                     [ meta_new, assembly ]
                 }
             ch_assemblies = ch_assemblies.mix(ch_spades_assemblies)
@@ -580,8 +577,7 @@ workflow MAG {
             SPADESHYBRID ( ch_reads_spadeshybrid )
             ch_spadeshybrid_assemblies = SPADESHYBRID.out.assembly
                 .map { meta, assembly ->
-                    def meta_new = meta.clone()
-                    meta_new.assembler  = "SPAdesHybrid"
+                    def meta_new = meta + [assembler: "SPAdesHybrid"]
                     [ meta_new, assembly ]
                 }
             ch_assemblies = ch_assemblies.mix(ch_spadeshybrid_assemblies)
@@ -881,8 +877,7 @@ workflow MAG {
         if (!params.skip_prokka){
             ch_bins_for_prokka = ch_input_for_postbinning_bins_unbins.transpose()
             .map { meta, bin ->
-                def meta_new = meta.clone()
-                meta_new.id  = bin.getBaseName()
+                def meta_new = meta + [id: bin.getBaseName()]
                 [ meta_new, bin ]
             }
             .filter { meta, bin ->

@@ -24,7 +24,7 @@ workflow DEPTHS {
     ch_versions = Channel.empty()
 
     // Compute bin depths for different samples (according to `binning_map_mode`)
-    // Create a new meta joining key first, but clone meta so that
+    // Create a new meta joining key first, but copy meta so that
     // we retain the information about binners and domain classification
     ch_depth_input = bins_unbins
         .map { meta, bins ->

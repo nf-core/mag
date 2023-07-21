@@ -87,17 +87,16 @@ workflow BINNING_REFINEMENT {
         .groupTuple()
         .map {
             meta, bins ->
-                def meta_new = meta.clone()
-                meta_new['domain'] = params.bin_domain_classification ? 'prokarya' : 'unclassified'
+                def domain_class = params.bin_domain_classification ? 'prokarya' : 'unclassified'
+                def meta_new = meta + [domain: domain_class]
                 [ meta_new, bins ]
             }
 
     ch_input_for_renamedastool = DASTOOL_DASTOOL.out.bins
         .map {
             meta, bins ->
-                def meta_new = meta.clone()
-                meta_new['binner'] = 'DASTool'
-                meta_new['domain'] = params.bin_domain_classification ? 'prokarya' : 'unclassified'
+                def domain_class = params.bin_domain_classification ? 'prokarya' : 'unclassified'
+                def meta_new = meta + [binner: 'DASTool', domain: domain_class]
                 [ meta_new, bins ]
             }
 
