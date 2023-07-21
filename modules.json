@@ -165,7 +165,7 @@
                     },
                     "mmseqs/databases": {
                         "branch": "master",
-                        "git_sha": "262167cf9d21159f305ef77efda194f8d209911b",
+                        "git_sha": "699e078133f580548aeb43114f93ac29928c6143",
                         "installed_by": ["modules"]
                     },
                     "multiqc": {

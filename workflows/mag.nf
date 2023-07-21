@@ -214,7 +214,7 @@ if (gtdb) {
     ch_gtdb = Channel.empty()
 }
 
-if(params.metaeuk_db) {
+if(params.metaeuk_db && !params.skip_metaeuk) {
     ch_metaeuk_db = Channel.
         value(file("${params.metaeuk_db}", checkIfExists: true))
 } else {
@@ -243,9 +243,10 @@ workflow MAG {
     }
 
     // Get mmseqs db for MetaEuk if requested
-    if (!params.skip_metaeuk && params.metaeuk_mmseq_db) {
-        MMSEQS_DATABASES(params.metaeuk_mmseq_db)
+    if (!params.skip_metaeuk && params.metaeuk_mmseqs_db) {
+        MMSEQS_DATABASES(params.metaeuk_mmseqs_db)
         ch_metaeuk_db = MMSEQS_DATABASES.out.database
+        ch_versions = ch_versions.mix(MMSEQS_DATABASES.out.versions)
     }
 
     //
@@ -936,13 +937,14 @@ workflow MAG {
             ch_versions = ch_versions.mix(PROKKA.out.versions.first())
         }
 
-        if (!params.skip_metaeuk && (params.metaeuk_db || params.metaeuk_mmseq_db)) {
+        if (!params.skip_metaeuk && (params.metaeuk_db || params.metaeuk_mmseqs_db)) {
             ch_bins_for_metaeuk = ch_input_for_postbinning_bins_unbins.transpose()
                 .filter { meta, bin ->
-                    meta.domain in ["eukarya"]
+                    meta.domain in ["eukarya", "unclassified"]
                 }
 
             METAEUK_EASYPREDICT (ch_bins_for_metaeuk, ch_metaeuk_db)
+            ch_versions = ch_versions.mix(METAEUK_EASYPREDICT.out.versions)
         }
     }
 
