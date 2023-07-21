@@ -94,6 +94,7 @@ include { BINNING_PREPARATION } from '../subworkflows/local/binning_preparation'
 include { BINNING             } from '../subworkflows/local/binning'
 include { BINNING_REFINEMENT  } from '../subworkflows/local/binning_refinement'
 include { BUSCO_QC            } from '../subworkflows/local/busco_qc'
+include { VIRUS_IDENTIFICATION} from '../subworkflows/local/virus_identification'
 include { CHECKM_QC           } from '../subworkflows/local/checkm_qc'
 include { GUNC_QC             } from '../subworkflows/local/gunc_qc'
 include { GTDBTK              } from '../subworkflows/local/gtdbtk'
@@ -196,7 +197,14 @@ if (!params.keep_lambda) {
         .value(file( "${params.lambda_reference}" ))
 }
 
+if (params.genomad_db){
+    ch_genomad_db = file(params.genomad_db, checkIfExists: true)
+} else {
+    ch_genomad_db = Channel.empty()
+}
+
 gtdb = params.skip_binqc ? false : params.gtdb
+
 if (gtdb) {
     ch_gtdb = Channel
         .value(file( "${gtdb}" ))
@@ -622,6 +630,17 @@ workflow MAG {
             'gff'
         )
         ch_versions = ch_versions.mix(PRODIGAL.out.versions.first())
+    }
+
+    /*
+    ================================================================================
+                                    Virus identification
+    ================================================================================
+    */
+
+    if (params.run_virus_identification){
+        VIRUS_IDENTIFICATION(ch_assemblies, ch_genomad_db)
+        ch_versions = ch_versions.mix(VIRUS_IDENTIFICATION.out.versions.first())
     }
 
     /*
