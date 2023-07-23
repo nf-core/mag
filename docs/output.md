@@ -262,7 +262,7 @@ Protein-coding genes are predicted for each assembly.
 <details markdown="1">
 <summary>Output files</summary>
 
-- `Prodigal/`
+- `Annotation/Prodigal/`
   - `[sample/group].gff.gz`: Gene Coordinates in GFF format
   - `[sample/group].faa.gz`: The protein translation file consists of all the proteins from all the sequences in multiple FASTA format.
   - `[sample/group].fna.gz`: Nucleotide sequences of the predicted proteins using the DNA alphabet, not mRNA (so you will see 'T' in the output and not 'U').
@@ -627,18 +627,18 @@ Whole genome annotation is the process of identifying features of interest in a 
 <summary>Output files</summary>
 
 - `Annotation/Prokka/[assembler]/[bin]/`
-  - `[bin].gff`: annotation in GFF3 format, containing both sequences and annotations
-  - `[bin].gbk`: annotation in GenBank format, containing both sequences and annotations
-  - `[bin].fna`: nucleotide FASTA file of the input contig sequences
-  - `[bin].faa`: protein FASTA file of the translated CDS sequences
-  - `[bin].ffn`: nucleotide FASTA file of all the prediction transcripts (CDS, rRNA, tRNA, tmRNA, misc_RNA)
-  - `[bin].sqn`: an ASN1 format "Sequin" file for submission to Genbank
-  - `[bin].fsa`: nucleotide FASTA file of the input contig sequences, used by "tbl2asn" to create the .sqn file
-  - `[bin].tbl`: feature Table file, used by "tbl2asn" to create the .sqn file
-  - `[bin].err`: unacceptable annotations - the NCBI discrepancy report.
-  - `[bin].log`: contains all the output that Prokka produced during its run
-  - `[bin].txt`: statistics relating to the annotated features found
-  - `[bin].tsv`: tab-separated file of all features (locus_tag, ftype, len_bp, gene, EC_number, COG, product)
+  - `[assembler]-[binner]-[bin].gff`: annotation in GFF3 format, containing both sequences and annotations
+  - `[assembler]-[binner]-[bin].gbk`: annotation in GenBank format, containing both sequences and annotations
+  - `[assembler]-[binner]-[bin].fna`: nucleotide FASTA file of the input contig sequences
+  - `[assembler]-[binner]-[bin].faa`: protein FASTA file of the translated CDS sequences
+  - `[assembler]-[binner]-[bin].ffn`: nucleotide FASTA file of all the prediction transcripts (CDS, rRNA, tRNA, tmRNA, misc_RNA)
+  - `[assembler]-[binner]-[bin].sqn`: an ASN1 format "Sequin" file for submission to Genbank
+  - `[assembler]-[binner]-[bin].fsa`: nucleotide FASTA file of the input contig sequences, used by "tbl2asn" to create the .sqn file
+  - `[assembler]-[binner]-[bin].tbl`: feature Table file, used by "tbl2asn" to create the .sqn file
+  - `[assembler]-[binner]-[bin].err`: unacceptable annotations - the NCBI discrepancy report.
+  - `[assembler]-[binner]-[bin].log`: contains all the output that Prokka produced during its run
+  - `[assembler]-[binner]-[bin].txt`: statistics relating to the annotated features found
+  - `[assembler]-[binner]-[bin].tsv`: tab-separated file of all features (locus_tag, ftype, len_bp, gene, EC_number, COG, product)
 
 </details>
 
@@ -649,11 +649,11 @@ In cases where eukaryotic genomes are recovered in binning, [MetaEuk](https://gi
 <details markdown="1">
 <summary>Output files</summary>
 
-- `Annotation/MetaEuk/[assembler]/[bin]/`
-  - `[bin].fas`: fasta file of protein sequences identified by MetaEuk
-  - `[bin].codon.fas`: fasta file of nucleotide sequences corresponding to the protein sequences fasta
-  - `[bin].headersMap.tsv`: tab-separated table containing the information from each header in the fasta files
-  - `[bin].gff`: annotation in GFF3 format
+- `Annotation/MetaEuk/[assembler]/[bin]`
+  - `[assembler]-[binner]-[bin].fas`: fasta file of protein sequences identified by MetaEuk
+  - `[assembler]-[binner]-[bin].codon.fas`: fasta file of nucleotide sequences corresponding to the protein sequences fasta
+  - `[assembler]-[binner]-[bin].headersMap.tsv`: tab-separated table containing the information from each header in the fasta files
+  - `[assembler]-[binner]-[bin].gff`: annotation in GFF3 format
 
 </details>
 
