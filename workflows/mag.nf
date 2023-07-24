@@ -515,7 +515,7 @@ workflow MAG {
             MEGAHIT ( ch_short_reads_grouped )
             ch_megahit_assemblies = MEGAHIT.out.assembly
                 .map { meta, assembly ->
-                    def meta_new = meta + [assember: 'MEGAHIT']
+                    def meta_new = meta + [assembler: 'MEGAHIT']
                     [ meta_new, assembly ]
                 }
             ch_assemblies = ch_assemblies.mix(ch_megahit_assemblies)

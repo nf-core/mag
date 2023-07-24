@@ -33,7 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#447](https://github.com/nf-core/mag/pull/447) - Remove `default: None` from parameter schema (by @drpatelh)
 - [#449](https://github.com/nf-core/mag/pull/447) - Fix results file overwriting in Ancient DNA workflow (reported by @alexhbnr, fix by @jfy133)
 - [#470](https://github.com/nf-core/mag/pull/470) - Fix binning preparation from running even when binning was requested to be skipped (reported by @prototaxites, fix by @jfy133)
-- [#XXX](https://github.com/nf-core/mag/pull/XXX) - Improved `-resume` reliability through better meta map preservation (reported by @prototaxites, fix by @jfy133)
+- [#480](https://github.com/nf-core/mag/pull/480) - Improved `-resume` reliability through better meta map preservation (reported by @prototaxites, fix by @jfy133)
 
 ### `Dependencies`
 
