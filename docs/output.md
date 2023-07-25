@@ -263,10 +263,10 @@ Protein-coding genes are predicted for each assembly.
 <summary>Output files</summary>
 
 - `Annotation/Prodigal/`
-  - `[sample/group].gff.gz`: Gene Coordinates in GFF format
-  - `[sample/group].faa.gz`: The protein translation file consists of all the proteins from all the sequences in multiple FASTA format.
-  - `[sample/group].fna.gz`: Nucleotide sequences of the predicted proteins using the DNA alphabet, not mRNA (so you will see 'T' in the output and not 'U').
-  - `[sample/group]_all.txt.gz`: Information about start positions of genes.
+  - `[assembler]-[sample/group].gff.gz`: Gene Coordinates in GFF format
+  - `[assembler]-[sample/group].faa.gz`: The protein translation file consists of all the proteins from all the sequences in multiple FASTA format.
+  - `[assembler]-[sample/group].fna.gz`: Nucleotide sequences of the predicted proteins using the DNA alphabet, not mRNA (so you will see 'T' in the output and not 'U').
+  - `[assembler]-[sample/group]_all.txt.gz`: Information about start positions of genes.
 
 </details>
 
