@@ -14,15 +14,14 @@ workflow TIARA {
 
     bins = bins
         .map { meta, bins ->
-            def meta_new = meta.clone()
+            def meta_new = meta + [bin: 'bins']
             meta_new.bin = 'bins'
             [meta_new, bins]
         }
 
     unbins = unbins
         .map { meta, unbins ->
-            def meta_new = meta.clone()
-            meta_new.bin = 'unbins'
+            def meta_new = meta + [bin: 'unbins']
             [meta_new, unbins]
         }
 
@@ -40,9 +39,7 @@ workflow TIARA {
     ch_contigs_to_bin_tiara = DASTOOL_FASTATOCONTIG2BIN_TIARA.out.fastatocontig2bin
         .combine(ch_tiara_input, by: 0)
         .map { meta, contig2bin, bins ->
-            def meta_join = meta.clone()
-            meta_join.remove('binner')
-            meta_join.remove('bin')
+            def meta_join = meta - meta.subMap('binner', 'bin')
             [ meta_join, meta, contig2bin, bins ]
         }
 
@@ -57,43 +54,37 @@ workflow TIARA {
 
     ch_eukarya_bins = TIARA_CLASSIFY.out.eukarya_bins
         .map { meta, bins ->
-            def meta_new = meta.clone()
-            meta_new.domain = 'eukarya'
+            def meta_new = meta + [domain: 'eukarya']
             [meta_new, bins]
         }
 
     ch_prokarya_bins = TIARA_CLASSIFY.out.prokarya_bins
         .map { meta, bins ->
-            def meta_new = meta.clone()
-            meta_new.domain = 'prokarya'
+            def meta_new = meta + [domain: 'prokarya']
             [meta_new, bins]
         }
 
     ch_bacteria_bins = TIARA_CLASSIFY.out.bacteria_bins
         .map { meta, bins ->
-            def meta_new = meta.clone()
-            meta_new.domain = 'bacteria'
+            def meta_new = meta + [domain: 'bacteria']
             [meta_new, bins]
         }
 
     ch_archaea_bins = TIARA_CLASSIFY.out.archaea_bins
         .map { meta, bins ->
-            def meta_new = meta.clone()
-            meta_new.domain = 'archaea'
+            def meta_new = meta + [domain: 'archaea']
             [meta_new, bins]
         }
 
     ch_organelle_bins = TIARA_CLASSIFY.out.organelle_bins
         .map { meta, bins ->
-            def meta_new = meta.clone()
-            meta_new.domain = 'organelle'
+            def meta_new = meta + [domain: 'organelle']
             [meta_new, bins]
         }
 
     ch_unknown_bins = TIARA_CLASSIFY.out.unknown_bins
         .map { meta, bins ->
-            def meta_new = meta.clone()
-            meta_new.domain = 'unknown'
+            def meta_new = meta + [domain: 'unknown']
             [meta_new, bins]
         }
 
@@ -109,8 +100,7 @@ workflow TIARA {
             meta.bin == "bins"
         }
         .map { meta, bins ->
-            def meta_new = meta.clone()
-            meta_new.remove('bin')
+            def meta_new = meta - meta.subMap('bin')
             [meta_new, bins]
         }
 
@@ -119,8 +109,7 @@ workflow TIARA {
             meta.bin == "unbins"
         }
         .map { meta, bins ->
-            def meta_new = meta.clone()
-            meta_new.remove('bin')
+            def meta_new = meta - meta.subMap('bin')
             [meta_new, bins]
         }
 

@@ -25,7 +25,8 @@ workflow BINNING {
     // generate coverage depths for each contig
     ch_summarizedepth_input = assemblies
                                 .map { meta, assembly, bams, bais ->
-                                        def meta_new = meta.clone()
+                                        def meta_keys = meta.keySet()
+                                        def meta_new = meta + meta.subMap(meta_keys)
                                     [ meta_new, bams, bais ]
                                 }
 
@@ -33,9 +34,7 @@ workflow BINNING {
 
     ch_metabat_depths = METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS.out.depth
         .map { meta, depths ->
-            def meta_new = meta.clone()
-            meta_new['binner'] = 'MetaBAT2'
-
+            def meta_new = meta + [binner: 'MetaBAT2']
             [ meta_new, depths ]
         }
 
@@ -44,9 +43,7 @@ workflow BINNING {
     // combine depths back with assemblies
     ch_metabat2_input = assemblies
         .map { meta, assembly, bams, bais ->
-            def meta_new = meta.clone()
-            meta_new['binner'] = 'MetaBAT2'
-
+            def meta_new = meta + [binner: 'MetaBAT2']
             [ meta_new, assembly, bams, bais ]
         }
         .join( ch_metabat_depths, by: 0 )
@@ -59,9 +56,7 @@ workflow BINNING {
         CONVERT_DEPTHS ( ch_metabat2_input )
         ch_maxbin2_input = CONVERT_DEPTHS.out.output
             .map { meta, assembly, reads, depth ->
-                    def meta_new = meta.clone()
-                    meta_new['binner'] = 'MaxBin2'
-
+                    def meta_new = meta + [binner: 'MaxBin2']
                 [ meta_new, assembly, reads, depth ]
             }
         ch_versions = ch_versions.mix(CONVERT_DEPTHS.out.versions.first())
@@ -69,8 +64,10 @@ workflow BINNING {
 
     // main bins for decompressing for MAG_DEPTHS
     ch_final_bins_for_gunzip = Channel.empty()
+
     // final gzipped bins
     ch_binning_results_gzipped_final = Channel.empty()
+
     // run binning
     if ( !params.skip_metabat2 ) {
         METABAT2_METABAT2 ( ch_metabat2_input )
@@ -90,9 +87,7 @@ workflow BINNING {
 
         ch_concoct_input = assemblies
                             .map { meta, bins, bams, bais ->
-                                def meta_new = meta.clone()
-                                meta_new['binner'] = 'CONCOCT'
-
+                                def meta_new = meta + [binner: 'CONCOCT']
                                 [ meta_new, bins, bams, bais ]
                             }
                             .multiMap {
@@ -135,9 +130,9 @@ workflow BINNING {
     ch_versions = ch_versions.mix(GUNZIP_UNBINS.out.versions.first())
 
     emit:
-    bins                                         = ch_binning_results_gunzipped
+    bins                                         = ch_binning_results_gunzipped.dump(tag: "ch_binning_results_gunzipped")
     bins_gz                                      = ch_binning_results_gzipped_final
-    unbinned                                     = ch_splitfasta_results_gunzipped
+    unbinned                                     = ch_splitfasta_results_gunzipped.dump(tag: "ch_splitfasta_results_gunzipped")
     unbinned_gz                                  = SPLIT_FASTA.out.unbinned
     metabat2depths                               = METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS.out.depth
     versions                                     = ch_versions

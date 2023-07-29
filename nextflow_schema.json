@@ -570,6 +570,11 @@
                     "default": true,
                     "description": "Reduce GTDB-Tk memory consumption by running pplacer in a setting writing to disk.",
                     "help_text": "Will be slower. Set to `false` to turn this off."
+                },
+                "genomad_db": {
+                    "type": "string",
+                    "description": "Database for virus classification with geNomad",
+                    "help_text": "Must be a directory containing the uncompressed contents from https://portal.nersc.gov/genomad/__data__/genomad_db_v1.1.tar.gz"
                 }
             }
         },
@@ -620,6 +625,28 @@
                 "skip_prodigal": {
                     "type": "boolean",
                     "description": "Skip Prodigal gene prediction"
+                }
+            }
+        },
+        "virus_identification_options": {
+            "title": "Virus identification options",
+            "type": "object",
+            "default": "",
+            "properties": {
+                "run_virus_identification": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Run virus identification."
+                },
+                "genomad_min_score": {
+                    "type": "number",
+                    "default": 0.7,
+                    "description": "Minimum geNomad score for a sequence to be considered viral"
+                },
+                "genomad_splits": {
+                    "type": "integer",
+                    "default": 1,
+                    "description": "Number of groups that geNomad's MMSeqs2 databse should be split into (reduced memory requirements)"
                 }
             }
         },
@@ -876,6 +903,9 @@
         },
         {
             "$ref": "#/definitions/gene_prediction_options"
+        },
+        {
+            "$ref": "#/definitions/virus_identification_options"
         },
         {
             "$ref": "#/definitions/binning_options"

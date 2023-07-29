@@ -75,6 +75,7 @@ include { POOL_SINGLE_READS as POOL_LONG_READS                } from '../modules
 include { MEGAHIT                                             } from '../modules/local/megahit'
 include { SPADES                                              } from '../modules/local/spades'
 include { SPADESHYBRID                                        } from '../modules/local/spadeshybrid'
+include { GUNZIP as GUNZIP_ASSEMBLIES                         } from '../modules/nf-core/gunzip'
 include { QUAST                                               } from '../modules/local/quast'
 include { QUAST_BINS                                          } from '../modules/local/quast_bins'
 include { QUAST_BINS_SUMMARY                                  } from '../modules/local/quast_bins_summary'
@@ -93,6 +94,7 @@ include { BINNING_PREPARATION } from '../subworkflows/local/binning_preparation'
 include { BINNING             } from '../subworkflows/local/binning'
 include { BINNING_REFINEMENT  } from '../subworkflows/local/binning_refinement'
 include { BUSCO_QC            } from '../subworkflows/local/busco_qc'
+include { VIRUS_IDENTIFICATION} from '../subworkflows/local/virus_identification'
 include { CHECKM_QC           } from '../subworkflows/local/checkm_qc'
 include { GUNC_QC             } from '../subworkflows/local/gunc_qc'
 include { GTDBTK              } from '../subworkflows/local/gtdbtk'
@@ -195,12 +197,17 @@ if (!params.keep_lambda) {
         .value(file( "${params.lambda_reference}" ))
 }
 
-gtdb = ( params.skip_binqc || params.skip_gtdbtk ) ? false : params.gtdb_db
-if (gtdb) {
+if (params.genomad_db){
+    ch_genomad_db = file(params.genomad_db, checkIfExists: true)
+} else {
+    ch_genomad_db = Channel.empty()
+}
 
+gtdb = ( params.skip_binqc || params.skip_gtdbtk ) ? false : params.gtdb_db
+
+if (gtdb) {
     ch_gtdb = Channel
         .value(file( "${gtdb}", checkIfExists: true))
-
 } else {
     ch_gtdb = Channel.empty()
 }
@@ -326,8 +333,7 @@ workflow MAG {
         ch_short_reads_forcat = ch_short_reads_phixremoved
             .map {
                 meta, reads ->
-                    def meta_new = meta.clone()
-                    meta_new.remove('run')
+                    def meta_new = meta - meta.subMap('run')
                 [ meta_new, reads ]
             }
             .groupTuple()
@@ -370,8 +376,7 @@ workflow MAG {
         ch_short_reads = ch_raw_short_reads
                         .map {
                             meta, reads ->
-                                def meta_new = meta.clone()
-                                meta_new.remove('run')
+                                def meta_new = meta - meta.subMap('run')
                             [ meta_new, reads ]
                         }
     }
@@ -389,8 +394,7 @@ workflow MAG {
     ch_long_reads = ch_raw_long_reads
                         .map {
                         meta, reads ->
-                            def meta_new = meta.clone()
-                            meta_new.remove('run')
+                            def meta_new = meta - meta.subMap('run')
                         [ meta_new, reads ]
                     }
 
@@ -458,8 +462,7 @@ workflow MAG {
         KRONA_DB ()
         ch_tax_classifications = CENTRIFUGE.out.results_for_krona.mix(KRAKEN2.out.results_for_krona)
             . map { classifier, meta, report ->
-                def meta_new = meta.clone()
-                meta_new.classifier  = classifier
+                def meta_new = meta + [classifer: classifier]
                 [ meta_new, report ]
             }
         KRONA (
@@ -520,8 +523,7 @@ workflow MAG {
             MEGAHIT ( ch_short_reads_grouped )
             ch_megahit_assemblies = MEGAHIT.out.assembly
                 .map { meta, assembly ->
-                    def meta_new = meta.clone()
-                    meta_new.assembler  = "MEGAHIT"
+                    def meta_new = meta + [assembler: 'MEGAHIT']
                     [ meta_new, assembly ]
                 }
             ch_assemblies = ch_assemblies.mix(ch_megahit_assemblies)
@@ -564,8 +566,7 @@ workflow MAG {
             SPADES ( ch_short_reads_spades )
             ch_spades_assemblies = SPADES.out.assembly
                 .map { meta, assembly ->
-                    def meta_new = meta.clone()
-                    meta_new.assembler  = "SPAdes"
+                    def meta_new = meta + [assembler: 'SPAdes']
                     [ meta_new, assembly ]
                 }
             ch_assemblies = ch_assemblies.mix(ch_spades_assemblies)
@@ -584,15 +585,24 @@ workflow MAG {
             SPADESHYBRID ( ch_reads_spadeshybrid )
             ch_spadeshybrid_assemblies = SPADESHYBRID.out.assembly
                 .map { meta, assembly ->
-                    def meta_new = meta.clone()
-                    meta_new.assembler  = "SPAdesHybrid"
+                    def meta_new = meta + [assembler: "SPAdesHybrid"]
                     [ meta_new, assembly ]
                 }
             ch_assemblies = ch_assemblies.mix(ch_spadeshybrid_assemblies)
             ch_versions = ch_versions.mix(SPADESHYBRID.out.versions.first())
         }
     } else {
-        ch_assemblies = ch_input_assemblies
+        ch_assemblies_split = ch_input_assemblies
+            .branch { meta, assembly ->
+                gzipped: assembly[0].getExtension() == "gz"
+                ungzip: true
+            }
+
+        GUNZIP_ASSEMBLIES(ch_assemblies_split.gzipped)
+        ch_versions = ch_versions.mix(GUNZIP_ASSEMBLIES.out.versions)
+
+        ch_assemblies = Channel.empty()
+        ch_assemblies = ch_assemblies.mix(ch_assemblies_split.ungzip, GUNZIP_ASSEMBLIES.out.gunzip)
     }
 
     ch_quast_multiqc = Channel.empty()
@@ -613,6 +623,17 @@ workflow MAG {
             'gff'
         )
         ch_versions = ch_versions.mix(PRODIGAL.out.versions.first())
+    }
+
+    /*
+    ================================================================================
+                                    Virus identification
+    ================================================================================
+    */
+
+    if (params.run_virus_identification){
+        VIRUS_IDENTIFICATION(ch_assemblies, ch_genomad_db)
+        ch_versions = ch_versions.mix(VIRUS_IDENTIFICATION.out.versions.first())
     }
 
     /*
@@ -683,16 +704,14 @@ workflow MAG {
 
 
         } else {
-            ch_binning_results_bins = BINNING.out.bins
+            ch_binning_results_bins = BINNING.out.bins.dump(tag: 'BINNING.out.bins')
                 .map { meta, bins ->
-                    meta_new = meta.clone()
-                    meta_new.domain = 'unclassified'
+                    def meta_new = meta + [domain: 'unclassified']
                     [meta_new, bins]
                 }
-            ch_binning_results_unbins = BINNING.out.unbinned
+            ch_binning_results_unbins = BINNING.out.unbinned.dump(tag: 'BINNING.out.unbins')
                 .map { meta, bins ->
-                    meta_new = meta.clone()
-                    meta_new.domain = 'unclassified'
+                    def meta_new = meta + [domain: 'unclassified']
                     [meta_new, bins]
                 }
         }
@@ -883,8 +902,7 @@ workflow MAG {
         if (!params.skip_prokka){
             ch_bins_for_prokka = ch_input_for_postbinning_bins_unbins.transpose()
             .map { meta, bin ->
-                def meta_new = meta.clone()
-                meta_new.id  = bin.getBaseName()
+                def meta_new = meta + [id: bin.getBaseName()]
                 [ meta_new, bin ]
             }
             .filter { meta, bin ->

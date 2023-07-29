@@ -62,6 +62,10 @@
 
   > Garrison E, Marth G. Haplotype-based variant detection from short-read sequencing. arXiv preprint arXiv:1207.3907 [q-bio.GN] 2012
 
+- [geNomad](https://doi.org/10.1101/2023.03.05.531206)
+
+  > Camargo, A. P., et al. (2023). You can move, but you can’t hide: identification of mobile genetic elements with geNomad. bioRxiv preprint. doi: https://doi.org/10.1101/2023.03.05.531206
+
 - [GTDB-Tk](https://doi.org/10.1093/bioinformatics/btz848)
 
   > Chaumeil, P. A., Mussig, A. J., Hugenholtz, P., & Parks, D. H. (2020). GTDB-Tk: a toolkit to classify genomes with the Genome Taxonomy Database. Bioinformatics , 36(6), 1925–1927. doi: 10.1093/bioinformatics/btz848.

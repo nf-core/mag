@@ -106,6 +106,18 @@
                         "git_sha": "0f8a77ff00e65eaeebc509b8156eaa983192474b",
                         "installed_by": ["modules"]
                     },
+                    "genomad/download": {
+                        "branch": "master",
+                        "git_sha": "ca813f3f73adedf3547a5a677e992d9d43a71870",
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/genomad/download/genomad-download.diff"
+                    },
+                    "genomad/endtoend": {
+                        "branch": "master",
+                        "git_sha": "ca813f3f73adedf3547a5a677e992d9d43a71870",
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/genomad/endtoend/genomad-endtoend.diff"
+                    },
                     "gtdbtk/classifywf": {
                         "branch": "master",
                         "git_sha": "c67eaf89682a12966f60008a8fa30f5dd29239df",
