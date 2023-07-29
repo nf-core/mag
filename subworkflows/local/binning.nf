@@ -130,9 +130,9 @@ workflow BINNING {
     ch_versions = ch_versions.mix(GUNZIP_UNBINS.out.versions.first())
 
     emit:
-    bins                                         = ch_binning_results_gunzipped.dump(tag: "ch_binning_results_gunzipped")
+    bins                                         = ch_binning_results_gunzipped
     bins_gz                                      = ch_binning_results_gzipped_final
-    unbinned                                     = ch_splitfasta_results_gunzipped.dump(tag: "ch_splitfasta_results_gunzipped")
+    unbinned                                     = ch_splitfasta_results_gunzipped
     unbinned_gz                                  = SPLIT_FASTA.out.unbinned
     metabat2depths                               = METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS.out.depth
     versions                                     = ch_versions

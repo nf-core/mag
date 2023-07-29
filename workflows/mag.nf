@@ -208,10 +208,9 @@ if (params.genomad_db){
 gtdb = ( params.skip_binqc || params.skip_gtdbtk ) ? false : params.gtdb_db
 
 if (gtdb) {
-    ch_gtdb = Channel
-        .value(file( "${gtdb}", checkIfExists: true))
+    gtdb = file( "${gtdb}", checkIfExists: true)
 } else {
-    ch_gtdb = Channel.empty()
+    gtdb = []
 }
 
 if(params.metaeuk_db && !params.skip_metaeuk) {
@@ -720,12 +719,12 @@ workflow MAG {
 
 
         } else {
-            ch_binning_results_bins = BINNING.out.bins.dump(tag: 'BINNING.out.bins')
+            ch_binning_results_bins = BINNING.out.bins
                 .map { meta, bins ->
                     def meta_new = meta + [domain: 'unclassified']
                     [meta_new, bins]
                 }
-            ch_binning_results_unbins = BINNING.out.unbinned.dump(tag: 'BINNING.out.unbins')
+            ch_binning_results_unbins = BINNING.out.unbinned
                 .map { meta, bins ->
                     def meta_new = meta + [domain: 'unclassified']
                     [meta_new, bins]
@@ -892,7 +891,7 @@ workflow MAG {
                     ch_gtdb_bins,
                     ch_busco_summary,
                     ch_checkm_summary,
-                    ch_gtdb
+                    gtdb
                 )
                 ch_versions = ch_versions.mix(GTDBTK.out.versions.first())
                 ch_gtdbtk_summary = GTDBTK.out.summary
