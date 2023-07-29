@@ -122,6 +122,8 @@ include { ADAPTERREMOVAL as ADAPTERREMOVAL_SE    } from '../modules/nf-core/adap
 include { CAT_FASTQ                              } from '../modules/nf-core/cat/fastq/main'
 include { PRODIGAL                               } from '../modules/nf-core/prodigal/main'
 include { PROKKA                                 } from '../modules/nf-core/prokka/main'
+include { MMSEQS_DATABASES                       } from '../modules/nf-core/mmseqs/databases/main'
+include { METAEUK_EASYPREDICT                    } from '../modules/nf-core/metaeuk/easypredict/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS            } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 include { MULTIQC                                } from '../modules/nf-core/multiqc/main'
 
@@ -212,6 +214,13 @@ if (gtdb) {
     ch_gtdb = Channel.empty()
 }
 
+if(params.metaeuk_db && !params.skip_metaeuk) {
+    ch_metaeuk_db = Channel.
+        value(file("${params.metaeuk_db}", checkIfExists: true))
+} else {
+    ch_metaeuk_db = Channel.empty()
+}
+
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     RUN MAIN WORKFLOW
@@ -231,6 +240,13 @@ workflow MAG {
     if ( !params.skip_binqc && params.binqc_tool == 'checkm' && !params.checkm_db ) {
         ARIA2_UNTAR (params.checkm_download_url)
         ch_checkm_db = ARIA2_UNTAR.out.downloaded_file
+    }
+
+    // Get mmseqs db for MetaEuk if requested
+    if (!params.skip_metaeuk && params.metaeuk_mmseqs_db) {
+        MMSEQS_DATABASES(params.metaeuk_mmseqs_db)
+        ch_metaeuk_db = MMSEQS_DATABASES.out.database
+        ch_versions = ch_versions.mix(MMSEQS_DATABASES.out.versions)
     }
 
     //
@@ -915,6 +931,20 @@ workflow MAG {
                 []
             )
             ch_versions = ch_versions.mix(PROKKA.out.versions.first())
+        }
+
+        if (!params.skip_metaeuk && (params.metaeuk_db || params.metaeuk_mmseqs_db)) {
+            ch_bins_for_metaeuk = ch_input_for_postbinning_bins_unbins.transpose()
+                .filter { meta, bin ->
+                    meta.domain in ["eukarya", "unclassified"]
+                }
+                .map { meta, bin ->
+                    def meta_new = meta + [id: bin.getBaseName()]
+                    [ meta_new, bin ]
+                }
+
+            METAEUK_EASYPREDICT (ch_bins_for_metaeuk, ch_metaeuk_db)
+            ch_versions = ch_versions.mix(METAEUK_EASYPREDICT.out.versions)
         }
     }
 

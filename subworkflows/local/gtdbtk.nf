@@ -62,7 +62,7 @@ workflow GTDBTK {
     if ( gtdb.extension == '.gz' ) {
         // Expects to be tar.gz!
         ch_db_for_gtdbtk = GTDBTK_DB_PREPARATION ( gtdb ).out
-    } else if ( gtdb.isDirectory ) {
+    } else if ( gtdb.isDirectory() ) {
         // Make up meta id to match expected channel cardinality for GTDBTK
         ch_db_for_gtdbtk = gtdb
                             .map{
