@@ -34,7 +34,6 @@
                     "format": "file-path",
                     "description": "Additional input CSV samplesheet containing information about pre-computed assemblies. When set, both read pre-processing and assembly are skipped and the pipeline begins at the binning stage.",
                     "help_text": "If you have pre-computed assemblies from another source, it is possible to jump straight to the binning stage of the pipeline by supplying these assemblies in a CSV file. This CSV file should have three columns and the following header: `id,group,assembler,fasta`. Short reads must still be supplied in to `--input` in CSV format. See [usage docs](https://nf-co.re/mag/usage#input-specifications) for further details.",
-                    "default": "None",
                     "fa_icon": "fas fa-file-csv"
                 },
                 "outdir": {
@@ -174,14 +173,12 @@
                     "type": "boolean",
                     "description": "Display help text.",
                     "fa_icon": "fas fa-question-circle",
-                    "default": false,
                     "hidden": true
                 },
                 "version": {
                     "type": "boolean",
                     "description": "Display version and exit.",
                     "fa_icon": "fas fa-question-circle",
-                    "default": false,
                     "hidden": true
                 },
                 "publish_dir_mode": {
@@ -205,7 +202,6 @@
                     "type": "boolean",
                     "description": "Send plain-text email instead of HTML.",
                     "fa_icon": "fas fa-remove-format",
-                    "default": false,
                     "hidden": true
                 },
                 "max_multiqc_email_size": {
@@ -220,7 +216,6 @@
                     "type": "boolean",
                     "description": "Do not use coloured log outputs.",
                     "fa_icon": "fas fa-palette",
-                    "default": false,
                     "hidden": true
                 },
                 "hook_url": {
@@ -259,7 +254,6 @@
                     "type": "boolean",
                     "fa_icon": "far fa-eye-slash",
                     "description": "Show all params when using `--help`",
-                    "default": false,
                     "hidden": true,
                     "help_text": "By default, parameters set as _hidden_ in the schema are not shown on the command line when a user runs with `--help`. Specifying this option will tell the pipeline to show all parameters."
                 },
@@ -267,7 +261,6 @@
                     "type": "boolean",
                     "fa_icon": "far fa-check-circle",
                     "description": "Validation of parameters fails when an unrecognised parameter is found.",
-                    "default": false,
                     "hidden": true,
                     "help_text": "By default, when an unrecognised parameter is found, it returns a warinig."
                 },
@@ -275,7 +268,6 @@
                     "type": "boolean",
                     "fa_icon": "far fa-check-circle",
                     "description": "Validation of parameters in lenient more.",
-                    "default": false,
                     "hidden": true,
                     "help_text": "Allows string values that are parseable as numbers or booleans. For further information see [JSONSchema docs](https://github.com/everit-org/json-schema#lenient-mode)."
                 }
@@ -612,8 +604,8 @@
                 }
             }
         },
-        "gene_prediction_options": {
-            "title": "Gene prediction options",
+        "gene_prediction_and_annotation_options": {
+            "title": "Gene prediction and annotation options",
             "type": "object",
             "description": "",
             "default": "",
@@ -621,6 +613,28 @@
                 "skip_prodigal": {
                     "type": "boolean",
                     "description": "Skip Prodigal gene prediction"
+                },
+                "skip_prokka": {
+                    "type": "boolean",
+                    "description": "Skip Prokka genome annotation."
+                },
+                "skip_metaeuk": {
+                    "type": "boolean",
+                    "description": "Skip MetaEuk gene prediction and annotation"
+                },
+                "metaeuk_mmseqs_db": {
+                    "type": "string",
+                    "description": "A string containing the name of one of the databases listed in the [mmseqs2 documentation](https://github.com/soedinglab/MMseqs2/wiki#downloading-databases). This database will be downloaded and formatted for eukaryotic genome annotation. Incompatible with --metaeuk_db.",
+                    "help_text": "mmseqs2 lists a large number of databases, not all of which are appropriate for use with MetaEuk. MetaEuk requires protein inputs, so you should select one of the Aminoacid or Profile options."
+                },
+                "metaeuk_db": {
+                    "type": "string",
+                    "description": "Path to either a local fasta file of protein sequences, or to a directory containing an mmseqs2-formatted database, for annotation of eukaryotic genomes.",
+                    "help_text": "One option would be the databases from the MetaEuk publication (https://wwwuser.gwdg.de/~compbiol/metaeuk/), however it should be noted that these are focused on marine eukaryotes."
+                },
+                "save_mmseqs_db": {
+                    "type": "boolean",
+                    "description": "Save the downloaded mmseqs2 database specified in `--metaeuk_mmseqs_db`."
                 }
             }
         },
@@ -712,10 +726,6 @@
                     "type": "integer",
                     "default": 3000,
                     "description": "Minimum contig length for Tiara to use for domain classification. For accurate classification, should be longer than 3000 bp."
-                },
-                "skip_prokka": {
-                    "type": "boolean",
-                    "description": "Skip Prokka genome annotation."
                 }
             }
         },
@@ -898,7 +908,7 @@
             "$ref": "#/definitions/assembly_options"
         },
         {
-            "$ref": "#/definitions/gene_prediction_options"
+            "$ref": "#/definitions/gene_prediction_and_annotation_options"
         },
         {
             "$ref": "#/definitions/virus_identification_options"

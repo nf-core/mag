@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#439](https://github.com/nf-core/mag/pull/439) - Adds ability to enter the pipeline at the binning stage by providing a CSV of pre-computed assemblies (by @prototaxites)
 - [#459](https://github.com/nf-core/mag/pull/459) - Adds ability to skip damage correction step in the ancient DNA workflow and just run pyDamage (by @jfy133)
 - [#364](https://github.com/nf-core/mag/pull/364) - Added geNomad nf-core modules for identifying viruses in assemblies (by @PhilPalmer and @CarsonJM)
+- [#481](https://github.com/nf-core/mag/pull/481) - Adds MetaEuk for annotation of eukaryotic MAGs, and MMSeqs2 to enable downloading databases for MetaEuk (by @prototaxites)
 
 ### `Changed`
 
