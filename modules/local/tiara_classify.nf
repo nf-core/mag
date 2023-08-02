@@ -1,4 +1,6 @@
 process TIARA_CLASSIFY {
+    tag "${meta.id}"
+    label "process_single"
 
     conda "conda-forge::r-tidyverse=1.3.1 conda-forge::r-optparse=1.7.3"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
