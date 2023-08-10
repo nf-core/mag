@@ -58,22 +58,22 @@
                     },
                     "concoct/concoctcoveragetable": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "git_sha": "36aa9d3ce6561d9bd5c240bcf82fe109af543c0d",
                         "installed_by": ["fasta_binning_concoct"]
                     },
                     "concoct/cutupfasta": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "git_sha": "36aa9d3ce6561d9bd5c240bcf82fe109af543c0d",
                         "installed_by": ["fasta_binning_concoct"]
                     },
                     "concoct/extractfastabins": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "git_sha": "36aa9d3ce6561d9bd5c240bcf82fe109af543c0d",
                         "installed_by": ["fasta_binning_concoct"]
                     },
                     "concoct/mergecutupclustering": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "git_sha": "36aa9d3ce6561d9bd5c240bcf82fe109af543c0d",
                         "installed_by": ["fasta_binning_concoct"]
                     },
                     "custom/dumpsoftwareversions": {
