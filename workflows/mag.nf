@@ -31,7 +31,7 @@ log.info logo + paramsSummaryLog(workflow) + citation
 WorkflowMag.initialise(params, log, hybrid)
 
 // Check input path parameters to see if they exist
-def checkPathParamList = [ params.input, params.multiqc_config, params.phix_reference, params.host_fasta, params.centrifuge_db, params.kraken2_db, params.cat_db, params.gtdb, params.lambda_reference, params.busco_reference ]
+def checkPathParamList = [ params.input, params.multiqc_config, params.phix_reference, params.host_fasta, params.centrifuge_db, params.kraken2_db, params.cat_db, params.gtdb_db, params.lambda_reference, params.busco_reference ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
 /*
@@ -205,13 +205,12 @@ if (params.genomad_db){
     ch_genomad_db = Channel.empty()
 }
 
-gtdb = params.skip_binqc ? false : params.gtdb
+gtdb = ( params.skip_binqc || params.skip_gtdbtk ) ? false : params.gtdb_db
 
 if (gtdb) {
-    ch_gtdb = Channel
-        .value(file( "${gtdb}" ))
+    gtdb = file( "${gtdb}", checkIfExists: true)
 } else {
-    ch_gtdb = Channel.empty()
+    gtdb = []
 }
 
 if(params.metaeuk_db && !params.skip_metaeuk) {
@@ -720,12 +719,12 @@ workflow MAG {
 
 
         } else {
-            ch_binning_results_bins = BINNING.out.bins.dump(tag: 'BINNING.out.bins')
+            ch_binning_results_bins = BINNING.out.bins
                 .map { meta, bins ->
                     def meta_new = meta + [domain: 'unclassified']
                     [meta_new, bins]
                 }
-            ch_binning_results_unbins = BINNING.out.unbinned.dump(tag: 'BINNING.out.unbins')
+            ch_binning_results_unbins = BINNING.out.unbinned
                 .map { meta, bins ->
                     def meta_new = meta + [domain: 'unclassified']
                     [meta_new, bins]
@@ -877,25 +876,31 @@ workflow MAG {
         /*
          * GTDB-tk: taxonomic classifications using GTDB reference
          */
-        ch_gtdbtk_summary = Channel.empty()
-        if ( gtdb ){
 
-            ch_gtdb_bins = ch_input_for_postbinning_bins_unbins
-                .filter { meta, bins ->
-                    meta.domain != "eukarya"
-                }
+        if ( !params.skip_gtdbtk ) {
 
-            GTDBTK (
-                ch_gtdb_bins,
-                ch_busco_summary,
-                ch_checkm_summary,
-                ch_gtdb
-            )
-            ch_versions = ch_versions.mix(GTDBTK.out.versions.first())
-            ch_gtdbtk_summary = GTDBTK.out.summary
+            ch_gtdbtk_summary = Channel.empty()
+            if ( gtdb ){
+
+                ch_gtdb_bins = ch_input_for_postbinning_bins_unbins
+                    .filter { meta, bins ->
+                        meta.domain != "eukarya"
+                    }
+
+                GTDBTK (
+                    ch_gtdb_bins,
+                    ch_busco_summary,
+                    ch_checkm_summary,
+                    gtdb
+                )
+                ch_versions = ch_versions.mix(GTDBTK.out.versions.first())
+                ch_gtdbtk_summary = GTDBTK.out.summary
+            }
+        } else {
+            ch_gtdbtk_summary = Channel.empty()
         }
 
-        if ( ( !params.skip_binqc ) || !params.skip_quast || gtdb){
+        if ( ( !params.skip_binqc ) || !params.skip_quast || !params.skip_gtdbtk){
             BIN_SUMMARY (
                 ch_input_for_binsummary,
                 ch_busco_summary.ifEmpty([]),

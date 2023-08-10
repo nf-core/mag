@@ -119,8 +119,8 @@ class WorkflowMag {
             Nextflow.error('Both --busco_auto_lineage_prok and --busco_reference are specified! Invalid combination, please specify either --busco_auto_lineage_prok or --busco_reference.')
         }
 
-        if (params.skip_binqc && params.gtdb) {
-            log.warn '--skip_binqc and --gtdb are specified! GTDB-tk will be omitted because GTDB-tk bin classification requires bin filtering based on BUSCO or CheckM QC results to avoid GTDB-tk errors.'
+        if (params.skip_binqc && !params.skip_gtdbtk) {
+            log.warn '--skip_binqc is specified, but --skip_gtdbtk is explictly set to run! GTDB-tk will be omitted because GTDB-tk bin classification requires bin filtering based on BUSCO or CheckM QC results to avoid GTDB-tk errors.'
         }
 
         // Check if CAT parameters are valid

@@ -10,7 +10,7 @@ process GTDBTK_DB_PREPARATION {
     path(database)
 
     output:
-    tuple val("${database.toString().replace(".tar.gz", "")}"), path("database/*")
+    tuple val("${database.toString().replace(".tar.gz", "")}"), path("database/*"), emit: db
 
     script:
     """

@@ -59,10 +59,24 @@ workflow GTDBTK {
                 return [it[0], it[1]]
         }
 
-    GTDBTK_DB_PREPARATION ( gtdb )
+    if ( gtdb.extension == 'gz' ) {
+        // Expects to be tar.gz!
+        ch_db_for_gtdbtk = GTDBTK_DB_PREPARATION ( gtdb ).db
+    } else if ( gtdb.isDirectory() ) {
+        // Make up meta id to match expected channel cardinality for GTDBTK
+        ch_db_for_gtdbtk = Channel
+                            .of(gtdb)
+                            .map{
+                                [ it.toString().split('/').last(), it ]
+                            }
+                            .collect()
+    } else {
+        error("Unsupported object given to --gtdb, database must be supplied as either a directory or a .tar.gz file!")
+    }
+
     GTDBTK_CLASSIFYWF (
         ch_filtered_bins.passed.groupTuple(),
-        GTDBTK_DB_PREPARATION.out
+        ch_db_for_gtdbtk
     )
 
     GTDBTK_SUMMARY (

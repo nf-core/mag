@@ -511,11 +511,15 @@
                     "type": "boolean",
                     "description": "Only return official taxonomic ranks (Kingdom, Phylum, etc.) when running CAT."
                 },
-                "gtdb": {
+                "skip_gtdbtk": {
+                    "type": "boolean",
+                    "description": "Skip the running of GTDB, as well as the automatic download of the database",
+                    "default": "false"
+                },
+                "gtdb_db": {
                     "type": "string",
-                    "default": "https://data.gtdb.ecogenomic.org/releases/release202/202.0/auxillary_files/gtdbtk_r202_data.tar.gz",
-                    "description": "GTDB database for taxonomic classification of bins with GTDB-tk.",
-                    "help_text": "For information which GTDB reference databases are compatible with the used GTDB-tk version see https://ecogenomics.github.io/GTDBTk/installing/index.html#gtdb-tk-reference-data."
+                    "description": "Specify the location of a GTDBTK database. Can be either an uncompressed directory or a `.tar.gz` archive. If not specified will be downloaded for you when GTDBTK or binning QC is not skipped.",
+                    "default": "https://data.ace.uq.edu.au/public/gtdb/data/releases/release214/214.1/auxillary_files/gtdbtk_r214_data.tar.gz"
                 },
                 "gtdbtk_min_completeness": {
                     "type": "number",
