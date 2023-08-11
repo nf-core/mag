@@ -155,7 +155,7 @@
                     },
                     "metabat2/metabat2": {
                         "branch": "master",
-                        "git_sha": "f1591b35cc7b21b333d1226daa9986c173fe9afc",
+                        "git_sha": "d2e220fdec3aa2f4482c70017df4cdf8a4c94f27",
                         "installed_by": ["modules"]
                     },
                     "metaeuk/easypredict": {
