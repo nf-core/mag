@@ -7,13 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
-- [#395](https://github.com/nf-core/mag/pull/395) - Add support for fast domain-level classification of bins using Tiara, to allow bins to be separated into eukaryotic and prokaryotic-specific processes.
+- [#395](https://github.com/nf-core/mag/pull/395) - Adds support for fast domain-level classification of bins using Tiara, to allow bins to be separated into eukaryotic and prokaryotic-specific processes.
 - [#422](https://github.com/nf-core/mag/pull/422) - Adds support for normalization of read depth with BBNorm (added by @erikrikarddaniel and @fabianegli)
 - [#439](https://github.com/nf-core/mag/pull/439) - Adds ability to enter the pipeline at the binning stage by providing a CSV of pre-computed assemblies (by @prototaxites)
 - [#459](https://github.com/nf-core/mag/pull/459) - Adds ability to skip damage correction step in the ancient DNA workflow and just run pyDamage (by @jfy133)
 - [#364](https://github.com/nf-core/mag/pull/364) - Adds geNomad nf-core modules for identifying viruses in assemblies (by @PhilPalmer and @CarsonJM)
 - [#481](https://github.com/nf-core/mag/pull/481) - Adds MetaEuk for annotation of eukaryotic MAGs, and MMSeqs2 to enable downloading databases for MetaEuk (by @prototaxites)
 - [#437](https://github.com/nf-core/mag/pull/429) - `--gtdb_db` also now supports directory input of an pre-uncompressed GTDB archive directory (reported by @alneberg, fix by @jfy133)
+- [#494](https://github.com/nf-core/mag/pull/494) - Adds support for saving the BAM files from Bowtie2 mapping of input reads back to assembly (fix by @jfy133)
 
 ### `Changed`
 
@@ -38,7 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#449](https://github.com/nf-core/mag/pull/447) - Fix results file overwriting in Ancient DNA workflow (reported by @alexhbnr, fix by @jfy133)
 - [#470](https://github.com/nf-core/mag/pull/470) - Fix binning preparation from running even when binning was requested to be skipped (reported by @prototaxites, fix by @jfy133)
 - [#480](https://github.com/nf-core/mag/pull/480) - Improved `-resume` reliability through better meta map preservation (reported by @prototaxites, fix by @jfy133)
-- [#493](https://github.com/nf-core/mag/pull/493) - Update `METABAT2` nf-core module so that it reduced the number of unnecessary file moves, enabling virtual filesystems, fix by @adamrtalbot)
+- [#493](https://github.com/nf-core/mag/pull/493) - Update `METABAT2` nf-core module so that it reduced the number of unnecessary file moves, enabling virtual filesystems (fix by @adamrtalbot)
 
 ### `Dependencies`
 
