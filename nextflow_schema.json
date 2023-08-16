@@ -513,8 +513,7 @@
                 },
                 "skip_gtdbtk": {
                     "type": "boolean",
-                    "description": "Skip the running of GTDB, as well as the automatic download of the database",
-                    "default": "false"
+                    "description": "Skip the running of GTDB, as well as the automatic download of the database"
                 },
                 "gtdb_db": {
                     "type": "string",
@@ -523,7 +522,7 @@
                 },
                 "gtdbtk_min_completeness": {
                     "type": "number",
-                    "default": 50.0,
+                    "default": 50,
                     "description": "Min. bin completeness (in %) required to apply GTDB-tk classification.",
                     "help_text": "Completeness assessed with BUSCO analysis (100% - %Missing). Must be greater than 0 (min. 0.01) to avoid GTDB-tk errors. If too low, GTDB-tk classification results can be impaired due to not enough marker genes!",
                     "minimum": 0.01,
@@ -531,7 +530,7 @@
                 },
                 "gtdbtk_max_contamination": {
                     "type": "number",
-                    "default": 10.0,
+                    "default": 10,
                     "description": "Max. bin contamination (in %) allowed to apply GTDB-tk classification.",
                     "help_text": "Contamination approximated based on BUSCO analysis (%Complete and duplicated). If too high, GTDB-tk classification results can be impaired due to contamination!",
                     "minimum": 0,
@@ -539,7 +538,7 @@
                 },
                 "gtdbtk_min_perc_aa": {
                     "type": "number",
-                    "default": 10.0,
+                    "default": 10,
                     "description": "Min. fraction of AA (in %) in the MSA for bins to be kept.",
                     "minimum": 0,
                     "maximum": 100
@@ -553,7 +552,7 @@
                 },
                 "gtdbtk_pplacer_cpus": {
                     "type": "number",
-                    "default": 1.0,
+                    "default": 1,
                     "description": "Number of CPUs used for the by GTDB-Tk run tool pplacer.",
                     "help_text": "A low number of CPUs helps to reduce the memory required/reported by GTDB-Tk. See also the [GTDB-Tk documentation](https://ecogenomics.github.io/GTDBTk/faq.html#gtdb-tk-reaches-the-memory-limit-pplacer-crashes)."
                 },
@@ -649,7 +648,6 @@
             "properties": {
                 "run_virus_identification": {
                     "type": "boolean",
-                    "default": false,
                     "description": "Run virus identification."
                 },
                 "genomad_min_score": {
@@ -714,6 +712,11 @@
                     "type": "string",
                     "description": "Bowtie2 alignment mode",
                     "help_text": "Bowtie2 alignment mode options, for example: `--very-fast` , `--very-sensitive-local -N 1` , ..."
+                },
+                "save_assembly_mapped_reads": {
+                    "type": "boolean",
+                    "description": "Save the output of mapping raw reads back to assembled contigs",
+                    "help_text": "Specify to save the BAM and BAI files generated when mapping input reads back to the assembled contigs (performed in preparation for binning and contig depth estimations)."
                 },
                 "bin_domain_classification": {
                     "type": "boolean",
