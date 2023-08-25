@@ -74,6 +74,7 @@ workflow GTDBTK {
         error("Unsupported object given to --gtdb, database must be supplied as either a directory or a .tar.gz file!")
     }
 
+    ch_filtered_bins.passed.groupTuple().dump(tag: "ch_filtered_bins.passed.groupTuple", pretty: true)
     GTDBTK_CLASSIFYWF (
         ch_filtered_bins.passed.groupTuple(),
         ch_db_for_gtdbtk
@@ -82,8 +83,10 @@ workflow GTDBTK {
     GTDBTK_SUMMARY (
         ch_filtered_bins.discarded.map{it[1]}.collect().ifEmpty([]),
         GTDBTK_CLASSIFYWF.out.summary.collect().ifEmpty([]),
-        GTDBTK_CLASSIFYWF.out.filtered.collect().ifEmpty([]),
-        GTDBTK_CLASSIFYWF.out.failed.collect().ifEmpty([])
+        [],
+        // GTDBTK_CLASSIFYWF.out.filtered.collect().ifEmpty([]),
+        []
+        // GTDBTK_CLASSIFYWF.out.failed.collect().ifEmpty([])
     )
 
     emit:

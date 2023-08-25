@@ -23,17 +23,21 @@ workflow DEPTHS {
     main:
     ch_versions = Channel.empty()
 
+    bins_unbins.dump(tag: "DEPTH_bins_unbins", pretty: true)
+    depths.dump(tag: 'DEPTH_depths', pretty: true)
+    reads.dump(tag: 'DEPTH_reads', pretty: true)
+
     // Compute bin depths for different samples (according to `binning_map_mode`)
     // Create a new meta joining key first, but copy meta so that
     // we retain the information about binners and domain classification
     ch_depth_input = bins_unbins
         .map { meta, bins ->
-            def meta_join = meta - meta.subMap('binner','domain')
+            def meta_join = meta - meta.subMap('binner','domain','refinement')
             [ meta_join, meta, bins ]
         }
         .combine( depths, by: 0 )
         .map { meta_join, meta, bins, contig_depths_file ->
-            def meta_new = meta - meta.subMap('domain')
+            def meta_new = meta - meta.subMap('domain','refinement')
             [ meta_new, bins, contig_depths_file ]
         }
         .transpose()
