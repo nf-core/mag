@@ -582,12 +582,12 @@
                 "spades_options": {
                     "type": "string",
                     "description": "Additional custom options for SPAdes.",
-                    "help_text": "An example is adjusting k-mers (\"-k 21,33,55,77\") or adding [advanced options](https://github.com/ablab/spades#advanced-options). But not -t, -m, -o or --out-prefix, because these are already in use."
+                    "help_text": "An example is adjusting k-mers (\"-k 21,33,55,77\") or adding [advanced options](https://github.com/ablab/spades#advanced-options). But not -t, -m, -o or --out-prefix, because these are already in use. Must be used like this: --spades_options=\"-k 21,33,55,77\")"
                 },
                 "megahit_options": {
                     "type": "string",
                     "description": "Additional custom options for MEGAHIT.",
-                    "help_text": "An example is adjusting presets (e.g. \"--presets meta-large\"), k-mers (e.g. \"-k 21,33,55,77\") or adding other [advanced options](https://github.com/voutcn/megahit#advanced-usage). For example, increase the minimum k-mer in the event of an error message such as \"Too many vertices in the unitig graph, you may increase the kmer size to remove tons of erroneous kmers.\" in the MEGAHIT log file. But not --threads, --memory, -o or input read files, because these are already in use."
+                    "help_text": "An example is adjusting presets (e.g. \"--presets meta-large\"), k-mers (e.g. \"-k 21,33,55,77\") or adding other [advanced options](https://github.com/voutcn/megahit#advanced-usage). For example, increase the minimum k-mer in the event of an error message such as \"Too many vertices in the unitig graph, you may increase the kmer size to remove tons of erroneous kmers.\" in the MEGAHIT log file. But not --threads, --memory, -o or input read files, because these are already in use. Must be used like this: --megahit_options=\"--presets meta-large\""
                 },
                 "skip_spades": {
                     "type": "boolean",
@@ -711,7 +711,7 @@
                 "bowtie2_mode": {
                     "type": "string",
                     "description": "Bowtie2 alignment mode",
-                    "help_text": "Bowtie2 alignment mode options, for example: `--very-fast` , `--very-sensitive-local -N 1` , ..."
+                    "help_text": "Bowtie2 alignment mode options, for example: `--very-fast` , `--very-sensitive-local -N 1` , ... Must be used like this: --bowtie2_mode=\"--very-sensitive\""
                 },
                 "save_assembly_mapped_reads": {
                     "type": "boolean",
