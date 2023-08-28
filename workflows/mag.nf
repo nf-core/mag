@@ -481,18 +481,15 @@ workflow MAG {
     ch_versions = ch_versions.mix(KRAKEN2.out.versions.first())
 
     if (( params.centrifuge_db || params.kraken2_db ) && !params.skip_krona){
-
         if (params.krona_db){
-            ch_cat_db = ch_krona_db_file
+            ch_krona_db = ch_krona_db_file
         } else {
             KRONA_DB ()
             ch_krona_db = KRONA_DB.out.db
-            // KRONA_DB.out.db.collect()
-            // collect or not?
         }
         ch_tax_classifications = CENTRIFUGE.out.results_for_krona.mix(KRAKEN2.out.results_for_krona)
             . map { classifier, meta, report ->
-                def meta_new = meta + [classifer: classifier]
+                def meta_new = meta + [classifier: classifier]
                 [ meta_new, report ]
             }
         KRONA (

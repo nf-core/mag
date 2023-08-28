@@ -8,16 +8,14 @@ process KRONA {
 
     input:
     tuple val(meta), path(report)
-    path(taxonomy)
+    path(taxonomy_file)
 
     output:
-    path "*.html"       , emit: html
-    path "versions.yml" , emit: versions
+    tuple val(meta), path("*.html") , emit: html
+    path "versions.yml"             , emit: versions
 
     script:
-    taxonomy_folder = taxonomy.toRealPath().getParent()
-    // if the path is a list, perhaps take the first item?
-    //taxonomy_folder = taxonomy[0].toRealPath().getParent()
+    taxonomy_folder = taxonomy_file.toRealPath().getParent()
     """
     ktImportTaxonomy "$report" -tax ${taxonomy_folder}
 
