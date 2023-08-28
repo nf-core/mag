@@ -209,6 +209,7 @@ gtdb = ( params.skip_binqc || params.skip_gtdbtk ) ? false : params.gtdb_db
 
 if (gtdb) {
     gtdb = file( "${gtdb}", checkIfExists: true)
+    gtdb_mash = params.gtdb_mash ? file("${params.gtdb_mash}", checkIfExists: true) : []
 } else {
     gtdb = []
 }
@@ -914,7 +915,8 @@ workflow MAG {
                     ch_gtdb_bins,
                     ch_busco_summary,
                     ch_checkm_summary,
-                    gtdb
+                    gtdb,
+                    gtdb_mash
                 )
                 ch_versions = ch_versions.mix(GTDBTK.out.versions.first())
                 ch_gtdbtk_summary = GTDBTK.out.summary
