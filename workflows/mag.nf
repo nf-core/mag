@@ -775,8 +775,6 @@ workflow MAG {
                         [meta_new, bins]
                     }.mix( BINNING_REFINEMENT.out.refined_bins)
 
-            ch_refined_bins.dump(tag: 'ch_refined_bins', pretty: true)
-
             ch_refined_unbins = BINNING_REFINEMENT.out.refined_unbins
             ch_versions = ch_versions.mix(BINNING_REFINEMENT.out.versions)
 
@@ -858,7 +856,6 @@ workflow MAG {
         }
 
         ch_quast_bins_summary = Channel.empty()
-        ch_input_for_postbinning_bins_unbins.dump(tag: 'ch_input_for_postbinning_bins_unbins', pretty: true)
         if (!params.skip_quast){
             ch_input_for_quast_bins = ch_input_for_postbinning_bins_unbins
                                         .groupTuple()
@@ -870,7 +867,6 @@ workflow MAG {
 
             QUAST_BINS ( ch_input_for_quast_bins )
             ch_versions = ch_versions.mix(QUAST_BINS.out.versions.first())
-            QUAST_BINS.out.quast_bin_summaries.collect().dump(tag: 'quast_bin_summaries_collect', pretty: true)
             QUAST_BINS_SUMMARY ( QUAST_BINS.out.quast_bin_summaries.collect() )
             ch_quast_bins_summary = QUAST_BINS_SUMMARY.out.summary
         }
