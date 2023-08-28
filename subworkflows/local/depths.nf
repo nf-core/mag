@@ -23,9 +23,6 @@ workflow DEPTHS {
     main:
     ch_versions = Channel.empty()
 
-    bins_unbins.dump(tag: "DEPTH_bins_unbins", pretty: true)
-    depths.dump(tag: 'DEPTH_depths', pretty: true)
-    reads.dump(tag: 'DEPTH_reads', pretty: true)
 
     // Compute bin depths for different samples (according to `binning_map_mode`)
     // Create a new meta joining key first, but copy meta so that
