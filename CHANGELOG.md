@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
+- [#X](https://github.com/nf-core/mag/pull/X) - Adds support for pointing at a local db for krona, using the parameter `--krona_db` (by @willros).
 - [#395](https://github.com/nf-core/mag/pull/395) - Adds support for fast domain-level classification of bins using Tiara, to allow bins to be separated into eukaryotic and prokaryotic-specific processes.
 - [#422](https://github.com/nf-core/mag/pull/422) - Adds support for normalization of read depth with BBNorm (added by @erikrikarddaniel and @fabianegli)
 - [#439](https://github.com/nf-core/mag/pull/439) - Adds ability to enter the pipeline at the binning stage by providing a CSV of pre-computed assemblies (by @prototaxites)
