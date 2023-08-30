@@ -15,7 +15,7 @@ process KRONA {
     path "versions.yml"             , emit: versions
 
     script:
-    taxonomy_folder = taxonomy_file.toRealPath().getParent()
+    taxonomy_folder = taxonomy_file.getParent()
     """
     ktImportTaxonomy "$report" -tax ${taxonomy_folder}
 
