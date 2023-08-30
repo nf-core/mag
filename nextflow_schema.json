@@ -491,7 +491,7 @@
                 "krona_db": {
                     "type": "string",
                     "description": "Database for taxonomic binning with krona",
-                    "help_text": "Local `taxonomy.tab` file for Krona, instead of downloading. Point at the `.tab` file."
+                    "help_text": "Path to `taxonomy.tab` file for Krona, instead of downloading the default file. Point at the `.tab` file."
                 },
                 "skip_krona": {
                     "type": "boolean",
