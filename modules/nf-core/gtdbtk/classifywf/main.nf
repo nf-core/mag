@@ -1,5 +1,5 @@
 process GTDBTK_CLASSIFYWF {
-    tag "${meta.assembler}-${meta.binner}-${meta.domain}-${meta.refinement}-${meta.id}"
+    tag "${prefix}"
     label 'process_medium'
 
     // WARN: Version information not provided by tool on CLI. Please update version string below when bumping container versions.
@@ -14,16 +14,16 @@ process GTDBTK_CLASSIFYWF {
     path(mash_db)
 
     output:
-    path "gtdbtk.${meta.assembler}-${meta.binner}-${meta.domain}-${meta.refinement}-${meta.id}.*.summary.tsv"        , emit: summary
-    path "gtdbtk.${meta.assembler}-${meta.binner}-${meta.domain}-${meta.refinement}-${meta.id}.*.classify.tree.gz"   , emit: tree, optional: true
-    path "gtdbtk.${meta.assembler}-${meta.binner}-${meta.domain}-${meta.refinement}-${meta.id}.*.markers_summary.tsv", emit: markers, optional: true
-    path "gtdbtk.${meta.assembler}-${meta.binner}-${meta.domain}-${meta.refinement}-${meta.id}.*.msa.fasta.gz"       , emit: msa, optional: true
-    path "gtdbtk.${meta.assembler}-${meta.binner}-${meta.domain}-${meta.refinement}-${meta.id}.*.user_msa.fasta.gz"  , emit: user_msa, optional: true
-    path "gtdbtk.${meta.assembler}-${meta.binner}-${meta.domain}-${meta.refinement}-${meta.id}.*.filtered.tsv"       , emit: filtered, optional: true
-    path "gtdbtk.${meta.assembler}-${meta.binner}-${meta.domain}-${meta.refinement}-${meta.id}.log"                  , emit: log
-    path "gtdbtk.${meta.assembler}-${meta.binner}-${meta.domain}-${meta.refinement}-${meta.id}.warnings.log"         , emit: warnings
-    path "gtdbtk.${meta.assembler}-${meta.binner}-${meta.domain}-${meta.refinement}-${meta.id}.failed_genomes.tsv"   , emit: failed, optional: true
-    path "versions.yml"                                             , emit: versions
+    path "gtdbtk.${prefix}.*.summary.tsv"        , emit: summary
+    path "gtdbtk.${prefix}.*.classify.tree.gz"   , emit: tree, optional: true
+    path "gtdbtk.${prefix}.*.markers_summary.tsv", emit: markers, optional: true
+    path "gtdbtk.${prefix}.*.msa.fasta.gz"       , emit: msa, optional: true
+    path "gtdbtk.${prefix}.*.user_msa.fasta.gz"  , emit: user_msa, optional: true
+    path "gtdbtk.${prefix}.*.filtered.tsv"       , emit: filtered, optional: true
+    path "gtdbtk.${prefix}.failed_genomes.tsv"   , emit: failed, optional: true
+    path "gtdbtk.${prefix}.log"                  , emit: log
+    path "gtdbtk.${prefix}.warnings.log"         , emit: warnings
+    path "versions.yml"                          , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -31,8 +31,8 @@ process GTDBTK_CLASSIFYWF {
     script:
     def args = task.ext.args ?: ''
     def pplacer_scratch = params.gtdbtk_pplacer_scratch ? "--scratch_dir pplacer_tmp" : ""
-    def prefix = task.ext.prefix ?: "${meta.assembler}-${meta.binner}-${meta.domain}-${meta.refinement}-${meta.id}"
     def mash_mode = mash_db ? "--mash_db ${mash_db}" : "--skip_ani_screen"
+    prefix = task.ext.prefix ?: "${meta.id}"
 
     """
     export GTDBTK_DATA_PATH="\${PWD}/database"
@@ -51,22 +51,18 @@ process GTDBTK_CLASSIFYWF {
         --min_perc_aa $params.gtdbtk_min_perc_aa \\
         --min_af $params.gtdbtk_min_af
 
-    mv classify/* \\
-        .
+    mv classify/* .
     
-    mv identify/* \\
-       .
+    mv identify/* .
 
-    mv align/* \\
-       . 
-
-    find -name gtdbtk.${prefix}.*.classify.tree | xargs -r gzip # do not fail if .tree is missing
-
-    
+    mv align/* .\
 
     mv gtdbtk.log "gtdbtk.${prefix}.log"
+    
     mv gtdbtk.warnings.log "gtdbtk.${prefix}.warnings.log"
 
+    find -name gtdbtk.${prefix}.*.classify.tree | xargs -r gzip # do not fail if .tree is missing
+    
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         gtdbtk: \$(echo \$(gtdbtk --version -v 2>&1) | sed "s/gtdbtk: version //; s/ Copyright.*//")
@@ -74,7 +70,7 @@ process GTDBTK_CLASSIFYWF {
     """
 
     stub:
-    def VERSION = '2.1.1' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
+    def VERSION = '2.3.2' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
 
     """
     touch gtdbtk.${prefix}.stub.summary.tsv
