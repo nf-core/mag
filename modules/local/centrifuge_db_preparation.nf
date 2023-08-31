@@ -14,7 +14,11 @@ process CENTRIFUGE_DB_PREPARATION {
 
     script:
     """
-    tar -xf "${db}"
+    if [[ -d ${db} ]]; then
+        ln -srf `find ${db}/ -type f -name "*.cf"` \${PWD}
+    else
+        tar -xf "${db}"
+    fi
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
