@@ -8,16 +8,17 @@ process KRONA {
 
     input:
     tuple val(meta), path(report)
-    path(taxonomy_file)
+    path(taxonomy_file), stageAs: 'taxonomy.tab'
 
     output:
     tuple val(meta), path("*.html") , emit: html
     path "versions.yml"             , emit: versions
 
     script:
-    taxonomy_folder = taxonomy_file.getParent()
     """
-    ktImportTaxonomy "$report" -tax ${taxonomy_folder}
+    TAXONOMY=\$(find -L . -name '*.tab' -exec dirname {} \\;)
+
+    ktImportTaxonomy ${report} -tax \$TAXONOMY/
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
