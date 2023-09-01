@@ -42,6 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#470](https://github.com/nf-core/mag/pull/470) - Fix binning preparation from running even when binning was requested to be skipped (reported by @prototaxites, fix by @jfy133)
 - [#480](https://github.com/nf-core/mag/pull/480) - Improved `-resume` reliability through better meta map preservation (reported by @prototaxites, fix by @jfy133)
 - [#493](https://github.com/nf-core/mag/pull/493) - Update `METABAT2` nf-core module so that it reduced the number of unnecessary file moves, enabling virtual filesystems (fix by @adamrtalbot)
+- [#500](https://github.com/nf-core/mag/pull/500) - Fix MaxBin2 bins not being saved in results directly properly (reported by @Perugolate, fix by @jfy133)
 
 ### `Dependencies`
 
