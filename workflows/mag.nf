@@ -765,10 +765,12 @@ workflow MAG {
             } else if ( params.postbinning_input == 'refined_bins_only' ) {
                 ch_input_for_postbinning_bins        = ch_refined_bins
                 ch_input_for_postbinning_bins_unbins = ch_refined_bins.mix(ch_refined_unbins)
-            } else if ( params.postbinning_input == 'both' ) {
-                ch_all_bins = ch_binning_results_bins.mix(ch_refined_bins)
-                ch_input_for_postbinning_bins        = ch_all_bins
-                ch_input_for_postbinning_bins_unbins = ch_all_bins.mix(ch_binning_results_unbins).mix(ch_refined_unbins)
+            // TODO REACTIVATE ONCE PR #489 IS READY!
+            // TODO RE-ADD BOTH TO SCHEMA ONCE RE-ADDING
+            // } else if ( params.postbinning_input == 'both' ) {
+            //     ch_all_bins = ch_binning_results_bins.mix(ch_refined_bins)
+            //     ch_input_for_postbinning_bins        = ch_all_bins
+            //     ch_input_for_postbinning_bins_unbins = ch_all_bins.mix(ch_binning_results_unbins).mix(ch_refined_unbins)
             }
         } else {
             ch_input_for_postbinning_bins        = ch_binning_results_bins
