@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 2.4.0dev - [date]
+## 2.4.0 - 2023-09-07
 
 ### `Added`
 
@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#444](https://github.com/nf-core/mag/pull/444) - Moved BUSCO bash code to script (by @jfy133)
 - [#428](https://github.com/nf-core/mag/pull/429) - Update to nf-core 2.9 `TEMPLATE` (by @jfy133)
 - [#437](https://github.com/nf-core/mag/pull/429) - `--gtdb` parameter is split into `--skip_gtdbtk` and `--gtdb_db` to allow finer control over GTDB database retrieval (fix by @jfy133)
+- [#500](https://github.com/nf-core/mag/pull/500) - Temporarily disabled downstream processing of both refined and raw bins due to bug (by @jfy133)
 
 ### `Fixed`
 
@@ -41,6 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#470](https://github.com/nf-core/mag/pull/470) - Fix binning preparation from running even when binning was requested to be skipped (reported by @prototaxites, fix by @jfy133)
 - [#480](https://github.com/nf-core/mag/pull/480) - Improved `-resume` reliability through better meta map preservation (reported by @prototaxites, fix by @jfy133)
 - [#493](https://github.com/nf-core/mag/pull/493) - Update `METABAT2` nf-core module so that it reduced the number of unnecessary file moves, enabling virtual filesystems (fix by @adamrtalbot)
+- [#500](https://github.com/nf-core/mag/pull/500) - Fix MaxBin2 bins not being saved in results directly properly (reported by @Perugolate, fix by @jfy133)
 
 ### `Dependencies`
 
