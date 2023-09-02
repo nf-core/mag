@@ -31,7 +31,7 @@ log.info logo + paramsSummaryLog(workflow) + citation
 WorkflowMag.initialise(params, log, hybrid)
 
 // Check input path parameters to see if they exist
-def checkPathParamList = [ params.input, params.multiqc_config, params.phix_reference, params.host_fasta, params.centrifuge_db, params.kraken2_db, params.cat_db, params.gtdb_db, params.lambda_reference, params.busco_reference ]
+def checkPathParamList = [ params.input, params.multiqc_config, params.phix_reference, params.host_fasta, params.centrifuge_db, params.kraken2_db, params.cat_db, params.krona_db, params.gtdb_db, params.lambda_reference, params.busco_reference ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
 /*
@@ -187,6 +187,13 @@ if(params.cat_db){
         .value(file( "${params.cat_db}" ))
 } else {
     ch_cat_db_file = Channel.empty()
+}
+
+if(params.krona_db){
+    ch_krona_db_file = Channel
+        .value(file( "${params.krona_db}" ))
+} else {
+    ch_krona_db_file = Channel.empty()
 }
 
 if(!params.keep_phix) {
@@ -474,15 +481,20 @@ workflow MAG {
     ch_versions = ch_versions.mix(KRAKEN2.out.versions.first())
 
     if (( params.centrifuge_db || params.kraken2_db ) && !params.skip_krona){
-        KRONA_DB ()
+        if (params.krona_db){
+            ch_krona_db = ch_krona_db_file
+        } else {
+            KRONA_DB ()
+            ch_krona_db = KRONA_DB.out.db
+        }
         ch_tax_classifications = CENTRIFUGE.out.results_for_krona.mix(KRAKEN2.out.results_for_krona)
             . map { classifier, meta, report ->
-                def meta_new = meta + [classifer: classifier]
+                def meta_new = meta + [classifier: classifier]
                 [ meta_new, report ]
             }
         KRONA (
             ch_tax_classifications,
-            KRONA_DB.out.db.collect()
+            ch_krona_db
         )
         ch_versions = ch_versions.mix(KRONA.out.versions.first())
     }
