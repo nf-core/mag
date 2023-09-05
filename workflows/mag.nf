@@ -31,7 +31,7 @@ log.info logo + paramsSummaryLog(workflow) + citation
 WorkflowMag.initialise(params, log, hybrid)
 
 // Check input path parameters to see if they exist
-def checkPathParamList = [ params.input, params.multiqc_config, params.phix_reference, params.host_fasta, params.centrifuge_db, params.kraken2_db, params.cat_db, params.krona_db, params.gtdb_db, params.lambda_reference, params.busco_reference ]
+def checkPathParamList = [ params.input, params.multiqc_config, params.phix_reference, params.host_fasta, params.centrifuge_db, params.kraken2_db, params.cat_db, params.krona_db, params.gtdb_db, params.lambda_reference, params.busco_db ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
 /*
@@ -145,17 +145,10 @@ if ( params.host_genome ) {
     ch_host_fasta = Channel.empty()
 }
 
-if(params.busco_reference){
-    ch_busco_db_file = Channel
-        .value(file( "${params.busco_reference}" ))
+if(params.busco_db){
+    ch_busco_db = file( "${params.busco_db}", checkIfExists: true )
 } else {
-    ch_busco_db_file = Channel.empty()
-}
-if (params.busco_download_path) {
-    ch_busco_download_folder = Channel
-        .value(file( "${params.busco_download_path}" ))
-} else {
-    ch_busco_download_folder = Channel.empty()
+    ch_busco_db = []
 }
 
 if(params.checkm_db) {
@@ -805,8 +798,7 @@ workflow MAG {
             */
 
             BUSCO_QC (
-                ch_busco_db_file,
-                ch_busco_download_folder,
+                ch_busco_db,
                 ch_input_bins_for_qc
             )
             ch_busco_summary = BUSCO_QC.out.summary

@@ -9,23 +9,48 @@ include { BUSCO_SUMMARY                   } from '../../modules/local/busco_summ
 
 workflow BUSCO_QC {
     take:
-    busco_db_file           // channel: path
-    busco_download_folder   // channel: path
-    bins                    // channel: [ val(meta), path(bin) ]
+    busco_db   // channel: path
+    bins       // channel: [ val(meta), path(bin) ]
 
     main:
-    if (params.busco_reference){
-        BUSCO_DB_PREPARATION ( busco_db_file )
-        ch_busco_db = BUSCO_DB_PREPARATION.out.db
+    if ( busco_db.extension == 'gz' ) {
+        // Expects to be tar.gz!
+        BUSCO_DB_PREPARATION ( busco_db )
+
+        ch_db_for_busco = BUSCO_DB_PREPARATION.out.db
+                            .map{
+                                meta, db ->
+                                    def meta_new = [:]
+                                    meta_new['id'] = meta
+                                    meta_new['lineage'] = 'Y'
+                                    [ meta_new, db ]
+                            }
+    } else if ( busco_db.isDirectory() ) {
+        // Set meta to match expected channel cardinality for BUSCO
+        ch_db_for_busco = Channel
+                        .of(busco_db)
+                        .map{
+                            db ->
+                                def meta = [:]
+                                meta['id'] = db.toString().split('/').last()
+                                if ("${meta['id'].toString().contains('odb10')}" == true) {
+                                    meta['lineage'] = 'Y'
+                                } else {
+                                    meta['lineage'] = 'N'
+                                }
+                                [ meta, db ]
+                        }
+                        .collect()
     } else {
-        ch_busco_db = Channel.empty()
+        error("Unsupported object given to --busco_db, database must be supplied as either a directory or a .tar.gz file!")
     }
+
     BUSCO (
         bins,
-        ch_busco_db.collect().ifEmpty([]),
-        busco_download_folder.collect().ifEmpty([])
+        ch_db_for_busco
     )
-    if (params.save_busco_reference){
+
+    if (params.save_busco_db){
         // publish files downloaded by Busco
         ch_downloads = BUSCO.out.busco_downloads.groupTuple().map{lin,downloads -> downloads[0]}.toSortedList().flatten()
         BUSCO_SAVE_DOWNLOAD ( ch_downloads )
