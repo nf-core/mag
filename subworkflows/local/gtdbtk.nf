@@ -12,6 +12,7 @@ workflow GTDBTK {
     busco_summary     // channel: path
     checkm_summary    // channel: path
     gtdb              // channel: path
+    gtdb_mash         // channel: path
 
     main:
     // Filter bins: classify only medium & high quality MAGs
@@ -76,7 +77,8 @@ workflow GTDBTK {
 
     GTDBTK_CLASSIFYWF (
         ch_filtered_bins.passed.groupTuple(),
-        ch_db_for_gtdbtk
+        ch_db_for_gtdbtk,
+        gtdb_mash
     )
 
     GTDBTK_SUMMARY (

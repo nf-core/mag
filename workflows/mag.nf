@@ -209,6 +209,7 @@ gtdb = ( params.skip_binqc || params.skip_gtdbtk ) ? false : params.gtdb_db
 
 if (gtdb) {
     gtdb = file( "${gtdb}", checkIfExists: true)
+    gtdb_mash = params.gtdb_mash ? file("${params.gtdb_mash}", checkIfExists: true) : []
 } else {
     gtdb = []
 }
@@ -770,7 +771,7 @@ workflow MAG {
 
             BINNING_REFINEMENT ( ch_contigs_for_binrefinement, ch_prokarya_bins_dastool )
             ch_refined_bins = ch_eukarya_bins_dastool
-                .map{ meta, bins -> 
+                .map{ meta, bins ->
                         def meta_new = meta + [refinement: 'eukaryote_unrefined']
                         [meta_new, bins]
                     }.mix( BINNING_REFINEMENT.out.refined_bins)

@@ -520,6 +520,10 @@
                     "description": "Specify the location of a GTDBTK database. Can be either an uncompressed directory or a `.tar.gz` archive. If not specified will be downloaded for you when GTDBTK or binning QC is not skipped.",
                     "default": "https://data.ace.uq.edu.au/public/gtdb/data/releases/release214/214.1/auxillary_files/gtdbtk_r214_data.tar.gz"
                 },
+                "gtdb_mash": {
+                    "type": "string",
+                    "description": "Specify the location of a GTDBTK mash database. If missing, GTDB-Tk will skip the ani_screening step"
+                },
                 "gtdbtk_min_completeness": {
                     "type": "number",
                     "default": 50,
