@@ -414,7 +414,7 @@ workflow MAG {
     ch_versions = ch_versions.mix(NANOPLOT_RAW.out.versions.first())
 
     ch_long_reads = ch_raw_long_reads
-                        .map {
+                    .map {
                         meta, reads ->
                             def meta_new = meta - meta.subMap('run')
                         [ meta_new, reads ]

@@ -13,7 +13,7 @@ process CENTRIFUGE {
     output:
     tuple val("centrifuge"), val(meta), path("results.krona"), emit: results_for_krona
     path "report.txt"                                        , emit: report
-    tuple val(meta), path("*kreport.txt")                     , emit: kreport
+    tuple val(meta), path("*kreport.txt")                    , emit: kreport
     path "versions.yml"                                      , emit: versions
 
     script:
