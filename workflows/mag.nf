@@ -911,7 +911,8 @@ workflow MAG {
                     ch_gtdb_bins,
                     ch_busco_summary,
                     ch_checkm_summary,
-                    gtdb
+                    gtdb,
+                    gtdb_mash
                 )
                 ch_versions = ch_versions.mix(GTDBTK.out.versions.first())
                 ch_gtdbtk_summary = GTDBTK.out.summary
