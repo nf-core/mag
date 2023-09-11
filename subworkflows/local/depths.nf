@@ -39,6 +39,7 @@ workflow DEPTHS {
         }
         .transpose()
         .groupTuple(by: [0,2])
+        .dump(tag: 'ch_depth_input', pretty: true)
 
 
     MAG_DEPTHS ( ch_depth_input )
