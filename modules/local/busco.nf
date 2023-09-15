@@ -27,16 +27,13 @@ process BUSCO {
     def lineage_dataset_provided = "${db_meta.lineage}"
     def busco_clean = params.busco_clean ? "Y" : "N"
 
-    def p = ""
+    def p = params.busco_auto_lineage_prok ? "--auto-lineage-prok" : "--auto-lineage"
     if ( "${lineage_dataset_provided}" == "Y" ) {
-        p += "--lineage_dataset dataset/${db}"
+        p = "--lineage_dataset dataset/${db}"
+    } else if ( "${lineage_dataset_provided}" == "N" ) {
+        p += "--offline --download_path ${db}"
     } else {
-        p = "--offline --download_path ${db}"
-        if (params.busco_auto_lineage_prok) {
-            p += " --auto-lineage-prok"
-        } else {
-            p += " --auto-lineage"
-        }
+        lineage_dataset_provided = ""
     }
     """
     run_busco.sh "${p}" "${cp_augustus_config}" "${db}" "${bin}" ${task.cpus} "${lineage_dataset_provided}" "${busco_clean}"

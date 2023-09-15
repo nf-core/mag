@@ -15,7 +15,7 @@ process BUSCO_SUMMARY {
     path "versions.yml"     , emit: versions
 
     script:
-    def reference = "${params.busco_db.toString().contains('odb10')}"
+    def reference = params.busco_db.toString().contains('odb10')
     def auto = reference ? "" : "-a"
     def ss = summaries_specific.sort().size() > 0 ? "-ss ${summaries_specific}" : ""
     def sd = summaries_domain.sort().size() > 0 ? "-sd ${summaries_domain}" : ""
