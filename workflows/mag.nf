@@ -145,8 +145,8 @@ if ( params.host_genome ) {
     ch_host_fasta = Channel.empty()
 }
 
-if(params.busco_db){
-    ch_busco_db = file( "${params.busco_db}", checkIfExists: true )
+if (params.busco_db) {
+    ch_busco_db = file(params.busco_db, checkIfExists: true)
 } else {
     ch_busco_db = []
 }
