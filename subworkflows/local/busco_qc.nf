@@ -13,36 +13,45 @@ workflow BUSCO_QC {
     bins       // channel: [ val(meta), path(bin) ]
 
     main:
-    if ( busco_db.extension == 'gz' ) {
-        // Expects to be tar.gz!
-        BUSCO_DB_PREPARATION ( busco_db )
+    if ( !busco_db.isEmpty() ) {
+        if ( busco_db.extension == "gz" ) {
+            // Expects to be tar.gz!
+            BUSCO_DB_PREPARATION ( busco_db )
 
-        ch_db_for_busco = BUSCO_DB_PREPARATION.out.db
-                            .map{
-                                meta, db ->
-                                    def meta_new = [:]
-                                    meta_new['id'] = meta
-                                    meta_new['lineage'] = 'Y'
-                                    [ meta_new, db ]
-                            }
-    } else if ( busco_db.isDirectory() ) {
-        // Set meta to match expected channel cardinality for BUSCO
-        ch_db_for_busco = Channel
-                        .of(busco_db)
-                        .map{
-                            db ->
-                                def meta = [:]
-                                meta['id'] = db.toString().split('/').last()
-                                if ("${meta['id'].toString().contains('odb10')}" == true) {
-                                    meta['lineage'] = 'Y'
-                                } else {
-                                    meta['lineage'] = 'N'
+            ch_db_for_busco = BUSCO_DB_PREPARATION.out.db
+                                .map{
+                                    meta, db ->
+                                        def meta_new = [:]
+                                        meta_new['id'] = meta
+                                        meta_new['lineage'] = 'Y'
+                                        [ meta_new, db ]
                                 }
-                                [ meta, db ]
-                        }
-                        .collect()
+        } else if ( busco_db.isDirectory() ) {
+            // Set meta to match expected channel cardinality for BUSCO
+            ch_db_for_busco = busco_db
+                                .map{
+                                    db ->
+                                        def meta = [:]
+                                        meta['id'] = db.toString().split('/').last()
+                                        if ("${meta['id'].toString().contains('odb10')}" == true) {
+                                            meta['lineage'] = 'Y'
+                                        } else {
+                                            meta['lineage'] = 'N'
+                                        }
+                                        [ meta, db ]
+                                }
+                                .collect()
+        }
     } else {
-        error("Unsupported object given to --busco_db, database must be supplied as either a directory or a .tar.gz file!")
+        // Set BUSCO database to empty to allow for --auto-lineage
+        ch_db_for_busco = Channel.of([])
+                            .map{
+                                empty_db ->
+                                    def meta = [:]
+                                    meta['lineage'] = ""
+                                    [ meta, [] ]
+                            }
+                            .collect()
     }
 
     BUSCO (
