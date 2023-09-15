@@ -6,7 +6,7 @@ process ADJUST_MAXBIN2_EXT {
     conda "bioconda::multiqc=1.12"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/multiqc:1.12--pyhdfd78af_0' :
-        'quay.io/biocontainers/multiqc:1.12--pyhdfd78af_0' }"
+        'biocontainers/multiqc:1.12--pyhdfd78af_0' }"
 
     input:
     tuple val(meta), path(bins)

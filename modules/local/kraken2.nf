@@ -4,7 +4,7 @@ process KRAKEN2 {
     conda "bioconda::kraken2=2.0.8_beta"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/kraken2:2.0.8_beta--pl526hc9558a2_2' :
-        'quay.io/biocontainers/kraken2:2.0.8_beta--pl526hc9558a2_2' }"
+        'biocontainers/kraken2:2.0.8_beta--pl526hc9558a2_2' }"
 
     input:
     tuple val(meta), path(reads)
