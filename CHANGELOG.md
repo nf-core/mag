@@ -26,7 +26,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#444](https://github.com/nf-core/mag/pull/444) - Moved BUSCO bash code to script (by @jfy133)
 - [#477](https://github.com/nf-core/mag/pull/477) - `--gtdb` parameter is split into `--skip_gtdbtk` and `--gtdb_db` to allow finer control over GTDB database retrieval (fix by @jfy133)
 - [#500](https://github.com/nf-core/mag/pull/500) - Temporarily disabled downstream processing of both refined and raw bins due to bug (by @jfy133)
-  in
 
 ### `Fixed`
 
