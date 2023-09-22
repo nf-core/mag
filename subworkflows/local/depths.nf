@@ -25,6 +25,7 @@ workflow DEPTHS {
 
 
     bins_unbins.dump(tag: 'bins_unbins', pretty: true)
+    depths.dump(tag: 'depths', pretty: true)
 
     // Compute bin depths for different samples (according to `binning_map_mode`)
     // Create a new meta combine key first, but copy meta so that
