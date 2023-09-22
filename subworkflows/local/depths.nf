@@ -42,6 +42,7 @@ workflow DEPTHS {
         .map { meta, bins, depth ->
             [meta, bins.unique(), depth]
         }
+        .groupTuple(by: [0,2])
 
     ch_depth_input.dump(tag: 'ch_depth_input', pretty: true)
 
