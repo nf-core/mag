@@ -24,6 +24,8 @@ workflow DEPTHS {
     ch_versions = Channel.empty()
 
 
+    bins_unbins.dump(tag: 'bins_unbins', pretty: true)
+
     // Compute bin depths for different samples (according to `binning_map_mode`)
     // Create a new meta joining key first, but copy meta so that
     // we retain the information about binners and domain classification
@@ -45,7 +47,7 @@ workflow DEPTHS {
         .groupTuple(by: [0,2])
         .map {
             meta, bins, depth ->
-            [meta, bins.flatten(), depth]
+            [meta, bins.flatten(),]
         }
 
     ch_depth_input.dump(tag: 'ch_depth_input', pretty: true)
