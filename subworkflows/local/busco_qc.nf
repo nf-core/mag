@@ -32,9 +32,9 @@ workflow BUSCO_QC {
     }
 
     BUSCO_SUMMARY (
-        BUSCO.out.summary_domain.map{it[1]}.collect().ifEmpty([]),
-        BUSCO.out.summary_specific.map{it[1]}.collect().ifEmpty([]),
-        BUSCO.out.failed_bin.map{it[1]}.collect().ifEmpty([])
+        BUSCO.out.summary_domain.map{it[1]}.unique().collect().ifEmpty([]),
+        BUSCO.out.summary_specific.map{it[1]}.unique().collect().ifEmpty([]),
+        BUSCO.out.failed_bin.map{it[1]}.unique().collect().ifEmpty([])
     )
 
     emit:
