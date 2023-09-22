@@ -27,27 +27,26 @@ workflow DEPTHS {
     bins_unbins.dump(tag: 'bins_unbins', pretty: true)
 
     // Compute bin depths for different samples (according to `binning_map_mode`)
-    // Create a new meta joining key first, but copy meta so that
+    // Create a new meta combine key first, but copy meta so that
     // we retain the information about binners and domain classification
     ch_depth_input = bins_unbins
-        .map { meta, bins ->
-            def meta_join = meta - meta.subMap('binner','domain','refinement')
-            [ meta_join, meta, bins ]
+        .map {
+            meta, bins ->
+            def meta_combine = meta - meta.subMap('binner','domain','refinement')
+            [meta_combine, meta, bins]
         }
-        .combine( depths, by: 0 )
-        .map { meta_join, meta, bins, contig_depths_file ->
-            def meta_new = meta - meta.subMap('domain','refinement')
-            [ meta_new, bins, contig_depths_file ]
-        }
+        .groupTuple()
+        .combine(depths, by: 0)
         .transpose()
-        .groupTuple(by: [0,2])
-        .map { meta, bins, depth ->
-            [meta, bins.unique(), depth]
+        .map {
+            meta_combine, meta, bins, depth ->
+            def meta_new = meta - meta.subMap('domain','refinement')
+            [meta_new, bins, depth]
         }
         .groupTuple(by: [0,2])
         .map {
             meta, bins, depth ->
-            [meta, bins.flatten(),]
+            [meta, bins.unique(), depth]
         }
 
     ch_depth_input.dump(tag: 'ch_depth_input', pretty: true)
