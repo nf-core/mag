@@ -31,6 +31,14 @@ workflow BUSCO_QC {
         BUSCO_SAVE_DOWNLOAD ( ch_downloads )
     }
 
+    busco_summary_domain = BUSCO.out.summary_domain.collect()
+    busco_summary_specific = BUSCO.out.summary_specific.collect()
+    busco_failed_bin = BUSCO.out.failed_bin.collect()
+
+    busco_summary_domain.dump(tag: 'busco_summary_domain', pretty: true)
+    busco_summary_specific.dump(tag: 'busco_summary_specific', pretty: true)
+    busco_failed_bin.dump(tag: 'busco_failed_bin', pretty: true)
+
     BUSCO_SUMMARY (
         BUSCO.out.summary_domain.map{it[1]}.unique().collect().ifEmpty([]),
         BUSCO.out.summary_specific.map{it[1]}.unique().collect().ifEmpty([]),
