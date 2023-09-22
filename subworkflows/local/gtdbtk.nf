@@ -48,7 +48,7 @@ workflow GTDBTK {
     }
 
     ch_bin_metrics.dump(tag: 'ch_bin_metrics', pretty: true)
-    ch_filtered_bins.transpose().map { meta, bin -> [bin.getName(), bin, meta]}.dump(tag: 'ch_filtered_bins', pretty: true)
+    bins.transpose().map { meta, bin -> [bin.getName(), bin, meta]}.dump(tag: 'ch_filtered_bins', pretty: true)
 
     // Filter bins based on collected metrics: completeness, contamination
     ch_filtered_bins = bins
