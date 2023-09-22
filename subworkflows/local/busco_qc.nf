@@ -40,9 +40,9 @@ workflow BUSCO_QC {
     busco_failed_bin.dump(tag: 'busco_failed_bin', pretty: true)
 
     BUSCO_SUMMARY (
-        BUSCO.out.summary_domain.map{it[1]}.unique().collect().ifEmpty([]),
-        BUSCO.out.summary_specific.map{it[1]}.unique().collect().ifEmpty([]),
-        BUSCO.out.failed_bin.map{it[1]}.unique().collect().ifEmpty([])
+        BUSCO.out.summary_domain.map{it[1]}.collect().ifEmpty([]),
+        BUSCO.out.summary_specific.map{it[1]}.collect().ifEmpty([]),
+        BUSCO.out.failed_bin.map{it[1]}.collect().ifEmpty([])
     )
 
     emit:
