@@ -3,7 +3,7 @@ process KRAKEN2_DB_PREPARATION {
     conda "conda-forge::sed=4.7"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/ubuntu:20.04' :
-        'docker.io/ubuntu:20.04' }"
+        'nf-core/ubuntu:20.04' }"
 
     input:
     path db
