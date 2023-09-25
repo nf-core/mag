@@ -50,6 +50,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | -------- | ---------------- | ----------- |
 | BCFtools | 1.16             | 1.17        |
 | SAMtools | 1.16.1           | 1.17        |
+| fastp    | 0.23.2           | 0.23.4      |
+| MultiQC  | 1.14             | 1.15        |
 
 ## v2.3.2 - [2023-06-23]
 
