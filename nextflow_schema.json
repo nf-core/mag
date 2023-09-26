@@ -14,8 +14,10 @@
             "properties": {
                 "input": {
                     "type": "string",
-                    "mimetype": "text/csv",
                     "format": "file-path",
+                    "exists": true,
+                    "mimetype": "text/csv",
+                    "pattern": "^\\S+\\.csv$",
                     "description": "Input FastQ files or CSV samplesheet file containing information about the samples in the experiment.",
                     "help_text": "Use this to specify the location of your input FastQ files. For example:\n\n```bash\n--input 'path/to/data/sample_*_{1,2}.fastq.gz'\n``` \n\nAlternatively, to assign different groups or to include long reads for hybrid assembly with metaSPAdes, you can specify a CSV samplesheet input file with 5 columns and the following header: sample,group,short_reads_1,short_reads_2,long_reads. See [usage docs](https://nf-co.re/mag/usage#input-specifications).",
                     "fa_icon": "fas fa-file-csv"
@@ -25,6 +27,14 @@
                     "description": "Specifies that the input is single-end reads.",
                     "fa_icon": "fas fa-align-center",
                     "help_text": "By default, the pipeline expects paired-end data. If you have single-end data, you need to specify `--single_end` on the command line when you launch the pipeline. A normal glob pattern, enclosed in quotation marks, can then be used for `--input`. For example:\n\n```bash\n--single_end --input '*.fastq'\n```\n\nIt is not possible to run a mixture of single-end and paired-end files in one run."
+                },
+                "assembly_input": {
+                    "type": "string",
+                    "mimetype": "text/csv",
+                    "format": "file-path",
+                    "description": "Additional input CSV samplesheet containing information about pre-computed assemblies. When set, both read pre-processing and assembly are skipped and the pipeline begins at the binning stage.",
+                    "help_text": "If you have pre-computed assemblies from another source, it is possible to jump straight to the binning stage of the pipeline by supplying these assemblies in a CSV file. This CSV file should have three columns and the following header: `id,group,assembler,fasta`. Short reads must still be supplied in to `--input` in CSV format. See [usage docs](https://nf-co.re/mag/usage#input-specifications) for further details.",
+                    "fa_icon": "fas fa-file-csv"
                 },
                 "outdir": {
                     "type": "string",
@@ -146,7 +156,7 @@
                     "description": "Maximum amount of time that can be requested for any single job.",
                     "default": "240.h",
                     "fa_icon": "far fa-clock",
-                    "pattern": "^(\\d+\\.?\\s*(s|m|h|day)\\s*)+$",
+                    "pattern": "^(\\d+\\.?\\s*(s|m|h|d|day)\\s*)+$",
                     "hidden": true,
                     "help_text": "Use to set an upper-limit for the time requirement for each process. Should be a string in the format integer-unit e.g. `--max_time '2.h'`"
                 }
@@ -217,6 +227,7 @@
                 },
                 "multiqc_config": {
                     "type": "string",
+                    "format": "file-path",
                     "description": "Custom config file to supply to MultiQC.",
                     "fa_icon": "fas fa-cog",
                     "hidden": true
@@ -232,13 +243,6 @@
                     "description": "Custom MultiQC yaml file containing HTML including a methods description.",
                     "fa_icon": "fas fa-cog"
                 },
-                "tracedir": {
-                    "type": "string",
-                    "description": "Directory to keep pipeline Nextflow logs and reports.",
-                    "default": "${params.outdir}/pipeline_info",
-                    "fa_icon": "fas fa-cogs",
-                    "hidden": true
-                },
                 "validate_params": {
                     "type": "boolean",
                     "description": "Boolean whether to validate parameters against the schema at runtime",
@@ -246,12 +250,26 @@
                     "fa_icon": "fas fa-check-square",
                     "hidden": true
                 },
-                "show_hidden_params": {
+                "validationShowHiddenParams": {
                     "type": "boolean",
                     "fa_icon": "far fa-eye-slash",
                     "description": "Show all params when using `--help`",
                     "hidden": true,
                     "help_text": "By default, parameters set as _hidden_ in the schema are not shown on the command line when a user runs with `--help`. Specifying this option will tell the pipeline to show all parameters."
+                },
+                "validationFailUnrecognisedParams": {
+                    "type": "boolean",
+                    "fa_icon": "far fa-check-circle",
+                    "description": "Validation of parameters fails when an unrecognised parameter is found.",
+                    "hidden": true,
+                    "help_text": "By default, when an unrecognised parameter is found, it returns a warinig."
+                },
+                "validationLenientMode": {
+                    "type": "boolean",
+                    "fa_icon": "far fa-check-circle",
+                    "description": "Validation of parameters in lenient more.",
+                    "hidden": true,
+                    "help_text": "Allows string values that are parseable as numbers or booleans. For further information see [JSONSchema docs](https://github.com/everit-org/json-schema#lenient-mode)."
                 }
             }
         },
@@ -346,13 +364,13 @@
                 },
                 "host_genome": {
                     "type": "string",
-                    "help_text": "This parameter is mutually exclusive with `--host_genome`. Host read removal is done with Bowtie2. \nBoth the iGenomes FASTA file as well as corresponding, already pre-built Bowtie 2 index files will be used.",
+                    "help_text": "This parameter is mutually exclusive with `--host_fasta`. Host read removal is done with Bowtie2. \nBoth the iGenomes FASTA file as well as corresponding, already pre-built Bowtie 2 index files will be used.",
                     "description": "Name of iGenomes reference for host contamination removal."
                 },
                 "host_fasta": {
                     "type": "string",
                     "description": "Fasta reference file for host contamination removal.",
-                    "help_text": "This parameter is mutually exclusive with `--host_fasta`. The reference can be masked. Host read removal is done with Bowtie2."
+                    "help_text": "This parameter is mutually exclusive with `--host_genome`. The reference can be masked. Host read removal is done with Bowtie2."
                 },
                 "host_removal_verysensitive": {
                     "type": "boolean",
@@ -383,6 +401,24 @@
                 "save_phixremoved_reads": {
                     "type": "boolean",
                     "description": "Specify to save input FASTQ files with phiX reads removed to --outdir."
+                },
+                "bbnorm": {
+                    "type": "boolean",
+                    "description": "Run BBnorm to normalize sequence depth."
+                },
+                "bbnorm_target": {
+                    "type": "integer",
+                    "default": 100,
+                    "description": "Set BBnorm target maximum depth to this number."
+                },
+                "bbnorm_min": {
+                    "type": "integer",
+                    "default": 5,
+                    "description": "Set BBnorm minimum depth to this number."
+                },
+                "save_bbnorm_reads": {
+                    "type": "boolean",
+                    "description": "Save normalized read files to output directory."
                 }
             }
         },
@@ -452,6 +488,11 @@
                     "description": "Database for taxonomic binning with kraken2.",
                     "help_text": "The database file must be a compressed tar archive that contains at least the three files `hash.k2d`, `opts.k2d` and `taxo.k2d`. E.g. ftp://ftp.ccb.jhu.edu/pub/data/kraken2_dbs/minikraken_8GB_202003.tgz."
                 },
+                "krona_db": {
+                    "type": "string",
+                    "description": "Database for taxonomic binning with krona",
+                    "help_text": "Path to `taxonomy.tab` file for Krona, instead of downloading the default file. Point at the `.tab` file."
+                },
                 "skip_krona": {
                     "type": "boolean",
                     "description": "Skip creating a krona plot for taxonomic binning."
@@ -475,15 +516,18 @@
                     "type": "boolean",
                     "description": "Only return official taxonomic ranks (Kingdom, Phylum, etc.) when running CAT."
                 },
-                "gtdb": {
+                "skip_gtdbtk": {
+                    "type": "boolean",
+                    "description": "Skip the running of GTDB, as well as the automatic download of the database"
+                },
+                "gtdb_db": {
                     "type": "string",
-                    "default": "https://data.gtdb.ecogenomic.org/releases/release202/202.0/auxillary_files/gtdbtk_r202_data.tar.gz",
-                    "description": "GTDB database for taxonomic classification of bins with GTDB-tk.",
-                    "help_text": "For information which GTDB reference databases are compatible with the used GTDB-tk version see https://ecogenomics.github.io/GTDBTk/installing/index.html#gtdb-tk-reference-data."
+                    "description": "Specify the location of a GTDBTK database. Can be either an uncompressed directory or a `.tar.gz` archive. If not specified will be downloaded for you when GTDBTK or binning QC is not skipped.",
+                    "default": "https://data.ace.uq.edu.au/public/gtdb/data/releases/release214/214.1/auxillary_files/gtdbtk_r214_data.tar.gz"
                 },
                 "gtdbtk_min_completeness": {
                     "type": "number",
-                    "default": 50,
+                    "default": 50.0,
                     "description": "Min. bin completeness (in %) required to apply GTDB-tk classification.",
                     "help_text": "Completeness assessed with BUSCO analysis (100% - %Missing). Must be greater than 0 (min. 0.01) to avoid GTDB-tk errors. If too low, GTDB-tk classification results can be impaired due to not enough marker genes!",
                     "minimum": 0.01,
@@ -491,7 +535,7 @@
                 },
                 "gtdbtk_max_contamination": {
                     "type": "number",
-                    "default": 10,
+                    "default": 10.0,
                     "description": "Max. bin contamination (in %) allowed to apply GTDB-tk classification.",
                     "help_text": "Contamination approximated based on BUSCO analysis (%Complete and duplicated). If too high, GTDB-tk classification results can be impaired due to contamination!",
                     "minimum": 0,
@@ -499,7 +543,7 @@
                 },
                 "gtdbtk_min_perc_aa": {
                     "type": "number",
-                    "default": 10,
+                    "default": 10.0,
                     "description": "Min. fraction of AA (in %) in the MSA for bins to be kept.",
                     "minimum": 0,
                     "maximum": 100
@@ -513,7 +557,7 @@
                 },
                 "gtdbtk_pplacer_cpus": {
                     "type": "number",
-                    "default": 1,
+                    "default": 1.0,
                     "description": "Number of CPUs used for the by GTDB-Tk run tool pplacer.",
                     "help_text": "A low number of CPUs helps to reduce the memory required/reported by GTDB-Tk. See also the [GTDB-Tk documentation](https://ecogenomics.github.io/GTDBTk/faq.html#gtdb-tk-reaches-the-memory-limit-pplacer-crashes)."
                 },
@@ -522,6 +566,11 @@
                     "default": true,
                     "description": "Reduce GTDB-Tk memory consumption by running pplacer in a setting writing to disk.",
                     "help_text": "Will be slower. Set to `false` to turn this off."
+                },
+                "genomad_db": {
+                    "type": "string",
+                    "description": "Database for virus classification with geNomad",
+                    "help_text": "Must be a directory containing the uncompressed contents from https://portal.nersc.gov/genomad/__data__/genomad_db_v1.1.tar.gz"
                 }
             }
         },
@@ -538,12 +587,12 @@
                 "spades_options": {
                     "type": "string",
                     "description": "Additional custom options for SPAdes.",
-                    "help_text": "An example is adjusting k-mers (\"-k 21,33,55,77\") or adding [advanced options](https://github.com/ablab/spades#advanced-options). But not -t, -m, -o or --out-prefix, because these are already in use."
+                    "help_text": "An example is adjusting k-mers (\"-k 21,33,55,77\") or adding [advanced options](https://github.com/ablab/spades#advanced-options). But not -t, -m, -o or --out-prefix, because these are already in use. Must be used like this: --spades_options=\"-k 21,33,55,77\")"
                 },
                 "megahit_options": {
                     "type": "string",
                     "description": "Additional custom options for MEGAHIT.",
-                    "help_text": "An example is adjusting presets (e.g. \"--presets meta-large\"), k-mers (e.g. \"-k 21,33,55,77\") or adding other [advanced options](https://github.com/voutcn/megahit#advanced-usage). For example, increase the minimum k-mer in the event of an error message such as \"Too many vertices in the unitig graph, you may increase the kmer size to remove tons of erroneous kmers.\" in the MEGAHIT log file. But not --threads, --memory, -o or input read files, because these are already in use."
+                    "help_text": "An example is adjusting presets (e.g. \"--presets meta-large\"), k-mers (e.g. \"-k 21,33,55,77\") or adding other [advanced options](https://github.com/voutcn/megahit#advanced-usage). For example, increase the minimum k-mer in the event of an error message such as \"Too many vertices in the unitig graph, you may increase the kmer size to remove tons of erroneous kmers.\" in the MEGAHIT log file. But not --threads, --memory, -o or input read files, because these are already in use. Must be used like this: --megahit_options=\"--presets meta-large\""
                 },
                 "skip_spades": {
                     "type": "boolean",
@@ -563,8 +612,8 @@
                 }
             }
         },
-        "gene_prediction_options": {
-            "title": "Gene prediction options",
+        "gene_prediction_and_annotation_options": {
+            "title": "Gene prediction and annotation options",
             "type": "object",
             "description": "",
             "default": "",
@@ -572,6 +621,49 @@
                 "skip_prodigal": {
                     "type": "boolean",
                     "description": "Skip Prodigal gene prediction"
+                },
+                "skip_prokka": {
+                    "type": "boolean",
+                    "description": "Skip Prokka genome annotation."
+                },
+                "skip_metaeuk": {
+                    "type": "boolean",
+                    "description": "Skip MetaEuk gene prediction and annotation"
+                },
+                "metaeuk_mmseqs_db": {
+                    "type": "string",
+                    "description": "A string containing the name of one of the databases listed in the [mmseqs2 documentation](https://github.com/soedinglab/MMseqs2/wiki#downloading-databases). This database will be downloaded and formatted for eukaryotic genome annotation. Incompatible with --metaeuk_db.",
+                    "help_text": "mmseqs2 lists a large number of databases, not all of which are appropriate for use with MetaEuk. MetaEuk requires protein inputs, so you should select one of the Aminoacid or Profile options."
+                },
+                "metaeuk_db": {
+                    "type": "string",
+                    "description": "Path to either a local fasta file of protein sequences, or to a directory containing an mmseqs2-formatted database, for annotation of eukaryotic genomes.",
+                    "help_text": "One option would be the databases from the MetaEuk publication (https://wwwuser.gwdg.de/~compbiol/metaeuk/), however it should be noted that these are focused on marine eukaryotes."
+                },
+                "save_mmseqs_db": {
+                    "type": "boolean",
+                    "description": "Save the downloaded mmseqs2 database specified in `--metaeuk_mmseqs_db`."
+                }
+            }
+        },
+        "virus_identification_options": {
+            "title": "Virus identification options",
+            "type": "object",
+            "default": "",
+            "properties": {
+                "run_virus_identification": {
+                    "type": "boolean",
+                    "description": "Run virus identification."
+                },
+                "genomad_min_score": {
+                    "type": "number",
+                    "default": 0.7,
+                    "description": "Minimum geNomad score for a sequence to be considered viral"
+                },
+                "genomad_splits": {
+                    "type": "integer",
+                    "default": 1,
+                    "description": "Number of groups that geNomad's MMSeqs2 databse should be split into (reduced memory requirements)"
                 }
             }
         },
@@ -624,11 +716,28 @@
                 "bowtie2_mode": {
                     "type": "string",
                     "description": "Bowtie2 alignment mode",
-                    "help_text": "Bowtie2 alignment mode options, for example: `--very-fast` , `--very-sensitive-local -N 1` , ..."
+                    "help_text": "Bowtie2 alignment mode options, for example: `--very-fast` , `--very-sensitive-local -N 1` , ... Must be used like this: --bowtie2_mode=\"--very-sensitive\""
                 },
-                "skip_prokka": {
+                "save_assembly_mapped_reads": {
                     "type": "boolean",
-                    "description": "Skip Prokka genome annotation."
+                    "description": "Save the output of mapping raw reads back to assembled contigs",
+                    "help_text": "Specify to save the BAM and BAI files generated when mapping input reads back to the assembled contigs (performed in preparation for binning and contig depth estimations)."
+                },
+                "bin_domain_classification": {
+                    "type": "boolean",
+                    "description": "Enable domain-level (prokaryote or eukaryote) classification of bins using Tiara. Processes which are domain-specific will then only receive bins matching the domain requirement.",
+                    "help_text": "Enable this if it is likely that your metagenome samples contain a mixture of eukaryotic and prokaryotic genomes. This will ensure that prokaryote-only steps only receive putatively prokaryotic genomes, and vice-versa. Additionally, may improve the performance of DAS Tool by ensuring it only receives prokaryotic genomes."
+                },
+                "bin_domain_classification_tool": {
+                    "type": "string",
+                    "default": "tiara",
+                    "description": "Specify which tool to use for domain classification of bins. Currently only 'tiara' is implemented.",
+                    "hidden": true
+                },
+                "tiara_min_length": {
+                    "type": "integer",
+                    "default": 3000,
+                    "description": "Minimum contig length for Tiara to use for domain classification. For accurate classification, should be longer than 3000 bp."
                 }
             }
         },
@@ -672,9 +781,15 @@
                     "description": "Enable clean-up of temporary files created during BUSCO runs.",
                     "help_text": "By default, BUSCO creates a large number of intermediate files every run. This may cause problems on some clusters which have file number limits in plate, particularly with large numbers of bins. Enabling this option cleans these files, reducing the total file count of the work directory."
                 },
+                "checkm_download_url": {
+                    "type": "string",
+                    "default": "https://data.ace.uq.edu.au/public/CheckM_databases/checkm_data_2015_01_16.tar.gz",
+                    "hidden": true,
+                    "description": "URL pointing to checkM database for auto download, if local path not supplied.",
+                    "help_text": "You can use this parameter to point to an online copy of the checkM database TAR archive that the pipeline will use for auto download if a local path is not supplied to `--checkm_db`."
+                },
                 "checkm_db": {
                     "type": "string",
-                    "default": "None",
                     "description": "Path to local folder containing already downloaded and uncompressed CheckM database.",
                     "help_text": "The pipeline can also download this for you if not specified, and you can save the resulting directory into your output directory by specifying `--save_checkm_data`. You should move this directory to somewhere else on your machine (and supply back to the pipeline in future runs again with `--checkm_db`."
                 },
@@ -697,8 +812,8 @@
                     "type": "string",
                     "default": "raw_bins_only",
                     "description": "Specify which binning output is sent for downstream annotation, taxonomic classification, bin quality control etc.",
-                    "help_text": "`raw_bins_only`: only bins (and unbinned contigs) from the binners.\n`refined_bins_only`:  only bins (and unbinned contigs) from the bin refinement step .\n`both`: bins and unbinned contigs from both the binning and bin refinement steps.",
-                    "enum": ["raw_bins_only", "refined_bins_only", "both"]
+                    "help_text": "`raw_bins_only`: only bins (and unbinned contigs) from the binners.\n`refined_bins_only`:  only bins (and unbinned contigs) from the bin refinement step .\n\n ~~`both`: bins and unbinned contigs from both the binning and bin refinement steps.~~ `both` option is disabled in v2.4 due a bug that will be fixed in a later release.",
+                    "enum": ["raw_bins_only", "refined_bins_only"]
                 },
                 "run_gunc": {
                     "type": "boolean",
@@ -706,7 +821,6 @@
                 },
                 "gunc_db": {
                     "type": "string",
-                    "default": "None",
                     "description": "Specify a path to a pre-downloaded GUNC dmnd database file"
                 },
                 "gunc_database_type": {
@@ -731,6 +845,15 @@
                 "ancient_dna": {
                     "type": "boolean",
                     "description": "Turn on/off the ancient DNA subworfklow"
+                },
+                "pydamage_accuracy": {
+                    "type": "number",
+                    "default": 0.5,
+                    "description": "PyDamage accuracy threshold"
+                },
+                "skip_ancient_damagecorrection": {
+                    "type": "boolean",
+                    "description": "deactivate damage correction of ancient contigs using variant and consensus calling"
                 },
                 "freebayes_ploidy": {
                     "type": "integer",
@@ -761,11 +884,6 @@
                     "type": "integer",
                     "default": 3,
                     "description": "minimum number of bases supporting the alternative allele"
-                },
-                "pydamage_accuracy": {
-                    "type": "number",
-                    "default": 0.5,
-                    "description": "PyDamage accuracy threshold"
                 }
             }
         }
@@ -802,7 +920,10 @@
             "$ref": "#/definitions/assembly_options"
         },
         {
-            "$ref": "#/definitions/gene_prediction_options"
+            "$ref": "#/definitions/gene_prediction_and_annotation_options"
+        },
+        {
+            "$ref": "#/definitions/virus_identification_options"
         },
         {
             "$ref": "#/definitions/binning_options"

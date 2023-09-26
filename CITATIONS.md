@@ -14,6 +14,8 @@
 
   > Schubert, M., Lindgreen, S., and Orlando, L. 2016. "AdapterRemoval v2: Rapid Adapter Trimming, Identification, and Read Merging." BMC Research Notes 9 (February): 88. doi: 10.1186/s13104-016-1900-2
 
+- [BBnorm/BBTools](http://sourceforge.net/projects/bbmap/)
+
 - [BCFtools](https://doi.org/10.1093/gigascience/giab008)
 
   > Danecek, Petr, et al. "Twelve years of SAMtools and BCFtools." Gigascience 10.2 (2021): giab008. doi: 10.1093/gigascience/giab008
@@ -52,11 +54,17 @@
 
 - [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
 
+  > Andrews, S. (2010). FastQC: A Quality Control Tool for High Throughput Sequence Data [Online]. Available online https://www.bioinformatics.babraham.ac.uk/projects/fastqc/.
+
 - [Filtlong](https://github.com/rrwick/Filtlong)
 
 - [Freebayes](https://arxiv.org/abs/1207.3907)
 
   > Garrison E, Marth G. Haplotype-based variant detection from short-read sequencing. arXiv preprint arXiv:1207.3907 [q-bio.GN] 2012
+
+- [geNomad](https://doi.org/10.1101/2023.03.05.531206)
+
+  > Camargo, A. P., et al. (2023). You can move, but you can’t hide: identification of mobile genetic elements with geNomad. bioRxiv preprint. doi: https://doi.org/10.1101/2023.03.05.531206
 
 - [GTDB-Tk](https://doi.org/10.1093/bioinformatics/btz848)
 
@@ -85,6 +93,14 @@
 - [MetaBAT2](https://doi.org/10.7717/peerj.7359)
 
   > Kang, D. D., Li, F., Kirton, E., Thomas, A., Egan, R., An, H., & Wang, Z. (2019). MetaBAT 2: an adaptive binning algorithm for robust and efficient genome reconstruction from metagenome assemblies. PeerJ, 7, e7359. doi: 10.7717/peerj.7359.
+
+- [MetaEuk](https://doi.org/10.1186/s40168-020-00808-x)
+
+> Levy Karin, E., Mirdita, M. & Söding, J. MetaEuk—sensitive, high-throughput gene discovery, and annotation for large-scale eukaryotic metagenomics. Microbiome 8, 48 (2020). https://doi.org/10.1186/s40168-020-00808-x
+
+- [MMseqs2](https://www.nature.com/articles/nbt.3988)
+
+> Steinegger, M., Söding, J. MMseqs2 enables sensitive protein sequence searching for the analysis of massive data sets. Nat Biotechnol 35, 1026–1028 (2017). https://doi.org/10.1038/nbt.3988
 
 - [MultiQC](https://pubmed.ncbi.nlm.nih.gov/27312411/)
 
@@ -116,9 +132,15 @@
 
   > Li, H., Handsaker, B., Wysoker, A., Fennell, T., Ruan, J., Homer, N., … 1000 Genome Project Data Processing Subgroup. (2009). The Sequence Alignment/Map format and SAMtools. Bioinformatics , 25(16), 2078–2079. doi: 10.1093/bioinformatics/btp352.
 
+- [Seqtk](https://github.com/lh3/seqtk)
+
 - [SPAdes](https://doi.org/10.1101/gr.213959.116)
 
   > Nurk, S., Meleshko, D., Korobeynikov, A., & Pevzner, P. A. (2017). metaSPAdes: a new versatile metagenomic assembler. Genome research, 27(5), 824-834. doi: 10.1101/gr.213959.116.
+
+- [Tiara](https://doi.org/10.1093/bioinformatics/btab672)
+
+  > Karlicki, M., Antonowicz, S., Karnkowska, A., 2022. Tiara: deep learning-based classification system for eukaryotic sequences. Bioinformatics 38, 344–350. doi: 10.1093/bioinformatics/btab672
 
 ## Data
 
@@ -141,5 +163,8 @@
 
 - [Docker](https://dl.acm.org/doi/10.5555/2600239.2600241)
 
+  > Merkel, D. (2014). Docker: lightweight linux containers for consistent development and deployment. Linux Journal, 2014(239), 2. doi: 10.5555/2600239.2600241.
+
 - [Singularity](https://pubmed.ncbi.nlm.nih.gov/28494014/)
+
   > Kurtzer GM, Sochat V, Bauer MW. Singularity: Scientific containers for mobility of compute. PLoS One. 2017 May 11;12(5):e0177459. doi: 10.1371/journal.pone.0177459. eCollection 2017. PubMed PMID: 28494014; PubMed Central PMCID: PMC5426675.

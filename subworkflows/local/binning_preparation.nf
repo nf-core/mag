@@ -26,13 +26,16 @@ workflow BINNING_PREPARATION {
             .map { meta, assembly, index -> [ meta.group, meta, assembly, index ] }
             .combine(ch_reads_bowtie2, by: 0)
             .map { group, assembly_meta, assembly, index, reads_meta, reads -> [ assembly_meta, assembly, index, reads_meta, reads ] }
+
     } else {
+        // i.e. --binning_map_mode 'own'
         // combine assemblies (not co-assembled) with reads from own sample
         ch_reads_bowtie2 = reads.map{ meta, reads -> [ meta.id, meta, reads ] }
         ch_bowtie2_input = BOWTIE2_ASSEMBLY_BUILD.out.assembly_index
             .map { meta, assembly, index -> [ meta.id, meta, assembly, index ] }
             .combine(ch_reads_bowtie2, by: 0)
             .map { id, assembly_meta, assembly, index, reads_meta, reads -> [ assembly_meta, assembly, index, reads_meta, reads ] }
+
     }
 
     BOWTIE2_ASSEMBLY_ALIGN ( ch_bowtie2_input )
@@ -42,7 +45,7 @@ workflow BINNING_PREPARATION {
         .map { meta, assembly, bams, bais -> [ meta, assembly.sort()[0], bams, bais ] }     // multiple symlinks to the same assembly -> use first of sorted list
 
     emit:
-    bowtie2_assembly_multiqc = BOWTIE2_ASSEMBLY_ALIGN.out.log.map { assembly_meta, reads_meta, log -> if (assembly_meta.id == reads_meta.id) {return [ log ]} }
+    bowtie2_assembly_multiqc = BOWTIE2_ASSEMBLY_ALIGN.out.log.map { assembly_meta, reads_meta, log -> [ log ] }
     bowtie2_version          = BOWTIE2_ASSEMBLY_ALIGN.out.versions
     grouped_mappings         = ch_grouped_mappings
 }

@@ -24,7 +24,7 @@ jobs:
     strategy:
       matrix:
         NXF_VER:
-          - "22.10.1"
+          - "23.04.0"
           - "latest-everything"
     steps:
       - name: Free some space
@@ -61,6 +61,7 @@ jobs:
             test_ancient_dna,
             test_adapterremoval,
             test_binrefinement,
+            test_virus_identification,
           ]
     steps:
       - name: Free some space

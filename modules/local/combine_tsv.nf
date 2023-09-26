@@ -4,7 +4,7 @@ process COMBINE_TSV {
     conda "bioconda::bioawk=1.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/bioawk:1.0--hed695b0_5' :
-        'quay.io/biocontainers/bioawk:1.0--hed695b0_5' }"
+        'biocontainers/bioawk:1.0--hed695b0_5' }"
 
     input:
     path(bin_summaries)

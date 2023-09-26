@@ -40,6 +40,6 @@ workflow BUSCO_QC {
     emit:
     summary     = BUSCO_SUMMARY.out.summary
     failed_bin  = BUSCO.out.failed_bin.map{it[1]}
-    multiqc     = BUSCO.out.summary_domain.map{it[1]}
+    multiqc     = BUSCO.out.summary_domain.mix(BUSCO.out.summary_specific).map{it[1]}
     versions    = BUSCO.out.versions
 }

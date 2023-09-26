@@ -3,7 +3,7 @@
  */
 
 include { GTDBTK_DB_PREPARATION } from '../../modules/local/gtdbtk_db_preparation'
-include { GTDBTK_CLASSIFY       } from '../../modules/local/gtdbtk_classify'
+include { GTDBTK_CLASSIFYWF     } from '../../modules/nf-core/gtdbtk/classifywf/main'
 include { GTDBTK_SUMMARY        } from '../../modules/local/gtdbtk_summary'
 
 workflow GTDBTK {
@@ -59,20 +59,34 @@ workflow GTDBTK {
                 return [it[0], it[1]]
         }
 
-    GTDBTK_DB_PREPARATION ( gtdb )
-    GTDBTK_CLASSIFY (
+    if ( gtdb.extension == 'gz' ) {
+        // Expects to be tar.gz!
+        ch_db_for_gtdbtk = GTDBTK_DB_PREPARATION ( gtdb ).db
+    } else if ( gtdb.isDirectory() ) {
+        // Make up meta id to match expected channel cardinality for GTDBTK
+        ch_db_for_gtdbtk = Channel
+                            .of(gtdb)
+                            .map{
+                                [ it.toString().split('/').last(), it ]
+                            }
+                            .collect()
+    } else {
+        error("Unsupported object given to --gtdb, database must be supplied as either a directory or a .tar.gz file!")
+    }
+
+    GTDBTK_CLASSIFYWF (
         ch_filtered_bins.passed.groupTuple(),
-        GTDBTK_DB_PREPARATION.out
+        ch_db_for_gtdbtk
     )
 
     GTDBTK_SUMMARY (
         ch_filtered_bins.discarded.map{it[1]}.collect().ifEmpty([]),
-        GTDBTK_CLASSIFY.out.summary.collect().ifEmpty([]),
-        GTDBTK_CLASSIFY.out.filtered.collect().ifEmpty([]),
-        GTDBTK_CLASSIFY.out.failed.collect().ifEmpty([])
+        GTDBTK_CLASSIFYWF.out.summary.collect().ifEmpty([]),
+        GTDBTK_CLASSIFYWF.out.filtered.collect().ifEmpty([]),
+        GTDBTK_CLASSIFYWF.out.failed.collect().ifEmpty([])
     )
 
     emit:
     summary     = GTDBTK_SUMMARY.out.summary
-    versions    = GTDBTK_CLASSIFY.out.versions
+    versions    = GTDBTK_CLASSIFYWF.out.versions
 }

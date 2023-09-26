@@ -4,7 +4,7 @@ process MEGAHIT {
     conda "bioconda::megahit=1.2.9"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/megahit:1.2.9--h2e03b76_1' :
-        'quay.io/biocontainers/megahit:1.2.9--h2e03b76_1' }"
+        'biocontainers/megahit:1.2.9--h2e03b76_1' }"
 
     input:
     tuple val(meta), path(reads1), path(reads2)
@@ -17,7 +17,7 @@ process MEGAHIT {
 
     script:
     def args = task.ext.args ?: ''
-    def input = params.single_end ? "-r \"" + reads1.join(",") + "\"" : "-1 \"" + reads1.join(",") + "\" -2 \"" + reads2.join(",") + "\""
+    def input = meta.single_end ? "-r \"" + reads1.join(",") + "\"" : "-1 \"" + reads1.join(",") + "\" -2 \"" + reads2.join(",") + "\""
     mem = task.memory.toBytes()
     if ( !params.megahit_fix_cpu_1 || task.cpus == 1 )
         """

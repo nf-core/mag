@@ -12,8 +12,10 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 - [Quality control](#quality-control) of input reads - trimming and contaminant removal
 - [Taxonomic classification of trimmed reads](#taxonomic-classification-of-trimmed-reads)
+- [Digital sequencing normalisation](#digital-normalization-with-BBnorm)
 - [Assembly](#assembly) of trimmed reads
 - [Protein-coding gene prediction](#gene-prediction) of assemblies
+- [Virus identification](#virus-identification-in-assemblies) of assemblies
 - [Binning and binning refinement](#binning-and-binning-refinement) of assembled contigs
 - [Taxonomic classification of binned genomes](#taxonomic-classification-of-binned-genomes)
 - [Genome annotation of binned genomes](#genome-annotation-of-binned-genomes)
@@ -129,6 +131,20 @@ NanoPlot is used to calculate various metrics and plots about the quality and le
 
 </details>
 
+## Digital normalization with BBnorm
+
+If the pipeline is called with the `--bbnorm` option, it will normalize sequencing depth of libraries prior assembly by removing reads to 1) reduce coverage of very abundant kmers and 2) delete very rare kmers (see `--bbnorm_target` and `--bbnorm_min` parameters).
+When called in conjunction with `--coassemble_group`, BBnorm will operate on interleaved (merged) FastQ files, producing only a single output file.
+If the `--save_bbnorm_reads` parameter is set, the resulting FastQ files are saved together with log output.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `bbmap/bbnorm/[sample]\*.fastq.gz`
+- `bbmap/bbnorm/log/[sample].bbnorm.log`
+
+</details>
+
 ## Taxonomic classification of trimmed reads
 
 ### Kraken
@@ -177,6 +193,7 @@ Trimmed (short) reads are assembled with both megahit and SPAdes. Hybrid assembl
   - `QC/[sample/group]/`: Directory containing QUAST files and Bowtie2 mapping logs
     - `MEGAHIT-[sample].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the sample that the metagenome was assembled from, only present if `--coassemble_group` is not set.
     - `MEGAHIT-[sample/group]-[sampleToMap].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the respective sample ("sampleToMap").
+    - `MEGAHIT-[sample].[bam/bai]`: Optionally saved BAM file of the Bowtie2 mapping of reads against the assembly.
 
 </details>
 
@@ -195,6 +212,7 @@ Trimmed (short) reads are assembled with both megahit and SPAdes. Hybrid assembl
   - `QC/[sample/group]/`: Directory containing QUAST files and Bowtie2 mapping logs
     - `SPAdes-[sample].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the sample that the metagenome was assembled from, only present if `--coassemble_group` is not set.
     - `SPAdes-[sample/group]-[sampleToMap].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the respective sample ("sampleToMap").
+    - `SPAdes-[sample].[bam/bai]`: Optionally saved BAM file of the Bowtie2 mapping of reads against the assembly.
 
 </details>
 
@@ -213,6 +231,7 @@ SPAdesHybrid is a part of the [SPAdes](http://cab.spbu.ru/software/spades/) soft
   - `QC/[sample/group]/`: Directory containing QUAST files and Bowtie2 mapping logs
     - `SPAdesHybrid-[sample].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the sample that the metagenome was assembled from, only present if `--coassemble_group` is not set.
     - `SPAdesHybrid-[sample/group]-[sampleToMap].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the respective sample ("sampleToMap").
+    - `SPAdesHybrid-[sample].[bam/bai]`: Optionally saved BAM file of the Bowtie2 mapping of reads against the assembly.
 
 </details>
 
@@ -246,11 +265,40 @@ Protein-coding genes are predicted for each assembly.
 <details markdown="1">
 <summary>Output files</summary>
 
-- `Prodigal/`
-  - `[sample/group].gff`: Gene Coordinates in GFF format
-  - `[sample/group].faa`: The protein translation file consists of all the proteins from all the sequences in multiple FASTA format.
-  - `[sample/group].fna`: Nucleotide sequences of the predicted proteins using the DNA alphabet, not mRNA (so you will see 'T' in the output and not 'U').
-  - `[sample/group]_all.txt`: Information about start positions of genes.
+- `Annotation/Prodigal/`
+  - `[assembler]-[sample/group].gff.gz`: Gene Coordinates in GFF format
+  - `[assembler]-[sample/group].faa.gz`: The protein translation file consists of all the proteins from all the sequences in multiple FASTA format.
+  - `[assembler]-[sample/group].fna.gz`: Nucleotide sequences of the predicted proteins using the DNA alphabet, not mRNA (so you will see 'T' in the output and not 'U').
+  - `[assembler]-[sample/group]_all.txt.gz`: Information about start positions of genes.
+
+</details>
+
+## Virus identification in assemblies
+
+### geNomad
+
+[geNomad](https://github.com/apcamargo/genomad) identifies viruses and plasmids in sequencing data (isolates, metagenomes, and metatranscriptomes)
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `VirusIdentification/geNomad/[assembler]-[sample/group]*/`
+  - `[assembler]-[sample/group]*_annotate`
+    - `[assembler]-[sample/group]*_taxonomy.tsv`: Taxonomic assignment data
+  - `[assembler]-[sample/group]*_aggregated_classification`
+    - `[assembler]-[sample/group]*_aggregated_classification.tsv`: Sequence classification in tabular format
+  - `[assembler]-[sample/group]*_find_proviruses`
+    - `[assembler]-[sample/group]*_provirus.tsv`: Characteristics of proviruses identified by geNomad
+  - `[assembler]-[sample/group]*_summary`
+    - `[assembler]-[sample/group]*_virus_summary.tsv`: Virus classification summary file in tabular format
+    - `[assembler]-[sample/group]*_plasmid_summary.tsv`: Plasmid classification summary file in tabular format
+    - `[assembler]-[sample/group]*_viruses_genes.tsv`: Virus gene annotation data in tabular format
+    - `[assembler]-[sample/group]*_plasmids_genes.tsv`: Plasmid gene annotation data in tabular format
+    - `[assembler]-[sample/group]*_viruses.fna`: Virus nucleotide sequences in FASTA format
+    - `[assembler]-[sample/group]*_plasmids.fna`: Plasmid nucleotide sequences in FASTA format
+    - `[assembler]-[sample/group]*_viruses_proteins.faa`: Virus protein sequences in FASTA format
+    - `[assembler]-[sample/group]*_plasmids_proteins.faa`: Plasmid protein sequences in FASTA format
+  - `[assembler]-[sample/group]*.log`: Plain text log file detailing the steps executed by geNomad (annotate, find-proviruses, marker-classification, nn-classification, aggregated-classification and summary)
 
 </details>
 
@@ -376,6 +424,22 @@ DAS Tool will remove contigs from bins that do not pass additional filtering cri
 By default, only the raw bins (and unbinned contigs) from the actual binning methods, but not from the binning refinement with DAS Tool, will be used for downstream bin quality control, annotation and taxonomic classification. The parameter `--postbinning_input` can be used to change this behaviour.
 
 ⚠️ Due to ability to perform downstream QC of both raw and refined bins in parallel (via `--postbinning_input)`, bin names in DAS Tools's `*_allBins.eval` file will include `Refined`. However for this particular file, they _actually_ refer to the 'raw' input bins. The pipeline renames the input files prior to running DASTool to ensure they can be disambiguated from the original bin files in the downstream QC steps.
+
+### Tiara
+
+Tiara is a contig classifier that identifies the domain (prokarya, eukarya) of contigs within an assembly. This is used in this pipeline to rapidly and with few resources identify the most likely domain classification of each bin or unbin based on its contig identities.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `Taxonomy/Tiara/`
+  - `[assembler]-[sample/group].tiara.txt` - Tiara output classifications (with probabilities) for all contigs within the specified sample/group assembly
+  - `log/log_[assembler]-[sample/group].txt` - log file detailing the parameters used by the Tiara model for contig classification.
+- `GenomeBinning/tiara_summary.tsv` - Summary of Tiara domain classification for all bins.
+
+</details>
+
+Typically, you would use `tiara_summary.tsv` as the primary file to see which bins or unbins have been classified to which domains at a glance, whereas `[assembler]-[sample/group].tiara.txt` provides classifications for each contig.
 
 ### Bin sequencing depth
 
@@ -565,19 +629,34 @@ Whole genome annotation is the process of identifying features of interest in a 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `Prokka/[assembler]/[bin]/`
-  - `[bin].gff`: annotation in GFF3 format, containing both sequences and annotations
-  - `[bin].gbk`: annotation in GenBank format, containing both sequences and annotations
-  - `[bin].fna`: nucleotide FASTA file of the input contig sequences
-  - `[bin].faa`: protein FASTA file of the translated CDS sequences
-  - `[bin].ffn`: nucleotide FASTA file of all the prediction transcripts (CDS, rRNA, tRNA, tmRNA, misc_RNA)
-  - `[bin].sqn`: an ASN1 format "Sequin" file for submission to Genbank
-  - `[bin].fsa`: nucleotide FASTA file of the input contig sequences, used by "tbl2asn" to create the .sqn file
-  - `[bin].tbl`: feature Table file, used by "tbl2asn" to create the .sqn file
-  - `[bin].err`: unacceptable annotations - the NCBI discrepancy report.
-  - `[bin].log`: contains all the output that Prokka produced during its run
-  - `[bin].txt`: statistics relating to the annotated features found
-  - `[bin].tsv`: tab-separated file of all features (locus_tag, ftype, len_bp, gene, EC_number, COG, product)
+- `Annotation/Prokka/[assembler]/[bin]/`
+  - `[assembler]-[binner]-[bin].gff`: annotation in GFF3 format, containing both sequences and annotations
+  - `[assembler]-[binner]-[bin].gbk`: annotation in GenBank format, containing both sequences and annotations
+  - `[assembler]-[binner]-[bin].fna`: nucleotide FASTA file of the input contig sequences
+  - `[assembler]-[binner]-[bin].faa`: protein FASTA file of the translated CDS sequences
+  - `[assembler]-[binner]-[bin].ffn`: nucleotide FASTA file of all the prediction transcripts (CDS, rRNA, tRNA, tmRNA, misc_RNA)
+  - `[assembler]-[binner]-[bin].sqn`: an ASN1 format "Sequin" file for submission to Genbank
+  - `[assembler]-[binner]-[bin].fsa`: nucleotide FASTA file of the input contig sequences, used by "tbl2asn" to create the .sqn file
+  - `[assembler]-[binner]-[bin].tbl`: feature Table file, used by "tbl2asn" to create the .sqn file
+  - `[assembler]-[binner]-[bin].err`: unacceptable annotations - the NCBI discrepancy report.
+  - `[assembler]-[binner]-[bin].log`: contains all the output that Prokka produced during its run
+  - `[assembler]-[binner]-[bin].txt`: statistics relating to the annotated features found
+  - `[assembler]-[binner]-[bin].tsv`: tab-separated file of all features (locus_tag, ftype, len_bp, gene, EC_number, COG, product)
+
+</details>
+
+### MetaEuk
+
+In cases where eukaryotic genomes are recovered in binning, [MetaEuk](https://github.com/soedinglab/metaeuk) is also available to annotate eukaryotic genomes quickly with standards-compliant output files.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `Annotation/MetaEuk/[assembler]/[bin]`
+  - `[assembler]-[binner]-[bin].fas`: fasta file of protein sequences identified by MetaEuk
+  - `[assembler]-[binner]-[bin].codon.fas`: fasta file of nucleotide sequences corresponding to the protein sequences fasta
+  - `[assembler]-[binner]-[bin].headersMap.tsv`: tab-separated table containing the information from each header in the fasta files
+  - `[assembler]-[binner]-[bin].gff`: annotation in GFF3 format
 
 </details>
 
@@ -610,7 +689,7 @@ Optional, only running when parameter `-profile ancient_dna` is specified.
 
 ### `variant_calling`
 
-Because of aDNA damage, _de novo_ assemblers sometimes struggle to call a correct consensus on the contig sequence. To avoid this situation, the consensus is re-called with a variant calling software using the reads aligned back to the contigs
+Because of aDNA damage, _de novo_ assemblers sometimes struggle to call a correct consensus on the contig sequence. To avoid this situation, the consensus is optionally re-called with a variant calling software using the reads aligned back to the contigs when `--run_ancient_damagecorrection` is supplied.
 
 <details markdown="1">
 <summary>Output files</summary>
@@ -639,6 +718,21 @@ Because of aDNA damage, _de novo_ assemblers sometimes struggle to call a correc
 [MultiQC](http://multiqc.info) is a visualization tool that generates a single HTML report summarising all samples in your project. Most of the pipeline QC results are visualised in the report and further statistics are available in the report data directory.
 
 Results generated by MultiQC collate pipeline QC from supported tools e.g. FastQC. The pipeline has special steps which also allow the software versions to be reported in the MultiQC output for future traceability. For more information about how to use MultiQC reports, see <http://multiqc.info>.
+
+The general stats table at the top of the table will by default only display the most relevant pre- and post-processing statistics prior to assembly, i.e., FastQC, fastp/Adapter removal, and Bowtie2 PhiX and host removal mapping results.
+
+Note that the FastQC raw and processed columns are right next to each other for improved visual comparability, however the processed columns represent the input reads _after_ fastp/Adapter Removal processing (the dedicated columns of which come directly after the two FastQC set of columns). Hover your cursor over each column name to see the which tool the column is derived from.
+
+Summary tool-specific plots and tables of following tools are currently displayed (if activated):
+
+- FastQC (pre- and post-trimming)
+- fastp
+- Adapter Removal
+- bowtie2
+- BUSCO
+- QUAST
+- Kraken2 / Centrifuge
+- PROKKA
 
 ### Pipeline information
 
