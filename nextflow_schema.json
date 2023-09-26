@@ -18,8 +18,22 @@
                     "exists": true,
                     "mimetype": "text/csv",
                     "pattern": "^\\S+\\.csv$",
-                    "description": "Path to comma-separated file containing information about the samples in the experiment.",
-                    "help_text": "You will need to create a design file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row. See [usage docs](https://nf-co.re/mag/usage#samplesheet-input).",
+                    "description": "Input FastQ files or CSV samplesheet file containing information about the samples in the experiment.",
+                    "help_text": "Use this to specify the location of your input FastQ files. For example:\n\n```bash\n--input 'path/to/data/sample_*_{1,2}.fastq.gz'\n``` \n\nAlternatively, to assign different groups or to include long reads for hybrid assembly with metaSPAdes, you can specify a CSV samplesheet input file with 5 columns and the following header: sample,group,short_reads_1,short_reads_2,long_reads. See [usage docs](https://nf-co.re/mag/usage#input-specifications).",
+                    "fa_icon": "fas fa-file-csv"
+                },
+                "single_end": {
+                    "type": "boolean",
+                    "description": "Specifies that the input is single-end reads.",
+                    "fa_icon": "fas fa-align-center",
+                    "help_text": "By default, the pipeline expects paired-end data. If you have single-end data, you need to specify `--single_end` on the command line when you launch the pipeline. A normal glob pattern, enclosed in quotation marks, can then be used for `--input`. For example:\n\n```bash\n--single_end --input '*.fastq'\n```\n\nIt is not possible to run a mixture of single-end and paired-end files in one run."
+                },
+                "assembly_input": {
+                    "type": "string",
+                    "mimetype": "text/csv",
+                    "format": "file-path",
+                    "description": "Additional input CSV samplesheet containing information about pre-computed assemblies. When set, both read pre-processing and assembly are skipped and the pipeline begins at the binning stage.",
+                    "help_text": "If you have pre-computed assemblies from another source, it is possible to jump straight to the binning stage of the pipeline by supplying these assemblies in a CSV file. This CSV file should have three columns and the following header: `id,group,assembler,fasta`. Short reads must still be supplied in to `--input` in CSV format. See [usage docs](https://nf-co.re/mag/usage#input-specifications) for further details.",
                     "fa_icon": "fas fa-file-csv"
                 },
                 "outdir": {
@@ -48,21 +62,13 @@
             "fa_icon": "fas fa-dna",
             "description": "Reference genome related files and options required for the workflow.",
             "properties": {
-                "genome": {
+                "igenomes_base": {
                     "type": "string",
-                    "description": "Name of iGenomes reference.",
-                    "fa_icon": "fas fa-book",
-                    "help_text": "If using a reference genome configured in the pipeline using iGenomes, use this parameter to give the ID for the reference. This is then used to build the full paths for all required reference genome files e.g. `--genome GRCh38`. \n\nSee the [nf-core website docs](https://nf-co.re/usage/reference_genomes) for more details."
-                },
-                "fasta": {
-                    "type": "string",
-                    "format": "file-path",
-                    "exists": true,
-                    "mimetype": "text/plain",
-                    "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
-                    "description": "Path to FASTA genome file.",
-                    "help_text": "This parameter is *mandatory* if `--genome` is not specified. If you don't have a BWA index available this will be generated for you automatically. Combine with `--save_reference` to save BWA index for future runs.",
-                    "fa_icon": "far fa-file-code"
+                    "format": "directory-path",
+                    "description": "Directory / URL base for iGenomes references.",
+                    "default": "s3://ngi-igenomes/igenomes",
+                    "fa_icon": "fas fa-cloud-download-alt",
+                    "hidden": true
                 },
                 "igenomes_ignore": {
                     "type": "boolean",
@@ -266,6 +272,620 @@
                     "help_text": "Allows string values that are parseable as numbers or booleans. For further information see [JSONSchema docs](https://github.com/everit-org/json-schema#lenient-mode)."
                 }
             }
+        },
+        "reproducibility_options": {
+            "title": "Reproducibility options",
+            "type": "object",
+            "description": "Use these parameters to also enable reproducible results from the individual assembly and binning tools .",
+            "default": "",
+            "properties": {
+                "megahit_fix_cpu_1": {
+                    "type": "boolean",
+                    "description": "Fix number of CPUs for MEGAHIT to 1. Not increased with retries.",
+                    "help_text": "MEGAHIT only generates reproducible results when run single-threaded. \n\nWhen using this parameter do not change the number of CPUs for the `megahit` process with a custom config file. This would result in an error.\n\nDefault: The number of CPUs is specified in the `base.config` file, and increased with each retry."
+                },
+                "spades_fix_cpus": {
+                    "type": "integer",
+                    "default": -1,
+                    "description": "Fix number of CPUs used by SPAdes. Not increased with retries.",
+                    "help_text": "SPAdes is designed to be deterministic for a given number of threads. To generate reproducible results fix the number of CPUs using this parameter.\n\nWhen using this parameter do not change the number of CPUs for the `spades` process with a custom config file. This would result in an error.\n\nDefault: -1 (the number of CPUs is specified in the `base.config` or in a custom config file, and increased with each retry)."
+                },
+                "spadeshybrid_fix_cpus": {
+                    "type": "integer",
+                    "default": -1,
+                    "description": "Fix number of CPUs used by SPAdes hybrid. Not increased with retries.",
+                    "help_text": "SPAdes is designed to be deterministic for a given number of threads. To generate reproducible results fix the number of CPUs using this parameter.\n\nWhen using this parameter do not change the number of CPUs for the `spadeshybrid` process with a custom config file. This would result in an error.\n\nDefault: -1 (the number of CPUs is specified in the `base.config` or in a custom config file, and increased with each retry)."
+                },
+                "metabat_rng_seed": {
+                    "type": "integer",
+                    "default": 1,
+                    "description": "RNG seed for MetaBAT2.",
+                    "help_text": "MetaBAT2 is run by default with a fixed seed within this pipeline, thus producing reproducible results. You can set it also to any other positive integer to ensure reproducibility. Set the parameter to 0 to use a random seed."
+                }
+            },
+            "help_text": ""
+        },
+        "quality_control_for_short_reads_options": {
+            "title": "Quality control for short reads options",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "clip_tool": {
+                    "type": "string",
+                    "default": "fastp",
+                    "description": "Specify which adapter clipping tool to use.",
+                    "enum": ["fastp", "adapterremoval"]
+                },
+                "save_clipped_reads": {
+                    "type": "boolean",
+                    "description": "Specify to save the resulting clipped FASTQ files to --outdir."
+                },
+                "reads_minlength": {
+                    "type": "integer",
+                    "default": 15,
+                    "description": "The minimum length of reads must have to be retained for downstream analysis."
+                },
+                "fastp_qualified_quality": {
+                    "type": "integer",
+                    "default": 15,
+                    "description": "Minimum phred quality value of a base to be qualified in fastp.",
+                    "help": "Reads with more than 40% of unqualified bases will be discarded."
+                },
+                "fastp_cut_mean_quality": {
+                    "type": "integer",
+                    "default": 15,
+                    "description": "The mean quality requirement used for per read sliding window cutting by fastp.",
+                    "help": "Used in combination with the fastp options '--cut_front' and '--cut_tail'. If the mean quality within a window (of size 4) is below `--fastp_cut_mean_quality`, the bases are dropped and the sliding window is moved further, otherwise it stops."
+                },
+                "fastp_save_trimmed_fail": {
+                    "type": "boolean",
+                    "description": "Save reads that fail fastp filtering in a separate file. Not used downstream."
+                },
+                "adapterremoval_minquality": {
+                    "type": "integer",
+                    "default": 2,
+                    "description": "The minimum base quality for low-quality base trimming by AdapterRemoval."
+                },
+                "adapterremoval_trim_quality_stretch": {
+                    "type": "boolean",
+                    "description": "Turn on quality trimming by consecutive stretch of low quality bases, rather than by window.",
+                    "help_text": "Default base-quality trimming is set to trim by 'windows', as in FastP. Specifying this flag will use trim via contiguous stretch of low quality bases (Ns) instead.\n\n> Replaces --trimwindows 4 with --trimqualities in AdapterRemoval"
+                },
+                "adapterremoval_adapter1": {
+                    "type": "string",
+                    "default": "AGATCGGAAGAGCACACGTCTGAACTCCAGTCACNNNNNNATCTCGTATGCCGTCTTCTGCTTG",
+                    "description": "Forward read adapter to be trimmed by AdapterRemoval."
+                },
+                "adapterremoval_adapter2": {
+                    "type": "string",
+                    "default": "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT",
+                    "description": "Reverse read adapter to be trimmed by AdapterRemoval for paired end data."
+                },
+                "host_genome": {
+                    "type": "string",
+                    "help_text": "This parameter is mutually exclusive with `--host_fasta`. Host read removal is done with Bowtie2. \nBoth the iGenomes FASTA file as well as corresponding, already pre-built Bowtie 2 index files will be used.",
+                    "description": "Name of iGenomes reference for host contamination removal."
+                },
+                "host_fasta": {
+                    "type": "string",
+                    "description": "Fasta reference file for host contamination removal.",
+                    "help_text": "This parameter is mutually exclusive with `--host_genome`. The reference can be masked. Host read removal is done with Bowtie2."
+                },
+                "host_removal_verysensitive": {
+                    "type": "boolean",
+                    "description": "Use the `--very-sensitive` instead of the`--sensitive`setting for Bowtie 2 to map reads against the host genome."
+                },
+                "host_removal_save_ids": {
+                    "type": "boolean",
+                    "description": "Save the read IDs of removed host reads."
+                },
+                "save_hostremoved_reads": {
+                    "type": "boolean",
+                    "description": "Specify to save input FASTQ files with host reads removed to --outdir."
+                },
+                "keep_phix": {
+                    "type": "boolean",
+                    "description": "Keep reads similar to the Illumina internal standard PhiX genome."
+                },
+                "phix_reference": {
+                    "type": "string",
+                    "default": "${baseDir}/assets/data/GCA_002596845.1_ASM259684v1_genomic.fna.gz",
+                    "description": "Genome reference used to remove Illumina PhiX contaminant reads.",
+                    "hidden": true
+                },
+                "skip_clipping": {
+                    "type": "boolean",
+                    "description": "Skip read preprocessing using fastp or adapterremoval."
+                },
+                "save_phixremoved_reads": {
+                    "type": "boolean",
+                    "description": "Specify to save input FASTQ files with phiX reads removed to --outdir."
+                },
+                "bbnorm": {
+                    "type": "boolean",
+                    "description": "Run BBnorm to normalize sequence depth."
+                },
+                "bbnorm_target": {
+                    "type": "integer",
+                    "default": 100,
+                    "description": "Set BBnorm target maximum depth to this number."
+                },
+                "bbnorm_min": {
+                    "type": "integer",
+                    "default": 5,
+                    "description": "Set BBnorm minimum depth to this number."
+                },
+                "save_bbnorm_reads": {
+                    "type": "boolean",
+                    "description": "Save normalized read files to output directory."
+                }
+            }
+        },
+        "quality_control_for_long_reads_options": {
+            "title": "Quality control for long reads options",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "skip_adapter_trimming": {
+                    "type": "boolean",
+                    "description": "Skip removing adapter sequences from long reads."
+                },
+                "longreads_min_length": {
+                    "type": "integer",
+                    "default": 1000,
+                    "description": "Discard any read which is shorter than this value."
+                },
+                "longreads_keep_percent": {
+                    "type": "integer",
+                    "default": 90,
+                    "description": "Keep this percent of bases."
+                },
+                "longreads_length_weight": {
+                    "type": "integer",
+                    "default": 10,
+                    "description": "The higher the more important is read length when choosing the best reads.",
+                    "help_text": "The default value focuses on length instead of quality to improve assembly size.\nIn order to assign equal weights to read lengths and read qualities set this parameter to 1.\nThis might be useful, for example, to benefit indirectly from the removal of short host reads (causing lower qualities for reads not overlapping filtered short reads)."
+                },
+                "keep_lambda": {
+                    "type": "boolean",
+                    "description": "Keep reads similar to the ONT internal standard Escherichia virus Lambda genome."
+                },
+                "lambda_reference": {
+                    "type": "string",
+                    "default": "${baseDir}/assets/data/GCA_000840245.1_ViralProj14204_genomic.fna.gz",
+                    "hidden": true,
+                    "description": "Genome reference used to remove ONT Lambda contaminant reads."
+                },
+                "save_lambdaremoved_reads": {
+                    "type": "boolean",
+                    "description": "Specify to save input FASTQ files with lamba reads removed  to --outdir."
+                },
+                "save_porechop_reads": {
+                    "type": "boolean",
+                    "description": "Specify to save the resulting clipped FASTQ files to --outdir."
+                },
+                "save_filtlong_reads": {
+                    "type": "boolean",
+                    "description": "Specify to save the resulting length filtered FASTQ files to --outdir."
+                }
+            }
+        },
+        "taxonomic_profiling_options": {
+            "title": "Taxonomic profiling options",
+            "type": "object",
+            "description": "Taxonomic classification is disabled by default. You have to specify one of the options below to activate it.",
+            "default": "",
+            "properties": {
+                "centrifuge_db": {
+                    "type": "string",
+                    "description": "Database for taxonomic binning with centrifuge.",
+                    "help_text": "E.g. ftp://ftp.ccb.jhu.edu/pub/infphilo/centrifuge/data/p_compressed+h+v.tar.gz."
+                },
+                "kraken2_db": {
+                    "type": "string",
+                    "description": "Database for taxonomic binning with kraken2.",
+                    "help_text": "The database file must be a compressed tar archive that contains at least the three files `hash.k2d`, `opts.k2d` and `taxo.k2d`. E.g. ftp://ftp.ccb.jhu.edu/pub/data/kraken2_dbs/minikraken_8GB_202003.tgz."
+                },
+                "krona_db": {
+                    "type": "string",
+                    "description": "Database for taxonomic binning with krona",
+                    "help_text": "Path to `taxonomy.tab` file for Krona, instead of downloading the default file. Point at the `.tab` file."
+                },
+                "skip_krona": {
+                    "type": "boolean",
+                    "description": "Skip creating a krona plot for taxonomic binning."
+                },
+                "cat_db": {
+                    "type": "string",
+                    "description": "Database for taxonomic classification of metagenome assembled genomes. Can be either a zipped file or a directory containing the extracted output of such.",
+                    "help_text": "E.g. https://tbb.bio.uu.nl/bastiaan/CAT_prepare/CAT_prepare_20210107.tar.gz. This parameter is mutually exclusive with `--cat_db_generate`. The file needs to contain a folder named `*taxonomy*` and `*database*` that hold the respective files."
+                },
+                "cat_db_generate": {
+                    "type": "boolean",
+                    "description": "Generate CAT database.",
+                    "help_text": "Download the taxonomy files from NCBI taxonomy, the nr database and generate CAT database. This parameter is mutually exclusive with `--cat_db`. Useful to build a CAT database with the same DIAMOND version as used for running CAT classification, avoiding compatibility problems."
+                },
+                "save_cat_db": {
+                    "type": "boolean",
+                    "description": "Save the CAT database generated when specified by `--cat_db_generate`.",
+                    "help_text": "Useful to allow reproducibility, as old versions of prebuild CAT databases do not always remain accessible and underlying NCBI taxonomy and nr databases change."
+                },
+                "cat_official_taxonomy": {
+                    "type": "boolean",
+                    "description": "Only return official taxonomic ranks (Kingdom, Phylum, etc.) when running CAT."
+                },
+                "skip_gtdbtk": {
+                    "type": "boolean",
+                    "description": "Skip the running of GTDB, as well as the automatic download of the database"
+                },
+                "gtdb_db": {
+                    "type": "string",
+                    "description": "Specify the location of a GTDBTK database. Can be either an uncompressed directory or a `.tar.gz` archive. If not specified will be downloaded for you when GTDBTK or binning QC is not skipped.",
+                    "default": "https://data.ace.uq.edu.au/public/gtdb/data/releases/release214/214.1/auxillary_files/gtdbtk_r214_data.tar.gz"
+                },
+                "gtdbtk_min_completeness": {
+                    "type": "number",
+                    "default": 50.0,
+                    "description": "Min. bin completeness (in %) required to apply GTDB-tk classification.",
+                    "help_text": "Completeness assessed with BUSCO analysis (100% - %Missing). Must be greater than 0 (min. 0.01) to avoid GTDB-tk errors. If too low, GTDB-tk classification results can be impaired due to not enough marker genes!",
+                    "minimum": 0.01,
+                    "maximum": 100
+                },
+                "gtdbtk_max_contamination": {
+                    "type": "number",
+                    "default": 10.0,
+                    "description": "Max. bin contamination (in %) allowed to apply GTDB-tk classification.",
+                    "help_text": "Contamination approximated based on BUSCO analysis (%Complete and duplicated). If too high, GTDB-tk classification results can be impaired due to contamination!",
+                    "minimum": 0,
+                    "maximum": 100
+                },
+                "gtdbtk_min_perc_aa": {
+                    "type": "number",
+                    "default": 10.0,
+                    "description": "Min. fraction of AA (in %) in the MSA for bins to be kept.",
+                    "minimum": 0,
+                    "maximum": 100
+                },
+                "gtdbtk_min_af": {
+                    "type": "number",
+                    "default": 0.65,
+                    "description": "Min. alignment fraction to consider closest genome.",
+                    "minimum": 0,
+                    "maximum": 1
+                },
+                "gtdbtk_pplacer_cpus": {
+                    "type": "number",
+                    "default": 1.0,
+                    "description": "Number of CPUs used for the by GTDB-Tk run tool pplacer.",
+                    "help_text": "A low number of CPUs helps to reduce the memory required/reported by GTDB-Tk. See also the [GTDB-Tk documentation](https://ecogenomics.github.io/GTDBTk/faq.html#gtdb-tk-reaches-the-memory-limit-pplacer-crashes)."
+                },
+                "gtdbtk_pplacer_scratch": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Reduce GTDB-Tk memory consumption by running pplacer in a setting writing to disk.",
+                    "help_text": "Will be slower. Set to `false` to turn this off."
+                },
+                "genomad_db": {
+                    "type": "string",
+                    "description": "Database for virus classification with geNomad",
+                    "help_text": "Must be a directory containing the uncompressed contents from https://portal.nersc.gov/genomad/__data__/genomad_db_v1.1.tar.gz"
+                }
+            }
+        },
+        "assembly_options": {
+            "title": "Assembly options",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "coassemble_group": {
+                    "type": "boolean",
+                    "description": "Co-assemble samples within one group, instead of assembling each sample separately."
+                },
+                "spades_options": {
+                    "type": "string",
+                    "description": "Additional custom options for SPAdes.",
+                    "help_text": "An example is adjusting k-mers (\"-k 21,33,55,77\") or adding [advanced options](https://github.com/ablab/spades#advanced-options). But not -t, -m, -o or --out-prefix, because these are already in use. Must be used like this: --spades_options=\"-k 21,33,55,77\")"
+                },
+                "megahit_options": {
+                    "type": "string",
+                    "description": "Additional custom options for MEGAHIT.",
+                    "help_text": "An example is adjusting presets (e.g. \"--presets meta-large\"), k-mers (e.g. \"-k 21,33,55,77\") or adding other [advanced options](https://github.com/voutcn/megahit#advanced-usage). For example, increase the minimum k-mer in the event of an error message such as \"Too many vertices in the unitig graph, you may increase the kmer size to remove tons of erroneous kmers.\" in the MEGAHIT log file. But not --threads, --memory, -o or input read files, because these are already in use. Must be used like this: --megahit_options=\"--presets meta-large\""
+                },
+                "skip_spades": {
+                    "type": "boolean",
+                    "description": "Skip Illumina-only SPAdes assembly."
+                },
+                "skip_spadeshybrid": {
+                    "type": "boolean",
+                    "description": "Skip SPAdes hybrid assembly."
+                },
+                "skip_megahit": {
+                    "type": "boolean",
+                    "description": "Skip MEGAHIT assembly."
+                },
+                "skip_quast": {
+                    "type": "boolean",
+                    "description": "Skip metaQUAST."
+                }
+            }
+        },
+        "gene_prediction_and_annotation_options": {
+            "title": "Gene prediction and annotation options",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "skip_prodigal": {
+                    "type": "boolean",
+                    "description": "Skip Prodigal gene prediction"
+                },
+                "skip_prokka": {
+                    "type": "boolean",
+                    "description": "Skip Prokka genome annotation."
+                },
+                "skip_metaeuk": {
+                    "type": "boolean",
+                    "description": "Skip MetaEuk gene prediction and annotation"
+                },
+                "metaeuk_mmseqs_db": {
+                    "type": "string",
+                    "description": "A string containing the name of one of the databases listed in the [mmseqs2 documentation](https://github.com/soedinglab/MMseqs2/wiki#downloading-databases). This database will be downloaded and formatted for eukaryotic genome annotation. Incompatible with --metaeuk_db.",
+                    "help_text": "mmseqs2 lists a large number of databases, not all of which are appropriate for use with MetaEuk. MetaEuk requires protein inputs, so you should select one of the Aminoacid or Profile options."
+                },
+                "metaeuk_db": {
+                    "type": "string",
+                    "description": "Path to either a local fasta file of protein sequences, or to a directory containing an mmseqs2-formatted database, for annotation of eukaryotic genomes.",
+                    "help_text": "One option would be the databases from the MetaEuk publication (https://wwwuser.gwdg.de/~compbiol/metaeuk/), however it should be noted that these are focused on marine eukaryotes."
+                },
+                "save_mmseqs_db": {
+                    "type": "boolean",
+                    "description": "Save the downloaded mmseqs2 database specified in `--metaeuk_mmseqs_db`."
+                }
+            }
+        },
+        "virus_identification_options": {
+            "title": "Virus identification options",
+            "type": "object",
+            "default": "",
+            "properties": {
+                "run_virus_identification": {
+                    "type": "boolean",
+                    "description": "Run virus identification."
+                },
+                "genomad_min_score": {
+                    "type": "number",
+                    "default": 0.7,
+                    "description": "Minimum geNomad score for a sequence to be considered viral"
+                },
+                "genomad_splits": {
+                    "type": "integer",
+                    "default": 1,
+                    "description": "Number of groups that geNomad's MMSeqs2 databse should be split into (reduced memory requirements)"
+                }
+            }
+        },
+        "binning_options": {
+            "title": "Binning options",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "binning_map_mode": {
+                    "type": "string",
+                    "default": "group",
+                    "description": "Defines mapping strategy to compute co-abundances for binning, i.e. which samples will be mapped against the assembly.",
+                    "help_text": "Available: `all`, `group` or `own`. Note that `own` cannot be specified in combination with `--coassemble_group`.\n\nNote that specifying `all` without additionally specifying `--coassemble_group` results in `n^2` mapping processes for each assembly method, where `n` is the number of samples."
+                },
+                "skip_binning": {
+                    "type": "boolean",
+                    "description": "Skip metagenome binning entirely"
+                },
+                "skip_metabat2": {
+                    "type": "boolean",
+                    "description": "Skip MetaBAT2 Binning"
+                },
+                "skip_maxbin2": {
+                    "type": "boolean",
+                    "description": "Skip MaxBin2 Binning"
+                },
+                "skip_concoct": {
+                    "type": "boolean",
+                    "description": "Skip CONCOCT Binning"
+                },
+                "min_contig_size": {
+                    "type": "integer",
+                    "default": 1500,
+                    "description": "Minimum contig size to be considered for binning and for bin quality check.",
+                    "help_text": "For forwarding into downstream analysis, i.e. QUAST and BUSCO, and reporting."
+                },
+                "min_length_unbinned_contigs": {
+                    "type": "integer",
+                    "default": 1000000,
+                    "description": "Minimal length of contigs that are not part of any bin but treated as individual genome.",
+                    "help_text": "Contigs that do not fulfill the thresholds of `--min_length_unbinned_contigs` and `--max_unbinned_contigs` are pooled for downstream analysis and reporting, except contigs that also do not fullfill `--min_contig_size` are not considered further."
+                },
+                "max_unbinned_contigs": {
+                    "type": "integer",
+                    "default": 100,
+                    "description": "Maximal number of contigs that are not part of any bin but treated as individual genome.",
+                    "help_text": "Contigs that do not fulfill the thresholds of `--min_length_unbinned_contigs` and `--max_unbinned_contigs` are pooled for downstream analysis and reporting, except contigs that also do not fullfill `--min_contig_size` are not considered further."
+                },
+                "bowtie2_mode": {
+                    "type": "string",
+                    "description": "Bowtie2 alignment mode",
+                    "help_text": "Bowtie2 alignment mode options, for example: `--very-fast` , `--very-sensitive-local -N 1` , ... Must be used like this: --bowtie2_mode=\"--very-sensitive\""
+                },
+                "save_assembly_mapped_reads": {
+                    "type": "boolean",
+                    "description": "Save the output of mapping raw reads back to assembled contigs",
+                    "help_text": "Specify to save the BAM and BAI files generated when mapping input reads back to the assembled contigs (performed in preparation for binning and contig depth estimations)."
+                },
+                "bin_domain_classification": {
+                    "type": "boolean",
+                    "description": "Enable domain-level (prokaryote or eukaryote) classification of bins using Tiara. Processes which are domain-specific will then only receive bins matching the domain requirement.",
+                    "help_text": "Enable this if it is likely that your metagenome samples contain a mixture of eukaryotic and prokaryotic genomes. This will ensure that prokaryote-only steps only receive putatively prokaryotic genomes, and vice-versa. Additionally, may improve the performance of DAS Tool by ensuring it only receives prokaryotic genomes."
+                },
+                "bin_domain_classification_tool": {
+                    "type": "string",
+                    "default": "tiara",
+                    "description": "Specify which tool to use for domain classification of bins. Currently only 'tiara' is implemented.",
+                    "hidden": true
+                },
+                "tiara_min_length": {
+                    "type": "integer",
+                    "default": 3000,
+                    "description": "Minimum contig length for Tiara to use for domain classification. For accurate classification, should be longer than 3000 bp."
+                }
+            }
+        },
+        "bin_quality_check_options": {
+            "title": "Bin quality check options",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "skip_binqc": {
+                    "type": "boolean",
+                    "description": "Disable bin QC with BUSCO or CheckM."
+                },
+                "binqc_tool": {
+                    "type": "string",
+                    "default": "busco",
+                    "description": "Specify which tool for bin quality-control validation to use.",
+                    "enum": ["busco", "checkm"]
+                },
+                "busco_reference": {
+                    "type": "string",
+                    "description": "Download path for BUSCO lineage dataset, instead of using automated lineage selection.",
+                    "help_text": "E.g. https://busco-data.ezlab.org/v5/data/lineages/bacteria_odb10.2020-03-06.tar.gz. Available databases are listed here: https://busco-data.ezlab.org/v5/data/lineages/."
+                },
+                "busco_download_path": {
+                    "type": "string",
+                    "description": "Path to local folder containing already downloaded and unpacked lineage datasets.",
+                    "help_text": "If provided, BUSCO analysis will be run in offline mode. Data can be downloaded from https://busco-data.ezlab.org/v5/data/ (files still need to be unpacked manually). Run in combination with automated lineage selection."
+                },
+                "busco_auto_lineage_prok": {
+                    "type": "boolean",
+                    "description": "Run BUSCO with automated lineage selection, but ignoring eukaryotes (saves runtime)."
+                },
+                "save_busco_reference": {
+                    "type": "boolean",
+                    "description": "Save the used BUSCO lineage datasets provided via --busco_reference or downloaded when not using --busco_reference or --busco_download_path.",
+                    "help_text": "Useful to allow reproducibility, as BUSCO datasets are frequently updated and old versions do not always remain accessible."
+                },
+                "busco_clean": {
+                    "type": "boolean",
+                    "description": "Enable clean-up of temporary files created during BUSCO runs.",
+                    "help_text": "By default, BUSCO creates a large number of intermediate files every run. This may cause problems on some clusters which have file number limits in plate, particularly with large numbers of bins. Enabling this option cleans these files, reducing the total file count of the work directory."
+                },
+                "checkm_download_url": {
+                    "type": "string",
+                    "default": "https://data.ace.uq.edu.au/public/CheckM_databases/checkm_data_2015_01_16.tar.gz",
+                    "hidden": true,
+                    "description": "URL pointing to checkM database for auto download, if local path not supplied.",
+                    "help_text": "You can use this parameter to point to an online copy of the checkM database TAR archive that the pipeline will use for auto download if a local path is not supplied to `--checkm_db`."
+                },
+                "checkm_db": {
+                    "type": "string",
+                    "description": "Path to local folder containing already downloaded and uncompressed CheckM database.",
+                    "help_text": "The pipeline can also download this for you if not specified, and you can save the resulting directory into your output directory by specifying `--save_checkm_data`. You should move this directory to somewhere else on your machine (and supply back to the pipeline in future runs again with `--checkm_db`."
+                },
+                "save_checkm_data": {
+                    "type": "boolean",
+                    "description": "Save the used CheckM reference files downloaded when not using --checkm_db parameter.",
+                    "help_text": "If specified, the directories and files decompressed from the `tar.gz` file downloaded from the [CheckM FTP server](https://data.ace.uq.edu.au/public/CheckM_databases/) will be stored in your output directory alongside your CheckM results."
+                },
+                "refine_bins_dastool": {
+                    "type": "boolean",
+                    "description": "Turn on bin refinement using DAS Tool."
+                },
+                "refine_bins_dastool_threshold": {
+                    "type": "number",
+                    "default": 0.5,
+                    "description": "Specify single-copy gene score threshold for bin refinement.",
+                    "help_text": "Score threshold for single-copy gene selection algorithm to keep selecting bins, with a value ranging from 0-1.\n\nFor description of scoring algorithm, see: Sieber, Christian M. K., et al. 2018. Nature Microbiology 3 (7): 836\u201343. https://doi.org/10.1038/s41564-018-0171-1.\n\n> Modifies DAS Tool parameter --score_threshold\n"
+                },
+                "postbinning_input": {
+                    "type": "string",
+                    "default": "raw_bins_only",
+                    "description": "Specify which binning output is sent for downstream annotation, taxonomic classification, bin quality control etc.",
+                    "help_text": "`raw_bins_only`: only bins (and unbinned contigs) from the binners.\n`refined_bins_only`:  only bins (and unbinned contigs) from the bin refinement step .\n\n ~~`both`: bins and unbinned contigs from both the binning and bin refinement steps.~~ `both` option is disabled in v2.4 due a bug that will be fixed in a later release.",
+                    "enum": ["raw_bins_only", "refined_bins_only"]
+                },
+                "run_gunc": {
+                    "type": "boolean",
+                    "description": "Turn on GUNC genome chimerism checks"
+                },
+                "gunc_db": {
+                    "type": "string",
+                    "description": "Specify a path to a pre-downloaded GUNC dmnd database file"
+                },
+                "gunc_database_type": {
+                    "type": "string",
+                    "default": "progenomes",
+                    "description": "Specify which database to auto-download if not supplying own",
+                    "enum": ["progenomes", "gtdb"]
+                },
+                "gunc_save_db": {
+                    "type": "boolean",
+                    "description": "Save the used GUNC reference files downloaded when not using --gunc_db parameter.",
+                    "help_text": "If specified, the corresponding DIAMOND file downloaded from the GUNC server will be stored in your output directory alongside your GUNC results."
+                }
+            }
+        },
+        "ancient_dna_assembly": {
+            "title": "Ancient DNA assembly",
+            "type": "object",
+            "description": "Performs ancient DNA assembly validation and contig consensus sequence recalling.",
+            "default": "",
+            "properties": {
+                "ancient_dna": {
+                    "type": "boolean",
+                    "description": "Turn on/off the ancient DNA subworfklow"
+                },
+                "pydamage_accuracy": {
+                    "type": "number",
+                    "default": 0.5,
+                    "description": "PyDamage accuracy threshold"
+                },
+                "skip_ancient_damagecorrection": {
+                    "type": "boolean",
+                    "description": "deactivate damage correction of ancient contigs using variant and consensus calling"
+                },
+                "freebayes_ploidy": {
+                    "type": "integer",
+                    "default": 1,
+                    "description": "Ploidy for variant calling"
+                },
+                "freebayes_min_basequality": {
+                    "type": "integer",
+                    "default": 20,
+                    "description": "minimum base quality required for variant calling"
+                },
+                "freebayes_minallelefreq": {
+                    "type": "number",
+                    "default": 0.33,
+                    "description": "minimum minor allele frequency for considering variants"
+                },
+                "bcftools_view_high_variant_quality": {
+                    "type": "integer",
+                    "default": 30,
+                    "description": "minimum genotype quality for considering a variant high quality"
+                },
+                "bcftools_view_medium_variant_quality": {
+                    "type": "integer",
+                    "default": 20,
+                    "description": "minimum genotype quality for considering a variant medium quality"
+                },
+                "bcftools_view_minimal_allelesupport": {
+                    "type": "integer",
+                    "default": 3,
+                    "description": "minimum number of bases supporting the alternative allele"
+                }
+            }
         }
     },
     "allOf": [
@@ -283,6 +903,36 @@
         },
         {
             "$ref": "#/definitions/generic_options"
+        },
+        {
+            "$ref": "#/definitions/reproducibility_options"
+        },
+        {
+            "$ref": "#/definitions/quality_control_for_short_reads_options"
+        },
+        {
+            "$ref": "#/definitions/quality_control_for_long_reads_options"
+        },
+        {
+            "$ref": "#/definitions/taxonomic_profiling_options"
+        },
+        {
+            "$ref": "#/definitions/assembly_options"
+        },
+        {
+            "$ref": "#/definitions/gene_prediction_and_annotation_options"
+        },
+        {
+            "$ref": "#/definitions/virus_identification_options"
+        },
+        {
+            "$ref": "#/definitions/binning_options"
+        },
+        {
+            "$ref": "#/definitions/bin_quality_check_options"
+        },
+        {
+            "$ref": "#/definitions/ancient_dna_assembly"
         }
     ]
 }
