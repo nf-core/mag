@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
+- [#515](https://github.com/nf-core/mag/pull/515) Fix overwriting of GUNC output directories when running with domain classification (reported by @maxibor, fix by @jfy133)
+
 ### `Dependencies`
 
 ## 2.4.0 - 2023-09-26
