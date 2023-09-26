@@ -78,7 +78,7 @@
                     },
                     "custom/dumpsoftwareversions": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "git_sha": "05c280924b6c768d484c7c443dad5e605c4ff4b4",
                         "installed_by": ["modules"]
                     },
                     "dastool/dastool": {
@@ -98,7 +98,7 @@
                     },
                     "fastqc": {
                         "branch": "master",
-                        "git_sha": "bd8092b67b5103bdd52e300f75889442275c3117",
+                        "git_sha": "9a4517e720bc812e95b56d23d15a1653b6db4f53",
                         "installed_by": ["modules"]
                     },
                     "freebayes": {
