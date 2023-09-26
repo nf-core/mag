@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
+- [#511](https://github.com/nf-core/mag/pull/511) Update to nf-core 2.10 `TEMPLATE` (by @jfy133)
+
 ### `Fixed`
 
 ### `Dependencies`
