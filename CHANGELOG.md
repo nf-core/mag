@@ -9,12 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
-- [#511](https://github.com/nf-core/mag/pull/511) Update to nf-core 2.10 `TEMPLATE` (by @jfy133)
+- [#511](https://github.com/nf-core/mag/pull/511) - Update to nf-core 2.10 `TEMPLATE` (by @jfy133)
 
 ### `Fixed`
 
-- [#515](https://github.com/nf-core/mag/pull/515) Fix overwriting of GUNC output directories when running with domain classification (reported by @maxibor, fix by @jfy133)
-- [#514](https://github.com/nf-core/mag/pull/514) Fix missing CONCOCT files in downstream output (reported by @maxibor, fix by @jfy133)
+- [#514](https://github.com/nf-core/mag/pull/514) - Fix missing CONCOCT files in downstream output (reported by @maxibor, fix by @jfy133)
+- [#515](https://github.com/nf-core/mag/pull/515) - Fix overwriting of GUNC output directories when running with domain classification (reported by @maxibor, fix by @jfy133)
+- [#516](https://github.com/nf-core/mag/pull/516) - Fix edge-case bug where MEGAHIT re-uses previous work directory on resume and fails (reported by @husensofteng, fix by @prototaxites)
 
 ### `Dependencies`
 

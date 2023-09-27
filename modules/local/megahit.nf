@@ -21,6 +21,11 @@ process MEGAHIT {
     mem = task.memory.toBytes()
     if ( !params.megahit_fix_cpu_1 || task.cpus == 1 )
         """
+        ## Check if we're in the same work directory as a previous failed MEGAHIT run
+        if [[ -d MEGAHIT ]]; then
+            rm -r MEGAHIT/
+        fi
+
         megahit $args -t "${task.cpus}" -m $mem $input -o MEGAHIT --out-prefix "MEGAHIT-${meta.id}"
 
         gzip -c "MEGAHIT/MEGAHIT-${meta.id}.contigs.fa" > "MEGAHIT/MEGAHIT-${meta.id}.contigs.fa.gz"
