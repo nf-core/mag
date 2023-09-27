@@ -557,7 +557,7 @@ If the parameter `--save_checkm_reference` is set, additionally the used the Che
 <summary>Output files</summary>
 
 - `GenomeBinning/QC/gunc_summary.tsv`
-- `GenomeBinning/QC/gunc_checkm_GUNCmmary.tsv`
+- `GenomeBinning/QC/gunc_checkm_summary.tsv`
 - `[gunc-database].dmnd`
 - `GUNC/`
   - `raw/`
