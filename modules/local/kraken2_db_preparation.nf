@@ -19,7 +19,7 @@ process KRAKEN2_DB_PREPARATION {
             ln -sr ${db} database
         fi
 
-        # Make sure {hash,opts,taxo}.k2d are found in direcotry input
+        # Make sure {hash,opts,taxo}.k2d are found in directory input
         if [[ \$(find database/ -name "*.k2d" | wc -l) -lt 3 ]]; then
             error "ERROR: Kraken2 requires '{hash,opts,taxo}.k2d' files."
         fi
