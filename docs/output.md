@@ -439,7 +439,7 @@ Tiara is a contig classifier that identifies the domain (prokarya, eukarya) of c
 
 </details>
 
-Typically, you would use `tiara_summary.tsv` as the primary file to see which bins or unbins have been classified to which domains at a glance, whereas the files in `Taxonomy/Tiara` provides classifications for each contig.
+Typically, you would use `tiara_summary.tsv` as the primary file to see which bins or unbins have been classified to which domains at a glance, whereas the files in `Taxonomy/Tiara` provide classifications for each contig.
 
 ### Bin sequencing depth
 
