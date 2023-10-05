@@ -16,9 +16,7 @@ workflow BUSCO_QC {
     if ( !busco_db.isEmpty() ) {
         if ( busco_db.extension == "gz" ) {
             // Expects to be tar.gz!
-            BUSCO_DB_PREPARATION ( busco_db )
-
-            ch_db_for_busco = BUSCO_DB_PREPARATION.out.db
+            ch_db_for_busco = BUSCO_DB_PREPARATION ( busco_db ).db
                                 .map{
                                     meta, db ->
                                         def meta_new = [:]
@@ -28,12 +26,13 @@ workflow BUSCO_QC {
                                 }
         } else if ( busco_db.isDirectory() ) {
             // Set meta to match expected channel cardinality for BUSCO
-            ch_db_for_busco = busco_db
+            ch_db_for_busco = Channel
+                                .of(busco_db)
                                 .map{
                                     db ->
                                         def meta = [:]
-                                        meta['id'] = db.toString().split('/').last()
-                                        if ("${meta['id'].toString().contains('odb10')}" == true) {
+                                        meta['id'] = db.getBaseName()
+                                        if ( meta['id'].contains('odb10') == true ) {
                                             meta['lineage'] = 'Y'
                                         } else {
                                             meta['lineage'] = 'N'
@@ -44,11 +43,12 @@ workflow BUSCO_QC {
         }
     } else {
         // Set BUSCO database to empty to allow for --auto-lineage
-        ch_db_for_busco = Channel.of([])
+        ch_db_for_busco = Channel
+                            .of([])
                             .map{
                                 empty_db ->
                                     def meta = [:]
-                                    meta['lineage'] = ""
+                                    meta['lineage'] = ''
                                     [ meta, [] ]
                             }
                             .collect()
