@@ -9,8 +9,8 @@ process CENTRIFUGE_DB_PREPARATION {
     path db
 
     output:
-    tuple val("${db.toString().replace(".tar.gz", "")}"), path("*.cf"), emit: db
-    path "versions.yml"                                               , emit: versions
+    path("*.cf")       , emit: db
+    path "versions.yml", emit: versions
 
     script:
     """

@@ -456,11 +456,16 @@ workflow MAG {
                                     Taxonomic information
     ================================================================================
     */
-    CENTRIFUGE_DB_PREPARATION ( ch_centrifuge_db_file )
+    ch_db_for_centrifuge = CENTRIFUGE_DB_PREPARATION ( ch_centrifuge_db_file ).db
+                            .map{
+                                db ->
+                                    def db_name = db[0].getBaseName().split('\\.')[0]
+                                    [ db_name, db ]
+                            }
 
     CENTRIFUGE (
         ch_short_reads,
-        CENTRIFUGE_DB_PREPARATION.out.db
+        ch_db_for_centrifuge
     )
     ch_versions = ch_versions.mix(CENTRIFUGE.out.versions.first())
 
