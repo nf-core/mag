@@ -31,7 +31,7 @@ process BUSCO {
     if ( "${lineage_dataset_provided}" == "Y" ) {
         p = "--lineage_dataset dataset/${db}"
     } else if ( "${lineage_dataset_provided}" == "N" ) {
-        p += "--offline --download_path ${db}"
+        p += " --offline --download_path ${db}"
     } else {
         lineage_dataset_provided = ""
     }
