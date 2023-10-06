@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#481](https://github.com/nf-core/mag/pull/481) - Adds MetaEuk for annotation of eukaryotic MAGs, and MMSeqs2 to enable downloading databases for MetaEuk (by @prototaxites)
 - [#437](https://github.com/nf-core/mag/pull/429) - `--gtdb_db` also now supports directory input of an pre-uncompressed GTDB archive directory (reported by @alneberg, fix by @jfy133)
 - [#494](https://github.com/nf-core/mag/pull/494) - Adds support for saving the BAM files from Bowtie2 mapping of input reads back to assembly (fix by @jfy133)
-- [#504](https://github.com/nf-core/mag/pull/504) - `--busco_db`, `--kraken2_db`, and `--centrifuge_db` now support direcotry input of a pre-uncompressed database archive directory (by @gregorysprenger).
+- [#504](https://github.com/nf-core/mag/pull/504) - `--busco_db`, `--kraken2_db`, and `--centrifuge_db` now support directory input of a pre-uncompressed database archive directory (by @gregorysprenger).
 
 ### `Changed`
 
