@@ -162,17 +162,15 @@ if (params.gunc_db) {
 }
 
 if(params.centrifuge_db){
-    ch_centrifuge_db_file = Channel
-        .value(file( "${params.centrifuge_db}" ))
+    ch_centrifuge_db_file = file(params.centrifuge_db, checkIfExists: true)
 } else {
-    ch_centrifuge_db_file = Channel.empty()
+    ch_centrifuge_db_file = []
 }
 
 if(params.kraken2_db){
-    ch_kraken2_db_file = Channel
-        .value(file( "${params.kraken2_db}" ))
+    ch_kraken2_db_file = file(params.kraken2_db, checkIfExists: true)
 } else {
-    ch_kraken2_db_file = Channel.empty()
+    ch_kraken2_db_file = []
 }
 
 if(params.cat_db){
@@ -456,12 +454,29 @@ workflow MAG {
                                     Taxonomic information
     ================================================================================
     */
-    ch_db_for_centrifuge = CENTRIFUGE_DB_PREPARATION ( ch_centrifuge_db_file ).db
+    if ( !ch_centrifuge_db_file.isEmpty() ) {
+        if ( ch_centrifuge_db_file.extension == "gz" || ch_centrifuge_db_file.extension == "tgz" ) {
+            // Expects to be tar.gz!
+            ch_db_for_centrifuge = CENTRIFUGE_DB_PREPARATION ( ch_centrifuge_db_file ).db
+        } else if ( ch_centrifuge_db_file.isDirectory() ) {
+            ch_db_for_centrifuge = Channel
+                                    .fromPath( "${ch_centrifuge_db_file}/*.cf" )
+        } else {
+            ch_db_for_centrifuge = Channel.empty()
+        }
+    } else {
+        ch_db_for_centrifuge = Channel.empty()
+    }
+
+    // Centrifuge val(db_name) has to be the basename of any of the
+    //   index files up to but not including the final .1.cf
+    ch_db_for_centrifuge = ch_db_for_centrifuge
+                            .collect()
                             .map{
                                 db ->
                                     def db_name = db[0].getBaseName().split('\\.')[0]
                                     [ db_name, db ]
-                            }
+                            }.view()
 
     CENTRIFUGE (
         ch_short_reads,
@@ -469,12 +484,33 @@ workflow MAG {
     )
     ch_versions = ch_versions.mix(CENTRIFUGE.out.versions.first())
 
-    KRAKEN2_DB_PREPARATION (
-        ch_kraken2_db_file
-    )
+    if ( !ch_kraken2_db_file.isEmpty() ) {
+        if ( ch_kraken2_db_file.extension == "gz" || ch_kraken2_db_file.extension == "tgz" ) {
+            // Expects to be tar.gz!
+            ch_db_for_kraken2 = KRAKEN2_DB_PREPARATION ( ch_kraken2_db_file ).db
+        } else if ( ch_kraken2_db_file.isDirectory() ) {
+            ch_db_for_kraken2 = Channel
+                                    .fromPath( "${ch_kraken2_db_file}/*.k2d" )
+                                    .collect()
+                                    .map{
+                                        file ->
+                                            if (file.size() >= 3) {
+                                                def db_name = file[0].getParent().getName()
+                                                [ db_name, file ]
+                                            } else {
+                                                error("Kraken2 requires '{hash,opts,taxo}.k2d' files.")
+                                            }
+                                    }
+        } else {
+            ch_db_for_kraken2 = Channel.empty()
+        }
+    } else {
+        ch_db_for_kraken2 = Channel.empty()
+    }
+
     KRAKEN2 (
         ch_short_reads,
-        KRAKEN2_DB_PREPARATION.out.db
+        ch_db_for_kraken2
     )
     ch_versions = ch_versions.mix(KRAKEN2.out.versions.first())
 
