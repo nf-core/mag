@@ -9,16 +9,15 @@ process CENTRIFUGE_DB_PREPARATION {
     path db
 
     output:
-    path("*.cf")       , emit: db
-    path "versions.yml", emit: versions
+    path "database/*.cf", emit: db
+    path "versions.yml" , emit: versions
 
     script:
     """
-    if [[ -d ${db} ]]; then
-        ln -srf `find ${db}/ -type f -name "*.cf"` \${PWD}
-    else
-        tar -xf "${db}"
-    fi
+    mkdir db_tmp
+    tar -xf "${db}" -C db_tmp
+    mkdir database
+    mv `find db_tmp/ -name "*.cf"` database/
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

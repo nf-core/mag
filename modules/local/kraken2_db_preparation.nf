@@ -14,21 +14,10 @@ process KRAKEN2_DB_PREPARATION {
 
     script:
     """
-    if [[ -d ${db} ]]; then
-        if [[ ${db} != database ]]; then
-            ln -sr ${db} database
-        fi
-
-        # Make sure {hash,opts,taxo}.k2d are found in directory input
-        if [[ \$(find database/ -name "*.k2d" | wc -l) -lt 3 ]]; then
-            error "ERROR: Kraken2 requires '{hash,opts,taxo}.k2d' files."
-        fi
-    else
-        mkdir db_tmp
-        tar -xf "${db}" -C db_tmp
-        mkdir database
-        mv `find db_tmp/ -name "*.k2d"` database/
-    fi
+    mkdir db_tmp
+    tar -xf "${db}" -C db_tmp
+    mkdir database
+    mv `find db_tmp/ -name "*.k2d"` database/
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
