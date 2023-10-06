@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#515](https://github.com/nf-core/mag/pull/515) - Fix overwriting of GUNC output directories when running with domain classification (reported by @maxibor, fix by @jfy133)
 - [#516](https://github.com/nf-core/mag/pull/516) - Fix edge-case bug where MEGAHIT re-uses previous work directory on resume and fails (reported by @husensofteng, fix by @prototaxites)
 - [#520](https://github.com/nf-core/mag/pull/520) - Fix missing Tiara output files (fix by @jfy133)
+- [#522](https://github.com/nf-core/mag/pull/522) - Fix 'nulls' in depth plot PNG files (fix by @jfy133)
 
 ### `Dependencies`
 
