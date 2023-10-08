@@ -10,8 +10,8 @@ process BUSCO_DB_PREPARATION {
     path database
 
     output:
-    tuple val("${database.toString().replace(".tar.gz", "")}"), path("buscodb/*"), emit: db
-    path "versions.yml"                                                         , emit: versions
+    tuple val("${database.getSimpleName()}"), path("buscodb/*"), emit: db
+    path "versions.yml"                                        , emit: versions
 
     script:
     """
