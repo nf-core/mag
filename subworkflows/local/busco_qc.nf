@@ -14,7 +14,7 @@ workflow BUSCO_QC {
 
     main:
     if ( !busco_db.isEmpty() ) {
-        if ( busco_db.extension == "gz" ) {
+        if ( busco_db.extension in ['gz', 'tgz'] ) {
             // Expects to be tar.gz!
             ch_db_for_busco = BUSCO_DB_PREPARATION ( busco_db ).db
                                 .map{

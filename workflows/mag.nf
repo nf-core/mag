@@ -455,7 +455,7 @@ workflow MAG {
     ================================================================================
     */
     if ( !ch_centrifuge_db_file.isEmpty() ) {
-        if ( ch_centrifuge_db_file.extension == "gz" || ch_centrifuge_db_file.extension == "tgz" ) {
+        if ( ch_centrifuge_db_file.extension in ['gz', 'tgz'] ) {
             // Expects to be tar.gz!
             ch_db_for_centrifuge = CENTRIFUGE_DB_PREPARATION ( ch_centrifuge_db_file ).db
         } else if ( ch_centrifuge_db_file.isDirectory() ) {
@@ -485,7 +485,7 @@ workflow MAG {
     ch_versions = ch_versions.mix(CENTRIFUGE.out.versions.first())
 
     if ( !ch_kraken2_db_file.isEmpty() ) {
-        if ( ch_kraken2_db_file.extension == "gz" || ch_kraken2_db_file.extension == "tgz" ) {
+        if ( ch_kraken2_db_file.extension in ['gz', 'tgz'] ) {
             // Expects to be tar.gz!
             ch_db_for_kraken2 = KRAKEN2_DB_PREPARATION ( ch_kraken2_db_file ).db
         } else if ( ch_kraken2_db_file.isDirectory() ) {
