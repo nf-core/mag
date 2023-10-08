@@ -476,7 +476,7 @@ workflow MAG {
                                 db ->
                                     def db_name = db[0].getBaseName().split('\\.')[0]
                                     [ db_name, db ]
-                            }.view()
+                            }
 
     CENTRIFUGE (
         ch_short_reads,
