@@ -4,7 +4,7 @@ process NANOPLOT {
     conda "bioconda::nanoplot=1.26.3"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/nanoplot:1.26.3--py_0' :
-        'quay.io/biocontainers/nanoplot:1.26.3--py_0' }"
+        'biocontainers/nanoplot:1.26.3--py_0' }"
 
     input:
     tuple val(meta), path(reads)

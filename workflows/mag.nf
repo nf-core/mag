@@ -89,18 +89,18 @@ include { COMBINE_TSV as COMBINE_SUMMARY_TSV                  } from '../modules
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { INPUT_CHECK         } from '../subworkflows/local/input_check'
-include { BINNING_PREPARATION } from '../subworkflows/local/binning_preparation'
-include { BINNING             } from '../subworkflows/local/binning'
-include { BINNING_REFINEMENT  } from '../subworkflows/local/binning_refinement'
-include { BUSCO_QC            } from '../subworkflows/local/busco_qc'
-include { VIRUS_IDENTIFICATION} from '../subworkflows/local/virus_identification'
-include { CHECKM_QC           } from '../subworkflows/local/checkm_qc'
-include { GUNC_QC             } from '../subworkflows/local/gunc_qc'
-include { GTDBTK              } from '../subworkflows/local/gtdbtk'
+include { INPUT_CHECK                     } from '../subworkflows/local/input_check'
+include { BINNING_PREPARATION             } from '../subworkflows/local/binning_preparation'
+include { BINNING                         } from '../subworkflows/local/binning'
+include { BINNING_REFINEMENT              } from '../subworkflows/local/binning_refinement'
+include { BUSCO_QC                        } from '../subworkflows/local/busco_qc'
+include { VIRUS_IDENTIFICATION            } from '../subworkflows/local/virus_identification'
+include { CHECKM_QC                       } from '../subworkflows/local/checkm_qc'
+include { GUNC_QC                         } from '../subworkflows/local/gunc_qc'
+include { GTDBTK                          } from '../subworkflows/local/gtdbtk'
 include { ANCIENT_DNA_ASSEMBLY_VALIDATION } from '../subworkflows/local/ancient_dna'
-include { DOMAIN_CLASSIFICATION } from '../subworkflows/local/domain_classification'
-include { DEPTHS              } from '../subworkflows/local/depths'
+include { DOMAIN_CLASSIFICATION           } from '../subworkflows/local/domain_classification'
+include { DEPTHS                          } from '../subworkflows/local/depths'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -405,7 +405,7 @@ workflow MAG {
     ch_versions = ch_versions.mix(NANOPLOT_RAW.out.versions.first())
 
     ch_long_reads = ch_raw_long_reads
-                        .map {
+                    .map {
                         meta, reads ->
                             def meta_new = meta - meta.subMap('run')
                         [ meta_new, reads ]
@@ -1082,6 +1082,7 @@ workflow.onComplete {
     if (params.email || params.email_on_fail) {
         NfcoreTemplate.email(workflow, params, summary_params, projectDir, log, multiqc_report, busco_failed_bins)
     }
+    NfcoreTemplate.dump_parameters(workflow, params)
     NfcoreTemplate.summary(workflow, params, log, busco_failed_bins)
     if (params.hook_url) {
         NfcoreTemplate.IM_notification(workflow, params, summary_params, projectDir, log)

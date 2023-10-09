@@ -1,15 +1,6 @@
 Changes in module 'nf-core/aria2'
 --- modules/nf-core/aria2/main.nf
 +++ modules/nf-core/aria2/main.nf
-@@ -3,7 +3,7 @@
-     tag "$source_url"
-     label 'process_single'
- 
--    conda "conda-forge::aria2=1.36.0"
-+    conda "conda-forge::aria2=1.36.0 conda-forge::tar"
-     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-         'https://depot.galaxyproject.org/singularity/aria2:1.36.0' :
-         'quay.io/biocontainers/aria2:1.36.0' }"
 @@ -12,7 +12,7 @@
      val source_url
  
