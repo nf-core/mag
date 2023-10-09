@@ -102,21 +102,12 @@ class WorkflowMag {
             Nextflow.error('Both --skip_binqc and --binqc_tool \'checkm\' are specified! Invalid combination, please specify either --skip_binqc or --binqc_tool.')
         }
         if (params.skip_binqc) {
-            if (params.busco_reference) {
-                Nextflow.error('Both --skip_binqc and --busco_reference are specified! Invalid combination, please specify either --skip_binqc or --binqc_tool \'busco\' with --busco_reference.')
-            }
-            if (params.busco_download_path) {
-                Nextflow.error('Both --skip_binqc and --busco_download_path are specified! Invalid combination, please specify either --skip_binqc or --binqc_tool \'busco\' with --busco_download_path.')
+            if (params.busco_db) {
+                Nextflow.error('Both --skip_binqc and --busco_db are specified! Invalid combination, please specify either --skip_binqc or --binqc_tool \'busco\' with --busco_db.')
             }
             if (params.busco_auto_lineage_prok) {
                 Nextflow.error('Both --skip_binqc and --busco_auto_lineage_prok are specified! Invalid combination, please specify either --skip_binqc or --binqc_tool \'busco\' with --busco_auto_lineage_prok.')
             }
-        }
-        if (params.busco_reference && params.busco_download_path) {
-            Nextflow.error('Both --busco_reference and --busco_download_path are specified! Invalid combination, please specify either --busco_reference or --busco_download_path.')
-        }
-        if (params.busco_auto_lineage_prok && params.busco_reference) {
-            Nextflow.error('Both --busco_auto_lineage_prok and --busco_reference are specified! Invalid combination, please specify either --busco_auto_lineage_prok or --busco_reference.')
         }
 
         if (params.skip_binqc && !params.skip_gtdbtk) {
