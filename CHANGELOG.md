@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Changed`
 
 - [#511](https://github.com/nf-core/mag/pull/511) - Update to nf-core 2.10 `TEMPLATE` (by @jfy133)
-- [#504](https://github.com/nf-core/mag/pull/504) - `--save_busco_reference` is now replaced by `--save_busco_db`  (by @gregorysprenger).
+- [#504](https://github.com/nf-core/mag/pull/504) - `--save_busco_reference` is now replaced by `--save_busco_db` (by @gregorysprenger).
 
 ### `Fixed`
 
