@@ -31,7 +31,7 @@ log.info logo + paramsSummaryLog(workflow) + citation
 WorkflowMag.initialise(params, log, hybrid)
 
 // Check input path parameters to see if they exist
-def checkPathParamList = [ params.input, params.multiqc_config, params.phix_reference, params.host_fasta, params.centrifuge_db, params.kraken2_db, params.cat_db, params.krona_db, params.gtdb_db, params.lambda_reference, params.busco_reference ]
+def checkPathParamList = [ params.input, params.multiqc_config, params.phix_reference, params.host_fasta, params.centrifuge_db, params.kraken2_db, params.cat_db, params.krona_db, params.gtdb_db, params.lambda_reference, params.busco_db ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
 /*
@@ -145,17 +145,10 @@ if ( params.host_genome ) {
     ch_host_fasta = Channel.empty()
 }
 
-if(params.busco_reference){
-    ch_busco_db_file = Channel
-        .value(file( "${params.busco_reference}" ))
+if (params.busco_db) {
+    ch_busco_db = file(params.busco_db, checkIfExists: true)
 } else {
-    ch_busco_db_file = Channel.empty()
-}
-if (params.busco_download_path) {
-    ch_busco_download_folder = Channel
-        .value(file( "${params.busco_download_path}" ))
-} else {
-    ch_busco_download_folder = Channel.empty()
+    ch_busco_db = []
 }
 
 if(params.checkm_db) {
@@ -169,17 +162,15 @@ if (params.gunc_db) {
 }
 
 if(params.centrifuge_db){
-    ch_centrifuge_db_file = Channel
-        .value(file( "${params.centrifuge_db}" ))
+    ch_centrifuge_db_file = file(params.centrifuge_db, checkIfExists: true)
 } else {
-    ch_centrifuge_db_file = Channel.empty()
+    ch_centrifuge_db_file = []
 }
 
 if(params.kraken2_db){
-    ch_kraken2_db_file = Channel
-        .value(file( "${params.kraken2_db}" ))
+    ch_kraken2_db_file = file(params.kraken2_db, checkIfExists: true)
 } else {
-    ch_kraken2_db_file = Channel.empty()
+    ch_kraken2_db_file = []
 }
 
 if(params.cat_db){
@@ -463,20 +454,63 @@ workflow MAG {
                                     Taxonomic information
     ================================================================================
     */
-    CENTRIFUGE_DB_PREPARATION ( ch_centrifuge_db_file )
+    if ( !ch_centrifuge_db_file.isEmpty() ) {
+        if ( ch_centrifuge_db_file.extension in ['gz', 'tgz'] ) {
+            // Expects to be tar.gz!
+            ch_db_for_centrifuge = CENTRIFUGE_DB_PREPARATION ( ch_centrifuge_db_file ).db
+        } else if ( ch_centrifuge_db_file.isDirectory() ) {
+            ch_db_for_centrifuge = Channel
+                                    .fromPath( "${ch_centrifuge_db_file}/*.cf" )
+        } else {
+            ch_db_for_centrifuge = Channel.empty()
+        }
+    } else {
+        ch_db_for_centrifuge = Channel.empty()
+    }
+
+    // Centrifuge val(db_name) has to be the basename of any of the
+    //   index files up to but not including the final .1.cf
+    ch_db_for_centrifuge = ch_db_for_centrifuge
+                            .collect()
+                            .map{
+                                db ->
+                                    def db_name = db[0].getBaseName().split('\\.')[0]
+                                    [ db_name, db ]
+                            }
 
     CENTRIFUGE (
         ch_short_reads,
-        CENTRIFUGE_DB_PREPARATION.out.db
+        ch_db_for_centrifuge
     )
     ch_versions = ch_versions.mix(CENTRIFUGE.out.versions.first())
 
-    KRAKEN2_DB_PREPARATION (
-        ch_kraken2_db_file
-    )
+    if ( !ch_kraken2_db_file.isEmpty() ) {
+        if ( ch_kraken2_db_file.extension in ['gz', 'tgz'] ) {
+            // Expects to be tar.gz!
+            ch_db_for_kraken2 = KRAKEN2_DB_PREPARATION ( ch_kraken2_db_file ).db
+        } else if ( ch_kraken2_db_file.isDirectory() ) {
+            ch_db_for_kraken2 = Channel
+                                    .fromPath( "${ch_kraken2_db_file}/*.k2d" )
+                                    .collect()
+                                    .map{
+                                        file ->
+                                            if (file.size() >= 3) {
+                                                def db_name = file[0].getParent().getName()
+                                                [ db_name, file ]
+                                            } else {
+                                                error("Kraken2 requires '{hash,opts,taxo}.k2d' files.")
+                                            }
+                                    }
+        } else {
+            ch_db_for_kraken2 = Channel.empty()
+        }
+    } else {
+        ch_db_for_kraken2 = Channel.empty()
+    }
+
     KRAKEN2 (
         ch_short_reads,
-        KRAKEN2_DB_PREPARATION.out.db
+        ch_db_for_kraken2
     )
     ch_versions = ch_versions.mix(KRAKEN2.out.versions.first())
 
@@ -805,8 +839,7 @@ workflow MAG {
             */
 
             BUSCO_QC (
-                ch_busco_db_file,
-                ch_busco_download_folder,
+                ch_busco_db,
                 ch_input_bins_for_qc
             )
             ch_busco_summary = BUSCO_QC.out.summary
@@ -1049,6 +1082,7 @@ workflow.onComplete {
     if (params.email || params.email_on_fail) {
         NfcoreTemplate.email(workflow, params, summary_params, projectDir, log, multiqc_report, busco_failed_bins)
     }
+    NfcoreTemplate.dump_parameters(workflow, params)
     NfcoreTemplate.summary(workflow, params, log, busco_failed_bins)
     if (params.hook_url) {
         NfcoreTemplate.IM_notification(workflow, params, summary_params, projectDir, log)

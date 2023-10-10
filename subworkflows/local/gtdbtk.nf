@@ -24,7 +24,7 @@ workflow GTDBTK {
                         def completeness  = -1
                         def contamination = -1
                         def missing, duplicated
-                        if (params.busco_reference) {
+                        if (params.busco_db.getBaseName().contains('odb10')) {
                             missing    = row.'%Missing (specific)'      // TODO or just take '%Complete'?
                             duplicated = row.'%Complete and duplicated (specific)'
                         } else {

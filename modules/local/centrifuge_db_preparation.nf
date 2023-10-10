@@ -9,12 +9,15 @@ process CENTRIFUGE_DB_PREPARATION {
     path db
 
     output:
-    tuple val("${db.toString().replace(".tar.gz", "")}"), path("*.cf"), emit: db
-    path "versions.yml"                                               , emit: versions
+    path "database/*.cf", emit: db
+    path "versions.yml" , emit: versions
 
     script:
     """
-    tar -xf "${db}"
+    mkdir db_tmp
+    tar -xf "${db}" -C db_tmp
+    mkdir database
+    mv `find db_tmp/ -name "*.cf"` database/
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

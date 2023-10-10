@@ -3,7 +3,32 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 2.4.0 - 2023-09-25
+## 2.5.0 - [2023-10-10]
+
+### `Added`
+
+- [#504](https://github.com/nf-core/mag/pull/504) - New parameters `--busco_db`, `--kraken2_db`, and `--centrifuge_db` now support directory input of a pre-uncompressed database archive directory (by @gregorysprenger).
+
+### `Changed`
+
+- [#511](https://github.com/nf-core/mag/pull/511) - Update to nf-core 2.10 `TEMPLATE` (by @jfy133)
+- [#504](https://github.com/nf-core/mag/pull/504) - `--save_busco_reference` is now replaced by `--save_busco_db` (by @gregorysprenger).
+
+### `Fixed`
+
+- [#514](https://github.com/nf-core/mag/pull/514) - Fix missing CONCOCT files in downstream output (reported by @maxibor, fix by @jfy133)
+- [#515](https://github.com/nf-core/mag/pull/515) - Fix overwriting of GUNC output directories when running with domain classification (reported by @maxibor, fix by @jfy133)
+- [#516](https://github.com/nf-core/mag/pull/516) - Fix edge-case bug where MEGAHIT re-uses previous work directory on resume and fails (reported by @husensofteng, fix by @prototaxites)
+- [#520](https://github.com/nf-core/mag/pull/520) - Fix missing Tiara output files (fix by @jfy133)
+- [#522](https://github.com/nf-core/mag/pull/522) - Fix 'nulls' in depth plot PNG files (fix by @jfy133)
+
+### `Dependencies`
+
+### `Deprecated`
+
+- [#504](https://github.com/nf-core/mag/pull/504) - `--busco_reference`, `--busco_download_path`, `--save_busco_reference` parameters have been deprecated and replaced with new parameters (by @gregorysprenger).
+
+## 2.4.0 - 2023-09-26
 
 ### `Added`
 

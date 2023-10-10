@@ -434,12 +434,12 @@ Tiara is a contig classifier that identifies the domain (prokarya, eukarya) of c
 
 - `Taxonomy/Tiara/`
   - `[assembler]-[sample/group].tiara.txt` - Tiara output classifications (with probabilities) for all contigs within the specified sample/group assembly
-  - `log/log_[assembler]-[sample/group].txt` - log file detailing the parameters used by the Tiara model for contig classification.
+  - `log_[assembler]-[sample/group].txt` - log file detailing the parameters used by the Tiara model for contig classification.
 - `GenomeBinning/tiara_summary.tsv` - Summary of Tiara domain classification for all bins.
 
 </details>
 
-Typically, you would use `tiara_summary.tsv` as the primary file to see which bins or unbins have been classified to which domains at a glance, whereas `[assembler]-[sample/group].tiara.txt` provides classifications for each contig.
+Typically, you would use `tiara_summary.tsv` as the primary file to see which bins or unbins have been classified to which domains at a glance, whereas the files in `Taxonomy/Tiara` provide classifications for each contig.
 
 ### Bin sequencing depth
 
@@ -484,7 +484,7 @@ For each bin or refined bin the median sequencing depth is computed based on the
 
 #### BUSCO
 
-[BUSCO](https://busco.ezlab.org/) is a tool used to assess the completeness of a genome assembly. It is run on all the genome bins and high quality contigs obtained by the applied binning and/or binning refinement methods (depending on the `--postbinning_input` parameter). By default, BUSCO is run in automated lineage selection mode in which it first tries to select the domain and then a more specific lineage based on phylogenetic placement. If available, result files for both the selected domain lineage and the selected more specific lineage are placed in the output directory. If a lineage dataset is specified already with `--busco_reference`, only results for this specific lineage will be generated.
+[BUSCO](https://busco.ezlab.org/) is a tool used to assess the completeness of a genome assembly. It is run on all the genome bins and high quality contigs obtained by the applied binning and/or binning refinement methods (depending on the `--postbinning_input` parameter). By default, BUSCO is run in automated lineage selection mode in which it first tries to select the domain and then a more specific lineage based on phylogenetic placement. If available, result files for both the selected domain lineage and the selected more specific lineage are placed in the output directory. If a lineage dataset is specified already with `--busco_db`, only results for this specific lineage will be generated.
 
 <details markdown="1">
 <summary>Output files</summary>
@@ -493,21 +493,21 @@ For each bin or refined bin the median sequencing depth is computed based on the
   - `[assembler]-[bin]_busco.log`: Log file containing the standard output of BUSCO.
   - `[assembler]-[bin]_busco.err`: File containing potential error messages returned from BUSCO.
   - `short_summary.domain.[lineage].[assembler]-[bin].txt`: BUSCO summary of the results for the selected domain when run in automated lineage selection mode. Not available for bins for which a viral lineage was selected.
-  - `short_summary.specific_lineage.[lineage].[assembler]-[bin].txt`: BUSCO summary of the results in case a more specific lineage than the domain could be selected or for the lineage provided via `--busco_reference`.
+  - `short_summary.specific_lineage.[lineage].[assembler]-[bin].txt`: BUSCO summary of the results in case a more specific lineage than the domain could be selected or for the lineage provided via `--busco_db`.
   - `[assembler]-[bin]_buscos.[lineage].fna.gz`: Nucleotide sequence of all identified BUSCOs for used lineages (domain or specific).
   - `[assembler]-[bin]_buscos.[lineage].faa.gz`: Aminoacid sequence of all identified BUSCOs for used lineages (domain or specific).
   - `[assembler]-[bin]_prodigal.gff`: Genes predicted with Prodigal.
 
 </details>
 
-If the parameter `--save_busco_reference` is set, additionally the used BUSCO lineage datasets are stored in the output directory.
+If the parameter `--save_busco_db` is set, additionally the used BUSCO lineage datasets are stored in the output directory.
 
 <details markdown="1">
 <summary>Output files</summary>
 
 - `GenomeBinning/QC/BUSCO/`
   - `busco_downloads/`: All files and lineage datasets downloaded by BUSCO when run in automated lineage selection mode. (Can currently not be used to reproduce analysis, see the [nf-core/mag website documentation](https://nf-co.re/mag/usage#reproducibility) how to achieve reproducible BUSCO results).
-  - `reference/*.tar.gz`: BUSCO reference lineage dataset that was provided via `--busco_reference`.
+  - `reference/*.tar.gz`: BUSCO reference lineage dataset that was provided via `--busco_db`.
 
 </details>
 
@@ -561,9 +561,9 @@ If the parameter `--save_checkm_reference` is set, additionally the used the Che
 - `[gunc-database].dmnd`
 - `GUNC/`
   - `raw/`
-    - `[assembler]-[binner]-[sample/group]/GUNC_checkM.merged.tsv`: Per sample GUNC [output](https://grp-bork.embl-community.io/gunc/output.html) containing with taxonomic and completeness QC statistics.
+    - `[assembler]-[binner]-[domain]-[refinement]-[sample/group]/GUNC_checkM.merged.tsv`: Per sample GUNC [output](https://grp-bork.embl-community.io/gunc/output.html) containing with taxonomic and completeness QC statistics.
   - `checkmmerged/`
-    - `[assembler]-[binner]-[sample/group]/GUNC.progenomes_2.1.maxCSS_level.tsv`: Per sample GUNC output merged with output from [CheckM](#checkm)
+    - `[assembler]-[binner]-[domain]-[refinement]-[sample/group]/GUNC.progenomes_2.1.maxCSS_level.tsv`: Per sample GUNC output merged with output from [CheckM](#checkm)
 
 </details>
 
@@ -742,6 +742,7 @@ Summary tool-specific plots and tables of following tools are currently displaye
 - `pipeline_info/`
   - Reports generated by Nextflow: `execution_report.html`, `execution_timeline.html`, `execution_trace.txt` and `pipeline_dag.dot`/`pipeline_dag.svg`.
   - Reports generated by the pipeline: `pipeline_report.html`, `pipeline_report.txt` and `software_versions.yml`. The `pipeline_report*` files will only be present if the `--email` / `--email_on_fail` parameter's are used when running the pipeline.
+  - Parameters used by the pipeline run: `params.json`.
 
 </details>
 
