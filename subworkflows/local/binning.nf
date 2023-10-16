@@ -25,9 +25,7 @@ workflow BINNING {
     // generate coverage depths for each contig
     ch_summarizedepth_input = assemblies
                                 .map { meta, assembly, bams, bais ->
-                                        def meta_keys = meta.keySet()
-                                        def meta_new = meta + meta.subMap(meta_keys)
-                                    [ meta_new, bams, bais ]
+                                    [ meta, bams, bais ]
                                 }
 
     METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS ( ch_summarizedepth_input )

@@ -4,7 +4,7 @@ process FILTLONG {
     conda "bioconda::filtlong=0.2.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/filtlong:0.2.0--he513fc3_3' :
-        'quay.io/biocontainers/filtlong:0.2.0--he513fc3_3' }"
+        'biocontainers/filtlong:0.2.0--he513fc3_3' }"
 
     input:
     tuple val(meta), path(long_reads), path(short_reads_1), path(short_reads_2)

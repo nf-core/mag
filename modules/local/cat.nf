@@ -4,7 +4,7 @@ process CAT {
     conda "bioconda::cat=5.2.3"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/cat:5.2.3--hdfd78af_1' :
-        'quay.io/biocontainers/cat:5.2.3--hdfd78af_1' }"
+        'biocontainers/cat:5.2.3--hdfd78af_1' }"
 
     input:
     tuple val(meta), path("bins/*")

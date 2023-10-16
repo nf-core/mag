@@ -1,7 +1,3 @@
-params.mag_depths_options                           = [:]
-params.mag_depths_plot_options                      = [:]
-params.mag_depths_summary_options                   = [:]
-
 include { MAG_DEPTHS                            } from '../../modules/local/mag_depths'
 include { MAG_DEPTHS_PLOT                       } from '../../modules/local/mag_depths_plot'
 include { MAG_DEPTHS_SUMMARY                    } from '../../modules/local/mag_depths_summary'

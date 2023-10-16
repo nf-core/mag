@@ -5,7 +5,7 @@
    viewBox="0 0 320.14583 160.81199"
    version="1.1"
    id="svg8"
-   inkscape:version="1.2.2 (b0a84865, 2022-12-01)"
+   inkscape:version="1.3 (1:1.3+202307231459+0e150ed6c4)"
    sodipodi:docname="mag_workflow.svg"
    inkscape:export-filename="mag_workflow.png"
    inkscape:export-xdpi="289.40701"
@@ -377,10 +377,10 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.3311751"
-     inkscape:cx="787.64995"
+     inkscape:cx="788.02556"
      inkscape:cy="281.33038"
      inkscape:document-units="mm"
-     inkscape:current-layer="g4116"
+     inkscape:current-layer="g6248"
      showgrid="false"
      inkscape:window-width="1664"
      inkscape:window-height="1051"
@@ -411,7 +411,11 @@
        id="grid5642"
        originx="26.458333"
        originy="145.52081"
-       dotted="true" />
+       dotted="true"
+       spacingy="1"
+       spacingx="1"
+       units="mm"
+       visible="false" />
     <sodipodi:guide
        position="175.90721,-88.906245"
        orientation="0,1"
@@ -2690,7 +2694,7 @@
            id="tspan3824"
            style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';stroke-width:0.264583"
            x="260.85703"
-           y="65.938919">v2.3.0</tspan></text>
+           y="65.938919">v2.5.0</tspan></text>
       <g
          id="g1307"
          transform="translate(3.3065026,127.42992)">

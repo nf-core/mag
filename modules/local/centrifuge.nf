@@ -4,7 +4,7 @@ process CENTRIFUGE {
     conda "bioconda::centrifuge=1.0.4_beta"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/centrifuge:1.0.4_beta--he513fc3_5' :
-        'quay.io/biocontainers/centrifuge:1.0.4_beta--he513fc3_5' }"
+        'biocontainers/centrifuge:1.0.4_beta--he513fc3_5' }"
 
     input:
     tuple val(meta), path(reads)
@@ -13,7 +13,7 @@ process CENTRIFUGE {
     output:
     tuple val("centrifuge"), val(meta), path("results.krona"), emit: results_for_krona
     path "report.txt"                                        , emit: report
-    tuple val(meta), path("*kreport.txt")                     , emit: kreport
+    tuple val(meta), path("*kreport.txt")                    , emit: kreport
     path "versions.yml"                                      , emit: versions
 
     script:

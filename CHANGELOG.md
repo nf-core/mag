@@ -3,10 +3,48 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 2.4.0dev - [date]
+## dev - [unreleased]
 
 ### `Added`
 
+### `Changed`
+
+### `Fixed`
+
+### `Dependencies`
+
+### `Deprecated`
+
+## 2.5.0 - [2023-10-10]
+
+### `Added`
+
+- [#504](https://github.com/nf-core/mag/pull/504) - New parameters `--busco_db`, `--kraken2_db`, and `--centrifuge_db` now support directory input of a pre-uncompressed database archive directory (by @gregorysprenger).
+
+### `Changed`
+
+- [#511](https://github.com/nf-core/mag/pull/511) - Update to nf-core 2.10 `TEMPLATE` (by @jfy133)
+- [#504](https://github.com/nf-core/mag/pull/504) - `--save_busco_reference` is now replaced by `--save_busco_db` (by @gregorysprenger).
+
+### `Fixed`
+
+- [#514](https://github.com/nf-core/mag/pull/514) - Fix missing CONCOCT files in downstream output (reported by @maxibor, fix by @jfy133)
+- [#515](https://github.com/nf-core/mag/pull/515) - Fix overwriting of GUNC output directories when running with domain classification (reported by @maxibor, fix by @jfy133)
+- [#516](https://github.com/nf-core/mag/pull/516) - Fix edge-case bug where MEGAHIT re-uses previous work directory on resume and fails (reported by @husensofteng, fix by @prototaxites)
+- [#520](https://github.com/nf-core/mag/pull/520) - Fix missing Tiara output files (fix by @jfy133)
+- [#522](https://github.com/nf-core/mag/pull/522) - Fix 'nulls' in depth plot PNG files (fix by @jfy133)
+
+### `Dependencies`
+
+### `Deprecated`
+
+- [#504](https://github.com/nf-core/mag/pull/504) - `--busco_reference`, `--busco_download_path`, `--save_busco_reference` parameters have been deprecated and replaced with new parameters (by @gregorysprenger).
+
+## 2.4.0 - 2023-09-26
+
+### `Added`
+
+- [#497](https://github.com/nf-core/mag/pull/497) - Adds support for pointing at a local db for krona, using the parameter `--krona_db` (by @willros).
 - [#395](https://github.com/nf-core/mag/pull/395) - Adds support for fast domain-level classification of bins using Tiara, to allow bins to be separated into eukaryotic and prokaryotic-specific processes.
 - [#422](https://github.com/nf-core/mag/pull/422) - Adds support for normalization of read depth with BBNorm (added by @erikrikarddaniel and @fabianegli)
 - [#439](https://github.com/nf-core/mag/pull/439) - Adds ability to enter the pipeline at the binning stage by providing a CSV of pre-computed assemblies (by @prototaxites)
@@ -18,16 +56,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
-- [#428](https://github.com/nf-core/mag/pull/428) - Update to nf-core 2.8 `TEMPLATE` (by @jfy133)
+- [#428](https://github.com/nf-core/mag/pull/428) [#467](https://github.com/nf-core/mag/pull/467) - Update to nf-core 2.8, 2.9 `TEMPLATE` (by @jfy133)
 - [#429](https://github.com/nf-core/mag/pull/429) - Replaced hardcoded CheckM database auto-download URL to a parameter (reported by @erikrikarddaniel, fix by @jfy133)
 - [#441](https://github.com/nf-core/mag/pull/441) - Deactivated CONCOCT in AWS 'full test' due to very long runtime (fix by @jfy133).
 - [#442](https://github.com/nf-core/mag/pull/442) - Remove warning when BUSCO finds no genes in bins, as this can be expected in some datasets (reported by @Lumimar, fix by @jfy133).
 - [#444](https://github.com/nf-core/mag/pull/444) - Moved BUSCO bash code to script (by @jfy133)
-- [#428](https://github.com/nf-core/mag/pull/429) - Update to nf-core 2.9 `TEMPLATE` (by @jfy133)
-- [#437](https://github.com/nf-core/mag/pull/429) - `--gtdb` parameter is split into `--skip_gtdbtk` and `--gtdb_db` to allow finer control over GTDB database retrieval (fix by @jfy133)
+- [#477](https://github.com/nf-core/mag/pull/477) - `--gtdb` parameter is split into `--skip_gtdbtk` and `--gtdb_db` to allow finer control over GTDB database retrieval (fix by @jfy133)
+- [#500](https://github.com/nf-core/mag/pull/500) - Temporarily disabled downstream processing of both refined and raw bins due to bug (by @jfy133)
 
 ### `Fixed`
 
+- [#496](https://github.com/nf-core/mag/pull/496) - Fix help text for paramters `--bowtie2_mode`, `spades_options` and `megahit_options` (by @willros)
 - [#400](https://github.com/nf-core/mag/pull/400) - Fix duplicated Zenodo badge in README (by @jfy133)
 - [#406](https://github.com/nf-core/mag/pull/406) - Fix CheckM database always downloading, regardless if CheckM is selected (by @jfy133)
 - [#419](https://github.com/nf-core/mag/pull/419) - Fix bug with busco_clean parameter, where it is always activated (by @prototaxites)
@@ -40,6 +79,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#470](https://github.com/nf-core/mag/pull/470) - Fix binning preparation from running even when binning was requested to be skipped (reported by @prototaxites, fix by @jfy133)
 - [#480](https://github.com/nf-core/mag/pull/480) - Improved `-resume` reliability through better meta map preservation (reported by @prototaxites, fix by @jfy133)
 - [#493](https://github.com/nf-core/mag/pull/493) - Update `METABAT2` nf-core module so that it reduced the number of unnecessary file moves, enabling virtual filesystems (fix by @adamrtalbot)
+- [#500](https://github.com/nf-core/mag/pull/500) - Fix MaxBin2 bins not being saved in results directly properly (reported by @Perugolate, fix by @jfy133)
 
 ### `Dependencies`
 
@@ -47,6 +87,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | -------- | ---------------- | ----------- |
 | BCFtools | 1.16             | 1.17        |
 | SAMtools | 1.16.1           | 1.17        |
+| fastp    | 0.23.2           | 0.23.4      |
+| MultiQC  | 1.14             | 1.15        |
 
 ## v2.3.2 - [2023-06-23]
 

@@ -4,7 +4,7 @@ process NANOLYSE {
     conda "bioconda::nanolyse=1.1.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/nanolyse:1.1.0--py36_1' :
-        'quay.io/biocontainers/nanolyse:1.1.0--py36_1' }"
+        'biocontainers/nanolyse:1.1.0--py36_1' }"
 
     input:
     tuple val(meta), path(reads)

@@ -4,15 +4,14 @@ process BUSCO_DB_PREPARATION {
     conda "conda-forge::sed=4.7"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/ubuntu:20.04' :
-        'docker.io/ubuntu:20.04' }"
+        'nf-core/ubuntu:20.04' }"
 
     input:
     path database
 
     output:
-    path "buscodb/*"    , emit: db
-    path database       , emit: database
-    path "versions.yml" , emit: versions
+    tuple val("${database.getSimpleName()}"), path("buscodb/*"), emit: db
+    path "versions.yml"                                        , emit: versions
 
     script:
     """

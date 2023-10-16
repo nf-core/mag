@@ -481,12 +481,17 @@
                 "centrifuge_db": {
                     "type": "string",
                     "description": "Database for taxonomic binning with centrifuge.",
-                    "help_text": "E.g. ftp://ftp.ccb.jhu.edu/pub/infphilo/centrifuge/data/p_compressed+h+v.tar.gz."
+                    "help_text": "Local directory containing `*.cf` files, or a URL or local path to a downloaded compressed tar archive of a Centrifuge database. E.g. ftp://ftp.ccb.jhu.edu/pub/infphilo/centrifuge/data/p_compressed+h+v.tar.gz."
                 },
                 "kraken2_db": {
                     "type": "string",
                     "description": "Database for taxonomic binning with kraken2.",
-                    "help_text": "The database file must be a compressed tar archive that contains at least the three files `hash.k2d`, `opts.k2d` and `taxo.k2d`. E.g. ftp://ftp.ccb.jhu.edu/pub/data/kraken2_dbs/minikraken_8GB_202003.tgz."
+                    "help_text": "Path to a local directory, archive file, or a URL to compressed tar archive that contains at least the three files `hash.k2d`, `opts.k2d` and `taxo.k2d`. E.g. ftp://ftp.ccb.jhu.edu/pub/data/kraken2_dbs/minikraken_8GB_202003.tgz."
+                },
+                "krona_db": {
+                    "type": "string",
+                    "description": "Database for taxonomic binning with krona",
+                    "help_text": "Path to `taxonomy.tab` file for Krona, instead of downloading the default file. Point at the `.tab` file."
                 },
                 "skip_krona": {
                     "type": "boolean",
@@ -526,7 +531,7 @@
                 },
                 "gtdbtk_min_completeness": {
                     "type": "number",
-                    "default": 50,
+                    "default": 50.0,
                     "description": "Min. bin completeness (in %) required to apply GTDB-tk classification.",
                     "help_text": "Completeness assessed with BUSCO analysis (100% - %Missing). Must be greater than 0 (min. 0.01) to avoid GTDB-tk errors. If too low, GTDB-tk classification results can be impaired due to not enough marker genes!",
                     "minimum": 0.01,
@@ -534,7 +539,7 @@
                 },
                 "gtdbtk_max_contamination": {
                     "type": "number",
-                    "default": 10,
+                    "default": 10.0,
                     "description": "Max. bin contamination (in %) allowed to apply GTDB-tk classification.",
                     "help_text": "Contamination approximated based on BUSCO analysis (%Complete and duplicated). If too high, GTDB-tk classification results can be impaired due to contamination!",
                     "minimum": 0,
@@ -542,7 +547,7 @@
                 },
                 "gtdbtk_min_perc_aa": {
                     "type": "number",
-                    "default": 10,
+                    "default": 10.0,
                     "description": "Min. fraction of AA (in %) in the MSA for bins to be kept.",
                     "minimum": 0,
                     "maximum": 100
@@ -556,7 +561,7 @@
                 },
                 "gtdbtk_pplacer_cpus": {
                     "type": "number",
-                    "default": 1,
+                    "default": 1.0,
                     "description": "Number of CPUs used for the by GTDB-Tk run tool pplacer.",
                     "help_text": "A low number of CPUs helps to reduce the memory required/reported by GTDB-Tk. See also the [GTDB-Tk documentation](https://ecogenomics.github.io/GTDBTk/faq.html#gtdb-tk-reaches-the-memory-limit-pplacer-crashes)."
                 },
@@ -586,12 +591,12 @@
                 "spades_options": {
                     "type": "string",
                     "description": "Additional custom options for SPAdes.",
-                    "help_text": "An example is adjusting k-mers (\"-k 21,33,55,77\") or adding [advanced options](https://github.com/ablab/spades#advanced-options). But not -t, -m, -o or --out-prefix, because these are already in use."
+                    "help_text": "An example is adjusting k-mers (\"-k 21,33,55,77\") or adding [advanced options](https://github.com/ablab/spades#advanced-options). But not -t, -m, -o or --out-prefix, because these are already in use. Must be used like this: --spades_options=\"-k 21,33,55,77\")"
                 },
                 "megahit_options": {
                     "type": "string",
                     "description": "Additional custom options for MEGAHIT.",
-                    "help_text": "An example is adjusting presets (e.g. \"--presets meta-large\"), k-mers (e.g. \"-k 21,33,55,77\") or adding other [advanced options](https://github.com/voutcn/megahit#advanced-usage). For example, increase the minimum k-mer in the event of an error message such as \"Too many vertices in the unitig graph, you may increase the kmer size to remove tons of erroneous kmers.\" in the MEGAHIT log file. But not --threads, --memory, -o or input read files, because these are already in use."
+                    "help_text": "An example is adjusting presets (e.g. \"--presets meta-large\"), k-mers (e.g. \"-k 21,33,55,77\") or adding other [advanced options](https://github.com/voutcn/megahit#advanced-usage). For example, increase the minimum k-mer in the event of an error message such as \"Too many vertices in the unitig graph, you may increase the kmer size to remove tons of erroneous kmers.\" in the MEGAHIT log file. But not --threads, --memory, -o or input read files, because these are already in use. Must be used like this: --megahit_options=\"--presets meta-large\""
                 },
                 "skip_spades": {
                     "type": "boolean",
@@ -715,7 +720,7 @@
                 "bowtie2_mode": {
                     "type": "string",
                     "description": "Bowtie2 alignment mode",
-                    "help_text": "Bowtie2 alignment mode options, for example: `--very-fast` , `--very-sensitive-local -N 1` , ..."
+                    "help_text": "Bowtie2 alignment mode options, for example: `--very-fast` , `--very-sensitive-local -N 1` , ... Must be used like this: --bowtie2_mode=\"--very-sensitive\""
                 },
                 "save_assembly_mapped_reads": {
                     "type": "boolean",
@@ -756,23 +761,18 @@
                     "description": "Specify which tool for bin quality-control validation to use.",
                     "enum": ["busco", "checkm"]
                 },
-                "busco_reference": {
+                "busco_db": {
                     "type": "string",
-                    "description": "Download path for BUSCO lineage dataset, instead of using automated lineage selection.",
-                    "help_text": "E.g. https://busco-data.ezlab.org/v5/data/lineages/bacteria_odb10.2020-03-06.tar.gz. Available databases are listed here: https://busco-data.ezlab.org/v5/data/lineages/."
-                },
-                "busco_download_path": {
-                    "type": "string",
-                    "description": "Path to local folder containing already downloaded and unpacked lineage datasets.",
-                    "help_text": "If provided, BUSCO analysis will be run in offline mode. Data can be downloaded from https://busco-data.ezlab.org/v5/data/ (files still need to be unpacked manually). Run in combination with automated lineage selection."
+                    "description": "Download URL for BUSCO lineage dataset, or path to a tar.gz archive, or local directory containing already downloaded and unpacked lineage datasets.",
+                    "help_text": "E.g. https://busco-data.ezlab.org/v5/data/lineages/bacteria_odb10.2020-03-06.tar.gz or '/path/to/buscodb' (files still need to be unpacked manually). Available databases are listed here: https://busco-data.ezlab.org/v5/data/lineages/."
                 },
                 "busco_auto_lineage_prok": {
                     "type": "boolean",
                     "description": "Run BUSCO with automated lineage selection, but ignoring eukaryotes (saves runtime)."
                 },
-                "save_busco_reference": {
+                "save_busco_db": {
                     "type": "boolean",
-                    "description": "Save the used BUSCO lineage datasets provided via --busco_reference or downloaded when not using --busco_reference or --busco_download_path.",
+                    "description": "Save the used BUSCO lineage datasets provided via `--busco_db`.",
                     "help_text": "Useful to allow reproducibility, as BUSCO datasets are frequently updated and old versions do not always remain accessible."
                 },
                 "busco_clean": {
@@ -811,8 +811,8 @@
                     "type": "string",
                     "default": "raw_bins_only",
                     "description": "Specify which binning output is sent for downstream annotation, taxonomic classification, bin quality control etc.",
-                    "help_text": "`raw_bins_only`: only bins (and unbinned contigs) from the binners.\n`refined_bins_only`:  only bins (and unbinned contigs) from the bin refinement step .\n`both`: bins and unbinned contigs from both the binning and bin refinement steps.",
-                    "enum": ["raw_bins_only", "refined_bins_only", "both"]
+                    "help_text": "`raw_bins_only`: only bins (and unbinned contigs) from the binners.\n`refined_bins_only`:  only bins (and unbinned contigs) from the bin refinement step .\n\n ~~`both`: bins and unbinned contigs from both the binning and bin refinement steps.~~ `both` option is disabled in v2.4 due a bug that will be fixed in a later release.",
+                    "enum": ["raw_bins_only", "refined_bins_only"]
                 },
                 "run_gunc": {
                     "type": "boolean",

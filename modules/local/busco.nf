@@ -4,12 +4,11 @@ process BUSCO {
     conda "bioconda::busco=5.4.3"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/busco:5.4.3--pyhdfd78af_0':
-        'quay.io/biocontainers/busco:5.4.3--pyhdfd78af_0' }"
+        'biocontainers/busco:5.4.3--pyhdfd78af_0' }"
 
     input:
     tuple val(meta), path(bin)
-    path(db)
-    path(download_folder)
+    tuple val(db_meta), path(db)
 
     output:
     tuple val(meta), path("short_summary.domain.*.${bin}.txt")          , optional:true , emit: summary_domain
@@ -25,17 +24,16 @@ process BUSCO {
 
     script:
     def cp_augustus_config = workflow.profile.toString().indexOf("conda") != -1 ? "N" : "Y"
-    def lineage_dataset_provided = params.busco_reference ? "Y" : "N"
+    def lineage_dataset_provided = "${db_meta.lineage}"
     def busco_clean = params.busco_clean ? "Y" : "N"
 
-    def p = "--auto-lineage"
-    if (params.busco_reference){
+    def p = params.busco_auto_lineage_prok ? "--auto-lineage-prok" : "--auto-lineage"
+    if ( "${lineage_dataset_provided}" == "Y" ) {
         p = "--lineage_dataset dataset/${db}"
+    } else if ( "${lineage_dataset_provided}" == "N" ) {
+        p += " --offline --download_path ${db}"
     } else {
-        if (params.busco_auto_lineage_prok)
-            p = "--auto-lineage-prok"
-        if (params.busco_download_path)
-            p += " --offline --download_path ${download_folder}"
+        lineage_dataset_provided = ""
     }
     """
     run_busco.sh "${p}" "${cp_augustus_config}" "${db}" "${bin}" ${task.cpus} "${lineage_dataset_provided}" "${busco_clean}"

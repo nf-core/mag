@@ -3,7 +3,7 @@ process BUSCO_SUMMARY {
     conda "conda-forge::pandas=1.4.3"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/pandas:1.4.3' :
-        'quay.io/biocontainers/pandas:1.4.3' }"
+        'biocontainers/pandas:1.4.3' }"
 
     input:
     path(summaries_domain)
@@ -15,11 +15,12 @@ process BUSCO_SUMMARY {
     path "versions.yml"     , emit: versions
 
     script:
-    def auto = params.busco_reference ? "" : "-a"
+    def reference = params.busco_db.toString().contains('odb10')
+    def auto = reference ? "" : "-a"
     def ss = summaries_specific.sort().size() > 0 ? "-ss ${summaries_specific}" : ""
     def sd = summaries_domain.sort().size() > 0 ? "-sd ${summaries_domain}" : ""
     def f = ""
-    if (!params.busco_reference && failed_bins.sort().size() > 0)
+    if ("${reference}" == false && failed_bins.sort().size() > 0)
         f = "-f ${failed_bins}"
     """
     summary_busco.py $auto $ss $sd $f -o busco_summary.tsv
