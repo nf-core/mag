@@ -812,7 +812,7 @@
                     "default": "raw_bins_only",
                     "description": "Specify which binning output is sent for downstream annotation, taxonomic classification, bin quality control etc.",
                     "help_text": "`raw_bins_only`: only bins (and unbinned contigs) from the binners.\n`refined_bins_only`:  only bins (and unbinned contigs) from the bin refinement step .\n\n ~~`both`: bins and unbinned contigs from both the binning and bin refinement steps.~~ `both` option is disabled in v2.4 due a bug that will be fixed in a later release.",
-                    "enum": ["raw_bins_only", "refined_bins_only","both"]
+                    "enum": ["raw_bins_only", "refined_bins_only", "both"]
                 },
                 "run_gunc": {
                     "type": "boolean",
