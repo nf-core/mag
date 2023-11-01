@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
+- [#489] Fix file name collision clashes for CHECKM, CAT, GTDBTK, and QUAST (by @maxibor)
+
 ### `Dependencies`
 
 ### `Deprecated`
