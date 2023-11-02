@@ -20,7 +20,6 @@ workflow DEPTHS {
     ch_versions = Channel.empty()
 
 
-    bins_unbins.dump(tag: 'bins_unbins', pretty: true)
     depths.dump(tag: 'depths', pretty: true)
 
     // Compute bin depths for different samples (according to `binning_map_mode`)
@@ -46,7 +45,6 @@ workflow DEPTHS {
             [meta, bins.unique().flatten(), depth]
         }
 
-    ch_depth_input.dump(tag: 'ch_depth_input', pretty: true)
 
 
     MAG_DEPTHS ( ch_depth_input )
