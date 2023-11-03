@@ -51,7 +51,13 @@ workflow DEPTHS {
         }
 
     MAG_DEPTHS_PLOT ( ch_mag_depths_plot, ch_sample_groups.collect() )
-    MAG_DEPTHS_SUMMARY ( MAG_DEPTHS.out.depths.map{it[1]}.collect() )
+    //Depth files that are coming from bins and failed binning refinement are concatenated per meta
+    ch_mag_depth_out = MAG_DEPTHS.out.depths
+        .collectFile(keepHeader: true) {
+            meta, depth ->
+            [depth.getBaseName(), depth]
+        }
+    MAG_DEPTHS_SUMMARY ( ch_mag_depth_out.collect() )
     ch_versions = ch_versions.mix( MAG_DEPTHS_PLOT.out.versions )
     ch_versions = ch_versions.mix( MAG_DEPTHS_SUMMARY.out.versions )
 
