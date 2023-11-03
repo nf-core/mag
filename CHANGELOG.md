@@ -11,7 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
-- [#489](https://github.com/nf-core/mag/pull/489) Fix file name collision clashes for CHECKM, CAT, GTDBTK, and QUAST (by @maxibor)
+- [#489](https://github.com/nf-core/mag/pull/489) Fix file name collision clashes for CHECKM, CAT, GTDBTK, and QUAST (reported by @tillenglert and @maxibor, fix by @maxibor)
+- [#527](https://github.com/nf-core/mag/pull/489) Fix glob pattern for publishing MetaBAT2 bins in results (reported by @patriciatran, fix by @jfy133)
 
 ### `Dependencies`
 
