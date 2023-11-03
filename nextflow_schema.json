@@ -525,6 +525,10 @@
                     "description": "Specify the location of a GTDBTK database. Can be either an uncompressed directory or a `.tar.gz` archive. If not specified will be downloaded for you when GTDBTK or binning QC is not skipped.",
                     "default": "https://data.ace.uq.edu.au/public/gtdb/data/releases/release214/214.1/auxillary_files/gtdbtk_r214_data.tar.gz"
                 },
+                "gtdb_mash": {
+                    "type": "string",
+                    "description": "Specify the location of a GTDBTK mash database. If missing, GTDB-Tk will skip the ani_screening step"
+                },
                 "gtdbtk_min_completeness": {
                     "type": "number",
                     "default": 50.0,
@@ -808,7 +812,7 @@
                     "default": "raw_bins_only",
                     "description": "Specify which binning output is sent for downstream annotation, taxonomic classification, bin quality control etc.",
                     "help_text": "`raw_bins_only`: only bins (and unbinned contigs) from the binners.\n`refined_bins_only`:  only bins (and unbinned contigs) from the bin refinement step .\n\n ~~`both`: bins and unbinned contigs from both the binning and bin refinement steps.~~ `both` option is disabled in v2.4 due a bug that will be fixed in a later release.",
-                    "enum": ["raw_bins_only", "refined_bins_only"]
+                    "enum": ["raw_bins_only", "refined_bins_only", "both"]
                 },
                 "run_gunc": {
                     "type": "boolean",
