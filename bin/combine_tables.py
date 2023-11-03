@@ -87,7 +87,8 @@ def main(args=None):
 
     if args.gtdbtk_summary:
         gtdbtk_results = pd.read_csv(args.gtdbtk_summary, sep="\t")
-        if not bins.equals(gtdbtk_results["user_genome"].sort_values().reset_index(drop=True)):
+        # if there are bins in GTDB-Tk not in Depths summary, exit
+        if len(set(gtdbtk_results["user_genome"].to_list()).difference(set(bins))) > 0:
             sys.exit("Bins in GTDB-Tk summary do not match bins in bin depths summary!")
         results = pd.merge(
             results, gtdbtk_results, left_on="bin", right_on="user_genome", how="outer"
