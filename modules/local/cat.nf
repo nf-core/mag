@@ -11,7 +11,7 @@ process CAT {
     tuple val(db_name), path("database/*"), path("taxonomy/*")
 
     output:
-    path("*.names.txt.gz")                 , emit: tax_classification
+    path("*.names.txt")                    , emit: tax_classification
     path("raw/*.ORF2LCA.txt.gz")           , emit: orf2lca
     path("raw/*.predicted_proteins.faa.gz"), emit: faa
     path("raw/*.predicted_proteins.gff.gz"), emit: gff
@@ -27,13 +27,14 @@ process CAT {
     CAT add_names -i "${meta.assembler}-${meta.binner}-${meta.id}.bin2classification.txt" -o "${meta.assembler}-${meta.binner}-${meta.id}.bin2classification.names.txt" -t taxonomy/ ${official_taxonomy}
 
     mkdir raw
-    mv *.ORF2LCA.txt *.predicted_proteins.faa *.predicted_proteins.gff *.log *.bin2classification.txt raw/
+    mv *.ORF2LCA.txt *.predicted_proteins.faa *.predicted_proteins.gff *.bin2classification.txt *.log raw/
+    cp *.bin2classification.names.txt raw/
+
     gzip "raw/${meta.assembler}-${meta.binner}-${meta.id}.ORF2LCA.txt" \
         "raw/${meta.assembler}-${meta.binner}-${meta.id}.concatenated.predicted_proteins.faa" \
         "raw/${meta.assembler}-${meta.binner}-${meta.id}.concatenated.predicted_proteins.gff" \
         "raw/${meta.assembler}-${meta.binner}-${meta.id}.bin2classification.txt" \
         "${meta.assembler}-${meta.binner}-${meta.id}.ORF2LCA.names.txt" \
-        "${meta.assembler}-${meta.binner}-${meta.id}.bin2classification.names.txt"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
