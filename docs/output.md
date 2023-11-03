@@ -333,6 +333,8 @@ These depth files are used for downstream binning steps.
 
 All the files and contigs in these folders will be assessed by QUAST and BUSCO.
 
+All other files that were discarded by the tool, or from the low-quality unbinned contigs , can be found here.
+
 <details markdown="1">
 <summary>Output files</summary>
 
