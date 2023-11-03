@@ -457,26 +457,29 @@ workflow MAG {
     if ( !ch_centrifuge_db_file.isEmpty() ) {
         if ( ch_centrifuge_db_file.extension in ['gz', 'tgz'] ) {
             // Expects to be tar.gz!
-            ch_db_for_centrifuge = CENTRIFUGE_DB_PREPARATION ( ch_centrifuge_db_file ).db
+            ch_db_for_centrifuge = CENTRIFUGE_DB_PREPARATION ( ch_centrifuge_db_file )
+                                    .db
+                                    .collect()
+                                    .map{
+                                    db ->
+                                        def db_name = db[0].getBaseName().split('\\.')[0]
+                                        [ db_name, db ]
+                                    }
         } else if ( ch_centrifuge_db_file.isDirectory() ) {
             ch_db_for_centrifuge = Channel
                                     .fromPath( "${ch_centrifuge_db_file}/*.cf" )
+                                    .collect()
+                                    .map{
+                                        db ->
+                                            def db_name = db[0].getBaseName().split('\\.')[0]
+                                            [ db_name, db ]
+                                    }
         } else {
             ch_db_for_centrifuge = Channel.empty()
         }
     } else {
         ch_db_for_centrifuge = Channel.empty()
     }
-
-    // Centrifuge val(db_name) has to be the basename of any of the
-    //   index files up to but not including the final .1.cf
-    ch_db_for_centrifuge = ch_db_for_centrifuge
-                            .collect()
-                            .map{
-                                db ->
-                                    def db_name = db[0].getBaseName().split('\\.')[0]
-                                    [ db_name, db ]
-                            }
 
     CENTRIFUGE (
         ch_short_reads,
@@ -888,14 +891,18 @@ workflow MAG {
             ch_input_for_quast_bins = ch_input_for_postbinning_bins_unbins
                                         .groupTuple()
                                         .map {
-                                            meta, reads ->
-                                                def new_reads = reads.flatten()
-                                                [meta, new_reads]
+                                            meta, bins ->
+                                                def new_bins = bins.flatten()
+                                                [meta, new_bins]
                                             }
-
             QUAST_BINS ( ch_input_for_quast_bins )
             ch_versions = ch_versions.mix(QUAST_BINS.out.versions.first())
-            QUAST_BINS_SUMMARY ( QUAST_BINS.out.quast_bin_summaries.collect() )
+            ch_quast_bin_summary = QUAST_BINS.out.quast_bin_summaries
+                .collectFile(keepHeader: true) {
+                    summary ->
+                    [summary.getBaseName(), summary]
+            }
+            QUAST_BINS_SUMMARY ( ch_quast_bin_summary.collect() )
             ch_quast_bins_summary = QUAST_BINS_SUMMARY.out.summary
         }
 
@@ -914,8 +921,13 @@ workflow MAG {
             ch_input_for_postbinning_bins_unbins,
             ch_cat_db
         )
+        ch_cat_summary = CAT.out.tax_classification
+            .collectFile(keepHeader: true) {
+                    classification ->
+                    ["${classification.getBaseName()}.txt", classification]
+            }
         CAT_SUMMARY(
-            CAT.out.tax_classification.collect()
+            ch_cat_summary.collect()
         )
         ch_versions = ch_versions.mix(CAT.out.versions.first())
         ch_versions = ch_versions.mix(CAT_SUMMARY.out.versions)
