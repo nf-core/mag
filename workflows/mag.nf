@@ -11,11 +11,8 @@ def citation = '\n' + WorkflowMain.citation(workflow) + '\n'
 def summary_params = paramsSummaryMap(workflow)
 
 // Check already if long reads are provided
-def hasExtension(it, extension) {
-    it.toString().toLowerCase().endsWith(extension.toLowerCase())
-}
 def hybrid = false
-if(hasExtension(params.input, "csv")){
+if(file(params.input).extension == 'csv'){
     Channel
         .from(file(params.input))
         .splitCsv(header: true)

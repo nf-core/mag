@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Dependencies`
 
+- [#536](https://github.com/nf-core/mag/pull/536) Remove custom function with native Nextflow for checking file extension (reported by @d4straub, fix by @jfy133)
+
 ### `Deprecated`
 
 ## 2.5.0 - [2023-10-10]
