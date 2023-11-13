@@ -21,6 +21,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Deprecated`
 
+### `Dependencies`
+
+| Tool     | Previous version | New version |
+| -------- | ---------------- | ----------- |
+| CAT      | 4.6              | 5.2.3       |
+
 ## 2.5.0 - [2023-10-10]
 
 ### `Added`
