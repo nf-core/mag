@@ -3,6 +3,18 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## dev - [unreleased]
+
+### `Added`
+
+### `Changed`
+
+### `Fixed`
+
+### `Dependencies`
+
+### `Deprecated`
+
 ## 2.5.1 - [2023-11-17]
 
 ### `Added`
@@ -11,9 +23,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
-- [#489](https://github.com/nf-core/mag/pull/489) Fix file name collision clashes for CHECKM, CAT, GTDBTK, and QUAST (reported by @tillenglert and @maxibor, fix by @maxibor)
-- [#533](https://github.com/nf-core/mag/pull/533) Fix glob pattern for publishing MetaBAT2 bins in results (reported by @patriciatran, fix by @jfy133)
-- [#535](https://github.com/nf-core/mag/pull/535) Fix input validation pattern to again allow direct FASTQ input (reported by @lennijusten, @emnilsson, fix by @jfy133, @d4straub, @mahesh-panchal, @nvnieuwk)
+- [#489](https://github.com/nf-core/mag/pull/489) - Fix file name collision clashes for CHECKM, CAT, GTDBTK, and QUAST (reported by @tillenglert and @maxibor, fix by @maxibor)
+- [#533](https://github.com/nf-core/mag/pull/533) - Fix glob pattern for publishing MetaBAT2 bins in results (reported by @patriciatran, fix by @jfy133)
+- [#535](https://github.com/nf-core/mag/pull/535) - Fix input validation pattern to again allow direct FASTQ input (reported by @lennijusten, @emnilsson, fix by @jfy133, @d4straub, @mahesh-panchal, @nvnieuwk)
 
 ### `Dependencies`
 
@@ -23,7 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Deprecated`
 
-- [#536](https://github.com/nf-core/mag/pull/536) Remove custom function with native Nextflow for checking file extension (reported by @d4straub, fix by @jfy133)
+- [#536](https://github.com/nf-core/mag/pull/536) - Remove custom function with native Nextflow for checking file extension (reported by @d4straub, fix by @jfy133)
 
 ## 2.5.0 - [2023-10-10]
 
