@@ -12,6 +12,7 @@ workflow GTDBTK {
     busco_summary     // channel: path
     checkm_summary    // channel: path
     gtdb              // channel: path
+    gtdb_mash         // channel: path
 
     main:
     // Filter bins: classify only medium & high quality MAGs
@@ -46,6 +47,7 @@ workflow GTDBTK {
             }
     }
 
+
     // Filter bins based on collected metrics: completeness, contamination
     ch_filtered_bins = bins
         .transpose()
@@ -76,14 +78,17 @@ workflow GTDBTK {
 
     GTDBTK_CLASSIFYWF (
         ch_filtered_bins.passed.groupTuple(),
-        ch_db_for_gtdbtk
+        ch_db_for_gtdbtk,
+        gtdb_mash
     )
 
     GTDBTK_SUMMARY (
         ch_filtered_bins.discarded.map{it[1]}.collect().ifEmpty([]),
         GTDBTK_CLASSIFYWF.out.summary.collect().ifEmpty([]),
-        GTDBTK_CLASSIFYWF.out.filtered.collect().ifEmpty([]),
-        GTDBTK_CLASSIFYWF.out.failed.collect().ifEmpty([])
+        [],
+        // GTDBTK_CLASSIFYWF.out.filtered.collect().ifEmpty([]),
+        []
+        // GTDBTK_CLASSIFYWF.out.failed.collect().ifEmpty([])
     )
 
     emit:

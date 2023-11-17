@@ -25,7 +25,7 @@ workflow BINNING_REFINEMENT {
     // everything here is either unclassified or a prokaryote
     ch_bins = bins
         .map { meta, bins ->
-            def meta_new = meta - meta.subMap('domain')
+            def meta_new = meta - meta.subMap(['domain','refinement'])
             [meta_new, bins]
         }
         .groupTuple()
@@ -88,7 +88,7 @@ workflow BINNING_REFINEMENT {
         .map {
             meta, bins ->
                 def domain_class = params.bin_domain_classification ? 'prokarya' : 'unclassified'
-                def meta_new = meta + [domain: domain_class]
+                def meta_new = meta + [refinement: 'dastool_refined', domain: domain_class]
                 [ meta_new, bins ]
             }
 
@@ -96,14 +96,21 @@ workflow BINNING_REFINEMENT {
         .map {
             meta, bins ->
                 def domain_class = params.bin_domain_classification ? 'prokarya' : 'unclassified'
-                def meta_new = meta + [binner: 'DASTool', domain: domain_class]
+                def meta_new = meta + [refinement: 'dastool_refined', binner: 'DASTool', domain: domain_class]
                 [ meta_new, bins ]
             }
 
     RENAME_POSTDASTOOL ( ch_input_for_renamedastool )
 
+    refined_unbins = RENAME_POSTDASTOOL.out.refined_unbins
+        .map {
+            meta, bins ->
+                def meta_new = meta + [refinement: 'dastool_refined_unbinned']
+                [meta_new, bins]
+        }
+
     emit:
     refined_bins                = ch_dastool_bins_newmeta
-    refined_unbins              = RENAME_POSTDASTOOL.out.refined_unbins
+    refined_unbins              = refined_unbins
     versions                    = ch_versions
 }

@@ -11,11 +11,8 @@ def citation = '\n' + WorkflowMain.citation(workflow) + '\n'
 def summary_params = paramsSummaryMap(workflow)
 
 // Check already if long reads are provided
-def hasExtension(it, extension) {
-    it.toString().toLowerCase().endsWith(extension.toLowerCase())
-}
 def hybrid = false
-if(hasExtension(params.input, "csv")){
+if(file(params.input).extension == 'csv'){
     Channel
         .from(file(params.input))
         .splitCsv(header: true)
@@ -207,6 +204,7 @@ gtdb = ( params.skip_binqc || params.skip_gtdbtk ) ? false : params.gtdb_db
 
 if (gtdb) {
     gtdb = file( "${gtdb}", checkIfExists: true)
+    gtdb_mash = params.gtdb_mash ? file("${params.gtdb_mash}", checkIfExists: true) : []
 } else {
     gtdb = []
 }
@@ -781,6 +779,20 @@ workflow MAG {
         * DAS Tool: binning refinement
         */
 
+        ch_binning_results_bins = ch_binning_results_bins
+            .map { meta, bins ->
+                def meta_new = meta + [refinement:'unrefined']
+                [meta_new , bins]
+            }
+
+        ch_binning_results_unbins = ch_binning_results_unbins
+            .map { meta, bins ->
+                def meta_new = meta + [refinement:'unrefined_unbinned']
+                [meta_new, bins]
+            }
+
+
+
         // If any two of the binners are both skipped at once, do not run because DAS_Tool needs at least one
         if ( params.refine_bins_dastool ) {
             ch_prokarya_bins_dastool = ch_binning_results_bins
@@ -801,7 +813,13 @@ workflow MAG {
             }
 
             BINNING_REFINEMENT ( ch_contigs_for_binrefinement, ch_prokarya_bins_dastool )
-            ch_refined_bins = ch_eukarya_bins_dastool.mix(BINNING_REFINEMENT.out.refined_bins)
+            // ch_refined_bins = ch_eukarya_bins_dastool
+            //     .map{ meta, bins ->
+            //             def meta_new = meta + [refinement: 'eukaryote_unrefined']
+            //             [meta_new, bins]
+            //         }.mix( BINNING_REFINEMENT.out.refined_bins)
+
+            ch_refined_bins = BINNING_REFINEMENT.out.refined_bins
             ch_refined_unbins = BINNING_REFINEMENT.out.refined_unbins
             ch_versions = ch_versions.mix(BINNING_REFINEMENT.out.versions)
 
@@ -813,10 +831,10 @@ workflow MAG {
                 ch_input_for_postbinning_bins_unbins = ch_refined_bins.mix(ch_refined_unbins)
             // TODO REACTIVATE ONCE PR #489 IS READY!
             // TODO RE-ADD BOTH TO SCHEMA ONCE RE-ADDING
-            // } else if ( params.postbinning_input == 'both' ) {
-            //     ch_all_bins = ch_binning_results_bins.mix(ch_refined_bins)
-            //     ch_input_for_postbinning_bins        = ch_all_bins
-            //     ch_input_for_postbinning_bins_unbins = ch_all_bins.mix(ch_binning_results_unbins).mix(ch_refined_unbins)
+            } else if ( params.postbinning_input == 'both' ) {
+                ch_all_bins = ch_binning_results_bins.mix(ch_refined_bins)
+                ch_input_for_postbinning_bins        = ch_all_bins
+                ch_input_for_postbinning_bins_unbins = ch_all_bins.mix(ch_binning_results_unbins).mix(ch_refined_unbins)
             }
         } else {
             ch_input_for_postbinning_bins        = ch_binning_results_bins
@@ -888,9 +906,9 @@ workflow MAG {
             ch_input_for_quast_bins = ch_input_for_postbinning_bins_unbins
                                         .groupTuple()
                                         .map {
-                                            meta, reads ->
-                                                def new_reads = reads.flatten()
-                                                [meta, new_reads]
+                                            meta, bins ->
+                                                def new_bins = bins.flatten()
+                                                [meta, new_bins]
                                             }
 
             QUAST_BINS ( ch_input_for_quast_bins )
@@ -915,7 +933,7 @@ workflow MAG {
             ch_cat_db
         )
         CAT_SUMMARY(
-            CAT.out.tax_classification.collect()
+            CAT.out.tax_classification_names.collect()
         )
         ch_versions = ch_versions.mix(CAT.out.versions.first())
         ch_versions = ch_versions.mix(CAT_SUMMARY.out.versions)
@@ -938,7 +956,8 @@ workflow MAG {
                     ch_gtdb_bins,
                     ch_busco_summary,
                     ch_checkm_summary,
-                    gtdb
+                    gtdb,
+                    gtdb_mash
                 )
                 ch_versions = ch_versions.mix(GTDBTK.out.versions.first())
                 ch_gtdbtk_summary = GTDBTK.out.summary

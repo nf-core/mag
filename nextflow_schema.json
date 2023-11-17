@@ -14,11 +14,10 @@
             "properties": {
                 "input": {
                     "type": "string",
-                    "format": "file-path",
+                    "format": "file-path-pattern",
                     "exists": true,
-                    "mimetype": "text/csv",
-                    "pattern": "^\\S+\\.csv$",
-                    "description": "Input FastQ files or CSV samplesheet file containing information about the samples in the experiment.",
+                    "pattern": "^\\S+\\.csv$|^\\S+\\.(fastq|fq).gz$",
+                    "description": "Input FastQ files (gzip compressed) or CSV samplesheet file containing information about the samples in the experiment.",
                     "help_text": "Use this to specify the location of your input FastQ files. For example:\n\n```bash\n--input 'path/to/data/sample_*_{1,2}.fastq.gz'\n``` \n\nAlternatively, to assign different groups or to include long reads for hybrid assembly with metaSPAdes, you can specify a CSV samplesheet input file with 5 columns and the following header: sample,group,short_reads_1,short_reads_2,long_reads. See [usage docs](https://nf-co.re/mag/usage#input-specifications).",
                     "fa_icon": "fas fa-file-csv"
                 },
@@ -525,6 +524,10 @@
                     "description": "Specify the location of a GTDBTK database. Can be either an uncompressed directory or a `.tar.gz` archive. If not specified will be downloaded for you when GTDBTK or binning QC is not skipped.",
                     "default": "https://data.ace.uq.edu.au/public/gtdb/data/releases/release214/214.1/auxillary_files/gtdbtk_r214_data.tar.gz"
                 },
+                "gtdb_mash": {
+                    "type": "string",
+                    "description": "Specify the location of a GTDBTK mash database. If missing, GTDB-Tk will skip the ani_screening step"
+                },
                 "gtdbtk_min_completeness": {
                     "type": "number",
                     "default": 50.0,
@@ -808,7 +811,7 @@
                     "default": "raw_bins_only",
                     "description": "Specify which binning output is sent for downstream annotation, taxonomic classification, bin quality control etc.",
                     "help_text": "`raw_bins_only`: only bins (and unbinned contigs) from the binners.\n`refined_bins_only`:  only bins (and unbinned contigs) from the bin refinement step .\n\n ~~`both`: bins and unbinned contigs from both the binning and bin refinement steps.~~ `both` option is disabled in v2.4 due a bug that will be fixed in a later release.",
-                    "enum": ["raw_bins_only", "refined_bins_only"]
+                    "enum": ["raw_bins_only", "refined_bins_only", "both"]
                 },
                 "run_gunc": {
                     "type": "boolean",
