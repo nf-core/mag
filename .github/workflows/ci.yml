@@ -62,6 +62,7 @@ jobs:
             test_adapterremoval,
             test_binrefinement,
             test_virus_identification,
+            test_samplesheet,
           ]
     steps:
       - name: Free some space
