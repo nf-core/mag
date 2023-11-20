@@ -98,6 +98,7 @@ include { GTDBTK                          } from '../subworkflows/local/gtdbtk'
 include { ANCIENT_DNA_ASSEMBLY_VALIDATION } from '../subworkflows/local/ancient_dna'
 include { DOMAIN_CLASSIFICATION           } from '../subworkflows/local/domain_classification'
 include { DEPTHS                          } from '../subworkflows/local/depths'
+include { SAMPLESHEET_CREATION            } from '../subworkflows/local/samplesheet_creation'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1012,6 +1013,12 @@ workflow MAG {
             ch_versions = ch_versions.mix(METAEUK_EASYPREDICT.out.versions)
         }
     }
+
+    //
+    // SUBWORKFLOW: Auto-create samplesheets for downstream nf-core pipelines
+    //
+    ch_samplesheet = SAMPLESHEET_CREATION ( ch_short_reads_assembly, ch_assemblies ).samplesheet
+    ch_versions = ch_versions.mix( SAMPLESHEET_CREATION.out.versions )
 
     CUSTOM_DUMPSOFTWAREVERSIONS (
         ch_versions.unique().collectFile(name: 'collated_versions.yml')
