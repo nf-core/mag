@@ -1017,7 +1017,7 @@ workflow MAG {
     //
     // SUBWORKFLOW: Auto-create samplesheets for downstream nf-core pipelines
     //
-    ch_samplesheet = SAMPLESHEET_CREATION ( ch_short_reads_assembly, ch_assemblies ).samplesheet
+    ch_samplesheet = SAMPLESHEET_CREATION ( ch_short_reads, ch_assemblies ).samplesheet
     ch_versions = ch_versions.mix( SAMPLESHEET_CREATION.out.versions )
 
     CUSTOM_DUMPSOFTWAREVERSIONS (
