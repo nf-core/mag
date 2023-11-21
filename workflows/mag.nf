@@ -455,10 +455,23 @@ workflow MAG {
     if ( !ch_centrifuge_db_file.isEmpty() ) {
         if ( ch_centrifuge_db_file.extension in ['gz', 'tgz'] ) {
             // Expects to be tar.gz!
-            ch_db_for_centrifuge = CENTRIFUGE_DB_PREPARATION ( ch_centrifuge_db_file ).db
+            ch_db_for_centrifuge = CENTRIFUGE_DB_PREPARATION ( ch_centrifuge_db_file )
+                                    .db
+                                    .collect()
+                                    .map{
+                                    db ->
+                                        def db_name = db[0].getBaseName().split('\\.')[0]
+                                        [ db_name, db ]
+                                    }
         } else if ( ch_centrifuge_db_file.isDirectory() ) {
             ch_db_for_centrifuge = Channel
                                     .fromPath( "${ch_centrifuge_db_file}/*.cf" )
+                                    .collect()
+                                    .map{
+                                        db ->
+                                            def db_name = db[0].getBaseName().split('\\.')[0]
+                                            [ db_name, db ]
+                                    }
         } else {
             ch_db_for_centrifuge = Channel.empty()
         }
