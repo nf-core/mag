@@ -19,6 +19,8 @@ workflow BINNING_REFINEMENT {
     bins           // channel: [ val(meta), path(bins) ]
 
     main:
+    ch_contigs_for_dastool.dump(tag: 'ch_contigs_for_dastool', pretty: true)
+    bins.dump(tag: 'ch_bins_dastool', pretty: true)
     ch_versions = Channel.empty()
 
     // remove domain information, will add it back later
@@ -62,6 +64,9 @@ workflow BINNING_REFINEMENT {
 
     // Note: do not `failOnMismatch` on join here, in some cases e.g. MAXBIN2 will fail if no bins, so cannot join!
     // Only want to join for DAS_Tool on bins that 'exist'
+    ch_contigs_for_dastool.dump(tag: 'ch_contigs_for_dastool', pretty: true)
+    ch_fastatocontig2bin_for_dastool.dump(tag: 'ch_fastatocontig2bin_for_dastool', pretty: true)
+
     ch_input_for_dastool = ch_contigs_for_dastool.join(ch_fastatocontig2bin_for_dastool, by: 0)
 
     ch_versions = ch_versions.mix(DASTOOL_FASTATOCONTIG2BIN_METABAT2.out.versions.first())

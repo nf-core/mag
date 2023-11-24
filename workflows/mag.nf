@@ -760,6 +760,8 @@ workflow MAG {
         }
         ch_versions = ch_versions.mix(BINNING.out.versions)
 
+        BINNING.out.bins.dump(tag: 'ch_BINNING.out.bins', pretty: true)
+
         if ( params.bin_domain_classification ) {
 
             // Make sure if running aDNA subworkflow to use the damage-corrected contigs for higher accuracy
@@ -804,6 +806,8 @@ workflow MAG {
                 [meta_new, bins]
             }
 
+        ch_binning_results_bins.dump(tag: 'ch_binning_results_bins', pretty: true)
+
 
 
         // If any two of the binners are both skipped at once, do not run because DAS_Tool needs at least one
@@ -842,8 +846,6 @@ workflow MAG {
             } else if ( params.postbinning_input == 'refined_bins_only' ) {
                 ch_input_for_postbinning_bins        = ch_refined_bins
                 ch_input_for_postbinning_bins_unbins = ch_refined_bins.mix(ch_refined_unbins)
-            // TODO REACTIVATE ONCE PR #489 IS READY!
-            // TODO RE-ADD BOTH TO SCHEMA ONCE RE-ADDING
             } else if ( params.postbinning_input == 'both' ) {
                 ch_all_bins = ch_binning_results_bins.mix(ch_refined_bins)
                 ch_input_for_postbinning_bins        = ch_all_bins
@@ -857,6 +859,10 @@ workflow MAG {
         DEPTHS ( ch_input_for_postbinning_bins_unbins, BINNING.out.metabat2depths, ch_short_reads )
         ch_input_for_binsummary = DEPTHS.out.depths_summary
         ch_versions = ch_versions.mix(DEPTHS.out.versions)
+
+        ch_input_for_postbinning_bins_unbins.dump(tag: 'ch_input_for_postbinning_bins_unbins', pretty: true)
+
+
 
         /*
         * Bin QC subworkflows: for checking bin completeness with either BUSCO, CHECKM, and/or GUNC
@@ -926,7 +932,12 @@ workflow MAG {
 
             QUAST_BINS ( ch_input_for_quast_bins )
             ch_versions = ch_versions.mix(QUAST_BINS.out.versions.first())
-            QUAST_BINS_SUMMARY ( QUAST_BINS.out.quast_bin_summaries.collect() )
+            ch_quast_bin_summary = QUAST_BINS.out.quast_bin_summaries
+                .collectFile(keepHeader: true) {
+                    meta, summary ->
+                    ["${meta.id}.tsv", summary]
+            }
+            QUAST_BINS_SUMMARY ( ch_quast_bin_summary.collect() )
             ch_quast_bins_summary = QUAST_BINS_SUMMARY.out.summary
         }
 
@@ -945,8 +956,13 @@ workflow MAG {
             ch_input_for_postbinning_bins_unbins,
             ch_cat_db
         )
+        ch_cat_summary = CAT.out.tax_classification_names
+            .collectFile(keepHeader: true) {
+                    meta, classification ->
+                    ["${meta.id}.txt", classification]
+            }
         CAT_SUMMARY(
-            CAT.out.tax_classification_names.collect()
+            ch_cat_summary.collect()
         )
         ch_versions = ch_versions.mix(CAT.out.versions.first())
         ch_versions = ch_versions.mix(CAT_SUMMARY.out.versions)

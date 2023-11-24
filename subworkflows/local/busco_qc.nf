@@ -13,6 +13,7 @@ workflow BUSCO_QC {
     bins       // channel: [ val(meta), path(bin) ]
 
     main:
+    bins.dump(tag: 'entry_bins_busco_ch', pretty: true)
     if ( !busco_db.isEmpty() ) {
         if ( busco_db.extension in ['gz', 'tgz'] ) {
             // Expects to be tar.gz!
@@ -53,6 +54,9 @@ workflow BUSCO_QC {
                             }
                             .collect()
     }
+
+    ch_db_for_busco.dump(tag: 'ch_db_for_busco', pretty: true)
+    bins.dump(tag: 'ch_bins_for_busco', pretty: true)
 
     BUSCO (
         bins,

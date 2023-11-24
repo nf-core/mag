@@ -20,6 +20,9 @@ workflow BINNING {
 
     main:
 
+    assemblies.dump(tag: 'ch_binning_assemblies', pretty: true)
+    reads.dump(tag: 'ch_binning_reads', pretty: true)
+
     ch_versions = Channel.empty()
 
     // generate coverage depths for each contig

@@ -34,6 +34,9 @@ workflow TIARA {
     DASTOOL_FASTATOCONTIG2BIN_TIARA ( ch_tiara_input , 'fa')
     ch_versions = ch_versions.mix(DASTOOL_FASTATOCONTIG2BIN_TIARA.out.versions.first())
 
+    ch_tiara_input.dump(tag: 'ch_tiara_input', pretty: true)
+    DASTOOL_FASTATOCONTIG2BIN_TIARA.out.fastatocontig2bin.dump(tag: 'ch_DASTOOL_FASTATOCONTIG2BIN_TIARA.out.fastatocontig2bin', pretty: true)
+
     // Need to per-assembly Tiara classifications to their bins
     // Have to remove binner information from the meta map to do this
     ch_contigs_to_bin_tiara = DASTOOL_FASTATOCONTIG2BIN_TIARA.out.fastatocontig2bin
@@ -42,6 +45,8 @@ workflow TIARA {
             def meta_join = meta - meta.subMap('binner', 'bin')
             [ meta_join, meta, contig2bin, bins ]
         }
+
+    ch_contigs_to_bin_tiara.dump(tag: 'ch_contigs_to_bin_tiara', pretty: true)
 
     ch_tiara_classify_input = ch_contigs_to_bin_tiara
         .combine( TIARA_TIARA.out.classifications, by: 0)
