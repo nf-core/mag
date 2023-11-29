@@ -34,6 +34,7 @@ The pipeline then:
 - Performs ancient DNA validation and repair with [pyDamage](https://github.com/maxibor/pydamage) and [freebayes](https://github.com/freebayes/freebayes)
 - optionally refines bins with [DAS Tool](https://github.com/cmks/DAS_Tool)
 - assigns taxonomy to bins using [GTDB-Tk](https://github.com/Ecogenomics/GTDBTk) and/or [CAT](https://github.com/dutilh/CAT) and optionally identifies viruses in assemblies using [geNomad](https://github.com/apcamargo/genomad), or Eukaryotes with [Tiara](https://github.com/ibe-uw/tiara)
+- generates a samplesheet that can be used as input for other nf-core pipelines. Currently, [phageannotator](https://github.com/nf-core/phageannotator) is supported.
 
 Furthermore, the pipeline creates various reports in the results directory specified, including a [MultiQC](https://multiqc.info/) report summarizing some of the findings and software versions.
 

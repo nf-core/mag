@@ -21,6 +21,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 - [Genome annotation of binned genomes](#genome-annotation-of-binned-genomes)
 - [Additional summary for binned genomes](#additional-summary-for-binned-genomes)
 - [Ancient DNA](#ancient-dna)
+- [Samplesheet generation](#sampleseet-generation)
 - [MultiQC](#multiqc) - aggregate report, describing results of the whole pipeline
 - [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
 
@@ -705,6 +706,20 @@ Because of aDNA damage, _de novo_ assemblers sometimes struggle to call a correc
   - `[assembler]_[sample/group].filtered.vcf.gz`: quality filtered variant calls of the reads aligned back to the contigs.
 
 </details>
+
+### Samplesheet generation
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `samplesheet/`
+  - `[nf_core_pipeline].csv`: a samplesheet in CSV format that can be directly used as input for the specified nf-core pipeline
+
+</details>
+
+Currently, samplesheets for the following nf-core pipelines can be automatically generated:
+
+- [phageannotator](https://github.com/nf-core/phageannotator): a pipeline for identifying, annotation, and quantifying phage sequences in (meta)-genomic sequences.
 
 ### MultiQC
 

@@ -9,14 +9,15 @@ process MAG_MERGE_SAMPLESHEET {
     path ('samplesheets/*')
 
     output:
-    path "samplesheet.csv", emit: samplesheet
+    path "*_samplesheet.csv", emit: samplesheet
     path "versions.yml"   , emit: versions
 
     script:
+    def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    head -n 1 `ls ./samplesheets/* | head -n 1` > samplesheet.csv
+    head -n 1 `ls ./samplesheets/* | head -n 1` > ${prefix}_samplesheet.csv
     for fileid in `ls ./samplesheets/*`; do
-        awk 'NR>1' \$fileid >> samplesheet.csv
+        awk 'NR>1' \$fileid >> ${prefix}_samplesheet.csv
     done
 
     cat <<-END_VERSIONS > versions.yml
