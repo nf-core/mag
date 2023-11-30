@@ -1,0 +1,2 @@
+input_check:
+  - subworkflows/local/input_check/**

@@ -51,53 +51,43 @@ ch_multiqc_custom_methods_description = params.multiqc_methods_description ? fil
 //
 // MODULE: Local to the pipeline
 //
-include { BOWTIE2_REMOVAL_BUILD as BOWTIE2_HOST_REMOVAL_BUILD } from '../modules/local/bowtie2_removal_build'
-include { BOWTIE2_REMOVAL_ALIGN as BOWTIE2_HOST_REMOVAL_ALIGN } from '../modules/local/bowtie2_removal_align'
-include { BOWTIE2_REMOVAL_BUILD as BOWTIE2_PHIX_REMOVAL_BUILD } from '../modules/local/bowtie2_removal_build'
-include { BOWTIE2_REMOVAL_ALIGN as BOWTIE2_PHIX_REMOVAL_ALIGN } from '../modules/local/bowtie2_removal_align'
-include { PORECHOP                                            } from '../modules/local/porechop'
-include { NANOLYSE                                            } from '../modules/local/nanolyse'
-include { FILTLONG                                            } from '../modules/local/filtlong'
-include { NANOPLOT as NANOPLOT_RAW                            } from '../modules/local/nanoplot'
-include { NANOPLOT as NANOPLOT_FILTERED                       } from '../modules/local/nanoplot'
-include { CENTRIFUGE_DB_PREPARATION                           } from '../modules/local/centrifuge_db_preparation'
-include { CENTRIFUGE                                          } from '../modules/local/centrifuge'
-include { KRAKEN2_DB_PREPARATION                              } from '../modules/local/kraken2_db_preparation'
-include { KRAKEN2                                             } from '../modules/local/kraken2'
-include { KRONA_DB                                            } from '../modules/local/krona_db'
-include { KRONA                                               } from '../modules/local/krona'
-include { POOL_SINGLE_READS as POOL_SHORT_SINGLE_READS        } from '../modules/local/pool_single_reads'
-include { POOL_PAIRED_READS                                   } from '../modules/local/pool_paired_reads'
-include { POOL_SINGLE_READS as POOL_LONG_READS                } from '../modules/local/pool_single_reads'
-include { MEGAHIT                                             } from '../modules/local/megahit'
-include { SPADES                                              } from '../modules/local/spades'
-include { SPADESHYBRID                                        } from '../modules/local/spadeshybrid'
-include { GUNZIP as GUNZIP_ASSEMBLIES                         } from '../modules/nf-core/gunzip'
-include { QUAST                                               } from '../modules/local/quast'
-include { QUAST_BINS                                          } from '../modules/local/quast_bins'
-include { QUAST_BINS_SUMMARY                                  } from '../modules/local/quast_bins_summary'
-include { CAT_DB                                              } from '../modules/local/cat_db'
-include { CAT_DB_GENERATE                                     } from '../modules/local/cat_db_generate'
-include { CAT                                                 } from '../modules/local/cat'
-include { CAT_SUMMARY                                         } from "../modules/local/cat_summary"
-include { BIN_SUMMARY                                         } from '../modules/local/bin_summary'
-include { COMBINE_TSV as COMBINE_SUMMARY_TSV                  } from '../modules/local/combine_tsv'
+include { CENTRIFUGE_DB_PREPARATION                           } from '../../modules/local/centrifuge_db_preparation'
+include { CENTRIFUGE                                          } from '../../modules/local/centrifuge'
+include { KRAKEN2_DB_PREPARATION                              } from '../../modules/local/kraken2_db_preparation'
+include { KRAKEN2                                             } from '../../modules/local/kraken2'
+include { KRONA_DB                                            } from '../../modules/local/krona_db'
+include { KRONA                                               } from '../../modules/local/krona'
+include { POOL_SINGLE_READS as POOL_SHORT_SINGLE_READS        } from '../../modules/local/pool_single_reads'
+include { POOL_PAIRED_READS                                   } from '../../modules/local/pool_paired_reads'
+include { POOL_SINGLE_READS as POOL_LONG_READS                } from '../../modules/local/pool_single_reads'
+include { MEGAHIT                                             } from '../../modules/local/megahit'
+include { SPADES                                              } from '../../modules/local/spades'
+include { SPADESHYBRID                                        } from '../../modules/local/spadeshybrid'
+include { QUAST                                               } from '../../modules/local/quast'
+include { QUAST_BINS                                          } from '../../modules/local/quast_bins'
+include { QUAST_BINS_SUMMARY                                  } from '../../modules/local/quast_bins_summary'
+include { CAT_DB                                              } from '../../modules/local/cat_db'
+include { CAT_DB_GENERATE                                     } from '../../modules/local/cat_db_generate'
+include { CAT                                                 } from '../../modules/local/cat'
+include { CAT_SUMMARY                                         } from "../../modules/local/cat_summary"
+include { BIN_SUMMARY                                         } from '../../modules/local/bin_summary'
+include { COMBINE_TSV as COMBINE_SUMMARY_TSV                  } from '../../modules/local/combine_tsv'
 
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { INPUT_CHECK                     } from '../subworkflows/local/input_check'
-include { BINNING_PREPARATION             } from '../subworkflows/local/binning_preparation'
-include { BINNING                         } from '../subworkflows/local/binning'
-include { BINNING_REFINEMENT              } from '../subworkflows/local/binning_refinement'
-include { BUSCO_QC                        } from '../subworkflows/local/busco_qc'
-include { VIRUS_IDENTIFICATION            } from '../subworkflows/local/virus_identification'
-include { CHECKM_QC                       } from '../subworkflows/local/checkm_qc'
-include { GUNC_QC                         } from '../subworkflows/local/gunc_qc'
-include { GTDBTK                          } from '../subworkflows/local/gtdbtk'
-include { ANCIENT_DNA_ASSEMBLY_VALIDATION } from '../subworkflows/local/ancient_dna'
-include { DOMAIN_CLASSIFICATION           } from '../subworkflows/local/domain_classification'
-include { DEPTHS                          } from '../subworkflows/local/depths'
+include { INPUT_CHECK                     } from '../../subworkflows/local/input_check'
+include { BINNING_PREPARATION             } from '../../subworkflows/local/binning_preparation'
+include { BINNING                         } from '../../subworkflows/local/binning'
+include { BINNING_REFINEMENT              } from '../../subworkflows/local/binning_refinement'
+include { BUSCO_QC                        } from '../../subworkflows/local/busco_qc'
+include { VIRUS_IDENTIFICATION            } from '../../subworkflows/local/virus_identification'
+include { CHECKM_QC                       } from '../../subworkflows/local/checkm_qc'
+include { GUNC_QC                         } from '../../subworkflows/local/gunc_qc'
+include { GTDBTK                          } from '../../subworkflows/local/gtdbtk'
+include { ANCIENT_DNA_ASSEMBLY_VALIDATION } from '../../subworkflows/local/ancient_dna'
+include { DOMAIN_CLASSIFICATION           } from '../../subworkflows/local/domain_classification'
+include { DEPTHS                          } from '../../subworkflows/local/depths'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -108,22 +98,32 @@ include { DEPTHS                          } from '../subworkflows/local/depths'
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { ARIA2 as ARIA2_UNTAR                   } from '../modules/nf-core/aria2/main'
-include { FASTQC as FASTQC_RAW                   } from '../modules/nf-core/fastqc/main'
-include { FASTQC as FASTQC_TRIMMED               } from '../modules/nf-core/fastqc/main'
-include { SEQTK_MERGEPE                          } from '../modules/nf-core/seqtk/mergepe/main'
-include { BBMAP_BBNORM                           } from '../modules/nf-core/bbmap/bbnorm/main'
-include { FASTP                                  } from '../modules/nf-core/fastp/main'
-include { ADAPTERREMOVAL as ADAPTERREMOVAL_PE    } from '../modules/nf-core/adapterremoval/main'
-include { ADAPTERREMOVAL as ADAPTERREMOVAL_SE    } from '../modules/nf-core/adapterremoval/main'
-include { CAT_FASTQ                              } from '../modules/nf-core/cat/fastq/main'
-include { PRODIGAL                               } from '../modules/nf-core/prodigal/main'
-include { PROKKA                                 } from '../modules/nf-core/prokka/main'
-include { MMSEQS_DATABASES                       } from '../modules/nf-core/mmseqs/databases/main'
-include { METAEUK_EASYPREDICT                    } from '../modules/nf-core/metaeuk/easypredict/main'
-include { CUSTOM_DUMPSOFTWAREVERSIONS            } from '../modules/nf-core/custom/dumpsoftwareversions/main'
-include { MULTIQC                                } from '../modules/nf-core/multiqc/main'
-
+include { ARIA2 as ARIA2_UNTAR                          } from '../../modules/nf-core/aria2/main'
+include { FASTQC as FASTQC_RAW                          } from '../../modules/nf-core/fastqc/main'
+include { FASTQC as FASTQC_TRIMMED                      } from '../../modules/nf-core/fastqc/main'
+include { SEQTK_MERGEPE                                 } from '../../modules/nf-core/seqtk/mergepe/main'
+include { BBMAP_BBNORM                                  } from '../../modules/nf-core/bbmap/bbnorm/main'
+include { FASTP                                         } from '../../modules/nf-core/fastp/main'
+include { ADAPTERREMOVAL as ADAPTERREMOVAL_PE           } from '../../modules/nf-core/adapterremoval/main'
+include { ADAPTERREMOVAL as ADAPTERREMOVAL_SE           } from '../../modules/nf-core/adapterremoval/main'
+include { BOWTIE2_BUILD as BOWTIE2_HOST_REMOVAL_BUILD   } from '../../modules/nf-core/bowtie2/build/main'
+include { BOWTIE2_ALIGN as BOWTIE2_HOST_REMOVAL_ALIGN   } from '../../modules/nf-core/bowtie2/align/main'
+include { BOWTIE2_BUILD as BOWTIE2_PHIX_REMOVAL_BUILD   } from '../../modules/nf-core/bowtie2/build/main'
+include { BOWTIE2_ALIGN as BOWTIE2_PHIX_REMOVAL_ALIGN   } from '../../modules/nf-core/bowtie2/align/main'
+include { CAT_FASTQ                                     } from '../../modules/nf-core/cat/fastq/main'
+include { NANOPLOT as NANOPLOT_RAW                      } from '../../modules/nf-core/nanoplot/main'
+include { NANOPLOT as NANOPLOT_FILTERED                 } from '../../modules/nf-core/nanoplot/main'
+include { PORECHOP_PORECHOP                             } from '../../modules/nf-core/porechop/porechop/main'
+include { NANOLYSE                                      } from '../../modules/nf-core/nanolyse/main'
+include { FILTLONG                                      } from '../../modules/nf-core/filtlong/main'
+include { GUNZIP as GUNZIP_ASSEMBLIES                   } from '../../modules/nf-core/gunzip/main'
+include { PRODIGAL                                      } from '../../modules/nf-core/prodigal/main'
+include { PROKKA                                        } from '../../modules/nf-core/prokka/main'
+include { MMSEQS_DATABASES                              } from '../../modules/nf-core/mmseqs/databases/main'
+include { METAEUK_EASYPREDICT                           } from '../../modules/nf-core/metaeuk/easypredict/main'
+include { CUSTOM_DUMPSOFTWAREVERSIONS                   } from '../../modules/nf-core/custom/dumpsoftwareversions/main'
+include { MULTIQC                                       } from '../../modules/nf-core/multiqc/main'
+/..
 ////////////////////////////////////////////////////
 /* --  Create channel for reference databases  -- */
 ////////////////////////////////////////////////////
@@ -299,9 +299,11 @@ workflow MAG {
             ch_short_reads_prepped = ch_raw_short_reads
         }
 
+        ch_bowtie2_host_removal_fasta = ch_host_fasta.map { [ [ id:'host_fasta' ], it ] }
+
         if (params.host_fasta){
             BOWTIE2_HOST_REMOVAL_BUILD (
-                ch_host_fasta
+                ch_bowtie2_host_removal_fasta
             )
             ch_host_bowtie2index = BOWTIE2_HOST_REMOVAL_BUILD.out.index
         }
@@ -309,24 +311,30 @@ workflow MAG {
         if (params.host_fasta || params.host_genome){
             BOWTIE2_HOST_REMOVAL_ALIGN (
                 ch_short_reads_prepped,
-                ch_host_bowtie2index
+                ch_host_bowtie2index,
+                true,
+                false
             )
-            ch_short_reads_hostremoved = BOWTIE2_HOST_REMOVAL_ALIGN.out.reads
+            ch_short_reads_hostremoved = BOWTIE2_HOST_REMOVAL_ALIGN.out.fastq
             ch_bowtie2_removal_host_multiqc = BOWTIE2_HOST_REMOVAL_ALIGN.out.log
             ch_versions = ch_versions.mix(BOWTIE2_HOST_REMOVAL_ALIGN.out.versions.first())
         } else {
             ch_short_reads_hostremoved = ch_short_reads_prepped
         }
 
+        ch_bowtie2_phix_removal_fasta = ch_phix_db_file.map { [ [ id:'phix_fasta' ], it ] }
+
         if(!params.keep_phix) {
             BOWTIE2_PHIX_REMOVAL_BUILD (
-                ch_phix_db_file
+                ch_bowtie2_phix_removal_fasta
             )
             BOWTIE2_PHIX_REMOVAL_ALIGN (
                 ch_short_reads_hostremoved,
-                BOWTIE2_PHIX_REMOVAL_BUILD.out.index
+                BOWTIE2_PHIX_REMOVAL_BUILD.out.index,
+                true,
+                false
             )
-            ch_short_reads_phixremoved = BOWTIE2_PHIX_REMOVAL_ALIGN.out.reads
+            ch_short_reads_phixremoved = BOWTIE2_PHIX_REMOVAL_ALIGN.out.fastq
             ch_versions = ch_versions.mix(BOWTIE2_PHIX_REMOVAL_ALIGN.out.versions.first())
         } else {
             ch_short_reads_phixremoved = ch_short_reads_hostremoved
@@ -411,11 +419,11 @@ workflow MAG {
 
     if ( !params.assembly_input ) {
         if (!params.skip_adapter_trimming) {
-            PORECHOP (
+            PORECHOP_PORECHOP (
                 ch_raw_long_reads
             )
-            ch_long_reads = PORECHOP.out.reads
-            ch_versions = ch_versions.mix(PORECHOP.out.versions.first())
+            ch_long_reads = PORECHOP_PORECHOP.out.reads
+            ch_versions = ch_versions.mix(PORECHOP_PORECHOP.out.versions.first())
         }
 
         if (!params.keep_lambda) {
@@ -423,7 +431,7 @@ workflow MAG {
                 ch_long_reads,
                 ch_nanolyse_db
             )
-            ch_long_reads = NANOLYSE.out.reads
+            ch_long_reads = NANOLYSE.out.fastq
             ch_versions = ch_versions.mix(NANOLYSE.out.versions.first())
         }
 
@@ -434,7 +442,7 @@ workflow MAG {
         ch_short_and_long_reads = ch_long_reads
             .map { meta, lr -> [ meta.id, meta, lr ] }
             .join(ch_short_reads_tmp, by: 0)
-            .map { id, meta_lr, lr, meta_sr, sr -> [ meta_lr, lr, sr[0], sr[1] ] }  // should not occur for single-end, since SPAdes (hybrid) does not support single-end
+            .map { id, meta_lr, lr, meta_sr, sr -> [ meta_lr, sr, lr ] }  // should not occur for single-end, since SPAdes (hybrid) does not support single-end
 
         FILTLONG (
             ch_short_and_long_reads

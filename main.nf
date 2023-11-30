@@ -52,7 +52,7 @@ WorkflowMain.initialise(workflow, params, log)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { MAG } from './workflows/mag'
+include { MAG } from './workflows/mag/main'
 
 //
 // WORKFLOW: Run main nf-core/mag analysis pipeline

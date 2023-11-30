@@ -36,6 +36,16 @@
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
                         "installed_by": ["modules"]
                     },
+                    "bowtie2/align": {
+                        "branch": "master",
+                        "git_sha": "1fea64f5132a813ec97c1c6d3a74e0aee7142b6d",
+                        "installed_by": ["modules"]
+                    },
+                    "bowtie2/build": {
+                        "branch": "master",
+                        "git_sha": "1fea64f5132a813ec97c1c6d3a74e0aee7142b6d",
+                        "installed_by": ["modules"]
+                    },
                     "cat/fastq": {
                         "branch": "master",
                         "git_sha": "5c460c5a4736974abde2843294f35307ee2b0e5e",
@@ -99,6 +109,11 @@
                     "fastqc": {
                         "branch": "master",
                         "git_sha": "9a4517e720bc812e95b56d23d15a1653b6db4f53",
+                        "installed_by": ["modules"]
+                    },
+                    "filtlong": {
+                        "branch": "master",
+                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
                         "installed_by": ["modules"]
                     },
                     "freebayes": {
@@ -169,6 +184,21 @@
                     "multiqc": {
                         "branch": "master",
                         "git_sha": "a6e11ac655e744f7ebc724be669dd568ffdc0e80",
+                        "installed_by": ["modules"]
+                    },
+                    "nanolyse": {
+                        "branch": "master",
+                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "installed_by": ["modules"]
+                    },
+                    "nanoplot": {
+                        "branch": "master",
+                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "installed_by": ["modules"]
+                    },
+                    "porechop/porechop": {
+                        "branch": "master",
+                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
                         "installed_by": ["modules"]
                     },
                     "prodigal": {

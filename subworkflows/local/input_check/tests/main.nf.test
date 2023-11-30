@@ -1,0 +1,28 @@
+nextflow_workflow {
+
+    name "Test Subworkflow: INPUT_CHECK"
+    script "subworkflows/local/input_check/main.nf"
+    workflow "INPUT_CHECK"
+    tag "subworkflows"
+    tag "subworkflows_local"
+    tag "input_check"
+
+
+    test("Parameters: default") {
+
+        when {
+            params {
+                outdir          = "$outputDir"
+                input           = 'https://raw.githubusercontent.com/nf-core/test-datasets/mag/samplesheets/samplesheet.csv'
+                assembly_input  = 'https://raw.githubusercontent.com/nf-core/test-datasets/mag/samplesheets/assembly_samplesheet.csv'
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(workflow.out).match() }
+            )
+        }
+    }
+}
