@@ -479,16 +479,6 @@ workflow MAG {
         ch_db_for_centrifuge = Channel.empty()
     }
 
-    // Centrifuge val(db_name) has to be the basename of any of the
-    //   index files up to but not including the final .1.cf
-    ch_db_for_centrifuge = ch_db_for_centrifuge
-                            .collect()
-                            .map{
-                                db ->
-                                    def db_name = db[0].getBaseName().split('\\.')[0]
-                                    [ db_name, db ]
-                            }
-
     CENTRIFUGE (
         ch_short_reads,
         ch_db_for_centrifuge
@@ -591,6 +581,10 @@ workflow MAG {
         }
 
         ch_assemblies = Channel.empty()
+
+        ch_short_reads_assembly.dump(tag: 'ch_short_reads_assembly', pretty: true)
+        ch_short_reads_grouped.dump(tag: 'ch_short_reads_grouped', pretty: true)
+
         if (!params.skip_megahit){
             MEGAHIT ( ch_short_reads_grouped )
             ch_megahit_assemblies = MEGAHIT.out.assembly
