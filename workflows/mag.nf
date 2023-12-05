@@ -582,9 +582,6 @@ workflow MAG {
 
         ch_assemblies = Channel.empty()
 
-        ch_short_reads_assembly.dump(tag: 'ch_short_reads_assembly', pretty: true)
-        ch_short_reads_grouped.dump(tag: 'ch_short_reads_grouped', pretty: true)
-
         if (!params.skip_megahit){
             MEGAHIT ( ch_short_reads_grouped )
             ch_megahit_assemblies = MEGAHIT.out.assembly
@@ -754,8 +751,6 @@ workflow MAG {
         }
         ch_versions = ch_versions.mix(BINNING.out.versions)
 
-        BINNING.out.bins.dump(tag: 'ch_BINNING.out.bins', pretty: true)
-
         if ( params.bin_domain_classification ) {
 
             // Make sure if running aDNA subworkflow to use the damage-corrected contigs for higher accuracy
@@ -799,10 +794,6 @@ workflow MAG {
                 def meta_new = meta + [refinement:'unrefined_unbinned']
                 [meta_new, bins]
             }
-
-        ch_binning_results_bins.dump(tag: 'ch_binning_results_bins', pretty: true)
-
-
 
         // If any two of the binners are both skipped at once, do not run because DAS_Tool needs at least one
         if ( params.refine_bins_dastool ) {
@@ -853,10 +844,6 @@ workflow MAG {
         DEPTHS ( ch_input_for_postbinning_bins_unbins, BINNING.out.metabat2depths, ch_short_reads )
         ch_input_for_binsummary = DEPTHS.out.depths_summary
         ch_versions = ch_versions.mix(DEPTHS.out.versions)
-
-        ch_input_for_postbinning_bins_unbins.dump(tag: 'ch_input_for_postbinning_bins_unbins', pretty: true)
-
-
 
         /*
         * Bin QC subworkflows: for checking bin completeness with either BUSCO, CHECKM, and/or GUNC
