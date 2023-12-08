@@ -1,0 +1,45 @@
+nextflow_pipeline {
+
+    name "Test pipeline: NFCORE_MAG"
+    script "main.nf"
+    tag "pipeline"
+    tag "nfcore_mag"
+    tag "nfcore_mag_test_adapterremoval"
+
+    test("Parameters: clip_tool = 'adapterremoval'") {
+        when {
+            params {
+                outdir                  = "$outputDir"
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    path("${params.outdir}/Annotation/MetaEuk/"),
+                    path("${params.outdir}/Annotation/Prodigal/"),
+                    path("${params.outdir}/Annotation/Prokka/MEGAHIT/MEGAHIT-MaxBin2-test_minigut_euk.001/MEGAHIT-MaxBin2-test_minigut_euk.001.tsv"),
+                    path("${params.outdir}/Annotation/Prokka/MEGAHIT/MEGAHIT-MetaBAT2-test_minigut_euk.2/MEGAHIT-MetaBAT2-test_minigut_euk.2.tsv"),
+                    path("${params.outdir}/Annotation/Prokka/MEGAHIT/MEGAHIT-MetaBAT2-test_minigut_euk.unbinned.1/MEGAHIT-MetaBAT2-test_minigut_euk.unbinned.1.tsv"),
+                    path("${params.outdir}/Annotation/Prokka/SPAdes/SPAdes-MaxBin2-test_minigut_euk.002/SPAdes-MaxBin2-test_minigut_euk.002.tsv"),
+                    path("${params.outdir}/Annotation/Prokka/SPAdes/SPAdes-MetaBAT2-test_minigut_euk.2/SPAdes-MetaBAT2-test_minigut_euk.2.tsv"),
+                    path("${params.outdir}/Annotation/Prokka/SPAdes/SPAdes-MetaBAT2-test_minigut_euk.unbinned.1/SPAdes-MetaBAT2-test_minigut_euk.unbinned.1.tsv"),
+                    path("${params.outdir}/Assembly/MEGAHIT/MEGAHIT-test_minigut_euk.contigs.fa.gz"),
+                    path("${params.outdir}/Assembly/MEGAHIT/MEGAHIT-test_minigut_sample2_euk.contigs.fa.gz"),
+                    path("${params.outdir}/Assembly/SPAdes/SPAdes-test_minigut_euk_contigs.fasta.gz"),
+                    path("${params.outdir}/Assembly/SPAdes/SPAdes-test_minigut_sample2_euk_contigs.fasta.gz"),
+                    path("${params.outdir}/GenomeBinning/depths/contigs/"),
+                    path("${params.outdir}/GenomeBinning/MaxBin2/"),
+                    path("${params.outdir}/GenomeBinning/MetaBAT2/"),
+                    path("${params.outdir}/QC_shortreads/adapterremoval/test_minigut_euk/test_minigut_euk_run0_ar2.settings"),
+                    path("${params.outdir}/QC_shortreads/adapterremoval/test_minigut_sample2_euk/test_minigut_sample2_euk_run0_ar2.settings"),
+                    path("${params.outdir}/QC_shortreads/remove_phix/test_minigut_euk_run0_phix_removed.bowtie2.log"),
+                    path("${params.outdir}/QC_shortreads/remove_phix/test_minigut_sample2_euk_run0_phix_removed.bowtie2.log"),
+                    path("${params.outdir}/Taxonomy/")
+                ).match() },
+                { assert new File("$outputDir/multiqc/multiqc_report.html").exists() }
+            )
+        }
+    }
+}
