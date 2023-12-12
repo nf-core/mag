@@ -9,7 +9,29 @@ nextflow_pipeline {
     test("Parameters: run_virus_identification = true") {
         when {
             params {
-                outdir                  = "$outputDir"
+                outdir                      = "$outputDir"
+                input                       = 'https://raw.githubusercontent.com/nf-core/test-datasets/mag/samplesheets/samplesheet.csv'
+                run_virus_identification    = true
+                genomad_splits              = 7
+                reads_minlength             = 150
+                megahit_fix_cpu_1           = true
+                centrifuge_db               = null
+                kraken2_db                  = null
+                keep_phix                   = true
+                skip_clipping               = true
+                coassemble_group            = true
+                skip_gtdbtk                 = true
+                skip_binning                = true
+                skip_prokka                 = true
+                skip_spades                 = true
+                skip_spadeshybrid           = true
+                skip_quast                  = true
+                skip_prodigal               = true
+                skip_krona                  = true
+                skip_adapter_trimming       = true
+                skip_metabat2               = true
+                skip_maxbin2                = true
+                skip_busco                  = true
             }
         }
 
@@ -19,7 +41,7 @@ nextflow_pipeline {
                 { assert snapshot(
                     path("${params.outdir}/Assembly/MEGAHIT/MEGAHIT-group-0.contigs.fa.gz"),
                     path("${params.outdir}/multiqc/multiqc_data/multiqc_fastqc.yaml"),
-                    path("${params.outdir}/VirusIdentification/"),
+                    path("${params.outdir}/VirusIdentification/")
                 ).match() },
                 { assert new File("$outputDir/QC_shortreads/fastqc/test_minigut_run0_raw_1_fastqc.html").exists() },
                 { assert new File("$outputDir/QC_shortreads/fastqc/test_minigut_run0_raw_2_fastqc.html").exists() },
