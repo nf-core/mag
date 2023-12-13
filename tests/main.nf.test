@@ -9,7 +9,21 @@ nextflow_pipeline {
     test("Parameters: default test") {
         when {
             params {
-                outdir                  = "$outputDir"
+                outdir                      = "$outputDir"
+                input                       = 'https://raw.githubusercontent.com/nf-core/test-datasets/mag/samplesheets/samplesheet.multirun.csv'
+                centrifuge_db               = "https://raw.githubusercontent.com/nf-core/test-datasets/mag/test_data/minigut_cf.tar.gz"
+                kraken2_db                  = "https://raw.githubusercontent.com/nf-core/test-datasets/mag/test_data/minigut_kraken.tgz"
+                skip_krona                  = true
+                min_length_unbinned_contigs = 1
+                max_unbinned_contigs        = 2
+                busco_db                    = "https://busco-data.ezlab.org/v5/data/lineages/bacteria_odb10.2020-03-06.tar.gz"
+                busco_clean                 = true
+                skip_gtdbtk                 = true
+                skip_concoct                = true
+                megahit_fix_cpu_1           = true
+                spades_fix_cpus             = 2
+                spadeshybrid_fix_cpus       = 2
+                metabat_rng_seed            = 1
             }
         }
 

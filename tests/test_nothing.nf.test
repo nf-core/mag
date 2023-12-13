@@ -10,26 +10,6 @@ nextflow_pipeline {
         when {
             params {
                 outdir                  = "$outputDir"
-                input                   = 'https://raw.githubusercontent.com/nf-core/test-datasets/mag/samplesheets/samplesheet.csv'
-                centrifuge_db           = null
-                kraken2_db              = null
-                keep_phix               = true
-                skip_krona              = true
-                skip_clipping           = true
-                skip_adapter_trimming   = true
-                skip_spades             = true
-                skip_spadeshybrid       = true
-                skip_megahit            = true
-                skip_quast              = true
-                skip_prodigal           = true
-                skip_binning            = true
-                skip_metabat2           = true
-                skip_maxbin2            = true
-                skip_concoct            = true
-                skip_prokka             = true
-                skip_binqc              = true
-                skip_gtdbtk             = true
-                skip_concoct            = true
             }
         }
 

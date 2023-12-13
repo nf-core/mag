@@ -1,0 +1,18 @@
+{
+    "Parameters: clip_tool = 'adapterremoval'": {
+        "content": [
+            "MEGAHIT-group-0.contigs.fa.gz:md5,766fe3571e8774489f9b96ae913386a7",
+            [
+                [
+                    "test_minigut_run1_ar2.settings:md5,eb194399448c3bfe5eced0b1d546a541",
+                    "test_minigut_run2_ar2.settings:md5,eb194399448c3bfe5eced0b1d546a541"
+                ],
+                [
+                    "test_minigut_sample2_run0_ar2.settings:md5,8c175a320fab230961c2886e096a019e"
+                ]
+            ],
+            "multiqc_fastqc.yaml:md5,42cf8e13e8ef14ac9192896be672997c"
+        ],
+        "timestamp": "2023-12-13T00:48:34.419699875"
+    }
+}
