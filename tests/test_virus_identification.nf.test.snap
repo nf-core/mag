@@ -1,0 +1,34 @@
+{
+    "Parameters: run_virus_identification = true": {
+        "content": [
+            "MEGAHIT-group-0.contigs.fa.gz:md5,8419d4d6c72ac1006324a9fee1394646",
+            "multiqc_fastqc.yaml:md5,42cf8e13e8ef14ac9192896be672997c",
+            [
+                [
+                    [
+                        [
+                            "MEGAHIT-group-0.contigs_aggregated_classification.tsv:md5,f153c7a73fcfdd50b984d66f028ee1f5"
+                        ],
+                        [
+                            "MEGAHIT-group-0.contigs_taxonomy.tsv:md5,0d7f92268635ade939854ab3c9d25d8a"
+                        ],
+                        [
+                            "MEGAHIT-group-0.contigs_provirus.tsv:md5,93a6bca59b0bf7f57c0b9b60d2e57082"
+                        ],
+                        [
+                            "MEGAHIT-group-0.contigs_plasmid.fna:md5,de02fb2a6118aeaad11ba53bea4b1915",
+                            "MEGAHIT-group-0.contigs_plasmid_genes.tsv:md5,95d4f272d73ce65b77caa0ff02d8f478",
+                            "MEGAHIT-group-0.contigs_plasmid_proteins.faa:md5,1d9cecab547cb22c5554e5c4d194d96a",
+                            "MEGAHIT-group-0.contigs_plasmid_summary.tsv:md5,9320622f9a70dbe40b519b7659971ee2",
+                            "MEGAHIT-group-0.contigs_virus.fna:md5,382caf28272d1e263e0a13221314562e",
+                            "MEGAHIT-group-0.contigs_virus_genes.tsv:md5,b8c98e49ded642f7f1f18ed5f14ec617",
+                            "MEGAHIT-group-0.contigs_virus_proteins.faa:md5,8bf26b6fa9ebf1c3931a7b92311f4e35",
+                            "MEGAHIT-group-0.contigs_virus_summary.tsv:md5,95db91fff85f23a19e64ef7ea0f8d371"
+                        ]
+                    ]
+                ]
+            ]
+        ],
+        "timestamp": "2023-12-12T21:17:39.225353455"
+    }
+}
