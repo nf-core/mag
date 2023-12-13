@@ -1,112 +1,105 @@
 name: nf-core CI
-# This workflow runs the pipeline with the minimal test dataset to check that it completes without any syntax errors
 on:
-  push:
-    branches:
-      - dev
   pull_request:
   release:
     types: [published]
+  merge_group:
+    types:
+      - checks_requested
+    branches:
+      - master
+      - dev
 
 env:
   NXF_ANSI_LOG: false
+  NFTEST_VER: "0.8.1"
 
 concurrency:
   group: "${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}"
   cancel-in-progress: true
 
 jobs:
+  changes:
+    name: Check for changes
+    runs-on: ubuntu-latest
+    outputs:
+      # Expose matched filters as job 'tags' output variable
+      tags: ${{ steps.filter.outputs.changes }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Combine all tags.yml files
+        id: get_username
+        run: find . -name "tags.yml" -not -path "./.github/*" -exec cat {} + > .github/tags.yml
+      - name: debug
+        run: cat .github/tags.yml
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: ".github/tags.yml"
+
+  define_nxf_versions:
+    name: Choose nextflow versions to test against depending on target branch
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.nxf_versions.outputs.matrix }}
+    steps:
+      - id: nxf_versions
+        run: |
+          if [[ "${{ github.event_name }}" == "pull_request" && "${{ github.base_ref }}" == "dev" && "${{ matrix.NXF_VER }}" != "latest-everything" ]]; then
+            echo matrix='["latest-everything"]' | tee -a $GITHUB_OUTPUT
+          else
+            echo matrix='["latest-everything", "23.04.0"]' | tee -a $GITHUB_OUTPUT
+          fi
+
   test:
-    name: Run pipeline with test data
-    # Only run on push if this is the nf-core dev branch (merged PRs)
-    if: "${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/mag') }}"
+    name: ${{ matrix.tags }} ${{ matrix.profile }} NF ${{ matrix.NXF_VER }}
+    needs: [changes, define_nxf_versions]
+    if: needs.changes.outputs.tags != '[]'
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        NXF_VER:
-          - "23.04.0"
-          - "latest-everything"
-    steps:
-      - name: Free some space
-        run: |
-          sudo rm -rf "/usr/local/share/boost"
-          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+        NXF_VER: ${{ fromJson(needs.define_nxf_versions.outputs.matrix) }}
+        tags: ["${{ fromJson(needs.changes.outputs.tags) }}"]
+        profile:
+          - "docker"
 
+    steps:
       - name: Check out pipeline code
         uses: actions/checkout@v3
 
       - name: Install Nextflow
         uses: nf-core/setup-nextflow@v1
         with:
-          version: "${{ matrix.NXF_VER }}"
+          version: "23.10.0"
 
-      - name: Run pipeline with test data
+      - name: Cache nf-test installation
+        id: cache-software
+        uses: actions/cache@v3
+        with:
+          path: |
+            /usr/local/bin/nf-test
+            /home/runner/.nf-test/nf-test.jar
+          key: ${{ runner.os }}-${{ env.NFTEST_VER }}-nftest
+
+      - name: Install nf-test
+        if: steps.cache-software.outputs.cache-hit != 'true'
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --outdir ./results
+          wget -qO- https://code.askimed.com/install/nf-test | bash
+          sudo mv nf-test /usr/local/bin/
 
-  profiles:
-    name: Run workflow profile
-    # Only run on push if this is the nf-core dev branch (merged PRs)
-    if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/mag') }}
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        # Run remaining test profiles with minimum nextflow version
-        profile:
-          [
-            test_host_rm,
-            test_hybrid,
-            test_hybrid_host_rm,
-            test_busco_auto,
-            test_ancient_dna,
-            test_adapterremoval,
-            test_binrefinement,
-            test_virus_identification,
-          ]
-    steps:
-      - name: Free some space
+      - name: Run nf-test
         run: |
-          sudo rm -rf "/usr/local/share/boost"
-          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+          nf-test test --tag ${{ matrix.tags }} --profile "nf_test,${{ matrix.profile }}" --junitxml=test.xml
 
-      - name: Check out pipeline code
-        uses: actions/checkout@v2
-
-      - name: Install Nextflow
+      - name: Output log on failure
+        if: failure()
         run: |
-          wget -qO- get.nextflow.io | bash
-          sudo mv nextflow /usr/local/bin/
+          sudo apt install bat > /dev/null
+          batcat --decorations=always --color=always ${{ github.workspace }}/.nf-test/tests/*/meta/nextflow.log
 
-      - name: Run pipeline with ${{ matrix.profile }} test profile
-        run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile ${{ matrix.profile }},docker --outdir ./results
-
-  checkm:
-    name: Run single test to checkm due to database download
-    # Only run on push if this is the nf-core dev branch (merged PRs)
-    if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/mag') }}
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Free some space
-        run: |
-          sudo rm -rf "/usr/local/share/boost"
-          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
-
-      - name: Check out pipeline code
-        uses: actions/checkout@v2
-
-      - name: Install Nextflow
-        run: |
-          wget -qO- get.nextflow.io | bash
-          sudo mv nextflow /usr/local/bin/
-
-      - name: Download and prepare CheckM database
-        run: |
-          mkdir -p databases/checkm
-          wget https://data.ace.uq.edu.au/public/CheckM_databases/checkm_data_2015_01_16.tar.gz -P databases/checkm
-          tar xzvf databases/checkm/checkm_data_2015_01_16.tar.gz -C databases/checkm/
-
-      - name: Run pipeline with ${{ matrix.profile }} test profile
-        run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --outdir ./results --binqc_tool checkm --checkm_db databases/checkm
+      - name: Publish Test Report
+        uses: mikepenz/action-junit-report@v3
+        if: always() # always run even if the previous step fails
+        with:
+          report_paths: test.xml
