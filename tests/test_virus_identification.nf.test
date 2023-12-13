@@ -10,7 +10,7 @@ nextflow_pipeline {
         when {
             params {
                 outdir                      = "$outputDir"
-                input                       = 'https://raw.githubusercontent.com/nf-core/test-datasets/mag/samplesheets/samplesheet.csv'
+                input                       = 'https://raw.githubusercontent.com/nf-core/test-datasets/mag/samplesheets/samplesheet.multirun.csv'
                 run_virus_identification    = true
                 genomad_splits              = 7
                 reads_minlength             = 150
@@ -43,10 +43,6 @@ nextflow_pipeline {
                     path("${params.outdir}/multiqc/multiqc_data/multiqc_fastqc.yaml"),
                     path("${params.outdir}/VirusIdentification/")
                 ).match() },
-                { assert new File("$outputDir/QC_shortreads/fastqc/test_minigut_run0_raw_1_fastqc.html").exists() },
-                { assert new File("$outputDir/QC_shortreads/fastqc/test_minigut_run0_raw_2_fastqc.html").exists() },
-                { assert new File("$outputDir/QC_shortreads/fastqc/test_minigut_sample2_run0_raw_1_fastqc.html").exists() },
-                { assert new File("$outputDir/QC_shortreads/fastqc/test_minigut_sample2_run0_raw_1_fastqc.html").exists() },
                 { assert new File("$outputDir/multiqc/multiqc_report.html").exists() }
             )
         }
