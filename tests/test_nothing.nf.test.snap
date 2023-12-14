@@ -1,8 +1,0 @@
-{
-    "Parameters: test_nothing": {
-        "content": [
-            "multiqc_fastqc.yaml:md5,2ef2c5154a509b13d9bcfe8cc879d71b"
-        ],
-        "timestamp": "2023-12-12T19:28:46.793245086"
-    }
-}

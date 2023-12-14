@@ -1,0 +1,163 @@
+{
+    "Parameters: clip_tool = 'adapterremoval'": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test_minigut",
+                            "group": "0",
+                            "single_end": false
+                        },
+                        [
+                            "test_minigut_1.merged.fastq.gz:md5,3ba44a474c09f2bc8770299fc6d327fb",
+                            "test_minigut_2.merged.fastq.gz:md5,587c61c5f7bf3f0377f152ce9835bb88"
+                        ]
+                    ],
+                    [
+                        {
+                            "id": "test_minigut_sample2",
+                            "group": "0",
+                            "single_end": false
+                        },
+                        [
+                            "test_minigut_sample2_run0_ar2.pair1.truncated.fastq.gz:md5,6ec5c5d6a273c2145096cd8a1488e159",
+                            "test_minigut_sample2_run0_ar2.pair2.truncated.fastq.gz:md5,2c037d5d633998bf4b7006d30dc95610"
+                        ]
+                    ]
+                ],
+                "1": [
+                    
+                ],
+                "10": [
+                    
+                ],
+                "11": [
+                    
+                ],
+                "12": [
+                    
+                ],
+                "13": [
+                    
+                ],
+                "14": [
+                    
+                ],
+                "15": [
+                    
+                ],
+                "16": [
+                    "versions.yml:md5,3222fd64337a6c070682b63fc5e0cb3c",
+                    "versions.yml:md5,9e5858bca5fb800545dc5c11f8503cc4",
+                    "versions.yml:md5,9e5858bca5fb800545dc5c11f8503cc4",
+                    "versions.yml:md5,9e5858bca5fb800545dc5c11f8503cc4",
+                    "versions.yml:md5,e9b46b38f7df41da088ff41127d3752a",
+                    "versions.yml:md5,eca9f4c6e135848b1247916040e52b99"
+                ],
+                "2": [
+                    
+                ],
+                "3": [
+                    
+                ],
+                "4": [
+                    
+                ],
+                "5": [
+                    
+                ],
+                "6": [
+                    
+                ],
+                "7": [
+                    
+                ],
+                "8": [
+                    
+                ],
+                "9": [
+                    
+                ],
+                "assemblies": [
+                    
+                ],
+                "bins": [
+                    
+                ],
+                "busco": [
+                    
+                ],
+                "cat": [
+                    
+                ],
+                "checkm": [
+                    
+                ],
+                "genomad": [
+                    
+                ],
+                "gtdbtk": [
+                    
+                ],
+                "gunc": [
+                    
+                ],
+                "metaeuk": [
+                    
+                ],
+                "prodigal": [
+                    
+                ],
+                "prokka": [
+                    
+                ],
+                "quast_bins": [
+                    
+                ],
+                "refined_bins": [
+                    
+                ],
+                "refined_unbins": [
+                    
+                ],
+                "short_reads": [
+                    [
+                        {
+                            "id": "test_minigut",
+                            "group": "0",
+                            "single_end": false
+                        },
+                        [
+                            "test_minigut_1.merged.fastq.gz:md5,3ba44a474c09f2bc8770299fc6d327fb",
+                            "test_minigut_2.merged.fastq.gz:md5,587c61c5f7bf3f0377f152ce9835bb88"
+                        ]
+                    ],
+                    [
+                        {
+                            "id": "test_minigut_sample2",
+                            "group": "0",
+                            "single_end": false
+                        },
+                        [
+                            "test_minigut_sample2_run0_ar2.pair1.truncated.fastq.gz:md5,6ec5c5d6a273c2145096cd8a1488e159",
+                            "test_minigut_sample2_run0_ar2.pair2.truncated.fastq.gz:md5,2c037d5d633998bf4b7006d30dc95610"
+                        ]
+                    ]
+                ],
+                "unbins": [
+                    
+                ],
+                "versions": [
+                    "versions.yml:md5,3222fd64337a6c070682b63fc5e0cb3c",
+                    "versions.yml:md5,9e5858bca5fb800545dc5c11f8503cc4",
+                    "versions.yml:md5,9e5858bca5fb800545dc5c11f8503cc4",
+                    "versions.yml:md5,9e5858bca5fb800545dc5c11f8503cc4",
+                    "versions.yml:md5,e9b46b38f7df41da088ff41127d3752a",
+                    "versions.yml:md5,eca9f4c6e135848b1247916040e52b99"
+                ]
+            }
+        ],
+        "timestamp": "2023-12-14T11:34:38.395383683"
+    }
+}

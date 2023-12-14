@@ -92,6 +92,7 @@ workflow GTDBTK {
     )
 
     emit:
-    summary     = GTDBTK_SUMMARY.out.summary
-    versions    = GTDBTK_CLASSIFYWF.out.versions
+    gtdbtk_summaries    = GTDBTK_CLASSIFYWF.out.summary
+    summary             = GTDBTK_SUMMARY.out.summary
+    versions            = GTDBTK_CLASSIFYWF.out.versions
 }

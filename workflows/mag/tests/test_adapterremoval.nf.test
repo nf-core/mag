@@ -1,0 +1,21 @@
+nextflow_workflow {
+
+    name "Test workflow: MAG"
+    script "../main.nf"
+    workflow "MAG"
+    tag "workflows"
+    tag "mag"
+    tag "mag_test_adapterremoval"
+
+    test("Parameters: clip_tool = 'adapterremoval'") {
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out,
+                ).match()}
+            )
+        }
+    }
+}

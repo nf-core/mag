@@ -1,0 +1,155 @@
+{
+    "Parameters: test_nothing": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test_minigut",
+                            "group": "0",
+                            "single_end": false
+                        },
+                        [
+                            "test_minigut_1.merged.fastq.gz:md5,b7eaf06531000c4d32a48d050c2df34f",
+                            "test_minigut_2.merged.fastq.gz:md5,a1629ec2f2931892a2a0c43f0f677056"
+                        ]
+                    ],
+                    [
+                        {
+                            "id": "test_minigut_sample2",
+                            "group": "0",
+                            "single_end": false
+                        },
+                        [
+                            "/nf-core/test-datasets/raw/mag/test_data/test_minigut_sample2_R1.fastq.gz",
+                            "/nf-core/test-datasets/raw/mag/test_data/test_minigut_sample2_R2.fastq.gz"
+                        ]
+                    ]
+                ],
+                "1": [
+                    
+                ],
+                "10": [
+                    
+                ],
+                "11": [
+                    
+                ],
+                "12": [
+                    
+                ],
+                "13": [
+                    
+                ],
+                "14": [
+                    
+                ],
+                "15": [
+                    
+                ],
+                "16": [
+                    "versions.yml:md5,3222fd64337a6c070682b63fc5e0cb3c",
+                    "versions.yml:md5,e9b46b38f7df41da088ff41127d3752a"
+                ],
+                "2": [
+                    
+                ],
+                "3": [
+                    
+                ],
+                "4": [
+                    
+                ],
+                "5": [
+                    
+                ],
+                "6": [
+                    
+                ],
+                "7": [
+                    
+                ],
+                "8": [
+                    
+                ],
+                "9": [
+                    
+                ],
+                "assemblies": [
+                    
+                ],
+                "bins": [
+                    
+                ],
+                "busco": [
+                    
+                ],
+                "cat": [
+                    
+                ],
+                "checkm": [
+                    
+                ],
+                "genomad": [
+                    
+                ],
+                "gtdbtk": [
+                    
+                ],
+                "gunc": [
+                    
+                ],
+                "metaeuk": [
+                    
+                ],
+                "prodigal": [
+                    
+                ],
+                "prokka": [
+                    
+                ],
+                "quast_bins": [
+                    
+                ],
+                "refined_bins": [
+                    
+                ],
+                "refined_unbins": [
+                    
+                ],
+                "short_reads": [
+                    [
+                        {
+                            "id": "test_minigut",
+                            "group": "0",
+                            "single_end": false
+                        },
+                        [
+                            "test_minigut_1.merged.fastq.gz:md5,b7eaf06531000c4d32a48d050c2df34f",
+                            "test_minigut_2.merged.fastq.gz:md5,a1629ec2f2931892a2a0c43f0f677056"
+                        ]
+                    ],
+                    [
+                        {
+                            "id": "test_minigut_sample2",
+                            "group": "0",
+                            "single_end": false
+                        },
+                        [
+                            "/nf-core/test-datasets/raw/mag/test_data/test_minigut_sample2_R1.fastq.gz",
+                            "/nf-core/test-datasets/raw/mag/test_data/test_minigut_sample2_R2.fastq.gz"
+                        ]
+                    ]
+                ],
+                "unbins": [
+                    
+                ],
+                "versions": [
+                    "versions.yml:md5,3222fd64337a6c070682b63fc5e0cb3c",
+                    "versions.yml:md5,e9b46b38f7df41da088ff41127d3752a"
+                ]
+            }
+        ],
+        "timestamp": "2023-12-14T11:38:30.168015353"
+    }
+}

@@ -1,0 +1,15 @@
+test_adapterremoval:
+  - ./**
+test_bbnorm:
+  - ./**
+test_host_rm:
+  - ./**
+test_hybrid_host_rm:
+  - ./**
+test_hybrid:
+  - ./**
+test_nothing:
+  - ./**
+test_virus_identification:
+  - ./**
+

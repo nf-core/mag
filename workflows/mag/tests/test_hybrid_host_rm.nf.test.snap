@@ -1,0 +1,161 @@
+{
+    "Parameters: long reads & host removal included": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "minigut",
+                            "group": "0",
+                            "single_end": false
+                        },
+                        [
+                            "minigut_run0_host_removed.unmapped_1.fastq.gz:md5,48ab5cdbf8567cf6023bd304fcf896a9",
+                            "minigut_run0_host_removed.unmapped_2.fastq.gz:md5,b4246225aa4a15496991ac7c6b58563f"
+                        ]
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "minigut",
+                            "group": "0",
+                            "single_end": false,
+                            "assembler": "SPAdesHybrid"
+                        },
+                        "SPAdesHybrid-minigut_scaffolds.fasta:md5,d3c5e27f011a08daea597f9d2650436d"
+                    ]
+                ],
+                "10": [
+                    
+                ],
+                "11": [
+                    
+                ],
+                "12": [
+                    
+                ],
+                "13": [
+                    
+                ],
+                "14": [
+                    
+                ],
+                "15": [
+                    
+                ],
+                "16": [
+                    "versions.yml:md5,1bd6bbec156534880e04e0320dbce063",
+                    "versions.yml:md5,59050473c9f749b269ad7079fd4693df",
+                    "versions.yml:md5,5de8983775d3ef64cdbec6f382852619",
+                    "versions.yml:md5,9e5858bca5fb800545dc5c11f8503cc4",
+                    "versions.yml:md5,b94aaba1559ac9deaf7339181c398405",
+                    "versions.yml:md5,cc143ba1b806a335a9963a434c887eba",
+                    "versions.yml:md5,d13508b80e270ac6f1543725b431a682",
+                    "versions.yml:md5,e9b46b38f7df41da088ff41127d3752a"
+                ],
+                "2": [
+                    
+                ],
+                "3": [
+                    
+                ],
+                "4": [
+                    
+                ],
+                "5": [
+                    
+                ],
+                "6": [
+                    
+                ],
+                "7": [
+                    
+                ],
+                "8": [
+                    
+                ],
+                "9": [
+                    
+                ],
+                "assemblies": [
+                    [
+                        {
+                            "id": "minigut",
+                            "group": "0",
+                            "single_end": false,
+                            "assembler": "SPAdesHybrid"
+                        },
+                        "SPAdesHybrid-minigut_scaffolds.fasta:md5,d3c5e27f011a08daea597f9d2650436d"
+                    ]
+                ],
+                "bins": [
+                    
+                ],
+                "busco": [
+                    
+                ],
+                "cat": [
+                    
+                ],
+                "checkm": [
+                    
+                ],
+                "genomad": [
+                    
+                ],
+                "gtdbtk": [
+                    
+                ],
+                "gunc": [
+                    
+                ],
+                "metaeuk": [
+                    
+                ],
+                "prodigal": [
+                    
+                ],
+                "prokka": [
+                    
+                ],
+                "quast_bins": [
+                    
+                ],
+                "refined_bins": [
+                    
+                ],
+                "refined_unbins": [
+                    
+                ],
+                "short_reads": [
+                    [
+                        {
+                            "id": "minigut",
+                            "group": "0",
+                            "single_end": false
+                        },
+                        [
+                            "minigut_run0_host_removed.unmapped_1.fastq.gz:md5,48ab5cdbf8567cf6023bd304fcf896a9",
+                            "minigut_run0_host_removed.unmapped_2.fastq.gz:md5,b4246225aa4a15496991ac7c6b58563f"
+                        ]
+                    ]
+                ],
+                "unbins": [
+                    
+                ],
+                "versions": [
+                    "versions.yml:md5,1bd6bbec156534880e04e0320dbce063",
+                    "versions.yml:md5,59050473c9f749b269ad7079fd4693df",
+                    "versions.yml:md5,5de8983775d3ef64cdbec6f382852619",
+                    "versions.yml:md5,9e5858bca5fb800545dc5c11f8503cc4",
+                    "versions.yml:md5,b94aaba1559ac9deaf7339181c398405",
+                    "versions.yml:md5,cc143ba1b806a335a9963a434c887eba",
+                    "versions.yml:md5,d13508b80e270ac6f1543725b431a682",
+                    "versions.yml:md5,e9b46b38f7df41da088ff41127d3752a"
+                ]
+            }
+        ],
+        "timestamp": "2023-12-14T14:52:24.237611909"
+    }
+}
