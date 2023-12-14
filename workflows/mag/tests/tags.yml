@@ -12,4 +12,3 @@ test_nothing:
   - ./**
 test_virus_identification:
   - ./**
-
