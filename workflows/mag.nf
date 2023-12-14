@@ -86,19 +86,19 @@ include { COMBINE_TSV as COMBINE_SUMMARY_TSV                  } from '../modules
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { INPUT_CHECK                     } from '../subworkflows/local/input_check'
-include { BINNING_PREPARATION             } from '../subworkflows/local/binning_preparation'
-include { BINNING                         } from '../subworkflows/local/binning'
-include { BINNING_REFINEMENT              } from '../subworkflows/local/binning_refinement'
-include { BUSCO_QC                        } from '../subworkflows/local/busco_qc'
-include { VIRUS_IDENTIFICATION            } from '../subworkflows/local/virus_identification'
-include { CHECKM_QC                       } from '../subworkflows/local/checkm_qc'
-include { GUNC_QC                         } from '../subworkflows/local/gunc_qc'
-include { GTDBTK                          } from '../subworkflows/local/gtdbtk'
-include { ANCIENT_DNA_ASSEMBLY_VALIDATION } from '../subworkflows/local/ancient_dna'
-include { DOMAIN_CLASSIFICATION           } from '../subworkflows/local/domain_classification'
-include { DEPTHS                          } from '../subworkflows/local/depths'
-include { SAMPLESHEET_CREATION            } from '../subworkflows/local/samplesheet_creation'
+include { INPUT_CHECK                       } from '../subworkflows/local/input_check'
+include { BINNING_PREPARATION               } from '../subworkflows/local/binning_preparation'
+include { BINNING                           } from '../subworkflows/local/binning'
+include { BINNING_REFINEMENT                } from '../subworkflows/local/binning_refinement'
+include { BUSCO_QC                          } from '../subworkflows/local/busco_qc'
+include { VIRUS_IDENTIFICATION              } from '../subworkflows/local/virus_identification'
+include { CHECKM_QC                         } from '../subworkflows/local/checkm_qc'
+include { GUNC_QC                           } from '../subworkflows/local/gunc_qc'
+include { GTDBTK                            } from '../subworkflows/local/gtdbtk'
+include { ANCIENT_DNA_ASSEMBLY_VALIDATION   } from '../subworkflows/local/ancient_dna'
+include { DOMAIN_CLASSIFICATION             } from '../subworkflows/local/domain_classification'
+include { DEPTHS                            } from '../subworkflows/local/depths'
+include { CREATE_PHAGEANNOTATOR_SAMPLESHEET } from '../subworkflows/local/create_phageannotator_samplesheet'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1017,9 +1017,9 @@ workflow MAG {
     //
     // SUBWORKFLOW: Auto-create samplesheets for downstream nf-core pipelines
     //
-    if ( params.nf_core_pipeline ) {
-        ch_samplesheet = SAMPLESHEET_CREATION ( ch_short_reads, ch_assemblies ).samplesheet
-        ch_versions = ch_versions.mix( SAMPLESHEET_CREATION.out.versions )
+    if ( params.generate_downstream_samplesheet == 'phageannotator' ) {
+        CREATE_PHAGEANNOTATOR_SAMPLESHEET ( ch_short_reads, ch_assemblies )
+        ch_versions = ch_versions.mix( CREATE_PHAGEANNOTATOR_SAMPLESHEET.out.versions )
     }
 
     CUSTOM_DUMPSOFTWAREVERSIONS (

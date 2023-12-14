@@ -713,7 +713,7 @@ Because of aDNA damage, _de novo_ assemblers sometimes struggle to call a correc
 <summary>Output files</summary>
 
 - `samplesheet/`
-  - `[nf_core_pipeline].csv`: a samplesheet in CSV format that can be directly used as input for the specified nf-core pipeline
+  - `[generate_downstream_samplesheet].csv`: a samplesheet in CSV format that can be directly used as input for the specified nf-core pipeline
 
 </details>
 
