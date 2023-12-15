@@ -1,5 +1,7 @@
 test_adapterremoval:
   - ./**
+test_ancient_dna:
+  - ./**
 test_bbnorm:
   - ./**
 test_host_rm:

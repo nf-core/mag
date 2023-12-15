@@ -1,0 +1,34 @@
+nextflow_workflow {
+
+    name "Test workflow: MAG"
+    script "../main.nf"
+    workflow "MAG"
+    tag "workflows"
+    tag "mag"
+    tag "mag_test_ancient_dna"
+
+    test("Parameters: ancient_dna = true") {
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.
+                    short_reads,
+                    //workflow.out.assemblies,
+                    //workflow.out.prodigal,
+                    //workflow.out.genomad,
+                    //workflow.out.busco,
+                    //workflow.out.checkm,
+                    //workflow.out.gunc,
+                    //workflow.out.quast_bins,
+                    //workflow.out.cat,
+                    //workflow.out.gtdbtk,
+                    //workflow.out.prokka,
+                    //workflow.out.metaeuk,
+                    //workflow.out.versions
+                ).match()}
+            )
+        }
+    }
+}
