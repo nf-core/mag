@@ -225,10 +225,11 @@ if(params.metaeuk_db && !params.skip_metaeuk) {
     ch_binning_results_unbins       = Channel.empty()
     ch_refined_bins                 = Channel.empty()
     ch_refined_unbins               = Channel.empty()
-    ch_busco_summary_specific       = Channel.empty()
+    ch_busco_summary                = Channel.empty()
     ch_checkm_tsv                   = Channel.empty()
     ch_gunc_maxcss_level_tsv        = Channel.empty()
     ch_quast_bin_summaries          = Channel.empty()
+    ch_bin_summaries                = Channel.empty()
     ch_cat_tax_classification_names = Channel.empty()
     ch_gtdbtk_summaries             = Channel.empty()
     ch_prokka_faa                   = Channel.empty()
@@ -881,7 +882,6 @@ workflow MAG {
                 ch_input_bins_for_qc
             )
             ch_busco_summary = BUSCO_QC.out.summary
-            ch_busco_summary_specific = BUSCO_QC.out.summary_specific
             ch_versions = ch_versions.mix(BUSCO_QC.out.versions.first())
             // process information if BUSCO analysis failed for individual bins due to no matching genes
             BUSCO_QC.out
@@ -1000,6 +1000,7 @@ workflow MAG {
                 ch_quast_bins_summary.ifEmpty([]),
                 ch_gtdbtk_summary.ifEmpty([])
             )
+            ch_bin_summaries = BIN_SUMMARY.out.summary
         }
 
         /*
@@ -1120,39 +1121,13 @@ workflow MAG {
 
     emit:
     short_reads         = ch_short_reads
-    // fastqc_raw          = FASTQC_RAW.out.json
-    // adapterremoval_se   = ADAPTERREMOVAL_SE.out.singles_truncated
-    // adapterremoval_pe   = ADAPTERREMOVAL_PE.out.paired_truncated
-    // host_rm             = BOWTIE2_HOST_REMOVAL_ALIGN.out.reads
-    // phix_rm             = BOWTIE2_PHIX_REMOVAL_ALIGN.out.reads
-    // fastqc_trimmed      = FASTQC_TRIMMED.out.json
-    // cat_fastq           = CAT_FASTQ.out.reads
-    // seqtk               = SEQTK_MERGEPE.out.reads
-    // bbmap               = BBMAP_BBNORM.out.fastq
-    // nanoplot_raw        = NANOPLOT_RAW.out.txt
-    // porechop            = PORECHOP.out.reads
-    // nanolyse            = NANOLYSE.out.reads
-    // filtlong            = FILTLONG.out.reads
-    // nanoplot_filtered   = NANOPLOT_FILTERED.out.txt
-    // kraken2             = KRAKEN2.out.report
-    // centrifuge          = CENTRIFUGE.out.report
     assemblies          = ch_assemblies
-    // megahit             = ch_megahit_assemblies
-    // spades              = ch_spades_assemblies
-    // spadeshybrid        = ch_spadeshybrid_assemblies
-    // quast_contigs       = QUAST.out.report
     prodigal		    = ch_prodigal_gene_annotations
     genomad             = ch_genomad_virus_summary
-    bins                = ch_binning_results_bins
-    unbins              = ch_binning_results_unbins
     refined_bins        = ch_refined_bins
     refined_unbins      = ch_refined_unbins
-    busco               = ch_busco_summary_specific
-    checkm              = ch_checkm_tsv
-    gunc                = ch_gunc_maxcss_level_tsv
-    quast_bins          = ch_quast_bin_summaries
+    bin_summary         = ch_bin_summaries
     cat                 = ch_cat_tax_classification_names
-    gtdbtk              = ch_gtdbtk_summaries
     prokka              = ch_prokka_faa
     metaeuk             = ch_metaeuk_easypredict_faa
     versions            = ch_versions

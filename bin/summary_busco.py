@@ -186,6 +186,8 @@ def main(args=None):
     else:
         df_final = df_specific.append(df_failed)
 
+    # sort output file for reproducibility
+    df_final.sort_values(by='GenomeBin', inplace=True)
     df_final.to_csv(args.out, sep="\t", index=False)
 
 

@@ -1,0 +1,189 @@
+{
+    "Parameters: skip_busco = false": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test_minigut",
+                            "group": "0",
+                            "single_end": false
+                        },
+                        [
+                            "test_minigut_run0_fastp_1.fastp.fastq.gz:md5,bac85d89ef44638200c247bc941a66fb",
+                            "test_minigut_run0_fastp_2.fastp.fastq.gz:md5,be6b3eb0d336c333e97d925b0e3a0ff6"
+                        ]
+                    ],
+                    [
+                        {
+                            "id": "test_minigut_sample2",
+                            "group": "0",
+                            "single_end": false
+                        },
+                        [
+                            "test_minigut_sample2_run0_fastp_1.fastp.fastq.gz:md5,25580ab85c8288a6a7a0b2100d93f1d0",
+                            "test_minigut_sample2_run0_fastp_2.fastp.fastq.gz:md5,a91bde6d5c85dd6b47f5bc5cfab65572"
+                        ]
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test_minigut",
+                            "group": "0",
+                            "single_end": false,
+                            "assembler": "MEGAHIT"
+                        },
+                        "MEGAHIT-test_minigut.contigs.fa:md5,c78fa53feb4b35380998bc0c339cdb0e"
+                    ],
+                    [
+                        {
+                            "id": "test_minigut_sample2",
+                            "group": "0",
+                            "single_end": false,
+                            "assembler": "MEGAHIT"
+                        },
+                        "MEGAHIT-test_minigut_sample2.contigs.fa:md5,2c0b7977b39fb2db31ee9b3adf75f8c6"
+                    ]
+                ],
+                "10": [
+                    "versions.yml:md5,0f67b0839fcef0334e0dcaf5568be9e0",
+                    "versions.yml:md5,0f67b0839fcef0334e0dcaf5568be9e0",
+                    "versions.yml:md5,0f67b0839fcef0334e0dcaf5568be9e0",
+                    "versions.yml:md5,15111ae1ae8b8b570a2efddd7c747bd0",
+                    "versions.yml:md5,18eeebfdf8c302c29cbb4abc4325628c",
+                    "versions.yml:md5,2d4f5bd36e073ac683075e4bc52884be",
+                    "versions.yml:md5,3550550b622b6d5f6803ffed9742e08b",
+                    "versions.yml:md5,7017c8959eb098440346ca9a2310c460",
+                    "versions.yml:md5,8187d1683f97b64a582620caba2b175a",
+                    "versions.yml:md5,82c86a3130605a0de153c903b2cfc6d2",
+                    "versions.yml:md5,9e5858bca5fb800545dc5c11f8503cc4",
+                    "versions.yml:md5,9e5858bca5fb800545dc5c11f8503cc4",
+                    "versions.yml:md5,b4ee8f08c1efaac6dee44f113c7a2e0b",
+                    "versions.yml:md5,bb7110425028f7e7abcbf17152405079",
+                    "versions.yml:md5,bb7110425028f7e7abcbf17152405079",
+                    "versions.yml:md5,bb7110425028f7e7abcbf17152405079",
+                    "versions.yml:md5,c384e0cacaa344670dcde728d78a524a",
+                    "versions.yml:md5,cc4a4972327dec07faf1f54ead653715",
+                    "versions.yml:md5,e2ed4d9a5b5d63ae1a6eef0418d976f0",
+                    "versions.yml:md5,e9b46b38f7df41da088ff41127d3752a"
+                ],
+                "2": [
+                    
+                ],
+                "3": [
+                    
+                ],
+                "4": [
+                    
+                ],
+                "5": [
+                    
+                ],
+                "6": [
+                    "bin_summary.tsv:md5,59e4568ef471db7c5d1f1105b3325216"
+                ],
+                "7": [
+                    
+                ],
+                "8": [
+                    
+                ],
+                "9": [
+                    
+                ],
+                "assemblies": [
+                    [
+                        {
+                            "id": "test_minigut",
+                            "group": "0",
+                            "single_end": false,
+                            "assembler": "MEGAHIT"
+                        },
+                        "MEGAHIT-test_minigut.contigs.fa:md5,c78fa53feb4b35380998bc0c339cdb0e"
+                    ],
+                    [
+                        {
+                            "id": "test_minigut_sample2",
+                            "group": "0",
+                            "single_end": false,
+                            "assembler": "MEGAHIT"
+                        },
+                        "MEGAHIT-test_minigut_sample2.contigs.fa:md5,2c0b7977b39fb2db31ee9b3adf75f8c6"
+                    ]
+                ],
+                "bin_summary": [
+                    "bin_summary.tsv:md5,59e4568ef471db7c5d1f1105b3325216"
+                ],
+                "cat": [
+                    
+                ],
+                "genomad": [
+                    
+                ],
+                "metaeuk": [
+                    
+                ],
+                "prodigal": [
+                    
+                ],
+                "prokka": [
+                    
+                ],
+                "refined_bins": [
+                    
+                ],
+                "refined_unbins": [
+                    
+                ],
+                "short_reads": [
+                    [
+                        {
+                            "id": "test_minigut",
+                            "group": "0",
+                            "single_end": false
+                        },
+                        [
+                            "test_minigut_run0_fastp_1.fastp.fastq.gz:md5,bac85d89ef44638200c247bc941a66fb",
+                            "test_minigut_run0_fastp_2.fastp.fastq.gz:md5,be6b3eb0d336c333e97d925b0e3a0ff6"
+                        ]
+                    ],
+                    [
+                        {
+                            "id": "test_minigut_sample2",
+                            "group": "0",
+                            "single_end": false
+                        },
+                        [
+                            "test_minigut_sample2_run0_fastp_1.fastp.fastq.gz:md5,25580ab85c8288a6a7a0b2100d93f1d0",
+                            "test_minigut_sample2_run0_fastp_2.fastp.fastq.gz:md5,a91bde6d5c85dd6b47f5bc5cfab65572"
+                        ]
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,0f67b0839fcef0334e0dcaf5568be9e0",
+                    "versions.yml:md5,0f67b0839fcef0334e0dcaf5568be9e0",
+                    "versions.yml:md5,0f67b0839fcef0334e0dcaf5568be9e0",
+                    "versions.yml:md5,15111ae1ae8b8b570a2efddd7c747bd0",
+                    "versions.yml:md5,18eeebfdf8c302c29cbb4abc4325628c",
+                    "versions.yml:md5,2d4f5bd36e073ac683075e4bc52884be",
+                    "versions.yml:md5,3550550b622b6d5f6803ffed9742e08b",
+                    "versions.yml:md5,7017c8959eb098440346ca9a2310c460",
+                    "versions.yml:md5,8187d1683f97b64a582620caba2b175a",
+                    "versions.yml:md5,82c86a3130605a0de153c903b2cfc6d2",
+                    "versions.yml:md5,9e5858bca5fb800545dc5c11f8503cc4",
+                    "versions.yml:md5,9e5858bca5fb800545dc5c11f8503cc4",
+                    "versions.yml:md5,b4ee8f08c1efaac6dee44f113c7a2e0b",
+                    "versions.yml:md5,bb7110425028f7e7abcbf17152405079",
+                    "versions.yml:md5,bb7110425028f7e7abcbf17152405079",
+                    "versions.yml:md5,bb7110425028f7e7abcbf17152405079",
+                    "versions.yml:md5,c384e0cacaa344670dcde728d78a524a",
+                    "versions.yml:md5,cc4a4972327dec07faf1f54ead653715",
+                    "versions.yml:md5,e2ed4d9a5b5d63ae1a6eef0418d976f0",
+                    "versions.yml:md5,e9b46b38f7df41da088ff41127d3752a"
+                ]
+            }
+        ],
+        "timestamp": "2024-01-02T15:06:33.650718766"
+    }
+}

@@ -27,24 +27,6 @@
                     ]
                 ],
                 "10": [
-                    
-                ],
-                "11": [
-                    
-                ],
-                "12": [
-                    
-                ],
-                "13": [
-                    
-                ],
-                "14": [
-                    
-                ],
-                "15": [
-                    
-                ],
-                "16": [
                     "versions.yml:md5,1bd6bbec156534880e04e0320dbce063",
                     "versions.yml:md5,59050473c9f749b269ad7079fd4693df",
                     "versions.yml:md5,5de8983775d3ef64cdbec6f382852619",
@@ -89,25 +71,13 @@
                         "SPAdesHybrid-minigut_scaffolds.fasta:md5,d3c5e27f011a08daea597f9d2650436d"
                     ]
                 ],
-                "bins": [
-                    
-                ],
-                "busco": [
+                "bin_summary": [
                     
                 ],
                 "cat": [
                     
                 ],
-                "checkm": [
-                    
-                ],
                 "genomad": [
-                    
-                ],
-                "gtdbtk": [
-                    
-                ],
-                "gunc": [
                     
                 ],
                 "metaeuk": [
@@ -117,9 +87,6 @@
                     
                 ],
                 "prokka": [
-                    
-                ],
-                "quast_bins": [
                     
                 ],
                 "refined_bins": [
@@ -141,9 +108,6 @@
                         ]
                     ]
                 ],
-                "unbins": [
-                    
-                ],
                 "versions": [
                     "versions.yml:md5,1bd6bbec156534880e04e0320dbce063",
                     "versions.yml:md5,59050473c9f749b269ad7079fd4693df",
@@ -156,6 +120,6 @@
                 ]
             }
         ],
-        "timestamp": "2023-12-14T14:52:24.237611909"
+        "timestamp": "2024-01-02T15:43:00.831382408"
     }
 }

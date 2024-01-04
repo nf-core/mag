@@ -30,24 +30,6 @@
                     
                 ],
                 "10": [
-                    
-                ],
-                "11": [
-                    
-                ],
-                "12": [
-                    
-                ],
-                "13": [
-                    
-                ],
-                "14": [
-                    
-                ],
-                "15": [
-                    
-                ],
-                "16": [
                     "versions.yml:md5,59050473c9f749b269ad7079fd4693df",
                     "versions.yml:md5,9e5858bca5fb800545dc5c11f8503cc4",
                     "versions.yml:md5,9e5858bca5fb800545dc5c11f8503cc4",
@@ -80,25 +62,13 @@
                 "assemblies": [
                     
                 ],
-                "bins": [
-                    
-                ],
-                "busco": [
+                "bin_summary": [
                     
                 ],
                 "cat": [
                     
                 ],
-                "checkm": [
-                    
-                ],
                 "genomad": [
-                    
-                ],
-                "gtdbtk": [
-                    
-                ],
-                "gunc": [
                     
                 ],
                 "metaeuk": [
@@ -108,9 +78,6 @@
                     
                 ],
                 "prokka": [
-                    
-                ],
-                "quast_bins": [
                     
                 ],
                 "refined_bins": [
@@ -143,9 +110,6 @@
                         ]
                     ]
                 ],
-                "unbins": [
-                    
-                ],
                 "versions": [
                     "versions.yml:md5,59050473c9f749b269ad7079fd4693df",
                     "versions.yml:md5,9e5858bca5fb800545dc5c11f8503cc4",
@@ -154,6 +118,6 @@
                 ]
             }
         ],
-        "timestamp": "2023-12-14T14:23:51.5082671"
+        "timestamp": "2024-01-02T15:33:59.196829811"
     }
 }

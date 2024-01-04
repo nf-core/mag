@@ -1,0 +1,543 @@
+{
+    "Default paramters": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test_minigut",
+                            "group": "0",
+                            "single_end": false
+                        },
+                        [
+                            "test_minigut_1.merged.fastq.gz:md5,fe81462f19e6acc0bbcec55528be7ad2",
+                            "test_minigut_2.merged.fastq.gz:md5,88ebc2ac01082507f7be1761049e5eff"
+                        ]
+                    ],
+                    [
+                        {
+                            "id": "test_minigut_sample2",
+                            "group": "0",
+                            "single_end": false
+                        },
+                        [
+                            "test_minigut_sample2_run0_phix_removed.unmapped_1.fastq.gz:md5,25580ab85c8288a6a7a0b2100d93f1d0",
+                            "test_minigut_sample2_run0_phix_removed.unmapped_2.fastq.gz:md5,a91bde6d5c85dd6b47f5bc5cfab65572"
+                        ]
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test_minigut",
+                            "group": "0",
+                            "single_end": false,
+                            "assembler": "MEGAHIT"
+                        },
+                        "MEGAHIT-test_minigut.contigs.fa:md5,f35393cdbcb64bdc7ae9db78a5601229"
+                    ],
+                    [
+                        {
+                            "id": "test_minigut",
+                            "group": "0",
+                            "single_end": false,
+                            "assembler": "SPAdes"
+                        },
+                        "SPAdes-test_minigut_scaffolds.fasta:md5,8bd449b393a7d3937ff74a24ce39cfc1"
+                    ],
+                    [
+                        {
+                            "id": "test_minigut_sample2",
+                            "group": "0",
+                            "single_end": false,
+                            "assembler": "MEGAHIT"
+                        },
+                        "MEGAHIT-test_minigut_sample2.contigs.fa:md5,2c0b7977b39fb2db31ee9b3adf75f8c6"
+                    ],
+                    [
+                        {
+                            "id": "test_minigut_sample2",
+                            "group": "0",
+                            "single_end": false,
+                            "assembler": "SPAdes"
+                        },
+                        "SPAdes-test_minigut_sample2_scaffolds.fasta:md5,bf8ebad421409a0dee62a7b14acfca88"
+                    ]
+                ],
+                "10": [
+                    "versions.yml:md5,0f67b0839fcef0334e0dcaf5568be9e0",
+                    "versions.yml:md5,0f67b0839fcef0334e0dcaf5568be9e0",
+                    "versions.yml:md5,0f67b0839fcef0334e0dcaf5568be9e0",
+                    "versions.yml:md5,0f67b0839fcef0334e0dcaf5568be9e0",
+                    "versions.yml:md5,0f67b0839fcef0334e0dcaf5568be9e0",
+                    "versions.yml:md5,15111ae1ae8b8b570a2efddd7c747bd0",
+                    "versions.yml:md5,18eeebfdf8c302c29cbb4abc4325628c",
+                    "versions.yml:md5,200880072147033d455fede5cf4499dc",
+                    "versions.yml:md5,2acb240e473bc70de2e0bb8a392748ac",
+                    "versions.yml:md5,2d4f5bd36e073ac683075e4bc52884be",
+                    "versions.yml:md5,2d4f5bd36e073ac683075e4bc52884be",
+                    "versions.yml:md5,2d4f5bd36e073ac683075e4bc52884be",
+                    "versions.yml:md5,3222fd64337a6c070682b63fc5e0cb3c",
+                    "versions.yml:md5,3550550b622b6d5f6803ffed9742e08b",
+                    "versions.yml:md5,368d757df0f57b49bce09965641cc71a",
+                    "versions.yml:md5,519a472d661281a99e0335305cdd1d85",
+                    "versions.yml:md5,59e59108b091ee58d131ac74e9bfac43",
+                    "versions.yml:md5,5cf45e79d026b3593199fa035f2d72ec",
+                    "versions.yml:md5,7017c8959eb098440346ca9a2310c460",
+                    "versions.yml:md5,7067399ef1687d4d1ba0aab93dc67754",
+                    "versions.yml:md5,8187d1683f97b64a582620caba2b175a",
+                    "versions.yml:md5,82c86a3130605a0de153c903b2cfc6d2",
+                    "versions.yml:md5,9e5858bca5fb800545dc5c11f8503cc4",
+                    "versions.yml:md5,9e5858bca5fb800545dc5c11f8503cc4",
+                    "versions.yml:md5,9e5858bca5fb800545dc5c11f8503cc4",
+                    "versions.yml:md5,b4ee8f08c1efaac6dee44f113c7a2e0b",
+                    "versions.yml:md5,bb7110425028f7e7abcbf17152405079",
+                    "versions.yml:md5,bb7110425028f7e7abcbf17152405079",
+                    "versions.yml:md5,bb7110425028f7e7abcbf17152405079",
+                    "versions.yml:md5,bb7110425028f7e7abcbf17152405079",
+                    "versions.yml:md5,bb7110425028f7e7abcbf17152405079",
+                    "versions.yml:md5,bb7110425028f7e7abcbf17152405079",
+                    "versions.yml:md5,bb7110425028f7e7abcbf17152405079",
+                    "versions.yml:md5,c384e0cacaa344670dcde728d78a524a",
+                    "versions.yml:md5,e2ed4d9a5b5d63ae1a6eef0418d976f0",
+                    "versions.yml:md5,e9b46b38f7df41da088ff41127d3752a",
+                    "versions.yml:md5,ea3029fd33017b2f39de14bce337c246"
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test_minigut",
+                            "group": "0",
+                            "single_end": false,
+                            "assembler": "MEGAHIT"
+                        },
+                        "test_minigut.gff.gz:md5,d90d8730f41d31fdecf7571555b598fe"
+                    ],
+                    [
+                        {
+                            "id": "test_minigut",
+                            "group": "0",
+                            "single_end": false,
+                            "assembler": "SPAdes"
+                        },
+                        "test_minigut.gff.gz:md5,80e8726ecc2d146187cfa2aa4a748d84"
+                    ],
+                    [
+                        {
+                            "id": "test_minigut_sample2",
+                            "group": "0",
+                            "single_end": false,
+                            "assembler": "MEGAHIT"
+                        },
+                        "test_minigut_sample2.gff.gz:md5,3ee13f148386668e88c18a4cd6a14ad3"
+                    ],
+                    [
+                        {
+                            "id": "test_minigut_sample2",
+                            "group": "0",
+                            "single_end": false,
+                            "assembler": "SPAdes"
+                        },
+                        "test_minigut_sample2.gff.gz:md5,1e099a6a3def0c73010d7a1e138c8047"
+                    ]
+                ],
+                "3": [
+                    
+                ],
+                "4": [
+                    
+                ],
+                "5": [
+                    
+                ],
+                "6": [
+                    "bin_summary.tsv:md5,cb825146f68ff4d1722fc7064ae9017b"
+                ],
+                "7": [
+                    
+                ],
+                "8": [
+                    [
+                        {
+                            "id": "MEGAHIT-MaxBin2-test_minigut.001",
+                            "group": "0",
+                            "single_end": false,
+                            "assembler": "MEGAHIT",
+                            "binner": "MaxBin2",
+                            "domain": "unclassified",
+                            "refinement": "unrefined"
+                        },
+                        "MEGAHIT-MaxBin2-test_minigut.001.faa:md5,eaccd450eed58eae731384315670ca58"
+                    ],
+                    [
+                        {
+                            "id": "MEGAHIT-MaxBin2-test_minigut.002",
+                            "group": "0",
+                            "single_end": false,
+                            "assembler": "MEGAHIT",
+                            "binner": "MaxBin2",
+                            "domain": "unclassified",
+                            "refinement": "unrefined"
+                        },
+                        "MEGAHIT-MaxBin2-test_minigut.002.faa:md5,78099bcfdbc895f9a9db06cd15f5edab"
+                    ],
+                    [
+                        {
+                            "id": "MEGAHIT-MetaBAT2-test_minigut.1",
+                            "group": "0",
+                            "single_end": false,
+                            "assembler": "MEGAHIT",
+                            "binner": "MetaBAT2",
+                            "domain": "unclassified",
+                            "refinement": "unrefined"
+                        },
+                        "MEGAHIT-MetaBAT2-test_minigut.1.faa:md5,b9bd97482ed409c39f8685a9bc898f01"
+                    ],
+                    [
+                        {
+                            "id": "MEGAHIT-MetaBAT2-test_minigut.2",
+                            "group": "0",
+                            "single_end": false,
+                            "assembler": "MEGAHIT",
+                            "binner": "MetaBAT2",
+                            "domain": "unclassified",
+                            "refinement": "unrefined"
+                        },
+                        "MEGAHIT-MetaBAT2-test_minigut.2.faa:md5,b3c4338146bcc7fb36a8c94d92922f5e"
+                    ],
+                    [
+                        {
+                            "id": "SPAdes-MaxBin2-test_minigut.001",
+                            "group": "0",
+                            "single_end": false,
+                            "assembler": "SPAdes",
+                            "binner": "MaxBin2",
+                            "domain": "unclassified",
+                            "refinement": "unrefined"
+                        },
+                        "SPAdes-MaxBin2-test_minigut.001.faa:md5,7e773008946a8eeb529cabc153d197b5"
+                    ],
+                    [
+                        {
+                            "id": "SPAdes-MaxBin2-test_minigut.002",
+                            "group": "0",
+                            "single_end": false,
+                            "assembler": "SPAdes",
+                            "binner": "MaxBin2",
+                            "domain": "unclassified",
+                            "refinement": "unrefined"
+                        },
+                        "SPAdes-MaxBin2-test_minigut.002.faa:md5,846a091d4f412975bcd66c5ef0ed49d9"
+                    ],
+                    [
+                        {
+                            "id": "SPAdes-MaxBin2-test_minigut_sample2.001",
+                            "group": "0",
+                            "single_end": false,
+                            "assembler": "SPAdes",
+                            "binner": "MaxBin2",
+                            "domain": "unclassified",
+                            "refinement": "unrefined"
+                        },
+                        "SPAdes-MaxBin2-test_minigut_sample2.001.faa:md5,e33d7a55af8b070646de60f62d407481"
+                    ],
+                    [
+                        {
+                            "id": "SPAdes-MetaBAT2-test_minigut.1",
+                            "group": "0",
+                            "single_end": false,
+                            "assembler": "SPAdes",
+                            "binner": "MetaBAT2",
+                            "domain": "unclassified",
+                            "refinement": "unrefined"
+                        },
+                        "SPAdes-MetaBAT2-test_minigut.1.faa:md5,2879b7a33cca4024e3c518b2fa4bc063"
+                    ],
+                    [
+                        {
+                            "id": "SPAdes-MetaBAT2-test_minigut.2",
+                            "group": "0",
+                            "single_end": false,
+                            "assembler": "SPAdes",
+                            "binner": "MetaBAT2",
+                            "domain": "unclassified",
+                            "refinement": "unrefined"
+                        },
+                        "SPAdes-MetaBAT2-test_minigut.2.faa:md5,1cc11d484e49ff51111b0e0bf7a2349b"
+                    ]
+                ],
+                "9": [
+                    
+                ],
+                "assemblies": [
+                    [
+                        {
+                            "id": "test_minigut",
+                            "group": "0",
+                            "single_end": false,
+                            "assembler": "MEGAHIT"
+                        },
+                        "MEGAHIT-test_minigut.contigs.fa:md5,f35393cdbcb64bdc7ae9db78a5601229"
+                    ],
+                    [
+                        {
+                            "id": "test_minigut",
+                            "group": "0",
+                            "single_end": false,
+                            "assembler": "SPAdes"
+                        },
+                        "SPAdes-test_minigut_scaffolds.fasta:md5,8bd449b393a7d3937ff74a24ce39cfc1"
+                    ],
+                    [
+                        {
+                            "id": "test_minigut_sample2",
+                            "group": "0",
+                            "single_end": false,
+                            "assembler": "MEGAHIT"
+                        },
+                        "MEGAHIT-test_minigut_sample2.contigs.fa:md5,2c0b7977b39fb2db31ee9b3adf75f8c6"
+                    ],
+                    [
+                        {
+                            "id": "test_minigut_sample2",
+                            "group": "0",
+                            "single_end": false,
+                            "assembler": "SPAdes"
+                        },
+                        "SPAdes-test_minigut_sample2_scaffolds.fasta:md5,bf8ebad421409a0dee62a7b14acfca88"
+                    ]
+                ],
+                "bin_summary": [
+                    "bin_summary.tsv:md5,cb825146f68ff4d1722fc7064ae9017b"
+                ],
+                "cat": [
+                    
+                ],
+                "genomad": [
+                    
+                ],
+                "metaeuk": [
+                    
+                ],
+                "prodigal": [
+                    [
+                        {
+                            "id": "test_minigut",
+                            "group": "0",
+                            "single_end": false,
+                            "assembler": "MEGAHIT"
+                        },
+                        "test_minigut.gff.gz:md5,d90d8730f41d31fdecf7571555b598fe"
+                    ],
+                    [
+                        {
+                            "id": "test_minigut",
+                            "group": "0",
+                            "single_end": false,
+                            "assembler": "SPAdes"
+                        },
+                        "test_minigut.gff.gz:md5,80e8726ecc2d146187cfa2aa4a748d84"
+                    ],
+                    [
+                        {
+                            "id": "test_minigut_sample2",
+                            "group": "0",
+                            "single_end": false,
+                            "assembler": "MEGAHIT"
+                        },
+                        "test_minigut_sample2.gff.gz:md5,3ee13f148386668e88c18a4cd6a14ad3"
+                    ],
+                    [
+                        {
+                            "id": "test_minigut_sample2",
+                            "group": "0",
+                            "single_end": false,
+                            "assembler": "SPAdes"
+                        },
+                        "test_minigut_sample2.gff.gz:md5,1e099a6a3def0c73010d7a1e138c8047"
+                    ]
+                ],
+                "prokka": [
+                    [
+                        {
+                            "id": "MEGAHIT-MaxBin2-test_minigut.001",
+                            "group": "0",
+                            "single_end": false,
+                            "assembler": "MEGAHIT",
+                            "binner": "MaxBin2",
+                            "domain": "unclassified",
+                            "refinement": "unrefined"
+                        },
+                        "MEGAHIT-MaxBin2-test_minigut.001.faa:md5,eaccd450eed58eae731384315670ca58"
+                    ],
+                    [
+                        {
+                            "id": "MEGAHIT-MaxBin2-test_minigut.002",
+                            "group": "0",
+                            "single_end": false,
+                            "assembler": "MEGAHIT",
+                            "binner": "MaxBin2",
+                            "domain": "unclassified",
+                            "refinement": "unrefined"
+                        },
+                        "MEGAHIT-MaxBin2-test_minigut.002.faa:md5,78099bcfdbc895f9a9db06cd15f5edab"
+                    ],
+                    [
+                        {
+                            "id": "MEGAHIT-MetaBAT2-test_minigut.1",
+                            "group": "0",
+                            "single_end": false,
+                            "assembler": "MEGAHIT",
+                            "binner": "MetaBAT2",
+                            "domain": "unclassified",
+                            "refinement": "unrefined"
+                        },
+                        "MEGAHIT-MetaBAT2-test_minigut.1.faa:md5,b9bd97482ed409c39f8685a9bc898f01"
+                    ],
+                    [
+                        {
+                            "id": "MEGAHIT-MetaBAT2-test_minigut.2",
+                            "group": "0",
+                            "single_end": false,
+                            "assembler": "MEGAHIT",
+                            "binner": "MetaBAT2",
+                            "domain": "unclassified",
+                            "refinement": "unrefined"
+                        },
+                        "MEGAHIT-MetaBAT2-test_minigut.2.faa:md5,b3c4338146bcc7fb36a8c94d92922f5e"
+                    ],
+                    [
+                        {
+                            "id": "SPAdes-MaxBin2-test_minigut.001",
+                            "group": "0",
+                            "single_end": false,
+                            "assembler": "SPAdes",
+                            "binner": "MaxBin2",
+                            "domain": "unclassified",
+                            "refinement": "unrefined"
+                        },
+                        "SPAdes-MaxBin2-test_minigut.001.faa:md5,7e773008946a8eeb529cabc153d197b5"
+                    ],
+                    [
+                        {
+                            "id": "SPAdes-MaxBin2-test_minigut.002",
+                            "group": "0",
+                            "single_end": false,
+                            "assembler": "SPAdes",
+                            "binner": "MaxBin2",
+                            "domain": "unclassified",
+                            "refinement": "unrefined"
+                        },
+                        "SPAdes-MaxBin2-test_minigut.002.faa:md5,846a091d4f412975bcd66c5ef0ed49d9"
+                    ],
+                    [
+                        {
+                            "id": "SPAdes-MaxBin2-test_minigut_sample2.001",
+                            "group": "0",
+                            "single_end": false,
+                            "assembler": "SPAdes",
+                            "binner": "MaxBin2",
+                            "domain": "unclassified",
+                            "refinement": "unrefined"
+                        },
+                        "SPAdes-MaxBin2-test_minigut_sample2.001.faa:md5,e33d7a55af8b070646de60f62d407481"
+                    ],
+                    [
+                        {
+                            "id": "SPAdes-MetaBAT2-test_minigut.1",
+                            "group": "0",
+                            "single_end": false,
+                            "assembler": "SPAdes",
+                            "binner": "MetaBAT2",
+                            "domain": "unclassified",
+                            "refinement": "unrefined"
+                        },
+                        "SPAdes-MetaBAT2-test_minigut.1.faa:md5,2879b7a33cca4024e3c518b2fa4bc063"
+                    ],
+                    [
+                        {
+                            "id": "SPAdes-MetaBAT2-test_minigut.2",
+                            "group": "0",
+                            "single_end": false,
+                            "assembler": "SPAdes",
+                            "binner": "MetaBAT2",
+                            "domain": "unclassified",
+                            "refinement": "unrefined"
+                        },
+                        "SPAdes-MetaBAT2-test_minigut.2.faa:md5,1cc11d484e49ff51111b0e0bf7a2349b"
+                    ]
+                ],
+                "refined_bins": [
+                    
+                ],
+                "refined_unbins": [
+                    
+                ],
+                "short_reads": [
+                    [
+                        {
+                            "id": "test_minigut",
+                            "group": "0",
+                            "single_end": false
+                        },
+                        [
+                            "test_minigut_1.merged.fastq.gz:md5,fe81462f19e6acc0bbcec55528be7ad2",
+                            "test_minigut_2.merged.fastq.gz:md5,88ebc2ac01082507f7be1761049e5eff"
+                        ]
+                    ],
+                    [
+                        {
+                            "id": "test_minigut_sample2",
+                            "group": "0",
+                            "single_end": false
+                        },
+                        [
+                            "test_minigut_sample2_run0_phix_removed.unmapped_1.fastq.gz:md5,25580ab85c8288a6a7a0b2100d93f1d0",
+                            "test_minigut_sample2_run0_phix_removed.unmapped_2.fastq.gz:md5,a91bde6d5c85dd6b47f5bc5cfab65572"
+                        ]
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,0f67b0839fcef0334e0dcaf5568be9e0",
+                    "versions.yml:md5,0f67b0839fcef0334e0dcaf5568be9e0",
+                    "versions.yml:md5,0f67b0839fcef0334e0dcaf5568be9e0",
+                    "versions.yml:md5,0f67b0839fcef0334e0dcaf5568be9e0",
+                    "versions.yml:md5,0f67b0839fcef0334e0dcaf5568be9e0",
+                    "versions.yml:md5,15111ae1ae8b8b570a2efddd7c747bd0",
+                    "versions.yml:md5,18eeebfdf8c302c29cbb4abc4325628c",
+                    "versions.yml:md5,200880072147033d455fede5cf4499dc",
+                    "versions.yml:md5,2acb240e473bc70de2e0bb8a392748ac",
+                    "versions.yml:md5,2d4f5bd36e073ac683075e4bc52884be",
+                    "versions.yml:md5,2d4f5bd36e073ac683075e4bc52884be",
+                    "versions.yml:md5,2d4f5bd36e073ac683075e4bc52884be",
+                    "versions.yml:md5,3222fd64337a6c070682b63fc5e0cb3c",
+                    "versions.yml:md5,3550550b622b6d5f6803ffed9742e08b",
+                    "versions.yml:md5,368d757df0f57b49bce09965641cc71a",
+                    "versions.yml:md5,519a472d661281a99e0335305cdd1d85",
+                    "versions.yml:md5,59e59108b091ee58d131ac74e9bfac43",
+                    "versions.yml:md5,5cf45e79d026b3593199fa035f2d72ec",
+                    "versions.yml:md5,7017c8959eb098440346ca9a2310c460",
+                    "versions.yml:md5,7067399ef1687d4d1ba0aab93dc67754",
+                    "versions.yml:md5,8187d1683f97b64a582620caba2b175a",
+                    "versions.yml:md5,82c86a3130605a0de153c903b2cfc6d2",
+                    "versions.yml:md5,9e5858bca5fb800545dc5c11f8503cc4",
+                    "versions.yml:md5,9e5858bca5fb800545dc5c11f8503cc4",
+                    "versions.yml:md5,9e5858bca5fb800545dc5c11f8503cc4",
+                    "versions.yml:md5,b4ee8f08c1efaac6dee44f113c7a2e0b",
+                    "versions.yml:md5,bb7110425028f7e7abcbf17152405079",
+                    "versions.yml:md5,bb7110425028f7e7abcbf17152405079",
+                    "versions.yml:md5,bb7110425028f7e7abcbf17152405079",
+                    "versions.yml:md5,bb7110425028f7e7abcbf17152405079",
+                    "versions.yml:md5,bb7110425028f7e7abcbf17152405079",
+                    "versions.yml:md5,bb7110425028f7e7abcbf17152405079",
+                    "versions.yml:md5,bb7110425028f7e7abcbf17152405079",
+                    "versions.yml:md5,c384e0cacaa344670dcde728d78a524a",
+                    "versions.yml:md5,e2ed4d9a5b5d63ae1a6eef0418d976f0",
+                    "versions.yml:md5,e9b46b38f7df41da088ff41127d3752a",
+                    "versions.yml:md5,ea3029fd33017b2f39de14bce337c246"
+                ]
+            }
+        ],
+        "timestamp": "2024-01-04T14:50:41.377338936"
+    }
+}

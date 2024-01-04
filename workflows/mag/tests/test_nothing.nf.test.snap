@@ -30,24 +30,6 @@
                     
                 ],
                 "10": [
-                    
-                ],
-                "11": [
-                    
-                ],
-                "12": [
-                    
-                ],
-                "13": [
-                    
-                ],
-                "14": [
-                    
-                ],
-                "15": [
-                    
-                ],
-                "16": [
                     "versions.yml:md5,3222fd64337a6c070682b63fc5e0cb3c",
                     "versions.yml:md5,e9b46b38f7df41da088ff41127d3752a"
                 ],
@@ -78,25 +60,13 @@
                 "assemblies": [
                     
                 ],
-                "bins": [
-                    
-                ],
-                "busco": [
+                "bin_summary": [
                     
                 ],
                 "cat": [
                     
                 ],
-                "checkm": [
-                    
-                ],
                 "genomad": [
-                    
-                ],
-                "gtdbtk": [
-                    
-                ],
-                "gunc": [
                     
                 ],
                 "metaeuk": [
@@ -106,9 +76,6 @@
                     
                 ],
                 "prokka": [
-                    
-                ],
-                "quast_bins": [
                     
                 ],
                 "refined_bins": [
@@ -141,15 +108,12 @@
                         ]
                     ]
                 ],
-                "unbins": [
-                    
-                ],
                 "versions": [
                     "versions.yml:md5,3222fd64337a6c070682b63fc5e0cb3c",
                     "versions.yml:md5,e9b46b38f7df41da088ff41127d3752a"
                 ]
             }
         ],
-        "timestamp": "2023-12-14T11:38:30.168015353"
+        "timestamp": "2024-01-02T16:14:07.274635084"
     }
 }

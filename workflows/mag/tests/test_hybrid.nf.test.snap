@@ -36,24 +36,6 @@
                     ]
                 ],
                 "10": [
-                    
-                ],
-                "11": [
-                    
-                ],
-                "12": [
-                    
-                ],
-                "13": [
-                    
-                ],
-                "14": [
-                    
-                ],
-                "15": [
-                    
-                ],
-                "16": [
                     "versions.yml:md5,15111ae1ae8b8b570a2efddd7c747bd0",
                     "versions.yml:md5,1bd6bbec156534880e04e0320dbce063",
                     "versions.yml:md5,5de8983775d3ef64cdbec6f382852619",
@@ -108,25 +90,13 @@
                         "SPAdesHybrid-group-0_scaffolds.fasta:md5,84c68c6ba721ad5858588a1487e05b6f"
                     ]
                 ],
-                "bins": [
-                    
-                ],
-                "busco": [
+                "bin_summary": [
                     
                 ],
                 "cat": [
                     
                 ],
-                "checkm": [
-                    
-                ],
                 "genomad": [
-                    
-                ],
-                "gtdbtk": [
-                    
-                ],
-                "gunc": [
                     
                 ],
                 "metaeuk": [
@@ -136,9 +106,6 @@
                     
                 ],
                 "prokka": [
-                    
-                ],
-                "quast_bins": [
                     
                 ],
                 "refined_bins": [
@@ -160,9 +127,6 @@
                         ]
                     ]
                 ],
-                "unbins": [
-                    
-                ],
                 "versions": [
                     "versions.yml:md5,15111ae1ae8b8b570a2efddd7c747bd0",
                     "versions.yml:md5,1bd6bbec156534880e04e0320dbce063",
@@ -176,6 +140,6 @@
                 ]
             }
         ],
-        "timestamp": "2023-12-14T14:09:37.526745496"
+        "timestamp": "2024-01-02T16:01:13.719391405"
     }
 }

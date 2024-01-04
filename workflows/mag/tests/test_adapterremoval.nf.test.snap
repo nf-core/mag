@@ -5,24 +5,24 @@
                 "0": [
                     [
                         {
-                            "id": "test_minigut",
+                            "id": "test_minigut_euk",
                             "group": "0",
                             "single_end": false
                         },
                         [
-                            "test_minigut_1.merged.fastq.gz:md5,3ba44a474c09f2bc8770299fc6d327fb",
-                            "test_minigut_2.merged.fastq.gz:md5,587c61c5f7bf3f0377f152ce9835bb88"
+                            "test_minigut_euk_run0_ar2.pair1.truncated.fastq.gz:md5,e8f01a4fdf2e348330fc02a47eb3c5af",
+                            "test_minigut_euk_run0_ar2.pair2.truncated.fastq.gz:md5,06510940505288d80a3d940db85d0ed5"
                         ]
                     ],
                     [
                         {
-                            "id": "test_minigut_sample2",
+                            "id": "test_minigut_sample2_euk",
                             "group": "0",
                             "single_end": false
                         },
                         [
-                            "test_minigut_sample2_run0_ar2.pair1.truncated.fastq.gz:md5,6ec5c5d6a273c2145096cd8a1488e159",
-                            "test_minigut_sample2_run0_ar2.pair2.truncated.fastq.gz:md5,2c037d5d633998bf4b7006d30dc95610"
+                            "test_minigut_sample2_euk_run0_ar2.pair1.truncated.fastq.gz:md5,92b8643e591f7490c980fe4d0879c955",
+                            "test_minigut_sample2_euk_run0_ar2.pair2.truncated.fastq.gz:md5,7d4436e9532bb9665080b77efe441faf"
                         ]
                     ]
                 ],
@@ -30,26 +30,6 @@
                     
                 ],
                 "10": [
-                    
-                ],
-                "11": [
-                    
-                ],
-                "12": [
-                    
-                ],
-                "13": [
-                    
-                ],
-                "14": [
-                    
-                ],
-                "15": [
-                    
-                ],
-                "16": [
-                    "versions.yml:md5,3222fd64337a6c070682b63fc5e0cb3c",
-                    "versions.yml:md5,9e5858bca5fb800545dc5c11f8503cc4",
                     "versions.yml:md5,9e5858bca5fb800545dc5c11f8503cc4",
                     "versions.yml:md5,9e5858bca5fb800545dc5c11f8503cc4",
                     "versions.yml:md5,e9b46b38f7df41da088ff41127d3752a",
@@ -82,25 +62,13 @@
                 "assemblies": [
                     
                 ],
-                "bins": [
-                    
-                ],
-                "busco": [
+                "bin_summary": [
                     
                 ],
                 "cat": [
                     
                 ],
-                "checkm": [
-                    
-                ],
                 "genomad": [
-                    
-                ],
-                "gtdbtk": [
-                    
-                ],
-                "gunc": [
                     
                 ],
                 "metaeuk": [
@@ -112,9 +80,6 @@
                 "prokka": [
                     
                 ],
-                "quast_bins": [
-                    
-                ],
                 "refined_bins": [
                     
                 ],
@@ -124,33 +89,28 @@
                 "short_reads": [
                     [
                         {
-                            "id": "test_minigut",
+                            "id": "test_minigut_euk",
                             "group": "0",
                             "single_end": false
                         },
                         [
-                            "test_minigut_1.merged.fastq.gz:md5,3ba44a474c09f2bc8770299fc6d327fb",
-                            "test_minigut_2.merged.fastq.gz:md5,587c61c5f7bf3f0377f152ce9835bb88"
+                            "test_minigut_euk_run0_ar2.pair1.truncated.fastq.gz:md5,e8f01a4fdf2e348330fc02a47eb3c5af",
+                            "test_minigut_euk_run0_ar2.pair2.truncated.fastq.gz:md5,06510940505288d80a3d940db85d0ed5"
                         ]
                     ],
                     [
                         {
-                            "id": "test_minigut_sample2",
+                            "id": "test_minigut_sample2_euk",
                             "group": "0",
                             "single_end": false
                         },
                         [
-                            "test_minigut_sample2_run0_ar2.pair1.truncated.fastq.gz:md5,6ec5c5d6a273c2145096cd8a1488e159",
-                            "test_minigut_sample2_run0_ar2.pair2.truncated.fastq.gz:md5,2c037d5d633998bf4b7006d30dc95610"
+                            "test_minigut_sample2_euk_run0_ar2.pair1.truncated.fastq.gz:md5,92b8643e591f7490c980fe4d0879c955",
+                            "test_minigut_sample2_euk_run0_ar2.pair2.truncated.fastq.gz:md5,7d4436e9532bb9665080b77efe441faf"
                         ]
                     ]
                 ],
-                "unbins": [
-                    
-                ],
                 "versions": [
-                    "versions.yml:md5,3222fd64337a6c070682b63fc5e0cb3c",
-                    "versions.yml:md5,9e5858bca5fb800545dc5c11f8503cc4",
                     "versions.yml:md5,9e5858bca5fb800545dc5c11f8503cc4",
                     "versions.yml:md5,9e5858bca5fb800545dc5c11f8503cc4",
                     "versions.yml:md5,e9b46b38f7df41da088ff41127d3752a",
@@ -158,6 +118,6 @@
                 ]
             }
         ],
-        "timestamp": "2023-12-14T11:34:38.395383683"
+        "timestamp": "2024-01-02T11:42:16.890174222"
     }
 }

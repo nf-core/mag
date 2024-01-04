@@ -38,24 +38,6 @@
                     ]
                 ],
                 "10": [
-                    
-                ],
-                "11": [
-                    
-                ],
-                "12": [
-                    
-                ],
-                "13": [
-                    
-                ],
-                "14": [
-                    
-                ],
-                "15": [
-                    
-                ],
-                "16": [
                     "versions.yml:md5,3222fd64337a6c070682b63fc5e0cb3c",
                     "versions.yml:md5,e2ed4d9a5b5d63ae1a6eef0418d976f0",
                     "versions.yml:md5,e9b46b38f7df41da088ff41127d3752a"
@@ -103,16 +85,10 @@
                         "MEGAHIT-group-0.contigs.fa:md5,8419d4d6c72ac1006324a9fee1394646"
                     ]
                 ],
-                "bins": [
-                    
-                ],
-                "busco": [
+                "bin_summary": [
                     
                 ],
                 "cat": [
-                    
-                ],
-                "checkm": [
                     
                 ],
                 "genomad": [
@@ -126,12 +102,6 @@
                         "MEGAHIT-group-0.contigs_virus_summary.tsv:md5,b08861c8a938b3eaf8c1d8e533935042"
                     ]
                 ],
-                "gtdbtk": [
-                    
-                ],
-                "gunc": [
-                    
-                ],
                 "metaeuk": [
                     
                 ],
@@ -139,9 +109,6 @@
                     
                 ],
                 "prokka": [
-                    
-                ],
-                "quast_bins": [
                     
                 ],
                 "refined_bins": [
@@ -174,9 +141,6 @@
                         ]
                     ]
                 ],
-                "unbins": [
-                    
-                ],
                 "versions": [
                     "versions.yml:md5,3222fd64337a6c070682b63fc5e0cb3c",
                     "versions.yml:md5,e2ed4d9a5b5d63ae1a6eef0418d976f0",
@@ -184,6 +148,6 @@
                 ]
             }
         ],
-        "timestamp": "2023-12-14T11:48:19.010278472"
+        "timestamp": "2024-01-03T09:34:15.379927608"
     }
 }

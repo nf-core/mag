@@ -5,16 +5,16 @@ nextflow_workflow {
     workflow "MAG"
     tag "workflows"
     tag "mag"
-    tag "mag_test_ancient_dna"
+    tag "mag_test_busco_auto"
 
-    test("Parameters: ancient_dna = true") {
+    test("Parameters: skip_busco = false") {
 
         then {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out
-                ).match()}
+                ).match() }
             )
         }
     }

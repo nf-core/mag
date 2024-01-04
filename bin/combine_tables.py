@@ -93,6 +93,8 @@ def main(args=None):
             results, gtdbtk_results, left_on="bin", right_on="user_genome", how="outer"
         )  # assuming depths for all bins are given
 
+    # sort results for reproducibility
+    results.sort_values(by='bin', inplace=True, ignore_index=True)
     results.to_csv(args.out, sep="\t")
 
 

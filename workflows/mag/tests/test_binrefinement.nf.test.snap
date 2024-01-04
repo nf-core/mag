@@ -1,5 +1,5 @@
 {
-    "Parameters: ancient_dna = true": {
+    "Parameters: refine_bins_dastool = true": {
         "content": [
             {
                 "0": [
@@ -31,57 +31,41 @@
                         {
                             "id": "test_minigut",
                             "group": "0",
-                            "single_end": false,
                             "assembler": "MEGAHIT"
                         },
-                        "MEGAHIT-test_minigut.contigs.fa:md5,3055734183fc34cba4b50afbda4f34cf"
+                        "MEGAHIT-test_minigut.contigs.fa:md5,49bd2dbd085e37b3f19a62d9d010a271"
                     ],
                     [
                         {
                             "id": "test_minigut",
                             "group": "0",
-                            "single_end": false,
                             "assembler": "SPAdes"
                         },
-                        "SPAdes-test_minigut_scaffolds.fasta:md5,acb79980009afc87e0e81293a84fe54f"
+                        "SPAdes-test_minigut_contigs.fasta:md5,86027592505360f0e51a395555b8a11b"
                     ],
                     [
                         {
                             "id": "test_minigut_sample2",
                             "group": "0",
-                            "single_end": false,
                             "assembler": "MEGAHIT"
                         },
-                        "MEGAHIT-test_minigut_sample2.contigs.fa:md5,093b87fe274ddb7f7dbf5d5e574495ad"
+                        "MEGAHIT-test_minigut_sample2.contigs.fa:md5,378c9d74964ef6a9a0fd2f2c77dfa607"
                     ],
                     [
                         {
                             "id": "test_minigut_sample2",
                             "group": "0",
-                            "single_end": false,
                             "assembler": "SPAdes"
                         },
-                        "SPAdes-test_minigut_sample2_scaffolds.fasta:md5,98a1c0bf47c301bbd838b32a54b7537b"
+                        "SPAdes-test_minigut_sample2_contigs.fasta:md5,0c3fdd6f534d5e21b105be45351ee655"
                     ]
                 ],
                 "10": [
                     "versions.yml:md5,0f67b0839fcef0334e0dcaf5568be9e0",
                     "versions.yml:md5,0f67b0839fcef0334e0dcaf5568be9e0",
-                    "versions.yml:md5,0f67b0839fcef0334e0dcaf5568be9e0",
-                    "versions.yml:md5,0f67b0839fcef0334e0dcaf5568be9e0",
-                    "versions.yml:md5,0f67b0839fcef0334e0dcaf5568be9e0",
-                    "versions.yml:md5,0f67b0839fcef0334e0dcaf5568be9e0",
-                    "versions.yml:md5,0f67b0839fcef0334e0dcaf5568be9e0",
-                    "versions.yml:md5,0f67b0839fcef0334e0dcaf5568be9e0",
-                    "versions.yml:md5,0f67b0839fcef0334e0dcaf5568be9e0",
-                    "versions.yml:md5,0f67b0839fcef0334e0dcaf5568be9e0",
-                    "versions.yml:md5,0f67b0839fcef0334e0dcaf5568be9e0",
-                    "versions.yml:md5,2d4f5bd36e073ac683075e4bc52884be",
                     "versions.yml:md5,2d4f5bd36e073ac683075e4bc52884be",
                     "versions.yml:md5,2d4f5bd36e073ac683075e4bc52884be",
                     "versions.yml:md5,3550550b622b6d5f6803ffed9742e08b",
-                    "versions.yml:md5,368d757df0f57b49bce09965641cc71a",
-                    "versions.yml:md5,47df50b983a036f55cb936247d920744",
                     "versions.yml:md5,586dc48e8e2cc8106cb0ee3b70ce0fef",
                     "versions.yml:md5,6d41fb977d31ce96d7ddbb4ea2dbe38b",
                     "versions.yml:md5,7017c8959eb098440346ca9a2310c460",
@@ -96,16 +80,18 @@
                     "versions.yml:md5,bb7110425028f7e7abcbf17152405079",
                     "versions.yml:md5,bb7110425028f7e7abcbf17152405079",
                     "versions.yml:md5,bb7110425028f7e7abcbf17152405079",
-                    "versions.yml:md5,bb7110425028f7e7abcbf17152405079",
                     "versions.yml:md5,c384e0cacaa344670dcde728d78a524a",
                     "versions.yml:md5,c777f00c6a48f3c0490d09b1aa8d81a6",
                     "versions.yml:md5,cc4a4972327dec07faf1f54ead653715",
                     "versions.yml:md5,d8d2321bec0c70de2f9750f258fc890d",
                     "versions.yml:md5,dc29f891cb297131cf940ba5580a6832",
                     "versions.yml:md5,df654dd4fdb4039c2d8cf0b6b49f4b55",
-                    "versions.yml:md5,e2ed4d9a5b5d63ae1a6eef0418d976f0",
                     "versions.yml:md5,e9b46b38f7df41da088ff41127d3752a",
-                    "versions.yml:md5,e9f8fe610b5abe68b28d77efc951e9e6"
+                    "versions.yml:md5,e9f8fe610b5abe68b28d77efc951e9e6",
+                    "versions.yml:md5,ede79d94ca30c948c1707584760b230c",
+                    "versions.yml:md5,ede79d94ca30c948c1707584760b230c",
+                    "versions.yml:md5,ede79d94ca30c948c1707584760b230c",
+                    "versions.yml:md5,ede79d94ca30c948c1707584760b230c"
                 ],
                 "2": [
                     
@@ -118,44 +104,28 @@
                         {
                             "id": "test_minigut",
                             "group": "0",
-                            "single_end": false,
                             "assembler": "MEGAHIT",
                             "binner": "DASTool",
                             "refinement": "dastool_refined",
                             "domain": "unclassified"
                         },
                         [
-                            "MEGAHIT-MetaBAT2Refined-test_minigut.1.fa:md5,c010aca18e5dfa00f17b24ce507988f3",
-                            "MEGAHIT-MetaBAT2Refined-test_minigut.2.fa:md5,2cc38f264e02be8fab0867b1dfe9f9bd"
+                            "MEGAHIT-MetaBAT2Refined-test_minigut.1.fa:md5,489a5f7ba3795477e09d2d396fe535c3",
+                            "MEGAHIT-MetaBAT2Refined-test_minigut.2.fa:md5,1addf634bca82af85d36621585f93f52"
                         ]
                     ],
                     [
                         {
                             "id": "test_minigut",
                             "group": "0",
-                            "single_end": false,
                             "assembler": "SPAdes",
                             "binner": "DASTool",
                             "refinement": "dastool_refined",
                             "domain": "unclassified"
                         },
                         [
-                            "SPAdes-MaxBin2Refined-test_minigut.001.fa:md5,1e01c5c341311b94df0f5b0b97668cde",
-                            "SPAdes-MaxBin2Refined-test_minigut.002.fa:md5,ca74ae68469c1e354a00d7a1bf0416d0"
-                        ]
-                    ],
-                    [
-                        {
-                            "id": "test_minigut_sample2",
-                            "group": "0",
-                            "single_end": false,
-                            "assembler": "SPAdes",
-                            "binner": "DASTool",
-                            "refinement": "dastool_refined",
-                            "domain": "unclassified"
-                        },
-                        [
-                            "SPAdes-MaxBin2Refined-test_minigut_sample2.001.fa:md5,7c8439fb9c3b72ba4d89b9b61b538a66"
+                            "SPAdes-MaxBin2Refined-test_minigut.001_sub.fa:md5,b1633cb560c41afe3606b6e8f2082211",
+                            "SPAdes-MetaBAT2Refined-test_minigut.2.fa:md5,7f8be703a086fd12d41d2df817a08e8d"
                         ]
                     ]
                 ],
@@ -164,25 +134,23 @@
                         {
                             "id": "test_minigut",
                             "group": "0",
-                            "single_end": false,
                             "assembler": "MEGAHIT",
                             "refinement": "dastool_refined_unbinned",
                             "binner": "DASTool",
                             "domain": "unclassified"
                         },
-                        "MEGAHIT-DASToolUnbinned-test_minigut.fa:md5,4b022bfb579d9873385aadc9eaf549d6"
+                        "MEGAHIT-DASToolUnbinned-test_minigut.fa:md5,5b68d8b2df39cb4ab46299d9a09f1243"
                     ],
                     [
                         {
-                            "id": "test_minigut_sample2",
+                            "id": "test_minigut",
                             "group": "0",
-                            "single_end": false,
                             "assembler": "SPAdes",
                             "refinement": "dastool_refined_unbinned",
                             "binner": "DASTool",
                             "domain": "unclassified"
                         },
-                        "SPAdes-DASToolUnbinned-test_minigut_sample2.fa:md5,dd179320159df68d6bf630d6b46079b5"
+                        "SPAdes-DASToolUnbinned-test_minigut.fa:md5,067f6ad8e2f820ab3d6000a154150954"
                     ]
                 ],
                 "6": [
@@ -202,37 +170,33 @@
                         {
                             "id": "test_minigut",
                             "group": "0",
-                            "single_end": false,
                             "assembler": "MEGAHIT"
                         },
-                        "MEGAHIT-test_minigut.contigs.fa:md5,3055734183fc34cba4b50afbda4f34cf"
+                        "MEGAHIT-test_minigut.contigs.fa:md5,49bd2dbd085e37b3f19a62d9d010a271"
                     ],
                     [
                         {
                             "id": "test_minigut",
                             "group": "0",
-                            "single_end": false,
                             "assembler": "SPAdes"
                         },
-                        "SPAdes-test_minigut_scaffolds.fasta:md5,acb79980009afc87e0e81293a84fe54f"
+                        "SPAdes-test_minigut_contigs.fasta:md5,86027592505360f0e51a395555b8a11b"
                     ],
                     [
                         {
                             "id": "test_minigut_sample2",
                             "group": "0",
-                            "single_end": false,
                             "assembler": "MEGAHIT"
                         },
-                        "MEGAHIT-test_minigut_sample2.contigs.fa:md5,093b87fe274ddb7f7dbf5d5e574495ad"
+                        "MEGAHIT-test_minigut_sample2.contigs.fa:md5,378c9d74964ef6a9a0fd2f2c77dfa607"
                     ],
                     [
                         {
                             "id": "test_minigut_sample2",
                             "group": "0",
-                            "single_end": false,
                             "assembler": "SPAdes"
                         },
-                        "SPAdes-test_minigut_sample2_scaffolds.fasta:md5,98a1c0bf47c301bbd838b32a54b7537b"
+                        "SPAdes-test_minigut_sample2_contigs.fasta:md5,0c3fdd6f534d5e21b105be45351ee655"
                     ]
                 ],
                 "bin_summary": [
@@ -258,44 +222,28 @@
                         {
                             "id": "test_minigut",
                             "group": "0",
-                            "single_end": false,
                             "assembler": "MEGAHIT",
                             "binner": "DASTool",
                             "refinement": "dastool_refined",
                             "domain": "unclassified"
                         },
                         [
-                            "MEGAHIT-MetaBAT2Refined-test_minigut.1.fa:md5,c010aca18e5dfa00f17b24ce507988f3",
-                            "MEGAHIT-MetaBAT2Refined-test_minigut.2.fa:md5,2cc38f264e02be8fab0867b1dfe9f9bd"
+                            "MEGAHIT-MetaBAT2Refined-test_minigut.1.fa:md5,489a5f7ba3795477e09d2d396fe535c3",
+                            "MEGAHIT-MetaBAT2Refined-test_minigut.2.fa:md5,1addf634bca82af85d36621585f93f52"
                         ]
                     ],
                     [
                         {
                             "id": "test_minigut",
                             "group": "0",
-                            "single_end": false,
                             "assembler": "SPAdes",
                             "binner": "DASTool",
                             "refinement": "dastool_refined",
                             "domain": "unclassified"
                         },
                         [
-                            "SPAdes-MaxBin2Refined-test_minigut.001.fa:md5,1e01c5c341311b94df0f5b0b97668cde",
-                            "SPAdes-MaxBin2Refined-test_minigut.002.fa:md5,ca74ae68469c1e354a00d7a1bf0416d0"
-                        ]
-                    ],
-                    [
-                        {
-                            "id": "test_minigut_sample2",
-                            "group": "0",
-                            "single_end": false,
-                            "assembler": "SPAdes",
-                            "binner": "DASTool",
-                            "refinement": "dastool_refined",
-                            "domain": "unclassified"
-                        },
-                        [
-                            "SPAdes-MaxBin2Refined-test_minigut_sample2.001.fa:md5,7c8439fb9c3b72ba4d89b9b61b538a66"
+                            "SPAdes-MaxBin2Refined-test_minigut.001_sub.fa:md5,b1633cb560c41afe3606b6e8f2082211",
+                            "SPAdes-MetaBAT2Refined-test_minigut.2.fa:md5,7f8be703a086fd12d41d2df817a08e8d"
                         ]
                     ]
                 ],
@@ -304,25 +252,23 @@
                         {
                             "id": "test_minigut",
                             "group": "0",
-                            "single_end": false,
                             "assembler": "MEGAHIT",
                             "refinement": "dastool_refined_unbinned",
                             "binner": "DASTool",
                             "domain": "unclassified"
                         },
-                        "MEGAHIT-DASToolUnbinned-test_minigut.fa:md5,4b022bfb579d9873385aadc9eaf549d6"
+                        "MEGAHIT-DASToolUnbinned-test_minigut.fa:md5,5b68d8b2df39cb4ab46299d9a09f1243"
                     ],
                     [
                         {
-                            "id": "test_minigut_sample2",
+                            "id": "test_minigut",
                             "group": "0",
-                            "single_end": false,
                             "assembler": "SPAdes",
                             "refinement": "dastool_refined_unbinned",
                             "binner": "DASTool",
                             "domain": "unclassified"
                         },
-                        "SPAdes-DASToolUnbinned-test_minigut_sample2.fa:md5,dd179320159df68d6bf630d6b46079b5"
+                        "SPAdes-DASToolUnbinned-test_minigut.fa:md5,067f6ad8e2f820ab3d6000a154150954"
                     ]
                 ],
                 "short_reads": [
@@ -352,21 +298,9 @@
                 "versions": [
                     "versions.yml:md5,0f67b0839fcef0334e0dcaf5568be9e0",
                     "versions.yml:md5,0f67b0839fcef0334e0dcaf5568be9e0",
-                    "versions.yml:md5,0f67b0839fcef0334e0dcaf5568be9e0",
-                    "versions.yml:md5,0f67b0839fcef0334e0dcaf5568be9e0",
-                    "versions.yml:md5,0f67b0839fcef0334e0dcaf5568be9e0",
-                    "versions.yml:md5,0f67b0839fcef0334e0dcaf5568be9e0",
-                    "versions.yml:md5,0f67b0839fcef0334e0dcaf5568be9e0",
-                    "versions.yml:md5,0f67b0839fcef0334e0dcaf5568be9e0",
-                    "versions.yml:md5,0f67b0839fcef0334e0dcaf5568be9e0",
-                    "versions.yml:md5,0f67b0839fcef0334e0dcaf5568be9e0",
-                    "versions.yml:md5,0f67b0839fcef0334e0dcaf5568be9e0",
-                    "versions.yml:md5,2d4f5bd36e073ac683075e4bc52884be",
                     "versions.yml:md5,2d4f5bd36e073ac683075e4bc52884be",
                     "versions.yml:md5,2d4f5bd36e073ac683075e4bc52884be",
                     "versions.yml:md5,3550550b622b6d5f6803ffed9742e08b",
-                    "versions.yml:md5,368d757df0f57b49bce09965641cc71a",
-                    "versions.yml:md5,47df50b983a036f55cb936247d920744",
                     "versions.yml:md5,586dc48e8e2cc8106cb0ee3b70ce0fef",
                     "versions.yml:md5,6d41fb977d31ce96d7ddbb4ea2dbe38b",
                     "versions.yml:md5,7017c8959eb098440346ca9a2310c460",
@@ -381,19 +315,21 @@
                     "versions.yml:md5,bb7110425028f7e7abcbf17152405079",
                     "versions.yml:md5,bb7110425028f7e7abcbf17152405079",
                     "versions.yml:md5,bb7110425028f7e7abcbf17152405079",
-                    "versions.yml:md5,bb7110425028f7e7abcbf17152405079",
                     "versions.yml:md5,c384e0cacaa344670dcde728d78a524a",
                     "versions.yml:md5,c777f00c6a48f3c0490d09b1aa8d81a6",
                     "versions.yml:md5,cc4a4972327dec07faf1f54ead653715",
                     "versions.yml:md5,d8d2321bec0c70de2f9750f258fc890d",
                     "versions.yml:md5,dc29f891cb297131cf940ba5580a6832",
                     "versions.yml:md5,df654dd4fdb4039c2d8cf0b6b49f4b55",
-                    "versions.yml:md5,e2ed4d9a5b5d63ae1a6eef0418d976f0",
                     "versions.yml:md5,e9b46b38f7df41da088ff41127d3752a",
-                    "versions.yml:md5,e9f8fe610b5abe68b28d77efc951e9e6"
+                    "versions.yml:md5,e9f8fe610b5abe68b28d77efc951e9e6",
+                    "versions.yml:md5,ede79d94ca30c948c1707584760b230c",
+                    "versions.yml:md5,ede79d94ca30c948c1707584760b230c",
+                    "versions.yml:md5,ede79d94ca30c948c1707584760b230c",
+                    "versions.yml:md5,ede79d94ca30c948c1707584760b230c"
                 ]
             }
         ],
-        "timestamp": "2024-01-02T12:11:37.803431535"
+        "timestamp": "2024-01-02T13:35:37.404532095"
     }
 }
