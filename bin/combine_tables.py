@@ -94,7 +94,7 @@ def main(args=None):
         )  # assuming depths for all bins are given
 
     # sort results for reproducibility
-    results.sort_values(by='bin', inplace=True, ignore_index=True)
+    results.sort_values(by="bin", inplace=True, ignore_index=True)
     results.to_csv(args.out, sep="\t")
 
 

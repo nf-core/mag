@@ -43,7 +43,7 @@
                             "single_end": false,
                             "assembler": "SPAdes"
                         },
-                        "SPAdes-test_minigut_scaffolds.fasta:md5,8bd449b393a7d3937ff74a24ce39cfc1"
+                        "SPAdes-test_minigut_scaffolds.fasta:md5,50301a321e7618b1f5c4a8664ae21765"
                     ],
                     [
                         {
@@ -61,7 +61,7 @@
                             "single_end": false,
                             "assembler": "SPAdes"
                         },
-                        "SPAdes-test_minigut_sample2_scaffolds.fasta:md5,bf8ebad421409a0dee62a7b14acfca88"
+                        "SPAdes-test_minigut_sample2_scaffolds.fasta:md5,235505d69a2822d77ad70ce061b80efe"
                     ]
                 ],
                 "10": [
@@ -120,7 +120,7 @@
                             "single_end": false,
                             "assembler": "SPAdes"
                         },
-                        "test_minigut.gff.gz:md5,80e8726ecc2d146187cfa2aa4a748d84"
+                        "test_minigut.gff.gz:md5,84429e564c6e5efe0e39c131ee23919f"
                     ],
                     [
                         {
@@ -138,7 +138,7 @@
                             "single_end": false,
                             "assembler": "SPAdes"
                         },
-                        "test_minigut_sample2.gff.gz:md5,1e099a6a3def0c73010d7a1e138c8047"
+                        "test_minigut_sample2.gff.gz:md5,4d9b7eb438adc2db0befb7ae87f25725"
                     ]
                 ],
                 "3": [
@@ -227,7 +227,7 @@
                             "domain": "unclassified",
                             "refinement": "unrefined"
                         },
-                        "SPAdes-MaxBin2-test_minigut.002.faa:md5,846a091d4f412975bcd66c5ef0ed49d9"
+                        "SPAdes-MaxBin2-test_minigut.002.faa:md5,ed025d6d6dceb1b79fafb2a062b5790c"
                     ],
                     [
                         {
@@ -251,7 +251,7 @@
                             "domain": "unclassified",
                             "refinement": "unrefined"
                         },
-                        "SPAdes-MetaBAT2-test_minigut.1.faa:md5,2879b7a33cca4024e3c518b2fa4bc063"
+                        "SPAdes-MetaBAT2-test_minigut.1.faa:md5,d378b57b012feaf4c43a7da0a78a6968"
                     ],
                     [
                         {
@@ -286,7 +286,7 @@
                             "single_end": false,
                             "assembler": "SPAdes"
                         },
-                        "SPAdes-test_minigut_scaffolds.fasta:md5,8bd449b393a7d3937ff74a24ce39cfc1"
+                        "SPAdes-test_minigut_scaffolds.fasta:md5,50301a321e7618b1f5c4a8664ae21765"
                     ],
                     [
                         {
@@ -304,7 +304,7 @@
                             "single_end": false,
                             "assembler": "SPAdes"
                         },
-                        "SPAdes-test_minigut_sample2_scaffolds.fasta:md5,bf8ebad421409a0dee62a7b14acfca88"
+                        "SPAdes-test_minigut_sample2_scaffolds.fasta:md5,235505d69a2822d77ad70ce061b80efe"
                     ]
                 ],
                 "bin_summary": [
@@ -336,7 +336,7 @@
                             "single_end": false,
                             "assembler": "SPAdes"
                         },
-                        "test_minigut.gff.gz:md5,80e8726ecc2d146187cfa2aa4a748d84"
+                        "test_minigut.gff.gz:md5,84429e564c6e5efe0e39c131ee23919f"
                     ],
                     [
                         {
@@ -354,7 +354,7 @@
                             "single_end": false,
                             "assembler": "SPAdes"
                         },
-                        "test_minigut_sample2.gff.gz:md5,1e099a6a3def0c73010d7a1e138c8047"
+                        "test_minigut_sample2.gff.gz:md5,4d9b7eb438adc2db0befb7ae87f25725"
                     ]
                 ],
                 "prokka": [
@@ -428,7 +428,7 @@
                             "domain": "unclassified",
                             "refinement": "unrefined"
                         },
-                        "SPAdes-MaxBin2-test_minigut.002.faa:md5,846a091d4f412975bcd66c5ef0ed49d9"
+                        "SPAdes-MaxBin2-test_minigut.002.faa:md5,ed025d6d6dceb1b79fafb2a062b5790c"
                     ],
                     [
                         {
@@ -452,7 +452,7 @@
                             "domain": "unclassified",
                             "refinement": "unrefined"
                         },
-                        "SPAdes-MetaBAT2-test_minigut.1.faa:md5,2879b7a33cca4024e3c518b2fa4bc063"
+                        "SPAdes-MetaBAT2-test_minigut.1.faa:md5,d378b57b012feaf4c43a7da0a78a6968"
                     ],
                     [
                         {
@@ -538,6 +538,6 @@
                 ]
             }
         ],
-        "timestamp": "2024-01-04T14:50:41.377338936"
+        "timestamp": "2024-01-08T08:51:13.153323648"
     }
 }
