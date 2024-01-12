@@ -1,6 +1,4 @@
 include { CAT_CAT               } from '../../modules/nf-core/cat/cat/main'
-include { MAG_TO_SAMPLESHEET    } from '../../modules/local/mag_to_samplesheet'
-include { MAG_MERGE_SAMPLESHEET } from '../../modules/local/mag_merge_samplesheet'
 
 workflow CREATE_PHAGEANNOTATOR_SAMPLESHEET {
     take:
