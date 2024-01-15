@@ -356,9 +356,20 @@ workflow MAG {
 
         CAT_FASTQ ( ch_short_reads_forcat.cat.map { meta, reads -> [ meta, reads.flatten() ]} )
 
-            ch_short_reads = Channel.empty()
-            ch_short_reads = CAT_FASTQ.out.reads.mix( ch_short_reads_forcat.skip_cat ).map { meta, reads -> [ meta, reads.flatten() ]}
-            ch_versions    = ch_versions.mix(CAT_FASTQ.out.versions.first())
+        // Ensure for single-end data we have a path and not a single-element ArrayBag
+        ch_short_reads_catskipped = ch_short_reads_forcat.skip_cat
+                                        .map { meta, reads ->
+                                            def new_reads = meta.single_end ? reads[0] : reads.flatten()
+                                        [ meta, new_reads ]
+                                    }
+
+        // Combine skipped and run-merged data
+        ch_short_reads = Channel.empty()
+        ch_short_reads = CAT_FASTQ.out.reads.map { meta, reads -> [ meta, reads.flatten() ]}.mix(ch_short_reads_catskipped)
+        ch_versions    = ch_versions.mix(CAT_FASTQ.out.versions.first())
+
+
+
 
         if ( params.bbnorm ) {
             if ( params.coassemble_group ) {
@@ -572,6 +583,7 @@ workflow MAG {
                 .mix (
                     ch_short_reads_assembly
                         .filter { ! it[0].single_end }
+                        // TODO THIS MAKES MEGAHIT WORK BUT NOT
                         .map { meta, reads -> [ meta, [ reads[0] ], [ reads[1] ] ] }
                 )
             ch_long_reads_grouped = ch_long_reads

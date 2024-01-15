@@ -19,9 +19,6 @@ workflow DEPTHS {
     main:
     ch_versions = Channel.empty()
 
-
-    depths.dump(tag: 'depths', pretty: true)
-
     // Compute bin depths for different samples (according to `binning_map_mode`)
     // Create a new meta combine key first, but copy meta so that
     // we retain the information about binners and domain classification

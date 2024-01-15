@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
+- [#XXX](https://github.com/nf-core/mag/pull/489) - Fix bug in run merging when dealing with single end data (reported by @roberta-davidson, fix by @jfy133)
+
 ### `Dependencies`
 
 ### `Deprecated`
