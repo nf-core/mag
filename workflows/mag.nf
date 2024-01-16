@@ -368,9 +368,6 @@ workflow MAG {
         ch_short_reads = CAT_FASTQ.out.reads.map { meta, reads -> [ meta, reads ]}.mix(ch_short_reads_catskipped)
         ch_versions    = ch_versions.mix(CAT_FASTQ.out.versions.first())
 
-
-
-
         if ( params.bbnorm ) {
             if ( params.coassemble_group ) {
                 // Interleave pairs, to be able to treat them as single ends when calling bbnorm. This prepares
