@@ -580,7 +580,6 @@ workflow MAG {
                 .mix (
                     ch_short_reads_assembly
                         .filter { ! it[0].single_end }
-                        // TODO THIS MAKES MEGAHIT WORK BUT NOT
                         .map { meta, reads -> [ meta, [ reads[0] ], [ reads[1] ] ] }
                 )
             ch_long_reads_grouped = ch_long_reads
