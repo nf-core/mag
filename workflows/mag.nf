@@ -350,7 +350,7 @@ workflow MAG {
             .groupTuple()
             .branch {
                 meta, reads ->
-                    cat:       ( meta.single_end && reads.size() == 1 ) || ( !meta.single_end && reads.size() >= 2 )
+                    cat:      reads.size() >= 2
                     skip_cat: true // Can skip merging if only single lanes
             }
 
@@ -365,7 +365,7 @@ workflow MAG {
 
         // Combine skipped and run-merged data
         ch_short_reads = Channel.empty()
-        ch_short_reads = CAT_FASTQ.out.reads.map { meta, reads -> [ meta, reads.flatten() ]}.mix(ch_short_reads_catskipped)
+        ch_short_reads = CAT_FASTQ.out.reads.map { meta, reads -> [ meta, reads ]}.mix(ch_short_reads_catskipped)
         ch_versions    = ch_versions.mix(CAT_FASTQ.out.versions.first())
 
 
