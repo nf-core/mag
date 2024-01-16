@@ -350,7 +350,7 @@ workflow MAG {
             .groupTuple()
             .branch {
                 meta, reads ->
-                    cat:      reads.size() >= 2
+                    cat:      reads.size() >= 2 // SE: [[meta], [S1_R1, S2_R1]]; PE: [[meta], [[S1_R1, S1_R2], [S2_R1, S2_R2]]]
                     skip_cat: true // Can skip merging if only single lanes
             }
 
