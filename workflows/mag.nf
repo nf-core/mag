@@ -356,14 +356,14 @@ workflow MAG {
 
         CAT_FASTQ ( ch_short_reads_forcat.cat.map { meta, reads -> [ meta, reads.flatten() ]} )
 
-        // Ensure for single-end data we have a path and not a single-element ArrayBag
+        // Ensure we don't have nests of nests so that structure is in form expected for assembly
         ch_short_reads_catskipped = ch_short_reads_forcat.skip_cat
                                         .map { meta, reads ->
                                             def new_reads = meta.single_end ? reads[0] : reads.flatten()
                                         [ meta, new_reads ]
                                     }
 
-        // Combine skipped and run-merged data
+        // Combine single run and multi-run-merged data
         ch_short_reads = Channel.empty()
         ch_short_reads = CAT_FASTQ.out.reads.map { meta, reads -> [ meta, reads ]}.mix(ch_short_reads_catskipped)
         ch_versions    = ch_versions.mix(CAT_FASTQ.out.versions.first())
