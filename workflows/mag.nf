@@ -365,7 +365,7 @@ workflow MAG {
 
         // Combine single run and multi-run-merged data
         ch_short_reads = Channel.empty()
-        ch_short_reads = CAT_FASTQ.out.reads.map { meta, reads -> [ meta, reads ]}.mix(ch_short_reads_catskipped)
+        ch_short_reads = CAT_FASTQ.out.reads.mix(ch_short_reads_catskipped)
         ch_versions    = ch_versions.mix(CAT_FASTQ.out.versions.first())
 
         if ( params.bbnorm ) {
