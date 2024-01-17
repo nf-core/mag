@@ -43,7 +43,7 @@
                     "versions.yml:md5,e2ed4d9a5b5d63ae1a6eef0418d976f0"
                 ],
                 "2": [
-                    
+
                 ],
                 "3": [
                     [
@@ -53,26 +53,26 @@
                             "single_end": false,
                             "assembler": "MEGAHIT"
                         },
-                        "MEGAHIT-group-0.contigs_virus_summary.tsv:md5,b08861c8a938b3eaf8c1d8e533935042"
+                        "MEGAHIT-group-0.contigs_virus_summary.tsv:md5,95db91fff85f23a19e64ef7ea0f8d371"
                     ]
                 ],
                 "4": [
-                    
+
                 ],
                 "5": [
-                    
+
                 ],
                 "6": [
-                    
+
                 ],
                 "7": [
-                    
+
                 ],
                 "8": [
-                    
+
                 ],
                 "9": [
-                    
+
                 ],
                 "assemblies": [
                     [
@@ -86,10 +86,10 @@
                     ]
                 ],
                 "bin_summary": [
-                    
+
                 ],
                 "cat": [
-                    
+
                 ],
                 "genomad": [
                     [
@@ -99,23 +99,23 @@
                             "single_end": false,
                             "assembler": "MEGAHIT"
                         },
-                        "MEGAHIT-group-0.contigs_virus_summary.tsv:md5,b08861c8a938b3eaf8c1d8e533935042"
+                        "MEGAHIT-group-0.contigs_virus_summary.tsv:md5,95db91fff85f23a19e64ef7ea0f8d371"
                     ]
                 ],
                 "metaeuk": [
-                    
+
                 ],
                 "prodigal": [
-                    
+
                 ],
                 "prokka": [
-                    
+
                 ],
                 "refined_bins": [
-                    
+
                 ],
                 "refined_unbins": [
-                    
+
                 ],
                 "short_reads": [
                     [
