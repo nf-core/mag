@@ -39,7 +39,7 @@ At a minimum CSV file should contain the following columns:
 
 The path to `long_reads` and `short_reads_2` is optional. Valid examples could look like the following:
 
-```bash
+```csv title="samplesheet.csv"
 sample,group,short_reads_1,short_reads_2,long_reads
 sample1,0,data/sample1_R1.fastq.gz,data/sample1_R2.fastq.gz,data/sample1.fastq.gz
 sample2,0,data/sample2_R1.fastq.gz,data/sample2_R2.fastq.gz,data/sample2.fastq.gz
@@ -48,7 +48,7 @@ sample3,1,data/sample3_R1.fastq.gz,data/sample3_R2.fastq.gz,
 
 or
 
-```bash
+```csv title="samplesheet.csv"
 sample,group,short_reads_1,short_reads_2,long_reads
 sample1,0,data/sample1.fastq.gz,,
 sample2,0,data/sample2.fastq.gz,,
@@ -56,7 +56,7 @@ sample2,0,data/sample2.fastq.gz,,
 
 or to additionally to perform run merging of two runs of sample1:
 
-```bash
+```csv title="samplesheet.csv"
 sample,run,group,short_reads_1,short_reads_2,long_reads
 sample1,1,0,data/sample1_R1.fastq.gz,data/sample1_R2.fastq.gz,data/sample1.fastq.gz
 sample1,2,0,data/sample1_R1.fastq.gz,data/sample1_R2.fastq.gz,data/sample1.fastq.gz
@@ -87,7 +87,7 @@ The assembly CSV file should contain the following columns:
 
 Where `id` is the ID of the assembly, group is the assembly/binning group (see samplesheet information section for more details), `assembler` is the assembler used to produce the assembly (one of `MEGAHIT`, `SPAdes`, or `SPAdesHybrid`), and `fasta` is the path to the assembly fasta file. Input fasta files can be compressed or uncompressed, but compressed assemblies will be automatically uncompressed for use within the pipeline. The exact information required for each supplied assembly depends on whether the assemblies provided are single assemblies or group-wise co-assemblies. For the following example `--input` CSV:
 
-```bash
+```csv title="samplesheet.csv"
 sample,group,short_reads_1,short_reads_2,long_reads
 sample1,0,data/sample1_R1.fastq.gz,data/sample1_R2.fastq.gz,
 sample2,0,data/sample2_R1.fastq.gz,data/sample2_R2.fastq.gz,
@@ -96,7 +96,7 @@ sample3,1,data/sample3_R1.fastq.gz,data/sample3_R2.fastq.gz,
 
 If the assemblies are single assemblies, then the `id` and `group` columns should match those supplied in the `-input` read CSV files for each read set:
 
-```bash
+```csv title="samplesheet.csv"
 id,group,assembler,fasta
 sample1,0,MEGAHIT,MEGAHIT-sample1.contigs.fa.gz
 sample1,0,SPAdes,SPAdes-sample1.fasta.gz
@@ -108,7 +108,7 @@ sample3,1,SPAdes,SPAdes-sample3.contigs.fasta.gz
 
 If the assemblies are co-assemblies, the parameter `--coassemble_group` should additionally be specified. In this case, the `id` column should uniquely identify the assembly, while `group` should match those specified in the `--input` CSV file:
 
-```bash
+```csv title="samplesheet.csv"
 id,group,assembler,fasta
 group-0,0,MEGAHIT,MEGAHIT-group-0.contigs.fa.gz
 group-0,0,SPAdes,SPAdes-group-0.contigs.fasta.gz
