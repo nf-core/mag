@@ -25,9 +25,7 @@ nextflow_workflow {
                 skip_prodigal                           = true
                 bowtie2_fix_cpu_1                       = true
                 binning_map_mode                        = 'own'
-                metabat2_fix_cpu_1                      = true
                 maxbin2_fix_cpu_1                       = true
-                concoct_fix_cpu_1                       = true
                 bcftools_view_high_variant_quality      = 0
                 bcftools_view_medium_variant_quality    = 0
                 bcftools_view_minimal_allelesupport     = 3

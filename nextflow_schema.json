@@ -278,6 +278,9 @@
             "description": "Use these parameters to also enable reproducible results from the individual assembly and binning tools .",
             "default": "",
             "properties": {
+                "bowtie2_fix_cpu_1": {
+                    "type": "boolean"
+                },
                 "megahit_fix_cpu_1": {
                     "type": "boolean",
                     "description": "Fix number of CPUs for MEGAHIT to 1. Not increased with retries.",
@@ -294,6 +297,11 @@
                     "default": -1,
                     "description": "Fix number of CPUs used by SPAdes hybrid. Not increased with retries.",
                     "help_text": "SPAdes is designed to be deterministic for a given number of threads. To generate reproducible results fix the number of CPUs using this parameter.\n\nWhen using this parameter do not change the number of CPUs for the `spadeshybrid` process with a custom config file. This would result in an error.\n\nDefault: -1 (the number of CPUs is specified in the `base.config` or in a custom config file, and increased with each retry)."
+                },
+                "maxbin2_fix_cpu_1": {
+                    "type": "number",
+                    "description": "Fix number of CPUS used by MaxBin2. Not increased with retries",
+                    "default": -1
                 },
                 "metabat_rng_seed": {
                     "type": "integer",
@@ -530,7 +538,7 @@
                 },
                 "gtdbtk_min_completeness": {
                     "type": "number",
-                    "default": 50.0,
+                    "default": 50,
                     "description": "Min. bin completeness (in %) required to apply GTDB-tk classification.",
                     "help_text": "Completeness assessed with BUSCO analysis (100% - %Missing). Must be greater than 0 (min. 0.01) to avoid GTDB-tk errors. If too low, GTDB-tk classification results can be impaired due to not enough marker genes!",
                     "minimum": 0.01,
@@ -538,7 +546,7 @@
                 },
                 "gtdbtk_max_contamination": {
                     "type": "number",
-                    "default": 10.0,
+                    "default": 10,
                     "description": "Max. bin contamination (in %) allowed to apply GTDB-tk classification.",
                     "help_text": "Contamination approximated based on BUSCO analysis (%Complete and duplicated). If too high, GTDB-tk classification results can be impaired due to contamination!",
                     "minimum": 0,
@@ -546,7 +554,7 @@
                 },
                 "gtdbtk_min_perc_aa": {
                     "type": "number",
-                    "default": 10.0,
+                    "default": 10,
                     "description": "Min. fraction of AA (in %) in the MSA for bins to be kept.",
                     "minimum": 0,
                     "maximum": 100
@@ -560,7 +568,7 @@
                 },
                 "gtdbtk_pplacer_cpus": {
                     "type": "number",
-                    "default": 1.0,
+                    "default": 1,
                     "description": "Number of CPUs used for the by GTDB-Tk run tool pplacer.",
                     "help_text": "A low number of CPUs helps to reduce the memory required/reported by GTDB-Tk. See also the [GTDB-Tk documentation](https://ecogenomics.github.io/GTDBTk/faq.html#gtdb-tk-reaches-the-memory-limit-pplacer-crashes)."
                 },

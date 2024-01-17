@@ -23,9 +23,7 @@ nextflow_workflow {
                 skip_quast                      = true
                 skip_prodigal                   = true
                 bowtie2_fix_cpu_1               = true
-                metabat2_fix_cpu_1              = true
                 maxbin2_fix_cpu_1               = true
-                concoct_fix_cpu_1               = true
                 binning_map_mode                = 'own'
                 min_length_unbinned_contigs     = 1
                 max_unbinned_contigs            = 2
