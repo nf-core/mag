@@ -9,6 +9,33 @@ nextflow_workflow {
 
     test("Parameters: skip_busco = false") {
 
+        when {
+            params {
+                input                           = 'https://raw.githubusercontent.com/nf-core/test-datasets/mag/samplesheets/samplesheet.csv'
+                keep_phix                       = true
+                skip_adapter_trimming           = true
+                centrifuge_db                   = null
+                kraken2_db                      = null
+                skip_krona                      = true
+                megahit_fix_cpu_1               = true
+                skip_spades                     = true
+                skip_spadeshybrid               = true
+                skip_quast                      = true
+                skip_prodigal                   = true
+                bowtie2_fix_cpu_1               = true
+                metabat2_fix_cpu_1              = true
+                maxbin2_fix_cpu_1               = true
+                concoct_fix_cpu_1               = true
+                binning_map_mode                = 'own'
+                min_length_unbinned_contigs     = 1
+                max_unbinned_contigs            = 2
+                skip_concoct                    = true
+                skip_gtdbtk                     = true
+                skip_prokka                     = true
+                skip_metaeuk                    = true
+            }
+        }
+
         then {
             assertAll(
                 { assert workflow.success },
