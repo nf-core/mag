@@ -1,22 +1,22 @@
-test_adapterremoval:
+mag_test_adapterremoval:
   - ./**
-test_ancient_dna:
+mag_test_ancient_dna:
   - ./**
-test_bbnorm:
+mag_test_bbnorm:
   - ./**
-test_binrefinement:
+mag_test_binrefinement:
   - ./**
-test_busco_auto:
+mag_test_busco_auto:
   - ./**
-test_host_rm:
+mag_test_host_rm:
   - ./**
-test_hybrid_host_rm:
+mag_test_hybrid_host_rm:
   - ./**
-test_hybrid:
+mag_test_hybrid:
   - ./**
-test_nothing:
+mag_test_nothing:
   - ./**
-test_virus_identification:
+mag_test_virus_identification:
   - ./**
-test:
+mag_test:
   - ./**

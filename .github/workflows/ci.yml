@@ -90,7 +90,7 @@ jobs:
 
       - name: Run nf-test
         run: |
-          nf-test test --tag mag_${{ matrix.tags }} --profile ${{ matrix.tags }},${{ matrix.profile }},test_data --junitxml=test.xml
+          nf-test test --tag ${{ matrix.tags }} --profile ${{ matrix.tags }},${{ matrix.profile }},test_data --junitxml=test.xml
 
       - name: Output log on failure
         if: failure()
