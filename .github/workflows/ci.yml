@@ -1,3 +1,4 @@
+# This workflow runs the pipeline with the minimal test dataset to check that it completes without any syntax errors
 name: nf-core CI
 on:
   pull_request:
@@ -12,7 +13,10 @@ on:
 
 env:
   NXF_ANSI_LOG: false
-  NFTEST_VER: "0.8.1"
+  NFT_VER: "0.8.3"
+  NFT_WORKDIR: "~"
+  NFT_DIFF: "pdiff"
+  NFT_DIFF_ARGS: "--line-numbers --expand-tabs=2"
 
 concurrency:
   group: "${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}"
@@ -71,7 +75,17 @@ jobs:
       - name: Install Nextflow
         uses: nf-core/setup-nextflow@v1
         with:
-          version: "23.10.0"
+          version: "${{ matrix.NXF_VER }}"
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+          architecture: "x64"
+
+      - name: Install pdiff to see diff between nf-test snapshots
+        run: |
+          python -m pip install --upgrade pip
+          pip install pdiff
 
       - name: Cache nf-test installation
         id: cache-software
@@ -80,7 +94,7 @@ jobs:
           path: |
             /usr/local/bin/nf-test
             /home/runner/.nf-test/nf-test.jar
-          key: ${{ runner.os }}-${{ env.NFTEST_VER }}-nftest
+          key: ${{ runner.os }}-${{ env.NFT_VER }}-nftest
 
       - name: Install nf-test
         if: steps.cache-software.outputs.cache-hit != 'true'
@@ -90,7 +104,12 @@ jobs:
 
       - name: Run nf-test
         run: |
-          nf-test test --tag ${{ matrix.tags }} --profile test,${{ matrix.profile }},test_data --junitxml=test.xml
+          nf-test test --verbose --tag ${{ matrix.tags }} --profile "${{ matrix.profile }}" --junitxml=test.xml --tap=test.tap
+
+      - uses: pcolby/tap-summary@v1
+        with:
+          path: >-
+            test.tap
 
       - name: Output log on failure
         if: failure()

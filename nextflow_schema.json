@@ -279,7 +279,8 @@
             "default": "",
             "properties": {
                 "bowtie2_fix_cpu_1": {
-                    "type": "boolean"
+                    "type": "boolean",
+                    "description": "Fix number of CPUS used by MaxBin2. Not increased with retries"
                 },
                 "megahit_fix_cpu_1": {
                     "type": "boolean",
@@ -299,9 +300,8 @@
                     "help_text": "SPAdes is designed to be deterministic for a given number of threads. To generate reproducible results fix the number of CPUs using this parameter.\n\nWhen using this parameter do not change the number of CPUs for the `spadeshybrid` process with a custom config file. This would result in an error.\n\nDefault: -1 (the number of CPUs is specified in the `base.config` or in a custom config file, and increased with each retry)."
                 },
                 "maxbin2_fix_cpu_1": {
-                    "type": "number",
-                    "description": "Fix number of CPUS used by MaxBin2. Not increased with retries",
-                    "default": -1
+                    "type": "boolean",
+                    "description": "Fix number of CPUS used by MaxBin2. Not increased with retries"
                 },
                 "metabat_rng_seed": {
                     "type": "integer",

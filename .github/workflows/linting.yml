@@ -32,7 +32,7 @@ jobs:
       - uses: actions/setup-node@v4
 
       - name: Install Prettier
-        run: npm install -g prettier@3.1.0
+        run: npm install -g prettier
 
       - name: Run Prettier --check
         run: prettier --check ${GITHUB_WORKSPACE}
