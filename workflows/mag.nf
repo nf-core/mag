@@ -943,6 +943,7 @@ workflow MAG {
                     meta, classification ->
                     ["${meta.id}.txt", classification]
             }
+        // Group all classification results for the whole run in a single file
         CAT_SUMMARY(
             ch_cat_summary.collect()
         )
