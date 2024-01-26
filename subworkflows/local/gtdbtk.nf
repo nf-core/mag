@@ -88,8 +88,6 @@ workflow GTDBTK {
         GTDBTK_CLASSIFYWF.out.summary.map{it[1]}.collect().ifEmpty([]),
         [],
         []
-        // GTDBTK_CLASSIFYWF.out.filtered.map{it[1]}.collect().ifEmpty([]),
-        // GTDBTK_CLASSIFYWF.out.failed.map{it[1]}.collect().ifEmpty([])
     )
 
     emit:
