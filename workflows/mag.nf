@@ -982,7 +982,8 @@ workflow MAG {
                 ch_busco_summary.ifEmpty([]),
                 ch_checkm_summary.ifEmpty([]),
                 ch_quast_bins_summary.ifEmpty([]),
-                ch_gtdbtk_summary.ifEmpty([])
+                ch_gtdbtk_summary.ifEmpty([]),
+                CAT_SUMMARY.out.summary.ifEmpty([])
             )
         }
 
