@@ -53,7 +53,7 @@ workflow GTDBTK {
     ch_filtered_bins = bins
         .transpose()
         .map { meta, bin -> [bin.getName(), bin, meta]}
-        .join(ch_bin_metrics, failOnDuplicate: true, failOnMismatch: false)
+        .join(ch_bin_metrics, failOnDuplicate: true)
         .map { bin_name, bin, meta, completeness, contamination -> [meta, bin, completeness, contamination] }
         .branch {
             passed: (it[2] != -1 && it[2] >= params.gtdbtk_min_completeness && it[3] != -1 && it[3] <= params.gtdbtk_max_contamination)
