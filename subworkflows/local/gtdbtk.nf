@@ -25,7 +25,8 @@ workflow GTDBTK {
                         def completeness  = -1
                         def contamination = -1
                         def missing, duplicated
-                        if (params.busco_db.getBaseName().contains('odb10')) {
+                        def busco_db = file(params.busco_db)
+                        if (busco_db.getBaseName().contains('odb10')) {
                             missing    = row.'%Missing (specific)'      // TODO or just take '%Complete'?
                             duplicated = row.'%Complete and duplicated (specific)'
                         } else {
@@ -52,7 +53,7 @@ workflow GTDBTK {
     ch_filtered_bins = bins
         .transpose()
         .map { meta, bin -> [bin.getName(), bin, meta]}
-        .join(ch_bin_metrics, failOnDuplicate: true, failOnMismatch: true)
+        .join(ch_bin_metrics, failOnDuplicate: true)
         .map { bin_name, bin, meta, completeness, contamination -> [meta, bin, completeness, contamination] }
         .branch {
             passed: (it[2] != -1 && it[2] >= params.gtdbtk_min_completeness && it[3] != -1 && it[3] <= params.gtdbtk_max_contamination)
@@ -84,11 +85,9 @@ workflow GTDBTK {
 
     GTDBTK_SUMMARY (
         ch_filtered_bins.discarded.map{it[1]}.collect().ifEmpty([]),
-        GTDBTK_CLASSIFYWF.out.summary.collect().ifEmpty([]),
+        GTDBTK_CLASSIFYWF.out.summary.map{it[1]}.collect().ifEmpty([]),
         [],
-        // GTDBTK_CLASSIFYWF.out.filtered.collect().ifEmpty([]),
         []
-        // GTDBTK_CLASSIFYWF.out.failed.collect().ifEmpty([])
     )
 
     emit:

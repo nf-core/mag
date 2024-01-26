@@ -455,26 +455,29 @@ workflow MAG {
     if ( !ch_centrifuge_db_file.isEmpty() ) {
         if ( ch_centrifuge_db_file.extension in ['gz', 'tgz'] ) {
             // Expects to be tar.gz!
-            ch_db_for_centrifuge = CENTRIFUGE_DB_PREPARATION ( ch_centrifuge_db_file ).db
+            ch_db_for_centrifuge = CENTRIFUGE_DB_PREPARATION ( ch_centrifuge_db_file )
+                                    .db
+                                    .collect()
+                                    .map{
+                                    db ->
+                                        def db_name = db[0].getBaseName().split('\\.')[0]
+                                        [ db_name, db ]
+                                    }
         } else if ( ch_centrifuge_db_file.isDirectory() ) {
             ch_db_for_centrifuge = Channel
                                     .fromPath( "${ch_centrifuge_db_file}/*.cf" )
+                                    .collect()
+                                    .map{
+                                        db ->
+                                            def db_name = db[0].getBaseName().split('\\.')[0]
+                                            [ db_name, db ]
+                                    }
         } else {
             ch_db_for_centrifuge = Channel.empty()
         }
     } else {
         ch_db_for_centrifuge = Channel.empty()
     }
-
-    // Centrifuge val(db_name) has to be the basename of any of the
-    //   index files up to but not including the final .1.cf
-    ch_db_for_centrifuge = ch_db_for_centrifuge
-                            .collect()
-                            .map{
-                                db ->
-                                    def db_name = db[0].getBaseName().split('\\.')[0]
-                                    [ db_name, db ]
-                            }
 
     CENTRIFUGE (
         ch_short_reads,
@@ -578,6 +581,7 @@ workflow MAG {
         }
 
         ch_assemblies = Channel.empty()
+
         if (!params.skip_megahit){
             MEGAHIT ( ch_short_reads_grouped )
             ch_megahit_assemblies = MEGAHIT.out.assembly
@@ -791,8 +795,6 @@ workflow MAG {
                 [meta_new, bins]
             }
 
-
-
         // If any two of the binners are both skipped at once, do not run because DAS_Tool needs at least one
         if ( params.refine_bins_dastool ) {
             ch_prokarya_bins_dastool = ch_binning_results_bins
@@ -829,8 +831,6 @@ workflow MAG {
             } else if ( params.postbinning_input == 'refined_bins_only' ) {
                 ch_input_for_postbinning_bins        = ch_refined_bins
                 ch_input_for_postbinning_bins_unbins = ch_refined_bins.mix(ch_refined_unbins)
-            // TODO REACTIVATE ONCE PR #489 IS READY!
-            // TODO RE-ADD BOTH TO SCHEMA ONCE RE-ADDING
             } else if ( params.postbinning_input == 'both' ) {
                 ch_all_bins = ch_binning_results_bins.mix(ch_refined_bins)
                 ch_input_for_postbinning_bins        = ch_all_bins
@@ -913,7 +913,12 @@ workflow MAG {
 
             QUAST_BINS ( ch_input_for_quast_bins )
             ch_versions = ch_versions.mix(QUAST_BINS.out.versions.first())
-            QUAST_BINS_SUMMARY ( QUAST_BINS.out.quast_bin_summaries.collect() )
+            ch_quast_bin_summary = QUAST_BINS.out.quast_bin_summaries
+                .collectFile(keepHeader: true) {
+                    meta, summary ->
+                    ["${meta.id}.tsv", summary]
+            }
+            QUAST_BINS_SUMMARY ( ch_quast_bin_summary.collect() )
             ch_quast_bins_summary = QUAST_BINS_SUMMARY.out.summary
         }
 
@@ -932,8 +937,15 @@ workflow MAG {
             ch_input_for_postbinning_bins_unbins,
             ch_cat_db
         )
+        // Group all classification results for each sample in a single file
+        ch_cat_summary = CAT.out.tax_classification_names
+            .collectFile(keepHeader: true) {
+                    meta, classification ->
+                    ["${meta.id}.txt", classification]
+            }
+        // Group all classification results for the whole run in a single file
         CAT_SUMMARY(
-            CAT.out.tax_classification_names.collect()
+            ch_cat_summary.collect()
         )
         ch_versions = ch_versions.mix(CAT.out.versions.first())
         ch_versions = ch_versions.mix(CAT_SUMMARY.out.versions)
