@@ -937,11 +937,13 @@ workflow MAG {
             ch_input_for_postbinning_bins_unbins,
             ch_cat_db
         )
+        // Group all classification results for each sample in a single file
         ch_cat_summary = CAT.out.tax_classification_names
             .collectFile(keepHeader: true) {
                     meta, classification ->
                     ["${meta.id}.txt", classification]
             }
+        // Group all classification results for the whole run in a single file
         CAT_SUMMARY(
             ch_cat_summary.collect()
         )
