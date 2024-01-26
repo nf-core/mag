@@ -350,15 +350,23 @@ workflow MAG {
             .groupTuple()
             .branch {
                 meta, reads ->
-                    cat:       ( meta.single_end && reads.size() == 1 ) || ( !meta.single_end && reads.size() >= 2 )
+                    cat:      reads.size() >= 2 // SE: [[meta], [S1_R1, S2_R1]]; PE: [[meta], [[S1_R1, S1_R2], [S2_R1, S2_R2]]]
                     skip_cat: true // Can skip merging if only single lanes
             }
 
         CAT_FASTQ ( ch_short_reads_forcat.cat.map { meta, reads -> [ meta, reads.flatten() ]} )
 
-            ch_short_reads = Channel.empty()
-            ch_short_reads = CAT_FASTQ.out.reads.mix( ch_short_reads_forcat.skip_cat ).map { meta, reads -> [ meta, reads.flatten() ]}
-            ch_versions    = ch_versions.mix(CAT_FASTQ.out.versions.first())
+        // Ensure we don't have nests of nests so that structure is in form expected for assembly
+        ch_short_reads_catskipped = ch_short_reads_forcat.skip_cat
+                                        .map { meta, reads ->
+                                            def new_reads = meta.single_end ? reads[0] : reads.flatten()
+                                        [ meta, new_reads ]
+                                    }
+
+        // Combine single run and multi-run-merged data
+        ch_short_reads = Channel.empty()
+        ch_short_reads = CAT_FASTQ.out.reads.mix(ch_short_reads_catskipped)
+        ch_versions    = ch_versions.mix(CAT_FASTQ.out.versions.first())
 
         if ( params.bbnorm ) {
             if ( params.coassemble_group ) {
