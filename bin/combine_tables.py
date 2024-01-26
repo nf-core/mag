@@ -130,7 +130,7 @@ def main(args=None):
             results, gtdbtk_results, left_on="bin", right_on="user_genome", how="outer"
         )  # assuming depths for all bins are given
 
-    if args.cat_table:
+    if args.cat_summary:
         cat_results = parse_cat_table(args.cat_summary)
         if len(set(cat_results["bin"].to_list()).difference(set(bins))) > 0:
             sys.exit("Bins in CAT summary do not match bins in bin depths summary!")
