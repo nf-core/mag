@@ -937,6 +937,7 @@ workflow MAG {
             ch_input_for_postbinning_bins_unbins,
             ch_cat_db
         )
+        // Group all classification results for each sample in a single file
         ch_cat_summary = CAT.out.tax_classification_names
             .collectFile(keepHeader: true) {
                     meta, classification ->
