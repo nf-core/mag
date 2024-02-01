@@ -958,6 +958,13 @@ workflow MAG {
         ch_versions = ch_versions.mix(CAT.out.versions.first())
         ch_versions = ch_versions.mix(CAT_SUMMARY.out.versions)
 
+        // If CAT is not run, then the CAT global summary should be an empty channel
+        if ( params.cat_db_generate || params.cat_db) {
+            ch_cat_global_summary = CAT_SUMMARY.out.summary
+        } else {
+            ch_cat_global_summary = Channel.empty()
+        }
+
         /*
          * GTDB-tk: taxonomic classifications using GTDB reference
          */
@@ -992,7 +999,8 @@ workflow MAG {
                 ch_busco_summary.ifEmpty([]),
                 ch_checkm_summary.ifEmpty([]),
                 ch_quast_bins_summary.ifEmpty([]),
-                ch_gtdbtk_summary.ifEmpty([])
+                ch_gtdbtk_summary.ifEmpty([]),
+                ch_cat_global_summary.ifEmpty([])
             )
         }
 

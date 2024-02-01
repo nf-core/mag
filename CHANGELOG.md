@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
+- [#562](https://github.com/nf-core/mag/pull/562) - Add CAT summary into the global bin_summary (by @maxibor)
+
 ### `Changed`
 
 ### `Fixed`
