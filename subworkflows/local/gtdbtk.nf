@@ -77,6 +77,13 @@ workflow GTDBTK {
         error("Unsupported object given to --gtdb, database must be supplied as either a directory or a .tar.gz file!")
     }
 
+
+    // Print warning why GTDB-TK summary empty if passed channel gets no files
+    ch_filtered_bins.passed
+        .count()
+        .map{it == 0 ? log.warn("No contigs passed GTDB-TK min. completeness filters. GTDB-TK summary will execute but results will be empty!") : ""}
+
+
     GTDBTK_CLASSIFYWF (
         ch_filtered_bins.passed.groupTuple(),
         ch_db_for_gtdbtk,
