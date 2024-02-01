@@ -33,6 +33,7 @@ top_modules:
         - "*trimmed*"
   - "fastp"
   - "adapterRemoval"
+  - "porechop"
   - "fastqc":
       name: "FastQC: after preprocessing"
       info: "After trimming and, if requested, contamination removal."
@@ -48,12 +49,6 @@ top_modules:
       info: "Mapping statistics of reads mapped against host genome and subsequently removed."
       path_filters:
         - "*_host_removed.bowtie2.log"
-  - "bowtie2":
-      name: "Bowtie2: assembly"
-      info: "Mapping statistics of reads mapped against assemblies."
-      path_filters_exclude:
-        - "*_host_removed.bowtie2.log"
-        - "*_phix_removed.bowtie2.log"
   - "kraken":
       name: "Kraken2"
       anchor: "Kraken2"
@@ -70,21 +65,26 @@ top_modules:
       extra: "ℹ️: plot title will say Kraken2 due to Centrifuge producing the same output format as Kraken. If activated, see the actual Kraken2 results in the section above."
       path_filters:
         - "*.centrifuge_kreport.txt"
-  - "porechop"
-  - "bcftools"
-  - custom_content
-  - "busco":
-      info: "assesses genome assembly and annotation completeness with Benchmarking Universal Single-Copy Orthologs. In case BUSCO's automated lineage selection was used, only generic results for the selected domain are shown and only for genome bins and kept, unbinned contigs for which the BUSCO analysis was successfull, i.e. not for contigs for which no BUSCO genes could be found. Bins for which a specific virus lineage was selected are also not shown."
   - "quast":
       name: "QUAST: assembly"
       info: "Assembly statistics of raw assemblies."
       path_filters:
         - "*rawassemblies.tsv"
+  - "bowtie2":
+      name: "Bowtie2: assembly"
+      info: "Mapping statistics of reads mapped against assemblies."
+      path_filters_exclude:
+        - "*_host_removed.bowtie2.log"
+        - "*_phix_removed.bowtie2.log"
+  - "bcftools"
+  - custom_content
   - "quast":
       name: "QUAST: bins"
       info: "Assembly statistics of binned assemblies."
       path_filters_exclude:
         - "*rawassemblies.tsv"
+  - "busco":
+      info: "assesses genome assembly and annotation completeness with Benchmarking Universal Single-Copy Orthologs. In case BUSCO's automated lineage selection was used, only generic results for the selected domain are shown and only for genome bins and kept, unbinned contigs for which the BUSCO analysis was successfull, i.e. not for contigs for which no BUSCO genes could be found. Bins for which a specific virus lineage was selected are also not shown."
   - "prokka"
 
 custom_data:
@@ -140,6 +140,8 @@ table_columns_visible:
     after_filtering_gc_content: False
     pct_surviving: True
     pct_adapter: True
+  "Kraken2": False
+  "Centrifuge": False
   "QUAST: assembly":
     N75: True
     L50: True
@@ -148,8 +150,6 @@ table_columns_visible:
     "Total length": True
     N50: True
   "Bowtie2: assembly": False
-  "Kraken2": False
-  "Centrifuge": False
   "QUAST: bins":
     N75: True
     L50: True
@@ -190,11 +190,6 @@ table_columns_placement:
     overall_alignment_rate: 5000
   "Bowtie2: host removal":
     overall_alignment_rate: 6000
-  "QUAST: assembly":
-    "N50": 10000
-    "Total length": 11000
-  "Bowtie2: assembly":
-    overall_alignment_rate: 7000
   "Kraken2":
     "% root": 8000
     "% Top 5": 8100
@@ -203,6 +198,11 @@ table_columns_placement:
     "% root": 9000
     "% Top 5": 9100
     "% Unclassified": 9200
+  "QUAST: assembly":
+    "N50": 10000
+    "Total length": 11000
+  "Bowtie2: assembly":
+    overall_alignment_rate: 7000
   "QUAST: bins":
     "N50": 10000
     "Total length": 11000
