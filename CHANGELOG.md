@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Fixed`
 
 - [#558](https://github.com/nf-core/mag/pull/558) - Fix bug in run merging when dealing with single end data (reported by @roberta-davidson, fix by @jfy133)
-- [#566](https://github.com/nf-core/mag/pull/566) - More logical ordering of MultiQC sections (assembly and bin sections go together respectively) (fix by @jfy133 and @maxibor)
+- [#566](https://github.com/nf-core/mag/pull/566) - More logical ordering of MultiQC sections (assembly and bin sections go together respectively) (fix by @jfy133)
 
 ### `Dependencies`
 
