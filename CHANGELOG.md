@@ -7,7 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
-- [#548](https://github.com/nf-core/mag/pull/548) fixes to GTDBK-TK execusion, CAT/QUAST/DEPTH bin summary file name collisions, BUSCO database parsing, correct CAT name files (reported by @maxibor, @PPpissar, @muniheart, @llborcard, fix by @maxibor)
+- [#548](https://github.com/nf-core/mag/pull/548) - Fixes to (reported by @maxibor, @PPpissar, @muniheart, @llborcard, fix by @maxibor)
+  - GTDBK-TK execution 
+  - CAT/QUAST/DEPTH bin summary file name collisions
+  - BUSCO database parsing
+  - Correct CAT name files 
+- [#562](https://github.com/nf-core/mag/pull/562) - Add CAT summary into the global bin_summary (by @maxibor)
 - [#565](https://github.com/nf-core/mag/pull/565) - Add warning of empty GTDB-TK results if no contigs pass completeness filter (fix by @jfy133 and @maxibor)
 
 ### `Changed`
