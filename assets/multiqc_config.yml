@@ -140,9 +140,6 @@ table_columns_visible:
     after_filtering_gc_content: False
     pct_surviving: True
     pct_adapter: True
-  "Bowtie2: assembly": False
-  "Kraken2": False
-  "Centrifuge": False
   "QUAST: assembly":
     N75: True
     L50: True
@@ -150,6 +147,9 @@ table_columns_visible:
     "Largest contig": True
     "Total length": True
     N50: True
+  "Bowtie2: assembly": False
+  "Kraken2": False
+  "Centrifuge": False
   "QUAST: bins":
     N75: True
     L50: True
@@ -190,6 +190,9 @@ table_columns_placement:
     overall_alignment_rate: 5000
   "Bowtie2: host removal":
     overall_alignment_rate: 6000
+  "QUAST: assembly":
+    "N50": 10000
+    "Total length": 11000
   "Bowtie2: assembly":
     overall_alignment_rate: 7000
   "Kraken2":
@@ -200,9 +203,6 @@ table_columns_placement:
     "% root": 9000
     "% Top 5": 9100
     "% Unclassified": 9200
-  "QUAST: assembly":
-    "N50": 10000
-    "Total length": 11000
   "QUAST: bins":
     "N50": 10000
     "Total length": 11000
