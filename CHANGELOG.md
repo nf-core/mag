@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
+- [#574](https://github.com/nf-core/mag/pull/574) - Fix wrong channel going to BIN_SUMMARY (fix by @maxibor)
+
 ### `Dependencies`
 
 ### `Deprecated`
