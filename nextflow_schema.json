@@ -65,7 +65,7 @@
                     "type": "string",
                     "format": "directory-path",
                     "description": "Directory / URL base for iGenomes references.",
-                    "default": "s3://ngi-igenomes/igenomes",
+                    "default": "s3://ngi-igenomes/igenomes/",
                     "fa_icon": "fas fa-cloud-download-alt",
                     "hidden": true
                 },
@@ -763,7 +763,7 @@
                 "busco_db": {
                     "type": "string",
                     "description": "Download URL for BUSCO lineage dataset, or path to a tar.gz archive, or local directory containing already downloaded and unpacked lineage datasets.",
-                    "help_text": "E.g. https://busco-data.ezlab.org/v5/data/lineages/bacteria_odb10.2020-03-06.tar.gz or '/path/to/buscodb' (files still need to be unpacked manually). Available databases are listed here: https://busco-data.ezlab.org/v5/data/lineages/."
+                    "help_text": "E.g. https://busco-data.ezlab.org/v5/data/lineages/bacteria_odb10.2024-01-08.tar.gz or '/path/to/buscodb' (files still need to be unpacked manually). Available databases are listed here: https://busco-data.ezlab.org/v5/data/lineages/."
                 },
                 "busco_auto_lineage_prok": {
                     "type": "boolean",
