@@ -960,7 +960,7 @@ workflow MAG {
 
         // If CAT is not run, then the CAT global summary should be an empty channel
         if ( params.cat_db_generate || params.cat_db) {
-            ch_cat_global_summary = CAT_SUMMARY.out.summary
+            ch_cat_global_summary = CAT_SUMMARY.out.combined
         } else {
             ch_cat_global_summary = Channel.empty()
         }
