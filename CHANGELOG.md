@@ -3,24 +3,26 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## dev - [unreleased]
+## 2.5.2 - [2024-02-02]
 
 ### `Added`
+
+- [#562](https://github.com/nf-core/mag/pull/562) - Add CAT summary into the global bin_summary (by @maxibor)
+- [#565](https://github.com/nf-core/mag/pull/565) - Add warning of empty GTDB-TK results if no contigs pass completeness filter (by @jfy133 and @maxibor)
+
+### `Changed`
+
+- [#563](https://github.com/nf-core/mag/pull/562) Update to nf-core v2.12 `TEMPLATE` (by @CarsonJM)
+- [#566](https://github.com/nf-core/mag/pull/566) - More logical ordering of MultiQC sections (assembly and bin sections go together respectively) (fix by @jfy133)
+
+### `Fixed`
 
 - [#548](https://github.com/nf-core/mag/pull/548) - Fixes to (reported by @maxibor, @PPpissar, @muniheart, @llborcard, fix by @maxibor)
   - GTDBK-TK execution
   - CAT/QUAST/DEPTH bin summary file name collisions
   - BUSCO database parsing
   - Correct CAT name files
-- [#562](https://github.com/nf-core/mag/pull/562) - Add CAT summary into the global bin_summary (by @maxibor)
-- [#565](https://github.com/nf-core/mag/pull/565) - Add warning of empty GTDB-TK results if no contigs pass completeness filter (fix by @jfy133 and @maxibor)
-
-### `Changed`
-
-### `Fixed`
-
 - [#558](https://github.com/nf-core/mag/pull/558) - Fix bug in run merging when dealing with single end data (reported by @roberta-davidson, fix by @jfy133)
-- [#566](https://github.com/nf-core/mag/pull/566) - More logical ordering of MultiQC sections (assembly and bin sections go together respectively) (fix by @jfy133)
 
 ### `Dependencies`
 
