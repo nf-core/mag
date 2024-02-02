@@ -11,7 +11,7 @@ process QUAST_BINS {
 
     output:
     path "QUAST/*", type: 'dir'     , emit: dir
-    path "QUAST/*-quast_summary.tsv", emit: quast_bin_summaries
+    tuple val(meta), path("QUAST/*-quast_summary.tsv"), emit: quast_bin_summaries
     path "versions.yml"             , emit: versions
 
     script:

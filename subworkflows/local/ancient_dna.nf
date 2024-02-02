@@ -29,9 +29,9 @@ workflow ANCIENT_DNA_ASSEMBLY_VALIDATION {
                                         fasta: [ contigs ]
                                         fai: [ fai ]
                                 }
-            FREEBAYES ( freebayes_input.reads.dump(tag: 'reads'),
-                        freebayes_input.fasta.dump(tag: 'fasta'),
-                        freebayes_input.fai.dump(tag: 'fai'),
+            FREEBAYES ( freebayes_input.reads,
+                        freebayes_input.fasta,
+                        freebayes_input.fai,
                         [],
                         [],
                         [] )

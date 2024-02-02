@@ -11,6 +11,7 @@ process BIN_SUMMARY {
     path(checkm_sum)
     path(quast_sum)
     path(gtdbtk_sum)
+    path(cat_sum)
 
     output:
     path("bin_summary.tsv"), emit: summary
@@ -21,12 +22,14 @@ process BIN_SUMMARY {
     def checkm_summary = checkm_sum.sort().size() > 0 ?  "--checkm_summary ${checkm_sum}" : ""
     def quast_summary  = quast_sum.sort().size() > 0 ?  "--quast_summary ${quast_sum}" : ""
     def gtdbtk_summary = gtdbtk_sum.sort().size() > 0 ? "--gtdbtk_summary ${gtdbtk_sum}" : ""
+    def cat_summary    = cat_sum.sort().size() > 0 ?    "--cat_summary ${cat_sum}" : ""
     """
     combine_tables.py --depths_summary ${bin_depths} \
                     $busco_summary \
                     $checkm_summary \
                     $quast_summary \
                     $gtdbtk_summary \
+                    $cat_summary \
                     --out bin_summary.tsv
 
     cat <<-END_VERSIONS > versions.yml
