@@ -351,15 +351,23 @@ workflow MAG {
             .groupTuple()
             .branch {
                 meta, reads ->
-                    cat:       ( meta.single_end && reads.size() == 1 ) || ( !meta.single_end && reads.size() >= 2 )
+                    cat:      reads.size() >= 2 // SE: [[meta], [S1_R1, S2_R1]]; PE: [[meta], [[S1_R1, S1_R2], [S2_R1, S2_R2]]]
                     skip_cat: true // Can skip merging if only single lanes
             }
 
         CAT_FASTQ ( ch_short_reads_forcat.cat.map { meta, reads -> [ meta, reads.flatten() ]} )
 
-            ch_short_reads = Channel.empty()
-            ch_short_reads = CAT_FASTQ.out.reads.mix( ch_short_reads_forcat.skip_cat ).map { meta, reads -> [ meta, reads.flatten() ]}
-            ch_versions    = ch_versions.mix(CAT_FASTQ.out.versions.first())
+        // Ensure we don't have nests of nests so that structure is in form expected for assembly
+        ch_short_reads_catskipped = ch_short_reads_forcat.skip_cat
+                                        .map { meta, reads ->
+                                            def new_reads = meta.single_end ? reads[0] : reads.flatten()
+                                        [ meta, new_reads ]
+                                    }
+
+        // Combine single run and multi-run-merged data
+        ch_short_reads = Channel.empty()
+        ch_short_reads = CAT_FASTQ.out.reads.mix(ch_short_reads_catskipped)
+        ch_versions    = ch_versions.mix(CAT_FASTQ.out.versions.first())
 
         if ( params.bbnorm ) {
             if ( params.coassemble_group ) {
@@ -456,26 +464,29 @@ workflow MAG {
     if ( !ch_centrifuge_db_file.isEmpty() ) {
         if ( ch_centrifuge_db_file.extension in ['gz', 'tgz'] ) {
             // Expects to be tar.gz!
-            ch_db_for_centrifuge = CENTRIFUGE_DB_PREPARATION ( ch_centrifuge_db_file ).db
+            ch_db_for_centrifuge = CENTRIFUGE_DB_PREPARATION ( ch_centrifuge_db_file )
+                                    .db
+                                    .collect()
+                                    .map{
+                                    db ->
+                                        def db_name = db[0].getBaseName().split('\\.')[0]
+                                        [ db_name, db ]
+                                    }
         } else if ( ch_centrifuge_db_file.isDirectory() ) {
             ch_db_for_centrifuge = Channel
                                     .fromPath( "${ch_centrifuge_db_file}/*.cf" )
+                                    .collect()
+                                    .map{
+                                        db ->
+                                            def db_name = db[0].getBaseName().split('\\.')[0]
+                                            [ db_name, db ]
+                                    }
         } else {
             ch_db_for_centrifuge = Channel.empty()
         }
     } else {
         ch_db_for_centrifuge = Channel.empty()
     }
-
-    // Centrifuge val(db_name) has to be the basename of any of the
-    //   index files up to but not including the final .1.cf
-    ch_db_for_centrifuge = ch_db_for_centrifuge
-                            .collect()
-                            .map{
-                                db ->
-                                    def db_name = db[0].getBaseName().split('\\.')[0]
-                                    [ db_name, db ]
-                            }
 
     CENTRIFUGE (
         ch_short_reads,
@@ -579,6 +590,7 @@ workflow MAG {
         }
 
         ch_assemblies = Channel.empty()
+
         if (!params.skip_megahit){
             MEGAHIT ( ch_short_reads_grouped )
             ch_megahit_assemblies = MEGAHIT.out.assembly
@@ -792,8 +804,6 @@ workflow MAG {
                 [meta_new, bins]
             }
 
-
-
         // If any two of the binners are both skipped at once, do not run because DAS_Tool needs at least one
         if ( params.refine_bins_dastool ) {
             ch_prokarya_bins_dastool = ch_binning_results_bins
@@ -830,8 +840,6 @@ workflow MAG {
             } else if ( params.postbinning_input == 'refined_bins_only' ) {
                 ch_input_for_postbinning_bins        = ch_refined_bins
                 ch_input_for_postbinning_bins_unbins = ch_refined_bins.mix(ch_refined_unbins)
-            // TODO REACTIVATE ONCE PR #489 IS READY!
-            // TODO RE-ADD BOTH TO SCHEMA ONCE RE-ADDING
             } else if ( params.postbinning_input == 'both' ) {
                 ch_all_bins = ch_binning_results_bins.mix(ch_refined_bins)
                 ch_input_for_postbinning_bins        = ch_all_bins
@@ -914,7 +922,12 @@ workflow MAG {
 
             QUAST_BINS ( ch_input_for_quast_bins )
             ch_versions = ch_versions.mix(QUAST_BINS.out.versions.first())
-            QUAST_BINS_SUMMARY ( QUAST_BINS.out.quast_bin_summaries.collect() )
+            ch_quast_bin_summary = QUAST_BINS.out.quast_bin_summaries
+                .collectFile(keepHeader: true) {
+                    meta, summary ->
+                    ["${meta.id}.tsv", summary]
+            }
+            QUAST_BINS_SUMMARY ( ch_quast_bin_summary.collect() )
             ch_quast_bins_summary = QUAST_BINS_SUMMARY.out.summary
         }
 
@@ -933,11 +946,25 @@ workflow MAG {
             ch_input_for_postbinning_bins_unbins,
             ch_cat_db
         )
+        // Group all classification results for each sample in a single file
+        ch_cat_summary = CAT.out.tax_classification_names
+            .collectFile(keepHeader: true) {
+                    meta, classification ->
+                    ["${meta.id}.txt", classification]
+            }
+        // Group all classification results for the whole run in a single file
         CAT_SUMMARY(
-            CAT.out.tax_classification_names.collect()
+            ch_cat_summary.collect()
         )
         ch_versions = ch_versions.mix(CAT.out.versions.first())
         ch_versions = ch_versions.mix(CAT_SUMMARY.out.versions)
+
+        // If CAT is not run, then the CAT global summary should be an empty channel
+        if ( params.cat_db_generate || params.cat_db) {
+            ch_cat_global_summary = CAT_SUMMARY.out.summary
+        } else {
+            ch_cat_global_summary = Channel.empty()
+        }
 
         /*
          * GTDB-tk: taxonomic classifications using GTDB reference
@@ -973,7 +1000,8 @@ workflow MAG {
                 ch_busco_summary.ifEmpty([]),
                 ch_checkm_summary.ifEmpty([]),
                 ch_quast_bins_summary.ifEmpty([]),
-                ch_gtdbtk_summary.ifEmpty([])
+                ch_gtdbtk_summary.ifEmpty([]),
+                ch_cat_global_summary.ifEmpty([])
             )
         }
 
@@ -1114,6 +1142,13 @@ workflow.onComplete {
     NfcoreTemplate.summary(workflow, params, log, busco_failed_bins)
     if (params.hook_url) {
         NfcoreTemplate.IM_notification(workflow, params, summary_params, projectDir, log)
+    }
+}
+
+workflow.onError {
+    if (workflow.errorReport.contains("Process requirement exceeds available memory")) {
+        println("🛑 Default resources exceed availability 🛑 ")
+        println("💡 See here on how to configure pipeline: https://nf-co.re/docs/usage/configuration#tuning-workflow-resources 💡")
     }
 }
 

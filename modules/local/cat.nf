@@ -11,14 +11,14 @@ process CAT {
     tuple val(db_name), path("database/*"), path("taxonomy/*")
 
     output:
-    path("*.ORF2LCA.names.txt.gz")            , emit: orf2lca_classification
-    path("*.bin2classification.names.txt.gz") , emit: tax_classification_names
-    path("raw/*.ORF2LCA.txt.gz")              , emit: orf2lca
-    path("raw/*.predicted_proteins.faa.gz")   , emit: faa
-    path("raw/*.predicted_proteins.gff.gz")   , emit: gff
-    path("raw/*.log")                         , emit: log
-    path("raw/*.bin2classification.txt.gz")   , emit: tax_classification_taxids
-    path "versions.yml"                       , emit: versions
+    tuple val(meta), path("*.bin2classification.names.txt")    , emit: tax_classification_names
+    path("*.ORF2LCA.names.txt.gz")                             , emit: orf2lca_classification
+    path("raw/*.ORF2LCA.txt.gz")                               , emit: orf2lca
+    path("raw/*.predicted_proteins.faa.gz")                    , emit: faa
+    path("raw/*.predicted_proteins.gff.gz")                    , emit: gff
+    path("raw/*.log")                                          , emit: log
+    path("raw/*.bin2classification.txt.gz")                    , emit: tax_classification_taxids
+    path "versions.yml"                                        , emit: versions
 
     script:
     def official_taxonomy = params.cat_official_taxonomy ? "--only_official" : ""
@@ -31,12 +31,13 @@ process CAT {
 
     mkdir raw
     mv *.ORF2LCA.txt *.predicted_proteins.faa *.predicted_proteins.gff *.log *.bin2classification.txt raw/
+    cp *.bin2classification.names.txt raw/
     gzip "raw/${prefix}.ORF2LCA.txt" \
         "raw/${prefix}.concatenated.predicted_proteins.faa" \
         "raw/${prefix}.concatenated.predicted_proteins.gff" \
         "raw/${prefix}.bin2classification.txt" \
         "${prefix}.ORF2LCA.names.txt" \
-        "${prefix}.bin2classification.names.txt"
+        "raw/${prefix}.bin2classification.names.txt"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
