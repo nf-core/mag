@@ -369,15 +369,21 @@ workflow MAG {
             .groupTuple()
             .branch {
                 meta, reads ->
-                    cat:       ( meta.single_end && reads.size() == 1 ) || ( !meta.single_end && reads.size() >= 2 )
+                    cat:      reads.size() >= 2 // SE: [[meta], [S1_R1, S2_R1]]; PE: [[meta], [[S1_R1, S1_R2], [S2_R1, S2_R2]]]
                     skip_cat: true // Can skip merging if only single lanes
             }
 
         CAT_FASTQ ( ch_short_reads_forcat.cat.map { meta, reads -> [ meta, reads.flatten() ]} )
-
-            ch_short_reads = Channel.empty()
-            ch_short_reads = CAT_FASTQ.out.reads.mix( ch_short_reads_forcat.skip_cat ).map { meta, reads -> [ meta, reads.flatten() ]}
-            ch_versions    = ch_versions.mix(CAT_FASTQ.out.versions.first())
+        // Ensure we don't have nests of nests so that structure is in form expected for assembly
+        ch_short_reads_catskipped = ch_short_reads_forcat.skip_cat
+                                        .map { meta, reads ->
+                                            def new_reads = meta.single_end ? reads[0] : reads.flatten()
+                                        [ meta, new_reads ]
+                                    }
+        // Combine single run and multi-run-merged data
+        ch_short_reads = Channel.empty()
+        ch_short_reads = CAT_FASTQ.out.reads.mix(ch_short_reads_catskipped)
+        ch_versions    = ch_versions.mix(CAT_FASTQ.out.versions.first())
 
         if ( params.bbnorm ) {
             if ( params.coassemble_group ) {
@@ -474,27 +480,29 @@ workflow MAG {
     if ( !ch_centrifuge_db_file.isEmpty() ) {
         if ( ch_centrifuge_db_file.extension in ['gz', 'tgz'] ) {
             // Expects to be tar.gz!
-            ch_db_for_centrifuge = CENTRIFUGE_DB_PREPARATION ( ch_centrifuge_db_file ).db
+            ch_db_for_centrifuge = CENTRIFUGE_DB_PREPARATION ( ch_centrifuge_db_file )
+                                    .db
+                                    .collect()
+                                    .map{
+                                    db ->
+                                        def db_name = db[0].getBaseName().split('\\.')[0]
+                                        [ db_name, db ]
+                                    }
         } else if ( ch_centrifuge_db_file.isDirectory() ) {
             ch_db_for_centrifuge = Channel
                                     .fromPath( "${ch_centrifuge_db_file}/*.cf" )
+                                    .collect()
+                                    .map{
+                                        db ->
+                                            def db_name = db[0].getBaseName().split('\\.')[0]
+                                            [ db_name, db ]
+                                    }
         } else {
             ch_db_for_centrifuge = Channel.empty()
         }
     } else {
         ch_db_for_centrifuge = Channel.empty()
     }
-
-    // Centrifuge val(db_name) has to be the basename of any of the
-    //   index files up to but not including the final .1.cf
-    ch_db_for_centrifuge = ch_db_for_centrifuge
-                            .collect()
-                            .map{
-                                db ->
-                                    def db_name = db[0].getBaseName().split('\\.')[0]
-                                    [ db_name, db ]
-                            }
-
     CENTRIFUGE (
         ch_short_reads,
         ch_db_for_centrifuge
@@ -850,8 +858,6 @@ workflow MAG {
             } else if ( params.postbinning_input == 'refined_bins_only' ) {
                 ch_input_for_postbinning_bins        = ch_refined_bins
                 ch_input_for_postbinning_bins_unbins = ch_refined_bins.mix(ch_refined_unbins)
-            // TODO REACTIVATE ONCE PR #489 IS READY!
-            // TODO RE-ADD BOTH TO SCHEMA ONCE RE-ADDING
             } else if ( params.postbinning_input == 'both' ) {
                 ch_all_bins = ch_binning_results_bins.mix(ch_refined_bins)
                 ch_input_for_postbinning_bins        = ch_all_bins
@@ -933,14 +939,16 @@ workflow MAG {
                                                 def new_bins = bins.flatten()
                                                 [meta, new_bins]
                                             }
-
             QUAST_BINS ( ch_input_for_quast_bins )
             ch_versions = ch_versions.mix(QUAST_BINS.out.versions.first())
-            ch_quast_bin_summaries = QUAST_BINS.out.quast_bin_summaries
-            QUAST_BINS_SUMMARY ( QUAST_BINS.out.quast_bin_summaries.collect() )
+            ch_quast_bin_summary = QUAST_BINS.out.quast_bin_summaries
+                .collectFile(keepHeader: true) {
+                    meta, summary ->
+                    ["${meta.id}.tsv", summary]
+            }
+            QUAST_BINS_SUMMARY ( ch_quast_bin_summary.collect() )
             ch_quast_bins_summary = QUAST_BINS_SUMMARY.out.summary
         }
-
         /*
          * CAT: Bin Annotation Tool (BAT) are pipelines for the taxonomic classification of long DNA sequences and metagenome assembled genomes (MAGs/bins)
          */
@@ -956,27 +964,36 @@ workflow MAG {
             ch_input_for_postbinning_bins_unbins,
             ch_cat_db
         )
+        // Group all classification results for each sample in a single file
+        ch_cat_summary = CAT.out.tax_classification_names
+            .collectFile(keepHeader: true) {
+                    meta, classification ->
+                    ["${meta.id}.txt", classification]
+            }
+        // Group all classification results for the whole run in a single file
         CAT_SUMMARY(
-            CAT.out.tax_classification_names.collect()
+            ch_cat_summary.collect()
         )
-        ch_cat_tax_classification_names = CAT.out.tax_classification_names
         ch_versions = ch_versions.mix(CAT.out.versions.first())
         ch_versions = ch_versions.mix(CAT_SUMMARY.out.versions)
 
+        // If CAT is not run, then the CAT global summary should be an empty channel
+        if ( params.cat_db_generate || params.cat_db) {
+            ch_cat_global_summary = CAT_SUMMARY.out.summary
+            ch_cat_global_summary = CAT_SUMMARY.out.combined
+        } else {
+            ch_cat_global_summary = Channel.empty()
+        }
         /*
          * GTDB-tk: taxonomic classifications using GTDB reference
          */
-
         if ( !params.skip_gtdbtk ) {
-
             ch_gtdbtk_summary = Channel.empty()
             if ( gtdb ){
-
                 ch_gtdb_bins = ch_input_for_postbinning_bins_unbins
                     .filter { meta, bins ->
                         meta.domain != "eukarya"
                     }
-
                 GTDBTK (
                     ch_gtdb_bins,
                     ch_busco_summary,
@@ -985,28 +1002,24 @@ workflow MAG {
                     gtdb_mash
                 )
                 ch_versions = ch_versions.mix(GTDBTK.out.versions.first())
-                ch_gtdbtk_summaries = GTDBTK.out.gtdbtk_summaries
                 ch_gtdbtk_summary = GTDBTK.out.summary
             }
         } else {
             ch_gtdbtk_summary = Channel.empty()
         }
-
         if ( ( !params.skip_binqc ) || !params.skip_quast || !params.skip_gtdbtk){
             BIN_SUMMARY (
                 ch_input_for_binsummary,
                 ch_busco_summary.ifEmpty([]),
                 ch_checkm_summary.ifEmpty([]),
                 ch_quast_bins_summary.ifEmpty([]),
-                ch_gtdbtk_summary.ifEmpty([])
+                ch_gtdbtk_summary.ifEmpty([]),
+                ch_cat_global_summary.ifEmpty([])
             )
-            ch_bin_summaries = BIN_SUMMARY.out.summary
         }
-
         /*
          * Prokka: Genome annotation
          */
-
         if (!params.skip_prokka){
             ch_bins_for_prokka = ch_input_for_postbinning_bins_unbins.transpose()
             .map { meta, bin ->
@@ -1016,7 +1029,6 @@ workflow MAG {
             .filter { meta, bin ->
                 meta.domain != "eukarya"
             }
-
             PROKKA (
                 ch_bins_for_prokka,
                 [],
@@ -1025,7 +1037,6 @@ workflow MAG {
             ch_prokka_faa = PROKKA.out.faa
             ch_versions = ch_versions.mix(PROKKA.out.versions.first())
         }
-
         if (!params.skip_metaeuk && (params.metaeuk_db || params.metaeuk_mmseqs_db)) {
             ch_bins_for_metaeuk = ch_input_for_postbinning_bins_unbins.transpose()
                 .filter { meta, bin ->
@@ -1035,88 +1046,66 @@ workflow MAG {
                     def meta_new = meta + [id: bin.getBaseName()]
                     [ meta_new, bin ]
                 }
-
             METAEUK_EASYPREDICT (ch_bins_for_metaeuk, ch_metaeuk_db)
             ch_metaeuk_easypredict_faa = METAEUK_EASYPREDICT.out.faa
             ch_versions = ch_versions.mix(METAEUK_EASYPREDICT.out.versions)
         }
     }
-
     CUSTOM_DUMPSOFTWAREVERSIONS (
         ch_versions.unique().collectFile(name: 'collated_versions.yml')
     )
-
     //
     // MODULE: MultiQC
     //
     workflow_summary    = WorkflowMag.paramsSummaryMultiqc(workflow, summary_params)
     ch_workflow_summary = Channel.value(workflow_summary)
-
     methods_description    = WorkflowMag.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description, params)
     ch_methods_description = Channel.value(methods_description)
-
     ch_multiqc_files = Channel.empty()
     ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
     ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
     ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
-
     ch_multiqc_files = ch_multiqc_files.mix(FASTQC_RAW.out.zip.collect{it[1]}.ifEmpty([]))
-
     if (!params.assembly_input) {
-
         if ( !params.skip_clipping && params.clip_tool == 'adapterremoval' ) {
             ch_multiqc_files = ch_multiqc_files.mix(ADAPTERREMOVAL_PE.out.settings.collect{it[1]}.ifEmpty([]))
             ch_multiqc_files = ch_multiqc_files.mix(ADAPTERREMOVAL_SE.out.settings.collect{it[1]}.ifEmpty([]))
-
         } else if ( !params.skip_clipping && params.clip_tool == 'fastp' )  {
             ch_multiqc_files = ch_multiqc_files.mix(FASTP.out.json.collect{it[1]}.ifEmpty([]))
         }
-
         if (!(params.keep_phix && params.skip_clipping && !(params.host_genome || params.host_fasta))) {
             ch_multiqc_files = ch_multiqc_files.mix(FASTQC_TRIMMED.out.zip.collect{it[1]}.ifEmpty([]))
         }
-
         if ( params.host_fasta || params.host_genome ) {
             ch_multiqc_files = ch_multiqc_files.mix(BOWTIE2_HOST_REMOVAL_ALIGN.out.log.collect{it[1]}.ifEmpty([]))
         }
-
         if(!params.keep_phix) {
             ch_multiqc_files = ch_multiqc_files.mix(BOWTIE2_PHIX_REMOVAL_ALIGN.out.log.collect{it[1]}.ifEmpty([]))
         }
-
     }
-
     ch_multiqc_files = ch_multiqc_files.mix(CENTRIFUGE.out.kreport.collect{it[1]}.ifEmpty([]))
     ch_multiqc_files = ch_multiqc_files.mix(KRAKEN2.out.report.collect{it[1]}.ifEmpty([]))
-
     if (!params.skip_quast){
         ch_multiqc_files = ch_multiqc_files.mix(QUAST.out.report.collect().ifEmpty([]))
-
         if ( !params.skip_binning ) {
             ch_multiqc_files = ch_multiqc_files.mix(QUAST_BINS.out.dir.collect().ifEmpty([]))
         }
     }
-
     if ( !params.skip_binning || params.ancient_dna ) {
         ch_multiqc_files = ch_multiqc_files.mix(BINNING_PREPARATION.out.bowtie2_assembly_multiqc.collect().ifEmpty([]))
     }
-
     if (!params.skip_binning && !params.skip_prokka){
         ch_multiqc_files = ch_multiqc_files.mix(PROKKA.out.txt.collect{it[1]}.ifEmpty([]))
     }
-
     if (!params.skip_binning && !params.skip_binqc && params.binqc_tool == 'busco'){
         ch_multiqc_files = ch_multiqc_files.mix(BUSCO_QC.out.multiqc.collect().ifEmpty([]))
     }
-
-
     MULTIQC (
         ch_multiqc_files.collect(),
         ch_multiqc_config.toList(),
         ch_multiqc_custom_config.toList(),
         ch_multiqc_logo.toList()
     )
-
     multiqc_report = MULTIQC.out.report.toList()
 
     emit:
@@ -1127,7 +1116,6 @@ workflow MAG {
     refined_bins        = ch_refined_bins
     refined_unbins      = ch_refined_unbins
     bin_summary         = ch_bin_summaries
-    cat                 = ch_cat_tax_classification_names
     prokka              = ch_prokka_faa
     metaeuk             = ch_metaeuk_easypredict_faa
     versions            = ch_versions
@@ -1147,6 +1135,12 @@ workflow.onComplete {
     NfcoreTemplate.summary(workflow, params, log, busco_failed_bins)
     if (params.hook_url) {
         NfcoreTemplate.IM_notification(workflow, params, summary_params, projectDir, log)
+    }
+}
+workflow.onError {
+    if (workflow.errorReport.contains("Process requirement exceeds available memory")) {
+        println("🛑 Default resources exceed availability 🛑 ")
+        println("💡 See here on how to configure pipeline: https://nf-co.re/docs/usage/configuration#tuning-workflow-resources 💡")
     }
 }
 

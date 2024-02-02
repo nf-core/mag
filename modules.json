@@ -38,7 +38,7 @@
                     },
                     "cat/cat": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "git_sha": "81f27e75847087865299cc46605deb3b09b4e0a2",
                         "installed_by": ["modules"]
                     },
                     "cat/fastq": {
