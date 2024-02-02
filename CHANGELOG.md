@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Added`
 
 - [#562](https://github.com/nf-core/mag/pull/562) - Add CAT summary into the global bin_summary (by @maxibor)
-- [#565](https://github.com/nf-core/mag/pull/565) - Add warning of empty GTDB-TK results if no contigs pass completeness filter (fix by @jfy133 and @maxibor)
+- [#565](https://github.com/nf-core/mag/pull/565) - Add warning of empty GTDB-TK results if no contigs pass completeness filter (by @jfy133 and @maxibor)
 
 ### `Changed`
 
