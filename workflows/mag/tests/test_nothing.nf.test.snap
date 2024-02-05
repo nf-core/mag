@@ -29,10 +29,6 @@
                 "1": [
                     
                 ],
-                "10": [
-                    "versions.yml:md5,3222fd64337a6c070682b63fc5e0cb3c",
-                    "versions.yml:md5,85a05e91a1084dbca180ff6ff7e67400"
-                ],
                 "2": [
                     
                 ],
@@ -55,15 +51,13 @@
                     
                 ],
                 "9": [
-                    
+                    "versions.yml:md5,3222fd64337a6c070682b63fc5e0cb3c",
+                    "versions.yml:md5,85a05e91a1084dbca180ff6ff7e67400"
                 ],
                 "assemblies": [
                     
                 ],
                 "bin_summary": [
-                    
-                ],
-                "cat": [
                     
                 ],
                 "genomad": [
@@ -114,6 +108,6 @@
                 ]
             }
         ],
-        "timestamp": "2024-01-17T08:28:52.988011944"
+        "timestamp": "2024-02-05T23:35:18.598081054"
     }
 }
