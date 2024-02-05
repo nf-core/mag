@@ -3,6 +3,22 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2.5.3 - [2024-02-05]
+
+### `Added`
+
+### `Changed`
+
+- [#575](https://github.com/nf-core/mag/pull/575) - Deactivated MetaSPAdes, Centrifuge, and GTDB in test_full profile due to some container incompatibilities in nf-core megatest AWS configurations (by @jfy133)
+
+### `Fixed`
+
+- [#574](https://github.com/nf-core/mag/pull/574) - Fix wrong channel going to BIN_SUMMARY (fix by @maxibor)
+
+### `Dependencies`
+
+### `Deprecated`
+
 ## 2.5.2 - [2024-02-02]
 
 ### `Added`
