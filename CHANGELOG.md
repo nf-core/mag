@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
-- [#575](https://github.com/nf-core/mag/pull/575/files) - Deactivated MetaSPAdes, Centrifuge, and GTDB in test_full profile due to some container incompatibilities in nf-core megatest AWS configurations (by @jfy133) 
+- [#575](https://github.com/nf-core/mag/pull/575/files) - Deactivated MetaSPAdes, Centrifuge, and GTDB in test_full profile due to some container incompatibilities in nf-core megatest AWS configurations (by @jfy133)
 
 ### `Fixed`
 
