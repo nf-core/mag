@@ -26,16 +26,6 @@
                         "SPAdesHybrid-minigut_scaffolds.fasta:md5,d3c5e27f011a08daea597f9d2650436d"
                     ]
                 ],
-                "10": [
-                    "versions.yml:md5,1bd6bbec156534880e04e0320dbce063",
-                    "versions.yml:md5,59050473c9f749b269ad7079fd4693df",
-                    "versions.yml:md5,5de8983775d3ef64cdbec6f382852619",
-                    "versions.yml:md5,85a05e91a1084dbca180ff6ff7e67400",
-                    "versions.yml:md5,b94aaba1559ac9deaf7339181c398405",
-                    "versions.yml:md5,cc143ba1b806a335a9963a434c887eba",
-                    "versions.yml:md5,d13508b80e270ac6f1543725b431a682",
-                    "versions.yml:md5,d654471556992ae3c82a7fa792c90dc0"
-                ],
                 "2": [
                     
                 ],
@@ -58,7 +48,14 @@
                     
                 ],
                 "9": [
-                    
+                    "versions.yml:md5,1bd6bbec156534880e04e0320dbce063",
+                    "versions.yml:md5,59050473c9f749b269ad7079fd4693df",
+                    "versions.yml:md5,5de8983775d3ef64cdbec6f382852619",
+                    "versions.yml:md5,85a05e91a1084dbca180ff6ff7e67400",
+                    "versions.yml:md5,b94aaba1559ac9deaf7339181c398405",
+                    "versions.yml:md5,cc143ba1b806a335a9963a434c887eba",
+                    "versions.yml:md5,d13508b80e270ac6f1543725b431a682",
+                    "versions.yml:md5,d654471556992ae3c82a7fa792c90dc0"
                 ],
                 "assemblies": [
                     [
@@ -72,9 +69,6 @@
                     ]
                 ],
                 "bin_summary": [
-                    
-                ],
-                "cat": [
                     
                 ],
                 "genomad": [
@@ -120,6 +114,10 @@
                 ]
             }
         ],
-        "timestamp": "2024-01-17T10:03:17.006107632"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-08T15:28:58.822332791"
     }
 }

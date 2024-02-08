@@ -29,14 +29,6 @@
                 "1": [
                     
                 ],
-                "10": [
-                    "versions.yml:md5,15111ae1ae8b8b570a2efddd7c747bd0",
-                    "versions.yml:md5,67cbab915f2801633ea61219086a7735",
-                    "versions.yml:md5,67cbab915f2801633ea61219086a7735",
-                    "versions.yml:md5,85a05e91a1084dbca180ff6ff7e67400",
-                    "versions.yml:md5,d654471556992ae3c82a7fa792c90dc0",
-                    "versions.yml:md5,d654471556992ae3c82a7fa792c90dc0"
-                ],
                 "2": [
                     
                 ],
@@ -59,15 +51,17 @@
                     
                 ],
                 "9": [
-                    
+                    "versions.yml:md5,15111ae1ae8b8b570a2efddd7c747bd0",
+                    "versions.yml:md5,67cbab915f2801633ea61219086a7735",
+                    "versions.yml:md5,67cbab915f2801633ea61219086a7735",
+                    "versions.yml:md5,85a05e91a1084dbca180ff6ff7e67400",
+                    "versions.yml:md5,d654471556992ae3c82a7fa792c90dc0",
+                    "versions.yml:md5,d654471556992ae3c82a7fa792c90dc0"
                 ],
                 "assemblies": [
                     
                 ],
                 "bin_summary": [
-                    
-                ],
-                "cat": [
                     
                 ],
                 "genomad": [
@@ -122,6 +116,10 @@
                 ]
             }
         ],
-        "timestamp": "2024-01-17T09:19:27.939943074"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-08T13:57:10.226099714"
     }
 }
