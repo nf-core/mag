@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
-- [#]() - Added explicit licence text to headers of all custom scripts (reported by @FriederikeHanssen and @maxibor, reported by @jfy133)
+- [#581](https://github.com/nf-core/mag/pull/581) - Added explicit licence text to headers of all custom scripts (reported by @FriederikeHanssen and @maxibor, fix by @jfy133)
 
 ### `Fixed`
 
