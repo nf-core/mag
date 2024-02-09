@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+## Originally written by Sabrina Krakau and released under the MIT license.
+## See git repository (https://github.com/nf-core/mag) for full license text.
+
 import sys
 import argparse
 import pandas as pd
