@@ -31,6 +31,7 @@ workflow CREATE_PHAGEANNOTATOR_SAMPLESHEET {
 
                         return [ id, fasta ]
                 }
+
             short_reads
                 .map {
                     meta, fastq ->
