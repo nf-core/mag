@@ -89,7 +89,7 @@ workflow GTDBTK {
 
     GTDBTK_CLASSIFYWF (
         ch_filtered_bins.passed.groupTuple(),
-        ch_db_for_gtdbtk.dump(tag: 'gtdb_db'),
+        ch_db_for_gtdbtk,
         gtdb_mash
     )
 
