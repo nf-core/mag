@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 
+## Originally written by Daniel Straub and Sabrina Krakau and released
+## under the MIT license.
+## See git repository (https://github.com/nf-core/mag) for full license text.
+
 # USAGE: ./split_fasta.py <*.unbinned.fa(.gz)> <min_length_unbinned_contigs> <max_unbinned_contigs> <min_contig_size>
 
 import pandas as pd
@@ -45,10 +49,14 @@ if input_file.endswith(".gz"):
                 )
             # contigs to retain and pool
             elif length >= min_length_to_retain_contig:
-                pooled.append(SeqRecord(Seq(sequence, generic_dna), id=name, description=""))
+                pooled.append(
+                    SeqRecord(Seq(sequence, generic_dna), id=name, description="")
+                )
             # remaining sequences
             else:
-                remaining.append(SeqRecord(Seq(sequence, generic_dna), id=name, description=""))
+                remaining.append(
+                    SeqRecord(Seq(sequence, generic_dna), id=name, description="")
+                )
 else:
     with open(input_file) as f:
         fasta_sequences = SeqIO.parse(f, "fasta")
@@ -64,10 +72,14 @@ else:
                 )
             # contigs to retain and pool
             elif length >= min_length_to_retain_contig:
-                pooled.append(SeqRecord(Seq(sequence, generic_dna), id=name, description=""))
+                pooled.append(
+                    SeqRecord(Seq(sequence, generic_dna), id=name, description="")
+                )
             # remaining sequences
             else:
-                remaining.append(SeqRecord(Seq(sequence, generic_dna), id=name, description=""))
+                remaining.append(
+                    SeqRecord(Seq(sequence, generic_dna), id=name, description="")
+                )
 
 # Sort sequences above threshold by length
 df_above_threshold.sort_values(by=["length"], ascending=False, inplace=True)
@@ -80,7 +92,9 @@ for index, row in df_above_threshold.iterrows():
         out = SeqRecord(Seq(row["seq"], generic_dna), id=row["id"], description="")
         SeqIO.write(out, out_base + "." + str(index + 1) + ".fa", "fasta")
     else:
-        pooled.append(SeqRecord(Seq(row["seq"], generic_dna), id=row["id"], description=""))
+        pooled.append(
+            SeqRecord(Seq(row["seq"], generic_dna), id=row["id"], description="")
+        )
 
 print("write " + out_base + ".pooled.fa")
 SeqIO.write(pooled, out_base + ".pooled.fa", "fasta")

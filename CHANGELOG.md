@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## dev - [unreleased]
+## 2.5.4 - [2024-02-12]
 
 ### `Added`
 
@@ -11,7 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
+- [#581](https://github.com/nf-core/mag/pull/581) - Added explicit licence text to headers of all custom scripts (reported by @FriederikeHanssen and @maxibor, fix by @jfy133)
+
 ### `Fixed`
+
+- [#583](https://github.com/nf-core/mag/pull/583) - Fix GTDB database input when directory supplied (fix by @jfy133)
 
 ### `Dependencies`
 
