@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
+- [#583](https://github.com/nf-core/mag/pull/583) - Fix GTDB database input when directory supplied (fix by @jfy133)
+
 ### `Dependencies`
 
 ### `Deprecated`
