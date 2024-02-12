@@ -66,13 +66,16 @@ workflow GTDBTK {
         // Expects to be tar.gz!
         ch_db_for_gtdbtk = GTDBTK_DB_PREPARATION ( gtdb ).db
     } else if ( gtdb.isDirectory() ) {
-        // Make up meta id to match expected channel cardinality for GTDBTK
+        // The classifywf module expects a list of the _contents_ of the GTDB
+        // database, not just the directory itself (I'm not sure why). But
+        // for now we generate this list before putting into a channel,
+        // then grouping again to pass to the module.
+        // Then make up meta id to match expected channel cardinality for GTDBTK
+        gtdb_dir = gtdb.listFiles()
         ch_db_for_gtdbtk = Channel
-                            .of(gtdb)
-                            .map{
-                                [ it.toString().split('/').last(), it ]
-                            }
-                            .collect()
+                            .of(gtdb_dir)
+                            .map{['gtdb', it]}
+                            .groupTuple()
     } else {
         error("Unsupported object given to --gtdb, database must be supplied as either a directory or a .tar.gz file!")
     }
@@ -86,7 +89,7 @@ workflow GTDBTK {
 
     GTDBTK_CLASSIFYWF (
         ch_filtered_bins.passed.groupTuple(),
-        ch_db_for_gtdbtk,
+        ch_db_for_gtdbtk.dump(tag: 'gtdb_db'),
         gtdb_mash
     )
 
