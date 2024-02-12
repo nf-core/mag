@@ -37,13 +37,8 @@
                         "MEGAHIT-group-0.contigs.fa:md5,8419d4d6c72ac1006324a9fee1394646"
                     ]
                 ],
-                "10": [
-                    "versions.yml:md5,3222fd64337a6c070682b63fc5e0cb3c",
-                    "versions.yml:md5,85a05e91a1084dbca180ff6ff7e67400",
-                    "versions.yml:md5,e2ed4d9a5b5d63ae1a6eef0418d976f0"
-                ],
                 "2": [
-
+                    
                 ],
                 "3": [
                     [
@@ -53,26 +48,28 @@
                             "single_end": false,
                             "assembler": "MEGAHIT"
                         },
-                        "MEGAHIT-group-0.contigs_virus_summary.tsv:md5,95db91fff85f23a19e64ef7ea0f8d371"
+                        "MEGAHIT-group-0.contigs_virus_summary.tsv:md5,b08861c8a938b3eaf8c1d8e533935042"
                     ]
                 ],
                 "4": [
-
+                    
                 ],
                 "5": [
-
+                    
                 ],
                 "6": [
-
+                    
                 ],
                 "7": [
-
+                    
                 ],
                 "8": [
-
+                    
                 ],
                 "9": [
-
+                    "versions.yml:md5,3222fd64337a6c070682b63fc5e0cb3c",
+                    "versions.yml:md5,85a05e91a1084dbca180ff6ff7e67400",
+                    "versions.yml:md5,e2ed4d9a5b5d63ae1a6eef0418d976f0"
                 ],
                 "assemblies": [
                     [
@@ -86,10 +83,7 @@
                     ]
                 ],
                 "bin_summary": [
-
-                ],
-                "cat": [
-
+                    
                 ],
                 "genomad": [
                     [
@@ -99,23 +93,23 @@
                             "single_end": false,
                             "assembler": "MEGAHIT"
                         },
-                        "MEGAHIT-group-0.contigs_virus_summary.tsv:md5,95db91fff85f23a19e64ef7ea0f8d371"
+                        "MEGAHIT-group-0.contigs_virus_summary.tsv:md5,b08861c8a938b3eaf8c1d8e533935042"
                     ]
                 ],
                 "metaeuk": [
-
+                    
                 ],
                 "prodigal": [
-
+                    
                 ],
                 "prokka": [
-
+                    
                 ],
                 "refined_bins": [
-
+                    
                 ],
                 "refined_unbins": [
-
+                    
                 ],
                 "short_reads": [
                     [
@@ -148,6 +142,10 @@
                 ]
             }
         ],
-        "timestamp": "2024-01-17T09:14:33.005055708"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-09T15:30:48.208307453"
     }
 }
