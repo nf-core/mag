@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 
-# USAGE: ./summary.busco.py -sd <summaries_domain> -ss <summaries_specific> -f <failed_bins>
+## Originally written by Daniel Straub, Sabrina Krakau, and Hadrien Gourlé
+## and released under the MIT license.
+## See git repository (https://github.com/nf-core/mag) for full license text.
+
+## USAGE: ./summary.busco.py -sd <summaries_domain> -ss <summaries_specific> -f <failed_bins>
 
 import re
 import sys
@@ -12,10 +16,18 @@ import pandas as pd
 def parse_args(args=None):
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "-a", "--auto", default=False, action="store_true", help="BUSCO run in auto lineage selection mode."
+        "-a",
+        "--auto",
+        default=False,
+        action="store_true",
+        help="BUSCO run in auto lineage selection mode.",
     )
     parser.add_argument(
-        "-sd", "--summaries_domain", nargs="+", metavar="FILE", help="List of BUSCO summary files for domains."
+        "-sd",
+        "--summaries_domain",
+        nargs="+",
+        metavar="FILE",
+        help="List of BUSCO summary files for domains.",
     )
     parser.add_argument(
         "-ss",
@@ -45,8 +57,14 @@ def parse_args(args=None):
 def main(args=None):
     args = parse_args(args)
 
-    if not args.summaries_domain and not args.summaries_specific and not args.failed_bins:
-        sys.exit("Either --summaries_domain, --summaries_specific or --failed_bins must be specified!")
+    if (
+        not args.summaries_domain
+        and not args.summaries_specific
+        and not args.failed_bins
+    ):
+        sys.exit(
+            "Either --summaries_domain, --summaries_specific or --failed_bins must be specified!"
+        )
 
     # "# Summarized benchmarking in BUSCO notation for file /path/to/MEGAHIT-testset1.contigs.fa"
     # "	C:0.0%[S:0.0%,D:0.0%],F:0.0%,M:100.0%,n:148"
@@ -173,15 +191,30 @@ def main(args=None):
                             pd.NA,
                         ]
                     else:
-                        results = [failed_bin, pd.NA, "0.0", "0.0", "0.0", "0.0", "100.0", pd.NA]
+                        results = [
+                            failed_bin,
+                            pd.NA,
+                            "0.0",
+                            "0.0",
+                            "0.0",
+                            "0.0",
+                            "100.0",
+                            pd.NA,
+                        ]
                     failed.append(results)
     df_failed = pd.DataFrame(failed, columns=columns)
 
     # merge results
     if args.auto:
-        df_final = df_domain.merge(df_specific, on="GenomeBin", how="outer").append(df_failed)
+        df_final = df_domain.merge(df_specific, on="GenomeBin", how="outer").append(
+            df_failed
+        )
         # check if 'Domain' is 'NA', but 'Specific lineage dataset' given -> 'Viruses'
-        df_final.loc[pd.isna(df_final["Domain"]) & pd.notna(df_final["Specific lineage dataset"]), "Domain"] = "Viruses"
+        df_final.loc[
+            pd.isna(df_final["Domain"])
+            & pd.notna(df_final["Specific lineage dataset"]),
+            "Domain",
+        ] = "Viruses"
 
     else:
         df_final = df_specific.append(df_failed)

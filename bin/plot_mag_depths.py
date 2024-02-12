@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+# Originally written by Sabrina Krakau and released under the MIT license.
+# See git repository (https://github.com/nf-core/mag) for full license text.
+
 import sys
 import argparse
 import os.path
@@ -26,7 +29,9 @@ def parse_args(args=None):
         metavar="FILE",
         help="File in TSV format containing group information for samples: sample, group",
     )
-    parser.add_argument("-o", "--out", required=True, metavar="FILE", type=str, help="Output file.")
+    parser.add_argument(
+        "-o", "--out", required=True, metavar="FILE", type=str, help="Output file."
+    )
     return parser.parse_args(args)
 
 
@@ -43,12 +48,19 @@ def main(args=None):
     # compute centered log-ratios
     # divide df by sample-wise geometric means
     gmeans = stats.gmean(df, axis=0)  # apply on axis=0: 'index'
-    df = np.log(df.div(gmeans, axis="columns"))  # divide column-wise (axis=1|'columns'), take natural logorithm
+    df = np.log(
+        df.div(gmeans, axis="columns")
+    )  # divide column-wise (axis=1|'columns'), take natural logorithm
     df.index.name = "MAGs"
     df.columns.name = "Samples"
 
     # prepare colors for group information
-    color_map = dict(zip(groups["group"].unique(), sns.color_palette(n_colors=len(groups["group"].unique()))))
+    color_map = dict(
+        zip(
+            groups["group"].unique(),
+            sns.color_palette(n_colors=len(groups["group"].unique())),
+        )
+    )
 
     # plot
     plt.figure()

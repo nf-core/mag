@@ -1,5 +1,9 @@
 #! /usr/bin/env bash
 
+# Originally written by Sabrina Krakau and James Fellows Yates and released
+# under the MIT license.
+# See git repository (https://github.com/nf-core/mag) for full license text.
+
 p=$1
 cp_augustus_config=$2
 db=$3
@@ -148,7 +152,7 @@ if [ -f BUSCO/logs/prodigal_out.log ]; then
 fi
 
 # output value of most_spec_db
-echo ${most_spec_db} > info_most_spec_db.txt
+echo ${most_spec_db} >info_most_spec_db.txt
 
 # if needed delete temporary BUSCO files
 if [ ${busco_clean} = "Y" ]; then

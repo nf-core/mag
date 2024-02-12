@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+## Originally written by Sabrina Krakau and released under the MIT license.
+## See git repository (https://github.com/nf-core/mag) for full license text.
+
 import sys
 import argparse
 import os.path
@@ -14,7 +17,12 @@ from Bio import SeqIO
 def parse_args(args=None):
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "-b", "--bins", required=True, nargs="+", metavar="FILE", help="Bins: FASTA containing all contigs."
+        "-b",
+        "--bins",
+        required=True,
+        nargs="+",
+        metavar="FILE",
+        help="Bins: FASTA containing all contigs.",
     )
     parser.add_argument(
         "-d",
@@ -23,9 +31,15 @@ def parse_args(args=None):
         metavar="FILE",
         help="(Compressed) TSV file containing contig depths for each sample: contigName, contigLen, totalAvgDepth, sample1_avgDepth, sample1_var [, sample2_avgDepth, sample2_var, ...].",
     )
-    parser.add_argument("-a", "--assembler", required=True, type=str, help="Assembler name.")
-    parser.add_argument("-i", "--id", required=True, type=str, help="Sample or group id.")
-    parser.add_argument("-m", "--binner", required=True, type=str, help="Binning method.")
+    parser.add_argument(
+        "-a", "--assembler", required=True, type=str, help="Assembler name."
+    )
+    parser.add_argument(
+        "-i", "--id", required=True, type=str, help="Sample or group id."
+    )
+    parser.add_argument(
+        "-m", "--binner", required=True, type=str, help="Binning method."
+    )
     return parser.parse_args(args)
 
 
@@ -56,7 +70,9 @@ def main(args=None):
 
     # Initialize output files
     n_samples = len(sample_names)
-    with open(args.assembler + "-" + args.binner + "-" + args.id + "-binDepths.tsv", "w") as outfile:
+    with open(
+        args.assembler + "-" + args.binner + "-" + args.id + "-binDepths.tsv", "w"
+    ) as outfile:
         print("bin", "\t".join(sample_names), sep="\t", file=outfile)
 
     # for each bin, access contig depths and compute mean bin depth (for all samples)
@@ -77,10 +93,15 @@ def main(args=None):
                         all_depths[sample].append(contig_depths[sample])
 
         binname = os.path.basename(file)
-        with open(args.assembler + "-" + args.binner + "-" + args.id + "-binDepths.tsv", "a") as outfile:
+        with open(
+            args.assembler + "-" + args.binner + "-" + args.id + "-binDepths.tsv", "a"
+        ) as outfile:
             print(
                 binname,
-                "\t".join(str(statistics.median(sample_depths)) for sample_depths in all_depths),
+                "\t".join(
+                    str(statistics.median(sample_depths))
+                    for sample_depths in all_depths
+                ),
                 sep="\t",
                 file=outfile,
             )
