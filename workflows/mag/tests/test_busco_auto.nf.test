@@ -1,0 +1,22 @@
+nextflow_workflow {
+
+    name "Test workflow: MAG"
+    script "../main.nf"
+    workflow "MAG"
+    tag "workflows"
+    tag "mag"
+    tag "mag_test_busco_auto"
+    profile "test_busco_auto"
+
+    test("Parameters: skip_busco = false") {
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out
+                ).match() }
+            )
+        }
+    }
+}

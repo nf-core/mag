@@ -1,0 +1,117 @@
+{
+    "Parameters: clip_tool = 'adapterremoval'": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test_minigut_euk",
+                            "group": "0",
+                            "single_end": false
+                        },
+                        [
+                            "test_minigut_euk_run0_ar2.pair1.truncated.fastq.gz:md5,e8f01a4fdf2e348330fc02a47eb3c5af",
+                            "test_minigut_euk_run0_ar2.pair2.truncated.fastq.gz:md5,06510940505288d80a3d940db85d0ed5"
+                        ]
+                    ],
+                    [
+                        {
+                            "id": "test_minigut_sample2_euk",
+                            "group": "0",
+                            "single_end": false
+                        },
+                        [
+                            "test_minigut_sample2_euk_run0_ar2.pair1.truncated.fastq.gz:md5,92b8643e591f7490c980fe4d0879c955",
+                            "test_minigut_sample2_euk_run0_ar2.pair2.truncated.fastq.gz:md5,7d4436e9532bb9665080b77efe441faf"
+                        ]
+                    ]
+                ],
+                "1": [
+                    
+                ],
+                "2": [
+                    
+                ],
+                "3": [
+                    
+                ],
+                "4": [
+                    
+                ],
+                "5": [
+                    
+                ],
+                "6": [
+                    
+                ],
+                "7": [
+                    
+                ],
+                "8": [
+                    
+                ],
+                "9": [
+                    "versions.yml:md5,85a05e91a1084dbca180ff6ff7e67400",
+                    "versions.yml:md5,d654471556992ae3c82a7fa792c90dc0",
+                    "versions.yml:md5,d654471556992ae3c82a7fa792c90dc0",
+                    "versions.yml:md5,eca9f4c6e135848b1247916040e52b99"
+                ],
+                "assemblies": [
+                    
+                ],
+                "bin_summary": [
+                    
+                ],
+                "genomad": [
+                    
+                ],
+                "metaeuk": [
+                    
+                ],
+                "prodigal": [
+                    
+                ],
+                "prokka": [
+                    
+                ],
+                "refined_bins": [
+                    
+                ],
+                "refined_unbins": [
+                    
+                ],
+                "short_reads": [
+                    [
+                        {
+                            "id": "test_minigut_euk",
+                            "group": "0",
+                            "single_end": false
+                        },
+                        [
+                            "test_minigut_euk_run0_ar2.pair1.truncated.fastq.gz:md5,e8f01a4fdf2e348330fc02a47eb3c5af",
+                            "test_minigut_euk_run0_ar2.pair2.truncated.fastq.gz:md5,06510940505288d80a3d940db85d0ed5"
+                        ]
+                    ],
+                    [
+                        {
+                            "id": "test_minigut_sample2_euk",
+                            "group": "0",
+                            "single_end": false
+                        },
+                        [
+                            "test_minigut_sample2_euk_run0_ar2.pair1.truncated.fastq.gz:md5,92b8643e591f7490c980fe4d0879c955",
+                            "test_minigut_sample2_euk_run0_ar2.pair2.truncated.fastq.gz:md5,7d4436e9532bb9665080b77efe441faf"
+                        ]
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,85a05e91a1084dbca180ff6ff7e67400",
+                    "versions.yml:md5,d654471556992ae3c82a7fa792c90dc0",
+                    "versions.yml:md5,d654471556992ae3c82a7fa792c90dc0",
+                    "versions.yml:md5,eca9f4c6e135848b1247916040e52b99"
+                ]
+            }
+        ],
+        "timestamp": "2024-02-05T23:39:32.916744986"
+    }
+}

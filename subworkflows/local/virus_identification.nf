@@ -24,7 +24,8 @@ workflow VIRUS_IDENTIFICATION {
     ch_versions.mix( GENOMAD_ENDTOEND.out.versions )
 
     emit:
-    identified_viruses = ch_identified_viruses
-    versions = ch_versions
+    identified_viruses  = ch_identified_viruses
+    virus_summary       = GENOMAD_ENDTOEND.out.virus_summary
+    versions            = ch_versions
 
 }

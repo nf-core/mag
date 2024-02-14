@@ -7,3 +7,4 @@ lint:
     - config_defaults:
         - params.phix_reference
         - params.lambda_reference
+  actions_ci: false

@@ -51,53 +51,53 @@ ch_multiqc_custom_methods_description = params.multiqc_methods_description ? fil
 //
 // MODULE: Local to the pipeline
 //
-include { BOWTIE2_REMOVAL_BUILD as BOWTIE2_HOST_REMOVAL_BUILD } from '../modules/local/bowtie2_removal_build'
-include { BOWTIE2_REMOVAL_ALIGN as BOWTIE2_HOST_REMOVAL_ALIGN } from '../modules/local/bowtie2_removal_align'
-include { BOWTIE2_REMOVAL_BUILD as BOWTIE2_PHIX_REMOVAL_BUILD } from '../modules/local/bowtie2_removal_build'
-include { BOWTIE2_REMOVAL_ALIGN as BOWTIE2_PHIX_REMOVAL_ALIGN } from '../modules/local/bowtie2_removal_align'
-include { PORECHOP                                            } from '../modules/local/porechop'
-include { NANOLYSE                                            } from '../modules/local/nanolyse'
-include { FILTLONG                                            } from '../modules/local/filtlong'
-include { NANOPLOT as NANOPLOT_RAW                            } from '../modules/local/nanoplot'
-include { NANOPLOT as NANOPLOT_FILTERED                       } from '../modules/local/nanoplot'
-include { CENTRIFUGE_DB_PREPARATION                           } from '../modules/local/centrifuge_db_preparation'
-include { CENTRIFUGE                                          } from '../modules/local/centrifuge'
-include { KRAKEN2_DB_PREPARATION                              } from '../modules/local/kraken2_db_preparation'
-include { KRAKEN2                                             } from '../modules/local/kraken2'
-include { KRONA_DB                                            } from '../modules/local/krona_db'
-include { KRONA                                               } from '../modules/local/krona'
-include { POOL_SINGLE_READS as POOL_SHORT_SINGLE_READS        } from '../modules/local/pool_single_reads'
-include { POOL_PAIRED_READS                                   } from '../modules/local/pool_paired_reads'
-include { POOL_SINGLE_READS as POOL_LONG_READS                } from '../modules/local/pool_single_reads'
-include { MEGAHIT                                             } from '../modules/local/megahit'
-include { SPADES                                              } from '../modules/local/spades'
-include { SPADESHYBRID                                        } from '../modules/local/spadeshybrid'
-include { GUNZIP as GUNZIP_ASSEMBLIES                         } from '../modules/nf-core/gunzip'
-include { QUAST                                               } from '../modules/local/quast'
-include { QUAST_BINS                                          } from '../modules/local/quast_bins'
-include { QUAST_BINS_SUMMARY                                  } from '../modules/local/quast_bins_summary'
-include { CAT_DB                                              } from '../modules/local/cat_db'
-include { CAT_DB_GENERATE                                     } from '../modules/local/cat_db_generate'
-include { CAT                                                 } from '../modules/local/cat'
-include { CAT_SUMMARY                                         } from "../modules/local/cat_summary"
-include { BIN_SUMMARY                                         } from '../modules/local/bin_summary'
-include { COMBINE_TSV as COMBINE_SUMMARY_TSV                  } from '../modules/local/combine_tsv'
+include { BOWTIE2_REMOVAL_BUILD as BOWTIE2_HOST_REMOVAL_BUILD } from '../../modules/local/bowtie2_removal_build'
+include { BOWTIE2_REMOVAL_ALIGN as BOWTIE2_HOST_REMOVAL_ALIGN } from '../../modules/local/bowtie2_removal_align'
+include { BOWTIE2_REMOVAL_BUILD as BOWTIE2_PHIX_REMOVAL_BUILD } from '../../modules/local/bowtie2_removal_build'
+include { BOWTIE2_REMOVAL_ALIGN as BOWTIE2_PHIX_REMOVAL_ALIGN } from '../../modules/local/bowtie2_removal_align'
+include { PORECHOP                                            } from '../../modules/local/porechop'
+include { NANOLYSE                                            } from '../../modules/local/nanolyse'
+include { FILTLONG                                            } from '../../modules/local/filtlong'
+include { NANOPLOT as NANOPLOT_RAW                            } from '../../modules/local/nanoplot'
+include { NANOPLOT as NANOPLOT_FILTERED                       } from '../../modules/local/nanoplot'
+include { CENTRIFUGE_DB_PREPARATION                           } from '../../modules/local/centrifuge_db_preparation'
+include { CENTRIFUGE                                          } from '../../modules/local/centrifuge'
+include { KRAKEN2_DB_PREPARATION                              } from '../../modules/local/kraken2_db_preparation'
+include { KRAKEN2                                             } from '../../modules/local/kraken2'
+include { KRONA_DB                                            } from '../../modules/local/krona_db'
+include { KRONA                                               } from '../../modules/local/krona'
+include { POOL_SINGLE_READS as POOL_SHORT_SINGLE_READS        } from '../../modules/local/pool_single_reads'
+include { POOL_PAIRED_READS                                   } from '../../modules/local/pool_paired_reads'
+include { POOL_SINGLE_READS as POOL_LONG_READS                } from '../../modules/local/pool_single_reads'
+include { MEGAHIT                                             } from '../../modules/local/megahit'
+include { SPADES                                              } from '../../modules/local/spades'
+include { SPADESHYBRID                                        } from '../../modules/local/spadeshybrid'
+include { GUNZIP as GUNZIP_ASSEMBLIES                         } from '../../modules/nf-core/gunzip'
+include { QUAST                                               } from '../../modules/local/quast'
+include { QUAST_BINS                                          } from '../../modules/local/quast_bins'
+include { QUAST_BINS_SUMMARY                                  } from '../../modules/local/quast_bins_summary'
+include { CAT_DB                                              } from '../../modules/local/cat_db'
+include { CAT_DB_GENERATE                                     } from '../../modules/local/cat_db_generate'
+include { CAT                                                 } from '../../modules/local/cat'
+include { CAT_SUMMARY                                         } from "../../modules/local/cat_summary"
+include { BIN_SUMMARY                                         } from '../../modules/local/bin_summary'
+include { COMBINE_TSV as COMBINE_SUMMARY_TSV                  } from '../../modules/local/combine_tsv'
 
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { INPUT_CHECK                     } from '../subworkflows/local/input_check'
-include { BINNING_PREPARATION             } from '../subworkflows/local/binning_preparation'
-include { BINNING                         } from '../subworkflows/local/binning'
-include { BINNING_REFINEMENT              } from '../subworkflows/local/binning_refinement'
-include { BUSCO_QC                        } from '../subworkflows/local/busco_qc'
-include { VIRUS_IDENTIFICATION            } from '../subworkflows/local/virus_identification'
-include { CHECKM_QC                       } from '../subworkflows/local/checkm_qc'
-include { GUNC_QC                         } from '../subworkflows/local/gunc_qc'
-include { GTDBTK                          } from '../subworkflows/local/gtdbtk'
-include { ANCIENT_DNA_ASSEMBLY_VALIDATION } from '../subworkflows/local/ancient_dna'
-include { DOMAIN_CLASSIFICATION           } from '../subworkflows/local/domain_classification'
-include { DEPTHS                          } from '../subworkflows/local/depths'
+include { INPUT_CHECK                     } from '../../subworkflows/local/input_check'
+include { BINNING_PREPARATION             } from '../../subworkflows/local/binning_preparation'
+include { BINNING                         } from '../../subworkflows/local/binning'
+include { BINNING_REFINEMENT              } from '../../subworkflows/local/binning_refinement'
+include { BUSCO_QC                        } from '../../subworkflows/local/busco_qc'
+include { VIRUS_IDENTIFICATION            } from '../../subworkflows/local/virus_identification'
+include { CHECKM_QC                       } from '../../subworkflows/local/checkm_qc'
+include { GUNC_QC                         } from '../../subworkflows/local/gunc_qc'
+include { GTDBTK                          } from '../../subworkflows/local/gtdbtk'
+include { ANCIENT_DNA_ASSEMBLY_VALIDATION } from '../../subworkflows/local/ancient_dna'
+include { DOMAIN_CLASSIFICATION           } from '../../subworkflows/local/domain_classification'
+include { DEPTHS                          } from '../../subworkflows/local/depths'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -108,21 +108,21 @@ include { DEPTHS                          } from '../subworkflows/local/depths'
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { ARIA2 as ARIA2_UNTAR                   } from '../modules/nf-core/aria2/main'
-include { FASTQC as FASTQC_RAW                   } from '../modules/nf-core/fastqc/main'
-include { FASTQC as FASTQC_TRIMMED               } from '../modules/nf-core/fastqc/main'
-include { SEQTK_MERGEPE                          } from '../modules/nf-core/seqtk/mergepe/main'
-include { BBMAP_BBNORM                           } from '../modules/nf-core/bbmap/bbnorm/main'
-include { FASTP                                  } from '../modules/nf-core/fastp/main'
-include { ADAPTERREMOVAL as ADAPTERREMOVAL_PE    } from '../modules/nf-core/adapterremoval/main'
-include { ADAPTERREMOVAL as ADAPTERREMOVAL_SE    } from '../modules/nf-core/adapterremoval/main'
-include { CAT_FASTQ                              } from '../modules/nf-core/cat/fastq/main'
-include { PRODIGAL                               } from '../modules/nf-core/prodigal/main'
-include { PROKKA                                 } from '../modules/nf-core/prokka/main'
-include { MMSEQS_DATABASES                       } from '../modules/nf-core/mmseqs/databases/main'
-include { METAEUK_EASYPREDICT                    } from '../modules/nf-core/metaeuk/easypredict/main'
-include { CUSTOM_DUMPSOFTWAREVERSIONS            } from '../modules/nf-core/custom/dumpsoftwareversions/main'
-include { MULTIQC                                } from '../modules/nf-core/multiqc/main'
+include { ARIA2 as ARIA2_UNTAR                   } from '../../modules/nf-core/aria2/main'
+include { FASTQC as FASTQC_RAW                   } from '../../modules/nf-core/fastqc/main'
+include { FASTQC as FASTQC_TRIMMED               } from '../../modules/nf-core/fastqc/main'
+include { SEQTK_MERGEPE                          } from '../../modules/nf-core/seqtk/mergepe/main'
+include { BBMAP_BBNORM                           } from '../../modules/nf-core/bbmap/bbnorm/main'
+include { FASTP                                  } from '../../modules/nf-core/fastp/main'
+include { ADAPTERREMOVAL as ADAPTERREMOVAL_PE    } from '../../modules/nf-core/adapterremoval/main'
+include { ADAPTERREMOVAL as ADAPTERREMOVAL_SE    } from '../../modules/nf-core/adapterremoval/main'
+include { CAT_FASTQ                              } from '../../modules/nf-core/cat/fastq/main'
+include { PRODIGAL                               } from '../../modules/nf-core/prodigal/main'
+include { PROKKA                                 } from '../../modules/nf-core/prokka/main'
+include { MMSEQS_DATABASES                       } from '../../modules/nf-core/mmseqs/databases/main'
+include { METAEUK_EASYPREDICT                    } from '../../modules/nf-core/metaeuk/easypredict/main'
+include { CUSTOM_DUMPSOFTWAREVERSIONS            } from '../../modules/nf-core/custom/dumpsoftwareversions/main'
+include { MULTIQC                                } from '../../modules/nf-core/multiqc/main'
 
 ////////////////////////////////////////////////////
 /* --  Create channel for reference databases  -- */
@@ -215,6 +215,25 @@ if(params.metaeuk_db && !params.skip_metaeuk) {
 } else {
     ch_metaeuk_db = Channel.empty()
 }
+
+// Create empty channels for all emitted outputs
+    ch_short_reads                  = Channel.empty()
+    ch_assemblies                   = Channel.empty()
+    ch_prodigal_gene_annotations    = Channel.empty()
+    ch_genomad_virus_summary        = Channel.empty()
+    ch_binning_results_bins         = Channel.empty()
+    ch_binning_results_unbins       = Channel.empty()
+    ch_refined_bins                 = Channel.empty()
+    ch_refined_unbins               = Channel.empty()
+    ch_busco_summary                = Channel.empty()
+    ch_checkm_tsv                   = Channel.empty()
+    ch_gunc_maxcss_level_tsv        = Channel.empty()
+    ch_quast_bin_summaries          = Channel.empty()
+    ch_bin_summaries                = Channel.empty()
+    ch_cat_tax_classification_names = Channel.empty()
+    ch_gtdbtk_summaries             = Channel.empty()
+    ch_prokka_faa                   = Channel.empty()
+    ch_metaeuk_easypredict_faa      = Channel.empty()
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -355,14 +374,12 @@ workflow MAG {
             }
 
         CAT_FASTQ ( ch_short_reads_forcat.cat.map { meta, reads -> [ meta, reads.flatten() ]} )
-
         // Ensure we don't have nests of nests so that structure is in form expected for assembly
         ch_short_reads_catskipped = ch_short_reads_forcat.skip_cat
                                         .map { meta, reads ->
                                             def new_reads = meta.single_end ? reads[0] : reads.flatten()
                                         [ meta, new_reads ]
                                     }
-
         // Combine single run and multi-run-merged data
         ch_short_reads = Channel.empty()
         ch_short_reads = CAT_FASTQ.out.reads.mix(ch_short_reads_catskipped)
@@ -486,7 +503,6 @@ workflow MAG {
     } else {
         ch_db_for_centrifuge = Channel.empty()
     }
-
     CENTRIFUGE (
         ch_short_reads,
         ch_db_for_centrifuge
@@ -589,7 +605,6 @@ workflow MAG {
         }
 
         ch_assemblies = Channel.empty()
-
         if (!params.skip_megahit){
             MEGAHIT ( ch_short_reads_grouped )
             ch_megahit_assemblies = MEGAHIT.out.assembly
@@ -693,6 +708,7 @@ workflow MAG {
             ch_assemblies,
             'gff'
         )
+        ch_prodigal_gene_annotations = PRODIGAL.out.gene_annotations
         ch_versions = ch_versions.mix(PRODIGAL.out.versions.first())
     }
 
@@ -704,6 +720,7 @@ workflow MAG {
 
     if (params.run_virus_identification){
         VIRUS_IDENTIFICATION(ch_assemblies, ch_genomad_db)
+        ch_genomad_virus_summary = VIRUS_IDENTIFICATION.out.virus_summary
         ch_versions = ch_versions.mix(VIRUS_IDENTIFICATION.out.versions.first())
     }
 
@@ -803,6 +820,8 @@ workflow MAG {
                 [meta_new, bins]
             }
 
+
+
         // If any two of the binners are both skipped at once, do not run because DAS_Tool needs at least one
         if ( params.refine_bins_dastool ) {
             ch_prokarya_bins_dastool = ch_binning_results_bins
@@ -892,6 +911,7 @@ workflow MAG {
                 ch_checkm_db
             )
             ch_checkm_summary = CHECKM_QC.out.summary
+            ch_checkm_tsv = CHECKM_QC.out.checkm_tsv
 
             ch_versions = ch_versions.mix(CHECKM_QC.out.versions)
 
@@ -906,6 +926,7 @@ workflow MAG {
                     meta.domain != "eukarya"
                 }
             GUNC_QC ( ch_input_bins_for_qc, ch_gunc_db, [] )
+            ch_gunc_maxcss_level_tsv = GUNC_QC.out.gunc_maxcss_level_tsv
             ch_versions = ch_versions.mix( GUNC_QC.out.versions )
         }
 
@@ -918,7 +939,6 @@ workflow MAG {
                                                 def new_bins = bins.flatten()
                                                 [meta, new_bins]
                                             }
-
             QUAST_BINS ( ch_input_for_quast_bins )
             ch_versions = ch_versions.mix(QUAST_BINS.out.versions.first())
             ch_quast_bin_summary = QUAST_BINS.out.quast_bin_summaries
@@ -929,7 +949,6 @@ workflow MAG {
             QUAST_BINS_SUMMARY ( ch_quast_bin_summary.collect() )
             ch_quast_bins_summary = QUAST_BINS_SUMMARY.out.summary
         }
-
         /*
          * CAT: Bin Annotation Tool (BAT) are pipelines for the taxonomic classification of long DNA sequences and metagenome assembled genomes (MAGs/bins)
          */
@@ -960,25 +979,21 @@ workflow MAG {
 
         // If CAT is not run, then the CAT global summary should be an empty channel
         if ( params.cat_db_generate || params.cat_db) {
+            ch_cat_global_summary = CAT_SUMMARY.out.summary
             ch_cat_global_summary = CAT_SUMMARY.out.combined
         } else {
             ch_cat_global_summary = Channel.empty()
         }
-
         /*
          * GTDB-tk: taxonomic classifications using GTDB reference
          */
-
         if ( !params.skip_gtdbtk ) {
-
             ch_gtdbtk_summary = Channel.empty()
             if ( gtdb ){
-
                 ch_gtdb_bins = ch_input_for_postbinning_bins_unbins
                     .filter { meta, bins ->
                         meta.domain != "eukarya"
                     }
-
                 GTDBTK (
                     ch_gtdb_bins,
                     ch_busco_summary,
@@ -992,7 +1007,6 @@ workflow MAG {
         } else {
             ch_gtdbtk_summary = Channel.empty()
         }
-
         if ( ( !params.skip_binqc ) || !params.skip_quast || !params.skip_gtdbtk){
             BIN_SUMMARY (
                 ch_input_for_binsummary,
@@ -1003,11 +1017,9 @@ workflow MAG {
                 ch_cat_global_summary.ifEmpty([])
             )
         }
-
         /*
          * Prokka: Genome annotation
          */
-
         if (!params.skip_prokka){
             ch_bins_for_prokka = ch_input_for_postbinning_bins_unbins.transpose()
             .map { meta, bin ->
@@ -1017,15 +1029,14 @@ workflow MAG {
             .filter { meta, bin ->
                 meta.domain != "eukarya"
             }
-
             PROKKA (
                 ch_bins_for_prokka,
                 [],
                 []
             )
+            ch_prokka_faa = PROKKA.out.faa
             ch_versions = ch_versions.mix(PROKKA.out.versions.first())
         }
-
         if (!params.skip_metaeuk && (params.metaeuk_db || params.metaeuk_mmseqs_db)) {
             ch_bins_for_metaeuk = ch_input_for_postbinning_bins_unbins.transpose()
                 .filter { meta, bin ->
@@ -1035,88 +1046,79 @@ workflow MAG {
                     def meta_new = meta + [id: bin.getBaseName()]
                     [ meta_new, bin ]
                 }
-
             METAEUK_EASYPREDICT (ch_bins_for_metaeuk, ch_metaeuk_db)
+            ch_metaeuk_easypredict_faa = METAEUK_EASYPREDICT.out.faa
             ch_versions = ch_versions.mix(METAEUK_EASYPREDICT.out.versions)
         }
     }
-
     CUSTOM_DUMPSOFTWAREVERSIONS (
         ch_versions.unique().collectFile(name: 'collated_versions.yml')
     )
-
     //
     // MODULE: MultiQC
     //
     workflow_summary    = WorkflowMag.paramsSummaryMultiqc(workflow, summary_params)
     ch_workflow_summary = Channel.value(workflow_summary)
-
     methods_description    = WorkflowMag.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description, params)
     ch_methods_description = Channel.value(methods_description)
-
     ch_multiqc_files = Channel.empty()
     ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
     ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
     ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
-
     ch_multiqc_files = ch_multiqc_files.mix(FASTQC_RAW.out.zip.collect{it[1]}.ifEmpty([]))
-
     if (!params.assembly_input) {
-
         if ( !params.skip_clipping && params.clip_tool == 'adapterremoval' ) {
             ch_multiqc_files = ch_multiqc_files.mix(ADAPTERREMOVAL_PE.out.settings.collect{it[1]}.ifEmpty([]))
             ch_multiqc_files = ch_multiqc_files.mix(ADAPTERREMOVAL_SE.out.settings.collect{it[1]}.ifEmpty([]))
-
         } else if ( !params.skip_clipping && params.clip_tool == 'fastp' )  {
             ch_multiqc_files = ch_multiqc_files.mix(FASTP.out.json.collect{it[1]}.ifEmpty([]))
         }
-
         if (!(params.keep_phix && params.skip_clipping && !(params.host_genome || params.host_fasta))) {
             ch_multiqc_files = ch_multiqc_files.mix(FASTQC_TRIMMED.out.zip.collect{it[1]}.ifEmpty([]))
         }
-
         if ( params.host_fasta || params.host_genome ) {
             ch_multiqc_files = ch_multiqc_files.mix(BOWTIE2_HOST_REMOVAL_ALIGN.out.log.collect{it[1]}.ifEmpty([]))
         }
-
         if(!params.keep_phix) {
             ch_multiqc_files = ch_multiqc_files.mix(BOWTIE2_PHIX_REMOVAL_ALIGN.out.log.collect{it[1]}.ifEmpty([]))
         }
-
     }
-
     ch_multiqc_files = ch_multiqc_files.mix(CENTRIFUGE.out.kreport.collect{it[1]}.ifEmpty([]))
     ch_multiqc_files = ch_multiqc_files.mix(KRAKEN2.out.report.collect{it[1]}.ifEmpty([]))
-
     if (!params.skip_quast){
         ch_multiqc_files = ch_multiqc_files.mix(QUAST.out.report.collect().ifEmpty([]))
-
         if ( !params.skip_binning ) {
             ch_multiqc_files = ch_multiqc_files.mix(QUAST_BINS.out.dir.collect().ifEmpty([]))
         }
     }
-
     if ( !params.skip_binning || params.ancient_dna ) {
         ch_multiqc_files = ch_multiqc_files.mix(BINNING_PREPARATION.out.bowtie2_assembly_multiqc.collect().ifEmpty([]))
     }
-
     if (!params.skip_binning && !params.skip_prokka){
         ch_multiqc_files = ch_multiqc_files.mix(PROKKA.out.txt.collect{it[1]}.ifEmpty([]))
     }
-
     if (!params.skip_binning && !params.skip_binqc && params.binqc_tool == 'busco'){
         ch_multiqc_files = ch_multiqc_files.mix(BUSCO_QC.out.multiqc.collect().ifEmpty([]))
     }
-
-
     MULTIQC (
         ch_multiqc_files.collect(),
         ch_multiqc_config.toList(),
         ch_multiqc_custom_config.toList(),
         ch_multiqc_logo.toList()
     )
-
     multiqc_report = MULTIQC.out.report.toList()
+
+    emit:
+    short_reads         = ch_short_reads
+    assemblies          = ch_assemblies
+    prodigal		    = ch_prodigal_gene_annotations
+    genomad             = ch_genomad_virus_summary
+    refined_bins        = ch_refined_bins
+    refined_unbins      = ch_refined_unbins
+    bin_summary         = ch_bin_summaries
+    prokka              = ch_prokka_faa
+    metaeuk             = ch_metaeuk_easypredict_faa
+    versions            = ch_versions
 }
 
 /*
@@ -1135,7 +1137,6 @@ workflow.onComplete {
         NfcoreTemplate.IM_notification(workflow, params, summary_params, projectDir, log)
     }
 }
-
 workflow.onError {
     if (workflow.errorReport.contains("Process requirement exceeds available memory")) {
         println("🛑 Default resources exceed availability 🛑 ")

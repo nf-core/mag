@@ -1,0 +1,22 @@
+nextflow_workflow {
+
+    name "Test workflow: MAG"
+    script "../main.nf"
+    workflow "MAG"
+    tag "workflows"
+    tag "mag"
+    tag "mag_test"
+    profile "test"
+
+    test("Default paramters") {
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out
+                ).match() }
+            )
+        }
+    }
+}

@@ -1,0 +1,113 @@
+{
+    "Parameters: test_nothing": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test_minigut",
+                            "group": "0",
+                            "single_end": false
+                        },
+                        [
+                            "test_minigut_1.merged.fastq.gz:md5,b7eaf06531000c4d32a48d050c2df34f",
+                            "test_minigut_2.merged.fastq.gz:md5,a1629ec2f2931892a2a0c43f0f677056"
+                        ]
+                    ],
+                    [
+                        {
+                            "id": "test_minigut_sample2",
+                            "group": "0",
+                            "single_end": false
+                        },
+                        [
+                            "/nf-core/test-datasets/raw/mag/test_data/test_minigut_sample2_R1.fastq.gz",
+                            "/nf-core/test-datasets/raw/mag/test_data/test_minigut_sample2_R2.fastq.gz"
+                        ]
+                    ]
+                ],
+                "1": [
+                    
+                ],
+                "2": [
+                    
+                ],
+                "3": [
+                    
+                ],
+                "4": [
+                    
+                ],
+                "5": [
+                    
+                ],
+                "6": [
+                    
+                ],
+                "7": [
+                    
+                ],
+                "8": [
+                    
+                ],
+                "9": [
+                    "versions.yml:md5,3222fd64337a6c070682b63fc5e0cb3c",
+                    "versions.yml:md5,85a05e91a1084dbca180ff6ff7e67400"
+                ],
+                "assemblies": [
+                    
+                ],
+                "bin_summary": [
+                    
+                ],
+                "genomad": [
+                    
+                ],
+                "metaeuk": [
+                    
+                ],
+                "prodigal": [
+                    
+                ],
+                "prokka": [
+                    
+                ],
+                "refined_bins": [
+                    
+                ],
+                "refined_unbins": [
+                    
+                ],
+                "short_reads": [
+                    [
+                        {
+                            "id": "test_minigut",
+                            "group": "0",
+                            "single_end": false
+                        },
+                        [
+                            "test_minigut_1.merged.fastq.gz:md5,b7eaf06531000c4d32a48d050c2df34f",
+                            "test_minigut_2.merged.fastq.gz:md5,a1629ec2f2931892a2a0c43f0f677056"
+                        ]
+                    ],
+                    [
+                        {
+                            "id": "test_minigut_sample2",
+                            "group": "0",
+                            "single_end": false
+                        },
+                        [
+                            "/nf-core/test-datasets/raw/mag/test_data/test_minigut_sample2_R1.fastq.gz",
+                            "/nf-core/test-datasets/raw/mag/test_data/test_minigut_sample2_R2.fastq.gz"
+                        ]
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,3222fd64337a6c070682b63fc5e0cb3c",
+                    "versions.yml:md5,85a05e91a1084dbca180ff6ff7e67400"
+                ]
+            }
+        ],
+        "timestamp": "2024-02-05T23:35:18.598081054"
+    }
+}

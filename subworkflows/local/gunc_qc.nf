@@ -46,6 +46,7 @@ workflow GUNC_QC {
     }
 
     emit:
-    versions = ch_versions
+    gunc_maxcss_level_tsv   = GUNC_RUN.out.maxcss_level_tsv
+    versions                = ch_versions
 
 }
