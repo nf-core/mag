@@ -6,6 +6,7 @@ nextflow_workflow {
     tag "workflows"
     tag "mag"
     tag "mag_test_binrefinement"
+    config "../../../conf/mag_test_binrefinement.config"
 
     test("Parameters: refine_bins_dastool = true") {
 

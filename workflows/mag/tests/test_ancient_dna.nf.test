@@ -6,6 +6,7 @@ nextflow_workflow {
     tag "workflows"
     tag "mag"
     tag "mag_test_ancient_dna"
+    config "../../../conf/mag_test_ancient_dna.config"
 
     test("Parameters: ancient_dna = true") {
 

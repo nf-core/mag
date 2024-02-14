@@ -104,7 +104,7 @@ jobs:
 
       - name: Run nf-test
         run: |
-          nf-test test --verbose --tag ${{ matrix.tags }} --profile "${{ matrix.profile }}",${{ matrix.tags }} --junitxml=test.xml --tap=test.tap
+          nf-test test --verbose --tag ${{ matrix.tags }} --profile "${{ matrix.profile }}" --junitxml=test.xml --tap=test.tap
 
       - uses: pcolby/tap-summary@v1
         with:

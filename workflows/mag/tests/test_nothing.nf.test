@@ -6,6 +6,7 @@ nextflow_workflow {
     tag "workflows"
     tag "mag"
     tag "mag_test_nothing"
+    config "../../../conf/mag_test_nothing.config"
 
     test("Parameters: test_nothing") {
 

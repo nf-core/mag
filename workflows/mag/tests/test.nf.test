@@ -6,6 +6,7 @@ nextflow_workflow {
     tag "workflows"
     tag "mag"
     tag "mag_test"
+    config "../../../conf/mag_test.config"
 
     test("Default paramters") {
 
