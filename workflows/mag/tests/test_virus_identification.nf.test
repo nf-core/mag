@@ -6,7 +6,7 @@ nextflow_workflow {
     tag "workflows"
     tag "mag"
     tag "mag_test_virus_identification"
-    config "../../../conf/mag_test_virus_identification.config"
+    profile "test_virus_identification"
 
     test("Parameters: run_virus_identification = true") {
 

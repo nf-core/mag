@@ -6,7 +6,7 @@ nextflow_workflow {
     tag "workflows"
     tag "mag"
     tag "mag_test_adapterremoval"
-    config "../../../conf/mag_test_adapterremoval.config"
+    profile "test_adapterremoval"
 
     test("Parameters: clip_tool = 'adapterremoval'") {
 

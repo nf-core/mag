@@ -6,7 +6,7 @@ nextflow_workflow {
     tag "workflows"
     tag "mag"
     tag "mag_test_busco_auto"
-    config "../../../conf/mag_test_binrefinement.config"
+    profile "test_busco_auto"
 
     test("Parameters: skip_busco = false") {
 

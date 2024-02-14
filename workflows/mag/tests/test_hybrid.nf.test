@@ -6,7 +6,7 @@ nextflow_workflow {
     tag "workflows"
     tag "mag"
     tag "mag_test_hybrid"
-    config "../../../conf/mag_test_hybrid.config"
+    profile "test_hybrid"
 
     test("Parameters: long reads included") {
 

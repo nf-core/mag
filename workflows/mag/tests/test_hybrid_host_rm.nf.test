@@ -6,7 +6,7 @@ nextflow_workflow {
     tag "workflows"
     tag "mag"
     tag "mag_test_hybrid_host_rm"
-    config "../../../conf/mag_test_hybrid_host_rm.config"
+    profile "test_hybrid_host_rm"
 
     test("Parameters: long reads & host removal included") {
 
