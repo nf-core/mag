@@ -16,8 +16,6 @@ process GENOMAD_DOWNLOAD {
     script:
     def args = task.ext.args ?: ''
     """
-    https_proxy=http://klone-dip1-A-ib:3128
-    export https_proxy
     genomad \\
         download-database .
 
