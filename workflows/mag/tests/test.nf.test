@@ -5,9 +5,9 @@ nextflow_workflow {
     workflow "MAG"
     tag "workflows"
     tag "mag"
-    tag "mag_test_binrefinement"
+    tag "mag_test"
 
-    test("Parameters: refine_bins_dastool = true") {
+    test("Default paramters") {
 
         then {
             assertAll(

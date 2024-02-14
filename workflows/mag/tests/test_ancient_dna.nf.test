@@ -9,37 +9,6 @@ nextflow_workflow {
 
     test("Parameters: ancient_dna = true") {
 
-        when {
-            params {
-                input                                   = 'https://raw.githubusercontent.com/nf-core/test-datasets/mag/samplesheets/samplesheet.csv'
-                skip_clipping                           = true
-                keep_phix                               = true
-                kraken2_db                              = null
-                centrifuge_db                           = null
-                skip_krona                              = true
-                megahit_fix_cpu_1                       = true
-                spades_fix_cpus                         = 1
-                skip_spadeshybrid                       = true
-                ancient_dna                             = true
-                skip_quast                              = true
-                skip_prodigal                           = true
-                bowtie2_fix_cpu_1                       = true
-                binning_map_mode                        = 'own'
-                maxbin2_fix_cpu_1                       = true
-                bcftools_view_high_variant_quality      = 0
-                bcftools_view_medium_variant_quality    = 0
-                bcftools_view_minimal_allelesupport     = 3
-                refine_bins_dastool                     = true
-                refine_bins_dastool_threshold           = 0
-                min_length_unbinned_contigs             = 1
-                max_unbinned_contigs                    = 2
-                skip_binqc                              = true
-                skip_gtdbtk                             = true
-                skip_prokka                             = true
-                skip_metaeuk                            = true
-            }
-        }
-
         then {
             assertAll(
                 { assert workflow.success },

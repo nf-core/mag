@@ -9,28 +9,6 @@ nextflow_workflow {
 
     test("Parameters: bbnorm = true") {
 
-        when {
-            params {
-                input                       = 'https://raw.githubusercontent.com/nf-core/test-datasets/mag/samplesheets/samplesheet.csv'
-                bbnorm                      = true
-                keep_phix                   = true
-                skip_adapter_trimming       = true
-                centrifuge_db               = null
-                kraken2_db                  = null
-                skip_krona                  = true
-                skip_megahit                = true
-                skip_spades                 = true
-                skip_spadeshybrid           = true
-                skip_quast                  = true
-                skip_prodigal               = true
-                skip_binning                = true
-                skip_binqc                  = true
-                skip_gtdbtk                 = true
-                skip_prokka                 = true
-                skip_metaeuk                = true
-            }
-        }
-
         then {
             assertAll(
                 { assert workflow.success },
