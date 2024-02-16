@@ -62,6 +62,7 @@ jobs:
             test_adapterremoval,
             test_binrefinement,
             test_virus_identification,
+            test_single_end,
             test_concoct,
           ]
     steps:
