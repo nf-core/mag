@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+# Originally written by Sabrina Krakau and released under the MIT license.
+# See git repository (https://github.com/nf-core/mag) for full license text.
+
 import re
 import sys
 import argparse
@@ -16,7 +19,13 @@ def parse_args(args=None):
         type=str,
         help="File extension passed to GTDB-TK and substracted by GTDB-Tk from bin names in results files.",
     )
-    parser.add_argument("-s", "--summaries", nargs="+", metavar="FILE", help="List of GTDB-tk summary files.")
+    parser.add_argument(
+        "-s",
+        "--summaries",
+        nargs="+",
+        metavar="FILE",
+        help="List of GTDB-tk summary files.",
+    )
     parser.add_argument(
         "-fi",
         "--filtered_bins",
@@ -54,8 +63,15 @@ def parse_args(args=None):
 def main(args=None):
     args = parse_args(args)
 
-    if not args.summaries and not args.filtered_bins and not args.failed_bins and not args.qc_discarded_bins:
-        sys.exit("Either --summaries, --filtered_bins, --failed_bins or --qc_discarded_bins must be specified!")
+    if (
+        not args.summaries
+        and not args.filtered_bins
+        and not args.failed_bins
+        and not args.qc_discarded_bins
+    ):
+        sys.exit(
+            "Either --summaries, --filtered_bins, --failed_bins or --qc_discarded_bins must be specified!"
+        )
 
     columns = [
         "user_genome",
@@ -117,7 +133,9 @@ def main(args=None):
         for file in args.summaries:
             df_summary = pd.read_csv(file, sep="\t")[columns]
             # add by GTDB-Tk substracted file extension again to bin names (at least until changed consistently in rest of pipeline)
-            df_summary["user_genome"] = df_summary["user_genome"].astype(str) + "." + args.extension
+            df_summary["user_genome"] = (
+                df_summary["user_genome"].astype(str) + "." + args.extension
+            )
             df_summary.set_index("user_genome", inplace=True)
             df_final = df_final.append(df_summary, verify_integrity=True)
 
@@ -153,7 +171,9 @@ def main(args=None):
                 filtered.append(bin_results)
 
     df_filtered = pd.DataFrame(filtered, columns=columns)
-    df_filtered["user_genome"] = df_filtered["user_genome"].astype(str) + "." + args.extension
+    df_filtered["user_genome"] = (
+        df_filtered["user_genome"].astype(str) + "." + args.extension
+    )
     df_filtered.set_index("user_genome", inplace=True)
     df_final = df_final.append(df_filtered, verify_integrity=True)
 
@@ -189,12 +209,16 @@ def main(args=None):
                 failed.append(bin_results)
 
     df_failed = pd.DataFrame(failed, columns=columns)
-    df_failed["user_genome"] = df_failed["user_genome"].astype(str) + "." + args.extension
+    df_failed["user_genome"] = (
+        df_failed["user_genome"].astype(str) + "." + args.extension
+    )
     df_failed.set_index("user_genome", inplace=True)
     df_final = df_final.append(df_failed, verify_integrity=True)
 
     # write output
-    df_final.reset_index().rename(columns={"index": "user_genome"}).to_csv(args.out, sep="\t", index=False)
+    df_final.reset_index().rename(columns={"index": "user_genome"}).to_csv(
+        args.out, sep="\t", index=False
+    )
 
 
 if __name__ == "__main__":
