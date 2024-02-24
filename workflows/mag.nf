@@ -80,6 +80,8 @@ include { METAEUK_EASYPREDICT                    } from '../modules/nf-core/meta
 include { MULTIQC                                } from '../modules/nf-core/multiqc/main'
 include { paramsSummaryMap                       } from 'plugin/nf-validation'
 include { paramsSummaryMultiqc                   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { softwareVersionsToYAML                 } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { methodsDescriptionText                 } from '../subworkflows/local/utils_nfcore_mag_pipeline'
 
 ////////////////////////////////////////////////////
 /* --  Create channel for reference databases  -- */
@@ -180,15 +182,14 @@ if(params.metaeuk_db && !params.skip_metaeuk) {
 */
 
 // Info required for completion email and summary
-def multiqc_report    = []
 def busco_failed_bins = [:]
 
 workflow MAG {
 
     take:
-    raw_short_reads
-    raw_long_reads
-    input_assemblies
+    ch_raw_short_reads
+    ch_raw_long_reads
+    ch_input_assemblies
 
     main:
 
