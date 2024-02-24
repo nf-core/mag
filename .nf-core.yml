@@ -1,1 +1,9 @@
 repository_type: pipeline
+
+lint:
+  files_unchanged:
+    - lib/NfcoreTemplate.groovy
+  nextflow_config:
+    - config_defaults:
+        - params.phix_reference
+        - params.lambda_reference
