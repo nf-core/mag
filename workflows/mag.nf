@@ -1,49 +1,5 @@
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    IMPORT MODULES / SUBWORKFLOWS / FUNCTIONS
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-include { paramsSummaryMap } from 'plugin/nf-validation'
-
-def logo = NfcoreTemplate.logo(workflow, params.monochrome_logs)
-def citation = '\n' + WorkflowMain.citation(workflow) + '\n'
-def summary_params = paramsSummaryMap(workflow)
-
-// Check already if long reads are provided
-def hybrid = false
-if(file(params.input).extension == 'csv'){
-    Channel
-        .from(file(params.input))
-        .splitCsv(header: true)
-        .map { row ->
-                if (row.long_reads) hybrid = true
-            }
-}
-
-// Print parameter summary log to screen
-log.info logo + paramsSummaryLog(workflow) + citation
-
-// Validate input parameters
-WorkflowMag.initialise(params, log, hybrid)
-
-// Check input path parameters to see if they exist
-def checkPathParamList = [ params.input, params.multiqc_config, params.phix_reference, params.host_fasta, params.centrifuge_db, params.kraken2_db, params.cat_db, params.krona_db, params.gtdb_db, params.lambda_reference, params.busco_db ]
-for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    CONFIG FILES
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-ch_multiqc_config          = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
-ch_multiqc_custom_config   = params.multiqc_config ? Channel.fromPath( params.multiqc_config, checkIfExists: true ) : Channel.empty()
-ch_multiqc_logo            = params.multiqc_logo   ? Channel.fromPath( params.multiqc_logo, checkIfExists: true ) : Channel.fromPath("$projectDir/assets/nf-core-mag_logo_light.png")
-ch_multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     IMPORT LOCAL MODULES/SUBWORKFLOWS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
@@ -104,6 +60,10 @@ include { DEPTHS                          } from '../subworkflows/local/depths'
     IMPORT NF-CORE MODULES/SUBWORKFLOWS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
+//
+// PLUGIN
+//
+include { paramsSummaryMap                       } from 'plugin/nf-validation'
 
 //
 // MODULE: Installed directly from nf-core/modules
@@ -121,7 +81,6 @@ include { PRODIGAL                               } from '../modules/nf-core/prod
 include { PROKKA                                 } from '../modules/nf-core/prokka/main'
 include { MMSEQS_DATABASES                       } from '../modules/nf-core/mmseqs/databases/main'
 include { METAEUK_EASYPREDICT                    } from '../modules/nf-core/metaeuk/easypredict/main'
-include { CUSTOM_DUMPSOFTWAREVERSIONS            } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 include { MULTIQC                                } from '../modules/nf-core/multiqc/main'
 include { paramsSummaryMultiqc                   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML                 } from '../subworkflows/nf-core/utils_nfcore_pipeline'
@@ -226,13 +185,14 @@ if(params.metaeuk_db && !params.skip_metaeuk) {
 */
 
 // Info required for completion email and summary
-def multiqc_report    = []
 def busco_failed_bins = [:]
 
 workflow MAG {
 
     take:
-    ch_samplesheet // channel: samplesheet read in from --input
+    ch_raw_short_reads
+    ch_raw_long_reads
+    ch_input_assemblies
 
     main:
 
@@ -252,15 +212,6 @@ workflow MAG {
         ch_metaeuk_db = MMSEQS_DATABASES.out.database
         ch_versions = ch_versions.mix(MMSEQS_DATABASES.out.versions)
     }
-
-    //
-    // SUBWORKFLOW: Read in samplesheet, validate and stage input files
-    //
-
-    INPUT_CHECK ()
-    ch_raw_short_reads  = INPUT_CHECK.out.raw_short_reads
-    ch_raw_long_reads   = INPUT_CHECK.out.raw_long_reads
-    ch_input_assemblies = INPUT_CHECK.out.input_assemblies
 
     /*
     ================================================================================

@@ -11,6 +11,7 @@
 include { UTILS_NFVALIDATION_PLUGIN } from '../../nf-core/utils_nfvalidation_plugin'
 include { paramsSummaryMap          } from 'plugin/nf-validation'
 include { fromSamplesheet           } from 'plugin/nf-validation'
+include { INPUT_CHECK               } from '../../local/input_check.nf'
 include { UTILS_NEXTFLOW_PIPELINE   } from '../../nf-core/utils_nextflow_pipeline'
 include { completionEmail           } from '../../nf-core/utils_nfcore_pipeline'
 include { completionSummary         } from '../../nf-core/utils_nfcore_pipeline'
@@ -87,34 +88,19 @@ workflow PIPELINE_INITIALISATION {
     //
     // Custom validation for pipeline parameters
     //
-    validateInputParameters()
+    validateInputParameters(hybrid)
 
     //
     // Create channel from input file provided through params.input
     //
-    Channel
-        .fromSamplesheet("input")
-        .map {
-            meta, fastq_1, fastq_2 ->
-                if (!fastq_2) {
-                    return [ meta.id, meta + [ single_end:true ], [ fastq_1 ] ]
-                } else {
-                    return [ meta.id, meta + [ single_end:false ], [ fastq_1, fastq_2 ] ]
-                }
-        }
-        .groupTuple()
-        .map {
-            validateInputSamplesheet(it)
-        }
-        .map {
-            meta, fastqs ->
-                return [ meta, fastqs.flatten() ]
-        }
-        .set { ch_samplesheet }
+    INPUT_CHECK ()
+
 
     emit:
-    samplesheet = ch_samplesheet
-    versions    = ch_versions
+    raw_short_reads     = INPUT_CHECK.out.raw_short_reads
+    raw_long_reads      = INPUT_CHECK.out.raw_long_reads
+    input_assemblies    = INPUT_CHECK.out.input_assemblies
+    versions            = ch_versions
 }
 
 /*
@@ -284,7 +270,7 @@ def validateInputParameters(hybrid) {
 // Validate channels from input samplesheet
 //
 def validateInputSamplesheet(input) {
-    def (metas, fastqs) = input[1..2]
+    def (metas, fastqs, fasta) = input[1..3]
 
     // Check that multiple runs of the same sample are of the same datatype i.e. single-end / paired-end
     def endedness_ok = metas.collect{ it.single_end }.unique().size == 1
@@ -292,7 +278,7 @@ def validateInputSamplesheet(input) {
         error("Please check input samplesheet -> Multiple runs of a sample must be of the same datatype i.e. single-end or paired-end: ${metas[0].id}")
     }
 
-    return [ metas[0], fastqs ]
+    return [ metas[0], fastqs, fasta ]
 }
 //
 // Get attribute from genome config file e.g. fasta
