@@ -272,7 +272,7 @@ def attachMultiqcReport(multiqc_report) {
 //
 // Construct and send completion email
 //
-def completionEmail(summary_params, email, email_on_fail, plaintext_email, outdir, monochrome_logs=true, multiqc_report=null) {
+def completionEmail(summary_params, email, email_on_fail, plaintext_email, outdir, monochrome_logs=true, multiqc_report=null, busco_failed_bins = [:]) {
 
     // Set up the e-mail variables
     def subject = "[$workflow.manifest.name] Successful: $workflow.runName"
@@ -309,6 +309,7 @@ def completionEmail(summary_params, email, email_on_fail, plaintext_email, outdi
     email_fields['commandLine']  = workflow.commandLine
     email_fields['projectDir']   = workflow.projectDir
     email_fields['summary']      = summary << misc_fields
+    email_fields['busco_failed_bins'] = busco_failed_bins.keySet()
 
     // On success try attach the multiqc report
     def mqc_report = attachMultiqcReport(multiqc_report)
