@@ -66,10 +66,8 @@ def checkProfileProvided(nextflow_cli_args) {
 //
 def workflowCitation() {
     return "If you use ${workflow.manifest.name} for your analysis please cite:\n\n" +
-        "* The pipeline publication\n" +
-        "  https://doi.org/10.1093/nargab/lqac007\n\n" +
         "* The pipeline\n" +
-        "  https://doi.org/10.5281/zenodo.3589527\n\n" +
+        "  ${workflow.manifest.doi}\n\n" +
         "* The nf-core framework\n" +
         "  https://doi.org/10.1038/s41587-020-0439-x\n\n" +
         "* Software dependencies\n" +
@@ -274,7 +272,7 @@ def attachMultiqcReport(multiqc_report) {
 //
 // Construct and send completion email
 //
-def completionEmail(summary_params, email, email_on_fail, plaintext_email, outdir, monochrome_logs=true, multiqc_report=null, busco_failed_bins = [:]) {
+def completionEmail(summary_params, email, email_on_fail, plaintext_email, outdir, monochrome_logs=true, multiqc_report=null) {
 
     // Set up the e-mail variables
     def subject = "[$workflow.manifest.name] Successful: $workflow.runName"
@@ -311,7 +309,6 @@ def completionEmail(summary_params, email, email_on_fail, plaintext_email, outdi
     email_fields['commandLine']  = workflow.commandLine
     email_fields['projectDir']   = workflow.projectDir
     email_fields['summary']      = summary << misc_fields
-    email_fields['busco_failed_bins'] = busco_failed_bins.keySet()
 
     // On success try attach the multiqc report
     def mqc_report = attachMultiqcReport(multiqc_report)
