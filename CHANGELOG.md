@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Changed`
 
 - [#581](https://github.com/nf-core/mag/pull/581) - Added explicit licence text to headers of all custom scripts (reported by @FriederikeHanssen and @maxibor, fix by @jfy133)
+- [#602](https://github.com/nf-core/mag/pull/602) - Enables co-binning when using aDNA mode (added by @maxibor)
 
 ### `Fixed`
 
