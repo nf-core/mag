@@ -899,7 +899,7 @@
                 },
                 "samplesheet_combine_assemblers": {
                     "type": "boolean",
-                    "description": "Combine assembler outputs into one assembly file"
+                    "description": "Combine all contigs from all assemblies of a given sample into a single FASTA file"
                 }
             }
         }

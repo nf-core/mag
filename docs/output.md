@@ -719,7 +719,7 @@ Because of aDNA damage, _de novo_ assemblers sometimes struggle to call a correc
 
 Currently, samplesheets for the following nf-core pipelines can be automatically generated:
 
-- [phageannotator](https://github.com/nf-core/phageannotator): a pipeline for identifying, annotation, and quantifying phage sequences in (meta)-genomic sequences.
+- [phageannotator](https://github.com/nf-core/phageannotator): a pipeline for identifying, annotation, and quantifying phage sequences in (meta)-genomic sequences. Utilizes quality controlled reads and contigs generate by nf-core/mag
 
 ### MultiQC
 
