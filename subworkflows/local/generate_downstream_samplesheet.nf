@@ -5,6 +5,7 @@ workflow GENERATE_DOWNSTREAM_SAMPLESHEET {
         downstream_nfcore_pipelines // val: [ nf-core-pipeline, OPTIONAL: other-nf-core-pipelines ]
         short_reads                 // channel: [val(meta), path(fastq_1), path(fastq_2)]
         assemblies                  // channel: [val(meta), path(fasta)]
+
     main:
 
         ch_versions = Channel.empty()
@@ -103,10 +104,35 @@ workflow GENERATE_DOWNSTREAM_SAMPLESHEET {
                     .set { ch_mag_metadata }
             }
 
-            // Create samplesheet for each sample using meta information
-            ch_mag_id_samplesheets = ch_mag_metadata.collectFile() { meta ->
-                [ "${meta.id}_phageannotator_samplesheet.csv", "sample,group,fastq_1,fastq_2,fasta" + '\n' + "${meta.id},${meta.group},${meta.fastq_1},${meta.fastq_2},${meta.fasta}" + '\n' ]
-            }
+                // Create samplesheet for each sample using meta information
+                ch_mag_id_samplesheets = ch_mag_metadata.collectFile() { meta ->
+                    // Save reads and assemblies to outdir so that they are in a stable location
+                    file(meta.fastq_1.toUriString(), checkIfExists: true).copyTo("${params.outdir}/downstream_samplesheets/fastq/${meta.fastq_1.name}")
+                    file(meta.fasta, checkIfExists: true).copyTo("${params.outdir}/downstream_samplesheets/fasta/${meta.fasta.name}")
+                    if ( !meta.single_end ){
+                        file(meta.fastq_2.toUriString(), checkIfExists: true).copyTo("${params.outdir}/downstream_samplesheets/fastq/${meta.fastq_2.name}")
+                        [ "${meta.id}_phageannotator_samplesheet.csv",
+                            "sample,group,fastq_1,fastq_2,fasta" +
+                            '\n' +
+                            "${meta.id},${meta.group}," +
+                            file("${params.outdir}/downstream_samplesheets/fastq/${meta.fastq_1.name}").toString() + "," +
+                            file("${params.outdir}/downstream_samplesheets/fastq/${meta.fastq_2.name}").toString() + "," +
+                            file("${params.outdir}/downstream_samplesheets/fasta/${meta.fasta.name}").toString() +
+                            '\n'
+                        ]
+                    } else {
+                        // Create samplesheet for each sample using meta information
+                        [ "${meta.id}_phageannotator_samplesheet.csv",
+                            "sample,group,fastq_1,fastq_2,fasta" +
+                            '\n' +
+                            "${meta.id},${meta.group}," +
+                            file("${params.outdir}/downstream_samplesheets/fastq/${meta.fastq_1.name}").toString() + "," +
+                            "," +
+                            file("${params.outdir}/downstream_samplesheets/fasta/${meta.fasta.name}").toString() +
+                            '\n'
+                        ]
+                    }
+                }
 
             // Merge samplesheet across all samples for the pipeline
             ch_mag_id_samplesheets.collectFile(name: "phageannotator_samplesheet.csv", keepHeader:true, skip:1, storeDir:"${params.outdir}/downstream_samplesheets/")
