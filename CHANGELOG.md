@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
+- [#605](https://github.com/nf-core/mag/pull/605) - Added dedicated test profile for CheckM (by @jfy133)
+
 ### `Changed`
 
 ### `Fixed`
