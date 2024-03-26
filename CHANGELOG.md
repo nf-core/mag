@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
+- [#606](https://github.com/nf-core/mag/pull/606) - Prevent pipeline crashing when premade mashdb given to or no alignments found with GTDB-TK_CLASSIFYWF (reported by @cedwardson4, fix by @jfy133)
+
 ### `Dependencies`
 
 ### `Deprecated`
