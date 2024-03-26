@@ -1,0 +1,24 @@
+Changes in module 'nf-core/aria2'
+--- modules/nf-core/aria2/main.nf
++++ modules/nf-core/aria2/main.nf
+@@ -12,7 +12,7 @@
+     val source_url
+ 
+     output:
+-    path ("$downloaded_file"), emit: downloaded_file
++    path ("checkm_data_2015_01_16/"), emit: downloaded_file
+     path "versions.yml"      , emit: versions
+ 
+     when:
+@@ -30,6 +30,9 @@
+         $args \\
+         $source_url
+ 
++    mkdir checkm_data_2015_01_16/
++    tar x -C checkm_data_2015_01_16 -v -z -f *.tar.gz
++
+     cat <<-END_VERSIONS > versions.yml
+     "${task.process}":
+         aria2: \$(echo \$(aria2c --version 2>&1) | grep 'aria2 version' | cut -f3 -d ' ')
+
+************************************************************
