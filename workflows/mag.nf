@@ -9,7 +9,6 @@ include { paramsSummaryMap       } from 'plugin/nf-validation'
 include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_mag_pipeline'
-include { paramsSummaryLog; paramsSummaryMap } from 'plugin/nf-validation'
 
 // Check already if long reads are provided
 def hybrid = false
@@ -53,6 +52,41 @@ include { PRODIGAL                               } from '../modules/nf-core/prod
 include { PROKKA                                 } from '../modules/nf-core/prokka/main'
 include { MMSEQS_DATABASES                       } from '../modules/nf-core/mmseqs/databases/main'
 include { METAEUK_EASYPREDICT                    } from '../modules/nf-core/metaeuk/easypredict/main'
+
+//
+// MODULE: Local to the pipeline
+//
+include { BOWTIE2_REMOVAL_BUILD as BOWTIE2_HOST_REMOVAL_BUILD } from '../modules/local/bowtie2_removal_build'
+include { BOWTIE2_REMOVAL_ALIGN as BOWTIE2_HOST_REMOVAL_ALIGN } from '../modules/local/bowtie2_removal_align'
+include { BOWTIE2_REMOVAL_BUILD as BOWTIE2_PHIX_REMOVAL_BUILD } from '../modules/local/bowtie2_removal_build'
+include { BOWTIE2_REMOVAL_ALIGN as BOWTIE2_PHIX_REMOVAL_ALIGN } from '../modules/local/bowtie2_removal_align'
+include { PORECHOP                                            } from '../modules/local/porechop'
+include { NANOLYSE                                            } from '../modules/local/nanolyse'
+include { FILTLONG                                            } from '../modules/local/filtlong'
+include { NANOPLOT as NANOPLOT_RAW                            } from '../modules/local/nanoplot'
+include { NANOPLOT as NANOPLOT_FILTERED                       } from '../modules/local/nanoplot'
+include { CENTRIFUGE_DB_PREPARATION                           } from '../modules/local/centrifuge_db_preparation'
+include { CENTRIFUGE                                          } from '../modules/local/centrifuge'
+include { KRAKEN2_DB_PREPARATION                              } from '../modules/local/kraken2_db_preparation'
+include { KRAKEN2                                             } from '../modules/local/kraken2'
+include { KRONA_DB                                            } from '../modules/local/krona_db'
+include { KRONA                                               } from '../modules/local/krona'
+include { POOL_SINGLE_READS as POOL_SHORT_SINGLE_READS        } from '../modules/local/pool_single_reads'
+include { POOL_PAIRED_READS                                   } from '../modules/local/pool_paired_reads'
+include { POOL_SINGLE_READS as POOL_LONG_READS                } from '../modules/local/pool_single_reads'
+include { MEGAHIT                                             } from '../modules/local/megahit'
+include { SPADES                                              } from '../modules/local/spades'
+include { SPADESHYBRID                                        } from '../modules/local/spadeshybrid'
+include { GUNZIP as GUNZIP_ASSEMBLIES                         } from '../modules/nf-core/gunzip'
+include { QUAST                                               } from '../modules/local/quast'
+include { QUAST_BINS                                          } from '../modules/local/quast_bins'
+include { QUAST_BINS_SUMMARY                                  } from '../modules/local/quast_bins_summary'
+include { CAT_DB                                              } from '../modules/local/cat_db'
+include { CAT_DB_GENERATE                                     } from '../modules/local/cat_db_generate'
+include { CAT                                                 } from '../modules/local/cat'
+include { CAT_SUMMARY                                         } from "../modules/local/cat_summary"
+include { BIN_SUMMARY                                         } from '../modules/local/bin_summary'
+include { COMBINE_TSV as COMBINE_SUMMARY_TSV                  } from '../modules/local/combine_tsv'
 
 ////////////////////////////////////////////////////
 /* --  Create channel for reference databases  -- */
@@ -158,7 +192,9 @@ def busco_failed_bins = [:]
 workflow MAG {
 
     take:
-    ch_samplesheet // channel: samplesheet read in from --input
+    ch_raw_short_reads // channel: samplesheet read in from --input
+    ch_raw_long_reads
+    ch_input_assemblies
 
     main:
 
@@ -179,12 +215,8 @@ workflow MAG {
         ch_versions = ch_versions.mix(MMSEQS_DATABASES.out.versions)
     }
 
-    //
-    // Prepare channels based on the main input channel
-    //
-    ch_raw_short_reads  = ch_samplesheet.out.raw_short_reads
-    ch_raw_long_reads   = ch_samplesheet.out.raw_long_reads
-    ch_input_assemblies = ch_samplesheet.out.input_assemblies
+
+
 
     /*
     ================================================================================

@@ -46,7 +46,9 @@ include { getGenomeAttribute      } from './subworkflows/local/utils_nfcore_mag_
 workflow NFCORE_MAG {
 
     take:
-    samplesheet // channel: samplesheet read in from --input
+        raw_short_reads  // channel: samplesheet read in from --input
+        raw_long_reads
+        input_assemblies
 
     main:
 
@@ -54,7 +56,9 @@ workflow NFCORE_MAG {
     // WORKFLOW: Run pipeline
     //
     MAG (
-        samplesheet
+        raw_short_reads,  // channel: samplesheet read in from --input
+        raw_long_reads,
+        input_assemblies
     )
 
     emit:
@@ -88,7 +92,9 @@ workflow {
     // WORKFLOW: Run main workflow
     //
     NFCORE_MAG (
-        PIPELINE_INITIALISATION.out.samplesheet
+        PIPELINE_INITIALISATION.out.raw_short_reads,
+        PIPELINE_INITIALISATION.out.raw_long_reads,
+        PIPELINE_INITIALISATION.out.input_assemblies
     )
 
     //

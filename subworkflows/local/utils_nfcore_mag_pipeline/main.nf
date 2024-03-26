@@ -80,28 +80,21 @@ workflow PIPELINE_INITIALISATION {
     //
     // Create channel from input file provided through params.input
     //
-    Channel
+    ch_samplesheet = Channel
         .fromSamplesheet("input")
-        .map {
-            meta, fastq_1, fastq_2 ->
-                if (!fastq_2) {
-                    return [ meta.id, meta + [ single_end:true ], [ fastq_1 ] ]
-                } else {
-                    return [ meta.id, meta + [ single_end:false ], [ fastq_1, fastq_2 ] ]
-                }
-        }
-        .groupTuple()
         .map {
             validateInputSamplesheet(it)
         }
-        .map {
-            meta, fastqs ->
-                return [ meta, fastqs.flatten() ]
+        .dump(tag: 'ch_samplesheet')
+        .branch {
+            long_reads: it[2] != []
+            short_reads: true
         }
-        .set { ch_samplesheet }
 
     emit:
-    samplesheet = ch_samplesheet
+    raw_short_reads  = ch_samplesheet.short_reads.map{meta, r1, r2, lr -> [meta, r1, r2]}
+    raw_long_reads   = ch_samplesheet.long_reads.map{meta, r1, r2, lr -> [meta, lr]}
+    input_assemblies = [] // ch_input_assemblies
     versions    = ch_versions
 }
 
