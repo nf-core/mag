@@ -14,20 +14,30 @@
             "properties": {
                 "input": {
                     "type": "string",
+                    "mimetype": "text/csv",
                     "format": "file-path-pattern",
                     "exists": true,
                     "schema": "assets/schema_input.json",
-                    "pattern": "^\\S+\\.csv$|^\\S+\\.(fastq|fq).gz$",
+                    "pattern": "^\\S+\\.csv$",
                     "description": "Input FastQ files (gzip compressed) or CSV samplesheet file containing information about the samples in the experiment.",
                     "help_text": "Use this to specify the location of your input FastQ files. For example:\n\n```bash\n--input 'path/to/data/sample_*_{1,2}.fastq.gz'\n``` \n\nAlternatively, to assign different groups or to include long reads for hybrid assembly with metaSPAdes, you can specify a CSV samplesheet input file with 5 columns and the following header: sample,group,short_reads_1,short_reads_2,long_reads. See [usage docs](https://nf-co.re/mag/usage#input-specifications).",
                     "fa_icon": "fas fa-file-csv"
                 },
+                "single_end": {
+                    "type": "boolean",
+                    "description": "Specifies that the input is single-end reads.",
+                    "fa_icon": "fas fa-align-center",
+                    "help_text": "By default, the pipeline expects paired-end data. If you have single-end data, you need to specify `--single_end` on the command line when you launch the pipeline. A normal glob pattern, enclosed in quotation marks, can then be used for `--input`. For example:\n\n```bash\n--single_end --input '*.fastq'\n```\n\nIt is not possible to run a mixture of single-end and paired-end files in one run."
+                },
                 "assembly_input": {
                     "type": "string",
                     "mimetype": "text/csv",
-                    "format": "file-path",
+                    "format": "file-path-pattern",
+                    "exists": true,
+                    "schema": "assets/schema_assembly_input.json",
+                    "pattern": "^\\S+\\.csv$",
                     "description": "Additional input CSV samplesheet containing information about pre-computed assemblies. When set, both read pre-processing and assembly are skipped and the pipeline begins at the binning stage.",
-                    "help_text": "If you have pre-computed assemblies from another source, it is possible to jump straight to the binning stage of the pipeline by supplying these assemblies in a CSV file. This CSV file should have three columns and the following header: `id,group,assembler,fasta`. Short reads must still be supplied in to `--input` in CSV format. See [usage docs](https://nf-co.re/mag/usage#input-specifications) for further details.",
+                    "help_text": "If you have pre-computed assemblies from another source, it is possible to jump straight to the binning stage of the pipeline by supplying these assemblies in a CSV file. This CSV file should have four columns and the following header: `id,group,assembler,fasta`. Short reads must still be supplied in to `--input` in CSV format. See [usage docs](https://nf-co.re/mag/usage#input-specifications) for further details.",
                     "fa_icon": "fas fa-file-csv"
                 },
                 "outdir": {

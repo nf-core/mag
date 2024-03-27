@@ -7,18 +7,11 @@
     "items": {
         "type": "object",
         "properties": {
-            "sample": {
+            "id": {
                 "type": "string",
                 "pattern": "^\\S+$",
-                "errorMessage": "Sample name must be provided and cannot contain spaces",
+                "errorMessage": "ID must be provided and cannot contain spaces",
                 "meta": ["id"]
-            },
-            "run": {
-                "type": "string",
-                "pattern": "^\\S+$",
-                "meta": ["run"],
-                "unique": ["sample"],
-                "errorMessage": "Column 'run' contains an empty field. Either remove column 'run' or fill each field with a value."
             },
             "group": {
                 "type": "string",
@@ -26,12 +19,11 @@
                 "meta": ["group"],
                 "errorMessage": "Column 'group' contains an empty field. Either remove column 'run' or fill each field with a value."
             },
-            "short_reads_1": {
+            "assembler": {
                 "type": "string",
-                "format": "file-path",
-                "exists": true,
-                "pattern": "^\\S+\\.f(ast)?q\\.gz$",
-                "errorMessage": "FastQ file for reads 1 must be provided, cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
+                "pattern": "MEGAHIT|SPAdes",
+                "meta": ["assembler"],
+                "errorMessage": "Column 'group' contains an empty field. Either remove column 'run' or fill each field with a value."
             },
             "short_reads_2": {
                 "type": "string",

@@ -1,4 +1,4 @@
-//
+
 // Subworkflow with functionality specific to the nf-core/mag pipeline
 //
 
@@ -78,23 +78,77 @@ workflow PIPELINE_INITIALISATION {
     validateInputParameters()
 
     //
-    // Create channel from input file provided through params.input
+    // Create channels from input file provided through params.input and params.assembly_input
     //
+
+    // Validate FASTQ input
     ch_samplesheet = Channel
         .fromSamplesheet("input")
         .dump(tag: 'fromSamplesheet')
-        // .map {
+        // .map {t
         //     validateInputSamplesheet(it)
         // }
         .dump(tag: 'ch_samplesheet')
-        .branch {
-            long_reads: it[2] != []
-            short_reads: true
-        }
+
+    // Prepare FASTQs channel and separate short and long reads and prepare
+    ch_raw_short_reads = ch_samplesheet
+        .map { meta, sr1, sr2, lr ->
+                    meta.run          = meta.run == null ? "0" : meta.run
+                    meta.single_end   = params.single_end
+                    if (params.single_end)
+                        return [ meta, [ sr1] ]
+                    else
+                        return [ meta, [ sr1, sr2 ] ]
+            }
+
+    ch_raw_long_reads = ch_samplesheet
+        .map { meta, sr1, sr2, lr ->
+                    if (lr) {
+                        meta.run          = meta.run == null ? "0" : meta.run
+                        return [ meta, lr ]
+                    }
+            }
+
+
+    if (params.assembly_input) {
+
+        ch_input_assembly_rows = Channel
+            .fromSamplesheet("assembly_input")
+            .from(file(params.assembly_input))
+            .splitCsv(header: true)
+            .map { row ->
+                    if (row.size() == 4) {
+                        def id        = row.id
+                        def group     = row.group
+                        def assembler = row.assembler ?:  false
+                        def assembly  = row.fasta ? file(row.fasta, checkIfExists: true) : false
+                        // Check if given combination is valid
+                        if (!assembly) exit 1, "Invalid input assembly samplesheet: fasta can not be empty."
+                        if (!assembler) exit 1, "Invalid input assembly samplesheet: assembler can not be empty."
+                        return [ id, group, assembler, assembly ]
+                    } else {
+                        exit 1, "Input samplesheet contains row with ${row.size()} column(s). Expects 3."
+                    }
+                }
+
+        // build meta map
+        ch_input_assemblies = ch_input_assembly_rows
+            .map { id, group, assembler, fasta ->
+                    def meta       = [:]
+                    meta.id    = params.coassemble_group? "group-$group" : id
+                    meta.group = group
+                    meta.assembler = assembler
+                    return [ meta, [ fasta ] ]
+                }
+    } else {
+        ch_input_assembly_rows = Channel.empty()
+        ch_input_assemblies    = Channel.empty()
+    }
+
 
     emit:
-    raw_short_reads  = ch_samplesheet.short_reads.map{meta, r1, r2, lr -> [meta, [r1, r2]]}.dump(tag: 'raw_short_reads') // TODO add if/else for single end data
-    raw_long_reads   = ch_samplesheet.long_reads.map{meta, r1, r2, lr -> [meta, lr]}
+    raw_short_reads  = ch_raw_short_reads
+    raw_long_reads   = ch_raw_long_reads
     input_assemblies = [] // ch_input_assemblies
     versions    = ch_versions
 }
