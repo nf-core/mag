@@ -93,7 +93,7 @@ workflow PIPELINE_INITIALISATION {
         }
 
     emit:
-    raw_short_reads  = ch_samplesheet.short_reads.map{meta, r1, r2, lr -> [meta, r1, r2]}
+    raw_short_reads  = ch_samplesheet.short_reads.map{meta, r1, r2, lr -> [meta, [r1, r2]]}.dump(tag: 'raw_short_reads') // TODO add if/else for single end data
     raw_long_reads   = ch_samplesheet.long_reads.map{meta, r1, r2, lr -> [meta, lr]}
     input_assemblies = [] // ch_input_assemblies
     versions    = ch_versions
