@@ -84,11 +84,9 @@ workflow PIPELINE_INITIALISATION {
     // Validate FASTQ input
     ch_samplesheet = Channel
         .fromSamplesheet("input")
-        .dump(tag: 'fromSamplesheet')
         // .map {t
         //     validateInputSamplesheet(it)
         // }
-        .dump(tag: 'ch_samplesheet')
 
     // Prepare FASTQs channel and separate short and long reads and prepare
     ch_raw_short_reads = ch_samplesheet
