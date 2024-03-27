@@ -12,6 +12,7 @@ report_section_order:
 
 export_plots: true
 
+disable_version_detection: true
 data_format: "yaml"
 
 run_modules:
