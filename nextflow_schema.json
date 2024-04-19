@@ -20,7 +20,7 @@
                     "schema": "assets/schema_input.json",
                     "pattern": "^\\S+\\.csv$",
                     "description": "CSV samplesheet file containing information about the samples in the experiment.",
-                    "help_text": "Use this to specify the location of your input FastQ files and their associated metadata. You can also use the CSV file to assign different groups or to include long reads for hybrid assembly with metaSPAdes. The CSV file must have at least 5 columns and the following header: sample,group,short_reads_1,short_reads_2,long_reads. See [usage docs](https://nf-co.re/mag/usage#input-specifications).",
+                    "help_text": "Use this to specify the location of your input FastQ files and their associated metadata. You can also use the CSV file to assign different groups or to include long reads for hybrid assembly with metaSPAdes. The CSV file must have at least two columns (sample, short_reads1) and with a maximum CSV sheet having the headers: sample,run,group,short_reads_1,short_reads_2,long_reads. See [usage docs](https://nf-co.re/mag/usage#input-specifications).",
                     "fa_icon": "fas fa-file-csv"
                 },
                 "single_end": {
