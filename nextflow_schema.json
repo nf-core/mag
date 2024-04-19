@@ -37,7 +37,7 @@
                     "schema": "assets/schema_assembly_input.json",
                     "pattern": "^\\S+\\.csv$",
                     "description": "Additional input CSV samplesheet containing information about pre-computed assemblies. When set, both read pre-processing and assembly are skipped and the pipeline begins at the binning stage.",
-                    "help_text": "If you have pre-computed assemblies from another source, it is possible to jump straight to the binning stage of the pipeline by supplying these assemblies in a CSV file. This CSV file should have four columns and the following header: `id,group,assembler,fasta`. Short reads must still be supplied in to `--input` in CSV format. See [usage docs](https://nf-co.re/mag/usage#input-specifications) for further details.",
+                    "help_text": "If you have pre-computed assemblies from another source, it is possible to jump straight to the binning stage of the pipeline by supplying these assemblies in a CSV file. This CSV file should have at minimum three columns and the following header: `id,group,assembler,fasta` (group is only required when `--coassemble_group). Short reads must still be supplied in to `--input` in CSV format. See [usage docs](https://nf-co.re/mag/usage#input-specifications) for further details.",
                     "fa_icon": "fas fa-file-csv"
                 },
                 "outdir": {
