@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
+- [#599](https://github.com/nf-core/mag/pull/599) Update to nf-core v2.13.1 `TEMPLATE` (by @jfy133)
+
 ### `Fixed`
 
 - [#606](https://github.com/nf-core/mag/pull/606) - Prevent pipeline crash when premade mashdb given to or no alignments found with GTDB-TK_CLASSIFYWF (reported by @cedwardson4, fix by @jfy133)
@@ -16,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Dependencies`
 
 ### `Deprecated`
+
+- [#599](https://github.com/nf-core/mag/pull/599) Direct 'fastq' input (`--input 'sample_{R1,R2}.fastq.gz'`) is no longer supported, all input must come via samplesheets (by @jfy133)
 
 ## 2.5.4 - [2024-02-12]
 
