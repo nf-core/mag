@@ -75,7 +75,9 @@ workflow PIPELINE_INITIALISATION {
     //
     // Custom validation for pipeline parameters
     //
-    validateInputParameters()
+    validateInputParameters(
+
+    )
 
     //
     // Create channels from input file provided through params.input and params.assembly_input
@@ -84,19 +86,21 @@ workflow PIPELINE_INITIALISATION {
     // Validate FASTQ input
     ch_samplesheet = Channel
         .fromSamplesheet("input")
-        // .map {t
-        //     validateInputSamplesheet(it)
-        // }
+        .map {
+            validateInputSamplesheet(it)
+        }
 
     // Prepare FASTQs channel and separate short and long reads and prepare
     ch_raw_short_reads = ch_samplesheet
         .map { meta, sr1, sr2, lr ->
                     meta.run          = meta.run == null ? "0" : meta.run
                     meta.single_end   = params.single_end
-                    if (params.single_end)
-                        return [ meta, [ sr1] ]
-                    else
+
+                    if (params.single_end) {
+                        return [ meta, [ sr1 ] ]
+                    } else {
                         return [ meta, [ sr1, sr2 ] ]
+                    }
             }
 
     ch_raw_long_reads = ch_samplesheet
@@ -203,8 +207,12 @@ def validateInputParameters() {
 //
 // Validate channels from input samplesheet
 //
-def validateInputSamplesheet(input) {
+def validateInputSamplesheet(meta, sr1, sr2, lr) {
 
+        if ( !sr2 && !params.single_end ) { error("[nf-core/mag] ERROR: Single-end data must be executed with `--single_end`. Note that it is not possible to mix single- and paired-end data in one run! Check input TSV for sample: ${meta.id}") }
+        if ( sr2 && params.single_end ) { error("[nf-core/mag] ERROR: Paired-end data must be executed without `--single_end`. Note that it is not possible to mix single- and paired-end data in one run! Check input TSV for sample: ${meta.id}") }
+
+    return [meta, sr1, sr2, lr]
 }
 
 //
