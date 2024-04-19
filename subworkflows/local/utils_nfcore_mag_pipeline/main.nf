@@ -339,14 +339,6 @@ def validateInputSamplesheet(meta, sr1, sr2, lr) {
     return [meta, sr1, sr2, lr]
 }
 
-def validateInputSamplesheet(meta, fasta) {
-
-        if ( !sr2 && !params.single_end ) { error("[nf-core/mag] ERROR: Single-end data must be executed with `--single_end`. Note that it is not possible to mix single- and paired-end data in one run! Check input TSV for sample: ${meta.id}") }
-        if ( sr2 && params.single_end ) { error("[nf-core/mag] ERROR: Paired-end data must be executed without `--single_end`. Note that it is not possible to mix single- and paired-end data in one run! Check input TSV for sample: ${meta.id}") }
-
-    return [meta, sr1, sr2, lr]
-}
-
 //
 // Get attribute from genome config file e.g. fasta
 //
