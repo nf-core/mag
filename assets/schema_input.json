@@ -24,7 +24,7 @@
                 "type": "string",
                 "pattern": "^\\S+$",
                 "meta": ["group"],
-                "errorMessage": "Column 'group' contains an empty field. Either remove column 'run' or fill each field with a value."
+                "errorMessage": "Column 'group' contains an empty field. Either remove column 'group' or fill each field with a value."
             },
             "short_reads_1": {
                 "type": "string",

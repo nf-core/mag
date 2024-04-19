@@ -10,17 +10,6 @@ include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pi
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_mag_pipeline'
 
-// Check already if long reads are provided
-def hybrid = false
-if(file(params.input).extension == 'csv'){
-    Channel
-        .from(file(params.input))
-        .splitCsv(header: true)
-        .map { row ->
-                if (row.long_reads) hybrid = true
-            }
-}
-
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //

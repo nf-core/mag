@@ -17,31 +17,23 @@
                 "type": "string",
                 "pattern": "^\\S+$",
                 "meta": ["group"],
-                "errorMessage": "Column 'group' contains an empty field. Either remove column 'run' or fill each field with a value."
+                "errorMessage": "Column 'group' contains an empty field. Either remove column 'group' or fill each field with a value."
             },
             "assembler": {
                 "type": "string",
-                "pattern": "MEGAHIT|SPAdes",
+                "pattern": "MEGAHIT|SPAdes|SPAdesHybrid",
                 "meta": ["assembler"],
-                "errorMessage": "Column 'group' contains an empty field. Either remove column 'run' or fill each field with a value."
+                "errorMessage": "Only MEGAHIT or SPAdes assemblies are supported"
             },
-            "short_reads_2": {
+            "fasta": {
                 "type": "string",
                 "format": "file-path",
+                "pattern": "^\\S+\\.(fasta|fas|fa|fna)(\\.gz)?$",
                 "exists": true,
-                "pattern": "^\\S+\\.f(ast)?q\\.gz$",
-                "dependentRequired": ["short_reads_1"],
-                "errorMessage": "FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
-            },
-            "long_reads": {
-                "type": "string",
-                "format": "file-path",
-                "exists": true,
-                "pattern": "^\\S+\\.f(ast)?q\\.gz$",
-                "dependentRequired": ["short_reads_1", "short_reads_2"],
-                "errorMessage": "FastQ file for long reads cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
+                "unique": true,
+                "errorMessage": "FastA file with pre-assembled contigs must be provided, cannot contain spaces and must have extension 'fasta', 'fas', 'fa', or 'fna', all optionally gzipped."
             }
         },
-        "required": ["sample", "short_reads_1"]
+        "required": ["id", "assembler", "fasta"]
     }
 }
