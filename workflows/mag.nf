@@ -62,8 +62,6 @@ include { NANOPLOT as NANOPLOT_RAW                            } from '../modules
 include { NANOPLOT as NANOPLOT_FILTERED                       } from '../modules/local/nanoplot'
 include { KRAKEN2_DB_PREPARATION                              } from '../modules/local/kraken2_db_preparation'
 include { KRAKEN2                                             } from '../modules/local/kraken2'
-include { KRONA_DB                                            } from '../modules/local/krona_db'
-include { KRONA                                               } from '../modules/local/krona'
 include { POOL_SINGLE_READS as POOL_SHORT_SINGLE_READS        } from '../modules/local/pool_single_reads'
 include { POOL_PAIRED_READS                                   } from '../modules/local/pool_paired_reads'
 include { POOL_SINGLE_READS as POOL_LONG_READS                } from '../modules/local/pool_single_reads'
@@ -105,25 +103,28 @@ include { DEPTHS                          } from '../subworkflows/local/depths'
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { ARIA2 as ARIA2_UNTAR                   } from '../modules/nf-core/aria2/main'
-include { UNTAR                                  } from '../modules/nf-core/untar/main'
-include { FASTQC as FASTQC_RAW                   } from '../modules/nf-core/fastqc/main'
-include { FASTQC as FASTQC_TRIMMED               } from '../modules/nf-core/fastqc/main'
-include { SEQTK_MERGEPE                          } from '../modules/nf-core/seqtk/mergepe/main'
-include { BBMAP_BBNORM                           } from '../modules/nf-core/bbmap/bbnorm/main'
-include { FASTP                                  } from '../modules/nf-core/fastp/main'
-include { ADAPTERREMOVAL as ADAPTERREMOVAL_PE    } from '../modules/nf-core/adapterremoval/main'
-include { ADAPTERREMOVAL as ADAPTERREMOVAL_SE    } from '../modules/nf-core/adapterremoval/main'
-include { CAT_FASTQ                              } from '../modules/nf-core/cat/fastq/main'
-include { CENTRIFUGE_CENTRIFUGE                  } from '../modules/nf-core/centrifuge/centrifuge/main'
-include { CENTRIFUGE_KREPORT                     } from '../modules/nf-core/centrifuge/kreport/main'
-include { GUNZIP as GUNZIP_ASSEMBLIES            } from '../modules/nf-core/gunzip'
-include { PRODIGAL                               } from '../modules/nf-core/prodigal/main'
-include { PROKKA                                 } from '../modules/nf-core/prokka/main'
-include { MMSEQS_DATABASES                       } from '../modules/nf-core/mmseqs/databases/main'
-include { METAEUK_EASYPREDICT                    } from '../modules/nf-core/metaeuk/easypredict/main'
-include { CUSTOM_DUMPSOFTWAREVERSIONS            } from '../modules/nf-core/custom/dumpsoftwareversions/main'
-include { MULTIQC                                } from '../modules/nf-core/multiqc/main'
+include { ARIA2 as ARIA2_UNTAR                                  } from '../modules/nf-core/aria2/main'
+include { UNTAR                                                 } from '../modules/nf-core/untar/main'
+include { FASTQC as FASTQC_RAW                                  } from '../modules/nf-core/fastqc/main'
+include { FASTQC as FASTQC_TRIMMED                              } from '../modules/nf-core/fastqc/main'
+include { SEQTK_MERGEPE                                         } from '../modules/nf-core/seqtk/mergepe/main'
+include { BBMAP_BBNORM                                          } from '../modules/nf-core/bbmap/bbnorm/main'
+include { FASTP                                                 } from '../modules/nf-core/fastp/main'
+include { ADAPTERREMOVAL as ADAPTERREMOVAL_PE                   } from '../modules/nf-core/adapterremoval/main'
+include { ADAPTERREMOVAL as ADAPTERREMOVAL_SE                   } from '../modules/nf-core/adapterremoval/main'
+include { CAT_FASTQ                                             } from '../modules/nf-core/cat/fastq/main'
+include { CENTRIFUGE_CENTRIFUGE                                 } from '../modules/nf-core/centrifuge/centrifuge/main'
+include { CENTRIFUGE_KREPORT                                    } from '../modules/nf-core/centrifuge/kreport/main'
+include { KRONA_KRONADB                                         } from '../modules/nf-core/krona/kronadb/main'
+include { KRONA_KTIMPORTTAXONOMY                                } from '../modules/nf-core/krona/ktimporttaxonomy/main'
+include { KRAKENTOOLS_KREPORT2KRONA as KREPORT2KRONA_CENTRIFUGE } from '../modules/nf-core/krakentools/kreport2krona/main'
+include { GUNZIP as GUNZIP_ASSEMBLIES                           } from '../modules/nf-core/gunzip'
+include { PRODIGAL                                              } from '../modules/nf-core/prodigal/main'
+include { PROKKA                                                } from '../modules/nf-core/prokka/main'
+include { MMSEQS_DATABASES                                      } from '../modules/nf-core/mmseqs/databases/main'
+include { METAEUK_EASYPREDICT                                   } from '../modules/nf-core/metaeuk/easypredict/main'
+include { CUSTOM_DUMPSOFTWAREVERSIONS                           } from '../modules/nf-core/custom/dumpsoftwareversions/main'
+include { MULTIQC                                               } from '../modules/nf-core/multiqc/main'
 
 ////////////////////////////////////////////////////
 /* --  Create channel for reference databases  -- */
@@ -475,7 +476,7 @@ workflow MAG {
     )
     ch_versions = ch_versions.mix(CENTRIFUGE_CENTRIFUGE.out.versions.first())
 
-    CENTRIFUGE_KREPORT ( CENTRIFUGE_CENTRIFUGE.out.report, ch_db_for_centrifuge )
+    CENTRIFUGE_KREPORT ( CENTRIFUGE_CENTRIFUGE.out.results, ch_db_for_centrifuge )
     ch_versions = ch_versions.mix(CENTRIFUGE_KREPORT.out.versions.first())
 
     if ( !ch_kraken2_db_file.isEmpty() ) {
@@ -512,19 +513,31 @@ workflow MAG {
         if (params.krona_db){
             ch_krona_db = ch_krona_db_file
         } else {
-            KRONA_DB ()
-            ch_krona_db = KRONA_DB.out.db
+            KRONA_KRONADB ()
+            ch_krona_db = KRONA_KRONADB.out.db
+            ch_versions = ch_versions.mix(KRONA_KRONADB.out.versions.first())
         }
-        ch_tax_classifications = CENTRIFUGE_KREPORT.out.kreport.mix(KRAKEN2.out.results_for_krona)
-            . map { classifier, meta, report ->
-                def meta_new = meta + [classifier: classifier]
-                [ meta_new, report ]
-            }
-        KRONA (
+
+        if ( params.centrifuge_db )  {
+            ch_centrifuge_for_krona = KREPORT2KRONA_CENTRIFUGE ( CENTRIFUGE_KREPORT.out.kreport.dump(tag: 'input_to_convert') ).txt.dump(tag: 'output_from_convert')
+            ch_versions = ch_versions.mix(KREPORT2KRONA_CENTRIFUGE.out.versions.first())
+        } else {
+            ch_centrifuge_for_krona = Channel.empty()
+        }
+
+
+        ch_tax_classifications = ch_centrifuge_for_krona
+                                    .mix(KRAKEN2.out.results_for_krona)
+                                    . map { classifier, meta, report ->
+                                        def meta_new = meta + [classifier: classifier]
+                                        [ meta_new, report ]
+                                    }
+        KRONA_KTIMPORTTAXONOMY (
             ch_tax_classifications,
             ch_krona_db
         )
-        ch_versions = ch_versions.mix(KRONA.out.versions.first())
+        ch_versions = ch_versions.mix(KRONA_KTIMPORTTAXONOMY.out.versions.first())
+
     }
 
     /*

@@ -49,7 +49,8 @@
                     "centrifuge/kreport": {
                         "branch": "master",
                         "git_sha": "9a07a1293d9b818d1e06d0f7b58152f74d462012",
-                        "installed_by": ["modules"]
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/centrifuge/kreport/centrifuge-kreport.diff"
                     },
                     "checkm/lineagewf": {
                         "branch": "master",
@@ -149,6 +150,21 @@
                     "gunzip": {
                         "branch": "master",
                         "git_sha": "e06548bfa36ee31869b81041879dd6b3a83b1d57",
+                        "installed_by": ["modules"]
+                    },
+                    "krakentools/kreport2krona": {
+                        "branch": "master",
+                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "installed_by": ["modules"]
+                    },
+                    "krona/kronadb": {
+                        "branch": "master",
+                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "installed_by": ["modules"]
+                    },
+                    "krona/ktimporttaxonomy": {
+                        "branch": "master",
+                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
                         "installed_by": ["modules"]
                     },
                     "maxbin2": {
