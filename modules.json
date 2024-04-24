@@ -41,6 +41,16 @@
                         "git_sha": "5c460c5a4736974abde2843294f35307ee2b0e5e",
                         "installed_by": ["modules"]
                     },
+                    "centrifuge/centrifuge": {
+                        "branch": "master",
+                        "git_sha": "9a07a1293d9b818d1e06d0f7b58152f74d462012",
+                        "installed_by": ["modules"]
+                    },
+                    "centrifuge/kreport": {
+                        "branch": "master",
+                        "git_sha": "9a07a1293d9b818d1e06d0f7b58152f74d462012",
+                        "installed_by": ["modules"]
+                    },
                     "checkm/lineagewf": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
@@ -204,6 +214,11 @@
                     "tiara/tiara": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "installed_by": ["modules"]
+                    },
+                    "untar": {
+                        "branch": "master",
+                        "git_sha": "5caf7640a9ef1d18d765d55339be751bb0969dfa",
                         "installed_by": ["modules"]
                     }
                 }
