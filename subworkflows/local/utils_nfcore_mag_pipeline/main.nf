@@ -85,7 +85,7 @@ workflow PIPELINE_INITIALISATION {
     ch_samplesheet = Channel
         .fromSamplesheet("input")
         .map {
-            validateInputSamplesheet(it)
+            validateInputSamplesheet(it[0], it[1], it[2], it[3])
         }
 
     // Prepare FASTQs channel and separate short and long reads and prepare
