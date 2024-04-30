@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
+- [#606](https://github.com/nf-core/mag/pull/606) - Prevent pipeline crash when premade mashdb given to or no alignments found with GTDB-TK_CLASSIFYWF (reported by @cedwardson4, fix by @jfy133)
+
 ### `Dependencies`
 
 ### `Deprecated`
@@ -24,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Changed`
 
 - [#581](https://github.com/nf-core/mag/pull/581) - Added explicit licence text to headers of all custom scripts (reported by @FriederikeHanssen and @maxibor, fix by @jfy133)
+- [#602](https://github.com/nf-core/mag/pull/602) - Co-binning when using aDNA mode now enabled (added by @maxibor)
 
 ### `Fixed`
 
