@@ -618,8 +618,9 @@ workflow MAG {
         }
     } else {
         ch_assemblies_split = ch_input_assemblies
+            .dump(tag: 'ch_input_assemblies')
             .branch { meta, assembly ->
-                gzipped: assembly[0].getExtension() == "gz"
+                gzipped: assembly.getExtension() == "gz"
                 ungzip: true
             }
 
