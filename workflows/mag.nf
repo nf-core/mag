@@ -1,52 +1,46 @@
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    PRINT PARAMS SUMMARY
+    IMPORT MODULES / SUBWORKFLOWS / FUNCTIONS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { paramsSummaryLog; paramsSummaryMap } from 'plugin/nf-validation'
+include { MULTIQC                } from '../modules/nf-core/multiqc/main'
+include { paramsSummaryMap       } from 'plugin/nf-validation'
+include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_mag_pipeline'
 
-def logo = NfcoreTemplate.logo(workflow, params.monochrome_logs)
-def citation = '\n' + WorkflowMain.citation(workflow) + '\n'
-def summary_params = paramsSummaryMap(workflow)
+//
+// SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
+//
+include { BINNING_PREPARATION             } from '../subworkflows/local/binning_preparation'
+include { BINNING                         } from '../subworkflows/local/binning'
+include { BINNING_REFINEMENT              } from '../subworkflows/local/binning_refinement'
+include { BUSCO_QC                        } from '../subworkflows/local/busco_qc'
+include { VIRUS_IDENTIFICATION            } from '../subworkflows/local/virus_identification'
+include { CHECKM_QC                       } from '../subworkflows/local/checkm_qc'
+include { GUNC_QC                         } from '../subworkflows/local/gunc_qc'
+include { GTDBTK                          } from '../subworkflows/local/gtdbtk'
+include { ANCIENT_DNA_ASSEMBLY_VALIDATION } from '../subworkflows/local/ancient_dna'
+include { DOMAIN_CLASSIFICATION           } from '../subworkflows/local/domain_classification'
+include { DEPTHS                          } from '../subworkflows/local/depths'
 
-// Check already if long reads are provided
-def hybrid = false
-if(file(params.input).extension == 'csv'){
-    Channel
-        .from(file(params.input))
-        .splitCsv(header: true)
-        .map { row ->
-                if (row.long_reads) hybrid = true
-            }
-}
-
-// Print parameter summary log to screen
-log.info logo + paramsSummaryLog(workflow) + citation
-
-// Validate input parameters
-WorkflowMag.initialise(params, log, hybrid)
-
-// Check input path parameters to see if they exist
-def checkPathParamList = [ params.input, params.multiqc_config, params.phix_reference, params.host_fasta, params.centrifuge_db, params.kraken2_db, params.cat_db, params.krona_db, params.gtdb_db, params.lambda_reference, params.busco_db ]
-for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    CONFIG FILES
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-ch_multiqc_config          = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
-ch_multiqc_custom_config   = params.multiqc_config ? Channel.fromPath( params.multiqc_config, checkIfExists: true ) : Channel.empty()
-ch_multiqc_logo            = params.multiqc_logo   ? Channel.fromPath( params.multiqc_logo, checkIfExists: true ) : Channel.fromPath("$projectDir/assets/nf-core-mag_logo_light.png")
-ch_multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    IMPORT LOCAL MODULES/SUBWORKFLOWS
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
+//
+// MODULE: Installed directly from nf-core/modules
+//
+include { ARIA2 as ARIA2_UNTAR                   } from '../modules/nf-core/aria2/main'
+include { FASTQC as FASTQC_RAW                   } from '../modules/nf-core/fastqc/main'
+include { FASTQC as FASTQC_TRIMMED               } from '../modules/nf-core/fastqc/main'
+include { SEQTK_MERGEPE                          } from '../modules/nf-core/seqtk/mergepe/main'
+include { BBMAP_BBNORM                           } from '../modules/nf-core/bbmap/bbnorm/main'
+include { FASTP                                  } from '../modules/nf-core/fastp/main'
+include { ADAPTERREMOVAL as ADAPTERREMOVAL_PE    } from '../modules/nf-core/adapterremoval/main'
+include { ADAPTERREMOVAL as ADAPTERREMOVAL_SE    } from '../modules/nf-core/adapterremoval/main'
+include { CAT_FASTQ                              } from '../modules/nf-core/cat/fastq/main'
+include { PRODIGAL                               } from '../modules/nf-core/prodigal/main'
+include { PROKKA                                 } from '../modules/nf-core/prokka/main'
+include { MMSEQS_DATABASES                       } from '../modules/nf-core/mmseqs/databases/main'
+include { METAEUK_EASYPREDICT                    } from '../modules/nf-core/metaeuk/easypredict/main'
 
 //
 // MODULE: Local to the pipeline
@@ -82,47 +76,6 @@ include { CAT                                                 } from '../modules
 include { CAT_SUMMARY                                         } from "../modules/local/cat_summary"
 include { BIN_SUMMARY                                         } from '../modules/local/bin_summary'
 include { COMBINE_TSV as COMBINE_SUMMARY_TSV                  } from '../modules/local/combine_tsv'
-
-//
-// SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
-//
-include { INPUT_CHECK                     } from '../subworkflows/local/input_check'
-include { BINNING_PREPARATION             } from '../subworkflows/local/binning_preparation'
-include { BINNING                         } from '../subworkflows/local/binning'
-include { BINNING_REFINEMENT              } from '../subworkflows/local/binning_refinement'
-include { BUSCO_QC                        } from '../subworkflows/local/busco_qc'
-include { VIRUS_IDENTIFICATION            } from '../subworkflows/local/virus_identification'
-include { CHECKM_QC                       } from '../subworkflows/local/checkm_qc'
-include { GUNC_QC                         } from '../subworkflows/local/gunc_qc'
-include { GTDBTK                          } from '../subworkflows/local/gtdbtk'
-include { ANCIENT_DNA_ASSEMBLY_VALIDATION } from '../subworkflows/local/ancient_dna'
-include { DOMAIN_CLASSIFICATION           } from '../subworkflows/local/domain_classification'
-include { DEPTHS                          } from '../subworkflows/local/depths'
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    IMPORT NF-CORE MODULES/SUBWORKFLOWS
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-//
-// MODULE: Installed directly from nf-core/modules
-//
-include { ARIA2 as ARIA2_UNTAR                   } from '../modules/nf-core/aria2/main'
-include { FASTQC as FASTQC_RAW                   } from '../modules/nf-core/fastqc/main'
-include { FASTQC as FASTQC_TRIMMED               } from '../modules/nf-core/fastqc/main'
-include { SEQTK_MERGEPE                          } from '../modules/nf-core/seqtk/mergepe/main'
-include { BBMAP_BBNORM                           } from '../modules/nf-core/bbmap/bbnorm/main'
-include { FASTP                                  } from '../modules/nf-core/fastp/main'
-include { ADAPTERREMOVAL as ADAPTERREMOVAL_PE    } from '../modules/nf-core/adapterremoval/main'
-include { ADAPTERREMOVAL as ADAPTERREMOVAL_SE    } from '../modules/nf-core/adapterremoval/main'
-include { CAT_FASTQ                              } from '../modules/nf-core/cat/fastq/main'
-include { PRODIGAL                               } from '../modules/nf-core/prodigal/main'
-include { PROKKA                                 } from '../modules/nf-core/prokka/main'
-include { MMSEQS_DATABASES                       } from '../modules/nf-core/mmseqs/databases/main'
-include { METAEUK_EASYPREDICT                    } from '../modules/nf-core/metaeuk/easypredict/main'
-include { CUSTOM_DUMPSOFTWAREVERSIONS            } from '../modules/nf-core/custom/dumpsoftwareversions/main'
-include { MULTIQC                                } from '../modules/nf-core/multiqc/main'
 
 ////////////////////////////////////////////////////
 /* --  Create channel for reference databases  -- */
@@ -222,13 +175,20 @@ if(params.metaeuk_db && !params.skip_metaeuk) {
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-// Info required for completion email and summary
-def multiqc_report    = []
+// Additional info for completion email and summary
 def busco_failed_bins = [:]
 
 workflow MAG {
 
+    take:
+    ch_raw_short_reads // channel: samplesheet read in from --input
+    ch_raw_long_reads
+    ch_input_assemblies
+
+    main:
+
     ch_versions = Channel.empty()
+    ch_multiqc_files = Channel.empty()
 
     // Get checkM database if not supplied
 
@@ -244,14 +204,8 @@ workflow MAG {
         ch_versions = ch_versions.mix(MMSEQS_DATABASES.out.versions)
     }
 
-    //
-    // SUBWORKFLOW: Read in samplesheet, validate and stage input files
-    //
 
-    INPUT_CHECK ()
-    ch_raw_short_reads  = INPUT_CHECK.out.raw_short_reads
-    ch_raw_long_reads   = INPUT_CHECK.out.raw_long_reads
-    ch_input_assemblies = INPUT_CHECK.out.input_assemblies
+
 
     /*
     ================================================================================
@@ -664,8 +618,9 @@ workflow MAG {
         }
     } else {
         ch_assemblies_split = ch_input_assemblies
+            .dump(tag: 'ch_input_assemblies')
             .branch { meta, assembly ->
-                gzipped: assembly[0].getExtension() == "gz"
+                gzipped: assembly.getExtension() == "gz"
                 ungzip: true
             }
 
@@ -1041,23 +996,26 @@ workflow MAG {
         }
     }
 
-    CUSTOM_DUMPSOFTWAREVERSIONS (
-        ch_versions.unique().collectFile(name: 'collated_versions.yml')
-    )
+    //
+    // Collate and save software versions
+    //
+    softwareVersionsToYAML(ch_versions)
+        .collectFile(storeDir: "${params.outdir}/pipeline_info", name: 'nf_core_pipeline_software_mqc_versions.yml', sort: true, newLine: true)
+        .set { ch_collated_versions }
 
     //
     // MODULE: MultiQC
     //
-    workflow_summary    = WorkflowMag.paramsSummaryMultiqc(workflow, summary_params)
-    ch_workflow_summary = Channel.value(workflow_summary)
-
-    methods_description    = WorkflowMag.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description, params)
-    ch_methods_description = Channel.value(methods_description)
-
-    ch_multiqc_files = Channel.empty()
-    ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
-    ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
-    ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
+    ch_multiqc_config                     = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
+    ch_multiqc_custom_config              = params.multiqc_config ? Channel.fromPath(params.multiqc_config, checkIfExists: true) : Channel.empty()
+    ch_multiqc_logo                       = params.multiqc_logo ? Channel.fromPath(params.multiqc_logo, checkIfExists: true) : Channel.empty()
+    summary_params                        = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
+    ch_workflow_summary                   = Channel.value(paramsSummaryMultiqc(summary_params))
+    ch_multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
+    ch_methods_description                = Channel.value(methodsDescriptionText(ch_multiqc_custom_methods_description))
+    ch_multiqc_files                      = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
+    ch_multiqc_files                      = ch_multiqc_files.mix(ch_collated_versions)
+    ch_multiqc_files                      = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml', sort: false))
 
     ch_multiqc_files = ch_multiqc_files.mix(FASTQC_RAW.out.zip.collect{it[1]}.ifEmpty([]))
 
@@ -1116,31 +1074,9 @@ workflow MAG {
         ch_multiqc_logo.toList()
     )
 
-    multiqc_report = MULTIQC.out.report.toList()
-}
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    COMPLETION EMAIL AND SUMMARY
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-workflow.onComplete {
-    if (params.email || params.email_on_fail) {
-        NfcoreTemplate.email(workflow, params, summary_params, projectDir, log, multiqc_report, busco_failed_bins)
-    }
-    NfcoreTemplate.dump_parameters(workflow, params)
-    NfcoreTemplate.summary(workflow, params, log, busco_failed_bins)
-    if (params.hook_url) {
-        NfcoreTemplate.IM_notification(workflow, params, summary_params, projectDir, log)
-    }
-}
-
-workflow.onError {
-    if (workflow.errorReport.contains("Process requirement exceeds available memory")) {
-        println("🛑 Default resources exceed availability 🛑 ")
-        println("💡 See here on how to configure pipeline: https://nf-co.re/docs/usage/configuration#tuning-workflow-resources 💡")
-    }
+    emit:
+    multiqc_report = MULTIQC.out.report.toList() // channel: /path/to/multiqc_report.html
+    versions       = ch_versions                 // channel: [ path(versions.yml) ]
 }
 
 /*
