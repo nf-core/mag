@@ -3,16 +3,16 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## dev - [unreleased]
+## 3.0.0 - [2024-05-13]
 
 ### `Added`
 
-- [#615](https://github.com/nf-core/mag/pull/615) Add new logo (by @jfy133)
+- [#615](https://github.com/nf-core/mag/pull/615) - Add new logo (by @jfy133)
 
 ### `Changed`
 
-- [#599](https://github.com/nf-core/mag/pull/599) Update to nf-core v2.13.1 `TEMPLATE` (by @jfy133)
-- [#614](https://github.com/nf-core/mag/pull/614) Update to nf-core v2.14.1 `TEMPLATE` (by @jfy133)
+- [#599](https://github.com/nf-core/mag/pull/599) - Update to nf-core v2.13.1 `TEMPLATE` (by @jfy133)
+- [#614](https://github.com/nf-core/mag/pull/614) - Update to nf-core v2.14.1 `TEMPLATE` (by @jfy133)
 
 ### `Fixed`
 
@@ -22,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Deprecated`
 
-- [#599](https://github.com/nf-core/mag/pull/599) Direct reads input (`--input 'sample_{R1,R2}.fastq.gz'`) is no longer supported, all input must come via samplesheets (by @jfy133)
+- [#599](https://github.com/nf-core/mag/pull/599) - Direct reads input (`--input 'sample_{R1,R2}.fastq.gz'`) is no longer supported, all input must come via samplesheets (by @jfy133)
 
 ## 2.5.4 - [2024-02-12]
 
@@ -66,7 +66,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
-- [#563](https://github.com/nf-core/mag/pull/562) Update to nf-core v2.12 `TEMPLATE` (by @CarsonJM)
+- [#563](https://github.com/nf-core/mag/pull/562) - Update to nf-core v2.12 `TEMPLATE` (by @CarsonJM)
 - [#566](https://github.com/nf-core/mag/pull/566) - More logical ordering of MultiQC sections (assembly and bin sections go together respectively) (fix by @jfy133)
 
 ### `Fixed`
