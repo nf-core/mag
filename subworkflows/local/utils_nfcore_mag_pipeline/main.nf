@@ -1,4 +1,4 @@
-//
+
 // Subworkflow with functionality specific to the nf-core/mag pipeline
 //
 
@@ -72,36 +72,98 @@ workflow PIPELINE_INITIALISATION {
     UTILS_NFCORE_PIPELINE (
         nextflow_cli_args
     )
+
+    // Note: normally validateInputParameters() goes here, but
+    // as we need to use information from samplesheet from the input channel
+    // moved it below
+
+    //
+    // Create channels from input file provided through params.input and params.assembly_input
+    //
+
+    // Validate FASTQ input
+    ch_samplesheet = Channel
+        .fromSamplesheet("input")
+        .map {
+            validateInputSamplesheet(it[0], it[1], it[2], it[3])
+        }
+
+    // Prepare FASTQs channel and separate short and long reads and prepare
+    ch_raw_short_reads = ch_samplesheet
+        .map { meta, sr1, sr2, lr ->
+                    meta.run          = meta.run == null ? "0" : meta.run
+                    meta.single_end   = params.single_end
+
+                    if (params.single_end) {
+                        return [ meta, [ sr1 ] ]
+                    } else {
+                        return [ meta, [ sr1, sr2 ] ]
+                    }
+            }
+
+    ch_raw_long_reads = ch_samplesheet
+        .map { meta, sr1, sr2, lr ->
+                    if (lr) {
+                        meta.run          = meta.run == null ? "0" : meta.run
+                        return [ meta, lr ]
+                    }
+            }
+
+    // Check already if long reads are provided, for later parameter validation
+    def hybrid =false
+    ch_raw_long_reads.map{if (it) hybrid = true}
+
     //
     // Custom validation for pipeline parameters
     //
-    validateInputParameters()
+    validateInputParameters(
+        hybrid
+    )
 
-    //
-    // Create channel from input file provided through params.input
-    //
-    Channel
-        .fromSamplesheet("input")
-        .map {
-            meta, fastq_1, fastq_2 ->
-                if (!fastq_2) {
-                    return [ meta.id, meta + [ single_end:true ], [ fastq_1 ] ]
-                } else {
-                    return [ meta.id, meta + [ single_end:false ], [ fastq_1, fastq_2 ] ]
+    // Validate PRE-ASSEMBLED CONTIG input when supplied
+    if (params.assembly_input) {
+        ch_input_assemblies = Channel
+            .fromSamplesheet("assembly_input")
+    }
+
+    // Prepare ASSEMBLY input channel
+    if (params.assembly_input) {
+        ch_input_assemblies
+            .map { meta, fasta ->
+                    return [ meta + [id: params.coassemble_group ? "group-${meta.group}" : meta.id], [ fasta ] ]
                 }
-        }
-        .groupTuple()
-        .map {
-            validateInputSamplesheet(it)
-        }
-        .map {
-            meta, fastqs ->
-                return [ meta, fastqs.flatten() ]
-        }
-        .set { ch_samplesheet }
+    } else {
+        ch_input_assemblies    = Channel.empty()
+    }
+
+    // Cross validation of input assembly and read IDs: ensure groups are all represented between reads and assemblies
+    if (params.assembly_input) {
+        ch_read_ids = ch_samplesheet
+            .map { meta, sr1, sr2, lr -> params.coassemble_group ? meta.group : meta.id }
+            .unique()
+            .toList()
+            .sort()
+
+        ch_assembly_ids = ch_input_assemblies
+            .map { meta, fasta -> params.coassemble_group ? meta.group : meta.id }
+            .unique()
+            .toList()
+            .sort()
+
+        ch_read_ids.cross(ch_assembly_ids)
+            .map { ids1, ids2 ->
+                if (ids1.sort() != ids2.sort()) {
+                    exit 1, "[nf-core/mag] ERROR: supplied IDs or Groups in read and assembly CSV files do not match!"
+                }
+            }
+    }
+
+
 
     emit:
-    samplesheet = ch_samplesheet
+    raw_short_reads  = ch_raw_short_reads
+    raw_long_reads   = ch_raw_long_reads
+    input_assemblies = ch_input_assemblies
     versions    = ch_versions
 }
 
@@ -154,24 +216,133 @@ workflow PIPELINE_COMPLETION {
 //
 // Check and validate pipeline parameters
 //
-def validateInputParameters() {
+def validateInputParameters(hybrid) {
     genomeExistsError()
+
+    // Check if binning mapping mode is valid
+    if (params.coassemble_group && params.binning_map_mode == 'own') {
+        error("[nf-core/mag] ERROR: Invalid combination of parameter '--binning_map_mode own' and parameter '--coassemble_group'. Select either 'all' or 'group' mapping mode when performing group-wise co-assembly.")
+    }
+
+    // Check if specified cpus for SPAdes are available
+    if ( params.spades_fix_cpus > params.max_cpus ) {
+        error("[nf-core/mag] ERROR: Invalid parameter '--spades_fix_cpus ${params.spades_fix_cpus}', max cpus are '${params.max_cpus}'.")
+    }
+    if ( params.spadeshybrid_fix_cpus > params.max_cpus ) {
+        error("[nf-core/mag] ERROR: Invalid parameter '--spadeshybrid_fix_cpus ${params.spadeshybrid_fix_cpus}', max cpus are '${params.max_cpus}'.")
+    }
+    // Check if settings concerning reproducibility of used tools are consistent and print warning if not
+    if (params.megahit_fix_cpu_1 || params.spades_fix_cpus != -1 || params.spadeshybrid_fix_cpus != -1) {
+        if (!params.skip_spades && params.spades_fix_cpus == -1) {
+            log.warn "[nf-core/mag]: At least one assembly process is run with a parameter to ensure reproducible results, but SPAdes not. Consider using the parameter '--spades_fix_cpus'."
+        }
+        if (hybrid && params.skip_spadeshybrid && params.spadeshybrid_fix_cpus == -1) {
+            log.warn "[nf-core/mag]: At least one assembly process is run with a parameter to ensure reproducible results, but SPAdes hybrid not. Consider using the parameter '--spadeshybrid_fix_cpus'."
+        }
+        if (!params.skip_megahit && !params.megahit_fix_cpu_1) {
+            log.warn "[nf-core/mag]: At least one assembly process is run with a parameter to ensure reproducible results, but MEGAHIT not. Consider using the parameter '--megahit_fix_cpu_1'."
+        }
+        if (!params.skip_binning && params.metabat_rng_seed == 0) {
+            log.warn "[nf-core/mag]: At least one assembly process is run with a parameter to ensure reproducible results, but for MetaBAT2 a random seed is specified ('--metabat_rng_seed 0'). Consider specifying a positive seed instead."
+        }
+    }
+
+    // Check if SPAdes and single_end
+    if ( (!params.skip_spades || !params.skip_spadeshybrid) && params.single_end) {
+        log.warn '[nf-core/mag]: metaSPAdes does not support single-end data. SPAdes will be skipped.'
+    }
+
+    // Check if parameters for host contamination removal are valid
+    if ( params.host_fasta && params.host_genome) {
+        error('[nf-core/mag] ERROR: Both host fasta reference and iGenomes genome are specified to remove host contamination! Invalid combination, please specify either --host_fasta or --host_genome.')
+    }
+    if ( hybrid && (params.host_fasta || params.host_genome) ) {
+        log.warn '[nf-core/mag]: Host read removal is only applied to short reads. Long reads might be filtered indirectly by Filtlong, which is set to use read qualities estimated based on k-mer matches to the short, already filtered reads.'
+        if ( params.longreads_length_weight > 1 ) {
+            log.warn "[nf-core/mag]: The parameter --longreads_length_weight is ${params.longreads_length_weight}, causing the read length being more important for long read filtering than the read quality. Set --longreads_length_weight to 1 in order to assign equal weights."
+        }
+    }
+    if ( params.host_genome ) {
+        if (!params.genomes) {
+            error('[nf-core/mag] ERROR: No config file containing genomes provided!')
+        }
+        // Check if host genome exists in the config file
+        if (!params.genomes.containsKey(params.host_genome)) {
+            error('=============================================================================\n' +
+                    "  Host genome '${params.host_genome}' not found in any config files provided to the pipeline.\n" +
+                    '  Currently, the available genome keys are:\n' +
+                    "  ${params.genomes.keySet().join(', ')}\n" +
+                    '===================================================================================')
+        }
+        if ( !params.genomes[params.host_genome].fasta ) {
+            error("[nf-core/mag] ERROR: No fasta file specified for the host genome ${params.host_genome}!")
+        }
+        if ( !params.genomes[params.host_genome].bowtie2 ) {
+            error("[nf-core/mag] ERROR: No Bowtie 2 index file specified for the host genome ${params.host_genome}!")
+        }
+    }
+
+    // Check MetaBAT2 inputs
+    if ( !params.skip_metabat2 && params.min_contig_size < 1500 ) {
+        log.warn "[nf-core/mag]: Specified min. contig size under minimum for MetaBAT2. MetaBAT2 will be run with 1500 (other binners not affected). You supplied: --min_contig_size ${params.min_contig_size}"
+    }
+
+    // Check more than one binner is run for bin refinement  (required DAS by Tool)
+    // If the number of run binners (i.e., number of not-skipped) is more than one, otherwise throw an error
+    if ( params.refine_bins_dastool && !([ params.skip_metabat2, params.skip_maxbin2, params.skip_concoct ].count(false) > 1) ) {
+        error('[nf-core/mag] ERROR: Bin refinement with --refine_bins_dastool requires at least two binners to be running (not skipped). Check input.')
+    }
+
+    // Check that bin refinement is actually turned on if any of the refined bins are requested for downstream
+    if (!params.refine_bins_dastool && params.postbinning_input != 'raw_bins_only') {
+        error("[nf-core/mag] ERROR: The parameter '--postbinning_input ${ params.postbinning_input }' for downstream steps can only be specified if bin refinement is activated with --refine_bins_dastool! Check input.")
+    }
+
+    // Check if BUSCO parameters combinations are valid
+    if (params.skip_binqc && params.binqc_tool == 'checkm') {
+        error('[nf-core/mag] ERROR: Both --skip_binqc and --binqc_tool \'checkm\' are specified! Invalid combination, please specify either --skip_binqc or --binqc_tool.')
+    }
+    if (params.skip_binqc) {
+        if (params.busco_db) {
+            error('[nf-core/mag] ERROR: Both --skip_binqc and --busco_db are specified! Invalid combination, please specify either --skip_binqc or --binqc_tool \'busco\' with --busco_db.')
+        }
+        if (params.busco_auto_lineage_prok) {
+            error('[nf-core/mag] ERROR: Both --skip_binqc and --busco_auto_lineage_prok are specified! Invalid combination, please specify either --skip_binqc or --binqc_tool \'busco\' with --busco_auto_lineage_prok.')
+        }
+    }
+
+    if (params.skip_binqc && !params.skip_gtdbtk) {
+        log.warn '[nf-core/mag]: --skip_binqc is specified, but --skip_gtdbtk is explictly set to run! GTDB-tk will be omitted because GTDB-tk bin classification requires bin filtering based on BUSCO or CheckM QC results to avoid GTDB-tk errors.'
+    }
+
+    // Check if CAT parameters are valid
+    if (params.cat_db && params.cat_db_generate) {
+        error('[nf-core/mag] ERROR: Invalid combination of parameters --cat_db and --cat_db_generate is specified! Please specify either --cat_db or --cat_db_generate.')
+    }
+    if (params.save_cat_db && !params.cat_db_generate) {
+        error('[nf-core/mag] ERROR: Invalid parameter combination: parameter --save_cat_db specified, but not --cat_db_generate! Note also that the parameter --save_cat_db does not work in combination with --cat_db.')
+    }
+
+    // Chech MetaEuk db paramaters
+    if (params.metaeuk_mmseqs_db && params.metaeuk_db) {
+        error('[nf-core/mag] ERROR: Invalid parameter combination: both --metaeuk_mmseqs_db and --metaeuk_db are specified! Please specify either --metaeuk_mmseqs_db or --metaeuk_db.')
+    }
+    if (params.save_mmseqs_db && !params.metaeuk_mmseqs_db) {
+        error('[nf-core/mag] ERROR: Invalid parameter combination: --save_mmseqs_db supplied but no database has been requested for download with --metaeuk_mmseqs_db!')
+    }
 }
 
 //
 // Validate channels from input samplesheet
 //
-def validateInputSamplesheet(input) {
-    def (metas, fastqs) = input[1..2]
+def validateInputSamplesheet(meta, sr1, sr2, lr) {
 
-    // Check that multiple runs of the same sample are of the same datatype i.e. single-end / paired-end
-    def endedness_ok = metas.collect{ it.single_end }.unique().size == 1
-    if (!endedness_ok) {
-        error("Please check input samplesheet -> Multiple runs of a sample must be of the same datatype i.e. single-end or paired-end: ${metas[0].id}")
-    }
+        if ( !sr2 && !params.single_end ) { error("[nf-core/mag] ERROR: Single-end data must be executed with `--single_end`. Note that it is not possible to mix single- and paired-end data in one run! Check input TSV for sample: ${meta.id}") }
+        if ( sr2 && params.single_end ) { error("[nf-core/mag] ERROR: Paired-end data must be executed without `--single_end`. Note that it is not possible to mix single- and paired-end data in one run! Check input TSV for sample: ${meta.id}") }
 
-    return [ metas[0], fastqs ]
+    return [meta, sr1, sr2, lr]
 }
+
 //
 // Get attribute from genome config file e.g. fasta
 //

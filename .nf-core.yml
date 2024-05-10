@@ -1,2 +1,10 @@
 repository_type: pipeline
 nf_core_version: "2.14.1"
+
+lint:
+  files_unchanged:
+    - lib/NfcoreTemplate.groovy
+  nextflow_config:
+    - config_defaults:
+        - params.phix_reference
+        - params.lambda_reference

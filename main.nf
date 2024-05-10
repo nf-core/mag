@@ -29,10 +29,10 @@ include { getGenomeAttribute      } from './subworkflows/local/utils_nfcore_mag_
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-// TODO nf-core: Remove this line if you don't need a FASTA file
+// TODO nf-core: Remove this line if you don't need a FASTA file [TODO: try and test using for --host_fasta and --host_genome]
 //   This is an example of how to use getGenomeAttribute() to fetch parameters
 //   from igenomes.config using `--genome`
-params.fasta = getGenomeAttribute('fasta')
+// params.fasta = WorkflowMain.getGenomeAttribute(params, 'fasta')
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -46,7 +46,9 @@ params.fasta = getGenomeAttribute('fasta')
 workflow NFCORE_MAG {
 
     take:
-    samplesheet // channel: samplesheet read in from --input
+        raw_short_reads  // channel: samplesheet read in from --input
+        raw_long_reads
+        input_assemblies
 
     main:
 
@@ -54,7 +56,9 @@ workflow NFCORE_MAG {
     // WORKFLOW: Run pipeline
     //
     MAG (
-        samplesheet
+        raw_short_reads,  // channel: samplesheet read in from --input
+        raw_long_reads,
+        input_assemblies
     )
 
     emit:
@@ -88,7 +92,9 @@ workflow {
     // WORKFLOW: Run main workflow
     //
     NFCORE_MAG (
-        PIPELINE_INITIALISATION.out.samplesheet
+        PIPELINE_INITIALISATION.out.raw_short_reads,
+        PIPELINE_INITIALISATION.out.raw_long_reads,
+        PIPELINE_INITIALISATION.out.input_assemblies
     )
 
     //
