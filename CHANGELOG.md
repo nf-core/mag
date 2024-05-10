@@ -7,9 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
+- [#615](https://github.com/nf-core/mag/pull/615) Add new logo (by @jfy133)
+
 ### `Changed`
 
 - [#599](https://github.com/nf-core/mag/pull/599) Update to nf-core v2.13.1 `TEMPLATE` (by @jfy133)
+- [#614](https://github.com/nf-core/mag/pull/614) Update to nf-core v2.14.1 `TEMPLATE` (by @jfy133)
 
 ### `Fixed`
 

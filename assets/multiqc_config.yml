@@ -120,7 +120,7 @@ extra_fn_clean_exts:
   - "_fastp"
 
 ## Prettification
-custom_logo: "nf-core-mag_logo_light.png"
+custom_logo: "mag_logo_mascot_light.png"
 custom_logo_url: https://github.com/nf-core/mag/
 custom_logo_title: "nf-core/mag"
 
