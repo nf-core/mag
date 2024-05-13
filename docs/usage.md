@@ -6,32 +6,11 @@
 
 ## Input specifications
 
-The input data can be passed to nf-core/mag in three possible ways, either using the `--input` or `--assembly_input` parameters.
-
-### Direct FASTQ input (short reads only)
-
-The easiest way is to specify directly the path (with wildcards) to your input FASTQ files. For example:
-
-```bash
---input 'path/to/data/sample_*_R{1,2}.fastq.gz'
-```
-
-This input method only works with short read data and will assign all files to the same group. By default, this group information is only used to compute co-abundances for the binning step, but not for group-wise co-assembly (see the parameter docs for [`--coassemble_group`](https://nf-co.re/mag/parameters#coassemble_group) and [`--binning_map_mode`](https://nf-co.re/mag/parameters#binning_map_mode) for more information about how this group information can be used).
-
-Please note the following additional requirements:
-
-- Files names must be unique
-- Valid file extensions: `.fastq.gz`, `.fq.gz` (files must be compressed)
-- The path must be enclosed in quotes
-- The path must have at least one `*` wildcard character
-- When using the pipeline with paired end data, the path must use `{1,2}` notation to specify read pairs
-- To run single-end data you must additionally specify `--single_end`
-- If left unspecified, a default pattern is used: `data/*{1,2}.fastq.gz`
-- Sample name and run combinations must be unique
+The input data can be passed to nf-core/mag in two possible ways, either using the `--input` parameter of raw-reads alone or `--input` additionally with `--assembly_input` that specifies pre-built assemblies.
 
 ### Samplesheet input file
 
-Alternatively, to assign different groups or to include long reads for hybrid assembly with metaSPAdes, you can specify a CSV samplesheet input file that contains the paths to your FASTQ files and additional metadata. Furthermore when a `run` column is present, the pipeline will also run perform run- or lane-wise concatenation, for cases where you may have a sample or library sequenced with the same sequencing configuration across multiple runs. The optional run merging happens after short read QC (adapter clipping, host/PhiX removal etc.), and prior to normalisation, taxonomic profiling, and assembly.
+You can specify a CSV samplesheet input file that contains the paths to your FASTQ files and additional metadata. Furthermore when a `run` column is present, the pipeline will also run perform run- or lane-wise concatenation, for cases where you may have a sample or library sequenced with the same sequencing configuration across multiple runs. The optional run merging happens after short read QC (adapter clipping, host/PhiX removal etc.), and prior to normalisation, taxonomic profiling, and assembly.
 
 At a minimum CSV file should contain the following columns:
 
@@ -66,7 +45,7 @@ sample3,1,0,data/sample3_R1.fastq.gz,data/sample3_R2.fastq.gz,
 
 Please note the following requirements:
 
-- a minimum 5 of comma-seperated columns
+- a minimum 5 of comma-separated columns
 - Valid file extension: `.csv`
 - Must contain the header `sample,group,short_reads_1,short_reads_2,long_reads` (where `run` can be optionally added)
 - Run IDs must be unique within a multi-run sample. A sample with multiple runs will be automatically concatenated.
@@ -236,6 +215,8 @@ If `-profile` is not specified, the pipeline will run locally and expect all sof
   - A generic configuration profile to be used with [Charliecloud](https://hpc.github.io/charliecloud/)
 - `apptainer`
   - A generic configuration profile to be used with [Apptainer](https://apptainer.org/)
+- `wave`
+  - A generic configuration profile to enable [Wave](https://seqera.io/wave/) containers. Use together with one of the above (requires Nextflow ` 24.03.0-edge` or later).
 - `conda`
   - A generic configuration profile to be used with [Conda](https://conda.io/docs/). Please only use Conda as a last resort i.e. when it's not possible to run the pipeline with Docker, Singularity, Podman, Shifter, Charliecloud, or Apptainer.
 
