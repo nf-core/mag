@@ -36,6 +36,7 @@ include { BBMAP_BBNORM                           } from '../modules/nf-core/bbma
 include { FASTP                                  } from '../modules/nf-core/fastp/main'
 include { ADAPTERREMOVAL as ADAPTERREMOVAL_PE    } from '../modules/nf-core/adapterremoval/main'
 include { ADAPTERREMOVAL as ADAPTERREMOVAL_SE    } from '../modules/nf-core/adapterremoval/main'
+include { CENTRIFUGE_CENTRIFUGE                  } from '../modules/nf-core/centrifuge/centrifuge/main'
 include { CAT_FASTQ                              } from '../modules/nf-core/cat/fastq/main'
 include { PRODIGAL                               } from '../modules/nf-core/prodigal/main'
 include { PROKKA                                 } from '../modules/nf-core/prokka/main'
