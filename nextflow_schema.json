@@ -14,11 +14,13 @@
             "properties": {
                 "input": {
                     "type": "string",
+                    "mimetype": "text/csv",
                     "format": "file-path-pattern",
                     "exists": true,
-                    "pattern": "^\\S+\\.csv$|^\\S+\\.(fastq|fq).gz$",
-                    "description": "Input FastQ files (gzip compressed) or CSV samplesheet file containing information about the samples in the experiment.",
-                    "help_text": "Use this to specify the location of your input FastQ files. For example:\n\n```bash\n--input 'path/to/data/sample_*_{1,2}.fastq.gz'\n``` \n\nAlternatively, to assign different groups or to include long reads for hybrid assembly with metaSPAdes, you can specify a CSV samplesheet input file with 5 columns and the following header: sample,group,short_reads_1,short_reads_2,long_reads. See [usage docs](https://nf-co.re/mag/usage#input-specifications).",
+                    "schema": "assets/schema_input.json",
+                    "pattern": "^\\S+\\.csv$",
+                    "description": "CSV samplesheet file containing information about the samples in the experiment.",
+                    "help_text": "Use this to specify the location of your input FastQ files and their associated metadata. You can also use the CSV file to assign different groups or to include long reads for hybrid assembly with metaSPAdes. The CSV file must have at least two columns (sample, short_reads1) and with a maximum CSV sheet having the headers: sample,run,group,short_reads_1,short_reads_2,long_reads. See [usage docs](https://nf-co.re/mag/usage#input-specifications).",
                     "fa_icon": "fas fa-file-csv"
                 },
                 "single_end": {
@@ -30,9 +32,12 @@
                 "assembly_input": {
                     "type": "string",
                     "mimetype": "text/csv",
-                    "format": "file-path",
+                    "format": "file-path-pattern",
+                    "exists": true,
+                    "schema": "assets/schema_assembly_input.json",
+                    "pattern": "^\\S+\\.csv$",
                     "description": "Additional input CSV samplesheet containing information about pre-computed assemblies. When set, both read pre-processing and assembly are skipped and the pipeline begins at the binning stage.",
-                    "help_text": "If you have pre-computed assemblies from another source, it is possible to jump straight to the binning stage of the pipeline by supplying these assemblies in a CSV file. This CSV file should have three columns and the following header: `id,group,assembler,fasta`. Short reads must still be supplied in to `--input` in CSV format. See [usage docs](https://nf-co.re/mag/usage#input-specifications) for further details.",
+                    "help_text": "If you have pre-computed assemblies from another source, it is possible to jump straight to the binning stage of the pipeline by supplying these assemblies in a CSV file. This CSV file should have at minimum three columns and the following header: `id,group,assembler,fasta` (group is only required when `--coassemble_group). Short reads must still be supplied in to `--input` in CSV format. See [usage docs](https://nf-co.re/mag/usage#input-specifications) for further details.",
                     "fa_icon": "fas fa-file-csv"
                 },
                 "outdir": {
@@ -269,6 +274,13 @@
                     "description": "Validation of parameters in lenient more.",
                     "hidden": true,
                     "help_text": "Allows string values that are parseable as numbers or booleans. For further information see [JSONSchema docs](https://github.com/everit-org/json-schema#lenient-mode)."
+                },
+                "pipelines_testdata_base_path": {
+                    "type": "string",
+                    "fa_icon": "far fa-check-circle",
+                    "description": "Base URL or local path to location of pipeline test dataset files",
+                    "default": "https://raw.githubusercontent.com/nf-core/test-datasets/",
+                    "hidden": true
                 }
             }
         },
@@ -534,7 +546,7 @@
                 },
                 "gtdbtk_min_completeness": {
                     "type": "number",
-                    "default": 50.0,
+                    "default": 50,
                     "description": "Min. bin completeness (in %) required to apply GTDB-tk classification.",
                     "help_text": "Completeness assessed with BUSCO analysis (100% - %Missing). Must be greater than 0 (min. 0.01) to avoid GTDB-tk errors. If too low, GTDB-tk classification results can be impaired due to not enough marker genes!",
                     "minimum": 0.01,
@@ -542,7 +554,7 @@
                 },
                 "gtdbtk_max_contamination": {
                     "type": "number",
-                    "default": 10.0,
+                    "default": 10,
                     "description": "Max. bin contamination (in %) allowed to apply GTDB-tk classification.",
                     "help_text": "Contamination approximated based on BUSCO analysis (%Complete and duplicated). If too high, GTDB-tk classification results can be impaired due to contamination!",
                     "minimum": 0,
@@ -550,7 +562,7 @@
                 },
                 "gtdbtk_min_perc_aa": {
                     "type": "number",
-                    "default": 10.0,
+                    "default": 10,
                     "description": "Min. fraction of AA (in %) in the MSA for bins to be kept.",
                     "minimum": 0,
                     "maximum": 100
@@ -564,7 +576,7 @@
                 },
                 "gtdbtk_pplacer_cpus": {
                     "type": "number",
-                    "default": 1.0,
+                    "default": 1,
                     "description": "Number of CPUs used for the by GTDB-Tk run tool pplacer.",
                     "help_text": "A low number of CPUs helps to reduce the memory required/reported by GTDB-Tk. See also the [GTDB-Tk documentation](https://ecogenomics.github.io/GTDBTk/faq.html#gtdb-tk-reaches-the-memory-limit-pplacer-crashes)."
                 },
@@ -684,7 +696,8 @@
                     "type": "string",
                     "default": "group",
                     "description": "Defines mapping strategy to compute co-abundances for binning, i.e. which samples will be mapped against the assembly.",
-                    "help_text": "Available: `all`, `group` or `own`. Note that `own` cannot be specified in combination with `--coassemble_group`.\n\nNote that specifying `all` without additionally specifying `--coassemble_group` results in `n^2` mapping processes for each assembly method, where `n` is the number of samples."
+                    "help_text": "Available: `all`, `group` or `own`. Note that `own` cannot be specified in combination with `--coassemble_group`.\n\nNote that specifying `all` without additionally specifying `--coassemble_group` results in `n^2` mapping processes for each assembly method, where `n` is the number of samples.",
+                    "enum": ["all", "group", "own"]
                 },
                 "skip_binning": {
                     "type": "boolean",

@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## dev - [unreleased]
+## dev [unreleased]
 
 ### `Added`
 
@@ -15,6 +15,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Deprecated`
 
+## 3.0.0 - [2024-05-13]
+
+### `Added`
+
+- [#615](https://github.com/nf-core/mag/pull/615) - Add new logo (by @jfy133)
+
+### `Changed`
+
+- [#599](https://github.com/nf-core/mag/pull/599) - Update to nf-core v2.13.1 `TEMPLATE` (by @jfy133)
+- [#614](https://github.com/nf-core/mag/pull/614) - Update to nf-core v2.14.1 `TEMPLATE` (by @jfy133)
+
+### `Fixed`
+
+- [#606](https://github.com/nf-core/mag/pull/606) - Prevent pipeline crash when premade mashdb given to or no alignments found with GTDB-TK_CLASSIFYWF (reported by @cedwardson4, fix by @jfy133)
+
+### `Dependencies`
+
+### `Deprecated`
+
+- [#599](https://github.com/nf-core/mag/pull/599) - Direct reads input (`--input 'sample_{R1,R2}.fastq.gz'`) is no longer supported, all input must come via samplesheets (by @jfy133)
+
 ## 2.5.4 - [2024-02-12]
 
 ### `Added`
@@ -22,6 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Changed`
 
 - [#581](https://github.com/nf-core/mag/pull/581) - Added explicit licence text to headers of all custom scripts (reported by @FriederikeHanssen and @maxibor, fix by @jfy133)
+- [#602](https://github.com/nf-core/mag/pull/602) - Co-binning when using aDNA mode now enabled (added by @maxibor)
 
 ### `Fixed`
 
@@ -56,7 +78,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
-- [#563](https://github.com/nf-core/mag/pull/562) Update to nf-core v2.12 `TEMPLATE` (by @CarsonJM)
+- [#563](https://github.com/nf-core/mag/pull/562) - Update to nf-core v2.12 `TEMPLATE` (by @CarsonJM)
 - [#566](https://github.com/nf-core/mag/pull/566) - More logical ordering of MultiQC sections (assembly and bin sections go together respectively) (fix by @jfy133)
 
 ### `Fixed`
