@@ -28,20 +28,25 @@ include { DEPTHS                          } from '../subworkflows/local/depths'
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { ARIA2 as ARIA2_UNTAR                   } from '../modules/nf-core/aria2/main'
-include { FASTQC as FASTQC_RAW                   } from '../modules/nf-core/fastqc/main'
-include { FASTQC as FASTQC_TRIMMED               } from '../modules/nf-core/fastqc/main'
-include { SEQTK_MERGEPE                          } from '../modules/nf-core/seqtk/mergepe/main'
-include { BBMAP_BBNORM                           } from '../modules/nf-core/bbmap/bbnorm/main'
-include { FASTP                                  } from '../modules/nf-core/fastp/main'
-include { ADAPTERREMOVAL as ADAPTERREMOVAL_PE    } from '../modules/nf-core/adapterremoval/main'
-include { ADAPTERREMOVAL as ADAPTERREMOVAL_SE    } from '../modules/nf-core/adapterremoval/main'
-include { CENTRIFUGE_CENTRIFUGE                  } from '../modules/nf-core/centrifuge/centrifuge/main'
-include { CAT_FASTQ                              } from '../modules/nf-core/cat/fastq/main'
-include { PRODIGAL                               } from '../modules/nf-core/prodigal/main'
-include { PROKKA                                 } from '../modules/nf-core/prokka/main'
-include { MMSEQS_DATABASES                       } from '../modules/nf-core/mmseqs/databases/main'
-include { METAEUK_EASYPREDICT                    } from '../modules/nf-core/metaeuk/easypredict/main'
+include { ARIA2 as ARIA2_UNTAR                                  } from '../modules/nf-core/aria2/main'
+include { FASTQC as FASTQC_RAW                                  } from '../modules/nf-core/fastqc/main'
+include { FASTQC as FASTQC_TRIMMED                              } from '../modules/nf-core/fastqc/main'
+include { SEQTK_MERGEPE                                         } from '../modules/nf-core/seqtk/mergepe/main'
+include { BBMAP_BBNORM                                          } from '../modules/nf-core/bbmap/bbnorm/main'
+include { FASTP                                                 } from '../modules/nf-core/fastp/main'
+include { ADAPTERREMOVAL as ADAPTERREMOVAL_PE                   } from '../modules/nf-core/adapterremoval/main'
+include { ADAPTERREMOVAL as ADAPTERREMOVAL_SE                   } from '../modules/nf-core/adapterremoval/main'
+include { UNTAR as CENTRIFUGEDB_UNTAR                           } from '../modules/nf-core/untar/main'
+include { CENTRIFUGE_CENTRIFUGE                                 } from '../modules/nf-core/centrifuge/centrifuge/main'
+include { CENTRIFUGE_KREPORT                                    } from '../modules/nf-core/centrifuge/kreport/main'
+include { KRONA_KRONADB                                         } from '../modules/nf-core/krona/kronadb/main'
+include { KRONA_KTIMPORTTAXONOMY                                } from '../modules/nf-core/krona/ktimporttaxonomy/main'
+include { KRAKENTOOLS_KREPORT2KRONA as KREPORT2KRONA_CENTRIFUGE } from '../modules/nf-core/krakentools/kreport2krona/main'
+include { CAT_FASTQ                                             } from '../modules/nf-core/cat/fastq/main'
+include { PRODIGAL                                              } from '../modules/nf-core/prodigal/main'
+include { PROKKA                                                } from '../modules/nf-core/prokka/main'
+include { MMSEQS_DATABASES                                      } from '../modules/nf-core/mmseqs/databases/main'
+include { METAEUK_EASYPREDICT                                   } from '../modules/nf-core/metaeuk/easypredict/main'
 
 //
 // MODULE: Local to the pipeline
@@ -405,14 +410,15 @@ workflow MAG {
     ================================================================================
     */
 
-
+    // Centrifuge
     if ( !params.centrifuge_db ) {
         ch_db_for_centrifuge = Channel.empty()
     } else {
         if ( file(params.centrifuge_db).isDirectory() ) {
             ch_db_for_centrifuge = Channel.of(file(params.centrifuge_db, checkIfExists: true))
         } else {
-            ch_db_for_centrifuge = UNTAR ( Channel.of([[id: 'db'], file(params.centrifuge_db, checkIfExists: true)])).untar.map{it[1]}
+            ch_db_for_centrifuge = CENTRIFUGEDB_UNTAR ( Channel.of([[id: 'db'], file(params.centrifuge_db, checkIfExists: true)])).untar.map{it[1]}.first()
+            ch_versions = ch_versions.mix(CENTRIFUGEDB_UNTAR.out.versions.first())
         }
     }
 
@@ -427,6 +433,7 @@ workflow MAG {
     CENTRIFUGE_KREPORT ( CENTRIFUGE_CENTRIFUGE.out.results, ch_db_for_centrifuge )
     ch_versions = ch_versions.mix(CENTRIFUGE_KREPORT.out.versions.first())
 
+    // Kraken2
     if ( !ch_kraken2_db_file.isEmpty() ) {
         if ( ch_kraken2_db_file.extension in ['gz', 'tgz'] ) {
             // Expects to be tar.gz!
@@ -463,23 +470,24 @@ workflow MAG {
         } else {
             KRONA_KRONADB ()
             ch_krona_db = KRONA_KRONADB.out.db
-            ch_versions = ch_versions.mix(KRONA_KRONADB.out.versions.first())
+            ch_versions = ch_versions.mix(KRONA_KRONADB.out.versions)
         }
 
         if ( params.centrifuge_db )  {
-            ch_centrifuge_for_krona = KREPORT2KRONA_CENTRIFUGE ( CENTRIFUGE_KREPORT.out.kreport.dump(tag: 'input_to_convert') ).txt.dump(tag: 'output_from_convert')
+            ch_centrifuge_for_krona = KREPORT2KRONA_CENTRIFUGE ( CENTRIFUGE_KREPORT.out.kreport ).txt.map{ meta, files -> ['centrifuge', meta, files] }
             ch_versions = ch_versions.mix(KREPORT2KRONA_CENTRIFUGE.out.versions.first())
         } else {
             ch_centrifuge_for_krona = Channel.empty()
         }
 
-
+        // Join together for Krona
         ch_tax_classifications = ch_centrifuge_for_krona
                                     .mix(KRAKEN2.out.results_for_krona)
-                                    . map { classifier, meta, report ->
+                                    .map { classifier, meta, report ->
                                         def meta_new = meta + [classifier: classifier]
                                         [ meta_new, report ]
                                     }
+
         KRONA_KTIMPORTTAXONOMY (
             ch_tax_classifications,
             ch_krona_db
