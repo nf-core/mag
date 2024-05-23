@@ -43,6 +43,7 @@ include { KRONA_KRONADB                                         } from '../modul
 include { KRONA_KTIMPORTTAXONOMY                                } from '../modules/nf-core/krona/ktimporttaxonomy/main'
 include { KRAKENTOOLS_KREPORT2KRONA as KREPORT2KRONA_CENTRIFUGE } from '../modules/nf-core/krakentools/kreport2krona/main'
 include { CAT_FASTQ                                             } from '../modules/nf-core/cat/fastq/main'
+include { GUNZIP as GUNZIP_ASSEMBLIES                           } from '../modules/nf-core/gunzip'
 include { PRODIGAL                                              } from '../modules/nf-core/prodigal/main'
 include { PROKKA                                                } from '../modules/nf-core/prokka/main'
 include { MMSEQS_DATABASES                                      } from '../modules/nf-core/mmseqs/databases/main'
