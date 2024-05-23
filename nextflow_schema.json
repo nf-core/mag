@@ -492,7 +492,6 @@
                 "centrifuge_db": {
                     "type": "string",
                     "format": "file-path",
-                    "pattern": ".*.tar.gz",
                     "exists": true,
                     "description": "Database for taxonomic binning with centrifuge.",
                     "help_text": "Local directory containing `*.cf` files, or a URL or local path to a downloaded compressed tar archive of a Centrifuge database. E.g. ftp://ftp.ccb.jhu.edu/pub/infphilo/centrifuge/data/p_compressed+h+v.tar.gz."
