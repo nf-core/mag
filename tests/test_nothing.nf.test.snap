@@ -1,0 +1,39 @@
+{
+    "Profile: test_nothing": {
+        "content": [
+            [
+                "multiqc.log",
+                "multiqc_bowtie2.yaml",
+                "multiqc_citations.yaml",
+                "multiqc_data.json",
+                "multiqc_fastqc.yaml",
+                "multiqc_fastqc_1.yaml",
+                "multiqc_general_stats.yaml",
+                "multiqc_software_versions.yaml",
+                "multiqc_sources.yaml"
+            ],
+            [
+
+            ],
+            [
+                "test_minigut_run0_raw_1_fastqc.html",
+                "test_minigut_run0_raw_2_fastqc.html",
+                "test_minigut_run0_trimmed_1_fastqc.html",
+                "test_minigut_run0_trimmed_2_fastqc.html",
+                "test_minigut_sample2_run0_raw_1_fastqc.html",
+                "test_minigut_sample2_run0_raw_2_fastqc.html",
+                "test_minigut_sample2_run0_trimmed_1_fastqc.html",
+                "test_minigut_sample2_run0_trimmed_2_fastqc.html"
+            ],
+            [
+                "test_minigut_run0_phix_removed.bowtie2.log:md5,4f10d4bc2b3f0be722807bbf16659621",
+                "test_minigut_sample2_run0_phix_removed.bowtie2.log:md5,f1530d72fd5626bb98c60400b294dc18"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.1"
+        },
+        "timestamp": "2024-05-23T14:59:09.216485918"
+    }
+}

@@ -1,0 +1,29 @@
+nextflow_pipeline {
+
+    name "Test pipeline"
+    script "../main.nf"
+    profile "test_nothing"
+
+    test("Profile: test_nothing") {
+
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    file("$outputDir/multiqc/multiqc_data/").list().sort(),
+                    file("$outputDir/multiqc/multiqc_plots/").list().sort(),
+                    file("$outputDir/QC_shortreads/fastqc/").list().sort(),
+                    path("$outputDir/QC_shortreads/remove_phix/")
+                ).match() },
+                { assert new File("$outputDir/multiqc/multiqc_report.html").exists() },
+                { assert new File("$outputDir/pipeline_info/nf_core_pipeline_software_mqc_versions.yml").exists() }
+            )
+        }
+    }
+}
