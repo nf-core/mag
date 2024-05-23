@@ -170,9 +170,10 @@ More information on the [Centrifuge](https://ccb.jhu.edu/software/centrifuge/) w
 <summary>Output files</summary>
 
 - `Taxonomy/centrifuge/[sample]/`
-  - `report.txt`: Tab-delimited result file. See the [centrifuge manual](https://ccb.jhu.edu/software/centrifuge/manual.shtml#centrifuge-classification-output) for information about the fields
-  - `kreport.txt`: Classification in the Kraken report format. See the [kraken2 manual](https://github.com/DerrickWood/kraken2/wiki/Manual#output-formats) for more details
-  - `taxonomy.krona.html`: Interactive pie chart produced by [KronaTools](https://github.com/marbl/Krona/wiki)
+  - `[sample].kreport.txt`: Classification in the Kraken report format. See the [kraken2 manual](https://github.com/DerrickWood/kraken2/wiki/Manual#output-formats) for more details
+  - `[sample].report.txt`: Tab-delimited result file. See the [centrifuge manual](https://ccb.jhu.edu/software/centrifuge/manual.shtml#centrifuge-classification-output) for information about the fields
+  - `[sample].results.txt`: Per read taxonomic classification information. See the [centrifuge manual](https://ccb.jhu.edu/software/centrifuge/manual.shtml#centrifuge-classification-output) for more details
+  - `[sample].html`: Interactive pie chart produced by [KronaTools](https://github.com/marbl/Krona/wiki)
 
 </details>
 
