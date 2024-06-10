@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
+- [#625](https://github.com/nf-core/mag/pull/625) - Updated link to geNomad database for downloading (reported by @amizeranschi, fix by @jfy133)
+
 ### `Fixed`
 
 - [#618](https://github.com/nf-core/mag/pull/618) - Fix CENTRIFUGE mkfifo failures by using work directory /tmp (reported by @skrakau, fix by @jfy133)

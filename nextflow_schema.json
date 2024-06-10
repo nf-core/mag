@@ -588,7 +588,7 @@
                 "genomad_db": {
                     "type": "string",
                     "description": "Database for virus classification with geNomad",
-                    "help_text": "Must be a directory containing the uncompressed contents from https://portal.nersc.gov/genomad/__data__/genomad_db_v1.1.tar.gz"
+                    "help_text": "Must be a directory containing the uncompressed contents from https://zenodo.org/doi/10.5281/zenodo.6994741 (nf-core/mag tested with v1.1)"
                 }
             }
         },
