@@ -491,11 +491,14 @@
             "properties": {
                 "centrifuge_db": {
                     "type": "string",
+                    "format": "file-path",
+                    "exists": true,
                     "description": "Database for taxonomic binning with centrifuge.",
                     "help_text": "Local directory containing `*.cf` files, or a URL or local path to a downloaded compressed tar archive of a Centrifuge database. E.g. ftp://ftp.ccb.jhu.edu/pub/infphilo/centrifuge/data/p_compressed+h+v.tar.gz."
                 },
                 "kraken2_db": {
                     "type": "string",
+                    "format": "file-path",
                     "description": "Database for taxonomic binning with kraken2.",
                     "help_text": "Path to a local directory, archive file, or a URL to compressed tar archive that contains at least the three files `hash.k2d`, `opts.k2d` and `taxo.k2d`. E.g. ftp://ftp.ccb.jhu.edu/pub/data/kraken2_dbs/minikraken_8GB_202003.tgz."
                 },
@@ -585,7 +588,7 @@
                 "genomad_db": {
                     "type": "string",
                     "description": "Database for virus classification with geNomad",
-                    "help_text": "Must be a directory containing the uncompressed contents from https://portal.nersc.gov/genomad/__data__/genomad_db_v1.1.tar.gz"
+                    "help_text": "Must be a directory containing the uncompressed contents from https://zenodo.org/doi/10.5281/zenodo.6994741 (nf-core/mag tested with v1.1)"
                 }
             }
         },
