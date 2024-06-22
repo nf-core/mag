@@ -55,18 +55,14 @@ jobs:
     strategy:
       matrix:
         # Run remaining test profiles with minimum nextflow version
-        profile:
-          [
-            test_host_rm,
-            test_hybrid,
-            test_hybrid_host_rm,
-            test_busco_auto,
-            test_ancient_dna,
-            test_adapterremoval,
-            test_binrefinement,
-            test_virus_identification,
+        profile: [
+            test_nothing, ## fast alternative to kill all other jobs
             test_single_end,
-            test_concoct,
+            test_alternatives,
+            test_preassembly,
+            test_hybrid_host_rm,
+            test_extras,
+            test_bigdb,
           ]
     steps:
       - name: Free some space
