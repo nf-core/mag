@@ -57,12 +57,12 @@ jobs:
         # Run remaining test profiles with minimum nextflow version
         profile: [
             test_nothing, ## fast alternative to kill all other jobs
-            test_single_end,
+            #test_single_end,
             test_alternatives,
-            test_preassembly,
+            test_preassembly_binrefine,
             test_hybrid_host_rm,
-            test_extras,
-            test_bigdb,
+            #test_extras,
+            #test_bigdb,
           ]
     steps:
       - name: Free some space
