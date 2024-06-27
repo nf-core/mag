@@ -35,6 +35,7 @@ include { SEQTK_MERGEPE                                         } from '../modul
 include { PORECHOP_PORECHOP                                     } from '../modules/nf-core/porechop/porechop/main'
 include { NANOPLOT as NANOPLOT_RAW                              } from '../modules/nf-core/nanoplot/main'
 include { NANOPLOT as NANOPLOT_FILTERED                         } from '../modules/nf-core/nanoplot/main'
+include { NANOLYSE                                              } from '../modules/nf-core/nanolyse/main'
 include { BBMAP_BBNORM                                          } from '../modules/nf-core/bbmap/bbnorm/main'
 include { FASTP                                                 } from '../modules/nf-core/fastp/main'
 include { ADAPTERREMOVAL as ADAPTERREMOVAL_PE                   } from '../modules/nf-core/adapterremoval/main'
@@ -59,7 +60,6 @@ include { BOWTIE2_REMOVAL_BUILD as BOWTIE2_HOST_REMOVAL_BUILD } from '../modules
 include { BOWTIE2_REMOVAL_ALIGN as BOWTIE2_HOST_REMOVAL_ALIGN } from '../modules/local/bowtie2_removal_align'
 include { BOWTIE2_REMOVAL_BUILD as BOWTIE2_PHIX_REMOVAL_BUILD } from '../modules/local/bowtie2_removal_build'
 include { BOWTIE2_REMOVAL_ALIGN as BOWTIE2_PHIX_REMOVAL_ALIGN } from '../modules/local/bowtie2_removal_align'
-include { NANOLYSE                                            } from '../modules/local/nanolyse'
 include { FILTLONG                                            } from '../modules/local/filtlong'
 include { KRAKEN2_DB_PREPARATION                              } from '../modules/local/kraken2_db_preparation'
 include { KRAKEN2                                             } from '../modules/local/kraken2'
@@ -381,7 +381,7 @@ workflow MAG {
                 ch_long_reads,
                 ch_nanolyse_db
             )
-            ch_long_reads = NANOLYSE.out.reads
+            ch_long_reads = NANOLYSE.out.fastq
             ch_versions = ch_versions.mix(NANOLYSE.out.versions.first())
         }
 

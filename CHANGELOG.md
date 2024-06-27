@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
+- [#632](https://github.com/nf-core/mag/pull/632) - Use default NanoLyse log of just removed reads rather than custom (by @jfy133)
+
 ### `Fixed`
 
 ### `Dependencies`
@@ -17,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | -------- | ---------------- | ----------- |
 | Porechop | 0.2.3_seqan2.1.1 | 0.2.4       |
 | NanoPlot | 1.26.3           | 1.41.6      |
+| NanoLyse | 1.1.0            | 1.2.0       |
 
 ### `Deprecated`
 
