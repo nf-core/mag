@@ -105,7 +105,7 @@ The pipeline uses Nanolyse to map the reads against the Lambda phage and removes
 <summary>Output files</summary>
 
 - `QC_longreads/NanoLyse/`
-  - `[sample]_nanolyse.log`: Contains a brief log file indicating how many reads have been removed.
+  - `[sample]_[run]_lambdafiltered.nanolyse.log`: Contains a brief log file indicating how many reads have been removed.
 
 </details>
 
