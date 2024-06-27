@@ -197,6 +197,11 @@
                         "git_sha": "b7ebe95761cd389603f9cc0e0dc384c0f663815a",
                         "installed_by": ["modules"]
                     },
+                    "porechop/porechop": {
+                        "branch": "master",
+                        "git_sha": "1d68c7f248d1a480c5959548a9234602b771199e",
+                        "installed_by": ["modules"]
+                    },
                     "prodigal": {
                         "branch": "master",
                         "git_sha": "603ecbd9f45300c9788f197d2a15a005685b4220",

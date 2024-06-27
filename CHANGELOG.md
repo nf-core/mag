@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Dependencies`
 
+| Tool     | Previous version | New version |
+| -------- | ---------------- | ----------- |
+| Porechop | 0.2.3_seqan2.1.1 | 0.2.4       |
+
 ### `Deprecated`
 
 ## 3.0.1 [2024-06-10]

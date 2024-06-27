@@ -32,6 +32,7 @@ include { ARIA2 as ARIA2_UNTAR                                  } from '../modul
 include { FASTQC as FASTQC_RAW                                  } from '../modules/nf-core/fastqc/main'
 include { FASTQC as FASTQC_TRIMMED                              } from '../modules/nf-core/fastqc/main'
 include { SEQTK_MERGEPE                                         } from '../modules/nf-core/seqtk/mergepe/main'
+include { PORECHOP_PORECHOP                                     } from '../modules/nf-core/porechop/porechop/main'
 include { BBMAP_BBNORM                                          } from '../modules/nf-core/bbmap/bbnorm/main'
 include { FASTP                                                 } from '../modules/nf-core/fastp/main'
 include { ADAPTERREMOVAL as ADAPTERREMOVAL_PE                   } from '../modules/nf-core/adapterremoval/main'
@@ -56,7 +57,6 @@ include { BOWTIE2_REMOVAL_BUILD as BOWTIE2_HOST_REMOVAL_BUILD } from '../modules
 include { BOWTIE2_REMOVAL_ALIGN as BOWTIE2_HOST_REMOVAL_ALIGN } from '../modules/local/bowtie2_removal_align'
 include { BOWTIE2_REMOVAL_BUILD as BOWTIE2_PHIX_REMOVAL_BUILD } from '../modules/local/bowtie2_removal_build'
 include { BOWTIE2_REMOVAL_ALIGN as BOWTIE2_PHIX_REMOVAL_ALIGN } from '../modules/local/bowtie2_removal_align'
-include { PORECHOP                                            } from '../modules/local/porechop'
 include { NANOLYSE                                            } from '../modules/local/nanolyse'
 include { FILTLONG                                            } from '../modules/local/filtlong'
 include { NANOPLOT as NANOPLOT_RAW                            } from '../modules/local/nanoplot'
@@ -369,11 +369,11 @@ workflow MAG {
 
     if ( !params.assembly_input ) {
         if (!params.skip_adapter_trimming) {
-            PORECHOP (
+            PORECHOP_PORECHOP (
                 ch_raw_long_reads
             )
-            ch_long_reads = PORECHOP.out.reads
-            ch_versions = ch_versions.mix(PORECHOP.out.versions.first())
+            ch_long_reads = PORECHOP_PORECHOP.out.reads
+            ch_versions = ch_versions.mix(PORECHOP_PORECHOP.out.versions.first())
         }
 
         if (!params.keep_lambda) {
