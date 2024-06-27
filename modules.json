@@ -197,6 +197,11 @@
                         "git_sha": "b7ebe95761cd389603f9cc0e0dc384c0f663815a",
                         "installed_by": ["modules"]
                     },
+                    "nanoplot": {
+                        "branch": "master",
+                        "git_sha": "3135090b46f308a260fc9d5991d7d2f9c0785309",
+                        "installed_by": ["modules"]
+                    },
                     "porechop/porechop": {
                         "branch": "master",
                         "git_sha": "1d68c7f248d1a480c5959548a9234602b771199e",

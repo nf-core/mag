@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | Tool     | Previous version | New version |
 | -------- | ---------------- | ----------- |
 | Porechop | 0.2.3_seqan2.1.1 | 0.2.4       |
+| NanoPlot | 1.26.3           | 1.41.6      |
 
 ### `Deprecated`
 
