@@ -59,7 +59,7 @@ jobs:
             test_nothing, ## fast alternative to kill all other jobs
             #test_single_end,
             test_alternatives,
-            test_preassembly_binrefine,
+            test_preassembly_binrefine, ## TODO CHE KOUTPUT
             test_hybrid_host_rm,
             #test_extras,
             #test_bigdb,
