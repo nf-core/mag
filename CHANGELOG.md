@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
+- [#630](https://github.com/nf-core/mag/pull/630) - Fix CONCOCT empty bins killing the pipeline, and allow for true multithreading again (removing OPENBLAS loop) (reported by @maxibor, fix by @maxibor and @jfy133)
+
 ### `Dependencies`
 
 | Tool     | Previous version | New version |
