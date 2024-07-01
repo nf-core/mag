@@ -23,6 +23,7 @@ process BUSCO {
     path "versions.yml"                                                                 , emit: versions
 
     script:
+    def args = task.ext.args ?: ''
     def cp_augustus_config = workflow.profile.toString().indexOf("conda") != -1 ? "N" : "Y"
     def lineage_dataset_provided = "${db_meta.lineage}"
     def busco_clean = params.busco_clean ? "Y" : "N"
@@ -36,7 +37,16 @@ process BUSCO {
         lineage_dataset_provided = ""
     }
     """
-    run_busco.sh "${p}" "${cp_augustus_config}" "${db}" "${bin}" ${task.cpus} "${lineage_dataset_provided}" "${busco_clean}"
+    run_busco.sh \\
+        "${p}" \\
+        "${cp_augustus_config}" \\
+        "${db}" \\
+        "${bin}" \\
+        ${task.cpus} \\
+        "${lineage_dataset_provided}" \\
+        "${busco_clean}" \\
+        "${args}"
+
     most_spec_db=\$(<info_most_spec_db.txt)
 
     cat <<-END_VERSIONS > versions.yml

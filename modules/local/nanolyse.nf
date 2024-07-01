@@ -17,9 +17,9 @@ process NANOLYSE {
 
     script:
     """
-    cat ${reads} | NanoLyse --reference $nanolyse_db | gzip > ${meta.id}_nanolyse.fastq.gz
+    zcat ${reads} | NanoLyse --reference $nanolyse_db | gzip > ${meta.id}_nanolyse.fastq.gz
     echo "NanoLyse reference: $params.lambda_reference" >${meta.id}_nanolyse.log
-    cat ${reads} | echo "total reads before NanoLyse: \$((`wc -l`/4))" >>${meta.id}_nanolyse.log
+    zcat ${reads} | echo "total reads before NanoLyse: \$((`wc -l`/4))" >>${meta.id}_nanolyse.log
     gunzip -c ${meta.id}_nanolyse.fastq.gz | echo "total reads after NanoLyse: \$((`wc -l`/4))" >> ${meta.id}_nanolyse.log
 
     cat <<-END_VERSIONS > versions.yml
