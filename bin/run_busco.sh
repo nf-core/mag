@@ -11,6 +11,7 @@ bin=$4
 task_cpus=$5
 lineage_dataset_provided=$6
 busco_clean=$7
+extra_args=$8
 
 # ensure augustus has write access to config directory
 if [ ${cp_augustus_config} = "Y" ]; then
@@ -30,11 +31,14 @@ shopt -s nullglob
 # only used for saving busco downloads
 most_spec_db="NA"
 
-if busco ${p} \
-    --mode genome \
-    --in ${bin} \
-    --cpu ${task_cpus} \
-    --out "BUSCO" >${bin}_busco.log 2>${bin}_busco.err; then
+if
+    busco ${p} \
+        --mode genome \
+        --in ${bin} \
+        --cpu ${task_cpus} \
+        ${extra_args} \
+    --out "BUSCO" >${bin}_busco.log 2>${bin}_busco.err
+then
 
     # get name of used specific lineage dataset
     summaries=(BUSCO/short_summary.specific.*.BUSCO.txt)
