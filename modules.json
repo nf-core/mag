@@ -258,7 +258,7 @@
                 "nf-core": {
                     "fasta_binning_concoct": {
                         "branch": "master",
-                        "git_sha": "373d3e2f5ce7f215977826d358c461078c8e1057",
+                        "git_sha": "c60c14b285b89bdd0607e371417dadb80385ad6e",
                         "installed_by": ["subworkflows"]
                     },
                     "utils_nextflow_pipeline": {
