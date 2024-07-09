@@ -37,6 +37,7 @@ def main(args=None):
         assembly_results = pd.read_csv(assembly_depths_file, index_col="bin", sep="\t")
         results = results.append(assembly_results, sort=True, verify_integrity=True)
 
+    results.sort_values('bin', inplace=True)
     results.to_csv(args.out, sep="\t")
 
 
