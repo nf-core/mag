@@ -219,7 +219,7 @@
                     },
                     "prokka": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "git_sha": "49ebda931c36c2b282f7958d00e1236b751f1031",
                         "installed_by": ["modules"]
                     },
                     "pydamage/analyze": {
