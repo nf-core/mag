@@ -36,19 +36,20 @@ nextflow_pipeline {
                         it.toString() ==~ /.*Assembly.*QC.*bowtie2\.log/ ||
                         // Prodigal *.gff.gz, *.faa.gz, *.fna.gz, *all.txt.gz
                         // Prokka *.gff, *.err, *.faa, *.ffn, *.fna, *.fsa, *.gbk, *.tbl, *.tsv, *.txt
-                        it.toString() ==~ /.*Annotation.*(\.gz|err|faa|ffn|fna|fsa|gbk|gff|tbl|tsv|txt)/ ||
+                        it.toString() ==~ /.*Annotation.*(\.gz|err|faa|ffn|fna|fsa|gff|tbl|tsv|txt)/ ||
                         // MaxBin2 *.fa.gz
                         // MetaBAT2 *.fa.gz
                         it.toString() ==~ /.*GenomeBinning.*fa\.gz/ ||
                         // *depth.txt.gz
                         it.toString() ==~ /.*GenomeBinning.*depths.*txt\.gz/ ||
-                        // bin_depths_summary.tsv, busco_summary.tsv, quast_summary.tsv, bin_summary.tsv
-                        it.toString() ==~ /.*GenomeBinning.*(bin|busco|quast|depths)_summary\.tsv/ ||
-                        // BUSCO files have dates
-                        it.toString() ==~ /.*GenomeBinning.*(summary\.tsv)/
+                        // bin_depths_summary.tsv, busco_summary.tsv, bin_summary.tsv
+                        it.toString() ==~ /.*GenomeBinning.*busco_summary\.tsv/
+                        // QUAST files have dates
                     }
                     ).match()
-                }
+                },
+                { assert new File("${outputDir}/GenomeBinning/depths/bins/bin_depths_summary.tsv").exists() },
+                { assert new File("${outputDir}/GenomeBinning/bin_summary.tsv").exists() },
             )
         }
     }
