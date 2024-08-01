@@ -76,6 +76,7 @@ workflow GTDBTK {
                             .of(gtdb_dir)
                             .map{['gtdb', it]}
                             .groupTuple()
+                            .first()
     } else {
         error("Unsupported object given to --gtdb, database must be supplied as either a directory or a .tar.gz file!")
     }
