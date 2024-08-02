@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
+- [#648](https://github.com/nf-core/mag/pull/648) - Fix sample ID/assembly ID check failure when no IDs match (by @prototaxites)
+
 ### `Dependencies`
 
 ### `Deprecated`
