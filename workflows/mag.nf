@@ -881,7 +881,7 @@ workflow MAG {
                     meta, summary ->
                     ["${meta.id}.tsv", summary]
             }
-            QUAST_BINS_SUMMARY ( ch_quast_bin_summary.collect() )
+            QUAST_BINS_SUMMARY ( ch_quast_bin_summary.collect(sort:true) )
             ch_quast_bins_summary = QUAST_BINS_SUMMARY.out.summary
         }
 
