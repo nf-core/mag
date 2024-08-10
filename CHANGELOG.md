@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Changed`
 
 ### `Fixed`
+
 - [#639](https://github.com/nf-core/mag/pull/639) - Fix pipeline failure when a sample produces only a single bin (fix by @d-callan)
 
 ### `Dependencies`
