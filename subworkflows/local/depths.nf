@@ -10,7 +10,7 @@ def getColNo(filename) {
     return lines[0].split('\t').size()
 }
 
-/* 
+/*
  * Get number of rows in a file
  */
 def getRowNo(filename) {
