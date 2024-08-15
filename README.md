@@ -77,12 +77,12 @@ When group-wise co-assembly is enabled, `SPAdes` is run on accordingly pooled re
 
 ## Credits
 
-nf-core/mag was written by [Hadrien Gourlé](https://hadriengourle.com) at [SLU](https://slu.se), [Daniel Straub](https://github.com/d4straub) and [Sabrina Krakau](https://github.com/skrakau) at the [Quantitative Biology Center (QBiC)](http://qbic.life). [James A. Fellows Yates](https://github.com/jfy133) and [Maxime Borry](https://github.com/maxibor) at the [Max Planck Institute for Evolutionary Anthropology](https://www.eva.mpg.de) joined in version 2.2.0. 
+nf-core/mag was written by [Hadrien Gourlé](https://hadriengourle.com) at [SLU](https://slu.se), [Daniel Straub](https://github.com/d4straub) and [Sabrina Krakau](https://github.com/skrakau) at the [Quantitative Biology Center (QBiC)](http://qbic.life). [James A. Fellows Yates](https://github.com/jfy133) and [Maxime Borry](https://github.com/maxibor) at the [Max Planck Institute for Evolutionary Anthropology](https://www.eva.mpg.de) joined in version 2.2.0.
 
 Other code contributors include:
 
 - [Antonia Schuster](https://github.com/AntoniaSchuster)
-- [Alexander Ramos](https://github.com/alxndrdiaz) 
+- [Alexander Ramos](https://github.com/alxndrdiaz)
 - [Carson Miller](https://github.com/CarsonJM)
 - [Daniel Lundin](https://github.com/erikrikarddaniel)
 - [Danielle Callan](https://github.com/d-callan)
