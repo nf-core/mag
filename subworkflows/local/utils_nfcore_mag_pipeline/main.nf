@@ -150,7 +150,7 @@ workflow PIPELINE_INITIALISATION {
             .toList()
             .sort()
 
-        ch_read_ids.cross(ch_assembly_ids)
+        ch_read_ids.concat(ch_assembly_ids).collect(flat: false) // need flat:false to ensure the two lists of IDs in the channels don't get smushed into a single list (and thus no ids1 and ids2 lists to compare)
             .map { ids1, ids2 ->
                 if (ids1.sort() != ids2.sort()) {
                     exit 1, "[nf-core/mag] ERROR: supplied IDs or Groups in read and assembly CSV files do not match!"
