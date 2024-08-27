@@ -2,11 +2,10 @@ process RENAME_POSTDASTOOL {
     tag "${meta.assembler}-${meta.id}"
     label 'process_low'
 
-    // Using container from multiqc since it'll be included anyway
-    conda "bioconda::multiqc=1.12"
+    conda "conda-forge::sed=4.7"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/multiqc:1.12--pyhdfd78af_0' :
-        'biocontainers/multiqc:1.12--pyhdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/ubuntu:20.04' :
+        'nf-core/ubuntu:20.04' }"
 
     input:
     tuple val(meta), path(bins)

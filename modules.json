@@ -87,11 +87,6 @@
                         "git_sha": "baa30accc6c50ea8a98662417d4f42ed18966353",
                         "installed_by": ["fasta_binning_concoct"]
                     },
-                    "custom/dumpsoftwareversions": {
-                        "branch": "master",
-                        "git_sha": "8ec825f465b9c17f9d83000022995b4f7de6fe93",
-                        "installed_by": ["modules"]
-                    },
                     "dastool/dastool": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",

@@ -3,6 +3,25 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 3.0.3 [2024-08-27]
+
+### `Added`
+
+### `Changed`
+
+### `Fixed`
+
+- [#648](https://github.com/nf-core/mag/pull/648) - Fix sample ID/assembly ID check failure when no IDs match (reported by @zackhenny, fix by @prototaxites)
+- [#646](https://github.com/nf-core/mag/pull/646) - GTDB-Tk directory input now creates a value channel so it runs for all entries to the process and not just the first (reported by @amizeranschi, fix by @prototaxites).
+- [#639](https://github.com/nf-core/mag/pull/639) - Fix pipeline failure when a sample produces only a single bin (fix by @d-callan)
+- [#651](https://github.com/nf-core/mag/pull/651) - Replace base container for bash only modules to reduce number of containers in pipeline (reported and fixed by @harper357)
+- [#652](https://github.com/nf-core/mag/pull/652) - Fix documentation typo in using user-defined assembly parameters (reported and fixed by @amizeranschi)
+- [#653](https://github.com/nf-core/mag/pull/653) - Fix overwriting of per-bin 'raw' GUNC RUN output files (multi-bin summary tables not affected) (reported by @zackhenny and fixed by @jfy133)
+
+### `Dependencies`
+
+### `Deprecated`
+
 ## 3.0.2 [2024-07-04]
 
 ### `Added`

@@ -454,7 +454,7 @@ For each bin or refined bin the median sequencing depth is computed based on the
 - `GenomeBinning/depths/bins/`
   - `bin_depths_summary.tsv`: Summary of bin sequencing depths for all samples. Depths are available for samples mapped against the corresponding assembly, i.e. according to the mapping strategy specified with `--binning_map_mode`. Only for short reads.
   - `bin_refined_depths_summary.tsv`: Summary of sequencing depths for refined bins for all samples, if refinement was performed. Depths are available for samples mapped against the corresponding assembly, i.e. according to the mapping strategy specified with `--binning_map_mode`. Only for short reads.
-  - `[assembler]-[binner]-[sample/group]-binDepths.heatmap.png`: Clustered heatmap showing bin abundances of the assembly across samples. Bin depths are transformed to centered log-ratios and bins as well as samples are clustered by Euclidean distance. Again, sample depths are available according to the mapping strategy specified with `--binning_map_mode`.
+  - `[assembler]-[binner]-[sample/group]-binDepths.heatmap.png`: Clustered heatmap showing bin abundances of the assembly across samples. Bin depths are transformed to centered log-ratios and bins as well as samples are clustered by Euclidean distance. Again, sample depths are available according to the mapping strategy specified with `--binning_map_mode`. If a sample produces only a single bin, a heatmap will not be provided.
 
 </details>
 
@@ -565,9 +565,9 @@ If the parameter `--save_checkm_reference` is set, additionally the used the Che
 - `[gunc-database].dmnd`
 - `GUNC/`
   - `raw/`
-    - `[assembler]-[binner]-[domain]-[refinement]-[sample/group]/GUNC_checkM.merged.tsv`: Per sample GUNC [output](https://grp-bork.embl-community.io/gunc/output.html) containing with taxonomic and completeness QC statistics.
+    - `[assembler]-[binner]-[domain]-[refinement]-[sample/group]/[fasta input file name]/GUNC_checkM.merged.tsv`: Per sample GUNC [output](https://grp-bork.embl-community.io/gunc/output.html) containing with taxonomic and completeness QC statistics.
   - `checkmmerged/`
-    - `[assembler]-[binner]-[domain]-[refinement]-[sample/group]/GUNC.progenomes_2.1.maxCSS_level.tsv`: Per sample GUNC output merged with output from [CheckM](#checkm)
+    - `[assembler]-[binner]-[domain]-[refinement]-[sample/group]/[checkm input file name]/GUNC.progenomes_2.1.maxCSS_level.tsv`: Per sample GUNC output merged with output from [CheckM](#checkm)
 
 </details>
 
