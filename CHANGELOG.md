@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Dependencies`
 
+| Tool     | Previous version | New version |
+| -------- | ---------------- | ----------- |
+| GTDBTk   | 2.3.2            | 2.4.0       |
+
 ### `Deprecated`
 
 ## 3.0.3 [2024-08-27]
