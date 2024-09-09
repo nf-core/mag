@@ -250,11 +250,17 @@ workflow MAG {
         }
 
         if (params.host_fasta){
-            BOWTIE2_HOST_REMOVAL_BUILD (
-                ch_host_fasta
-            )
-            ch_host_bowtie2index = BOWTIE2_HOST_REMOVAL_BUILD.out.index
+            if ( params.host_fasta_bowtie2index ) {
+                ch_host_bowtie2index = file(params.host_fasta_bowtie2index, checkIfExists: true)
+            } else {
+                BOWTIE2_HOST_REMOVAL_BUILD (
+                    ch_host_fasta
+                )
+                ch_host_bowtie2index = BOWTIE2_HOST_REMOVAL_BUILD.out.index
+            }
+
         }
+
         ch_bowtie2_removal_host_multiqc = Channel.empty()
         if (params.host_fasta || params.host_genome){
             BOWTIE2_HOST_REMOVAL_ALIGN (
