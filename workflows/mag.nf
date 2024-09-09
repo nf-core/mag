@@ -47,6 +47,8 @@ include { KRONA_KRONADB                                         } from '../modul
 include { KRONA_KTIMPORTTAXONOMY                                } from '../modules/nf-core/krona/ktimporttaxonomy/main'
 include { KRAKENTOOLS_KREPORT2KRONA as KREPORT2KRONA_CENTRIFUGE } from '../modules/nf-core/krakentools/kreport2krona/main'
 include { CAT_FASTQ                                             } from '../modules/nf-core/cat/fastq/main'
+include { SPADES as METASPADES                                  } from '../modules/nf-core/spades/main'
+include { SPADES as METASPADESHYBRID                            } from '../modules/nf-core/spades/main'
 include { GUNZIP as GUNZIP_ASSEMBLIES                           } from '../modules/nf-core/gunzip'
 include { PRODIGAL                                              } from '../modules/nf-core/prodigal/main'
 include { PROKKA                                                } from '../modules/nf-core/prokka/main'
@@ -67,8 +69,6 @@ include { POOL_SINGLE_READS as POOL_SHORT_SINGLE_READS        } from '../modules
 include { POOL_PAIRED_READS                                   } from '../modules/local/pool_paired_reads'
 include { POOL_SINGLE_READS as POOL_LONG_READS                } from '../modules/local/pool_single_reads'
 include { MEGAHIT                                             } from '../modules/local/megahit'
-include { SPADES                                              } from '../modules/local/spades'
-include { SPADESHYBRID                                        } from '../modules/local/spadeshybrid'
 include { QUAST                                               } from '../modules/local/quast'
 include { QUAST_BINS                                          } from '../modules/local/quast_bins'
 include { QUAST_BINS_SUMMARY                                  } from '../modules/local/quast_bins_summary'
@@ -589,14 +589,14 @@ workflow MAG {
         }
 
         if (!params.single_end && !params.skip_spades){
-            SPADES ( ch_short_reads_spades )
-            ch_spades_assemblies = SPADES.out.assembly
+            METASPADES ( ch_short_reads_spades.map{ meta, reads -> [meta, reads, [], []]}, [], [] )
+            ch_spades_assemblies = METASPADES.out.scaffolds
                 .map { meta, assembly ->
                     def meta_new = meta + [assembler: 'SPAdes']
                     [ meta_new, assembly ]
                 }
             ch_assemblies = ch_assemblies.mix(ch_spades_assemblies)
-            ch_versions = ch_versions.mix(SPADES.out.versions.first())
+            ch_versions = ch_versions.mix(METASPADES.out.versions.first())
         }
 
         if (!params.single_end && !params.skip_spadeshybrid){
@@ -606,16 +606,16 @@ workflow MAG {
             ch_reads_spadeshybrid = ch_long_reads_spades
                 .map { meta, reads -> [ meta.id, meta, reads ] }
                 .combine(ch_short_reads_spades_tmp, by: 0)
-                .map { id, meta_long, long_reads, meta_short, short_reads -> [ meta_short, long_reads, short_reads ] }
+                .map { id, meta_long, long_reads, meta_short, short_reads -> [ meta_short, short_reads, [], long_reads ] }
 
-            SPADESHYBRID ( ch_reads_spadeshybrid )
-            ch_spadeshybrid_assemblies = SPADESHYBRID.out.assembly
+            METASPADESHYBRID ( ch_reads_spadeshybrid, [], [] )
+            ch_spadeshybrid_assemblies = METASPADESHYBRID.out.scaffolds
                 .map { meta, assembly ->
                     def meta_new = meta + [assembler: "SPAdesHybrid"]
                     [ meta_new, assembly ]
                 }
             ch_assemblies = ch_assemblies.mix(ch_spadeshybrid_assemblies)
-            ch_versions = ch_versions.mix(SPADESHYBRID.out.versions.first())
+            ch_versions = ch_versions.mix(METASPADESHYBRID.out.versions.first())
         }
     } else {
         ch_assemblies_split = ch_input_assemblies
