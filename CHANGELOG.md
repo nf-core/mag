@@ -9,9 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
+- [#666](https://github.com/nf-core/mag/pull/666) - Update SPAdes to version 4.0.0 (requested by @elsherbini, fix by @jfy133)
+
 ### `Fixed`
 
 ### `Dependencies`
+
+| Tool   | Previous version | New version |
+| ------ | ---------------- | ----------- |
+| SPAdes | 3.15.3           | 4.0.0       |
 
 ### `Deprecated`
 
