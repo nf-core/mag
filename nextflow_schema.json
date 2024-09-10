@@ -383,6 +383,11 @@
                     "description": "Fasta reference file for host contamination removal.",
                     "help_text": "This parameter is mutually exclusive with `--host_genome`. The reference can be masked. Host read removal is done with Bowtie2."
                 },
+                "host_fasta_bowtie2index": {
+                    "type": "string",
+                    "description": "Bowtie2 index directory corresponding to --host_fasta reference file for host contamination removal.",
+                    "help_text": "This parameter must be used in combination with --host_fasta, and should be a directory containing files from the output of `bowtie2-build`, i.e. files ending in `.bt2`"
+                },
                 "host_removal_verysensitive": {
                     "type": "boolean",
                     "description": "Use the `--very-sensitive` instead of the`--sensitive`setting for Bowtie 2 to map reads against the host genome."
