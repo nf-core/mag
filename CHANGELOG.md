@@ -9,9 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
+- [#664](https://github.com/nf-core/mag/pull/664) - Update GTDBTk to latest version, with updated column names, update GTDB to release 220 (by @dialvarezs)
+
 ### `Fixed`
 
 ### `Dependencies`
+
+| Tool   | Previous version | New version |
+| ------ | ---------------- | ----------- |
+| GTDBTk | 2.3.2            | 2.4.0       |
 
 ### `Deprecated`
 
