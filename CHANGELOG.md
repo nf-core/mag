@@ -7,8 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
+- [#665](https://github.com/nf-core/mag/pull/648) - Add support for supplying pre-made bowtie host reference index (requested by @simone-pignotti, added by @jfy133)
+
 ### `Changed`
 
+- [#664](https://github.com/nf-core/mag/pull/664) - Update GTDBTk to latest version, with updated column names, update GTDB to release 220 (by @dialvarezs)
 - [#666](https://github.com/nf-core/mag/pull/666) - Update SPAdes to version 4.0.0 (requested by @elsherbini, fix by @jfy133)
 
 ### `Fixed`
@@ -17,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Tool   | Previous version | New version |
 | ------ | ---------------- | ----------- |
+| GTDBTk | 2.3.2            | 2.4.0       |
 | SPAdes | 3.15.3           | 4.0.0       |
 
 ### `Deprecated`
