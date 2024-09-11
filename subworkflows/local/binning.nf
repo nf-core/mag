@@ -94,7 +94,7 @@ workflow BINNING {
                                     bams: [ meta, bams, bais ]
                             }
 
-        FASTA_BINNING_CONCOCT ( ch_concoct_input )
+        FASTA_BINNING_CONCOCT ( ch_concoct_input.bins, ch_concoct_input.bams )
         ch_final_bins_for_gunzip = ch_final_bins_for_gunzip.mix( FASTA_BINNING_CONCOCT.out.bins.transpose() )
         ch_binning_results_gzipped_final = ch_binning_results_gzipped_final.mix( FASTA_BINNING_CONCOCT.out.bins )
         ch_versions = ch_versions.mix(FASTA_BINNING_CONCOCT.out.versions)
@@ -102,10 +102,12 @@ workflow BINNING {
 
     // decide which unbinned fasta files to further filter, depending on which binners selected
     // NOTE: CONCOCT does not produce 'unbins' itself, therefore not included here.
-    if ( !params.skip_metabat2 & params.skip_maxbin2 ) {
+    if ( !params.skip_metabat2 && params.skip_maxbin2 ) {
         ch_input_splitfasta = METABAT2_METABAT2.out.unbinned
-    } else if ( params.skip_metabat2 & !params.skip_maxbin2 ) {
+    } else if ( params.skip_metabat2 && !params.skip_maxbin2 ) {
         ch_input_splitfasta = MAXBIN2.out.unbinned_fasta
+    } else if ( params.skip_metabat2 && params.skip_maxbin2 ) {
+        ch_input_splitfasta = Channel.empty()
     } else {
         ch_input_splitfasta = METABAT2_METABAT2.out.unbinned.mix(MAXBIN2.out.unbinned_fasta)
     }
@@ -116,11 +118,11 @@ workflow BINNING {
     ch_split_fasta_results_transposed = SPLIT_FASTA.out.unbinned.transpose()
     ch_versions = ch_versions.mix(SPLIT_FASTA.out.versions)
 
-    GUNZIP_BINS ( ch_final_bins_for_gunzip )
+    GUNZIP_BINS ( ch_final_bins_for_gunzip.dump(tag: 'final_bins') )
     ch_binning_results_gunzipped = GUNZIP_BINS.out.gunzip
         .groupTuple(by: 0)
 
-    GUNZIP_UNBINS ( ch_split_fasta_results_transposed )
+    GUNZIP_UNBINS ( ch_split_fasta_results_transposed.dump(tag: 'final_unbins') )
     ch_splitfasta_results_gunzipped = GUNZIP_UNBINS.out.gunzip
         .groupTuple(by: 0)
 
