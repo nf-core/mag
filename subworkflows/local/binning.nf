@@ -118,7 +118,7 @@ workflow BINNING {
     ch_split_fasta_results_transposed = SPLIT_FASTA.out.unbinned.transpose()
     ch_versions = ch_versions.mix(SPLIT_FASTA.out.versions)
 
-    GUNZIP_BINS ( ch_final_bins_for_gunzip.dump(tag: 'final_bins') )
+    GUNZIP_BINS ( ch_final_bins_for_gunzip )
     ch_binning_results_gunzipped = GUNZIP_BINS.out.gunzip
         .groupTuple(by: 0)
 
