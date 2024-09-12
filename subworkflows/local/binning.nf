@@ -122,7 +122,7 @@ workflow BINNING {
     ch_binning_results_gunzipped = GUNZIP_BINS.out.gunzip
         .groupTuple(by: 0)
 
-    GUNZIP_UNBINS ( ch_split_fasta_results_transposed.dump(tag: 'final_unbins') )
+    GUNZIP_UNBINS ( ch_split_fasta_results_transposed )
     ch_splitfasta_results_gunzipped = GUNZIP_UNBINS.out.gunzip
         .groupTuple(by: 0)
 
