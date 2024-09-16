@@ -124,7 +124,7 @@
                     },
                     "gtdbtk/classifywf": {
                         "branch": "master",
-                        "git_sha": "c44b5e99aea273adf455d8c40babeb3885083ff9",
+                        "git_sha": "3fb6803fd1cf5a63998216f4254d6d4e487fab21",
                         "installed_by": ["modules"]
                     },
                     "gunc/downloaddb": {
