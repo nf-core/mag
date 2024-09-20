@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Fixed`
 
 - [#667](https://github.com/nf-core/mag/pull/667) - Fix pipeline crashing if only CONCOCT selected during binning (reported and fixed by @jfy133)
+- [#672](https://github.com/nf-core/mag/pull/673) - Fix GTDB-Tk per-sample TSV files not being published in output directory (reported by @jhayer, fix by @jfy133)
 
 ### `Dependencies`
 
