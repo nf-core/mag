@@ -24,6 +24,7 @@ include { GTDBTK                          } from '../subworkflows/local/gtdbtk'
 include { ANCIENT_DNA_ASSEMBLY_VALIDATION } from '../subworkflows/local/ancient_dna'
 include { DOMAIN_CLASSIFICATION           } from '../subworkflows/local/domain_classification'
 include { DEPTHS                          } from '../subworkflows/local/depths'
+include { LR_PREPROCESSING                } from '../subworkflows/local/lr_preprocessing'
 
 //
 // MODULE: Installed directly from nf-core/modules
@@ -355,55 +356,15 @@ workflow MAG {
                                     Preprocessing and QC for long reads
     ================================================================================
     */
-    NANOPLOT_RAW (
-        ch_raw_long_reads
+
+    LR_PREPROCESSING (
+        ch_raw_long_reads,
+        ch_short_reads,
+        ch_nanolyse_db
     )
-    ch_versions = ch_versions.mix(NANOPLOT_RAW.out.versions.first())
 
-    ch_long_reads = ch_raw_long_reads
-                    .map {
-                        meta, reads ->
-                            def meta_new = meta - meta.subMap('run')
-                        [ meta_new, reads ]
-                    }
-
-    if ( !params.assembly_input ) {
-        if (!params.skip_adapter_trimming) {
-            PORECHOP_PORECHOP (
-                ch_raw_long_reads
-            )
-            ch_long_reads = PORECHOP_PORECHOP.out.reads
-            ch_versions = ch_versions.mix(PORECHOP_PORECHOP.out.versions.first())
-        }
-
-        if (!params.keep_lambda) {
-            NANOLYSE (
-                ch_long_reads,
-                ch_nanolyse_db
-            )
-            ch_long_reads = NANOLYSE.out.fastq
-            ch_versions = ch_versions.mix(NANOLYSE.out.versions.first())
-        }
-
-        // join long and short reads by sample name
-        ch_short_reads_tmp = ch_short_reads
-            .map { meta, sr -> [ meta.id, meta, sr ] }
-
-        ch_short_and_long_reads = ch_long_reads
-            .map { meta, lr -> [ meta.id, meta, lr ] }
-            .join(ch_short_reads_tmp, by: 0)
-            .map { id, meta_lr, lr, meta_sr, sr -> [ meta_lr, lr, sr[0], sr[1] ] }  // should not occur for single-end, since SPAdes (hybrid) does not support single-end
-
-        FILTLONG (
-            ch_short_and_long_reads
-        )
-        ch_long_reads = FILTLONG.out.reads
-        ch_versions = ch_versions.mix(FILTLONG.out.versions.first())
-
-        NANOPLOT_FILTERED (
-            ch_long_reads
-        )
-    }
+    ch_versions = ch_versions.mix(LR_PREPROCESSING.out.versions)
+    ch_long_reads = LR_PREPROCESSING.out.long_reads
 
     /*
     ================================================================================
