@@ -47,6 +47,7 @@ include { KRONA_KRONADB                                         } from '../modul
 include { KRONA_KTIMPORTTAXONOMY                                } from '../modules/nf-core/krona/ktimporttaxonomy/main'
 include { KRAKENTOOLS_KREPORT2KRONA as KREPORT2KRONA_CENTRIFUGE } from '../modules/nf-core/krakentools/kreport2krona/main'
 include { CAT_FASTQ                                             } from '../modules/nf-core/cat/fastq/main'
+include { MEGAHIT                                               } from '../modules/nf-core/megahit/main'
 include { SPADES as METASPADES                                  } from '../modules/nf-core/spades/main'
 include { SPADES as METASPADESHYBRID                            } from '../modules/nf-core/spades/main'
 include { GUNZIP as GUNZIP_ASSEMBLIES                           } from '../modules/nf-core/gunzip'
@@ -69,7 +70,6 @@ include { KRAKEN2                                             } from '../modules
 include { POOL_SINGLE_READS as POOL_SHORT_SINGLE_READS        } from '../modules/local/pool_single_reads'
 include { POOL_PAIRED_READS                                   } from '../modules/local/pool_paired_reads'
 include { POOL_SINGLE_READS as POOL_LONG_READS                } from '../modules/local/pool_single_reads'
-include { MEGAHIT                                             } from '../modules/local/megahit'
 include { QUAST                                               } from '../modules/local/quast'
 include { QUAST_BINS                                          } from '../modules/local/quast_bins'
 include { QUAST_BINS_SUMMARY                                  } from '../modules/local/quast_bins_summary'
@@ -611,7 +611,7 @@ workflow MAG {
 
         if (!params.skip_megahit){
             MEGAHIT ( ch_short_reads_grouped )
-            ch_megahit_assemblies = MEGAHIT.out.assembly
+            ch_megahit_assemblies = MEGAHIT.out.contigs
                 .map { meta, assembly ->
                     def meta_new = meta + [assembler: 'MEGAHIT']
                     [ meta_new, assembly ]
