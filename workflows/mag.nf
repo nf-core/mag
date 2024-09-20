@@ -634,7 +634,7 @@ workflow MAG {
                 ungzip: true
             }
 
-        GUNZIP_ASSEMBLYINPUT(ch_assemblies_split.gunzip)
+        GUNZIP_ASSEMBLYINPUT(ch_assemblies_split.gzipped)
         ch_versions = ch_versions.mix(GUNZIP_ASSEMBLYINPUT.out.versions)
 
         ch_assemblies = Channel.empty()
