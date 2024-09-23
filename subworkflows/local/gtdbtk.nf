@@ -90,6 +90,7 @@ workflow GTDBTK {
     GTDBTK_CLASSIFYWF (
         ch_filtered_bins.passed.groupTuple(),
         ch_db_for_gtdbtk,
+        params.gtdbtk_pplacer_useram ? false : true,
         gtdb_mash
     )
 
