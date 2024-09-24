@@ -6,8 +6,7 @@ include { NANOPLOT as NANOPLOT_RAW                              } from '../../mo
 include { NANOPLOT as NANOPLOT_FILTERED                         } from '../../modules/nf-core/nanoplot/main'
 include { NANOLYSE                                              } from '../../modules/nf-core/nanolyse/main'
 include { PORECHOP_ABI                                          } from '../../modules/nf-core/porechop/abi/main'
-include { FILTLONG                                              } from '../../modules/local/filtlong'
-
+include { FILTLONG                                              } from '../../modules/nf-core/filtlong'
 
 workflow LR_PREPROCESSING {
     take:
@@ -57,7 +56,7 @@ workflow LR_PREPROCESSING {
         ch_short_and_long_reads = ch_long_reads
             .map { meta, lr -> [ meta.id, meta, lr ] }
             .join(ch_short_reads_tmp, by: 0)
-            .map { id, meta_lr, lr, meta_sr, sr -> [ meta_lr, lr, sr[0], sr[1] ] }  // should not occur for single-end, since SPAdes (hybrid) does not support single-end
+            .map { id, meta_lr, lr, meta_sr, sr -> [ meta_lr, sr, lr ] }  // should not occur for single-end, since SPAdes (hybrid) does not support single-end
 
         FILTLONG (
             ch_short_and_long_reads
@@ -68,9 +67,10 @@ workflow LR_PREPROCESSING {
         NANOPLOT_FILTERED (
             ch_long_reads
         )
+
+        ch_versions = ch_versions.mix(NANOPLOT_FILTERED.out.versions.first())
     }
 
-    ch_versions = Channel.empty()
     emit:
     long_reads     = ch_long_reads
     versions    = ch_versions
