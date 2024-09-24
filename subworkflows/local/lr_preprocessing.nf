@@ -5,6 +5,7 @@
 include { NANOPLOT as NANOPLOT_RAW                              } from '../../modules/nf-core/nanoplot/main'
 include { NANOPLOT as NANOPLOT_FILTERED                         } from '../../modules/nf-core/nanoplot/main'
 include { NANOLYSE                                              } from '../../modules/nf-core/nanolyse/main'
+include { PORECHOP_PORECHOP                                     } from '../../modules/nf-core/porechop/porechop/main'
 include { PORECHOP_ABI                                          } from '../../modules/nf-core/porechop/abi/main'
 include { FILTLONG                                              } from '../../modules/nf-core/filtlong'
 
@@ -34,12 +35,24 @@ workflow LR_PREPROCESSING {
 
     if ( !params.assembly_input ) {
         if (!params.skip_adapter_trimming) {
-            PORECHOP_ABI (
-                ch_raw_long_reads
-            )
-            ch_long_reads = PORECHOP_ABI.out.reads
-            ch_versions = ch_versions.mix(PORECHOP_ABI.out.versions.first())
-            ch_multiqc_files = ch_multiqc_files.mix( PORECHOP_ABI.out.log )
+            if (params.longread_preprocessing_tools &&
+                params.longread_preprocessing_tools
+                    .split(',')
+                    .contains('porechop_abi')) {
+                PORECHOP_ABI (
+                    ch_raw_long_reads
+                )
+                ch_long_reads = PORECHOP_ABI.out.reads
+                ch_versions = ch_versions.mix(PORECHOP_ABI.out.versions.first())
+                ch_multiqc_files = ch_multiqc_files.mix( PORECHOP_ABI.out.log )
+            } else {
+                PORECHOP_PORECHOP (
+                    ch_raw_long_reads
+                )
+                ch_long_reads = PORECHOP_PORECHOP.out.reads
+                ch_versions = ch_versions.mix(PORECHOP_PORECHOP.out.versions.first())
+                ch_multiqc_files = ch_multiqc_files.mix( PORECHOP_PORECHOP.out.log )
+            }
         }
 
         if (!params.keep_lambda) {
