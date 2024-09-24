@@ -25,6 +25,8 @@ run_modules:
   - quast
   - kraken
   - prokka
+  - porechop
+  - filtlong
 
 ## Module order
 top_modules:
@@ -35,6 +37,7 @@ top_modules:
   - "fastp"
   - "adapterRemoval"
   - "porechop"
+  - "filtlong"
   - "fastqc":
       name: "FastQC: after preprocessing"
       info: "After trimming and, if requested, contamination removal."

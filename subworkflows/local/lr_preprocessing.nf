@@ -17,6 +17,7 @@ workflow LR_PREPROCESSING {
     main:
 
     ch_versions = Channel.empty()
+    ch_multiqc_files = Channel.empty()
 
     NANOPLOT_RAW (
         ch_raw_long_reads
@@ -38,6 +39,7 @@ workflow LR_PREPROCESSING {
             )
             ch_long_reads = PORECHOP_ABI.out.reads
             ch_versions = ch_versions.mix(PORECHOP_ABI.out.versions.first())
+            ch_multiqc_files = ch_multiqc_files.mix( PORECHOP_ABI.out.log )
         }
 
         if (!params.keep_lambda) {
@@ -63,6 +65,7 @@ workflow LR_PREPROCESSING {
         )
         ch_long_reads = FILTLONG.out.reads
         ch_versions = ch_versions.mix(FILTLONG.out.versions.first())
+        ch_multiqc_files = ch_multiqc_files.mix( FILTLONG.out.log )
 
         NANOPLOT_FILTERED (
             ch_long_reads
@@ -74,4 +77,5 @@ workflow LR_PREPROCESSING {
     emit:
     long_reads     = ch_long_reads
     versions    = ch_versions
+    multiqc_files = ch_multiqc_files
 }

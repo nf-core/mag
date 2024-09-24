@@ -996,6 +996,7 @@ workflow MAG {
     )
 
     ch_multiqc_files = ch_multiqc_files.mix(FASTQC_RAW.out.zip.collect{it[1]}.ifEmpty([]))
+    ch_multiqc_files = ch_multiqc_files.mix( LR_PREPROCESSING.out.multiqc_files.collect{it[1]}.ifEmpty([]) )
 
     if (!params.assembly_input) {
 
