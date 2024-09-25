@@ -37,4 +37,3 @@ process FILTLONG {
     END_VERSIONS
     """
 }
-
