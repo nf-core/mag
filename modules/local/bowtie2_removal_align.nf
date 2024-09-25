@@ -26,8 +26,12 @@ process BOWTIE2_REMOVAL_ALIGN {
     def save_ids = (args2.contains('--host_removal_save_ids')) ? "Y" : "N"
     if (!meta.single_end){
         """
+        INDEX=`find -L ./ -name "*.rev.1.bt2" | sed "s/\\.rev.1.bt2\$//"`
+        [ -z "\$INDEX" ] && INDEX=`find -L ./ -name "*.rev.1.bt2l" | sed "s/\\.rev.1.bt2l\$//"`
+        [ -z "\$INDEX" ] && echo "Bowtie2 index files not found" 1>&2 && exit 1
+
         bowtie2 -p ${task.cpus} \
-                -x ${index[0].getSimpleName()} \
+                -x \$INDEX \
                 -1 "${reads[0]}" -2 "${reads[1]}" \
                 $args \
                 --un-conc-gz ${prefix}.unmapped_%.fastq.gz \
