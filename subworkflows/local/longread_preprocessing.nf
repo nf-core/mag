@@ -1,5 +1,5 @@
 /*
- * LR_PREPROCESSING: Preprocessing and QC for long reads
+ * LONGREAD_PREPROCESSING: Preprocessing and QC for long reads
  */
 
 include { NANOPLOT as NANOPLOT_RAW                              } from '../../modules/nf-core/nanoplot/main'
@@ -9,7 +9,7 @@ include { PORECHOP_PORECHOP                                     } from '../../mo
 include { PORECHOP_ABI                                          } from '../../modules/nf-core/porechop/abi/main'
 include { FILTLONG                                              } from '../../modules/nf-core/filtlong'
 
-workflow LR_PREPROCESSING {
+workflow LONGREAD_PREPROCESSING {
     take:
     ch_raw_long_reads         // [ [meta] , fastq] (mandatory)
     ch_short_reads            // [ [meta] , fastq1, fastq2] (mandatory)

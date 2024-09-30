@@ -24,7 +24,7 @@ include { GTDBTK                          } from '../subworkflows/local/gtdbtk'
 include { ANCIENT_DNA_ASSEMBLY_VALIDATION } from '../subworkflows/local/ancient_dna'
 include { DOMAIN_CLASSIFICATION           } from '../subworkflows/local/domain_classification'
 include { DEPTHS                          } from '../subworkflows/local/depths'
-include { LR_PREPROCESSING                } from '../subworkflows/local/lr_preprocessing'
+include { LONGREAD_PREPROCESSING                } from '../subworkflows/local/longread_preprocessing'
 
 //
 // MODULE: Installed directly from nf-core/modules
@@ -358,14 +358,14 @@ workflow MAG {
     ================================================================================
     */
 
-    LR_PREPROCESSING (
+    LONGREAD_PREPROCESSING (
         ch_raw_long_reads,
         ch_short_reads,
         ch_nanolyse_db
     )
 
-    ch_versions = ch_versions.mix(LR_PREPROCESSING.out.versions)
-    ch_long_reads = LR_PREPROCESSING.out.long_reads
+    ch_versions = ch_versions.mix(LONGREAD_PREPROCESSING.out.versions)
+    ch_long_reads = LONGREAD_PREPROCESSING.out.long_reads
 
     /*
     ================================================================================
@@ -1002,7 +1002,7 @@ workflow MAG {
     )
 
     ch_multiqc_files = ch_multiqc_files.mix(FASTQC_RAW.out.zip.collect{it[1]}.ifEmpty([]))
-    ch_multiqc_files = ch_multiqc_files.mix( LR_PREPROCESSING.out.multiqc_files.collect{it[1]}.ifEmpty([]) )
+    ch_multiqc_files = ch_multiqc_files.mix( LONGREAD_PREPROCESSING.out.multiqc_files.collect{it[1]}.ifEmpty([]) )
 
     if (!params.assembly_input) {
 
