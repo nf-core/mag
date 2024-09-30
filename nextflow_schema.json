@@ -486,11 +486,12 @@
                     "type": "boolean",
                     "description": "Specify to save the resulting length filtered FASTQ files to --outdir."
                 },
-                "longread_preprocessing_tools": {
+                "longread_adaptertrimming_tool": {
                     "type": "string",
-                    "description": "Specify which long read preprocessing tools to use.",
-                    "help_text": "multiple tools can be specified separated by a comma",
-                    "pattern": "^((porechop_abi)?,?)*(?<!,)$"
+                    "description": "Specify which long read adaptertrimming tool to use.",
+                    "help_text": "porechop or porechop_abi",
+                    "enum": ["porechop", "porechop_abi"],
+                    "default": "porechop"
                 }
             }
         },

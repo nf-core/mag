@@ -35,17 +35,15 @@ workflow LONGREAD_PREPROCESSING {
 
     if ( !params.assembly_input ) {
         if (!params.skip_adapter_trimming) {
-            if (params.longread_preprocessing_tools &&
-                params.longread_preprocessing_tools
-                    .split(',')
-                    .contains('porechop_abi')) {
+            if (params.longread_adaptertrimming_tool &&
+                params.longread_adaptertrimming_tool == 'porechop_abi') {
                 PORECHOP_ABI (
                     ch_raw_long_reads
                 )
                 ch_long_reads = PORECHOP_ABI.out.reads
                 ch_versions = ch_versions.mix(PORECHOP_ABI.out.versions.first())
                 ch_multiqc_files = ch_multiqc_files.mix( PORECHOP_ABI.out.log )
-            } else {
+            } else if (params.longread_adaptertrimming_tool == 'porechop') {
                 PORECHOP_PORECHOP (
                     ch_raw_long_reads
                 )
