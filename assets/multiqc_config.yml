@@ -112,6 +112,9 @@ sp:
     fn_re: ".*[kraken2|centrifuge].*report.txt"
   quast:
     fn_re: "report.*.tsv"
+  filtlong:
+    num_lines: 20
+    fn_re: ".*_filtlong.log"
 
 ## File name cleaning
 extra_fn_clean_exts:
