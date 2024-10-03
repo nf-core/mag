@@ -3,13 +3,14 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## dev [unreleased]
+## 3.1.0 [2024-10-03]
 
 ### `Added`
 
 - [#665](https://github.com/nf-core/mag/pull/648) - Add support for supplying pre-made bowtie host reference index (requested by @simone-pignotti, added by @jfy133)
-- [#670](https://github.com/nf-core/mag/pull/670) - Added --gtdbtk_pplacer_useram to run GTDBTk in memory mode rather than write to disk (reported by @harper357, fixed by @jfy133)
+- [#670](https://github.com/nf-core/mag/pull/670) - Added `--gtdbtk_pplacer_useram` to run GTDBTk in memory mode rather than write to disk (requested by @harper357, fixed by @jfy133)
 - [#674](https://github.com/nf-core/mag/pull/674/files) - Added optional use of porechop-abi, instead of porechop, for long read adapter trimming (added by @muabnezor)
+
 
 ### `Changed`
 
@@ -33,7 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Deprecated`
 
-- [#670](https://github.com/nf-core/mag/pull/670) - Deprecated --gtdbtk_pplacer_scratch due to unintuitive usage (reported by harper357, fixed by @jfy133)
+- [#670](https://github.com/nf-core/mag/pull/670) - Deprecated `--gtdbtk_pplacer_scratch` due to unintuitive usage (reported by harper357, fixed by @jfy133)
 
 ## 3.0.3 [2024-08-27]
 
