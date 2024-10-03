@@ -8,15 +8,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Added`
 
 - [#665](https://github.com/nf-core/mag/pull/648) - Add support for supplying pre-made bowtie host reference index (requested by @simone-pignotti, added by @jfy133)
+- [#670](https://github.com/nf-core/mag/pull/670) - Added --gtdbtk_pplacer_useram to run GTDBTk in memory mode rather than write to disk (reported by @harper357, fixed by @jfy133)
 
 ### `Changed`
 
 - [#664](https://github.com/nf-core/mag/pull/664) - Update GTDBTk to latest version, with updated column names, update GTDB to release 220 (by @dialvarezs)
+- [#676](https://github.com/nf-core/mag/pull/676) - Added exit code 12 to valid SPAdes retry codes, due to OOM errors from spades-hammer (reported by @bawee, fix by @jfy133)
 - [#666](https://github.com/nf-core/mag/pull/666) - Update SPAdes to version 4.0.0 (requested by @elsherbini, fix by @jfy133)
 
 ### `Fixed`
 
 - [#667](https://github.com/nf-core/mag/pull/667) - Fix pipeline crashing if only CONCOCT selected during binning (reported and fixed by @jfy133)
+- [#670](https://github.com/nf-core/mag/pull/670) - Re-add missing GTDBTk parameters into GTDBTk module (reported by harper357, fixed by @jfy133)
 - [#672](https://github.com/nf-core/mag/pull/673) - Fix GTDB-Tk per-sample TSV files not being published in output directory (reported by @jhayer, fix by @jfy133)
 
 ### `Dependencies`
@@ -27,6 +30,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | SPAdes | 3.15.3           | 4.0.0       |
 
 ### `Deprecated`
+
+- [#670](https://github.com/nf-core/mag/pull/670) - Deprecated --gtdbtk_pplacer_scratch due to unintuitive usage (reported by harper357, fixed by @jfy133)
 
 ## 3.0.3 [2024-08-27]
 
