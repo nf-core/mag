@@ -22,7 +22,6 @@ workflow LONGREAD_PREPROCESSING {
     NANOPLOT_RAW (
         ch_raw_long_reads
     )
-
     ch_versions = ch_versions.mix(NANOPLOT_RAW.out.versions.first())
 
     ch_long_reads = ch_raw_long_reads
