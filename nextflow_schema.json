@@ -488,7 +488,7 @@
                 },
                 "longread_adaptertrimming_tool": {
                     "type": "string",
-                    "description": "Specify which long read adaptertrimming tool to use.",
+                    "description": "Specify which long read adapter trimming tool to use.",
                     "help_text": "porechop or porechop_abi",
                     "enum": ["porechop", "porechop_abi"],
                     "default": "porechop"
