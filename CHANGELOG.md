@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#664](https://github.com/nf-core/mag/pull/664) - Update GTDBTk to latest version, with updated column names, update GTDB to release 220 (by @dialvarezs)
 - [#676](https://github.com/nf-core/mag/pull/676) - Added exit code 12 to valid SPAdes retry codes, due to OOM errors from spades-hammer (reported by @bawee, fix by @jfy133)
-- [#666](https://github.com/nf-core/mag/pull/666) - Update SPAdes to version 4.0.0 (requested by @elsherbini, fix by @jfy133)
+- [#666](https://github.com/nf-core/mag/pull/666) - Update SPAdes to version 4.0.0, replace both METASPADES and MEGAHIT with official nf-core modules (requested by @elsherbini, fix by @jfy133)
 
 ### `Fixed`
 
