@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#665](https://github.com/nf-core/mag/pull/648) - Add support for supplying pre-made bowtie host reference index (requested by @simone-pignotti, added by @jfy133)
 - [#670](https://github.com/nf-core/mag/pull/670) - Added --gtdbtk_pplacer_useram to run GTDBTk in memory mode rather than write to disk (reported by @harper357, fixed by @jfy133)
-- Added optional use of porechop-abi, instead of porechop, for long read adapter trimming.
+- [#674](https://github.com/nf-core/mag/pull/674/files) - Added optional use of porechop-abi, instead of porechop, for long read adapter trimming (added by @muabnezor)
 
 ### `Changed`
 
