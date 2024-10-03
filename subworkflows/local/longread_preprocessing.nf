@@ -16,7 +16,6 @@ workflow LONGREAD_PREPROCESSING {
     ch_nanolyse_db            // [fasta]
 
     main:
-
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
 
