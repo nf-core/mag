@@ -84,7 +84,7 @@ workflow LONGREAD_PREPROCESSING {
     }
 
     emit:
-    long_reads     = ch_long_reads
-    versions    = ch_versions
+    long_reads    = ch_long_reads
+    versions      = ch_versions
     multiqc_files = ch_multiqc_files
 }
