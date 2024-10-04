@@ -383,6 +383,11 @@
                     "description": "Fasta reference file for host contamination removal.",
                     "help_text": "This parameter is mutually exclusive with `--host_genome`. The reference can be masked. Host read removal is done with Bowtie2."
                 },
+                "host_fasta_bowtie2index": {
+                    "type": "string",
+                    "description": "Bowtie2 index directory corresponding to `--host_fasta` reference file for host contamination removal.",
+                    "help_text": "This parameter must be used in combination with `--host_fasta`, and should be a directory containing files from the output of `bowtie2-build`, i.e. files ending in `.bt2`"
+                },
                 "host_removal_verysensitive": {
                     "type": "boolean",
                     "description": "Use the `--very-sensitive` instead of the`--sensitive`setting for Bowtie 2 to map reads against the host genome."
@@ -537,7 +542,7 @@
                 "gtdb_db": {
                     "type": "string",
                     "description": "Specify the location of a GTDBTK database. Can be either an uncompressed directory or a `.tar.gz` archive. If not specified will be downloaded for you when GTDBTK or binning QC is not skipped.",
-                    "default": "https://data.ace.uq.edu.au/public/gtdb/data/releases/release214/214.1/auxillary_files/gtdbtk_r214_data.tar.gz"
+                    "default": "https://data.ace.uq.edu.au/public/gtdb/data/releases/release220/220.0/auxillary_files/gtdbtk_package/full_package/gtdbtk_r220_data.tar.gz"
                 },
                 "gtdb_mash": {
                     "type": "string",
@@ -579,11 +584,11 @@
                     "description": "Number of CPUs used for the by GTDB-Tk run tool pplacer.",
                     "help_text": "A low number of CPUs helps to reduce the memory required/reported by GTDB-Tk. See also the [GTDB-Tk documentation](https://ecogenomics.github.io/GTDBTk/faq.html#gtdb-tk-reaches-the-memory-limit-pplacer-crashes)."
                 },
-                "gtdbtk_pplacer_scratch": {
+                "gtdbtk_pplacer_useram": {
                     "type": "boolean",
-                    "default": true,
-                    "description": "Reduce GTDB-Tk memory consumption by running pplacer in a setting writing to disk.",
-                    "help_text": "Will be slower. Set to `false` to turn this off."
+                    "default": false,
+                    "description": "Speed up pplacer step of GTDB-Tk by loading to memory.",
+                    "help_text": "Will be faster than writing to disk (default setting), however at the expense of much larger memory (RAM) requirements for GDTBTK/CLASSIFY."
                 },
                 "genomad_db": {
                     "type": "string",
