@@ -3,14 +3,35 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## dev [unreleased]
+
+### `Added`
+
+- [#674](https://github.com/nf-core/mag/pull/674/files) - Added `--longread_adaptertrimming_tool` Where user can chose between porechop_abi (default) and porechop (added by @muabnezor)
+
+### `Changed`
+
+- [#674](https://github.com/nf-core/mag/pull/674/files) - Changed to porechop-abi as default adapter trimming tool for long reads. User can still use porechop if prefered.
+
+### `Fixed`
+
+- [#674](https://github.com/nf-core/mag/pull/674/files) - Make longread preprocessing a subworkflow (added by @muabnezor)
+- [#674](https://github.com/nf-core/mag/pull/674/files) - Add porechop and filtlong logs to multiqc (added by @muabnezor)
+- [#674](https://github.com/nf-core/mag/pull/674/files) - Change local filtlong module to the official nf-core/filtlong module (added by @muabnezor)
+
+### `Dependencies`
+
+| Tool         | Previous version | New version |
+| ------------ | ---------------- | ----------- |
+| Porechop_ABI |                  | 0.5.0       |
+| Filtlong     | 0.2.0            | 0.2.1       |
+
 ## 3.1.0 [2024-10-03]
 
 ### `Added`
 
 - [#665](https://github.com/nf-core/mag/pull/648) - Add support for supplying pre-made bowtie host reference index (requested by @simone-pignotti, added by @jfy133)
 - [#670](https://github.com/nf-core/mag/pull/670) - Added `--gtdbtk_pplacer_useram` to run GTDBTk in memory mode rather than write to disk (requested by @harper357, fixed by @jfy133)
-- [#674](https://github.com/nf-core/mag/pull/674/files) - Added optional use of porechop-abi, instead of porechop, for long read adapter trimming (added by @muabnezor)
-
 
 ### `Changed`
 
@@ -22,9 +43,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#667](https://github.com/nf-core/mag/pull/667) - Fix pipeline crashing if only CONCOCT selected during binning (reported and fixed by @jfy133)
 - [#670](https://github.com/nf-core/mag/pull/670) - Re-add missing GTDBTk parameters into GTDBTk module (reported by harper357, fixed by @jfy133)
 - [#672](https://github.com/nf-core/mag/pull/673) - Fix GTDB-Tk per-sample TSV files not being published in output directory (reported by @jhayer, fix by @jfy133)
-- [#674](https://github.com/nf-core/mag/pull/674/files) -  Make longread preprocessing a subworkflow  (added by @muabnezor)
-- [#674](https://github.com/nf-core/mag/pull/674/files) -  Add porechop and filtlong logs to multiqc  (added by @muabnezor)
-- [#674](https://github.com/nf-core/mag/pull/674/files) -  Change local filtlong module to the official nf-core/filtlong module (added by @muabnezor)
 
 ### `Dependencies`
 
