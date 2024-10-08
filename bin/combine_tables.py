@@ -188,6 +188,7 @@ def main(args=None):
             how="outer",
         )
 
+    results.sort_values("bin", inplace=True)
     results.to_csv(args.out, sep="\t")
 
 
