@@ -90,6 +90,7 @@ Other code contributors include:
 - [Jim Downie](https://github.com/prototaxites)
 - [Phil Palmer](https://github.com/PhilPalmer)
 - [@willros](https://github.com/willros)
+- [Adam Rosenbaum](https://github.com/muabnezor)
 
 Long read processing was inspired by [caspargross/HybridAssembly](https://github.com/caspargross/HybridAssembly) written by Caspar Gross [@caspargross](https://github.com/caspargross)
 

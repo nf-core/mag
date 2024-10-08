@@ -7,11 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
+- [#674](https://github.com/nf-core/mag/pull/674/files) - Added `--longread_adaptertrimming_tool` Where user can chose between porechop_abi (default) and porechop (added by @muabnezor)
+
 ### `Changed`
+
+- [#674](https://github.com/nf-core/mag/pull/674/files) - Changed to porechop-abi as default adapter trimming tool for long reads. User can still use porechop if prefered.
 
 ### `Fixed`
 
+- [#674](https://github.com/nf-core/mag/pull/674/files) - Make longread preprocessing a subworkflow (added by @muabnezor)
+- [#674](https://github.com/nf-core/mag/pull/674/files) - Add porechop and filtlong logs to multiqc (added by @muabnezor)
+- [#674](https://github.com/nf-core/mag/pull/674/files) - Change local filtlong module to the official nf-core/filtlong module (added by @muabnezor)
+
 ### `Dependencies`
+
+| Tool         | Previous version | New version |
+| ------------ | ---------------- | ----------- |
+| Porechop_ABI |                  | 0.5.0       |
+| Filtlong     | 0.2.0            | 0.2.1       |
 
 ### `Deprecated`
 
