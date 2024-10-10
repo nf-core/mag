@@ -760,12 +760,14 @@ Summary tool-specific plots and tables of following tools are currently displaye
 The pipeline can also generate input files for the following downstream
 pipelines:
 
+- [nf-core/funcscan](https://nf-co.re/funcscan)
 - [nf-core/taxprofiler](https://nf-co.re/taxprofiler)
 
 <details markdown="1">
 <summary>Output files</summary>
 
 - `downstream_samplesheets/`
+  - `funcscan.csv`: Filled out nf-core/funcscan `--input` csv with absolute paths to the assembly FASTA files produced by MAG (MEGAHIT, SPAdes, SPAdesHybrid)
   - `taxprofiler.csv`: Partially filled out nf-core/taxprofiler preprocessed short reads csv with paths to database directories or `.fast1.gz` relative to the results directory
 
 </details>

@@ -37,6 +37,19 @@ workflow GENERATE_DOWNSTREAM_SAMPLESHEETS {
             .tap{ ch_header }
     }
 
+    if ( params.generate_pipeline_samplesheets == 'funcscan' ) {
+        format = 'csv'
+        format_sep = ','
+        ch_list_for_samplesheet = ch_assemblies
+                                    .map {
+                                        meta, filename ->
+                                            def sample = meta.id
+                                            def fasta  = file(params.outdir).toString() + '/Assembly/' + meta.assembler + '/' + filename.getName()
+                                        [ sample: sample, fasta: fasta ]
+                                    }
+                                    .tap{ ch_header }
+    }
+
     // Constructs the header string and then the strings of each row, and
     // finally concatenates for saving.
     ch_header
