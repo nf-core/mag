@@ -1,18 +1,13 @@
 //
-// Subworkflow with functionality specific to the nf-core/createtaxdb pipeline
+// Subworkflow with functionality specific to the nf-core/mag pipeline
 //
 
-workflow GENERATE_DOWNSTREAM_SAMPLESHEETS {
+workflow SAMPLESHEET_TAXPROFILER {
     take:
-    ch_input
-    downstreampipeline_name
+    ch_reads
 
     main:
-    format     = 'csv' // most common format in nf-core
-    format_sep = ','
-    // Make your samplesheet channel construct here depending on your downstream pipelines
-    if ( downstreampipeline_name == 'taxprofiler' && params.save_clipped_reads ) { // save_clipped_reads must be true
-        def fastq_rel_path = '/'
+    def fastq_rel_path = '/'
         if (params.bbnorm) {
             fastq_rel_path = '/bbmap/bbnorm/'
         } else if (!params.keep_phix) {
@@ -24,7 +19,7 @@ workflow GENERATE_DOWNSTREAM_SAMPLESHEETS {
         else if (!params.skip_clipping) {
             fastq_rel_path = '/QC_shortreads/fastp/'
         }
-        ch_list_for_samplesheet = ch_input
+        ch_list_for_samplesheet = ch_reads
             .map {
                 meta, fastq ->
                     def sample              = meta.id
@@ -36,29 +31,56 @@ workflow GENERATE_DOWNSTREAM_SAMPLESHEETS {
                 [ sample: sample, run_accession: run_accession, instrument_platform: instrument_platform, fastq_1: fastq_1, fastq_2: fastq_2, fasta: fasta ]
             }
             .tap{ ch_header }
-    }
 
-    if ( downstreampipeline_name == 'funcscan' ) {
-        ch_list_for_samplesheet = ch_input
-                                    .map {
-                                        meta, filename ->
-                                            def sample = meta.id
-                                            def fasta  = file(params.outdir).toString() + '/Assembly/' + meta.assembler + '/' + filename.getName()
-                                        [ sample: sample, fasta: fasta ]
-                                    }
-                                    .tap{ ch_header }
-    }
-
-    // Constructs the header string and then the strings of each row, and
-    // finally concatenates for saving.
     ch_header
         .first()
-        .map{ it.keySet().join(format_sep) }
-        .concat( ch_list_for_samplesheet.map{ it.values().join(format_sep) })
+        .map{ it.keySet().join(",") }
+        .concat( ch_list_for_samplesheet.map{ it.values().join(",") })
         .collectFile(
-            name:"${params.outdir}/downstream_samplesheet/${downstreampipeline_name}.${format}",
+            name:"${params.outdir}/downstream_samplesheet/taxprofiler.csv",
             newLine: true,
             sort: false
         )
+}
 
+workflow SAMPLESHEET_FUNCSCAN {
+    take:
+    ch_assemblies
+
+    main:
+    ch_list_for_samplesheet = ch_assemblies
+                            .map {
+                                meta, filename ->
+                                    def sample = meta.id
+                                    def fasta  = file(params.outdir).toString() + '/Assembly/' + meta.assembler + '/' + filename.getName()
+                                [ sample: sample, fasta: fasta ]
+                            }
+                            .tap{ ch_header }
+
+    ch_header
+        .first()
+        .map{ it.keySet().join(",") }
+        .concat( ch_list_for_samplesheet.map{ it.values().join(",") })
+        .collectFile(
+            name:"${params.outdir}/downstream_samplesheet/funcscan.csv",
+            newLine: true,
+            sort: false
+        )
+}
+
+workflow GENERATE_DOWNSTREAM_SAMPLESHEETS {
+    take:
+    ch_reads
+    ch_assemblies
+
+    main:
+    def downstreampipeline_names = params.generate_pipeline_samplesheets.split(",")
+
+    if ( downstreampipeline_names.contains('taxprofiler') && params.save_clipped_reads ) { // save_clipped_reads must be true
+        SAMPLESHEET_TAXPROFILER(ch_reads)
+    }
+
+    if ( downstreampipeline_names.contains('funcscan') ) {
+        SAMPLESHEET_FUNCSCAN(ch_assemblies)
+    }
 }

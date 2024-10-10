@@ -95,8 +95,8 @@
                     "fa_icon": "fas fa-toggle-on"
                 },
                 "generate_pipeline_samplesheets": {
-                    "type": "array",
-                    "default": ["funcscan","taxprofiler"],
+                    "type": "string",
+                    "default": "funcscan,taxprofiler",
                     "description": "Specify which pipeline to generate a samplesheet for.",
                     "fa_icon": "fas fa-toolbox"
                 }

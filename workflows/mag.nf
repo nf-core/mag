@@ -13,19 +13,18 @@ include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_mag_
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { BINNING_PREPARATION                                                              } from '../subworkflows/local/binning_preparation'
-include { BINNING                                                                          } from '../subworkflows/local/binning'
-include { BINNING_REFINEMENT                                                               } from '../subworkflows/local/binning_refinement'
-include { BUSCO_QC                                                                         } from '../subworkflows/local/busco_qc'
-include { VIRUS_IDENTIFICATION                                                             } from '../subworkflows/local/virus_identification'
-include { CHECKM_QC                                                                        } from '../subworkflows/local/checkm_qc'
-include { GUNC_QC                                                                          } from '../subworkflows/local/gunc_qc'
-include { GTDBTK                                                                           } from '../subworkflows/local/gtdbtk'
-include { ANCIENT_DNA_ASSEMBLY_VALIDATION                                                  } from '../subworkflows/local/ancient_dna'
-include { DOMAIN_CLASSIFICATION                                                            } from '../subworkflows/local/domain_classification'
-include { DEPTHS                                                                           } from '../subworkflows/local/depths'
-include { GENERATE_DOWNSTREAM_SAMPLESHEETS as GENERATE_DOWNSTREAM_SAMPLESHEETS_FUNCSCAN    } from '../subworkflows/local/generate_downstream_samplesheets/main.nf'
-include { GENERATE_DOWNSTREAM_SAMPLESHEETS as GENERATE_DOWNSTREAM_SAMPLESHEETS_TAXPROFILER } from '../subworkflows/local/generate_downstream_samplesheets/main.nf'
+include { BINNING_PREPARATION              } from '../subworkflows/local/binning_preparation'
+include { BINNING                          } from '../subworkflows/local/binning'
+include { BINNING_REFINEMENT               } from '../subworkflows/local/binning_refinement'
+include { BUSCO_QC                         } from '../subworkflows/local/busco_qc'
+include { VIRUS_IDENTIFICATION             } from '../subworkflows/local/virus_identification'
+include { CHECKM_QC                        } from '../subworkflows/local/checkm_qc'
+include { GUNC_QC                          } from '../subworkflows/local/gunc_qc'
+include { GTDBTK                           } from '../subworkflows/local/gtdbtk'
+include { ANCIENT_DNA_ASSEMBLY_VALIDATION  } from '../subworkflows/local/ancient_dna'
+include { DOMAIN_CLASSIFICATION            } from '../subworkflows/local/domain_classification'
+include { DEPTHS                           } from '../subworkflows/local/depths'
+include { GENERATE_DOWNSTREAM_SAMPLESHEETS } from '../subworkflows/local/generate_downstream_samplesheets/main.nf'
 
 //
 // MODULE: Installed directly from nf-core/modules
@@ -1007,24 +1006,8 @@ workflow MAG {
     //
     // Samplesheet generation
     //
-    if ( params.generate_pipeline_samplesheets.contains("taxprofiler") ) {
-        ch_input_for_samplesheet = Channel
-                                .empty()
-                                .mix( ch_short_reads_assembly )
-
-        if ( params.generate_downstream_samplesheets ) {
-            GENERATE_DOWNSTREAM_SAMPLESHEETS_TAXPROFILER ( [ ch_input_for_samplesheet, "taxprofiler" ] )
-        }
-    }
-
-    if ( params.generate_pipeline_samplesheets.contains("funcscan") ) {
-        ch_input_for_samplesheet = Channel
-                                .empty()
-                                .mix( ch_assemblies )
-
-        if ( params.generate_downstream_samplesheets ) {
-            GENERATE_DOWNSTREAM_SAMPLESHEETS_FUNCSCAN ( [ ch_input_for_samplesheet, "funcscan" ] )
-        }
+    if ( params.generate_downstream_samplesheets ) {
+        GENERATE_DOWNSTREAM_SAMPLESHEETS ( ch_short_reads_assembly, ch_assemblies )
     }
 
     //
