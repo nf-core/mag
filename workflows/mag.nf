@@ -357,8 +357,6 @@ workflow MAG {
                         }
     }
 
-    // TODO remove ch_short_reads_assembly.view()
-
     /*
     ================================================================================
                                     Preprocessing and QC for long reads
@@ -1010,18 +1008,10 @@ workflow MAG {
     //
     ch_input_for_samplesheet = Channel
                             .empty()
-                            // TODO
-                            // .mix(
-                            //         ch_centrifuge_output.map     {meta, db -> [ meta + [tool: "centrifuge"]     , db ]},
-                            //         ch_diamond_output.map        {meta, db -> [ meta + [tool: "diamond"]        , db ]},
-                            //         ch_kaiju_output.map          {meta, db -> [ meta + [tool: "kaiju"]          , db ]},
-                            //         ch_kraken2_bracken_output.map{meta, db -> [ meta + [tool: "kraken2_bracken"], db ]},
-                            //         ch_krakenuniq_output.map     {meta, db -> [ meta + [tool: "krakenuniq"]     , db ]},
-                            //         ch_malt_output.map           {meta, db -> [ meta + [tool: "malt"]           , db ]}
-                            //     )
-                            //     .view()
+                            .mix( ch_short_reads_assembly )
+                            .view()
 
-    if ( params.generate_samplesheet ) {
+    if ( params.generate_downstream_samplesheets ) {
         GENERATE_DOWNSTREAM_SAMPLESHEETS ( ch_input_for_samplesheet )
     }
 

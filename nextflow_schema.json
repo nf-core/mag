@@ -83,6 +83,25 @@
                 }
             }
         },
+        "generate_samplesheet_options": {
+            "title": "Downstream pipeline samplesheet generation options",
+            "type": "object",
+            "fa_icon": "fas fa-align-justify",
+            "description": "Options for generating input samplesheets for complementary downstream pipelines.",
+            "properties": {
+                "generate_downstream_samplesheets": {
+                    "type": "boolean",
+                    "description": "Turn on generation of samplesheets for downstream pipelines.",
+                    "fa_icon": "fas fa-toggle-on"
+                },
+                "generate_pipeline_samplesheets": {
+                    "type": "string",
+                    "default": "taxprofiler",
+                    "description": "Specify which pipeline to generate a samplesheet for.",
+                    "fa_icon": "fas fa-toolbox"
+                }
+            }
+        },
         "institutional_config_options": {
             "title": "Institutional config options",
             "type": "object",
@@ -913,6 +932,9 @@
         },
         {
             "$ref": "#/definitions/reference_genome_options"
+        },
+        {
+            "$ref": "#/definitions/generate_samplesheet_options"
         },
         {
             "$ref": "#/definitions/institutional_config_options"

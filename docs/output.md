@@ -707,6 +707,9 @@ Because of aDNA damage, _de novo_ assemblers sometimes struggle to call a correc
 
 </details>
 
+The pipeline can also generate downstream pipeline input samplesheets.
+These are stored in `<outdir>/downstream_samplesheets`.
+
 ### MultiQC
 
 <details markdown="1">
@@ -751,3 +754,23 @@ Summary tool-specific plots and tables of following tools are currently displaye
 </details>
 
 [Nextflow](https://www.nextflow.io/docs/latest/tracing.html) provides excellent functionality for generating various reports relevant to the running and execution of the pipeline. This will allow you to troubleshoot errors with the running of the pipeline, and also provide you with other information such as launch commands, run times and resource usage.
+
+### Downstream samplesheets
+
+The pipeline can also generate input files for the following downstream
+pipelines:
+
+- [nf-core/taxprofiler](https://nf-co.re/taxprofiler)
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `downstream_samplesheets/`
+  - `taxprofiler.csv`: Partially filled out nf-core/taxprofiler preprocessed short reads csv with paths to database directories or `.fast1.gz` relative to the results directory
+
+</details>
+
+:::warning
+Any generated downstream samplesheet is provided as 'best effort' and are not guaranteed to work straight out of the box!
+They may not be complete (e.g. some columns may need to be manually filled in).
+:::
