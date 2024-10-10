@@ -4,13 +4,14 @@
 
 workflow GENERATE_DOWNSTREAM_SAMPLESHEETS {
     take:
-    ch_reads
+    ch_input
+    downstreampipeline_name
 
     main:
     format     = 'csv' // most common format in nf-core
     format_sep = ','
     // Make your samplesheet channel construct here depending on your downstream pipelines
-    if ( params.generate_pipeline_samplesheets == 'taxprofiler' && params.save_clipped_reads ) { // save_clipped_reads must be true
+    if ( downstreampipeline_name == 'taxprofiler' && params.save_clipped_reads ) { // save_clipped_reads must be true
         def fastq_rel_path = '/'
         if (params.bbnorm) {
             fastq_rel_path = '/bbmap/bbnorm/'
@@ -23,7 +24,7 @@ workflow GENERATE_DOWNSTREAM_SAMPLESHEETS {
         else if (!params.skip_clipping) {
             fastq_rel_path = '/QC_shortreads/fastp/'
         }
-        ch_list_for_samplesheet = ch_reads
+        ch_list_for_samplesheet = ch_input
             .map {
                 meta, fastq ->
                     def sample              = meta.id
@@ -37,10 +38,8 @@ workflow GENERATE_DOWNSTREAM_SAMPLESHEETS {
             .tap{ ch_header }
     }
 
-    if ( params.generate_pipeline_samplesheets == 'funcscan' ) {
-        format = 'csv'
-        format_sep = ','
-        ch_list_for_samplesheet = ch_assemblies
+    if ( downstreampipeline_name == 'funcscan' ) {
+        ch_list_for_samplesheet = ch_input
                                     .map {
                                         meta, filename ->
                                             def sample = meta.id
@@ -57,7 +56,7 @@ workflow GENERATE_DOWNSTREAM_SAMPLESHEETS {
         .map{ it.keySet().join(format_sep) }
         .concat( ch_list_for_samplesheet.map{ it.values().join(format_sep) })
         .collectFile(
-            name:"${params.outdir}/downstream_samplesheet/${params.generate_pipeline_samplesheets}.${format}",
+            name:"${params.outdir}/downstream_samplesheet/${downstreampipeline_name}.${format}",
             newLine: true,
             sort: false
         )

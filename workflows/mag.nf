@@ -1007,25 +1007,25 @@ workflow MAG {
     //
     // Samplesheet generation
     //
-    // if ( params.generate_pipeline_samplesheets.contains("taxprofiler") ) {
+    if ( params.generate_pipeline_samplesheets.contains("taxprofiler") ) {
         ch_input_for_samplesheet = Channel
                                 .empty()
                                 .mix( ch_short_reads_assembly )
 
         if ( params.generate_downstream_samplesheets ) {
-            GENERATE_DOWNSTREAM_SAMPLESHEETS_TAXPROFILER ( ch_input_for_samplesheet )
+            GENERATE_DOWNSTREAM_SAMPLESHEETS_TAXPROFILER ( [ ch_input_for_samplesheet, "taxprofiler" ] )
         }
-    // }
+    }
 
-    // if ( params.generate_pipeline_samplesheets.contains("funcscan") ) {
+    if ( params.generate_pipeline_samplesheets.contains("funcscan") ) {
         ch_input_for_samplesheet = Channel
                                 .empty()
                                 .mix( ch_assemblies )
 
         if ( params.generate_downstream_samplesheets ) {
-            GENERATE_DOWNSTREAM_SAMPLESHEETS_FUNCSCAN ( ch_input_for_samplesheet )
+            GENERATE_DOWNSTREAM_SAMPLESHEETS_FUNCSCAN ( [ ch_input_for_samplesheet, "funcscan" ] )
         }
-    // }
+    }
 
     //
     // Collate and save software versions
