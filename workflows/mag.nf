@@ -1009,7 +1009,6 @@ workflow MAG {
     ch_input_for_samplesheet = Channel
                             .empty()
                             .mix( ch_short_reads_assembly )
-                            .view()
 
     if ( params.generate_downstream_samplesheets ) {
         GENERATE_DOWNSTREAM_SAMPLESHEETS ( ch_input_for_samplesheet )
