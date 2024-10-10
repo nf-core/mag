@@ -13,17 +13,18 @@ include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_mag_
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { BINNING_PREPARATION             } from '../subworkflows/local/binning_preparation'
-include { BINNING                         } from '../subworkflows/local/binning'
-include { BINNING_REFINEMENT              } from '../subworkflows/local/binning_refinement'
-include { BUSCO_QC                        } from '../subworkflows/local/busco_qc'
-include { VIRUS_IDENTIFICATION            } from '../subworkflows/local/virus_identification'
-include { CHECKM_QC                       } from '../subworkflows/local/checkm_qc'
-include { GUNC_QC                         } from '../subworkflows/local/gunc_qc'
-include { GTDBTK                          } from '../subworkflows/local/gtdbtk'
-include { ANCIENT_DNA_ASSEMBLY_VALIDATION } from '../subworkflows/local/ancient_dna'
-include { DOMAIN_CLASSIFICATION           } from '../subworkflows/local/domain_classification'
-include { DEPTHS                          } from '../subworkflows/local/depths'
+include { BINNING_PREPARATION              } from '../subworkflows/local/binning_preparation'
+include { BINNING                          } from '../subworkflows/local/binning'
+include { BINNING_REFINEMENT               } from '../subworkflows/local/binning_refinement'
+include { BUSCO_QC                         } from '../subworkflows/local/busco_qc'
+include { VIRUS_IDENTIFICATION             } from '../subworkflows/local/virus_identification'
+include { CHECKM_QC                        } from '../subworkflows/local/checkm_qc'
+include { GUNC_QC                          } from '../subworkflows/local/gunc_qc'
+include { GTDBTK                           } from '../subworkflows/local/gtdbtk'
+include { ANCIENT_DNA_ASSEMBLY_VALIDATION  } from '../subworkflows/local/ancient_dna'
+include { DOMAIN_CLASSIFICATION            } from '../subworkflows/local/domain_classification'
+include { DEPTHS                           } from '../subworkflows/local/depths'
+include { GENERATE_DOWNSTREAM_SAMPLESHEETS } from '../subworkflows/local/generate_downstream_samplesheets/main.nf'
 
 //
 // MODULE: Installed directly from nf-core/modules
@@ -355,6 +356,8 @@ workflow MAG {
                             [ meta_new, reads ]
                         }
     }
+
+    // TODO remove ch_short_reads_assembly.view()
 
     /*
     ================================================================================
@@ -1000,6 +1003,26 @@ workflow MAG {
             METAEUK_EASYPREDICT (ch_bins_for_metaeuk, ch_metaeuk_db)
             ch_versions = ch_versions.mix(METAEUK_EASYPREDICT.out.versions)
         }
+    }
+
+    //
+    // Samplesheet generation
+    //
+    ch_input_for_samplesheet = Channel
+                            .empty()
+                            // TODO
+                            // .mix(
+                            //         ch_centrifuge_output.map     {meta, db -> [ meta + [tool: "centrifuge"]     , db ]},
+                            //         ch_diamond_output.map        {meta, db -> [ meta + [tool: "diamond"]        , db ]},
+                            //         ch_kaiju_output.map          {meta, db -> [ meta + [tool: "kaiju"]          , db ]},
+                            //         ch_kraken2_bracken_output.map{meta, db -> [ meta + [tool: "kraken2_bracken"], db ]},
+                            //         ch_krakenuniq_output.map     {meta, db -> [ meta + [tool: "krakenuniq"]     , db ]},
+                            //         ch_malt_output.map           {meta, db -> [ meta + [tool: "malt"]           , db ]}
+                            //     )
+                            //     .view()
+
+    if ( params.generate_samplesheet ) {
+        GENERATE_DOWNSTREAM_SAMPLESHEETS ( ch_input_for_samplesheet )
     }
 
     //
