@@ -7,13 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
+- [#674](https://github.com/nf-core/mag/pull/674) - Added `--longread_adaptertrimming_tool` Where user can chose between porechop_abi (default) and porechop (added by @muabnezor)
+
 ### `Changed`
+
+- [#674](https://github.com/nf-core/mag/pull/674) - Changed to porechop-abi as default adapter trimming tool for long reads. User can still use porechop if preferred (added by @muabnezor)
 
 ### `Fixed`
 
+- [#674](https://github.com/nf-core/mag/pull/674) - Make longread preprocessing a subworkflow (added by @muabnezor)
+- [#674](https://github.com/nf-core/mag/pull/674) - Add porechop and filtlong logs to multiqc (added by @muabnezor)
+- [#674](https://github.com/nf-core/mag/pull/674) - Change local filtlong module to the official nf-core/filtlong module (added by @muabnezor)
 - [#690](https://github.com/nf-core/mag/pull/690) - MaxBin2 is using the abundance information from different samples now as expected (reported by @uel3 and fixed by @d4straub)
 
 ### `Dependencies`
+
+| Tool         | Previous version | New version |
+| ------------ | ---------------- | ----------- |
+| Porechop_ABI |                  | 0.5.0       |
+| Filtlong     | 0.2.0            | 0.2.1       |
 
 ### `Deprecated`
 

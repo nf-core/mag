@@ -25,6 +25,8 @@ run_modules:
   - quast
   - kraken
   - prokka
+  - porechop
+  - filtlong
 
 ## Module order
 top_modules:
@@ -35,6 +37,7 @@ top_modules:
   - "fastp"
   - "adapterRemoval"
   - "porechop"
+  - "filtlong"
   - "fastqc":
       name: "FastQC: after preprocessing"
       info: "After trimming and, if requested, contamination removal."
@@ -109,6 +112,9 @@ sp:
     fn_re: ".*[kraken2|centrifuge].*report.txt"
   quast:
     fn_re: "report.*.tsv"
+  filtlong:
+    num_lines: 20
+    fn_re: ".*_filtlong.log"
 
 ## File name cleaning
 extra_fn_clean_exts:
