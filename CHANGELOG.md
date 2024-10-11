@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
+- [#690](https://github.com/nf-core/mag/pull/690) - MaxBin2 is using the abundance information from different samples now as expected (reported by @uel3 and fixed by @d4straub)
+
 ### `Dependencies`
 
 ### `Deprecated`
