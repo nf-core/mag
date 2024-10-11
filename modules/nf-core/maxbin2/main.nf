@@ -18,8 +18,8 @@ process MAXBIN2 {
     tuple val(meta), path("*.noclass.gz") , emit: unbinned_fasta
     tuple val(meta), path("*.tooshort.gz"), emit: tooshort_fasta
     tuple val(meta), path("*_bin.tar.gz") , emit: marker_bins , optional: true
-    tuple val(meta), path("*.abundance")  , emit: marker_genes, optional: true
-    tuple val(meta), path("*_gene.tar.gz"), emit: abundance   , optional: true
+    tuple val(meta), path("*.abundance")  , emit: abundance   , optional: true
+    tuple val(meta), path("*_gene.tar.gz"), emit: marker_genes, optional: true
     path "versions.yml"                   , emit: versions
 
     when:
