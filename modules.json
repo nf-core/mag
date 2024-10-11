@@ -172,6 +172,11 @@
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
                         "installed_by": ["modules"]
                     },
+                    "megahit": {
+                        "branch": "master",
+                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
+                        "installed_by": ["modules"]
+                    },
                     "metabat2/jgisummarizebamcontigdepths": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
@@ -245,6 +250,11 @@
                     "seqtk/mergepe": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "installed_by": ["modules"]
+                    },
+                    "spades": {
+                        "branch": "master",
+                        "git_sha": "cfebb244d8c83ae533bf2db399f9af361927d504",
                         "installed_by": ["modules"]
                     },
                     "tiara/tiara": {
