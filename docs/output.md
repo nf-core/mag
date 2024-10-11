@@ -113,7 +113,6 @@ The pipeline uses Nanolyse to map the reads against the Lambda phage and removes
 
 The pipeline uses filtlong and porechop to perform quality control of the long reads that are eventually provided with the TSV input file.
 
-
 <details markdown="1">
 <summary>Output files</summary>
 
