@@ -11,14 +11,22 @@ process CONVERT_DEPTHS {
 
     output:
     // need to add empty val because representing reads as we dont want maxbin to calculate for us.
-    tuple val(meta), path(fasta), val([]), path("*_mb2_depth.txt"), emit: output
-    path "versions.yml"                                           , emit: versions
+    tuple val(meta), path(fasta), val([]), path("*_mb2_depth_*.txt"), emit: output
+    path "versions.yml"                                             , emit: versions
 
     script:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
     gunzip -f $depth
-    bioawk -t '{ { if (NR > 1) { { print \$1, \$3 } } } }' ${depth.toString() - '.gz'} > ${prefix}_mb2_depth.txt
+
+    # Determine the number of abundance columns
+    n_abund=\$(awk 'NR==1 {print int((NF-3)/2)}' ${depth.toString() - '.gz'})
+
+    # Generate abundance files for each read set
+    for i in \$(seq 1 \$n_abund); do
+        col=\$((i*2+2))
+        bioawk -t '{if (NR > 1) {print \$1, \$'"\$col"'}}' ${depth.toString() - '.gz'} > ${prefix}_mb2_depth_\$i.txt
+    done
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
