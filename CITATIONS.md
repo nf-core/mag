@@ -116,6 +116,8 @@
 
 - [Porechop](https://github.com/rrwick/Porechop)
 
+- [Porechop-abi](https://github.com/bonsai-team/Porechop_ABI)
+
 - [Prodigal](https://pubmed.ncbi.nlm.nih.gov/20211023/)
 
   > Hyatt D, Chen GL, Locascio PF, Land ML, Larimer FW, Hauser LJ. Prodigal: prokaryotic gene recognition and translation initiation site identification. BMC Bioinformatics. 2010 Mar 8;11:119. doi: 10.1186/1471-2105-11-119. PMID: 20211023; PMCID: PMC2848648.
