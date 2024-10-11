@@ -18,7 +18,8 @@ process MAXBIN2 {
     tuple val(meta), path("*.noclass.gz") , emit: unbinned_fasta
     tuple val(meta), path("*.tooshort.gz"), emit: tooshort_fasta
     tuple val(meta), path("*_bin.tar.gz") , emit: marker_bins , optional: true
-    tuple val(meta), path("*_gene.tar.gz"), emit: marker_genes, optional: true
+    tuple val(meta), path("*.abundance")  , emit: marker_genes, optional: true
+    tuple val(meta), path("*_gene.tar.gz"), emit: abundance   , optional: true
     path "versions.yml"                   , emit: versions
 
     when:
@@ -27,7 +28,15 @@ process MAXBIN2 {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def associate_files = reads ? "-reads $reads" : "-abund $abund"
+    def associate_files = ""
+    if ( reads ) {
+        associate_files = "-reads $reads"
+    } else if ( abund instanceof List ) {
+        associate_files = "-abund ${abund[0]}"
+        for (i in 2..abund.size()) { associate_files += " -abund$i ${abund[i-1]}" }
+    } else {
+        associate_files = "-abund $abund"
+    }
     """
     mkdir input/ && mv $contigs input/
     run_MaxBin.pl \\
