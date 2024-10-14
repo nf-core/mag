@@ -707,7 +707,7 @@ Because of aDNA damage, _de novo_ assemblers sometimes struggle to call a correc
 
 </details>
 
-The pipeline can also generate downstream pipeline input samplesheets.
+The pipeline can also generate input samplesheets for downstream pipelines.
 These are stored in `<outdir>/downstream_samplesheets`.
 
 ### MultiQC
@@ -757,8 +757,7 @@ Summary tool-specific plots and tables of following tools are currently displaye
 
 ### Downstream samplesheets
 
-The pipeline can also generate input files for the following downstream
-pipelines:
+The pipeline can also generate input files for the following downstream pipelines:
 
 - [nf-core/funcscan](https://nf-co.re/funcscan)
 - [nf-core/taxprofiler](https://nf-co.re/taxprofiler)
@@ -767,8 +766,8 @@ pipelines:
 <summary>Output files</summary>
 
 - `downstream_samplesheets/`
-  - `funcscan.csv`: Filled out nf-core/funcscan `--input` csv with absolute paths to the assembly FASTA files produced by MAG (MEGAHIT, SPAdes, SPAdesHybrid)
-  - `taxprofiler.csv`: Partially filled out nf-core/taxprofiler preprocessed short reads csv with paths to database directories or `.fast1.gz` relative to the results directory
+  - `funcscan.csv`: Filled out nf-core/funcscan `--input` csv with absolute paths to the assembled contig FASTA files produced by nf-core/mag (MEGAHIT, SPAdes, SPAdesHybrid)
+  - `taxprofiler.csv`: Partially filled out nf-core/taxprofiler csv with paths to preprocessed reads (adapter trimmed, host removed etc.) `.fastq.gz`
 
 </details>
 
