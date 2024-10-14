@@ -62,6 +62,11 @@
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
                         "installed_by": ["modules"]
                     },
+                    "chopper": {
+                        "branch": "master",
+                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
+                        "installed_by": ["modules"]
+                    },
                     "concoct/concoct": {
                         "branch": "master",
                         "git_sha": "baa30accc6c50ea8a98662417d4f42ed18966353",
