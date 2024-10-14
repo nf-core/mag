@@ -16,6 +16,9 @@ process CENTRIFUGE {
     tuple val(meta), path("*kreport.txt")                    , emit: kreport
     path "versions.yml"                                      , emit: versions
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     def input = meta.single_end ? "-U \"${reads}\"" :  "-1 \"${reads[0]}\" -2 \"${reads[1]}\""
     prefix = task.ext.prefix ?: "${meta.id}"

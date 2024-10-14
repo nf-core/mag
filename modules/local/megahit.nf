@@ -15,6 +15,9 @@ process MEGAHIT {
     path "MEGAHIT/MEGAHIT-${meta.id}.contigs.fa.gz"               , emit: assembly_gz
     path "versions.yml"                                   , emit: versions
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     def args = task.ext.args ?: ''
     def input = meta.single_end ? "-r \"" + reads1.join(",") + "\"" : "-1 \"" + reads1.join(",") + "\" -2 \"" + reads2.join(",") + "\""

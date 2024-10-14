@@ -14,6 +14,9 @@ process MAG_DEPTHS_PLOT {
     tuple val(meta), path("${meta.assembler}-${meta.binner}-${meta.id}-binDepths.heatmap.png"), emit: heatmap
     path "versions.yml"                                                                       , emit: versions
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
     plot_mag_depths.py --bin_depths ${depths} \

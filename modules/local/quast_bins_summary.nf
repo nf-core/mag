@@ -12,6 +12,9 @@ process QUAST_BINS_SUMMARY {
     path("quast_summary.tsv"), emit: summary
     path "versions.yml"      , emit: versions
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
     QUAST_BIN=\$(echo \"$summaries\" | sed 's/[][]//g')

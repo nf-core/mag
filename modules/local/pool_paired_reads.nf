@@ -13,6 +13,9 @@ process POOL_PAIRED_READS {
     tuple val(meta), path("pooled_${meta.id}_*.fastq.gz"), emit: reads
     path "versions.yml"                                  , emit: versions
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
     cat ${reads1} > "pooled_${meta.id}_1.fastq.gz"

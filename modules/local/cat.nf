@@ -20,6 +20,9 @@ process CAT {
     path("raw/*.bin2classification.txt.gz")                    , emit: tax_classification_taxids
     path "versions.yml"                                        , emit: versions
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     def official_taxonomy = params.cat_official_taxonomy ? "--only_official" : ""
     def args = task.ext.args ?: ''

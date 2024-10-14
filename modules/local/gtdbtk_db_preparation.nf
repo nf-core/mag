@@ -12,6 +12,9 @@ process GTDBTK_DB_PREPARATION {
     output:
     tuple val("${database.toString().replace(".tar.gz", "")}"), path("database/*"), emit: db
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
     mkdir database

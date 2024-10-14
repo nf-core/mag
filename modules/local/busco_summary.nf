@@ -14,6 +14,9 @@ process BUSCO_SUMMARY {
     path "busco_summary.tsv", emit: summary
     path "versions.yml"     , emit: versions
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     def reference = params.busco_db.toString().contains('odb10')
     def auto = reference ? "" : "-a"

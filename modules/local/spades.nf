@@ -17,6 +17,9 @@ process SPADES {
     path "SPAdes-${meta.id}_graph.gfa.gz"                     , emit: graph
     path "versions.yml"                                , emit: versions
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     def args = task.ext.args ?: ''
     maxmem = task.memory.toGiga()

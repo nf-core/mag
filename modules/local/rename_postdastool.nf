@@ -14,6 +14,9 @@ process RENAME_POSTDASTOOL {
     tuple val(meta), path("${meta.assembler}-*Refined-${meta.id}.*.fa", includeInputs: true), optional:true, emit: refined_bins
     tuple val(meta), path("${meta.assembler}-DASToolUnbinned-${meta.id}.fa"),                 optional:true, emit: refined_unbins
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
     if [[ -f unbinned.fa ]]; then

@@ -14,6 +14,9 @@ process QUAST {
     path "QUAST/report_rawassemblies.tsv", emit: report
     path "versions.yml"                  , emit: versions
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
     metaquast.py --threads "${task.cpus}" --rna-finding --max-ref-number 0 -l "${meta.assembler}-${meta.id}" "${assembly}" -o "QUAST"

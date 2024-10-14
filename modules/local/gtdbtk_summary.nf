@@ -16,6 +16,9 @@ process GTDBTK_SUMMARY {
     path "gtdbtk_summary.tsv", emit: summary
     path "versions.yml"      , emit: versions
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     def args = task.ext.args ?: ''
     def discarded = qc_discarded_bins.sort().size() > 0 ? "--qc_discarded_bins ${qc_discarded_bins}" : ""

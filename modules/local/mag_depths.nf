@@ -14,6 +14,9 @@ process MAG_DEPTHS {
     tuple val(meta), path("${meta.assembler}-${meta.binner}-${meta.id}-binDepths.tsv"), emit: depths
     path "versions.yml"                                                               , emit: versions
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
     get_mag_depths.py --bins ${bins} \\

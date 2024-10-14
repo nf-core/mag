@@ -13,6 +13,9 @@ process BUSCO_DB_PREPARATION {
     tuple val("${database.getSimpleName()}"), path("buscodb/*"), emit: db
     path "versions.yml"                                        , emit: versions
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
     mkdir buscodb

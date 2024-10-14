@@ -13,6 +13,9 @@ process CAT_DB {
     tuple val("${database.toString().replace(".tar.gz", "")}"), path("database/*"), path("taxonomy/*"), emit: db
     path "versions.yml"                                                                               , emit: versions
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
     if [[ ${database} != *.tar.gz ]]; then

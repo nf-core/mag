@@ -15,6 +15,9 @@ process NANOLYSE {
     path  "${meta.id}_nanolyse.log"                      , emit: log
     path "versions.yml"                                  , emit: versions
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
     zcat ${reads} | NanoLyse --reference $nanolyse_db | gzip > ${meta.id}_nanolyse.fastq.gz

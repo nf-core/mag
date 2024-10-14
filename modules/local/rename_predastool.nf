@@ -13,6 +13,9 @@ process RENAME_PREDASTOOL {
     output:
     tuple val(meta), path("${meta.assembler}-${meta.binner}Refined-${meta.id}*"), emit: renamed_bins
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
     if [ -n "${bins}" ]

@@ -14,6 +14,9 @@ process QUAST_BINS {
     tuple val(meta), path("QUAST/*-quast_summary.tsv"), emit: quast_bin_summaries
     path "versions.yml"             , emit: versions
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     def prefix = task.ext.prefix ?: "${meta.assembler}-${meta.binner}-${meta.domain}-${meta.refinement}-${meta.id}"
     """

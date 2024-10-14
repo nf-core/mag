@@ -12,6 +12,9 @@ process MAG_DEPTHS_SUMMARY {
     path("${prefix}.tsv"), emit: summary
     path "versions.yml"  , emit: versions
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     prefix = task.ext.prefix ?: "bin_depths_summary"
     """

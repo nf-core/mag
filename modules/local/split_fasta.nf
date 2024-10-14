@@ -17,6 +17,9 @@ process SPLIT_FASTA {
     tuple val(meta), path("${meta.assembler}-${meta.binner}-${meta.id}.*.remaining.fa.gz"), optional:true, emit: remaining
     path "versions.yml"                                                                   , emit: versions
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
     # save unbinned contigs above thresholds into individual files, dump others in one file

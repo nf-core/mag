@@ -22,6 +22,9 @@ process BUSCO {
     tuple val(meta), path("${bin}_busco.failed_bin.txt")                , optional:true , emit: failed_bin
     path "versions.yml"                                                                 , emit: versions
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     def args = task.ext.args ?: ''
     def cp_augustus_config = workflow.profile.toString().indexOf("conda") != -1 ? "N" : "Y"

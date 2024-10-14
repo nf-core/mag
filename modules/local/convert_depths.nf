@@ -14,6 +14,9 @@ process CONVERT_DEPTHS {
     tuple val(meta), path(fasta), val([]), path("*_mb2_depth.txt"), emit: output
     path "versions.yml"                                           , emit: versions
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """

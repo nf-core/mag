@@ -1,30 +1,32 @@
 process BOWTIE2_ASSEMBLY_ALIGN {
     tag "${assembly_meta.assembler}-${assembly_meta.id}-${reads_meta.id}"
-
     conda "bioconda::bowtie2=2.4.2 bioconda::samtools=1.11 conda-forge::pigz=2.3.4"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/mulled-v2-ac74a7f02cebcfcc07d8e8d1d750af9c83b4d45a:577a697be67b5ae9b16f637fd723b8263a3898b3-0' :
-        'biocontainers/mulled-v2-ac74a7f02cebcfcc07d8e8d1d750af9c83b4d45a:577a697be67b5ae9b16f637fd723b8263a3898b3-0' }"
+    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
+        ? 'https://depot.galaxyproject.org/singularity/mulled-v2-ac74a7f02cebcfcc07d8e8d1d750af9c83b4d45a:577a697be67b5ae9b16f637fd723b8263a3898b3-0'
+        : 'biocontainers/mulled-v2-ac74a7f02cebcfcc07d8e8d1d750af9c83b4d45a:577a697be67b5ae9b16f637fd723b8263a3898b3-0'}"
 
     input:
     tuple val(assembly_meta), path(assembly), path(index), val(reads_meta), path(reads)
 
     output:
     tuple val(assembly_meta), path(assembly), path("${assembly_meta.assembler}-${assembly_meta.id}-${reads_meta.id}.bam"), path("${assembly_meta.assembler}-${assembly_meta.id}-${reads_meta.id}.bam.bai"), emit: mappings
-    tuple val(assembly_meta), val(reads_meta), path("*.bowtie2.log")                                                                                                                                      , emit: log
-    path "versions.yml"                                                                                                                                                                                   , emit: versions
+    tuple val(assembly_meta), val(reads_meta), path("*.bowtie2.log"), emit: log
+    path "versions.yml", emit: versions
+
+    when:
+    task.ext.when == null || task.ext.when
 
     script:
     def args = task.ext.args ?: ''
     def name = "${assembly_meta.assembler}-${assembly_meta.id}-${reads_meta.id}"
-    def input = params.single_end ? "-U \"${reads}\"" :  "-1 \"${reads[0]}\" -2 \"${reads[1]}\""
+    def input = params.single_end ? "-U \"${reads}\"" : "-1 \"${reads[0]}\" -2 \"${reads[1]}\""
     """
     INDEX=`find -L ./ -name "*.rev.1.bt2l" -o -name "*.rev.1.bt2" | sed 's/.rev.1.bt2l//' | sed 's/.rev.1.bt2//'`
     bowtie2 \\
         -p "${task.cpus}" \\
         -x \$INDEX \\
-        $args \\
-        $input \\
+        ${args} \\
+        ${input} \\
         2> "${name}.bowtie2.log" | \
         samtools view -@ "${task.cpus}" -bS | \
         samtools sort -@ "${task.cpus}" -o "${name}.bam"

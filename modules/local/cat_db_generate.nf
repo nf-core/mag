@@ -10,6 +10,9 @@ process CAT_DB_GENERATE {
     path("CAT_prepare_*.tar.gz"), optional:true               , emit: db_tar_gz
     path "versions.yml"                                       , emit: versions
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     def save_db = params.save_cat_db ? "Y" : "N"
     """

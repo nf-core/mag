@@ -13,6 +13,9 @@ process BUSCO_SAVE_DOWNLOAD {
     output:
     path('busco_downloads/**', includeInputs: true)
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
     """

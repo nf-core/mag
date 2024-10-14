@@ -14,6 +14,9 @@ process KRONA {
     tuple val(meta), path("*.html") , emit: html
     path "versions.yml"             , emit: versions
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
     TAXONOMY=\$(find -L . -name '*.tab' -exec dirname {} \\;)
