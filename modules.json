@@ -212,6 +212,11 @@
                         "git_sha": "3135090b46f308a260fc9d5991d7d2f9c0785309",
                         "installed_by": ["modules"]
                     },
+                    "nanoq": {
+                        "branch": "master",
+                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
+                        "installed_by": ["modules"]
+                    },
                     "porechop/abi": {
                         "branch": "master",
                         "git_sha": "06c8865e36741e05ad32ef70ab3fac127486af48",
