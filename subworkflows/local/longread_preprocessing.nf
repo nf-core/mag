@@ -71,16 +71,16 @@ workflow LONGREAD_PREPROCESSING {
 
         }
 
-        // join long and short reads by sample name
-        ch_short_reads_tmp = ch_short_reads
-            .map { meta, sr -> [ meta.id, meta, sr ] }
-
-        ch_short_and_long_reads = ch_long_reads
-            .map { meta, lr -> [ meta.id, meta, lr ] }
-            .join(ch_short_reads_tmp, by: 0)
-            .map { id, meta_lr, lr, meta_sr, sr -> [ meta_lr, sr, lr ] }  // should not occur for single-end, since SPAdes (hybrid) does not support single-end
-
         if (params.longread_filtering_tool == 'filtlong') {
+            // join long and short reads by sample name
+            ch_short_reads_tmp = ch_short_reads
+                .map { meta, sr -> [ meta.id, meta, sr ] }
+
+            ch_short_and_long_reads = ch_long_reads
+                .map { meta, lr -> [ meta.id, meta, lr ] }
+                .join(ch_short_reads_tmp, by: 0)
+                .map { id, meta_lr, lr, meta_sr, sr -> [ meta_lr, sr, lr ] }  // should not occur for single-end, since SPAdes (hybrid) does not support single-end
+
             FILTLONG (
                 ch_short_and_long_reads
             )
@@ -89,10 +89,12 @@ workflow LONGREAD_PREPROCESSING {
             ch_multiqc_files = ch_multiqc_files.mix( FILTLONG.out.log )
         } else if (params.longread_filtering_tool == 'nanoq') {
             NANOQ (
-                ch_long_reads
+                ch_long_reads,
+                'fastq.gz'
             )
             ch_long_reads = NANOQ.out.reads
             ch_versions = ch_versions.mix(NANOQ.out.versions.first())
+            ch_multiqc_files = ch_multiqc_files.mix(NANOQ.out.stats)
         }
 
         NANOPLOT_FILTERED (

@@ -453,6 +453,11 @@
                     "default": 1000,
                     "description": "Discard any read which is shorter than this value."
                 },
+                "longreads_min_quality": {
+                    "type": "integer",
+                    "default": null,
+                    "description": "Discard any read which has a mean quality score lower than this value."
+                },
                 "longreads_keep_percent": {
                     "type": "integer",
                     "default": 90,
@@ -482,7 +487,7 @@
                     "type": "boolean",
                     "description": "Specify to save the resulting clipped FASTQ files to --outdir."
                 },
-                "save_filtlong_reads": {
+                "save_filtered_reads": {
                     "type": "boolean",
                     "description": "Specify to save the resulting length filtered FASTQ files to --outdir."
                 },
@@ -491,6 +496,18 @@
                     "description": "Specify which long read adapter trimming tool to use.",
                     "enum": ["porechop", "porechop_abi"],
                     "default": "porechop_abi"
+                },
+                "longread_phageremoval_tool": {
+                    "type": "string",
+                    "description": "Specify which long read phage removal tool to use.",
+                    "enum": ["nanolyse", "chopper"],
+                    "default": "chopper"
+                },
+                "longread_filtering_tool": {
+                    "type": "string",
+                    "description": "Specify which long read filtering tool to use.",
+                    "enum": ["filtlong", "nanoq"],
+                    "default": "filtlong"
                 }
             }
         },
