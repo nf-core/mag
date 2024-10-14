@@ -10,7 +10,7 @@ process BUSCO_SAVE_DOWNLOAD {
     path busco_downloads
 
     output:
-    path 'busco_downloads/**', includeInputs: true
+    path 'busco_downloads/**', includeInputs: true, emit: busco_downloads
 
     when:
     task.ext.when == null || task.ext.when

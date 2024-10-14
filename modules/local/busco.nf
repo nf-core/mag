@@ -14,10 +14,10 @@ process BUSCO {
     tuple val(meta), path("short_summary.domain.*.${bin}.txt"), optional: true, emit: summary_domain
     tuple val(meta), path("short_summary.specific_lineage.*.${bin}.txt"), optional: true, emit: summary_specific
     tuple env(most_spec_db), path('busco_downloads/'), optional: true, emit: busco_downloads
-    path "${bin}_busco.log"
-    path "${bin}_busco.err"
-    path ("${bin}_buscos.*.faa.gz"), optional: true
-    path ("${bin}_buscos.*.fna.gz"), optional: true
+    path "${bin}_busco.log", emit: busco_log
+    path "${bin}_busco.err", emit: busco_err
+    path ("${bin}_buscos.*.faa.gz"), optional: true, emit: busco_faa
+    path ("${bin}_buscos.*.fna.gz"), optional: true, emit: busco_fna
     path ("${bin}_prodigal.gff"), optional: true, emit: prodigal_genes
     tuple val(meta), path("${bin}_busco.failed_bin.txt"), optional: true, emit: failed_bin
     path "versions.yml", emit: versions
