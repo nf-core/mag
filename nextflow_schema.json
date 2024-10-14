@@ -538,7 +538,6 @@
                 },
                 "gtdbtk_pplacer_useram": {
                     "type": "boolean",
-                    "default": false,
                     "description": "Speed up pplacer step of GTDB-Tk by loading to memory.",
                     "help_text": "Will be faster than writing to disk (default setting), however at the expense of much larger memory (RAM) requirements for GDTBTK/CLASSIFY."
                 },
@@ -870,37 +869,37 @@
             "$ref": "#/$defs/institutional_config_options"
         },
         {
-            "$ref": "#/defs/generic_options"
+            "$ref": "#/$defs/generic_options"
         },
         {
-            "$ref": "#/defs/reproducibility_options"
+            "$ref": "#/$defs/reproducibility_options"
         },
         {
-            "$ref": "#/defs/quality_control_for_short_reads_options"
+            "$ref": "#/$defs/quality_control_for_short_reads_options"
         },
         {
-            "$ref": "#/defs/quality_control_for_long_reads_options"
+            "$ref": "#/$defs/quality_control_for_long_reads_options"
         },
         {
-            "$ref": "#/defs/taxonomic_profiling_options"
+            "$ref": "#/$defs/taxonomic_profiling_options"
         },
         {
-            "$ref": "#/defs/assembly_options"
+            "$ref": "#/$defs/assembly_options"
         },
         {
-            "$ref": "#/defs/gene_prediction_and_annotation_options"
+            "$ref": "#/$defs/gene_prediction_and_annotation_options"
         },
         {
-            "$ref": "#/defs/virus_identification_options"
+            "$ref": "#/$defs/virus_identification_options"
         },
         {
-            "$ref": "#/defs/binning_options"
+            "$ref": "#/$defs/binning_options"
         },
         {
-            "$ref": "#/defs/bin_quality_check_options"
+            "$ref": "#/$defs/bin_quality_check_options"
         },
         {
-            "$ref": "#/defs/ancient_dna_assembly"
+            "$ref": "#/$defs/ancient_dna_assembly"
         }
     ]
 }
