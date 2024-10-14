@@ -1,10 +1,10 @@
 process NANOLYSE {
-    tag "$meta.id"
-
+    label 'process_single'
+    tag "${meta.id}"
     conda "bioconda::nanolyse=1.1.0"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/nanolyse:1.1.0--py36_1' :
-        'biocontainers/nanolyse:1.1.0--py36_1' }"
+    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
+        ? 'https://depot.galaxyproject.org/singularity/nanolyse:1.1.0--py36_1'
+        : 'biocontainers/nanolyse:1.1.0--py36_1'}"
 
     input:
     tuple val(meta), path(reads)
@@ -12,16 +12,16 @@ process NANOLYSE {
 
     output:
     tuple val(meta), path("${meta.id}_nanolyse.fastq.gz"), emit: reads
-    path  "${meta.id}_nanolyse.log"                      , emit: log
-    path "versions.yml"                                  , emit: versions
+    path "${meta.id}_nanolyse.log", emit: log
+    path "versions.yml", emit: versions
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
     """
-    zcat ${reads} | NanoLyse --reference $nanolyse_db | gzip > ${meta.id}_nanolyse.fastq.gz
-    echo "NanoLyse reference: $params.lambda_reference" >${meta.id}_nanolyse.log
+    zcat ${reads} | NanoLyse --reference ${nanolyse_db} | gzip > ${meta.id}_nanolyse.fastq.gz
+    echo "NanoLyse reference: ${params.lambda_reference}" >${meta.id}_nanolyse.log
     zcat ${reads} | echo "total reads before NanoLyse: \$((`wc -l`/4))" >>${meta.id}_nanolyse.log
     gunzip -c ${meta.id}_nanolyse.fastq.gz | echo "total reads after NanoLyse: \$((`wc -l`/4))" >> ${meta.id}_nanolyse.log
 

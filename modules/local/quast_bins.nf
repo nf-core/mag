@@ -1,18 +1,18 @@
 process QUAST_BINS {
+    label 'process_low'
     tag "${meta.assembler}-${meta.binner}-${meta.domain}-${meta.refinement}-${meta.id}"
-
     conda "bioconda::quast=5.0.2"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/quast:5.0.2--py37pl526hb5aa323_2' :
-        'biocontainers/quast:5.0.2--py37pl526hb5aa323_2' }"
+    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
+        ? 'https://depot.galaxyproject.org/singularity/quast:5.0.2--py37pl526hb5aa323_2'
+        : 'biocontainers/quast:5.0.2--py37pl526hb5aa323_2'}"
 
     input:
     tuple val(meta), path(bins)
 
     output:
-    path "QUAST/*", type: 'dir'     , emit: dir
+    path "QUAST/*", type: 'dir', emit: dir
     tuple val(meta), path("QUAST/*-quast_summary.tsv"), emit: quast_bin_summaries
-    path "versions.yml"             , emit: versions
+    path "versions.yml", emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -20,7 +20,7 @@ process QUAST_BINS {
     script:
     def prefix = task.ext.prefix ?: "${meta.assembler}-${meta.binner}-${meta.domain}-${meta.refinement}-${meta.id}"
     """
-    BINS=\$(echo \"$bins\" | sed 's/[][]//g')
+    BINS=\$(echo \"${bins}\" | sed 's/[][]//g')
     IFS=', ' read -r -a bins <<< \"\$BINS\"
     for bin in \"\${bins[@]}\"; do
         metaquast.py --threads "${task.cpus}" --max-ref-number 0 --rna-finding --gene-finding -l "\${bin}" "\${bin}" -o "QUAST/\${bin}"

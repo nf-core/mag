@@ -1,11 +1,10 @@
 process RENAME_PREDASTOOL {
+    label 'process_single'
     tag "${meta.assembler}-${meta.binner}-${meta.id}"
-    label 'process_low'
-
     conda "conda-forge::sed=4.7"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/ubuntu:20.04' :
-        'nf-core/ubuntu:20.04' }"
+    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
+        ? 'https://depot.galaxyproject.org/singularity/ubuntu:20.04'
+        : 'nf-core/ubuntu:20.04'}"
 
     input:
     tuple val(meta), path(bins)

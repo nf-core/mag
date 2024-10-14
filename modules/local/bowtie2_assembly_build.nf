@@ -1,4 +1,5 @@
 process BOWTIE2_ASSEMBLY_BUILD {
+    label 'process_medium'
     tag "${meta.assembler}-${meta.id}"
     conda "bioconda::bowtie2=2.4.2"
     container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container

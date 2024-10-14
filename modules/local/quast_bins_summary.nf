@@ -1,23 +1,23 @@
 process QUAST_BINS_SUMMARY {
-
+    label 'process_single'
     conda "conda-forge::sed=4.7"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/ubuntu:20.04' :
-        'nf-core/ubuntu:20.04' }"
+    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
+        ? 'https://depot.galaxyproject.org/singularity/ubuntu:20.04'
+        : 'nf-core/ubuntu:20.04'}"
 
     input:
-    path(summaries)
+    path summaries
 
     output:
-    path("quast_summary.tsv"), emit: summary
-    path "versions.yml"      , emit: versions
+    path ("quast_summary.tsv"), emit: summary
+    path "versions.yml", emit: versions
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
     """
-    QUAST_BIN=\$(echo \"$summaries\" | sed 's/[][]//g')
+    QUAST_BIN=\$(echo \"${summaries}\" | sed 's/[][]//g')
     IFS=', ' read -r -a quast_bin <<< \"\$QUAST_BIN\"
     for quast_file in \"\${quast_bin[@]}\"; do
         if ! [ -f "quast_summary.tsv" ]; then

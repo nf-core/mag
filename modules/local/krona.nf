@@ -1,18 +1,18 @@
 process KRONA {
+    label 'process_single'
     tag "${meta.classifier}-${meta.id}"
-
     conda "bioconda::krona=2.7.1"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/krona:2.7.1--pl526_5' :
-        'biocontainers/krona:2.7.1--pl526_5' }"
+    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
+        ? 'https://depot.galaxyproject.org/singularity/krona:2.7.1--pl526_5'
+        : 'biocontainers/krona:2.7.1--pl526_5'}"
 
     input:
     tuple val(meta), path(report)
-    path(taxonomy_file), stageAs: 'taxonomy.tab'
+    path (taxonomy_file), stageAs: 'taxonomy.tab'
 
     output:
-    tuple val(meta), path("*.html") , emit: html
-    path "versions.yml"             , emit: versions
+    tuple val(meta), path("*.html"), emit: html
+    path "versions.yml", emit: versions
 
     when:
     task.ext.when == null || task.ext.when

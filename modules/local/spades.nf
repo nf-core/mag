@@ -1,21 +1,21 @@
 process SPADES {
-    tag "$meta.id"
-
+    label 'process_high'
+    tag "${meta.id}"
     conda "bioconda::spades=3.15.3"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/spades:3.15.3--h95f258a_0' :
-        'biocontainers/spades:3.15.3--h95f258a_0' }"
+    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
+        ? 'https://depot.galaxyproject.org/singularity/spades:3.15.3--h95f258a_0'
+        : 'biocontainers/spades:3.15.3--h95f258a_0'}"
 
     input:
     tuple val(meta), path(reads)
 
     output:
     tuple val(meta), path("SPAdes-${meta.id}_scaffolds.fasta"), emit: assembly
-    path "SPAdes-${meta.id}.log"                              , emit: log
-    path "SPAdes-${meta.id}_contigs.fasta.gz"                 , emit: contigs_gz
-    path "SPAdes-${meta.id}_scaffolds.fasta.gz"               , emit: assembly_gz
-    path "SPAdes-${meta.id}_graph.gfa.gz"                     , emit: graph
-    path "versions.yml"                                , emit: versions
+    path "SPAdes-${meta.id}.log", emit: log
+    path "SPAdes-${meta.id}_contigs.fasta.gz", emit: contigs_gz
+    path "SPAdes-${meta.id}_scaffolds.fasta.gz", emit: assembly_gz
+    path "SPAdes-${meta.id}_graph.gfa.gz", emit: graph
+    path "versions.yml", emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -27,12 +27,12 @@ process SPADES {
     // read depth was normalized with BBNorm, which actually outputs pairs, but in an interleaved file.
     def readstr = meta.single_end ? "--12 ${reads}" : "-1 ${reads[0]} -2 ${reads[1]}"
 
-    if ( params.spades_fix_cpus == -1 || task.cpus == params.spades_fix_cpus )
+    if (params.spades_fix_cpus == -1 || task.cpus == params.spades_fix_cpus) {
         """
         metaspades.py \
-            $args \
+            ${args} \
             --threads "${task.cpus}" \
-            --memory $maxmem \
+            --memory ${maxmem} \
             ${readstr} \
             -o spades
         mv spades/assembly_graph_with_scaffolds.gfa SPAdes-${meta.id}_graph.gfa
@@ -49,6 +49,8 @@ process SPADES {
             metaspades: \$(metaspades.py --version | sed "s/SPAdes genome assembler v//; s/ \\[.*//")
         END_VERSIONS
         """
-    else
-        error "ERROR: '--spades_fix_cpus' was specified, but not succesfully applied. Likely this is caused by changed process properties in a custom config file."
+    }
+    else {
+        error("ERROR: '--spades_fix_cpus' was specified, but not succesfully applied. Likely this is caused by changed process properties in a custom config file.")
+    }
 }

@@ -1,14 +1,14 @@
 process CAT_DB_GENERATE {
-
+    label 'process_single'
     conda "bioconda::cat=4.6 bioconda::diamond=2.0.6"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/mulled-v2-75e2a26f10cbf3629edf2d1600db3fed5ebe6e04:eae321284604f7dabbdf121e3070bda907b91266-0' :
-        'biocontainers/mulled-v2-75e2a26f10cbf3629edf2d1600db3fed5ebe6e04:eae321284604f7dabbdf121e3070bda907b91266-0' }"
+    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
+        ? 'https://depot.galaxyproject.org/singularity/mulled-v2-75e2a26f10cbf3629edf2d1600db3fed5ebe6e04:eae321284604f7dabbdf121e3070bda907b91266-0'
+        : 'biocontainers/mulled-v2-75e2a26f10cbf3629edf2d1600db3fed5ebe6e04:eae321284604f7dabbdf121e3070bda907b91266-0'}"
 
     output:
     tuple env(DB_NAME), path("database/*"), path("taxonomy/*"), emit: db
-    path("CAT_prepare_*.tar.gz"), optional:true               , emit: db_tar_gz
-    path "versions.yml"                                       , emit: versions
+    path ("CAT_prepare_*.tar.gz"), optional: true, emit: db_tar_gz
+    path "versions.yml", emit: versions
 
     when:
     task.ext.when == null || task.ext.when

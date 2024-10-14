@@ -1,21 +1,21 @@
 process SPADESHYBRID {
-    tag "$meta.id"
-
+    label 'process_high'
+    tag "${meta.id}"
     conda "bioconda::spades=3.15.3"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/spades:3.15.3--h95f258a_0' :
-        'biocontainers/spades:3.15.3--h95f258a_0' }"
+    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
+        ? 'https://depot.galaxyproject.org/singularity/spades:3.15.3--h95f258a_0'
+        : 'biocontainers/spades:3.15.3--h95f258a_0'}"
 
     input:
     tuple val(meta), path(long_reads), path(short_reads)
 
     output:
     tuple val(meta), path("SPAdesHybrid-${meta.id}_scaffolds.fasta"), emit: assembly
-    path "SPAdesHybrid-${meta.id}.log"                              , emit: log
-    path "SPAdesHybrid-${meta.id}_contigs.fasta.gz"                 , emit: contigs_gz
-    path "SPAdesHybrid-${meta.id}_scaffolds.fasta.gz"               , emit: assembly_gz
-    path "SPAdesHybrid-${meta.id}_graph.gfa.gz"                     , emit: graph
-    path "versions.yml"                                , emit: versions
+    path "SPAdesHybrid-${meta.id}.log", emit: log
+    path "SPAdesHybrid-${meta.id}_contigs.fasta.gz", emit: contigs_gz
+    path "SPAdesHybrid-${meta.id}_scaffolds.fasta.gz", emit: assembly_gz
+    path "SPAdesHybrid-${meta.id}_graph.gfa.gz", emit: graph
+    path "versions.yml", emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -23,12 +23,12 @@ process SPADESHYBRID {
     script:
     def args = task.ext.args ?: ''
     maxmem = task.memory.toGiga()
-    if ( params.spadeshybrid_fix_cpus == -1 || task.cpus == params.spadeshybrid_fix_cpus )
+    if (params.spadeshybrid_fix_cpus == -1 || task.cpus == params.spadeshybrid_fix_cpus) {
         """
         metaspades.py \
-            $args \
+            ${args} \
             --threads "${task.cpus}" \
-            --memory $maxmem \
+            --memory ${maxmem} \
             --pe1-1 ${short_reads[0]} \
             --pe1-2 ${short_reads[1]} \
             --nanopore ${long_reads} \
@@ -47,6 +47,8 @@ process SPADESHYBRID {
             metaspades: \$(metaspades.py --version | sed "s/SPAdes genome assembler v//; s/ \\[.*//")
         END_VERSIONS
         """
-    else
-        error "ERROR: '--spadeshybrid_fix_cpus' was specified, but not succesfully applied. Likely this is caused by changed process properties in a custom config file."
+    }
+    else {
+        error("ERROR: '--spadeshybrid_fix_cpus' was specified, but not succesfully applied. Likely this is caused by changed process properties in a custom config file.")
+    }
 }

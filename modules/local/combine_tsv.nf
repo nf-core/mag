@@ -1,16 +1,15 @@
 process COMBINE_TSV {
-
-    // Using bioawk as already use that for CONVERT_DEPTHS and does same thing
+    label 'process_single'
     conda "bioconda::bioawk=1.0"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/bioawk:1.0--hed695b0_5' :
-        'biocontainers/bioawk:1.0--hed695b0_5' }"
+    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
+        ? 'https://depot.galaxyproject.org/singularity/bioawk:1.0--hed695b0_5'
+        : 'biocontainers/bioawk:1.0--hed695b0_5'}"
 
     input:
-    path(bin_summaries)
+    path bin_summaries
 
     output:
-    path("*.tsv")      , emit: combined
+    path ("*.tsv"), emit: combined
     path "versions.yml", emit: versions
 
     when:

@@ -1,17 +1,17 @@
 process POOL_SINGLE_READS {
-    tag "$meta.id"
-
+    label 'process_single'
+    tag "${meta.id}"
     conda "conda-forge::sed=4.7"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/ubuntu:20.04' :
-        'nf-core/ubuntu:20.04' }"
+    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
+        ? 'https://depot.galaxyproject.org/singularity/ubuntu:20.04'
+        : 'nf-core/ubuntu:20.04'}"
 
     input:
     tuple val(meta), path(reads)
 
     output:
     tuple val(meta), path("pooled_${meta.id}.fastq.gz"), emit: reads
-    path "versions.yml"                                , emit: versions
+    path "versions.yml", emit: versions
 
     when:
     task.ext.when == null || task.ext.when

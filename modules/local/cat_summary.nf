@@ -1,16 +1,15 @@
 process CAT_SUMMARY {
     label 'process_low'
-
     conda "bioconda::bioawk=1.0"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/bioawk:1.0--hed695b0_5' :
-        'biocontainers/bioawk:1.0--hed695b0_5' }"
+    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
+        ? 'https://depot.galaxyproject.org/singularity/bioawk:1.0--hed695b0_5'
+        : 'biocontainers/bioawk:1.0--hed695b0_5'}"
 
     input:
-    path(cat_summaries)
+    path cat_summaries
 
     output:
-    path("*.tsv")      , emit: combined
+    path ("*.tsv"), emit: combined
     path "versions.yml", emit: versions
 
     when:

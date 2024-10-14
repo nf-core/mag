@@ -1,24 +1,23 @@
 process TIARA_CLASSIFY {
+    label 'process_single'
     tag "${meta.id}"
-    label "process_single"
-
     conda "conda-forge::r-tidyverse=1.3.1 conda-forge::r-optparse=1.7.3"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/mulled-v2-1021c2bc41756fa99bc402f461dad0d1c35358c1:b0c847e4fb89c343b04036e33b2daa19c4152cf5-0' :
-        'biocontainers/mulled-v2-1021c2bc41756fa99bc402f461dad0d1c35358c1:b0c847e4fb89c343b04036e33b2daa19c4152cf5-0' }"
+    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
+        ? 'https://depot.galaxyproject.org/singularity/mulled-v2-1021c2bc41756fa99bc402f461dad0d1c35358c1:b0c847e4fb89c343b04036e33b2daa19c4152cf5-0'
+        : 'biocontainers/mulled-v2-1021c2bc41756fa99bc402f461dad0d1c35358c1:b0c847e4fb89c343b04036e33b2daa19c4152cf5-0'}"
 
     input:
     tuple val(meta), path(classification), path(contig2bin), path(bins)
 
     output:
-    tuple val(meta), path("eukarya/*.fa"),            emit: eukarya_bins, optional: true
-    tuple val(meta), path("prokarya/*.fa"),           emit: prokarya_bins, optional: true
-    tuple val(meta), path("bacteria/*.fa"),           emit: bacteria_bins, optional: true
-    tuple val(meta), path("archaea/*.fa"),            emit: archaea_bins, optional: true
-    tuple val(meta), path("organelle/*.fa"),          emit: organelle_bins, optional: true
-    tuple val(meta), path("unknown/*.fa"),            emit: unknown_bins, optional: true
+    tuple val(meta), path("eukarya/*.fa"), emit: eukarya_bins, optional: true
+    tuple val(meta), path("prokarya/*.fa"), emit: prokarya_bins, optional: true
+    tuple val(meta), path("bacteria/*.fa"), emit: bacteria_bins, optional: true
+    tuple val(meta), path("archaea/*.fa"), emit: archaea_bins, optional: true
+    tuple val(meta), path("organelle/*.fa"), emit: organelle_bins, optional: true
+    tuple val(meta), path("unknown/*.fa"), emit: unknown_bins, optional: true
     tuple val(meta), path("*.binclassification.tsv"), emit: bin_classifications
-    path 'versions.yml',                              emit: versions
+    path 'versions.yml', emit: versions
 
     when:
     task.ext.when == null || task.ext.when

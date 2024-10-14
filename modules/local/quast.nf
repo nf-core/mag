@@ -1,18 +1,18 @@
 process QUAST {
+    label 'process_low'
     tag "${meta.assembler}-${meta.id}"
-
     conda "bioconda::quast=5.0.2"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/quast:5.0.2--py37pl526hb5aa323_2' :
-        'biocontainers/quast:5.0.2--py37pl526hb5aa323_2' }"
+    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
+        ? 'https://depot.galaxyproject.org/singularity/quast:5.0.2--py37pl526hb5aa323_2'
+        : 'biocontainers/quast:5.0.2--py37pl526hb5aa323_2'}"
 
     input:
     tuple val(meta), path(assembly)
 
     output:
-    path "QUAST/*"                       , emit: qc
+    path "QUAST/*", emit: qc
     path "QUAST/report_rawassemblies.tsv", emit: report
-    path "versions.yml"                  , emit: versions
+    path "versions.yml", emit: versions
 
     when:
     task.ext.when == null || task.ext.when
