@@ -330,6 +330,19 @@ def validateInputParameters(hybrid) {
     if (params.save_mmseqs_db && !params.metaeuk_mmseqs_db) {
         error('[nf-core/mag] ERROR: Invalid parameter combination: --save_mmseqs_db supplied but no database has been requested for download with --metaeuk_mmseqs_db!')
     }
+
+    // Validate samplesheet generation parameters
+    if (params.generate_downstream_samplesheets && !params.generate_pipeline_samplesheets) {
+        error('[nf-core/mag] If supplying `--generate_downstream_samplesheets`, you must also specify which pipeline to generate for with `--generate_pipeline_samplesheets! Check input.')
+    }
+
+    if (params.generate_downstream_samplesheets && !params.save_clipped_reads) {
+        error('[nf-core/mag] Supplied --generate_downstream_samplesheets but missing --save_clipped_reads (mandatory for reads.gz output).')
+    }
+
+    if (params.generate_downstream_samplesheets && params.save_clipped_reads && (params.bbnorm || !params.keep_phix || params.host_fasta || params.skip_clipping)) {
+        error('[nf-core/mag] Supplied --generate_downstream_samplesheets and --save_clipped_reads is true, but also need one of the following: --bbnorm true, or --keep_phix false, or --host_fasta true, or skip_clipping true.')
+    }
 }
 
 //

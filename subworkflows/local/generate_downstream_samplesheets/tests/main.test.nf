@@ -7,13 +7,13 @@ nextflow_workflow {
     tag "subworkflows_local"
     tag "subworkflows/generate_downstream_samplesheets"
 
-    test("reads - taxprofiler,funscan") {
+    test("reads - taxprofiler,funcscan") {
 
         when {
             params {
                 modules_testdata_base_path      = "https://raw.githubusercontent.com/nf-core/test-datasets/"
                 outdir                          = "."
-                generate_pipeline_samplesheets  = 'taxprofiler,funscan'
+                generate_pipeline_samplesheets  = 'taxprofiler,funcscan'
             }
             workflow {
                 """
@@ -32,7 +32,7 @@ nextflow_workflow {
                 { assert workflow.success},
                 { assert snapshot(
                     [
-                        "${params.outdir}/downstream_samplesheets/funscan.csv",
+                        "${params.outdir}/downstream_samplesheets/funcscan.csv",
                         "${params.outdir}/downstream_samplesheets/taxprofiler.csv"
                     ]).match()
                 },

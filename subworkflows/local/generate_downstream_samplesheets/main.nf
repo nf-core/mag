@@ -57,7 +57,7 @@ workflow SAMPLESHEET_FUNCSCAN {
         }
         .tap{ ch_colnames }
 
-    channelToSamplesheet(ch_colnames, ch_list_for_samplesheet, 'downstream_samplesheets', 'funscan', format, format_sep)
+    channelToSamplesheet(ch_colnames, ch_list_for_samplesheet, 'downstream_samplesheets', 'funcscan', format, format_sep)
 
 }
 
