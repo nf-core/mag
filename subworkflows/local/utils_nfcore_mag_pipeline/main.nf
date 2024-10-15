@@ -280,11 +280,6 @@ def validateInputParameters(hybrid) {
         if ( !params.genomes[params.host_genome].bowtie2 ) {
             error("[nf-core/mag] ERROR: No Bowtie 2 index file specified for the host genome ${params.host_genome}!")
         }
-
-        // Validate samplesheet generation parameters
-        if (params.generate_downstream_samplesheets && !params.generate_pipeline_samplesheets) {
-            error('[nf-core/createtaxdb] If supplying `--generate_downstream_samplesheets`, you must also specify which pipeline to generate for with `--generate_pipeline_samplesheets! Check input.')
-        }
     }
 
     // Check MetaBAT2 inputs
@@ -336,7 +331,7 @@ def validateInputParameters(hybrid) {
         error('[nf-core/mag] ERROR: Invalid parameter combination: --save_mmseqs_db supplied but no database has been requested for download with --metaeuk_mmseqs_db!')
     }
 
-    // Validate samplesheet generation parameters
+
     if (params.generate_downstream_samplesheets && !params.generate_pipeline_samplesheets) {
         error('[nf-core/mag] If supplying `--generate_downstream_samplesheets`, you must also specify which pipeline to generate for with `--generate_pipeline_samplesheets! Check input.')
     }
@@ -348,6 +343,7 @@ def validateInputParameters(hybrid) {
     if (params.generate_downstream_samplesheets && params.save_clipped_reads && (params.bbnorm || !params.keep_phix || params.host_fasta || params.skip_clipping)) {
         error('[nf-core/mag] Supplied --generate_downstream_samplesheets and --save_clipped_reads is true, but also need one of the following: --bbnorm true, or --keep_phix false, or --host_fasta true, or skip_clipping true.')
     }
+
 }
 
 //
