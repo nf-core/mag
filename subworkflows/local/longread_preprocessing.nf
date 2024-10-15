@@ -53,22 +53,13 @@ workflow LONGREAD_PREPROCESSING {
             }
         }
 
-        if (!params.keep_lambda) {
-            if (params.longread_phageremoval_tool == 'chopper') {
-                CHOPPER (
-                    ch_long_reads
-                )
-                ch_long_reads = CHOPPER.out.fastq
-                ch_versions = ch_versions.mix(CHOPPER.out.versions.first())
-            } else if (params.longread_phageremoval_tool == 'nanolyse') {
-                NANOLYSE (
-                    ch_long_reads,
-                    ch_nanolyse_db
-                )
-                ch_long_reads = NANOLYSE.out.fastq
-                ch_versions = ch_versions.mix(NANOLYSE.out.versions.first())
-            }
-
+        if (!params.keep_lambda && params.longread_filtering_tool != 'chopper') {
+            NANOLYSE (
+                ch_long_reads,
+                ch_nanolyse_db
+            )
+            ch_long_reads = NANOLYSE.out.fastq
+            ch_versions = ch_versions.mix(NANOLYSE.out.versions.first())
         }
 
         if (params.longread_filtering_tool == 'filtlong') {
@@ -95,6 +86,12 @@ workflow LONGREAD_PREPROCESSING {
             ch_long_reads = NANOQ.out.reads
             ch_versions = ch_versions.mix(NANOQ.out.versions.first())
             ch_multiqc_files = ch_multiqc_files.mix(NANOQ.out.stats)
+        } else if (params.longread_filtering_tool == 'chopper') {
+            CHOPPER (
+                ch_long_reads
+            )
+            ch_long_reads = CHOPPER.out.fastq
+            ch_versions = ch_versions.mix(CHOPPER.out.versions.first())
         }
 
         NANOPLOT_FILTERED (

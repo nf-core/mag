@@ -497,16 +497,10 @@
                     "enum": ["porechop", "porechop_abi"],
                     "default": "porechop_abi"
                 },
-                "longread_phageremoval_tool": {
-                    "type": "string",
-                    "description": "Specify which long read phage removal tool to use.",
-                    "enum": ["nanolyse", "chopper"],
-                    "default": "chopper"
-                },
                 "longread_filtering_tool": {
                     "type": "string",
                     "description": "Specify which long read filtering tool to use.",
-                    "enum": ["filtlong", "nanoq"],
+                    "enum": ["filtlong", "nanoq", "chopper"],
                     "default": "filtlong"
                 }
             }
