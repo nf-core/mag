@@ -505,6 +505,12 @@
                 "save_filtlong_reads": {
                     "type": "boolean",
                     "description": "Specify to save the resulting length filtered FASTQ files to --outdir."
+                },
+                "longread_adaptertrimming_tool": {
+                    "type": "string",
+                    "description": "Specify which long read adapter trimming tool to use.",
+                    "enum": ["porechop", "porechop_abi"],
+                    "default": "porechop_abi"
                 }
             }
         },

@@ -13,17 +13,18 @@ include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_mag_
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { BINNING_PREPARATION              } from '../subworkflows/local/binning_preparation'
-include { BINNING                          } from '../subworkflows/local/binning'
-include { BINNING_REFINEMENT               } from '../subworkflows/local/binning_refinement'
-include { BUSCO_QC                         } from '../subworkflows/local/busco_qc'
-include { VIRUS_IDENTIFICATION             } from '../subworkflows/local/virus_identification'
-include { CHECKM_QC                        } from '../subworkflows/local/checkm_qc'
-include { GUNC_QC                          } from '../subworkflows/local/gunc_qc'
-include { GTDBTK                           } from '../subworkflows/local/gtdbtk'
-include { ANCIENT_DNA_ASSEMBLY_VALIDATION  } from '../subworkflows/local/ancient_dna'
-include { DOMAIN_CLASSIFICATION            } from '../subworkflows/local/domain_classification'
-include { DEPTHS                           } from '../subworkflows/local/depths'
+include { BINNING_PREPARATION             } from '../subworkflows/local/binning_preparation'
+include { BINNING                         } from '../subworkflows/local/binning'
+include { BINNING_REFINEMENT              } from '../subworkflows/local/binning_refinement'
+include { BUSCO_QC                        } from '../subworkflows/local/busco_qc'
+include { VIRUS_IDENTIFICATION            } from '../subworkflows/local/virus_identification'
+include { CHECKM_QC                       } from '../subworkflows/local/checkm_qc'
+include { GUNC_QC                         } from '../subworkflows/local/gunc_qc'
+include { GTDBTK                          } from '../subworkflows/local/gtdbtk'
+include { ANCIENT_DNA_ASSEMBLY_VALIDATION } from '../subworkflows/local/ancient_dna'
+include { DOMAIN_CLASSIFICATION           } from '../subworkflows/local/domain_classification'
+include { DEPTHS                          } from '../subworkflows/local/depths'
+include { LONGREAD_PREPROCESSING                } from '../subworkflows/local/longread_preprocessing'
 include { GENERATE_DOWNSTREAM_SAMPLESHEETS } from '../subworkflows/local/generate_downstream_samplesheets/main.nf'
 
 //
@@ -33,10 +34,6 @@ include { ARIA2 as ARIA2_UNTAR                                  } from '../modul
 include { FASTQC as FASTQC_RAW                                  } from '../modules/nf-core/fastqc/main'
 include { FASTQC as FASTQC_TRIMMED                              } from '../modules/nf-core/fastqc/main'
 include { SEQTK_MERGEPE                                         } from '../modules/nf-core/seqtk/mergepe/main'
-include { PORECHOP_PORECHOP                                     } from '../modules/nf-core/porechop/porechop/main'
-include { NANOPLOT as NANOPLOT_RAW                              } from '../modules/nf-core/nanoplot/main'
-include { NANOPLOT as NANOPLOT_FILTERED                         } from '../modules/nf-core/nanoplot/main'
-include { NANOLYSE                                              } from '../modules/nf-core/nanolyse/main'
 include { BBMAP_BBNORM                                          } from '../modules/nf-core/bbmap/bbnorm/main'
 include { FASTP                                                 } from '../modules/nf-core/fastp/main'
 include { ADAPTERREMOVAL as ADAPTERREMOVAL_PE                   } from '../modules/nf-core/adapterremoval/main'
@@ -61,7 +58,6 @@ include { BOWTIE2_REMOVAL_BUILD as BOWTIE2_HOST_REMOVAL_BUILD } from '../modules
 include { BOWTIE2_REMOVAL_ALIGN as BOWTIE2_HOST_REMOVAL_ALIGN } from '../modules/local/bowtie2_removal_align'
 include { BOWTIE2_REMOVAL_BUILD as BOWTIE2_PHIX_REMOVAL_BUILD } from '../modules/local/bowtie2_removal_build'
 include { BOWTIE2_REMOVAL_ALIGN as BOWTIE2_PHIX_REMOVAL_ALIGN } from '../modules/local/bowtie2_removal_align'
-include { FILTLONG                                            } from '../modules/local/filtlong'
 include { KRAKEN2_DB_PREPARATION                              } from '../modules/local/kraken2_db_preparation'
 include { KRAKEN2                                             } from '../modules/local/kraken2'
 include { POOL_SINGLE_READS as POOL_SHORT_SINGLE_READS        } from '../modules/local/pool_single_reads'
@@ -362,55 +358,15 @@ workflow MAG {
                                     Preprocessing and QC for long reads
     ================================================================================
     */
-    NANOPLOT_RAW (
-        ch_raw_long_reads
+
+    LONGREAD_PREPROCESSING (
+        ch_raw_long_reads,
+        ch_short_reads,
+        ch_nanolyse_db
     )
-    ch_versions = ch_versions.mix(NANOPLOT_RAW.out.versions.first())
 
-    ch_long_reads = ch_raw_long_reads
-                    .map {
-                        meta, reads ->
-                            def meta_new = meta - meta.subMap('run')
-                        [ meta_new, reads ]
-                    }
-
-    if ( !params.assembly_input ) {
-        if (!params.skip_adapter_trimming) {
-            PORECHOP_PORECHOP (
-                ch_raw_long_reads
-            )
-            ch_long_reads = PORECHOP_PORECHOP.out.reads
-            ch_versions = ch_versions.mix(PORECHOP_PORECHOP.out.versions.first())
-        }
-
-        if (!params.keep_lambda) {
-            NANOLYSE (
-                ch_long_reads,
-                ch_nanolyse_db
-            )
-            ch_long_reads = NANOLYSE.out.fastq
-            ch_versions = ch_versions.mix(NANOLYSE.out.versions.first())
-        }
-
-        // join long and short reads by sample name
-        ch_short_reads_tmp = ch_short_reads
-            .map { meta, sr -> [ meta.id, meta, sr ] }
-
-        ch_short_and_long_reads = ch_long_reads
-            .map { meta, lr -> [ meta.id, meta, lr ] }
-            .join(ch_short_reads_tmp, by: 0)
-            .map { id, meta_lr, lr, meta_sr, sr -> [ meta_lr, lr, sr[0], sr[1] ] }  // should not occur for single-end, since SPAdes (hybrid) does not support single-end
-
-        FILTLONG (
-            ch_short_and_long_reads
-        )
-        ch_long_reads = FILTLONG.out.reads
-        ch_versions = ch_versions.mix(FILTLONG.out.versions.first())
-
-        NANOPLOT_FILTERED (
-            ch_long_reads
-        )
-    }
+    ch_versions = ch_versions.mix(LONGREAD_PREPROCESSING.out.versions)
+    ch_long_reads = LONGREAD_PREPROCESSING.out.long_reads
 
     /*
     ================================================================================
@@ -1054,6 +1010,7 @@ workflow MAG {
     )
 
     ch_multiqc_files = ch_multiqc_files.mix(FASTQC_RAW.out.zip.collect{it[1]}.ifEmpty([]))
+    ch_multiqc_files = ch_multiqc_files.mix( LONGREAD_PREPROCESSING.out.multiqc_files.collect{it[1]}.ifEmpty([]) )
 
     if (!params.assembly_input) {
 

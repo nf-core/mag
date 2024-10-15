@@ -116,6 +116,19 @@ The pipeline uses Nanolyse to map the reads against the Lambda phage and removes
 
 The pipeline uses filtlong and porechop to perform quality control of the long reads that are eventually provided with the TSV input file.
 
+<details markdown="1">
+<summary>Output files</summary>
+
+- `QC_longreads/porechop/`
+  - `[sample]_[run]_porechop_trimmed.fastq.gz`: If `--longread_adaptertrimming_tool 'porechop'`, the adapter trimmed FASTQ files from porechop
+  - `[sample]_[run]_porechop-abi_trimmed.fastq.gz`: If `--longread_adaptertrimming_tool 'porechop_abi'`, the adapter trimmed FASTQ files from porechop_ABI
+- `QC_longreads/filtlong/`
+  - `[sample]_[run]_filtlong.fastq.gz`: The length and quality filtered reads in FASTQ from Filtlong
+
+</details>
+
+Trimmed and filtered FASTQ output directories and files will only exist if `--save_porechop_reads` and/or `--save_filtlong_reads` (respectively) are provided to the run command .
+
 No direct host read removal is performed for long reads.
 However, since within this pipeline filtlong uses a read quality based on k-mer matches to the already filtered short reads, reads not overlapping those short reads might be discarded.
 The lower the parameter `--longreads_length_weight`, the higher the impact of the read qualities for filtering.
