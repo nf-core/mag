@@ -26,6 +26,9 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 Note that when specifying the parameter `--coassemble_group`, for the corresponding output filenames/directories of the assembly or downsteam processes the group ID, or more precisely the term `group-[group_id]`, will be used instead of the sample ID.
 
+The pipeline can also generate downstream pipeline input samplesheets.
+These are stored in `<outdir>/downstream_samplesheets`.
+
 ## Quality control
 
 These steps trim away the adapter sequences present in input reads, trims away bad quality bases and sicard reads that are too short.
@@ -766,8 +769,8 @@ The pipeline can also generate input files for the following downstream pipeline
 <summary>Output files</summary>
 
 - `downstream_samplesheets/`
-  - `funcscan.csv`: Filled out nf-core/funcscan `--input` csv with absolute paths to the assembled contig FASTA files produced by nf-core/mag (MEGAHIT, SPAdes, SPAdesHybrid)
-  - `taxprofiler.csv`: Partially filled out nf-core/taxprofiler csv with paths to preprocessed reads (adapter trimmed, host removed etc.) `.fastq.gz`
+  - `taxprofiler.csv`: Partially filled out nf-core/taxprofiler `--input` csv with paths to preprocessed reads (adapter trimmed, host removed etc.) in `.fastq.gz` formats. I.e., the direct input into MEGAHIT, SPAdes, SPAdesHybrid.
+  - `funcscan.csv`: Filled out nf-core/funcscan `--input` csv with absolute paths to the assembled contig FASTA files produced by nf-core/mag (i.e., the direct output from MEGAHIT, SPAdes, SPAdesHybrid - not bins).
 
 </details>
 

@@ -7,8 +7,7 @@ workflow SAMPLESHEET_TAXPROFILER {
     ch_reads
 
     main:
-    format     = 'csv' // most common format in nf-core
-    format_sep = ','
+    format     = 'csv'
 
     def fastq_rel_path = '/'
     if (params.bbnorm) {
@@ -36,7 +35,7 @@ workflow SAMPLESHEET_TAXPROFILER {
         }
         .tap{ ch_colnames }
 
-    channelToSamplesheet(ch_colnames, ch_list_for_samplesheet, 'downstream_samplesheets', 'taxprofiler', format, format_sep)
+    channelToSamplesheet(ch_list_for_samplesheet, "${params.outdir}/downstream_samplesheets/mag", format)
 
 }
 
@@ -45,8 +44,7 @@ workflow SAMPLESHEET_FUNCSCAN {
     ch_assemblies
 
     main:
-    format     = 'csv' // most common format in nf-core
-    format_sep = ','
+    format     = 'csv'
 
     ch_list_for_samplesheet = ch_assemblies
         .map {
@@ -57,8 +55,7 @@ workflow SAMPLESHEET_FUNCSCAN {
         }
         .tap{ ch_colnames }
 
-    channelToSamplesheet(ch_colnames, ch_list_for_samplesheet, 'downstream_samplesheets', 'funcscan', format, format_sep)
-
+    channelToSamplesheet(ch_list_for_samplesheet, "${params.outdir}/downstream_samplesheets/funcscan", format)
 }
 
 workflow GENERATE_DOWNSTREAM_SAMPLESHEETS {
@@ -78,14 +75,17 @@ workflow GENERATE_DOWNSTREAM_SAMPLESHEETS {
     }
 }
 
-// Constructs the header string and then the strings of each row, and
-def channelToSamplesheet(ch_header, ch_list_for_samplesheet, outdir_subdir, pipeline, format, format_sep) {
+def channelToSamplesheet(ch_list_for_samplesheet, path, format) {
+    def format_sep = [csv: ",", tsv: "\t", txt: "\t"][format]
+
+    def ch_header = ch_list_for_samplesheet
+
     ch_header
         .first()
-        .map{ it.keySet().join(format_sep) }
-        .concat( ch_list_for_samplesheet.map{ it.values().join(format_sep) })
+        .map { it.keySet().join(format_sep) }
+        .concat(ch_list_for_samplesheet.map { it.values().join(format_sep) })
         .collectFile(
-            name:"${params.outdir}/${outdir_subdir}/${pipeline}.${format}",
+            name: "${path}.${format}",
             newLine: true,
             sort: false
         )

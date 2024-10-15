@@ -96,9 +96,10 @@
                 },
                 "generate_pipeline_samplesheets": {
                     "type": "string",
-                    "default": "funcscan,taxprofiler",
                     "description": "Specify which pipeline to generate a samplesheet for.",
-                    "fa_icon": "fas fa-toolbox"
+                    "help": "Note that the nf-core/funcscan samplesheet will only include paths to raw assemblies, not bins\n\nThe nf-core/taxprofiler samplesheet will include of paths the pre-processed reads that are used are used as input for _de novo_ assembly.",
+                    "fa_icon": "fas fa-toolbox",
+                    "pattern": "^(taxprofiler|funcscan)(?:,(taxprofiler|funcscan)){0,1}"
                 }
             }
         },

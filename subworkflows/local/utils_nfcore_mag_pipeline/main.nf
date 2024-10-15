@@ -118,6 +118,11 @@ workflow PIPELINE_INITIALISATION {
     //
     validateInputParameters(
         hybrid
+
+        // Validate samplesheet generation parameters
+        if (params.generate_downstream_samplesheets && !params.generate_pipeline_samplesheets) {
+            error('[nf-core/createtaxdb] If supplying `--generate_downstream_samplesheets`, you must also specify which pipeline to generate for with `--generate_pipeline_samplesheets! Check input.')
+        }
     )
 
     // Validate PRE-ASSEMBLED CONTIG input when supplied
