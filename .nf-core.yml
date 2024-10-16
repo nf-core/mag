@@ -10,8 +10,7 @@ nf_core_version: 3.0.2
 org_path: null
 repository_type: pipeline
 template:
-  author: "Hadrien Gourl\xE9, Daniel Straub, Sabrina Krakau, James A. Fellows Yates,\
-    \ Maxime Borry"
+  author: "Hadrien Gourlé, Daniel Straub, Sabrina Krakau, James A. Fellows Yates, Maxime Borry"
   description: Assembly, binning and annotation of metagenomes
   force: false
   is_nfcore: true

@@ -13,21 +13,43 @@
                 "errorMessage": "Sample name must be provided and cannot contain spaces",
                 "meta": ["id"]
             },
-            "fastq_1": {
+            "run": {
+                "type": "string",
+                "pattern": "^\\S+$",
+                "meta": ["run"],
+                "unique": ["sample"],
+                "errorMessage": "Column 'run' contains an empty field. Either remove column 'run' or fill each field with a value."
+            },
+            "group": {
+                "type": "string",
+                "pattern": "^\\S+$",
+                "meta": ["group"],
+                "errorMessage": "Column 'group' contains an empty field. Either remove column 'group' or fill each field with a value."
+            },
+            "short_reads_1": {
                 "type": "string",
                 "format": "file-path",
                 "exists": true,
                 "pattern": "^\\S+\\.f(ast)?q\\.gz$",
                 "errorMessage": "FastQ file for reads 1 must be provided, cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
             },
-            "fastq_2": {
+            "short_reads_2": {
                 "type": "string",
                 "format": "file-path",
                 "exists": true,
                 "pattern": "^\\S+\\.f(ast)?q\\.gz$",
+                "dependentRequired": ["short_reads_1"],
                 "errorMessage": "FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
+            },
+            "long_reads": {
+                "type": "string",
+                "format": "file-path",
+                "exists": true,
+                "pattern": "^\\S+\\.f(ast)?q\\.gz$",
+                "dependentRequired": ["short_reads_1", "short_reads_2"],
+                "errorMessage": "FastQ file for long reads cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
             }
         },
-        "required": ["sample", "fastq_1"]
+        "required": ["sample", "short_reads_1"]
     }
 }
