@@ -862,9 +862,6 @@
             "$ref": "#/$defs/institutional_config_options"
         },
         {
-            "$ref": "#/$defs/max_job_request_options"
-        },
-        {
             "$ref": "#/$defs/generic_options"
         },
         {
