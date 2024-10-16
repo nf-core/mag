@@ -25,6 +25,7 @@ include { ANCIENT_DNA_ASSEMBLY_VALIDATION } from '../subworkflows/local/ancient_
 include { DOMAIN_CLASSIFICATION           } from '../subworkflows/local/domain_classification'
 include { DEPTHS                          } from '../subworkflows/local/depths'
 include { LONGREAD_PREPROCESSING                } from '../subworkflows/local/longread_preprocessing'
+include { GENERATE_DOWNSTREAM_SAMPLESHEETS } from '../subworkflows/local/generate_downstream_samplesheets/main.nf'
 
 //
 // MODULE: Installed directly from nf-core/modules
@@ -506,6 +507,7 @@ workflow MAG {
         }
 
         ch_assemblies = Channel.empty()
+        ch_assemblies_gz = Channel.empty()
 
         if (!params.skip_megahit){
             MEGAHIT ( ch_short_reads_grouped )
@@ -514,7 +516,13 @@ workflow MAG {
                     def meta_new = meta + [assembler: 'MEGAHIT']
                     [ meta_new, assembly ]
                 }
+            ch_megahit_assemblies_gz = MEGAHIT.out.assembly_gz
+                .map { meta, assembly ->
+                    def meta_new = meta + [assembler: 'MEGAHIT']
+                    [ meta_new, assembly ]
+                }
             ch_assemblies = ch_assemblies.mix(ch_megahit_assemblies)
+            ch_assemblies_gz = ch_assemblies_gz.mix(ch_megahit_assemblies_gz)
             ch_versions = ch_versions.mix(MEGAHIT.out.versions.first())
         }
 
@@ -557,7 +565,13 @@ workflow MAG {
                     def meta_new = meta + [assembler: 'SPAdes']
                     [ meta_new, assembly ]
                 }
+            ch_spades_assemblies_gz = SPADES.out.assembly_gz
+                .map { meta, assembly ->
+                    def meta_new = meta + [assembler: 'SPAdes']
+                    [ meta_new, assembly ]
+                }
             ch_assemblies = ch_assemblies.mix(ch_spades_assemblies)
+            ch_assemblies_gz = ch_assemblies_gz.mix(ch_spades_assemblies_gz)
             ch_versions = ch_versions.mix(SPADES.out.versions.first())
         }
 
@@ -576,7 +590,13 @@ workflow MAG {
                     def meta_new = meta + [assembler: "SPAdesHybrid"]
                     [ meta_new, assembly ]
                 }
+            ch_spadeshybrid_assemblies_gz = SPADESHYBRID.out.assembly_gz
+                .map { meta, assembly ->
+                    def meta_new = meta + [assembler: "SPAdesHybrid"]
+                    [ meta_new, assembly ]
+                }
             ch_assemblies = ch_assemblies.mix(ch_spadeshybrid_assemblies)
+            ch_assemblies_gz = ch_assemblies_gz.mix(ch_spadeshybrid_assemblies_gz)
             ch_versions = ch_versions.mix(SPADESHYBRID.out.versions.first())
         }
     } else {
@@ -956,6 +976,13 @@ workflow MAG {
             METAEUK_EASYPREDICT (ch_bins_for_metaeuk, ch_metaeuk_db)
             ch_versions = ch_versions.mix(METAEUK_EASYPREDICT.out.versions)
         }
+    }
+
+    //
+    // Samplesheet generation
+    //
+    if ( params.generate_downstream_samplesheets ) {
+        GENERATE_DOWNSTREAM_SAMPLESHEETS ( ch_short_reads_assembly, ch_assemblies_gz )
     }
 
     //
