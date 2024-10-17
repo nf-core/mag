@@ -21,7 +21,7 @@
                 "errorMessage": "Column 'run' contains an empty field. Either remove column 'run' or fill each field with a value."
             },
             "group": {
-                "type": "string",
+                "type": ["string", "integer"],
                 "pattern": "^\\S+$",
                 "meta": ["group"],
                 "errorMessage": "Column 'group' contains an empty field. Either remove column 'group' or fill each field with a value."
@@ -38,7 +38,6 @@
                 "format": "file-path",
                 "exists": true,
                 "pattern": "^\\S+\\.f(ast)?q\\.gz$",
-                "dependentRequired": ["short_reads_1"],
                 "errorMessage": "FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
             },
             "long_reads": {
@@ -46,10 +45,14 @@
                 "format": "file-path",
                 "exists": true,
                 "pattern": "^\\S+\\.f(ast)?q\\.gz$",
-                "dependentRequired": ["short_reads_1", "short_reads_2"],
                 "errorMessage": "FastQ file for long reads cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
             }
         },
         "required": ["sample", "short_reads_1"]
+    },
+    "uniqueEntries": ["sample", "run"],
+    "dependentRequired": {
+        "short_reads_2": ["short_reads_1"],
+        "long_reads": ["short_reads_1", "short_reads_2"]
     }
 }

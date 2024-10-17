@@ -219,13 +219,6 @@ def validateInputParameters(hybrid) {
         error("[nf-core/mag] ERROR: Invalid combination of parameter '--binning_map_mode own' and parameter '--coassemble_group'. Select either 'all' or 'group' mapping mode when performing group-wise co-assembly.")
     }
 
-    // Check if specified cpus for SPAdes are available
-    if (params.spades_fix_cpus > params.max_cpus) {
-        error("[nf-core/mag] ERROR: Invalid parameter '--spades_fix_cpus ${params.spades_fix_cpus}', max cpus are '${params.max_cpus}'.")
-    }
-    if (params.spadeshybrid_fix_cpus > params.max_cpus) {
-        error("[nf-core/mag] ERROR: Invalid parameter '--spadeshybrid_fix_cpus ${params.spadeshybrid_fix_cpus}', max cpus are '${params.max_cpus}'.")
-    }
     // Check if settings concerning reproducibility of used tools are consistent and print warning if not
     if (params.megahit_fix_cpu_1 || params.spades_fix_cpus != -1 || params.spadeshybrid_fix_cpus != -1) {
         if (!params.skip_spades && params.spades_fix_cpus == -1) {
