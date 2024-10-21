@@ -157,7 +157,7 @@ jobs:
       - name: Download and prepare CheckM database
         run: |
           mkdir -p databases/checkm
-          wget https://data.ace.uq.edu.au/public/CheckM_databases/checkm_data_2015_01_16.tar.gz -P databases/checkm
+          wget https://zenodo.org/records/7401545/files/checkm_data_2015_01_16.tar.gz -P databases/checkm
           tar xzvf databases/checkm/checkm_data_2015_01_16.tar.gz -C databases/checkm/
 
       - name: Run pipeline with ${{ matrix.profile }} test profile
