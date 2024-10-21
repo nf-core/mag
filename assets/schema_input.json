@@ -10,42 +10,36 @@
             "sample": {
                 "type": "string",
                 "pattern": "^\\S+$",
-                "errorMessage": "Sample name must be provided and cannot contain spaces",
                 "meta": ["id"]
             },
             "run": {
-                "type": "string",
+                "type": ["string", "integer"],
                 "pattern": "^\\S+$",
                 "meta": ["run"],
-                "unique": ["sample"],
-                "errorMessage": "Column 'run' contains an empty field. Either remove column 'run' or fill each field with a value."
+                "unique": ["sample"]
             },
             "group": {
                 "type": ["string", "integer"],
                 "pattern": "^\\S+$",
-                "meta": ["group"],
-                "errorMessage": "Column 'group' contains an empty field. Either remove column 'group' or fill each field with a value."
+                "meta": ["group"]
             },
             "short_reads_1": {
                 "type": "string",
                 "format": "file-path",
                 "exists": true,
-                "pattern": "^\\S+\\.f(ast)?q\\.gz$",
-                "errorMessage": "FastQ file for reads 1 must be provided, cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
+                "pattern": "^\\S+\\.f(ast)?q\\.gz$"
             },
             "short_reads_2": {
                 "type": "string",
                 "format": "file-path",
                 "exists": true,
-                "pattern": "^\\S+\\.f(ast)?q\\.gz$",
-                "errorMessage": "FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
+                "pattern": "^\\S+\\.f(ast)?q\\.gz$"
             },
             "long_reads": {
                 "type": "string",
                 "format": "file-path",
                 "exists": true,
-                "pattern": "^\\S+\\.f(ast)?q\\.gz$",
-                "errorMessage": "FastQ file for long reads cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
+                "pattern": "^\\S+\\.f(ast)?q\\.gz$"
             }
         },
         "required": ["sample", "group", "short_reads_1"]
