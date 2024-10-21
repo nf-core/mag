@@ -48,7 +48,7 @@
                 "errorMessage": "FastQ file for long reads cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
             }
         },
-        "required": ["sample", "short_reads_1"]
+        "required": ["sample", "group", "short_reads_1"]
     },
     "uniqueEntries": ["sample", "run"],
     "dependentRequired": {
