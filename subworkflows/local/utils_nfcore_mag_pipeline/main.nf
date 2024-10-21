@@ -78,7 +78,7 @@ workflow PIPELINE_INITIALISATION {
 
     // Prepare FASTQs channel and separate short and long reads and prepare
     ch_raw_short_reads = ch_samplesheet.map { meta, sr1, sr2, lr ->
-        meta.run = meta.run == null ? "0" : meta.run
+        meta.run = meta.run == [] ? "0" : meta.run
         meta.single_end = params.single_end
 
         if (params.single_end) {
@@ -91,7 +91,7 @@ workflow PIPELINE_INITIALISATION {
 
     ch_raw_long_reads = ch_samplesheet.map { meta, sr1, sr2, lr ->
         if (lr) {
-            meta.run = meta.run == null ? "0" : meta.run
+            meta.run = meta.run == [] ? "0" : meta.run
             return [meta, lr]
         }
     }
@@ -337,9 +337,9 @@ def validateInputSamplesheet(meta, sr1, sr2, lr) {
 // Get attribute from genome config file e.g. fasta
 //
 def getGenomeAttribute(attribute) {
-    if (params.genomes && params.genome && params.genomes.containsKey(params.genome)) {
-        if (params.genomes[params.genome].containsKey(attribute)) {
-            return params.genomes[params.genome][attribute]
+    if (params.genomes && params.host_genome && params.genomes.containsKey(params.host_genome)) {
+        if (params.genomes[params.host_genome].containsKey(attribute)) {
+            return params.genomes[params.host_genome][attribute]
         }
     }
     return null
@@ -349,8 +349,8 @@ def getGenomeAttribute(attribute) {
 // Exit pipeline if incorrect --genome key provided
 //
 def genomeExistsError() {
-    if (params.genomes && params.genome && !params.genomes.containsKey(params.genome)) {
-        def error_string = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" + "  Genome '${params.genome}' not found in any config files provided to the pipeline.\n" + "  Currently, the available genome keys are:\n" + "  ${params.genomes.keySet().join(", ")}\n" + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+    if (params.genomes && params.host_genome && !params.genomes.containsKey(params.genome)) {
+        def error_string = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" + "  Genome '${params.host_genome}' not found in any config files provided to the pipeline.\n" + "  Currently, the available genome keys are:\n" + "  ${params.host_genomes.keySet().join(", ")}\n" + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
         error(error_string)
     }
 }
