@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#674](https://github.com/nf-core/mag/pull/674) - Make longread preprocessing a subworkflow (added by @muabnezor)
 - [#674](https://github.com/nf-core/mag/pull/674) - Add porechop and filtlong logs to multiqc (added by @muabnezor)
 - [#674](https://github.com/nf-core/mag/pull/674) - Change local filtlong module to the official nf-core/filtlong module (added by @muabnezor)
+- [#698](https://github.com/nf-core/mag/pull/698) - Updated prodigal module to not pick up input symlinks for compression causing pigz errors (reported by @zackhenny, fix by @jfy133 )
 
 ### `Dependencies`
 
