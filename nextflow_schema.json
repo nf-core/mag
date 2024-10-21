@@ -745,7 +745,7 @@
                 },
                 "checkm_download_url": {
                     "type": "string",
-                    "default": "https://data.ace.uq.edu.au/public/CheckM_databases/checkm_data_2015_01_16.tar.gz",
+                    "default": "https://zenodo.org/records/7401545/files/checkm_data_2015_01_16.tar.gz",
                     "hidden": true,
                     "description": "URL pointing to checkM database for auto download, if local path not supplied.",
                     "help_text": "You can use this parameter to point to an online copy of the checkM database TAR archive that the pipeline will use for auto download if a local path is not supplied to `--checkm_db`."
