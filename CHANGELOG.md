@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#674](https://github.com/nf-core/mag/pull/674) - Add porechop and filtlong logs to multiqc (added by @muabnezor)
 - [#674](https://github.com/nf-core/mag/pull/674) - Change local filtlong module to the official nf-core/filtlong module (added by @muabnezor)
 - [#690](https://github.com/nf-core/mag/pull/690) - MaxBin2 now using the abundance information from different samples rather than an average (reported by @uel3 and fixed by @d4straub)
+- [#698](https://github.com/nf-core/mag/pull/698) - Updated prodigal module to not pick up input symlinks for compression causing pigz errors (reported by @zackhenny, fix by @jfy133 )
 
 ### `Dependencies`
 
