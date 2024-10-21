@@ -113,7 +113,7 @@ workflow PIPELINE_INITIALISATION {
 
     // Validate PRE-ASSEMBLED CONTIG input when supplied
     if (params.assembly_input) {
-        ch_input_assemblies = Channel.fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_assembly_input.json"))
+        ch_input_assemblies = Channel.fromList(samplesheetToList(params.assembly_input, "${projectDir}/assets/schema_assembly_input.json"))
     }
 
     // Prepare ASSEMBLY input channel
