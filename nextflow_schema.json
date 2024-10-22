@@ -385,8 +385,8 @@
                 },
                 "host_fasta_bowtie2index": {
                     "type": "string",
-                    "description": "Bowtie2 index directory corresponding to --host_fasta reference file for host contamination removal.",
-                    "help_text": "This parameter must be used in combination with --host_fasta, and should be a directory containing files from the output of `bowtie2-build`, i.e. files ending in `.bt2`"
+                    "description": "Bowtie2 index directory corresponding to `--host_fasta` reference file for host contamination removal.",
+                    "help_text": "This parameter must be used in combination with `--host_fasta`, and should be a directory containing files from the output of `bowtie2-build`, i.e. files ending in `.bt2`"
                 },
                 "host_removal_verysensitive": {
                     "type": "boolean",
@@ -485,6 +485,12 @@
                 "save_filtlong_reads": {
                     "type": "boolean",
                     "description": "Specify to save the resulting length filtered FASTQ files to --outdir."
+                },
+                "longread_adaptertrimming_tool": {
+                    "type": "string",
+                    "description": "Specify which long read adapter trimming tool to use.",
+                    "enum": ["porechop", "porechop_abi"],
+                    "default": "porechop_abi"
                 }
             }
         },
