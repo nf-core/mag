@@ -174,7 +174,7 @@
                     },
                     "megahit": {
                         "branch": "master",
-                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
+                        "git_sha": "7755db15e36b30da564cd67fffdfe18a255092aa",
                         "installed_by": ["modules"]
                     },
                     "metabat2/jgisummarizebamcontigdepths": {
