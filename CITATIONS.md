@@ -64,7 +64,7 @@
 
 - [geNomad](https://doi.org/10.1101/2023.03.05.531206)
 
-  > Camargo, A. P., et al. (2023). You can move, but you can’t hide: identification of mobile genetic elements with geNomad. bioRxiv preprint. doi: https://doi.org/10.1101/2023.03.05.531206
+  > Camargo, A. P., et al. (2023). You can move, but you can’t hide: identification of mobile genetic elements with geNomad. bioRxiv preprint. doi: 10.1101/2023.03.05.531206
 
 - [GTDB-Tk](https://doi.org/10.1093/bioinformatics/btz848)
 
@@ -96,11 +96,11 @@
 
 - [MetaEuk](https://doi.org/10.1186/s40168-020-00808-x)
 
-> Levy Karin, E., Mirdita, M. & Söding, J. MetaEuk—sensitive, high-throughput gene discovery, and annotation for large-scale eukaryotic metagenomics. Microbiome 8, 48 (2020). https://doi.org/10.1186/s40168-020-00808-x
+  > Levy Karin, E., Mirdita, M. & Söding, J. MetaEuk—sensitive, high-throughput gene discovery, and annotation for large-scale eukaryotic metagenomics. Microbiome 8, 48 (2020). 10.1186/s40168-020-00808-x
 
 - [MMseqs2](https://www.nature.com/articles/nbt.3988)
 
-> Steinegger, M., Söding, J. MMseqs2 enables sensitive protein sequence searching for the analysis of massive data sets. Nat Biotechnol 35, 1026–1028 (2017). https://doi.org/10.1038/nbt.3988
+  > Steinegger, M., Söding, J. MMseqs2 enables sensitive protein sequence searching for the analysis of massive data sets. Nat Biotechnol 35, 1026–1028 (2017).10.1038/nbt.3988
 
 - [MultiQC](https://pubmed.ncbi.nlm.nih.gov/27312411/)
 
@@ -117,6 +117,8 @@
 - [Porechop](https://github.com/rrwick/Porechop)
 
 - [Porechop-abi](https://github.com/bonsai-team/Porechop_ABI)
+
+  > Bonenfant, Q., Noé, L., & Touzet, H. (2022). Porechop_ABI: discovering unknown adapters in ONT sequencing reads for downstream trimming. bioRxiv. 10.1101/2022.07.07.499093
 
 - [Prodigal](https://pubmed.ncbi.nlm.nih.gov/20211023/)
 
@@ -147,6 +149,7 @@
 ## Data
 
 - [Full-size test data](https://doi.org/10.1038/s41587-019-0191-2)
+
   > Bertrand, D., Shaw, J., Kalathiyappan, M., Ng, A. H. Q., Kumar, M. S., Li, C., ... & Nagarajan, N. (2019). Hybrid metagenomic assembly enables high-resolution analysis of resistance determinants and mobile elements in human microbiomes. Nature biotechnology, 37(8), 937-944. doi: 10.1038/s41587-019-0191-2.
 
 ## Software packaging/containerisation tools
