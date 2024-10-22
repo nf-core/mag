@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Changed`
 
 - [#674](https://github.com/nf-core/mag/pull/674) - Changed to porechop-abi as default adapter trimming tool for long reads. User can still use porechop if preferred (added by @muabnezor)
+- [#695](https://github.com/nf-core/mag/pull/695) - Updated to nf-core 3.0.2 `TEMPLATE` (by @jfy133)
+- [#695](https://github.com/nf-core/mag/pull/695) - Switch more stable Zenodo link for CheckM data (by @jfy133)
 
 ### `Fixed`
 
