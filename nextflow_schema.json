@@ -551,7 +551,7 @@
                 },
                 "spades_options": {
                     "type": "string",
-                    "description": "Additional custom options for SPAdes.",
+                    "description": "Additional custom options for SPAdes and SPAdesHybrid. You must also specify `--meta` to run SPAdes in metagenomic mode if customising these options!",
                     "help_text": "An example is adjusting k-mers (\"-k 21,33,55,77\") or adding [advanced options](https://github.com/ablab/spades#advanced-options). But not -t, -m, -o or --out-prefix, because these are already in use. Must be used like this: --spades_options \"-k 21,33,55,77\")"
                 },
                 "megahit_options": {
