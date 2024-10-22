@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Changed`
 
 - [#674](https://github.com/nf-core/mag/pull/674) - Changed to porechop-abi as default adapter trimming tool for long reads. User can still use porechop if preferred (added by @muabnezor)
+- [#666](https://github.com/nf-core/mag/pull/666) - Update SPAdes to version 4.0.0, replace both METASPADES and MEGAHIT with official nf-core modules (requested by @elsherbini, fix by @jfy133)
+- [#666](https://github.com/nf-core/mag/pull/666) - Update URLs to GTDB database downloads due to server move (reported by @Jokendo-collab, fix by @jfy133)
 - [#695](https://github.com/nf-core/mag/pull/695) - Updated to nf-core 3.0.2 `TEMPLATE` (by @jfy133)
 - [#695](https://github.com/nf-core/mag/pull/695) - Switch more stable Zenodo link for CheckM data (by @jfy133)
 
@@ -29,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | ------------ | ---------------- | ----------- |
 | Porechop_ABI |                  | 0.5.0       |
 | Filtlong     | 0.2.0            | 0.2.1       |
+| SPAdes       | 3.15.3           | 4.0.0       |
 
 ### `Deprecated`
 

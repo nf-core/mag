@@ -43,7 +43,11 @@ include { KRONA_KRONADB                                         } from '../modul
 include { KRONA_KTIMPORTTAXONOMY                                } from '../modules/nf-core/krona/ktimporttaxonomy/main'
 include { KRAKENTOOLS_KREPORT2KRONA as KREPORT2KRONA_CENTRIFUGE } from '../modules/nf-core/krakentools/kreport2krona/main'
 include { CAT_FASTQ                                             } from '../modules/nf-core/cat/fastq/main'
+include { MEGAHIT                                               } from '../modules/nf-core/megahit/main'
+include { SPADES as METASPADES                                  } from '../modules/nf-core/spades/main'
+include { SPADES as METASPADESHYBRID                            } from '../modules/nf-core/spades/main'
 include { GUNZIP as GUNZIP_ASSEMBLIES                           } from '../modules/nf-core/gunzip'
+include { GUNZIP as GUNZIP_ASSEMBLYINPUT                        } from '../modules/nf-core/gunzip'
 include { PRODIGAL                                              } from '../modules/nf-core/prodigal/main'
 include { PROKKA                                                } from '../modules/nf-core/prokka/main'
 include { MMSEQS_DATABASES                                      } from '../modules/nf-core/mmseqs/databases/main'
@@ -61,9 +65,6 @@ include { KRAKEN2                                             } from '../modules
 include { POOL_SINGLE_READS as POOL_SHORT_SINGLE_READS        } from '../modules/local/pool_single_reads'
 include { POOL_PAIRED_READS                                   } from '../modules/local/pool_paired_reads'
 include { POOL_SINGLE_READS as POOL_LONG_READS                } from '../modules/local/pool_single_reads'
-include { MEGAHIT                                             } from '../modules/local/megahit'
-include { SPADES                                              } from '../modules/local/spades'
-include { SPADESHYBRID                                        } from '../modules/local/spadeshybrid'
 include { QUAST                                               } from '../modules/local/quast'
 include { QUAST_BINS                                          } from '../modules/local/quast_bins'
 include { QUAST_BINS_SUMMARY                                  } from '../modules/local/quast_bins_summary'
@@ -73,101 +74,6 @@ include { CAT                                                 } from '../modules
 include { CAT_SUMMARY                                         } from "../modules/local/cat_summary"
 include { BIN_SUMMARY                                         } from '../modules/local/bin_summary'
 include { COMBINE_TSV as COMBINE_SUMMARY_TSV                  } from '../modules/local/combine_tsv'
-
-////////////////////////////////////////////////////
-/* --  Create channel for reference databases  -- */
-////////////////////////////////////////////////////
-
-if ( params.host_genome ) {
-    host_fasta = params.genomes[params.host_genome].fasta ?: false
-    ch_host_fasta = Channel
-        .value(file( "${host_fasta}" ))
-    host_bowtie2index = params.genomes[params.host_genome].bowtie2 ?: false
-    ch_host_bowtie2index = Channel
-        .value(file( "${host_bowtie2index}/*" ))
-} else if ( params.host_fasta ) {
-    ch_host_fasta = Channel
-        .value(file( "${params.host_fasta}" ))
-} else {
-    ch_host_fasta = Channel.empty()
-}
-
-if (params.busco_db) {
-    ch_busco_db = file(params.busco_db, checkIfExists: true)
-} else {
-    ch_busco_db = []
-}
-
-if(params.checkm_db) {
-    ch_checkm_db = file(params.checkm_db, checkIfExists: true)
-}
-
-if (params.gunc_db) {
-    ch_gunc_db = file(params.gunc_db, checkIfExists: true)
-} else {
-    ch_gunc_db = Channel.empty()
-}
-
-if(params.kraken2_db){
-    ch_kraken2_db_file = file(params.kraken2_db, checkIfExists: true)
-} else {
-    ch_kraken2_db_file = []
-}
-
-if(params.cat_db){
-    ch_cat_db_file = Channel
-        .value(file( "${params.cat_db}" ))
-} else {
-    ch_cat_db_file = Channel.empty()
-}
-
-if(params.krona_db){
-    ch_krona_db_file = Channel
-        .value(file( "${params.krona_db}" ))
-} else {
-    ch_krona_db_file = Channel.empty()
-}
-
-if(!params.keep_phix) {
-    ch_phix_db_file = Channel
-        .value(file( "${params.phix_reference}" ))
-}
-
-if (!params.keep_lambda) {
-    ch_nanolyse_db = Channel
-        .value(file( "${params.lambda_reference}" ))
-}
-
-if (params.genomad_db){
-    ch_genomad_db = file(params.genomad_db, checkIfExists: true)
-} else {
-    ch_genomad_db = Channel.empty()
-}
-
-gtdb = ( params.skip_binqc || params.skip_gtdbtk ) ? false : params.gtdb_db
-
-if (gtdb) {
-    gtdb = file( "${gtdb}", checkIfExists: true)
-    gtdb_mash = params.gtdb_mash ? file("${params.gtdb_mash}", checkIfExists: true) : []
-} else {
-    gtdb = []
-}
-
-if(params.metaeuk_db && !params.skip_metaeuk) {
-    ch_metaeuk_db = Channel.
-        value(file("${params.metaeuk_db}", checkIfExists: true))
-} else {
-    ch_metaeuk_db = Channel.empty()
-}
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    RUN MAIN WORKFLOW
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-// Additional info for completion email and summary
-def busco_failed_bins = [:]
 
 workflow MAG {
 
@@ -180,6 +86,94 @@ workflow MAG {
 
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
+
+    ////////////////////////////////////////////////////
+    /* --  Create channel for reference databases  -- */
+    ////////////////////////////////////////////////////
+
+    if ( params.host_genome ) {
+        host_fasta = params.genomes[params.host_genome].fasta ?: false
+        ch_host_fasta = Channel
+            .value(file( "${host_fasta}" ))
+        host_bowtie2index = params.genomes[params.host_genome].bowtie2 ?: false
+        ch_host_bowtie2index = Channel
+            .value(file( "${host_bowtie2index}/*" ))
+    } else if ( params.host_fasta ) {
+        ch_host_fasta = Channel
+            .value(file( "${params.host_fasta}" ))
+    } else {
+        ch_host_fasta = Channel.empty()
+    }
+
+    if (params.busco_db) {
+        ch_busco_db = file(params.busco_db, checkIfExists: true)
+    } else {
+        ch_busco_db = []
+    }
+
+    if(params.checkm_db) {
+        ch_checkm_db = file(params.checkm_db, checkIfExists: true)
+    }
+
+    if (params.gunc_db) {
+        ch_gunc_db = file(params.gunc_db, checkIfExists: true)
+    } else {
+        ch_gunc_db = Channel.empty()
+    }
+
+    if(params.kraken2_db){
+        ch_kraken2_db_file = file(params.kraken2_db, checkIfExists: true)
+    } else {
+        ch_kraken2_db_file = []
+    }
+
+    if(params.cat_db){
+        ch_cat_db_file = Channel
+            .value(file( "${params.cat_db}" ))
+    } else {
+        ch_cat_db_file = Channel.empty()
+    }
+
+    if(params.krona_db){
+        ch_krona_db_file = Channel
+            .value(file( "${params.krona_db}" ))
+    } else {
+        ch_krona_db_file = Channel.empty()
+    }
+
+    if(!params.keep_phix) {
+        ch_phix_db_file = Channel
+            .value(file( "${params.phix_reference}" ))
+    }
+
+    if (!params.keep_lambda) {
+        ch_nanolyse_db = Channel
+            .value(file( "${params.lambda_reference}" ))
+    }
+
+    if (params.genomad_db){
+        ch_genomad_db = file(params.genomad_db, checkIfExists: true)
+    } else {
+        ch_genomad_db = Channel.empty()
+    }
+
+    gtdb = ( params.skip_binqc || params.skip_gtdbtk ) ? false : params.gtdb_db
+
+    if (gtdb) {
+        gtdb = file( "${gtdb}", checkIfExists: true)
+        gtdb_mash = params.gtdb_mash ? file("${params.gtdb_mash}", checkIfExists: true) : []
+    } else {
+        gtdb = []
+    }
+
+    if(params.metaeuk_db && !params.skip_metaeuk) {
+        ch_metaeuk_db = Channel.value(file("${params.metaeuk_db}", checkIfExists: true))
+    } else {
+        ch_metaeuk_db = Channel.empty()
+    }
+
+    // Additional info for completion email and summary
+    def busco_failed_bins = [:]
 
     // Get checkM database if not supplied
 
@@ -462,7 +456,8 @@ workflow MAG {
     */
 
     if ( !params.assembly_input ) {
-        // Co-assembly: prepare grouping for MEGAHIT and for pooling for SPAdes
+
+        // Co-assembly preparation: grouping for MEGAHIT and for pooling for SPAdes
         if (params.coassemble_group) {
             // short reads
             // group and set group as new id
@@ -501,20 +496,6 @@ workflow MAG {
             ch_long_reads_grouped = ch_long_reads
         }
 
-        ch_assemblies = Channel.empty()
-
-        if (!params.skip_megahit){
-            MEGAHIT ( ch_short_reads_grouped )
-            ch_megahit_assemblies = MEGAHIT.out.assembly
-                .map { meta, assembly ->
-                    def meta_new = meta + [assembler: 'MEGAHIT']
-                    [ meta_new, assembly ]
-                }
-            ch_assemblies = ch_assemblies.mix(ch_megahit_assemblies)
-            ch_versions = ch_versions.mix(MEGAHIT.out.versions.first())
-        }
-
-        // Co-assembly: pool reads for SPAdes
         if ( ! params.skip_spades || ! params.skip_spadeshybrid ){
             if ( params.coassemble_group ) {
                 if ( params.bbnorm ) {
@@ -546,15 +527,19 @@ workflow MAG {
             ch_long_reads_spades  = Channel.empty()
         }
 
+        // Assembly
+
+        ch_assembled_contigs = Channel.empty()
+
         if (!params.single_end && !params.skip_spades){
-            SPADES ( ch_short_reads_spades )
-            ch_spades_assemblies = SPADES.out.assembly
+            METASPADES ( ch_short_reads_spades.map{ meta, reads -> [meta, reads, [], []]}, [], [] )
+            ch_spades_assemblies = METASPADES.out.scaffolds
                 .map { meta, assembly ->
                     def meta_new = meta + [assembler: 'SPAdes']
                     [ meta_new, assembly ]
                 }
-            ch_assemblies = ch_assemblies.mix(ch_spades_assemblies)
-            ch_versions = ch_versions.mix(SPADES.out.versions.first())
+            ch_assembled_contigs = ch_assembled_contigs.mix(ch_spades_assemblies)
+            ch_versions = ch_versions.mix(METASPADES.out.versions.first())
         }
 
         if (!params.single_end && !params.skip_spadeshybrid){
@@ -564,17 +549,36 @@ workflow MAG {
             ch_reads_spadeshybrid = ch_long_reads_spades
                 .map { meta, reads -> [ meta.id, meta, reads ] }
                 .combine(ch_short_reads_spades_tmp, by: 0)
-                .map { id, meta_long, long_reads, meta_short, short_reads -> [ meta_short, long_reads, short_reads ] }
+                .map { id, meta_long, long_reads, meta_short, short_reads -> [ meta_short, short_reads, [], long_reads ] }
 
-            SPADESHYBRID ( ch_reads_spadeshybrid )
-            ch_spadeshybrid_assemblies = SPADESHYBRID.out.assembly
+            METASPADESHYBRID ( ch_reads_spadeshybrid, [], [] )
+            ch_spadeshybrid_assemblies = METASPADESHYBRID.out.scaffolds
                 .map { meta, assembly ->
                     def meta_new = meta + [assembler: "SPAdesHybrid"]
                     [ meta_new, assembly ]
                 }
-            ch_assemblies = ch_assemblies.mix(ch_spadeshybrid_assemblies)
-            ch_versions = ch_versions.mix(SPADESHYBRID.out.versions.first())
+            ch_assembled_contigs = ch_assembled_contigs.mix(ch_spadeshybrid_assemblies)
+            ch_versions = ch_versions.mix(METASPADESHYBRID.out.versions.first())
         }
+
+        if (!params.skip_megahit){
+            MEGAHIT ( ch_short_reads_grouped )
+            ch_megahit_assemblies = MEGAHIT.out.contigs
+                .map { meta, assembly ->
+                    def meta_new = meta + [assembler: 'MEGAHIT']
+                    [ meta_new, assembly ]
+                }
+            ch_assembled_contigs = ch_assembled_contigs.mix(ch_megahit_assemblies)
+            ch_versions = ch_versions.mix(MEGAHIT.out.versions.first())
+        }
+
+
+
+        GUNZIP_ASSEMBLIES ( ch_assembled_contigs )
+        ch_versions = ch_versions.mix(GUNZIP_ASSEMBLIES .out.versions)
+
+        ch_assemblies = GUNZIP_ASSEMBLIES.out.gunzip
+
     } else {
         ch_assemblies_split = ch_input_assemblies
             .branch { meta, assembly ->
@@ -582,11 +586,11 @@ workflow MAG {
                 ungzip: true
             }
 
-        GUNZIP_ASSEMBLIES(ch_assemblies_split.gzipped)
-        ch_versions = ch_versions.mix(GUNZIP_ASSEMBLIES.out.versions)
+        GUNZIP_ASSEMBLYINPUT(ch_assemblies_split.gzipped)
+        ch_versions = ch_versions.mix(GUNZIP_ASSEMBLYINPUT.out.versions)
 
         ch_assemblies = Channel.empty()
-        ch_assemblies = ch_assemblies.mix(ch_assemblies_split.ungzip, GUNZIP_ASSEMBLIES.out.gunzip)
+        ch_assemblies = ch_assemblies.mix(ch_assemblies_split.ungzip, GUNZIP_ASSEMBLYINPUT.out.gunzip)
     }
 
     ch_quast_multiqc = Channel.empty()
