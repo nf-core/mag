@@ -1,18 +1,17 @@
 process MAG_DEPTHS_PLOT {
     tag "${meta.assembler}-${meta.binner}-${meta.id}"
-
-    conda "conda-forge::python=3.9 conda-forge::pandas=1.3.0 anaconda::seaborn=0.11.0"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/mulled-v2-d14219255233ee6cacc427e28a7caf8ee42e8c91:0a22c7568e4a509925048454dad9ab37fa8fe776-0' :
-        'biocontainers/mulled-v2-d14219255233ee6cacc427e28a7caf8ee42e8c91:0a22c7568e4a509925048454dad9ab37fa8fe776-0' }"
+    conda "conda-forge::python=3.9 conda-forge::pandas=1.3.0 conda-forge::seaborn=0.11.0 conda-forge::matplotlib=3.4.2"
+    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
+        ? 'https://depot.galaxyproject.org/singularity/mulled-v2-d14219255233ee6cacc427e28a7caf8ee42e8c91:0a22c7568e4a509925048454dad9ab37fa8fe776-0'
+        : 'biocontainers/mulled-v2-d14219255233ee6cacc427e28a7caf8ee42e8c91:0a22c7568e4a509925048454dad9ab37fa8fe776-0'}"
 
     input:
     tuple val(meta), path(depths)
-    path(sample_groups)
+    path sample_groups
 
     output:
     tuple val(meta), path("${meta.assembler}-${meta.binner}-${meta.id}-binDepths.heatmap.png"), emit: heatmap
-    path "versions.yml"                                                                       , emit: versions
+    path "versions.yml", emit: versions
 
     script:
     """

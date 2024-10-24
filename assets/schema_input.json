@@ -1,5 +1,5 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://raw.githubusercontent.com/nf-core/mag/master/assets/schema_input.json",
     "title": "nf-core/mag pipeline - params.input schema",
     "description": "Schema for the file provided with params.input",
@@ -10,46 +10,43 @@
             "sample": {
                 "type": "string",
                 "pattern": "^\\S+$",
-                "errorMessage": "Sample name must be provided and cannot contain spaces",
                 "meta": ["id"]
             },
             "run": {
-                "type": "string",
+                "type": ["string", "integer"],
                 "pattern": "^\\S+$",
                 "meta": ["run"],
-                "unique": ["sample"],
-                "errorMessage": "Column 'run' contains an empty field. Either remove column 'run' or fill each field with a value."
+                "unique": ["sample"]
             },
             "group": {
-                "type": "string",
+                "type": ["string", "integer"],
                 "pattern": "^\\S+$",
-                "meta": ["group"],
-                "errorMessage": "Column 'group' contains an empty field. Either remove column 'group' or fill each field with a value."
+                "meta": ["group"]
             },
             "short_reads_1": {
                 "type": "string",
                 "format": "file-path",
                 "exists": true,
-                "pattern": "^\\S+\\.f(ast)?q\\.gz$",
-                "errorMessage": "FastQ file for reads 1 must be provided, cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
+                "pattern": "^\\S+\\.f(ast)?q\\.gz$"
             },
             "short_reads_2": {
                 "type": "string",
                 "format": "file-path",
                 "exists": true,
-                "pattern": "^\\S+\\.f(ast)?q\\.gz$",
-                "dependentRequired": ["short_reads_1"],
-                "errorMessage": "FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
+                "pattern": "^\\S+\\.f(ast)?q\\.gz$"
             },
             "long_reads": {
                 "type": "string",
                 "format": "file-path",
                 "exists": true,
-                "pattern": "^\\S+\\.f(ast)?q\\.gz$",
-                "dependentRequired": ["short_reads_1", "short_reads_2"],
-                "errorMessage": "FastQ file for long reads cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
+                "pattern": "^\\S+\\.f(ast)?q\\.gz$"
             }
         },
-        "required": ["sample", "short_reads_1"]
+        "required": ["sample", "group", "short_reads_1"]
+    },
+    "uniqueEntries": ["sample", "run"],
+    "dependentRequired": {
+        "short_reads_2": ["short_reads_1"],
+        "long_reads": ["short_reads_1", "short_reads_2"]
     }
 }

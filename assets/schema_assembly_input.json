@@ -1,5 +1,5 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://raw.githubusercontent.com/nf-core/mag/master/assets/schema_input.json",
     "title": "nf-core/mag pipeline - params.input schema",
     "description": "Schema for the file provided with params.input",
@@ -10,30 +10,26 @@
             "id": {
                 "type": "string",
                 "pattern": "^\\S+$",
-                "errorMessage": "ID must be provided and cannot contain spaces",
                 "meta": ["id"]
             },
             "group": {
-                "type": "string",
+                "type": ["string", "integer"],
                 "pattern": "^\\S+$",
-                "meta": ["group"],
-                "errorMessage": "Column 'group' contains an empty field. Either remove column 'group' or fill each field with a value."
+                "meta": ["group"]
             },
             "assembler": {
                 "type": "string",
                 "pattern": "MEGAHIT|SPAdes|SPAdesHybrid",
-                "meta": ["assembler"],
-                "errorMessage": "Only MEGAHIT or SPAdes assemblies are supported"
+                "meta": ["assembler"]
             },
             "fasta": {
                 "type": "string",
                 "format": "file-path",
                 "pattern": "^\\S+\\.(fasta|fas|fa|fna)(\\.gz)?$",
-                "exists": true,
-                "unique": true,
-                "errorMessage": "FastA file with pre-assembled contigs must be provided, cannot contain spaces and must have extension 'fasta', 'fas', 'fa', or 'fna', all optionally gzipped."
+                "exists": true
             }
         },
-        "required": ["id", "assembler", "fasta"]
-    }
+        "required": ["id", "group", "assembler", "fasta"]
+    },
+    "allOf": [{ "uniqueEntries": ["fasta"] }]
 }
