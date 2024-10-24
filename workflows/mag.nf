@@ -567,16 +567,16 @@ workflow MAG {
                 .map { id, meta_long, long_reads, meta_short, short_reads -> [meta_short, short_reads, [], long_reads] }
 
             METASPADESHYBRID(ch_reads_spadeshybrid, [], [])
-            ch_spadeshybrid_assemblies = METASPADESHYBRID.out.scaffolds.map { meta, assembly ->
-                def meta_new = meta + [assembler: "SPAdesHybrid"]
-                [meta_new, assembly]
-            }
-            ch_spadeshybrid_assemblies_gz = METASPADESHYBRID.out.assembly_gz.map { meta, assembly ->
-                def meta_new = meta + [assembler: "SPAdesHybrid"]
-                [meta_new, assembly]
-            }
-            ch_assemblies = ch_assemblies.mix(ch_spadeshybrid_assemblies)
-            ch_assemblies_gz = ch_assemblies_gz.mix(ch_spadeshybrid_assemblies_gz)
+            ch_spadeshybrid_assemblies = METASPADESHYBRID.out.scaffolds
+                .map { meta, assembly ->
+                    def meta_new = meta + [assembler: "SPAdesHybrid"]
+                    [meta_new, assembly]
+                }
+                .tap { ch_spadeshybrid_assemblies_gz }
+
+
+            ch_assembled_contigs = ch_assembled_contigs.mix(ch_spadeshybrid_assemblies)
+            ch_assembled_contigs_gz = ch_assembled_contigs_gz.mix(ch_spadeshybrid_assemblies_gz)
             ch_versions = ch_versions.mix(METASPADESHYBRID.out.versions.first())
         }
 
@@ -977,7 +977,7 @@ workflow MAG {
     // Samplesheet generation
     //
     if (params.generate_downstream_samplesheets) {
-        GENERATE_DOWNSTREAM_SAMPLESHEETS(ch_short_reads_assembly, ch_assemblies_gz)
+        GENERATE_DOWNSTREAM_SAMPLESHEETS(ch_short_reads_assembly, ch_assembled_contigs_gz)
     }
 
     //
