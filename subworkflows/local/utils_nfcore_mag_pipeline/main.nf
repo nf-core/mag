@@ -316,6 +316,40 @@ def validateInputParameters(hybrid) {
     if (params.save_mmseqs_db && !params.metaeuk_mmseqs_db) {
         error('[nf-core/mag] ERROR: Invalid parameter combination: --save_mmseqs_db supplied but no database has been requested for download with --metaeuk_mmseqs_db!')
     }
+
+    if (params.generate_downstream_samplesheets) {
+
+        if (!params.generate_pipeline_samplesheets) {
+            error('[nf-core/mag] If supplying `--generate_downstream_samplesheets`, you must also specify which pipeline to generate for with `--generate_pipeline_samplesheets! Check input.')
+        }
+
+        if (params.generate_pipeline_samplesheets.split(',').contains('taxprofiler') && params.save_clipped_reads && (!params.bbnorm && params.keep_phix && !params.host_fasta && params.skip_clipping)) {
+            error('[nf-core/mag] Supplied --generate_downstream_samplesheets and --save_clipped_reads is true, but also need at lesat one of the following: --bbnorm, or --host_fasta <path>, and/or either do not supply both --keep_phix or --skip_clipping')
+        }
+
+        if (params.generate_pipeline_samplesheets.split(',').contains('taxprofiler') && params.bbnorm && !params.save_bbnorm_reads) {
+            error('[nf-core/mag] Supplied --generate_downstream_samplesheets but missing --save_bbnorm_reads (mandatory for reads.gz output when --bbnorm).')
+        }
+        else if (params.generate_pipeline_samplesheets.split(',').contains('taxprofiler') && !params.bbnorm && !params.keep_phix && !params.save_phixremoved_reads) {
+            error('[nf-core/mag] Supplied --generate_downstream_samplesheets but missing --save_phixremoved_reads (mandatory for reads.gz output when phix being removed [default behaviour]).')
+        }
+        else if (params.generate_pipeline_samplesheets.split(',').contains('taxprofiler') && !params.bbnorm && params.keep_phix && params.host_fasta && !params.save_hostremoved_reads) {
+            error('[nf-core/mag] Supplied --generate_downstream_samplesheets but missing --save_hostremoved_reads (mandatory for reads.gz output when host reads being removed).')
+        }
+        else if (params.generate_pipeline_samplesheets.split(',').contains('taxprofiler') &&  !params.bbnorm && params.keep_phix && !params.host_fasta && !params.skip_clipping && !params.save_clipped_reads) {
+            error('[nf-core/mag] Supplied --generate_downstream_samplesheets but missing --save_clipped_reads (mandatory for reads.gz output when running clipping).')
+        }
+    }
+
+    // Validate generate samplesheet inputs
+
+
+
+
+
+
+
+
 }
 
 //

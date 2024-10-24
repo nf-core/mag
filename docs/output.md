@@ -26,6 +26,9 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 Note that when specifying the parameter `--coassemble_group`, for the corresponding output filenames/directories of the assembly or downsteam processes the group ID, or more precisely the term `group-[group_id]`, will be used instead of the sample ID.
 
+The pipeline can also generate downstream pipeline input samplesheets.
+These are stored in `<outdir>/downstream_samplesheets`.
+
 ## Quality control
 
 These steps trim away the adapter sequences present in input reads, trims away bad quality bases and sicard reads that are too short.
@@ -720,6 +723,9 @@ Because of aDNA damage, _de novo_ assemblers sometimes struggle to call a correc
 
 </details>
 
+The pipeline can also generate input samplesheets for downstream pipelines.
+These are stored in `<outdir>/downstream_samplesheets`.
+
 ### MultiQC
 
 <details markdown="1">
@@ -764,3 +770,24 @@ Summary tool-specific plots and tables of following tools are currently displaye
 </details>
 
 [Nextflow](https://www.nextflow.io/docs/latest/tracing.html) provides excellent functionality for generating various reports relevant to the running and execution of the pipeline. This will allow you to troubleshoot errors with the running of the pipeline, and also provide you with other information such as launch commands, run times and resource usage.
+
+### Downstream samplesheets
+
+The pipeline can also generate input files for the following downstream pipelines:
+
+- [nf-core/funcscan](https://nf-co.re/funcscan)
+- [nf-core/taxprofiler](https://nf-co.re/taxprofiler)
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `downstream_samplesheets/`
+  - `taxprofiler.csv`: Partially filled out nf-core/taxprofiler `--input` csv with paths to preprocessed reads (adapter trimmed, host removed etc.) in `.fastq.gz` formats. I.e., the direct input into MEGAHIT, SPAdes, SPAdesHybrid.
+  - `funcscan.csv`: Filled out nf-core/funcscan `--input` csv with absolute paths to the assembled contig FASTA files produced by nf-core/mag (i.e., the direct output from MEGAHIT, SPAdes, SPAdesHybrid - not bins).
+
+</details>
+
+:::warning
+Any generated downstream samplesheet is provided as 'best effort' and are not guaranteed to work straight out of the box!
+They may not be complete (e.g. some columns may need to be manually filled in).
+:::
