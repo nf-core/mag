@@ -30,7 +30,7 @@ process BUSCO {
 
     def p = params.busco_auto_lineage_prok ? "--auto-lineage-prok" : "--auto-lineage"
     if ( "${lineage_dataset_provided}" == "Y" ) {
-        p = "--lineage_dataset dataset/${db}"
+        p = "--offline --lineage_dataset dataset/${db}"
     } else if ( "${lineage_dataset_provided}" == "N" ) {
         p += " --offline --download_path ${db}"
     } else {
