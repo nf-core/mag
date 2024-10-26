@@ -78,7 +78,7 @@ include { COMBINE_TSV as COMBINE_SUMMARY_TSV                    } from '../modul
 workflow MAG {
     take:
     ch_raw_short_reads  // channel: samplesheet read in from --input
-    ch_raw_long_reads  
+    ch_raw_long_reads
     ch_input_assemblies
 
     main:
