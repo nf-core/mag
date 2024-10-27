@@ -164,7 +164,6 @@ jobs:
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile test,docker --outdir ./results --binqc_tool checkm --checkm_db databases/checkm
 
-
   checkm2:
     name: Run single test to checkm2 due to database download
     # Only run on push if this is the nf-core dev branch (merged PRs)
