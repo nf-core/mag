@@ -131,8 +131,8 @@ jobs:
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile ${{ matrix.test_name }},docker --outdir ./results
 
-  checkm:
-    name: Run single test to checkm due to database download
+  checkm2:
+    name: Run single test to checkm2 due to database download
     # Only run on push if this is the nf-core dev branch (merged PRs)
     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/mag') }}
     runs-on: ubuntu-latest
@@ -154,12 +154,16 @@ jobs:
       - name: Clean up Disk space
         uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
 
-      - name: Download and prepare CheckM database
+      - name: Download and prepare CheckM2 database
         run: |
-          mkdir -p databases/checkm
-          wget https://zenodo.org/records/7401545/files/checkm_data_2015_01_16.tar.gz -P databases/checkm
-          tar xzvf databases/checkm/checkm_data_2015_01_16.tar.gz -C databases/checkm/
+          mkdir -p databases/checkm2
+          wget https://zenodo.org/records/5571251/files/checkm2_database.tar.gz -P databases/checkm2
+          tar xzvf databases/checkm2/checkm2_database.tar.gz -C databases/checkm2/
 
       - name: Run pipeline with ${{ matrix.profile }} test profile
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --outdir ./results --binqc_tool checkm --checkm_db databases/checkm
+          nextflow run ${GITHUB_WORKSPACE} \
+            -profile test,docker \
+            --outdir ./results \
+            --binqc_tool checkm2 \
+            --checkm2_db databases/checkm2/CheckM2_database/uniref100.KO.1.dmnd

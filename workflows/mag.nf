@@ -17,7 +17,7 @@ include { BINNING                                               } from '../subwo
 include { BINNING_REFINEMENT                                    } from '../subworkflows/local/binning_refinement'
 include { BUSCO_QC                                              } from '../subworkflows/local/busco_qc'
 include { VIRUS_IDENTIFICATION                                  } from '../subworkflows/local/virus_identification'
-include { CHECKM_QC                                             } from '../subworkflows/local/checkm_qc'
+include { CHECKM2_QC                                            } from '../subworkflows/local/checkm2_qc'
 include { GUNC_QC                                               } from '../subworkflows/local/gunc_qc'
 include { GTDBTK                                                } from '../subworkflows/local/gtdbtk'
 include { ANCIENT_DNA_ASSEMBLY_VALIDATION                       } from '../subworkflows/local/ancient_dna'
@@ -28,7 +28,6 @@ include { LONGREAD_PREPROCESSING                                } from '../subwo
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { ARIA2 as ARIA2_UNTAR                                  } from '../modules/nf-core/aria2/main'
 include { FASTQC as FASTQC_RAW                                  } from '../modules/nf-core/fastqc/main'
 include { FASTQC as FASTQC_TRIMMED                              } from '../modules/nf-core/fastqc/main'
 include { SEQTK_MERGEPE                                         } from '../modules/nf-core/seqtk/mergepe/main'
@@ -52,6 +51,7 @@ include { PRODIGAL                                              } from '../modul
 include { PROKKA                                                } from '../modules/nf-core/prokka/main'
 include { MMSEQS_DATABASES                                      } from '../modules/nf-core/mmseqs/databases/main'
 include { METAEUK_EASYPREDICT                                   } from '../modules/nf-core/metaeuk/easypredict/main'
+include { CHECKM2_DATABASEDOWNLOAD                              } from '../modules/nf-core/checkm2/databasedownload/main'
 
 //
 // MODULE: Local to the pipeline
@@ -110,8 +110,8 @@ workflow MAG {
         ch_busco_db = []
     }
 
-    if (params.checkm_db) {
-        ch_checkm_db = file(params.checkm_db, checkIfExists: true)
+    if(params.checkm2_db) {
+        ch_checkm2_db = [[:], file(params.checkm2_db, checkIfExists: true)]
     }
 
     if (params.gunc_db) {
@@ -177,11 +177,10 @@ workflow MAG {
     // Additional info for completion email and summary
     def busco_failed_bins = [:]
 
-    // Get checkM database if not supplied
-
-    if (!params.skip_binqc && params.binqc_tool == 'checkm' && !params.checkm_db) {
-        ARIA2_UNTAR(params.checkm_download_url)
-        ch_checkm_db = ARIA2_UNTAR.out.downloaded_file
+    // Get CheckM2 database if not supplied
+    if ( !params.skip_binqc && params.binqc_tool == 'checkm2' && !params.checkm2_db ) {
+        CHECKM2_DATABASEDOWNLOAD (params.checkm2_db_version)
+        ch_checkm2_db = CHECKM2_DATABASEDOWNLOAD.out.database
     }
 
     // Get mmseqs db for MetaEuk if requested
@@ -638,7 +637,7 @@ workflow MAG {
     */
 
     ch_busco_summary = Channel.empty()
-    ch_checkm_summary = Channel.empty()
+    ch_checkm2_summary = Channel.empty()
 
     if (!params.skip_binning || params.ancient_dna) {
         BINNING_PREPARATION(
@@ -774,7 +773,7 @@ workflow MAG {
         ch_versions = ch_versions.mix(DEPTHS.out.versions)
 
         /*
-        * Bin QC subworkflows: for checking bin completeness with either BUSCO, CHECKM, and/or GUNC
+        * Bin QC subworkflows: for checking bin completeness with either BUSCO, CHECKM2, and/or GUNC
         */
 
         ch_input_bins_for_qc = ch_input_for_postbinning_bins_unbins.transpose()
@@ -798,29 +797,25 @@ workflow MAG {
             }
         }
 
-        if (!params.skip_binqc && params.binqc_tool == 'checkm') {
+        if (!params.skip_binqc && params.binqc_tool == 'checkm2') {
             /*
-            * CheckM subworkflow: Quantitative measures for the assessment of genome assembly
+            * CheckM2 subworkflow: Quantitative measures for the assessment of genome assembly
             */
 
-            ch_input_bins_for_checkm = ch_input_bins_for_qc.filter { meta, bins ->
+            ch_input_bins_for_checkm2 = ch_input_bins_for_qc.filter { meta, bins ->
                 meta.domain != "eukarya"
             }
 
-            CHECKM_QC(
-                ch_input_bins_for_checkm.groupTuple(),
-                ch_checkm_db
+            CHECKM2_QC (
+                ch_input_bins_for_checkm2.groupTuple(),
+                ch_checkm2_db
             )
-            ch_checkm_summary = CHECKM_QC.out.summary
+            ch_checkm2_summary = CHECKM2_QC.out.summary
 
-            ch_versions = ch_versions.mix(CHECKM_QC.out.versions)
+            ch_versions = ch_versions.mix(CHECKM2_QC.out.versions)
         }
 
-        if (params.run_gunc && params.binqc_tool == 'checkm') {
-            GUNC_QC(ch_input_bins_for_checkm, ch_gunc_db, CHECKM_QC.out.checkm_tsv)
-            ch_versions = ch_versions.mix(GUNC_QC.out.versions)
-        }
-        else if (params.run_gunc) {
+        if (params.run_gunc) {
             ch_input_bins_for_gunc = ch_input_for_postbinning_bins_unbins.filter { meta, bins ->
                 meta.domain != "eukarya"
             }
@@ -897,7 +892,7 @@ workflow MAG {
                 GTDBTK(
                     ch_gtdb_bins,
                     ch_busco_summary,
-                    ch_checkm_summary,
+                    ch_checkm2_summary,
                     gtdb,
                     gtdb_mash
                 )
@@ -913,7 +908,7 @@ workflow MAG {
             BIN_SUMMARY(
                 ch_input_for_binsummary,
                 ch_busco_summary.ifEmpty([]),
-                ch_checkm_summary.ifEmpty([]),
+                ch_checkm2_summary.ifEmpty([]),
                 ch_quast_bins_summary.ifEmpty([]),
                 ch_gtdbtk_summary.ifEmpty([]),
                 ch_cat_global_summary.ifEmpty([])

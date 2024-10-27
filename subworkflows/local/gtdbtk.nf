@@ -10,7 +10,7 @@ workflow GTDBTK {
     take:
     bins              // channel: [ val(meta), [bins] ]
     busco_summary     // channel: path
-    checkm_summary    // channel: path
+    checkm2_summary   // channel: path
     gtdb              // channel: path
     gtdb_mash         // channel: path
 
@@ -38,13 +38,13 @@ workflow GTDBTK {
                         [row.'GenomeBin', completeness, contamination]
             }
     } else {
-        // Collect completeness and contamination metrics from checkm summary
-        ch_bin_metrics = checkm_summary
+        // Collect completeness and contamination metrics from CheckM2 summary
+        ch_bin_metrics = checkm2_summary
             .splitCsv(header: true, sep: '\t')
             .map { row ->
                         def completeness  = Double.parseDouble(row.'Completeness')
                         def contamination = Double.parseDouble(row.'Contamination')
-                        [row.'Bin Id' + ".fa", completeness, contamination]
+                        [row.'Name' + ".fa", completeness, contamination]
             }
     }
 
