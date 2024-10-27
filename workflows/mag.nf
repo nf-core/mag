@@ -3,28 +3,30 @@
     IMPORT MODULES / SUBWORKFLOWS / FUNCTIONS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-include { MULTIQC } from '../modules/nf-core/multiqc/main'
-include { paramsSummaryMap } from 'plugin/nf-schema'
-include { paramsSummaryMultiqc } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_mag_pipeline'
+
+include { MULTIQC                                               } from '../modules/nf-core/multiqc/main'
+include { paramsSummaryMap                                      } from 'plugin/nf-schema'
+include { paramsSummaryMultiqc                                  } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { softwareVersionsToYAML                                } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { methodsDescriptionText                                } from '../subworkflows/local/utils_nfcore_mag_pipeline'
 
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { BINNING_PREPARATION } from '../subworkflows/local/binning_preparation'
-include { BINNING } from '../subworkflows/local/binning'
-include { BINNING_REFINEMENT } from '../subworkflows/local/binning_refinement'
-include { BUSCO_QC } from '../subworkflows/local/busco_qc'
-include { VIRUS_IDENTIFICATION } from '../subworkflows/local/virus_identification'
-include { CHECKM_QC } from '../subworkflows/local/checkm_qc'
-include { GUNC_QC } from '../subworkflows/local/gunc_qc'
-include { GTDBTK } from '../subworkflows/local/gtdbtk'
-include { ANCIENT_DNA_ASSEMBLY_VALIDATION } from '../subworkflows/local/ancient_dna'
-include { DOMAIN_CLASSIFICATION } from '../subworkflows/local/domain_classification'
-include { DEPTHS } from '../subworkflows/local/depths'
-include { LONGREAD_PREPROCESSING } from '../subworkflows/local/longread_preprocessing'
-include { GENERATE_DOWNSTREAM_SAMPLESHEETS } from '../subworkflows/local/generate_downstream_samplesheets/main.nf'
+
+include { BINNING_PREPARATION                                   } from '../subworkflows/local/binning_preparation'
+include { BINNING                                               } from '../subworkflows/local/binning'
+include { BINNING_REFINEMENT                                    } from '../subworkflows/local/binning_refinement'
+include { BUSCO_QC                                              } from '../subworkflows/local/busco_qc'
+include { VIRUS_IDENTIFICATION                                  } from '../subworkflows/local/virus_identification'
+include { CHECKM_QC                                             } from '../subworkflows/local/checkm_qc'
+include { GUNC_QC                                               } from '../subworkflows/local/gunc_qc'
+include { GTDBTK                                                } from '../subworkflows/local/gtdbtk'
+include { ANCIENT_DNA_ASSEMBLY_VALIDATION                       } from '../subworkflows/local/ancient_dna'
+include { DOMAIN_CLASSIFICATION                                 } from '../subworkflows/local/domain_classification'
+include { DEPTHS                                                } from '../subworkflows/local/depths'
+include { LONGREAD_PREPROCESSING                                } from '../subworkflows/local/longread_preprocessing'
+include { GENERATE_DOWNSTREAM_SAMPLESHEETS                      } from '../subworkflows/local/generate_downstream_samplesheets/main.nf'
 
 //
 // MODULE: Installed directly from nf-core/modules
@@ -57,28 +59,29 @@ include { METAEUK_EASYPREDICT } from '../modules/nf-core/metaeuk/easypredict/mai
 //
 // MODULE: Local to the pipeline
 //
-include { BOWTIE2_REMOVAL_BUILD as BOWTIE2_HOST_REMOVAL_BUILD } from '../modules/local/bowtie2_removal_build'
-include { BOWTIE2_REMOVAL_ALIGN as BOWTIE2_HOST_REMOVAL_ALIGN } from '../modules/local/bowtie2_removal_align'
-include { BOWTIE2_REMOVAL_BUILD as BOWTIE2_PHIX_REMOVAL_BUILD } from '../modules/local/bowtie2_removal_build'
-include { BOWTIE2_REMOVAL_ALIGN as BOWTIE2_PHIX_REMOVAL_ALIGN } from '../modules/local/bowtie2_removal_align'
-include { KRAKEN2_DB_PREPARATION } from '../modules/local/kraken2_db_preparation'
-include { KRAKEN2 } from '../modules/local/kraken2'
-include { POOL_SINGLE_READS as POOL_SHORT_SINGLE_READS } from '../modules/local/pool_single_reads'
-include { POOL_PAIRED_READS } from '../modules/local/pool_paired_reads'
-include { POOL_SINGLE_READS as POOL_LONG_READS } from '../modules/local/pool_single_reads'
-include { QUAST } from '../modules/local/quast'
-include { QUAST_BINS } from '../modules/local/quast_bins'
-include { QUAST_BINS_SUMMARY } from '../modules/local/quast_bins_summary'
-include { CAT_DB } from '../modules/local/cat_db'
-include { CAT_DB_GENERATE } from '../modules/local/cat_db_generate'
-include { CAT } from '../modules/local/cat'
-include { CAT_SUMMARY } from '../modules/local/cat_summary'
-include { BIN_SUMMARY } from '../modules/local/bin_summary'
-include { COMBINE_TSV as COMBINE_SUMMARY_TSV } from '../modules/local/combine_tsv'
+
+include { BOWTIE2_REMOVAL_BUILD as BOWTIE2_HOST_REMOVAL_BUILD   } from '../modules/local/bowtie2_removal_build'
+include { BOWTIE2_REMOVAL_ALIGN as BOWTIE2_HOST_REMOVAL_ALIGN   } from '../modules/local/bowtie2_removal_align'
+include { BOWTIE2_REMOVAL_BUILD as BOWTIE2_PHIX_REMOVAL_BUILD   } from '../modules/local/bowtie2_removal_build'
+include { BOWTIE2_REMOVAL_ALIGN as BOWTIE2_PHIX_REMOVAL_ALIGN   } from '../modules/local/bowtie2_removal_align'
+include { KRAKEN2_DB_PREPARATION                                } from '../modules/local/kraken2_db_preparation'
+include { KRAKEN2                                               } from '../modules/local/kraken2'
+include { POOL_SINGLE_READS as POOL_SHORT_SINGLE_READS          } from '../modules/local/pool_single_reads'
+include { POOL_PAIRED_READS                                     } from '../modules/local/pool_paired_reads'
+include { POOL_SINGLE_READS as POOL_LONG_READS                  } from '../modules/local/pool_single_reads'
+include { QUAST                                                 } from '../modules/local/quast'
+include { QUAST_BINS                                            } from '../modules/local/quast_bins'
+include { QUAST_BINS_SUMMARY                                    } from '../modules/local/quast_bins_summary'
+include { CAT_DB                                                } from '../modules/local/cat_db'
+include { CAT_DB_GENERATE                                       } from '../modules/local/cat_db_generate'
+include { CAT                                                   } from '../modules/local/cat'
+include { CAT_SUMMARY                                           } from '../modules/local/cat_summary'
+include { BIN_SUMMARY                                           } from '../modules/local/bin_summary'
+include { COMBINE_TSV as COMBINE_SUMMARY_TSV                    } from '../modules/local/combine_tsv'
 
 workflow MAG {
     take:
-    ch_raw_short_reads // channel: samplesheet read in from --input
+    ch_raw_short_reads  // channel: samplesheet read in from --input
     ch_raw_long_reads
     ch_input_assemblies
 
@@ -508,10 +511,6 @@ workflow MAG {
             ch_long_reads_grouped = ch_long_reads
         }
 
-        ch_assembled_contigs = Channel.empty()
-        ch_assembled_contigs_gz = Channel.empty()
-
-        // Co-assembly: pool reads for SPAdes
         if (!params.skip_spades || !params.skip_spadeshybrid) {
             if (params.coassemble_group) {
                 if (params.bbnorm) {
@@ -544,14 +543,19 @@ workflow MAG {
             ch_long_reads_spades = Channel.empty()
         }
 
+
+        // Assembly
+
+        ch_assembled_contigs    = Channel.empty()
+        ch_assembled_contigs_gz = Channel.empty()
+
         if (!params.single_end && !params.skip_spades) {
             METASPADES(ch_short_reads_spades.map { meta, reads -> [meta, reads, [], []] }, [], [])
-            ch_spades_assemblies = METASPADES.out.scaffolds
-                .map { meta, assembly ->
-                    def meta_new = meta + [assembler: 'SPAdes']
-                    [meta_new, assembly]
-                }
-                .tap { ch_spades_assemblies_gz }
+            ch_spades_assemblies = METASPADES.out.scaffolds.map { meta, assembly ->
+                def meta_new = meta + [assembler: 'SPAdes']
+                [meta_new, assembly]
+            }
+            .tap { ch_spades_assemblies_gz }
 
             ch_assembled_contigs = ch_assembled_contigs.mix(ch_spades_assemblies)
             ch_assembled_contigs_gz = ch_assembled_contigs_gz.mix(ch_spades_assemblies_gz)
@@ -567,13 +571,11 @@ workflow MAG {
                 .map { id, meta_long, long_reads, meta_short, short_reads -> [meta_short, short_reads, [], long_reads] }
 
             METASPADESHYBRID(ch_reads_spadeshybrid, [], [])
-            ch_spadeshybrid_assemblies = METASPADESHYBRID.out.scaffolds
-                .map { meta, assembly ->
-                    def meta_new = meta + [assembler: "SPAdesHybrid"]
-                    [meta_new, assembly]
-                }
-                .tap { ch_spadeshybrid_assemblies_gz }
-
+            ch_spadeshybrid_assemblies = METASPADESHYBRID.out.scaffolds.map { meta, assembly ->
+                def meta_new = meta + [assembler: "SPAdesHybrid"]
+                [meta_new, assembly]
+            }
+            .tap { ch_spadeshybrid_assemblies_gz }
 
             ch_assembled_contigs = ch_assembled_contigs.mix(ch_spadeshybrid_assemblies)
             ch_assembled_contigs_gz = ch_assembled_contigs_gz.mix(ch_spadeshybrid_assemblies_gz)
@@ -582,17 +584,16 @@ workflow MAG {
 
         if (!params.skip_megahit) {
             MEGAHIT(ch_short_reads_grouped)
-            ch_megahit_assemblies = MEGAHIT.out.contigs
-                .map { meta, assembly ->
-                    def meta_new = meta + [assembler: 'MEGAHIT']
-                    [meta_new, assembly]
-                }
-                .tap { ch_megahit_assemblies_gz }
-
+            ch_megahit_assemblies = MEGAHIT.out.contigs.map { meta, assembly ->
+                def meta_new = meta + [assembler: 'MEGAHIT']
+                [meta_new, assembly]
+            }
+            .tap { ch_megahit_assemblies_gz }
             ch_assembled_contigs = ch_assembled_contigs.mix(ch_megahit_assemblies)
             ch_assembled_contigs_gz = ch_assembled_contigs_gz.mix(ch_megahit_assemblies_gz)
             ch_versions = ch_versions.mix(MEGAHIT.out.versions.first())
         }
+
 
         GUNZIP_ASSEMBLIES(ch_assembled_contigs)
         ch_versions = ch_versions.mix(GUNZIP_ASSEMBLIES.out.versions)
@@ -803,13 +804,12 @@ workflow MAG {
             ch_busco_summary = BUSCO_QC.out.summary
             ch_versions = ch_versions.mix(BUSCO_QC.out.versions.first())
             // process information if BUSCO analysis failed for individual bins due to no matching genes
-            BUSCO_QC.out.failed_bin
-                .splitCsv(sep: '\t')
-                .map { bin, error ->
-                    if (!bin.contains(".unbinned.")) {
-                        busco_failed_bins[bin] = error
-                    }
+
+            BUSCO_QC.out.failed_bin.splitCsv(sep: '\t').map { bin, error ->
+                if (!bin.contains(".unbinned.")) {
+                    busco_failed_bins[bin] = error
                 }
+            }
         }
 
         if (!params.skip_binqc && params.binqc_tool == 'checkm') {
@@ -1091,5 +1091,5 @@ workflow MAG {
 
     emit:
     multiqc_report = MULTIQC.out.report.toList() // channel: /path/to/multiqc_report.html
-    versions = ch_versions // channel: [ path(versions.yml) ]
+    versions       = ch_versions // channel: [ path(versions.yml) ]
 }
