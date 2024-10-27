@@ -20,7 +20,7 @@ def parse_args(args=None):
     )
     parser.add_argument("-b", "--busco_summary", metavar="FILE", help="BUSCO summary file.")
     parser.add_argument("-c", "--checkm_summary", metavar="FILE", help="CheckM summary file.")
-    parser.add_argument("-c", "--checkm2_summary", metavar="FILE", help="CheckM2 summary file.")
+    parser.add_argument("-C", "--checkm2_summary", metavar="FILE", help="CheckM2 summary file.")
     parser.add_argument("-q", "--quast_summary", metavar="FILE", help="QUAST BINS summary file.")
     parser.add_argument("-g", "--gtdbtk_summary", metavar="FILE", help="GTDB-Tk summary file.")
     parser.add_argument("-a", "--cat_summary", metavar="FILE", help="CAT table file.")
@@ -86,16 +86,23 @@ def main(args=None):
 
     if (
         not args.busco_summary
+        and not args.checkm_summary
         and not args.checkm2_summary
         and not args.quast_summary
         and not args.gtdbtk_summary
     ):
-        sys.exit("No summary specified! Please specify at least BUSCO, CheckM2 or QUAST summary.")
-
-    # GTDB-Tk can only be run in combination with BUSCO or CheckM2
-    if args.gtdbtk_summary and not (args.busco_summary or args.checkm2_summary):
         sys.exit(
-            "Invalid parameter combination: GTDB-TK summary specified, but no BUSCO or CheckM2 summary!"
+            "No summary specified! "
+            "Please specify at least BUSCO, CheckM, CheckM2 or QUAST summary."
+        )
+
+    # GTDB-Tk can only be run in combination with BUSCO, CheckM or CheckM2
+    if args.gtdbtk_summary and not (
+        args.busco_summary or args.checkm_summary or args.checkm2_summary
+    ):
+        sys.exit(
+            "Invalid parameter combination: "
+            "GTDB-TK summary specified, but no BUSCO, CheckM or CheckM2 summary!"
         )
 
     # handle bin depths
@@ -133,9 +140,7 @@ def main(args=None):
         ]
         checkm_results = pd.read_csv(args.checkm_summary, usecols=use_columns, sep="\t")
         checkm_results["Bin Id"] = checkm_results["Bin Id"] + ".fa"
-        if not bins.equals(
-            checkm_results["Bin Id"].sort_values().reset_index(drop=True)
-        ):
+        if not bins.equals(checkm_results["Bin Id"].sort_values().reset_index(drop=True)):
             sys.exit("Bins in CheckM summary do not match bins in bin depths summary!")
         results = pd.merge(
             results, checkm_results, left_on="bin", right_on="Bin Id", how="outer"
