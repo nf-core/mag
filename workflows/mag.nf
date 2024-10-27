@@ -29,6 +29,7 @@ include { LONGREAD_PREPROCESSING                                } from '../subwo
 //
 // MODULE: Installed directly from nf-core/modules
 //
+include { ARIA2 as ARIA2_UNTAR                                  } from '../modules/nf-core/aria2/main'
 include { FASTQC as FASTQC_RAW                                  } from '../modules/nf-core/fastqc/main'
 include { FASTQC as FASTQC_TRIMMED                              } from '../modules/nf-core/fastqc/main'
 include { SEQTK_MERGEPE                                         } from '../modules/nf-core/seqtk/mergepe/main'
