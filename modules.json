@@ -10,6 +10,12 @@
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
                         "installed_by": ["modules"]
                     },
+                    "aria2": {
+                        "branch": "master",
+                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/aria2/aria2.diff"
+                    },
                     "bbmap/bbnorm": {
                         "branch": "master",
                         "git_sha": "603ecbd9f45300c9788f197d2a15a005685b4220",
@@ -45,6 +51,16 @@
                         "git_sha": "9a07a1293d9b818d1e06d0f7b58152f74d462012",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/centrifuge/kreport/centrifuge-kreport.diff"
+                    },
+                    "checkm/lineagewf": {
+                        "branch": "master",
+                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "installed_by": ["modules"]
+                    },
+                    "checkm/qa": {
+                        "branch": "master",
+                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "installed_by": ["modules"]
                     },
                     "checkm2/databasedownload": {
                         "branch": "master",

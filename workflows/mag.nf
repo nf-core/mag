@@ -17,6 +17,7 @@ include { BINNING                                               } from '../subwo
 include { BINNING_REFINEMENT                                    } from '../subworkflows/local/binning_refinement'
 include { BUSCO_QC                                              } from '../subworkflows/local/busco_qc'
 include { VIRUS_IDENTIFICATION                                  } from '../subworkflows/local/virus_identification'
+include { CHECKM_QC                                             } from '../subworkflows/local/checkm_qc'
 include { CHECKM2_QC                                            } from '../subworkflows/local/checkm2_qc'
 include { GUNC_QC                                               } from '../subworkflows/local/gunc_qc'
 include { GTDBTK                                                } from '../subworkflows/local/gtdbtk'
@@ -110,6 +111,10 @@ workflow MAG {
         ch_busco_db = []
     }
 
+    if (params.checkm_db) {
+        ch_checkm_db = file(params.checkm_db, checkIfExists: true)
+    }
+
     if(params.checkm2_db) {
         ch_checkm2_db = [[:], file(params.checkm2_db, checkIfExists: true)]
     }
@@ -177,8 +182,15 @@ workflow MAG {
     // Additional info for completion email and summary
     def busco_failed_bins = [:]
 
+    // Get checkM database if not supplied
+
+    if (!params.skip_binqc && params.binqc_tool == 'checkm' && !params.checkm_db) {
+        ARIA2_UNTAR(params.checkm_download_url)
+        ch_checkm_db = ARIA2_UNTAR.out.downloaded_file
+    }
+
     // Get CheckM2 database if not supplied
-    if ( !params.skip_binqc && params.binqc_tool == 'checkm2' && !params.checkm2_db ) {
+    if (!params.skip_binqc && params.binqc_tool == 'checkm2' && !params.checkm2_db) {
         CHECKM2_DATABASEDOWNLOAD (params.checkm2_db_version)
         ch_checkm2_db = CHECKM2_DATABASEDOWNLOAD.out.database
     }
@@ -637,6 +649,7 @@ workflow MAG {
     */
 
     ch_busco_summary = Channel.empty()
+    ch_checkm_summary = Channel.empty()
     ch_checkm2_summary = Channel.empty()
 
     if (!params.skip_binning || params.ancient_dna) {
@@ -773,7 +786,7 @@ workflow MAG {
         ch_versions = ch_versions.mix(DEPTHS.out.versions)
 
         /*
-        * Bin QC subworkflows: for checking bin completeness with either BUSCO, CHECKM2, and/or GUNC
+        * Bin QC subworkflows: for checking bin completeness with either BUSCO, CHECKM, CHECKM2, and/or GUNC
         */
 
         ch_input_bins_for_qc = ch_input_for_postbinning_bins_unbins.transpose()
@@ -797,6 +810,24 @@ workflow MAG {
             }
         }
 
+        if (!params.skip_binqc && params.binqc_tool == 'checkm') {
+            /*
+            * CheckM subworkflow: Quantitative measures for the assessment of genome assembly
+            */
+
+            ch_input_bins_for_checkm = ch_input_bins_for_qc.filter { meta, bins ->
+                meta.domain != "eukarya"
+            }
+
+            CHECKM_QC(
+                ch_input_bins_for_checkm.groupTuple(),
+                ch_checkm_db
+            )
+            ch_checkm_summary = CHECKM_QC.out.summary
+
+            ch_versions = ch_versions.mix(CHECKM_QC.out.versions)
+        }
+
         if (!params.skip_binqc && params.binqc_tool == 'checkm2') {
             /*
             * CheckM2 subworkflow: Quantitative measures for the assessment of genome assembly
@@ -815,7 +846,11 @@ workflow MAG {
             ch_versions = ch_versions.mix(CHECKM2_QC.out.versions)
         }
 
-        if (params.run_gunc) {
+        if (params.run_gunc && params.binqc_tool == 'checkm') {
+            GUNC_QC(ch_input_bins_for_checkm, ch_gunc_db, CHECKM_QC.out.checkm_tsv)
+            ch_versions = ch_versions.mix(GUNC_QC.out.versions)
+        }
+        else if (params.run_gunc) {
             ch_input_bins_for_gunc = ch_input_for_postbinning_bins_unbins.filter { meta, bins ->
                 meta.domain != "eukarya"
             }
@@ -892,6 +927,7 @@ workflow MAG {
                 GTDBTK(
                     ch_gtdb_bins,
                     ch_busco_summary,
+                    ch_checkm_summary,
                     ch_checkm2_summary,
                     gtdb,
                     gtdb_mash
@@ -908,6 +944,7 @@ workflow MAG {
             BIN_SUMMARY(
                 ch_input_for_binsummary,
                 ch_busco_summary.ifEmpty([]),
+                ch_checkm_summary.ifEmpty([]),
                 ch_checkm2_summary.ifEmpty([]),
                 ch_quast_bins_summary.ifEmpty([]),
                 ch_gtdbtk_summary.ifEmpty([]),

@@ -131,6 +131,40 @@ jobs:
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile ${{ matrix.test_name }},docker --outdir ./results
 
+  checkm:
+    name: Run single test to checkm due to database download
+    # Only run on push if this is the nf-core dev branch (merged PRs)
+    if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/mag') }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Free some space
+        run: |
+          sudo rm -rf "/usr/local/share/boost"
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+
+      - name: Check out pipeline code
+        uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
+
+      - name: Install Nextflow
+        run: |
+          wget -qO- get.nextflow.io | bash
+          sudo mv nextflow /usr/local/bin/
+
+      - name: Clean up Disk space
+        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
+
+      - name: Download and prepare CheckM database
+        run: |
+          mkdir -p databases/checkm
+          wget https://zenodo.org/records/7401545/files/checkm_data_2015_01_16.tar.gz -P databases/checkm
+          tar xzvf databases/checkm/checkm_data_2015_01_16.tar.gz -C databases/checkm/
+
+      - name: Run pipeline with ${{ matrix.profile }} test profile
+        run: |
+          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --outdir ./results --binqc_tool checkm --checkm_db databases/checkm
+
+
   checkm2:
     name: Run single test to checkm2 due to database download
     # Only run on push if this is the nf-core dev branch (merged PRs)

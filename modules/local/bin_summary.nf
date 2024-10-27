@@ -8,6 +8,7 @@ process BIN_SUMMARY {
     input:
     path(bin_depths)
     path(busco_sum)
+    path(checkm_sum)
     path(checkm2_sum)
     path(quast_sum)
     path(gtdbtk_sum)
@@ -19,6 +20,7 @@ process BIN_SUMMARY {
 
     script:
     def busco_summary  = busco_sum.sort().size() > 0 ?  "--busco_summary ${busco_sum}" : ""
+    def checkm_summary = checkm2_sum.sort().size() > 0 ?  "--checkm2_summary ${checkm2_sum}" : ""
     def checkm2_summary = checkm2_sum.sort().size() > 0 ?  "--checkm2_summary ${checkm2_sum}" : ""
     def quast_summary  = quast_sum.sort().size() > 0 ?  "--quast_summary ${quast_sum}" : ""
     def gtdbtk_summary = gtdbtk_sum.sort().size() > 0 ? "--gtdbtk_summary ${gtdbtk_sum}" : ""
@@ -26,6 +28,7 @@ process BIN_SUMMARY {
     """
     combine_tables.py --depths_summary ${bin_depths} \
                     $busco_summary \
+                    $checkm_summary \
                     $checkm2_summary \
                     $quast_summary \
                     $gtdbtk_summary \

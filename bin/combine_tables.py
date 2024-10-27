@@ -19,6 +19,7 @@ def parse_args(args=None):
         help="Bin depths summary file.",
     )
     parser.add_argument("-b", "--busco_summary", metavar="FILE", help="BUSCO summary file.")
+    parser.add_argument("-c", "--checkm_summary", metavar="FILE", help="CheckM summary file.")
     parser.add_argument("-c", "--checkm2_summary", metavar="FILE", help="CheckM2 summary file.")
     parser.add_argument("-q", "--quast_summary", metavar="FILE", help="QUAST BINS summary file.")
     parser.add_argument("-g", "--gtdbtk_summary", metavar="FILE", help="GTDB-Tk summary file.")
@@ -109,6 +110,37 @@ def main(args=None):
         results = pd.merge(
             results, busco_results, left_on="bin", right_on="GenomeBin", how="outer"
         )  # assuming depths for all bins are given
+
+    if args.checkm_summary:
+        use_columns = [
+            "Bin Id",
+            "Marker lineage",
+            "# genomes",
+            "# markers",
+            "# marker sets",
+            "Completeness",
+            "Contamination",
+            "Strain heterogeneity",
+            "Coding density",
+            "Translation table",
+            "# predicted genes",
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5+",
+        ]
+        checkm_results = pd.read_csv(args.checkm_summary, usecols=use_columns, sep="\t")
+        checkm_results["Bin Id"] = checkm_results["Bin Id"] + ".fa"
+        if not bins.equals(
+            checkm_results["Bin Id"].sort_values().reset_index(drop=True)
+        ):
+            sys.exit("Bins in CheckM summary do not match bins in bin depths summary!")
+        results = pd.merge(
+            results, checkm_results, left_on="bin", right_on="Bin Id", how="outer"
+        )  # assuming depths for all bins are given
+        results["Bin Id"] = results["Bin Id"].str.removesuffix(".fa")
 
     if args.checkm2_summary:
         use_columns = [

@@ -715,13 +715,13 @@
             "properties": {
                 "skip_binqc": {
                     "type": "boolean",
-                    "description": "Disable bin QC with BUSCO or CheckM2."
+                    "description": "Disable bin QC with BUSCO, CheckM or CheckM2."
                 },
                 "binqc_tool": {
                     "type": "string",
                     "default": "busco",
                     "description": "Specify which tool for bin quality-control validation to use.",
-                    "enum": ["busco", "checkm2"]
+                    "enum": ["busco", "checkm", "checkm2"]
                 },
                 "busco_db": {
                     "type": "string",
@@ -741,6 +741,23 @@
                     "type": "boolean",
                     "description": "Enable clean-up of temporary files created during BUSCO runs.",
                     "help_text": "By default, BUSCO creates a large number of intermediate files every run. This may cause problems on some clusters which have file number limits in plate, particularly with large numbers of bins. Enabling this option cleans these files, reducing the total file count of the work directory."
+                },
+                "checkm_download_url": {
+                    "type": "string",
+                    "default": "https://zenodo.org/records/7401545/files/checkm_data_2015_01_16.tar.gz",
+                    "hidden": true,
+                    "description": "URL pointing to checkM database for auto download, if local path not supplied.",
+                    "help_text": "You can use this parameter to point to an online copy of the checkM database TAR archive that the pipeline will use for auto download if a local path is not supplied to `--checkm_db`."
+                },
+                "checkm_db": {
+                    "type": "string",
+                    "description": "Path to local folder containing already downloaded and uncompressed CheckM database.",
+                    "help_text": "The pipeline can also download this for you if not specified, and you can save the resulting directory into your output directory by specifying `--save_checkm_data`. You should move this directory to somewhere else on your machine (and supply back to the pipeline in future runs again with `--checkm_db`."
+                },
+                "save_checkm_data": {
+                    "type": "boolean",
+                    "description": "Save the used CheckM reference files downloaded when not using --checkm_db parameter.",
+                    "help_text": "If specified, the directories and files decompressed from the `tar.gz` file downloaded from the [CheckM FTP server](https://data.ace.uq.edu.au/public/CheckM_databases/) will be stored in your output directory alongside your CheckM results."
                 },
                 "checkm2_db": {
                     "type": "string",
