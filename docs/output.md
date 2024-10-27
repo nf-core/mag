@@ -113,6 +113,19 @@ The pipeline uses Nanolyse to map the reads against the Lambda phage and removes
 
 The pipeline uses filtlong and porechop to perform quality control of the long reads that are eventually provided with the TSV input file.
 
+<details markdown="1">
+<summary>Output files</summary>
+
+- `QC_longreads/porechop/`
+  - `[sample]_[run]_porechop_trimmed.fastq.gz`: If `--longread_adaptertrimming_tool 'porechop'`, the adapter trimmed FASTQ files from porechop
+  - `[sample]_[run]_porechop-abi_trimmed.fastq.gz`: If `--longread_adaptertrimming_tool 'porechop_abi'`, the adapter trimmed FASTQ files from porechop_ABI
+- `QC_longreads/filtlong/`
+  - `[sample]_[run]_filtlong.fastq.gz`: The length and quality filtered reads in FASTQ from Filtlong
+
+</details>
+
+Trimmed and filtered FASTQ output directories and files will only exist if `--save_porechop_reads` and/or `--save_filtlong_reads` (respectively) are provided to the run command .
+
 No direct host read removal is performed for long reads.
 However, since within this pipeline filtlong uses a read quality based on k-mer matches to the already filtered short reads, reads not overlapping those short reads might be discarded.
 The lower the parameter `--longreads_length_weight`, the higher the impact of the read qualities for filtering.
@@ -206,10 +219,10 @@ Trimmed (short) reads are assembled with both megahit and SPAdes. Hybrid assembl
 <summary>Output files</summary>
 
 - `Assembly/SPAdes/`
-  - `[sample/group]_scaffolds.fasta.gz`: Compressed assembled scaffolds in fasta format
-  - `[sample/group]_graph.gfa.gz`: Compressed assembly graph in gfa format
-  - `[sample/group]_contigs.fasta.gz`: Compressed assembled contigs in fasta format
-  - `[sample/group].log`: Log file
+  - `[sample/group].scaffolds.fa.gz`: Compressed assembled scaffolds in fasta format
+  - `[sample/group].assembly.gfa.gz`: Compressed assembly graph in gfa format
+  - `[sample/group].contigs.fa.gz`: Compressed assembled contigs in fasta format
+  - `[sample/group].spades.log`: Log file
   - `QC/[sample/group]/`: Directory containing QUAST files and Bowtie2 mapping logs
     - `SPAdes-[sample].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the sample that the metagenome was assembled from, only present if `--coassemble_group` is not set.
     - `SPAdes-[sample/group]-[sampleToMap].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the respective sample ("sampleToMap").
@@ -225,10 +238,10 @@ SPAdesHybrid is a part of the [SPAdes](http://cab.spbu.ru/software/spades/) soft
 <summary>Output files</summary>
 
 - `Assembly/SPAdesHybrid/`
-  - `[sample/group]_scaffolds.fasta.gz`: Compressed assembled scaffolds in fasta format
-  - `[sample/group]_graph.gfa.gz`: Compressed assembly graph in gfa format
-  - `[sample/group]_contigs.fasta.gz`: Compressed assembled contigs in fasta format
-  - `[sample/group].log`: Log file
+  - `[sample/group].scaffolds.fa.gz`: Compressed assembled scaffolds in fasta format
+  - `[sample/group].assembly.gfa.gz`: Compressed assembly graph in gfa format
+  - `[sample/group].contigs.fa.gz`: Compressed assembled contigs in fasta format
+  - `[sample/group].spades.log`: Log file
   - `QC/[sample/group]/`: Directory containing QUAST files and Bowtie2 mapping logs
     - `SPAdesHybrid-[sample].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the sample that the metagenome was assembled from, only present if `--coassemble_group` is not set.
     - `SPAdesHybrid-[sample/group]-[sampleToMap].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the respective sample ("sampleToMap").
