@@ -828,7 +828,7 @@ workflow MAG {
             ch_input_bins_for_gunc = ch_input_for_postbinning.filter { meta, bins ->
                 meta.domain != "eukarya"
             }
-            GUNC_QC(ch_input_bins_for_qc, ch_gunc_db, [])
+            GUNC_QC(ch_input_bins_for_gunc, ch_gunc_db, [])
             ch_versions = ch_versions.mix(GUNC_QC.out.versions)
         }
 
