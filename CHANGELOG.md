@@ -3,17 +3,23 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## dev [unreleased]
 
 ### `Added`
 
 - [#707](https://github.com/nf-core/mag/pull/707) - Added CheckM2 as an alternative bin completeness and QC tool (added by @dialvarezs)
+
+### `Changed`
+
+### `Fixed`
 
 ### `Dependencies`
 
 | Tool    | Previous version | New version |
 | ------- | ---------------- | ----------- |
 | CheckM2 |                  | 1.0.2       |
+
+### `Deprecated`
 
 ## 3.2.0 [2024-10-27]
 
