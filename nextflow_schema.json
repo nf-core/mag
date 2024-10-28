@@ -704,6 +704,11 @@
                     "type": "integer",
                     "default": 3000,
                     "description": "Minimum contig length for Tiara to use for domain classification. For accurate classification, should be longer than 3000 bp."
+                },
+                "include_unbins_in_postbinning": {
+                    "type": "boolean",
+                    "description": "Include unbinned contigs in the post-binning output (.",
+                    "default": true
                 }
             }
         },
