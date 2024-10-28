@@ -707,7 +707,7 @@
                 },
                 "include_unbins_in_postbinning": {
                     "type": "boolean",
-                    "description": "Include unbinned contigs in the post-binning output (.",
+                    "description": "Include unbinned contigs in the post-binning steps (bin qc, taxonomic classification and annotation).",
                     "default": true
                 }
             }

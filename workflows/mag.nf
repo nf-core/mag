@@ -769,7 +769,7 @@ workflow MAG {
             ch_input_for_postbinning_bins_unbins = ch_binning_results_bins.mix(ch_binning_results_unbins)
         }
 
-        def ch_input_for_postbinning = params.include_unbins_in_postbinning
+        ch_input_for_postbinning = params.include_unbins_in_postbinning
             ? ch_input_for_postbinning_bins_unbins
             : ch_input_for_postbinning_bins
 
