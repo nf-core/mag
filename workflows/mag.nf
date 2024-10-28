@@ -769,9 +769,9 @@ workflow MAG {
             ch_input_for_postbinning_bins_unbins = ch_binning_results_bins.mix(ch_binning_results_unbins)
         }
 
-        ch_input_for_postbinning = params.include_unbins_in_postbinning
-            ? ch_input_for_postbinning_bins_unbins
-            : ch_input_for_postbinning_bins
+        ch_input_for_postbinning = params.exclude_unbins_in_postbinning
+            ? ch_input_for_postbinning_bins
+            : ch_input_for_postbinning_bins_unbins
 
         DEPTHS(ch_input_for_postbinning, BINNING.out.metabat2depths, ch_short_reads)
         ch_input_for_binsummary = DEPTHS.out.depths_summary
