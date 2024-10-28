@@ -237,7 +237,20 @@ workflow MAG {
                 // due to strange output file scheme in AR2, have to manually separate
                 // SE/PE to allow correct pulling of reads after.
                 ch_adapterremoval_in = ch_raw_short_reads.branch {
-                    siMerge
+                    single: it[0]['single_end']
+                    paired: !it[0]['single_end']
+                }
+
+                ADAPTERREMOVAL_PE(ch_adapterremoval_in.paired, [])
+                ADAPTERREMOVAL_SE(ch_adapterremoval_in.single, [])
+
+                ch_short_reads_prepped = Channel.empty()
+                ch_short_reads_prepped = ch_short_reads_prepped.mix(ADAPTERREMOVAL_SE.out.singles_truncated, ADAPTERREMOVAL_PE.out.paired_truncated)
+
+                ch_versions = ch_versions.mix(ADAPTERREMOVAL_PE.out.versions.first(), ADAPTERREMOVAL_SE.out.versions.first())
+            }
+        }
+        else {
             ch_short_reads_prepped = ch_raw_short_reads
         }
 
