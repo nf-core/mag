@@ -83,6 +83,26 @@
                 }
             }
         },
+        "generate_samplesheet_options": {
+            "title": "Downstream pipeline samplesheet generation options",
+            "type": "object",
+            "fa_icon": "fas fa-align-justify",
+            "description": "Options for generating input samplesheets for complementary downstream pipelines.",
+            "properties": {
+                "generate_downstream_samplesheets": {
+                    "type": "boolean",
+                    "description": "Turn on generation of samplesheets for downstream pipelines.",
+                    "fa_icon": "fas fa-toggle-on"
+                },
+                "generate_pipeline_samplesheets": {
+                    "type": "string",
+                    "description": "Specify which pipeline to generate a samplesheet for.",
+                    "help": "Note that the nf-core/funcscan samplesheet will only include paths to raw assemblies, not bins\n\nThe nf-core/taxprofiler samplesheet will include of paths the pre-processed reads that are used are used as input for _de novo_ assembly.",
+                    "fa_icon": "fas fa-toolbox",
+                    "pattern": "^(taxprofiler|funcscan)(?:,(taxprofiler|funcscan)){0,1}"
+                }
+            }
+        },
         "institutional_config_options": {
             "title": "Institutional config options",
             "type": "object",
@@ -891,6 +911,9 @@
         },
         {
             "$ref": "#/$defs/ancient_dna_assembly"
+        },
+        {
+            "$ref": "#/$defs/generate_samplesheet_options"
         }
     ]
 }

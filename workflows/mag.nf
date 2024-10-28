@@ -3,6 +3,7 @@
     IMPORT MODULES / SUBWORKFLOWS / FUNCTIONS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
+
 include { MULTIQC                                               } from '../modules/nf-core/multiqc/main'
 include { paramsSummaryMap                                      } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc                                  } from '../subworkflows/nf-core/utils_nfcore_pipeline'
@@ -12,6 +13,7 @@ include { methodsDescriptionText                                } from '../subwo
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
+
 include { BINNING_PREPARATION                                   } from '../subworkflows/local/binning_preparation'
 include { BINNING                                               } from '../subworkflows/local/binning'
 include { BINNING_REFINEMENT                                    } from '../subworkflows/local/binning_refinement'
@@ -24,38 +26,40 @@ include { ANCIENT_DNA_ASSEMBLY_VALIDATION                       } from '../subwo
 include { DOMAIN_CLASSIFICATION                                 } from '../subworkflows/local/domain_classification'
 include { DEPTHS                                                } from '../subworkflows/local/depths'
 include { LONGREAD_PREPROCESSING                                } from '../subworkflows/local/longread_preprocessing'
+include { GENERATE_DOWNSTREAM_SAMPLESHEETS                      } from '../subworkflows/local/generate_downstream_samplesheets/main.nf'
 
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { ARIA2 as ARIA2_UNTAR                                  } from '../modules/nf-core/aria2/main'
-include { FASTQC as FASTQC_RAW                                  } from '../modules/nf-core/fastqc/main'
-include { FASTQC as FASTQC_TRIMMED                              } from '../modules/nf-core/fastqc/main'
-include { SEQTK_MERGEPE                                         } from '../modules/nf-core/seqtk/mergepe/main'
-include { BBMAP_BBNORM                                          } from '../modules/nf-core/bbmap/bbnorm/main'
-include { FASTP                                                 } from '../modules/nf-core/fastp/main'
-include { ADAPTERREMOVAL as ADAPTERREMOVAL_PE                   } from '../modules/nf-core/adapterremoval/main'
-include { ADAPTERREMOVAL as ADAPTERREMOVAL_SE                   } from '../modules/nf-core/adapterremoval/main'
-include { UNTAR as CENTRIFUGEDB_UNTAR                           } from '../modules/nf-core/untar/main'
-include { CENTRIFUGE_CENTRIFUGE                                 } from '../modules/nf-core/centrifuge/centrifuge/main'
-include { CENTRIFUGE_KREPORT                                    } from '../modules/nf-core/centrifuge/kreport/main'
-include { KRONA_KRONADB                                         } from '../modules/nf-core/krona/kronadb/main'
-include { KRONA_KTIMPORTTAXONOMY                                } from '../modules/nf-core/krona/ktimporttaxonomy/main'
+include { ARIA2 as ARIA2_UNTAR } from '../modules/nf-core/aria2/main'
+include { FASTQC as FASTQC_RAW } from '../modules/nf-core/fastqc/main'
+include { FASTQC as FASTQC_TRIMMED } from '../modules/nf-core/fastqc/main'
+include { SEQTK_MERGEPE } from '../modules/nf-core/seqtk/mergepe/main'
+include { BBMAP_BBNORM } from '../modules/nf-core/bbmap/bbnorm/main'
+include { FASTP } from '../modules/nf-core/fastp/main'
+include { ADAPTERREMOVAL as ADAPTERREMOVAL_PE } from '../modules/nf-core/adapterremoval/main'
+include { ADAPTERREMOVAL as ADAPTERREMOVAL_SE } from '../modules/nf-core/adapterremoval/main'
+include { UNTAR as CENTRIFUGEDB_UNTAR } from '../modules/nf-core/untar/main'
+include { CENTRIFUGE_CENTRIFUGE } from '../modules/nf-core/centrifuge/centrifuge/main'
+include { CENTRIFUGE_KREPORT } from '../modules/nf-core/centrifuge/kreport/main'
+include { KRONA_KRONADB } from '../modules/nf-core/krona/kronadb/main'
+include { KRONA_KTIMPORTTAXONOMY } from '../modules/nf-core/krona/ktimporttaxonomy/main'
 include { KRAKENTOOLS_KREPORT2KRONA as KREPORT2KRONA_CENTRIFUGE } from '../modules/nf-core/krakentools/kreport2krona/main'
-include { CAT_FASTQ                                             } from '../modules/nf-core/cat/fastq/main'
-include { MEGAHIT                                               } from '../modules/nf-core/megahit/main'
-include { SPADES as METASPADES                                  } from '../modules/nf-core/spades/main'
-include { SPADES as METASPADESHYBRID                            } from '../modules/nf-core/spades/main'
-include { GUNZIP as GUNZIP_ASSEMBLIES                           } from '../modules/nf-core/gunzip'
-include { GUNZIP as GUNZIP_ASSEMBLYINPUT                        } from '../modules/nf-core/gunzip'
-include { PRODIGAL                                              } from '../modules/nf-core/prodigal/main'
-include { PROKKA                                                } from '../modules/nf-core/prokka/main'
-include { MMSEQS_DATABASES                                      } from '../modules/nf-core/mmseqs/databases/main'
-include { METAEUK_EASYPREDICT                                   } from '../modules/nf-core/metaeuk/easypredict/main'
+include { CAT_FASTQ } from '../modules/nf-core/cat/fastq/main'
+include { MEGAHIT } from '../modules/nf-core/megahit/main'
+include { SPADES as METASPADES } from '../modules/nf-core/spades/main'
+include { SPADES as METASPADESHYBRID } from '../modules/nf-core/spades/main'
+include { GUNZIP as GUNZIP_ASSEMBLIES } from '../modules/nf-core/gunzip'
+include { GUNZIP as GUNZIP_ASSEMBLYINPUT } from '../modules/nf-core/gunzip'
+include { PRODIGAL } from '../modules/nf-core/prodigal/main'
+include { PROKKA } from '../modules/nf-core/prokka/main'
+include { MMSEQS_DATABASES } from '../modules/nf-core/mmseqs/databases/main'
+include { METAEUK_EASYPREDICT } from '../modules/nf-core/metaeuk/easypredict/main'
 
 //
 // MODULE: Local to the pipeline
 //
+
 include { BOWTIE2_REMOVAL_BUILD as BOWTIE2_HOST_REMOVAL_BUILD   } from '../modules/local/bowtie2_removal_build'
 include { BOWTIE2_REMOVAL_ALIGN as BOWTIE2_HOST_REMOVAL_ALIGN   } from '../modules/local/bowtie2_removal_align'
 include { BOWTIE2_REMOVAL_BUILD as BOWTIE2_PHIX_REMOVAL_BUILD   } from '../modules/local/bowtie2_removal_build'
@@ -539,9 +543,11 @@ workflow MAG {
             ch_long_reads_spades = Channel.empty()
         }
 
+
         // Assembly
 
-        ch_assembled_contigs = Channel.empty()
+        ch_assembled_contigs    = Channel.empty()
+        ch_assembled_contigs_gz = Channel.empty()
 
         if (!params.single_end && !params.skip_spades) {
             METASPADES(ch_short_reads_spades.map { meta, reads -> [meta, reads, [], []] }, [], [])
@@ -549,7 +555,10 @@ workflow MAG {
                 def meta_new = meta + [assembler: 'SPAdes']
                 [meta_new, assembly]
             }
+            .tap { ch_spades_assemblies_gz }
+
             ch_assembled_contigs = ch_assembled_contigs.mix(ch_spades_assemblies)
+            ch_assembled_contigs_gz = ch_assembled_contigs_gz.mix(ch_spades_assemblies_gz)
             ch_versions = ch_versions.mix(METASPADES.out.versions.first())
         }
 
@@ -566,7 +575,10 @@ workflow MAG {
                 def meta_new = meta + [assembler: "SPAdesHybrid"]
                 [meta_new, assembly]
             }
+            .tap { ch_spadeshybrid_assemblies_gz }
+
             ch_assembled_contigs = ch_assembled_contigs.mix(ch_spadeshybrid_assemblies)
+            ch_assembled_contigs_gz = ch_assembled_contigs_gz.mix(ch_spadeshybrid_assemblies_gz)
             ch_versions = ch_versions.mix(METASPADESHYBRID.out.versions.first())
         }
 
@@ -576,10 +588,11 @@ workflow MAG {
                 def meta_new = meta + [assembler: 'MEGAHIT']
                 [meta_new, assembly]
             }
+            .tap { ch_megahit_assemblies_gz }
             ch_assembled_contigs = ch_assembled_contigs.mix(ch_megahit_assemblies)
+            ch_assembled_contigs_gz = ch_assembled_contigs_gz.mix(ch_megahit_assemblies_gz)
             ch_versions = ch_versions.mix(MEGAHIT.out.versions.first())
         }
-
 
 
         GUNZIP_ASSEMBLIES(ch_assembled_contigs)
@@ -791,6 +804,7 @@ workflow MAG {
             ch_busco_summary = BUSCO_QC.out.summary
             ch_versions = ch_versions.mix(BUSCO_QC.out.versions.first())
             // process information if BUSCO analysis failed for individual bins due to no matching genes
+
             BUSCO_QC.out.failed_bin.splitCsv(sep: '\t').map { bin, error ->
                 if (!bin.contains(".unbinned.")) {
                     busco_failed_bins[bin] = error
@@ -957,6 +971,13 @@ workflow MAG {
             METAEUK_EASYPREDICT(ch_bins_for_metaeuk, ch_metaeuk_db)
             ch_versions = ch_versions.mix(METAEUK_EASYPREDICT.out.versions)
         }
+    }
+
+    //
+    // Samplesheet generation
+    //
+    if (params.generate_downstream_samplesheets) {
+        GENERATE_DOWNSTREAM_SAMPLESHEETS(ch_short_reads_assembly, ch_assembled_contigs_gz)
     }
 
     //
