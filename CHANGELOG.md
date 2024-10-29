@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
+- [#707](https://github.com/nf-core/mag/pull/674) - Fix missing space resulting in malformed args for MEGAHIT (reported by @d4straub, fix by @jfy133)
+
 ### `Dependencies`
 
 ### `Deprecated`
