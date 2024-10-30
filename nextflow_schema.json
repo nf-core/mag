@@ -705,9 +705,10 @@
                     "default": 3000,
                     "description": "Minimum contig length for Tiara to use for domain classification. For accurate classification, should be longer than 3000 bp."
                 },
-                "exclude_unbins_in_postbinning": {
+                "exclude_unbins_from_postbinning": {
                     "type": "boolean",
-                    "description": "Exclude unbinned contigs in the post-binning steps (bin qc, taxonomic classification and annotation).",
+                    "description": "Exclude unbinned contigs in the post-binning steps (bin QC, taxonomic classification, and annotation steps).",
+                    "help": "If you're not interested in assemblies results that are not considered 'genome level', excluding unbinned contigs  can greatly speed up downstream steps such as Prokka, that can be quite slow and spin up many tasks.",
                     "default": false
                 }
             }
