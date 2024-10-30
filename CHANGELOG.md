@@ -6,11 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## dev [unreleased]
 
 ### `Added`
+
 - [#708](https://github.com/nf-core/mag/pull/708) - Added `dev-exclude-unbinned` parameter to exclude unbinned contigs from post-binning processes (added by @dialvarezs)
 
 ### `Changed`
 
 ### `Fixed`
+
 - [#708](https://github.com/nf-core/mag/pull/708) - Fixed channel passed as GUNC input (added by @dialvarezs)
 
 ### `Dependencies`
