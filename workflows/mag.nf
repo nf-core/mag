@@ -649,9 +649,7 @@ workflow MAG {
     ================================================================================
     */
 
-    ch_busco_summary = Channel.empty()
-    ch_checkm_summary = Channel.empty()
-    ch_checkm2_summary = Channel.empty()
+    bin_qc_summary = Channel.empty()
 
     if (!params.skip_binning || params.ancient_dna) {
         BINNING_PREPARATION(
@@ -803,10 +801,11 @@ workflow MAG {
             ch_busco_db
         )
 
+        bin_qc_summary = BIN_QC.out.summary
         ch_versions = ch_versions.mix(BIN_QC.out.versions)
 
         if (params.run_gunc) {
-            ch_input_bins_for_gunc = ch_input_for_postbinning.filter { meta, bins ->
+            ch_input_bins_for_gunc = ch_input_for_postbinning.filter { meta, _bins ->
                 meta.domain != "eukarya"
             }
 
@@ -887,8 +886,7 @@ workflow MAG {
 
                 GTDBTK(
                     ch_gtdb_bins,
-                    ch_busco_summary,
-                    ch_checkm_summary,
+                    bin_qc_summary,
                     gtdb,
                     gtdb_mash
                 )
@@ -903,7 +901,7 @@ workflow MAG {
         if ((!params.skip_binqc) || !params.skip_quast || !params.skip_gtdbtk) {
             BIN_SUMMARY(
                 ch_input_for_binsummary,
-                params.binqc_tool == "busco" ? ch_busco_summary.ifEmpty([]) : ch_checkm_summary.ifEmpty([]),
+                bin_qc_summary.ifEmpty([]),
                 ch_quast_bins_summary.ifEmpty([]),
                 ch_gtdbtk_summary.ifEmpty([]),
                 ch_cat_global_summary.ifEmpty([])

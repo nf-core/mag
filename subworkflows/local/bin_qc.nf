@@ -47,7 +47,7 @@ workflow BIN_QC {
             // Set BUSCO database to empty to allow for --auto-lineage
             ch_db_for_busco = Channel
                 .of([])
-                .map { empty_db -> [[lineage: ''], []] }
+                .map { _empty_db -> [[lineage: ''], []] }
                 .collect()
         }
 
@@ -55,17 +55,13 @@ workflow BIN_QC {
             // publish files downloaded by Busco
             ch_downloads = BUSCO.out.busco_downloads
                 .groupTuple()
-                .map { lin, downloads -> downloads[0] }
+                .map { _lin, downloads -> downloads[0] }
                 .toSortedList()
                 .flatten()
             BUSCO_SAVE_DOWNLOAD(ch_downloads)
         }
 
         BUSCO(bins, ch_db_for_busco)
-
-        // busco_summary_domain = BUSCO.out.summary_domain.collect()
-        // busco_summary_specific = BUSCO.out.summary_specific.collect()
-        // busco_failed_bin = BUSCO.out.failed_bin.collect()
 
         BUSCO_SUMMARY(
             BUSCO.out.summary_domain.map { it[1] }.collect().ifEmpty([]),
@@ -80,7 +76,7 @@ workflow BIN_QC {
     else if (params.binqc_tool == "checkm") {
         // CheckM workflow
         ch_bins_for_checkmlineagewf = bins
-            .filter { meta, bin ->
+            .filter { meta, _bins ->
                     meta.domain != "eukarya"
                 }
             .multiMap { meta, fa ->
