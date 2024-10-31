@@ -14,10 +14,9 @@ include { methodsDescriptionText                                } from '../subwo
 //
 include { BINNING_PREPARATION                                   } from '../subworkflows/local/binning_preparation'
 include { BINNING                                               } from '../subworkflows/local/binning'
+include { BIN_QC                                                } from '../subworkflows/local/bin_qc'
 include { BINNING_REFINEMENT                                    } from '../subworkflows/local/binning_refinement'
-include { BUSCO_QC                                              } from '../subworkflows/local/busco_qc'
 include { VIRUS_IDENTIFICATION                                  } from '../subworkflows/local/virus_identification'
-include { CHECKM_QC                                             } from '../subworkflows/local/checkm_qc'
 include { GUNC_QC                                               } from '../subworkflows/local/gunc_qc'
 include { GTDBTK                                                } from '../subworkflows/local/gtdbtk'
 include { ANCIENT_DNA_ASSEMBLY_VALIDATION                       } from '../subworkflows/local/ancient_dna'
@@ -185,11 +184,7 @@ workflow MAG {
         ch_metaeuk_db = Channel.empty()
     }
 
-    // Additional info for completion email and summary
-    def busco_failed_bins = [:]
-
     // Get checkM database if not supplied
-
     if (!params.skip_binqc && params.binqc_tool == 'checkm' && !params.checkm_db) {
         ARIA2_UNTAR(params.checkm_download_url)
         ch_checkm_db = ARIA2_UNTAR.out.downloaded_file
@@ -797,55 +792,26 @@ workflow MAG {
 
         ch_input_bins_for_qc = ch_input_for_postbinning_bins_unbins.transpose()
 
-        if (!params.skip_binqc && params.binqc_tool == 'busco') {
-            /*
-            * BUSCO subworkflow: Quantitative measures for the assessment of genome assembly
-            */
+        BIN_QC(
+            ch_input_bins_for_qc,
+            ch_checkm_db,
+            ch_checkm2_db,
+            ch_busco_db
+        )
 
-            BUSCO_QC(
-                ch_busco_db,
-                ch_input_bins_for_qc
-            )
-            ch_busco_summary = BUSCO_QC.out.summary
-            ch_versions = ch_versions.mix(BUSCO_QC.out.versions.first())
-            // process information if BUSCO analysis failed for individual bins due to no matching genes
-            BUSCO_QC.out.failed_bin
-                .splitCsv(sep: '\t')
-                .map { bin, error ->
-                    if (!bin.contains(".unbinned.")) {
-                        busco_failed_bins[bin] = error
-                    }
-                }
-        }
+        ch_versions = ch_versions.mix(BIN_QC.out.versions)
 
-        if (!params.skip_binqc && params.binqc_tool in ['checkm', 'checkm2']) {
-            /*
-            * CheckM/CheckM2 subworkflow: Quantitative measures for the assessment of genome assembly
-            */
-
-            ch_input_bins_for_checkm = ch_input_bins_for_qc.filter { meta, bins ->
-                meta.domain != "eukarya"
-            }
-
-            CHECKM_QC(
-                ch_input_bins_for_checkm.groupTuple(),
-                ch_checkm_db,
-                ch_checkm2_db
-            )
-            ch_checkm_summary = CHECKM_QC.out.summary
-
-            ch_versions = ch_versions.mix(CHECKM_QC.out.versions)
-        }
-
-        if (params.run_gunc && params.binqc_tool == 'checkm') {
-            GUNC_QC(ch_input_bins_for_checkm, ch_gunc_db, CHECKM_QC.out.checkm_tsv)
-            ch_versions = ch_versions.mix(GUNC_QC.out.versions)
-        }
-        else if (params.run_gunc) {
+        if (params.run_gunc) {
             ch_input_bins_for_gunc = ch_input_for_postbinning_bins_unbins.filter { meta, bins ->
                 meta.domain != "eukarya"
             }
-            GUNC_QC(ch_input_bins_for_qc, ch_gunc_db, [])
+
+            GUNC_QC(
+                ch_input_bins_for_gunc,
+                ch_gunc_db,
+                params.binqc_tool == 'checkm' ? BIN_QC.out.checkm_tsv : []
+            )
+
             ch_versions = ch_versions.mix(GUNC_QC.out.versions)
         }
 
@@ -1075,7 +1041,7 @@ workflow MAG {
     }
 
     if (!params.skip_binning && !params.skip_binqc && params.binqc_tool == 'busco') {
-        ch_multiqc_files = ch_multiqc_files.mix(BUSCO_QC.out.multiqc.collect().ifEmpty([]))
+        ch_multiqc_files = ch_multiqc_files.mix(BIN_QC.out.multiqc.collect().ifEmpty([]))
     }
 
 
