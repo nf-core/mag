@@ -8,10 +8,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Added`
 
 - [#707](https://github.com/nf-core/mag/pull/707) - Added CheckM2 as an alternative bin completeness and QC tool (added by @dialvarezs)
+- [#708](https://github.com/nf-core/mag/pull/708) - Added `--exclude_unbins_from_postbinning` parameter to exclude unbinned contigs from post-binning processes, speeding up Prokka in some cases (added by @dialvarezs)
 
 ### `Changed`
 
 ### `Fixed`
+
+- [#708](https://github.com/nf-core/mag/pull/708) - Fixed channel passed as GUNC input (added by @dialvarezs)
+
+### `Dependencies`
+
+### `Deprecated`
+
+## 3.2.1 [2024-10-30]
+
+### `Added`
+
+### `Changed`
+
+### `Fixed`
+
+- [#707](https://github.com/nf-core/mag/pull/674) - Fix missing space resulting in malformed args for MEGAHIT (reported by @d4straub, fix by @jfy133)
 
 ### `Dependencies`
 
