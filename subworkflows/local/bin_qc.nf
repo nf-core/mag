@@ -2,14 +2,14 @@
  * BUSCO/CheckM/CheckM2: Quantitative measures for the assessment of genome assembly
  */
 
-include { BUSCO_DB_PREPARATION  } from '../../modules/local/busco_db_preparation'
-include { BUSCO                 } from '../../modules/local/busco'
-include { BUSCO_SAVE_DOWNLOAD   } from '../../modules/local/busco_save_download'
-include { BUSCO_SUMMARY         } from '../../modules/local/busco_summary'
-include { CHECKM_QA             } from '../../modules/nf-core/checkm/qa/main'
-include { CHECKM_LINEAGEWF      } from '../../modules/nf-core/checkm/lineagewf/main'
-include { CHECKM2_PREDICT       } from '../../modules/nf-core/checkm2/predict/main'
-include { COMBINE_TSV           } from '../../modules/local/combine_tsv'
+include { BUSCO_DB_PREPARATION              } from '../../modules/local/busco_db_preparation'
+include { BUSCO                             } from '../../modules/local/busco'
+include { BUSCO_SAVE_DOWNLOAD               } from '../../modules/local/busco_save_download'
+include { BUSCO_SUMMARY                     } from '../../modules/local/busco_summary'
+include { CHECKM_QA                         } from '../../modules/nf-core/checkm/qa/main'
+include { CHECKM_LINEAGEWF                  } from '../../modules/nf-core/checkm/lineagewf/main'
+include { CHECKM2_PREDICT                   } from '../../modules/nf-core/checkm2/predict/main'
+include { COMBINE_TSV as COMBINE_BINQC_TSV  } from '../../modules/local/combine_tsv'
 
 workflow BIN_QC {
     take:
@@ -20,6 +20,8 @@ workflow BIN_QC {
 
     main:
     ch_versions = Channel.empty()
+    multiqc_reports = []
+    checkm_tsv = []
 
     if (params.binqc_tool == "busco") {
         // BUSCO workflow
@@ -76,12 +78,13 @@ workflow BIN_QC {
     else if (params.binqc_tool == "checkm") {
         // CheckM workflow
         ch_bins_for_checkmlineagewf = bins
+            .groupTuple()
             .filter { meta, _bins ->
                     meta.domain != "eukarya"
                 }
             .multiMap { meta, fa ->
                 reads: [meta, fa]
-                ext: fa.extension.unique().join("")
+                ext: fa.extension.unique().join("")  // the pipeline ensures that all bins will have the same extension
             }
 
         CHECKM_LINEAGEWF(ch_bins_for_checkmlineagewf.reads, ch_bins_for_checkmlineagewf.ext, checkm_db)
@@ -95,24 +98,25 @@ workflow BIN_QC {
 
         CHECKM_QA(ch_checkmqa_input, [])
 
-        COMBINE_TSV(CHECKM_QA.out.output.map { it[1] }.collect())
+        COMBINE_BINQC_TSV(CHECKM_QA.out.output.map { it[1] }.collect())
 
-        summary = COMBINE_TSV.out.combined
+        summary = COMBINE_BINQC_TSV.out.combined
         ch_versions = ch_versions.mix(CHECKM_QA.out.versions.first())
+        checkm_tsv = CHECKM_QA.out.output
     }
     else if (params.binqc_tool == "checkm2") {
         // CheckM2 workflow
-        CHECKM2_PREDICT(bins, checkm2_db)
+        CHECKM2_PREDICT(bins.groupTuple(), checkm2_db)
 
-        COMBINE_TSV(CHECKM2_PREDICT.out.checkm2_tsv.map { it[1] }.collect())
+        COMBINE_BINQC_TSV(CHECKM2_PREDICT.out.checkm2_tsv.map { it[1] }.collect())
 
-        summary = COMBINE_TSV.out.combined
+        summary = COMBINE_BINQC_TSV.out.combined
         ch_versions = ch_versions.mix(CHECKM2_PREDICT.out.versions.first())
     }
 
     emit:
     summary     = summary
-    checkm_tsv  = params.binqc_tool == "checkm" ? CHECKM_QA.out.output : []
-    multiqc     = params.binqc_tool == "busco" ? multiqc_reports : []
+    checkm_tsv  = checkm_tsv
+    multiqc     = multiqc_reports
     versions    = ch_versions
 }
