@@ -392,7 +392,6 @@
                 },
                 "longreads_min_quality": {
                     "type": "integer",
-                    "default": null,
                     "description": "Discard any read which has a mean quality score lower than this value."
                 },
                 "longreads_keep_percent": {
