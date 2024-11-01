@@ -46,12 +46,11 @@ workflow BIN_QC {
                 // Set meta to match expected channel cardinality for BUSCO
                 ch_db_for_busco = Channel
                     .of(ch_busco_db)
-                    .map { db ->
+                    .collect { db ->
                         def basename = db.getBaseName()
                         def lineage = basename.contains('odb10') ? 'Y' : 'N'
                         [[id: basename, lineage: lineage], db]
                     }
-                    .collect()
             }
         }
         else {
@@ -74,13 +73,13 @@ workflow BIN_QC {
         BUSCO(ch_input_bins_for_qc, ch_db_for_busco)
 
         BUSCO_SUMMARY(
-            BUSCO.out.summary_domain.map { it[1] }.collect().ifEmpty([]),
-            BUSCO.out.summary_specific.map { it[1] }.collect().ifEmpty([]),
-            BUSCO.out.failed_bin.map { it[1] }.collect().ifEmpty([])
+            BUSCO.out.summary_domain.collect { v -> v[1] }.ifEmpty([]),
+            BUSCO.out.summary_specific.collect { v -> v[1] }.ifEmpty([]),
+            BUSCO.out.failed_bin.collect { v -> v[1] }.ifEmpty([])
         )
 
         ch_multiqc_files = ch_multiqc_files.mix(
-            BUSCO.out.summary_domain.mix(BUSCO.out.summary_specific).map{ it[1] }
+            BUSCO.out.summary_domain.mix(BUSCO.out.summary_specific).map { it[1] }
         )
         qc_summary = BUSCO_SUMMARY.out.summary
         ch_versions = ch_versions.mix(BUSCO.out.versions.first())
@@ -92,11 +91,11 @@ workflow BIN_QC {
         ch_bins_for_checkmlineagewf = ch_input_bins_for_qc
             .groupTuple()
             .filter { meta, _bins ->
-                    meta.domain != "eukarya"
-                }
+                meta.domain != "eukarya"
+            }
             .multiMap { meta, fa ->
                 reads: [meta, fa]
-                ext: fa.extension.unique().join("")  // the pipeline ensures that all bins will have the same extension
+                ext: fa.extension.unique().join("")
             }
 
         CHECKM_LINEAGEWF(ch_bins_for_checkmlineagewf.reads, ch_bins_for_checkmlineagewf.ext, ch_checkm_db)
@@ -110,7 +109,7 @@ workflow BIN_QC {
 
         CHECKM_QA(ch_checkmqa_input, [])
 
-        COMBINE_BINQC_TSV(CHECKM_QA.out.output.map { it[1] }.collect())
+        COMBINE_BINQC_TSV(CHECKM_QA.out.output.collect { v -> v[1] })
 
         qc_summary = COMBINE_BINQC_TSV.out.combined
         ch_versions = ch_versions.mix(CHECKM_QA.out.versions.first())
@@ -121,7 +120,7 @@ workflow BIN_QC {
          */
         CHECKM2_PREDICT(ch_input_bins_for_qc.groupTuple(), ch_checkm2_db)
 
-        COMBINE_BINQC_TSV(CHECKM2_PREDICT.out.checkm2_tsv.map { it[1] }.collect())
+        COMBINE_BINQC_TSV(CHECKM2_PREDICT.out.checkm2_tsv.collect { v -> v[1] })
 
         qc_summary = COMBINE_BINQC_TSV.out.combined
         ch_versions = ch_versions.mix(CHECKM2_PREDICT.out.versions.first())
@@ -139,7 +138,7 @@ workflow BIN_QC {
                 bins.collect { bin -> [meta, bin] }
             }
 
-        if ( params.gunc_db ) {
+        if (params.gunc_db) {
             ch_db_for_gunc = ch_gunc_db
         }
         else {
@@ -152,10 +151,14 @@ workflow BIN_QC {
 
         // Make sure to keep directory in sync with modules.conf
         GUNC_RUN.out.maxcss_level_tsv
-            .map{it[1]}
-            .collectFile(name: "gunc_summary.tsv", keepHeader: true, storeDir: "${params.outdir}/GenomeBinning/QC/")
+            .map { v -> v[1] }
+            .collectFile(
+                name: "gunc_summary.tsv",
+                keepHeader: true,
+                storeDir: "${params.outdir}/GenomeBinning/QC/"
+            )
 
-        if ( params.binqc_tool == 'checkm' ) {
+        if (params.binqc_tool == 'checkm') {
             ch_input_to_mergecheckm = GUNC_RUN.out.maxcss_level_tsv.combine(CHECKM_QA.out.output, by: 0)
 
             GUNC_MERGECHECKM(ch_input_to_mergecheckm)
@@ -163,11 +166,14 @@ workflow BIN_QC {
 
             // Make sure to keep directory in sync with modules.conf
             GUNC_MERGECHECKM.out.tsv
-                .map{it[1]}
-                .collectFile(name: "gunc_checkm_summary.tsv", keepHeader: true, storeDir: "${params.outdir}/GenomeBinning/QC/")
+                .map { v -> v[1] }
+                .collectFile(
+                    name: "gunc_checkm_summary.tsv",
+                    keepHeader: true,
+                    storeDir: "${params.outdir}/GenomeBinning/QC/"
+                )
         }
     }
-
 
     emit:
     qc_summary      = qc_summary
