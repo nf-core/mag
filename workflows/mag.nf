@@ -17,7 +17,6 @@ include { BINNING                                               } from '../subwo
 include { BIN_QC                                                } from '../subworkflows/local/bin_qc'
 include { BINNING_REFINEMENT                                    } from '../subworkflows/local/binning_refinement'
 include { VIRUS_IDENTIFICATION                                  } from '../subworkflows/local/virus_identification'
-include { GUNC_QC                                               } from '../subworkflows/local/gunc_qc'
 include { GTDBTK                                                } from '../subworkflows/local/gtdbtk'
 include { ANCIENT_DNA_ASSEMBLY_VALIDATION                       } from '../subworkflows/local/ancient_dna'
 include { DOMAIN_CLASSIFICATION                                 } from '../subworkflows/local/domain_classification'
@@ -649,7 +648,7 @@ workflow MAG {
     ================================================================================
     */
 
-    bin_qc_summary = Channel.empty()
+    ch_bin_qc_summary = Channel.empty()
 
     if (!params.skip_binning || params.ancient_dna) {
         BINNING_PREPARATION(
@@ -792,31 +791,16 @@ workflow MAG {
         * Bin QC subworkflows: for checking bin completeness with either BUSCO, CHECKM, CHECKM2, and/or GUNC
         */
 
-        ch_input_bins_for_qc = ch_input_for_postbinning.transpose()
-
         BIN_QC(
-            ch_input_bins_for_qc,
+            ch_input_for_postbinning,
             ch_checkm_db,
             ch_checkm2_db,
-            ch_busco_db
+            ch_busco_db,
+            ch_gunc_db
         )
 
-        bin_qc_summary = BIN_QC.out.summary
+        ch_bin_qc_summary = BIN_QC.out.qc_summary
         ch_versions = ch_versions.mix(BIN_QC.out.versions)
-
-        if (params.run_gunc) {
-            ch_input_bins_for_gunc = ch_input_for_postbinning.filter { meta, _bins ->
-                meta.domain != "eukarya"
-            }
-
-            GUNC_QC(
-                ch_input_bins_for_gunc,
-                ch_gunc_db,
-                params.binqc_tool == 'checkm' ? BIN_QC.out.checkm_tsv : []
-            )
-
-            ch_versions = ch_versions.mix(GUNC_QC.out.versions)
-        }
 
         ch_quast_bins_summary = Channel.empty()
         if (!params.skip_quast) {
@@ -886,7 +870,7 @@ workflow MAG {
 
                 GTDBTK(
                     ch_gtdb_bins,
-                    bin_qc_summary,
+                    ch_bin_qc_summary,
                     gtdb,
                     gtdb_mash
                 )
@@ -901,7 +885,7 @@ workflow MAG {
         if ((!params.skip_binqc) || !params.skip_quast || !params.skip_gtdbtk) {
             BIN_SUMMARY(
                 ch_input_for_binsummary,
-                bin_qc_summary.ifEmpty([]),
+                ch_bin_qc_summary.ifEmpty([]),
                 ch_quast_bins_summary.ifEmpty([]),
                 ch_gtdbtk_summary.ifEmpty([]),
                 ch_cat_global_summary.ifEmpty([])
@@ -1043,7 +1027,7 @@ workflow MAG {
     }
 
     if (!params.skip_binning && !params.skip_binqc && params.binqc_tool == 'busco') {
-        ch_multiqc_files = ch_multiqc_files.mix(BIN_QC.out.multiqc.collect().ifEmpty([]))
+        ch_multiqc_files = ch_multiqc_files.mix(BIN_QC.out.multiqc_files.collect().ifEmpty([]))
     }
 
 
