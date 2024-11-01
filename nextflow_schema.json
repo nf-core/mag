@@ -424,9 +424,9 @@
                     "type": "boolean",
                     "description": "Specify to save the resulting clipped FASTQ files to --outdir."
                 },
-                "save_filtered_reads": {
+                "save_filtered_longreads": {
                     "type": "boolean",
-                    "description": "Specify to save the resulting length filtered FASTQ files to --outdir."
+                    "description": "Specify to save the resulting length filtered long read FASTQ files to --outdir."
                 },
                 "longread_adaptertrimming_tool": {
                     "type": "string",
