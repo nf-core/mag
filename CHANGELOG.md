@@ -7,11 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
+- [#692](https://github.com/nf-core/mag/pull/692) - Added Nanoq as optional longread filtering tool
+- [#692](https://github.com/nf-core/mag/pull/692) - Added chopper as optional longread filtering tool and/or phage lambda removal tool
+
 ### `Changed`
 
 ### `Fixed`
 
 ### `Dependencies`
+
+| Tool    | Previous version | New version |
+| ------- | ---------------- | ----------- |
+| chopper |                  | 0.8.0       |
+| nanoq   |                  | 0.10.0      |
 
 ### `Deprecated`
 

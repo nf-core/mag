@@ -109,9 +109,9 @@ The pipeline uses Nanolyse to map the reads against the Lambda phage and removes
 
 </details>
 
-### Filtlong and porechop
+### Long read adapter removal
 
-The pipeline uses filtlong and porechop to perform quality control of the long reads that are eventually provided with the TSV input file.
+The pipeline uses porecho_abi or porechop to perform adaptertrimming of the long reads that are eventually provided with the TSV input file.
 
 <details markdown="1">
 <summary>Output files</summary>
@@ -119,15 +119,29 @@ The pipeline uses filtlong and porechop to perform quality control of the long r
 - `QC_longreads/porechop/`
   - `[sample]_[run]_porechop_trimmed.fastq.gz`: If `--longread_adaptertrimming_tool 'porechop'`, the adapter trimmed FASTQ files from porechop
   - `[sample]_[run]_porechop-abi_trimmed.fastq.gz`: If `--longread_adaptertrimming_tool 'porechop_abi'`, the adapter trimmed FASTQ files from porechop_ABI
-- `QC_longreads/filtlong/`
-  - `[sample]_[run]_filtlong.fastq.gz`: The length and quality filtered reads in FASTQ from Filtlong
 
 </details>
 
-Trimmed and filtered FASTQ output directories and files will only exist if `--save_porechop_reads` and/or `--save_filtlong_reads` (respectively) are provided to the run command .
+### Long read filtering
+
+The pipeline uses filtlong, chopper, or nanoq for quality filtering of long reads, specified with `--longread_filtering_tool filtlong|chopper|nanoq`. Only is capable of filtering long reads against short reads, and is therefor currently recommended in the hybrid mode. If chopper is selected as long read filtering tool, Phage Lambda removal will be performed with chopper as well, instead of nanolyse.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `QC_longreads/Filtlong/`
+  - `[sample]_[run]_filtlong.fastq.gz`: The length and quality filtered reads in FASTQ from Filtlong
+- `QC_longreads/Nanoq/`
+  - `[sample]_[run]_nanoq_filtered.fastq.gz`: The length and quality filtered reads in FASTQ from Nanoq
+- `QC_longreads/Chopper/`
+  - `[sample]_[run]_nanoq_chopper.fastq.gz`: The length and quality filtered, optionally phage lambda removed reads in FASTQ from Chopper
+
+</details>
+
+Trimmed and filtered FASTQ output directories and files will only exist if `--save_porechop_reads` and/or `--save_filtered_longreads` (respectively) are provided to the run command .
 
 No direct host read removal is performed for long reads.
-However, since within this pipeline filtlong uses a read quality based on k-mer matches to the already filtered short reads, reads not overlapping those short reads might be discarded.
+However, since within this pipeline filtlong uses a read quality based on k-mer matches to the already filtered short reads, reads not overlapping those short reads might be discarded. Note that this only applies when using filtlong as long read filtering tool.
 The lower the parameter `--longreads_length_weight`, the higher the impact of the read qualities for filtering.
 For further documentation see the [filtlong online documentation](https://github.com/rrwick/Filtlong).
 
