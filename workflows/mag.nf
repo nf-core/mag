@@ -135,8 +135,10 @@ if(!params.keep_phix) {
 }
 
 if (!params.keep_lambda) {
-    ch_nanolyse_db = Channel
+    ch_lambda_db = Channel
         .value(file( "${params.lambda_reference}" ))
+} else {
+    ch_lambda_db = Channel.empty()
 }
 
 if (params.genomad_db){
@@ -361,7 +363,7 @@ workflow MAG {
     LONGREAD_PREPROCESSING (
         ch_raw_long_reads,
         ch_short_reads,
-        ch_nanolyse_db
+        ch_lambda_db
     )
 
     ch_versions = ch_versions.mix(LONGREAD_PREPROCESSING.out.versions)

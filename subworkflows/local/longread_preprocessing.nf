@@ -15,7 +15,7 @@ workflow LONGREAD_PREPROCESSING {
     take:
     ch_raw_long_reads         // [ [meta] , fastq] (mandatory)
     ch_short_reads            // [ [meta] , fastq1, fastq2] (mandatory)
-    ch_nanolyse_db            // [fasta]
+    ch_lambda_db            // [fasta]
 
     main:
     ch_versions = Channel.empty()
@@ -56,7 +56,7 @@ workflow LONGREAD_PREPROCESSING {
         if (!params.keep_lambda && params.longread_filtering_tool != 'chopper') {
             NANOLYSE (
                 ch_long_reads,
-                ch_nanolyse_db
+                ch_lambda_db
             )
             ch_long_reads = NANOLYSE.out.fastq
             ch_versions = ch_versions.mix(NANOLYSE.out.versions.first())
@@ -88,7 +88,8 @@ workflow LONGREAD_PREPROCESSING {
             ch_multiqc_files = ch_multiqc_files.mix(NANOQ.out.stats)
         } else if (params.longread_filtering_tool == 'chopper') {
             CHOPPER (
-                ch_long_reads
+                ch_long_reads,
+                ch_lambda_db.ifEmpty([])
             )
             ch_long_reads = CHOPPER.out.fastq
             ch_versions = ch_versions.mix(CHOPPER.out.versions.first())
