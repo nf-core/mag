@@ -21,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Tool    | Previous version | New version |
 | ------- | ---------------- | ----------- |
-| chopper |                  | 0.8.0       |
+| chopper |                  | 0.9.0       |
 | nanoq   |                  | 0.10.0      |
 
 ### `Deprecated`
