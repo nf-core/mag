@@ -124,7 +124,7 @@ The pipeline uses porecho_abi or porechop to perform adaptertrimming of the long
 
 ### Long read filtering
 
-The pipeline uses filtlong, chopper, or nanoq for quality filtering of long reads, specified with `--longread_filtering_tool filtlong|chopper|nanoq`. Only is capable of filtering long reads against short reads, and is therefor currently recommended in the hybrid mode. If chopper is selected as long read filtering tool, Phage Lambda removal will be performed with chopper as well, instead of nanolyse.
+The pipeline uses filtlong, chopper, or nanoq for quality filtering of long reads, specified with `--longread_filtering_tool <filtlong|chopper|nanoq>`. Only is capable of filtering long reads against short reads, and is therefore currently recommended in the hybrid mode. If chopper is selected as long read filtering tool, Lambda Phage removal will be performed with chopper as well, instead of nanolyse.
 
 <details markdown="1">
 <summary>Output files</summary>
