@@ -148,7 +148,9 @@ workflow MAG {
     }
 
     if (!params.keep_lambda) {
-        ch_nanolyse_db = Channel.value(file("${params.lambda_reference}"))
+        ch_lambda_db = Channel.value(file( "${params.lambda_reference}" ))
+    } else {
+        ch_lambda_db = Channel.empty()
     }
 
     if (params.genomad_db) {
@@ -218,7 +220,7 @@ workflow MAG {
     LONGREAD_PREPROCESSING(
         ch_raw_long_reads,
         ch_short_reads,
-        ch_nanolyse_db
+        ch_lambda_db
     )
 
     ch_versions = ch_versions.mix(LONGREAD_PREPROCESSING.out.versions)
@@ -634,7 +636,11 @@ workflow MAG {
             ch_input_for_postbinning_bins_unbins = ch_binning_results_bins.mix(ch_binning_results_unbins)
         }
 
-        DEPTHS(ch_input_for_postbinning_bins_unbins, BINNING.out.metabat2depths, ch_short_reads)
+        ch_input_for_postbinning = params.exclude_unbins_from_postbinning
+            ? ch_input_for_postbinning_bins
+            : ch_input_for_postbinning_bins_unbins
+
+        DEPTHS(ch_input_for_postbinning, BINNING.out.metabat2depths, ch_short_reads)
         ch_input_for_binsummary = DEPTHS.out.depths_summary
         ch_versions = ch_versions.mix(DEPTHS.out.versions)
 
@@ -642,7 +648,7 @@ workflow MAG {
         * Bin QC subworkflows: for checking bin completeness with either BUSCO, CHECKM, and/or GUNC
         */
 
-        ch_input_bins_for_qc = ch_input_for_postbinning_bins_unbins.transpose()
+        ch_input_bins_for_qc = ch_input_for_postbinning.transpose()
 
         if (!params.skip_binqc && params.binqc_tool == 'busco') {
             /*
@@ -686,16 +692,16 @@ workflow MAG {
             ch_versions = ch_versions.mix(GUNC_QC.out.versions)
         }
         else if (params.run_gunc) {
-            ch_input_bins_for_gunc = ch_input_for_postbinning_bins_unbins.filter { meta, bins ->
+            ch_input_bins_for_gunc = ch_input_for_postbinning.filter { meta, bins ->
                 meta.domain != "eukarya"
             }
-            GUNC_QC(ch_input_bins_for_qc, ch_gunc_db, [])
+            GUNC_QC(ch_input_bins_for_gunc, ch_gunc_db, [])
             ch_versions = ch_versions.mix(GUNC_QC.out.versions)
         }
 
         ch_quast_bins_summary = Channel.empty()
         if (!params.skip_quast) {
-            ch_input_for_quast_bins = ch_input_for_postbinning_bins_unbins
+            ch_input_for_quast_bins = ch_input_for_postbinning
                 .groupTuple()
                 .map { meta, bins ->
                     def new_bins = bins.flatten()
@@ -724,7 +730,7 @@ workflow MAG {
             ch_cat_db = CAT_DB_GENERATE.out.db
         }
         CAT(
-            ch_input_for_postbinning_bins_unbins,
+            ch_input_for_postbinning,
             ch_cat_db
         )
         // Group all classification results for each sample in a single file
@@ -755,7 +761,7 @@ workflow MAG {
             ch_gtdbtk_summary = Channel.empty()
             if (gtdb) {
 
-                ch_gtdb_bins = ch_input_for_postbinning_bins_unbins.filter { meta, bins ->
+                ch_gtdb_bins = ch_input_for_postbinning.filter { meta, bins ->
                     meta.domain != "eukarya"
                 }
 
@@ -790,7 +796,7 @@ workflow MAG {
          */
 
         if (!params.skip_prokka) {
-            ch_bins_for_prokka = ch_input_for_postbinning_bins_unbins
+            ch_bins_for_prokka = ch_input_for_postbinning
                 .transpose()
                 .map { meta, bin ->
                     def meta_new = meta + [id: bin.getBaseName()]
@@ -809,7 +815,7 @@ workflow MAG {
         }
 
         if (!params.skip_metaeuk && (params.metaeuk_db || params.metaeuk_mmseqs_db)) {
-            ch_bins_for_metaeuk = ch_input_for_postbinning_bins_unbins
+            ch_bins_for_metaeuk = ch_input_for_postbinning
                 .transpose()
                 .filter { meta, bin ->
                     meta.domain in ["eukarya", "unclassified"]
