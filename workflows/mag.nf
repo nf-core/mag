@@ -24,6 +24,7 @@ include { ANCIENT_DNA_ASSEMBLY_VALIDATION                       } from '../subwo
 include { DOMAIN_CLASSIFICATION                                 } from '../subworkflows/local/domain_classification'
 include { DEPTHS                                                } from '../subworkflows/local/depths'
 include { LONGREAD_PREPROCESSING                                } from '../subworkflows/local/longread_preprocessing'
+include { SHORTREAD_PREPROCESSING                               } from '../subworkflows/local/shortread_preprocessing'
 
 //
 // MODULE: Installed directly from nf-core/modules
@@ -206,6 +207,7 @@ workflow MAG {
 
     ch_versions = ch_versions.mix(SHORTREAD_PREPROCESSING.out.versions)
     ch_short_reads = SHORTREAD_PREPROCESSING.out.short_reads
+    ch_short_reads_assembly = SHORTREAD_PREPROCESSING.out.short_reads_assembly
 
     /*
     ================================================================================
