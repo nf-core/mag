@@ -880,31 +880,9 @@ workflow MAG {
         )
     )
 
-    ch_multiqc_files = ch_multiqc_files.mix(FASTQC_RAW.out.zip.collect { it[1] }.ifEmpty([]))
+    // Add all files from preprocessing to the MultiQC input channel
+    ch_multiqc_files = ch_multiqc_files.mix(SHORTREAD_PREPROCESSING.out.multiqc_files.collect { it[1] }.ifEmpty([]))
     ch_multiqc_files = ch_multiqc_files.mix(LONGREAD_PREPROCESSING.out.multiqc_files.collect { it[1] }.ifEmpty([]))
-
-    if (!params.assembly_input) {
-
-        if (!params.skip_clipping && params.clip_tool == 'adapterremoval') {
-            ch_multiqc_files = ch_multiqc_files.mix(ADAPTERREMOVAL_PE.out.settings.collect { it[1] }.ifEmpty([]))
-            ch_multiqc_files = ch_multiqc_files.mix(ADAPTERREMOVAL_SE.out.settings.collect { it[1] }.ifEmpty([]))
-        }
-        else if (!params.skip_clipping && params.clip_tool == 'fastp') {
-            ch_multiqc_files = ch_multiqc_files.mix(FASTP.out.json.collect { it[1] }.ifEmpty([]))
-        }
-
-        if (!(params.keep_phix && params.skip_clipping && !(params.host_genome || params.host_fasta))) {
-            ch_multiqc_files = ch_multiqc_files.mix(FASTQC_TRIMMED.out.zip.collect { it[1] }.ifEmpty([]))
-        }
-
-        if (params.host_fasta || params.host_genome) {
-            ch_multiqc_files = ch_multiqc_files.mix(BOWTIE2_HOST_REMOVAL_ALIGN.out.log.collect { it[1] }.ifEmpty([]))
-        }
-
-        if (!params.keep_phix) {
-            ch_multiqc_files = ch_multiqc_files.mix(BOWTIE2_PHIX_REMOVAL_ALIGN.out.log.collect { it[1] }.ifEmpty([]))
-        }
-    }
 
     ch_multiqc_files = ch_multiqc_files.mix(CENTRIFUGE_KREPORT.out.kreport.collect { it[1] }.ifEmpty([]))
     ch_multiqc_files = ch_multiqc_files.mix(KRAKEN2.out.report.collect { it[1] }.ifEmpty([]))
