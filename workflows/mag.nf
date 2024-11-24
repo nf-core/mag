@@ -30,20 +30,12 @@ include { SHORTREAD_PREPROCESSING                               } from '../subwo
 // MODULE: Installed directly from nf-core/modules
 //
 include { ARIA2 as ARIA2_UNTAR                                  } from '../modules/nf-core/aria2/main'
-include { FASTQC as FASTQC_RAW                                  } from '../modules/nf-core/fastqc/main'
-include { FASTQC as FASTQC_TRIMMED                              } from '../modules/nf-core/fastqc/main'
-include { SEQTK_MERGEPE                                         } from '../modules/nf-core/seqtk/mergepe/main'
-include { BBMAP_BBNORM                                          } from '../modules/nf-core/bbmap/bbnorm/main'
-include { FASTP                                                 } from '../modules/nf-core/fastp/main'
-include { ADAPTERREMOVAL as ADAPTERREMOVAL_PE                   } from '../modules/nf-core/adapterremoval/main'
-include { ADAPTERREMOVAL as ADAPTERREMOVAL_SE                   } from '../modules/nf-core/adapterremoval/main'
 include { UNTAR as CENTRIFUGEDB_UNTAR                           } from '../modules/nf-core/untar/main'
 include { CENTRIFUGE_CENTRIFUGE                                 } from '../modules/nf-core/centrifuge/centrifuge/main'
 include { CENTRIFUGE_KREPORT                                    } from '../modules/nf-core/centrifuge/kreport/main'
 include { KRONA_KRONADB                                         } from '../modules/nf-core/krona/kronadb/main'
 include { KRONA_KTIMPORTTAXONOMY                                } from '../modules/nf-core/krona/ktimporttaxonomy/main'
 include { KRAKENTOOLS_KREPORT2KRONA as KREPORT2KRONA_CENTRIFUGE } from '../modules/nf-core/krakentools/kreport2krona/main'
-include { CAT_FASTQ                                             } from '../modules/nf-core/cat/fastq/main'
 include { MEGAHIT                                               } from '../modules/nf-core/megahit/main'
 include { SPADES as METASPADES                                  } from '../modules/nf-core/spades/main'
 include { SPADES as METASPADESHYBRID                            } from '../modules/nf-core/spades/main'
@@ -57,10 +49,6 @@ include { METAEUK_EASYPREDICT                                   } from '../modul
 //
 // MODULE: Local to the pipeline
 //
-include { BOWTIE2_REMOVAL_BUILD as BOWTIE2_HOST_REMOVAL_BUILD   } from '../modules/local/bowtie2_removal_build'
-include { BOWTIE2_REMOVAL_ALIGN as BOWTIE2_HOST_REMOVAL_ALIGN   } from '../modules/local/bowtie2_removal_align'
-include { BOWTIE2_REMOVAL_BUILD as BOWTIE2_PHIX_REMOVAL_BUILD   } from '../modules/local/bowtie2_removal_build'
-include { BOWTIE2_REMOVAL_ALIGN as BOWTIE2_PHIX_REMOVAL_ALIGN   } from '../modules/local/bowtie2_removal_align'
 include { KRAKEN2_DB_PREPARATION                                } from '../modules/local/kraken2_db_preparation'
 include { KRAKEN2                                               } from '../modules/local/kraken2'
 include { POOL_SINGLE_READS as POOL_SHORT_SINGLE_READS          } from '../modules/local/pool_single_reads'
