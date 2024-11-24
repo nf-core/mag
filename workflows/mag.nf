@@ -200,16 +200,24 @@ workflow MAG {
     ================================================================================
     */
 
-    SHORTREAD_PREPROCESSING(
-        ch_raw_short_reads,
-        ch_host_fasta,
-        ch_phix_db_file,
-        ch_metaeuk_db
-    )
+    if (!params.assembly_input) {
+        SHORTREAD_PREPROCESSING(
+            ch_raw_short_reads,
+            ch_host_fasta,
+            ch_phix_db_file,
+            ch_metaeuk_db
+        )
 
-    ch_versions = ch_versions.mix(SHORTREAD_PREPROCESSING.out.versions)
-    ch_short_reads = SHORTREAD_PREPROCESSING.out.short_reads
-    ch_short_reads_assembly = SHORTREAD_PREPROCESSING.out.short_reads_assembly
+        ch_versions = ch_versions.mix(SHORTREAD_PREPROCESSING.out.versions)
+        ch_short_reads = SHORTREAD_PREPROCESSING.out.short_reads
+        ch_short_reads_assembly = SHORTREAD_PREPROCESSING.out.short_reads_assembly
+    }
+    else {
+        ch_short_reads = ch_raw_short_reads.map { meta, reads ->
+            def meta_new = meta - meta.subMap('run')
+            [meta_new, reads]
+        }
+    }
 
     /*
     ================================================================================
