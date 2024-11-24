@@ -30,13 +30,13 @@ workflow SHORTREAD_PREPROCESSING {
         ch_raw_short_reads
     )
     ch_versions = ch_versions.mix(FASTQC_RAW.out.versions.first())
-    ch_multiqc_files = ch_multiqc_files.mix(FASTQC_RAW.out.zip.collect { it[1] }.ifEmpty([]))
+    ch_multiqc_files = ch_multiqc_files.mix(FASTQC_RAW.out.zip)
 
     ch_bowtie2_removal_host_multiqc = Channel.empty()
     if (!params.assembly_input) {
         if (!params.skip_clipping) {
             if (params.clip_tool == 'fastp') {
-                ch_clipmerge_out = FASTP(
+                FASTP(
                     ch_raw_short_reads,
                     [],
                     params.fastp_save_trimmed_fail,
@@ -44,7 +44,8 @@ workflow SHORTREAD_PREPROCESSING {
                 )
                 ch_short_reads_prepped = FASTP.out.reads
                 ch_versions = ch_versions.mix(FASTP.out.versions.first())
-                ch_multiqc_files = ch_multiqc_files.mix(FASTP.out.json.collect { it[1] }.ifEmpty([]))
+                ch_multiqc_files = ch_multiqc_files.mix(FASTP.out.json)
+
             }
             else if (params.clip_tool == 'adapterremoval') {
 
@@ -62,8 +63,8 @@ workflow SHORTREAD_PREPROCESSING {
                 ch_short_reads_prepped = ch_short_reads_prepped.mix(ADAPTERREMOVAL_SE.out.singles_truncated, ADAPTERREMOVAL_PE.out.paired_truncated)
 
                 ch_versions = ch_versions.mix(ADAPTERREMOVAL_PE.out.versions.first(), ADAPTERREMOVAL_SE.out.versions.first())
-                ch_multiqc_files = ch_multiqc_files.mix(ADAPTERREMOVAL_PE.out.settings.collect { it[1] }.ifEmpty([]))
-                ch_multiqc_files = ch_multiqc_files.mix(ADAPTERREMOVAL_SE.out.settings.collect { it[1] }.ifEmpty([]))
+                ch_multiqc_files = ch_multiqc_files.mix(ADAPTERREMOVAL_PE.out.settings)
+                ch_multiqc_files = ch_multiqc_files.mix(ADAPTERREMOVAL_SE.out.settings)
             }
         }
         else {
@@ -89,7 +90,7 @@ workflow SHORTREAD_PREPROCESSING {
             )
             ch_short_reads_hostremoved = BOWTIE2_HOST_REMOVAL_ALIGN.out.reads
             ch_versions = ch_versions.mix(BOWTIE2_HOST_REMOVAL_ALIGN.out.versions.first())
-            ch_multiqc_files = ch_multiqc_files.mix(BOWTIE2_HOST_REMOVAL_ALIGN.out.log.collect { it[1] }.ifEmpty([]))
+            ch_multiqc_files = ch_multiqc_files.mix(BOWTIE2_HOST_REMOVAL_ALIGN.out.log)
         }
         else {
             ch_short_reads_hostremoved = ch_short_reads_prepped
@@ -105,7 +106,7 @@ workflow SHORTREAD_PREPROCESSING {
             )
             ch_short_reads_phixremoved = BOWTIE2_PHIX_REMOVAL_ALIGN.out.reads
             ch_versions = ch_versions.mix(BOWTIE2_PHIX_REMOVAL_ALIGN.out.versions.first())
-            ch_multiqc_files = ch_multiqc_files.mix(BOWTIE2_PHIX_REMOVAL_ALIGN.out.log.collect { it[1] }.ifEmpty([]))
+            ch_multiqc_files = ch_multiqc_files.mix(BOWTIE2_PHIX_REMOVAL_ALIGN.out.log)
         }
         else {
             ch_short_reads_phixremoved = ch_short_reads_hostremoved
@@ -116,7 +117,7 @@ workflow SHORTREAD_PREPROCESSING {
                 ch_short_reads_phixremoved
             )
             ch_versions = ch_versions.mix(FASTQC_TRIMMED.out.versions)
-            ch_multiqc_files = ch_multiqc_files.mix(FASTQC_TRIMMED.out.zip.collect { it[1] }.ifEmpty([]))
+            ch_multiqc_files = ch_multiqc_files.mix(FASTQC_TRIMMED.out.zip)
         }
 
         // Run/Lane merging
