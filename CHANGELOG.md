@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
+- [#692](https://github.com/nf-core/mag/pull/692) - Added Nanoq as optional longread filtering tool (added by @muabnezor)
+- [#692](https://github.com/nf-core/mag/pull/692) - Added chopper as optional longread filtering tool and/or phage lambda removal tool (added by @muabnezor)
 - [#707](https://github.com/nf-core/mag/pull/707) - Make Bin QC a subworkflow (added by @dialvarezs)
 - [#707](https://github.com/nf-core/mag/pull/707) - Added CheckM2 as an alternative bin completeness and QC tool (added by @dialvarezs)
 - [#708](https://github.com/nf-core/mag/pull/708) - Added `--exclude_unbins_from_postbinning` parameter to exclude unbinned contigs from post-binning processes, speeding up Prokka in some cases (added by @dialvarezs)
@@ -21,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Tool    | Previous version | New version |
 | ------- | ---------------- | ----------- |
+| chopper |                  | 0.9.0       |
+| nanoq   |                  | 0.10.0      |
 | CheckM2 |                  | 1.0.2       |
 
 ### `Deprecated`

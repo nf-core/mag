@@ -72,6 +72,11 @@
                         "git_sha": "e17652681c856afaf2e240ba4c98bf4631a0fe2d",
                         "installed_by": ["modules"]
                     },
+                    "chopper": {
+                        "branch": "master",
+                        "git_sha": "22737835af2db3dd0d5b6b332e75e160d0199fae",
+                        "installed_by": ["modules"]
+                    },
                     "concoct/concoct": {
                         "branch": "master",
                         "git_sha": "baa30accc6c50ea8a98662417d4f42ed18966353",
@@ -220,6 +225,11 @@
                     "nanoplot": {
                         "branch": "master",
                         "git_sha": "3135090b46f308a260fc9d5991d7d2f9c0785309",
+                        "installed_by": ["modules"]
+                    },
+                    "nanoq": {
+                        "branch": "master",
+                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
                         "installed_by": ["modules"]
                     },
                     "porechop/abi": {

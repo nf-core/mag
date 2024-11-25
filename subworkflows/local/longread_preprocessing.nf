@@ -8,12 +8,14 @@ include { NANOLYSE                                              } from '../../mo
 include { PORECHOP_PORECHOP                                     } from '../../modules/nf-core/porechop/porechop/main'
 include { PORECHOP_ABI                                          } from '../../modules/nf-core/porechop/abi/main'
 include { FILTLONG                                              } from '../../modules/nf-core/filtlong'
+include { CHOPPER                                               } from '../../modules/nf-core/chopper'
+include { NANOQ                                                 } from '../../modules/nf-core/nanoq'
 
 workflow LONGREAD_PREPROCESSING {
     take:
     ch_raw_long_reads         // [ [meta] , fastq] (mandatory)
     ch_short_reads            // [ [meta] , fastq1, fastq2] (mandatory)
-    ch_nanolyse_db            // [fasta]
+    ch_lambda_db            // [fasta]
 
     main:
     ch_versions = Channel.empty()
@@ -51,30 +53,47 @@ workflow LONGREAD_PREPROCESSING {
             }
         }
 
-        if (!params.keep_lambda) {
+        if (!params.keep_lambda && params.longread_filtering_tool != 'chopper') {
             NANOLYSE (
                 ch_long_reads,
-                ch_nanolyse_db
+                ch_lambda_db
             )
             ch_long_reads = NANOLYSE.out.fastq
             ch_versions = ch_versions.mix(NANOLYSE.out.versions.first())
         }
 
-        // join long and short reads by sample name
-        ch_short_reads_tmp = ch_short_reads
-            .map { meta, sr -> [ meta.id, meta, sr ] }
+        if (params.longread_filtering_tool == 'filtlong') {
+            // join long and short reads by sample name
+            ch_short_reads_tmp = ch_short_reads
+                .map { meta, sr -> [ meta.id, meta, sr ] }
 
-        ch_short_and_long_reads = ch_long_reads
-            .map { meta, lr -> [ meta.id, meta, lr ] }
-            .join(ch_short_reads_tmp, by: 0)
-            .map { id, meta_lr, lr, meta_sr, sr -> [ meta_lr, sr, lr ] }  // should not occur for single-end, since SPAdes (hybrid) does not support single-end
+            ch_short_and_long_reads = ch_long_reads
+                .map { meta, lr -> [ meta.id, meta, lr ] }
+                .join(ch_short_reads_tmp, by: 0)
+                .map { id, meta_lr, lr, meta_sr, sr -> [ meta_lr, sr, lr ] }  // should not occur for single-end, since SPAdes (hybrid) does not support single-end
 
-        FILTLONG (
-            ch_short_and_long_reads
-        )
-        ch_long_reads = FILTLONG.out.reads
-        ch_versions = ch_versions.mix(FILTLONG.out.versions.first())
-        ch_multiqc_files = ch_multiqc_files.mix( FILTLONG.out.log )
+            FILTLONG (
+                ch_short_and_long_reads
+            )
+            ch_long_reads = FILTLONG.out.reads
+            ch_versions = ch_versions.mix(FILTLONG.out.versions.first())
+            ch_multiqc_files = ch_multiqc_files.mix( FILTLONG.out.log )
+        } else if (params.longread_filtering_tool == 'nanoq') {
+            NANOQ (
+                ch_long_reads,
+                'fastq.gz'
+            )
+            ch_long_reads = NANOQ.out.reads
+            ch_versions = ch_versions.mix(NANOQ.out.versions.first())
+            ch_multiqc_files = ch_multiqc_files.mix(NANOQ.out.stats)
+        } else if (params.longread_filtering_tool == 'chopper') {
+            CHOPPER (
+                ch_long_reads,
+                ch_lambda_db.ifEmpty([])
+            )
+            ch_long_reads = CHOPPER.out.fastq
+            ch_versions = ch_versions.mix(CHOPPER.out.versions.first())
+        }
 
         NANOPLOT_FILTERED (
             ch_long_reads
