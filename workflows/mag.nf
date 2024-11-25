@@ -188,17 +188,26 @@ workflow MAG {
     ================================================================================
     */
 
-    SHORTREAD_PREPROCESSING(
-        ch_raw_short_reads,
-        ch_host_fasta,
-        ch_phix_db_file,
-        ch_metaeuk_db
-    )
+    if (!params.assembly_input) {
+        SHORTREAD_PREPROCESSING(
+            ch_raw_short_reads,
+            ch_host_fasta,
+            ch_phix_db_file,
+            ch_metaeuk_db
+        )
 
-    ch_versions = ch_versions.mix(SHORTREAD_PREPROCESSING.out.versions)
-    ch_short_reads = SHORTREAD_PREPROCESSING.out.short_reads
-    ch_short_reads_assembly = SHORTREAD_PREPROCESSING.out.short_reads_assembly
+        ch_versions = ch_versions.mix(SHORTREAD_PREPROCESSING.out.versions)
+        ch_multiqc_files = ch_multiqc_files.mix(SHORTREAD_PREPROCESSING.out.multiqc_files.collect { it[1] }.ifEmpty([]))
+        ch_short_reads = SHORTREAD_PREPROCESSING.out.short_reads
+        ch_short_reads_assembly = SHORTREAD_PREPROCESSING.out.short_reads_assembly
 
+    }
+    else {
+        ch_short_reads = ch_raw_short_reads.map { meta, reads ->
+            def meta_new = meta - meta.subMap('run')
+            [meta_new, reads]
+        }
+    }
 
     /*
     ================================================================================
@@ -213,6 +222,7 @@ workflow MAG {
     )
 
     ch_versions = ch_versions.mix(LONGREAD_PREPROCESSING.out.versions)
+    ch_multiqc_files = ch_multiqc_files.mix(LONGREAD_PREPROCESSING.out.multiqc_files.collect { it[1] }.ifEmpty([]))
     ch_long_reads = LONGREAD_PREPROCESSING.out.long_reads
 
     /*
@@ -868,10 +878,6 @@ workflow MAG {
             sort: true
         )
     )
-
-    // Add all files from preprocessing to the MultiQC input channel
-    ch_multiqc_files = ch_multiqc_files.mix(SHORTREAD_PREPROCESSING.out.multiqc_files.collect { it[1] }.ifEmpty([]))
-    ch_multiqc_files = ch_multiqc_files.mix(LONGREAD_PREPROCESSING.out.multiqc_files.collect { it[1] }.ifEmpty([]))
 
     ch_multiqc_files = ch_multiqc_files.mix(CENTRIFUGE_KREPORT.out.kreport.collect { it[1] }.ifEmpty([]))
     ch_multiqc_files = ch_multiqc_files.mix(KRAKEN2.out.report.collect { it[1] }.ifEmpty([]))
