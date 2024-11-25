@@ -42,11 +42,29 @@
                 "pattern": "^\\S+\\.f(ast)?q\\.gz$"
             }
         },
-        "required": ["sample", "group", "short_reads_1"]
+        "required": ["sample", "group"],
+        "allOf": [
+            {
+                "if": {
+                    "required": ["short_reads_1"]
+                },
+                "then": {
+                    "required": ["short_reads_2"]
+                }
+            },
+            {
+                "if": {
+                    "not": { "required": ["short_reads_1"] },
+                    "not": { "required": ["short_reads_2"] }
+                },
+                "then": {
+                    "required": ["long_reads"]
+                }
+            }
+        ]
     },
     "uniqueEntries": ["sample", "run"],
     "dependentRequired": {
-        "short_reads_2": ["short_reads_1"],
-        "long_reads": ["short_reads_1", "short_reads_2"]
+        "short_reads_2": ["short_reads_1"]
     }
 }
