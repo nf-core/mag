@@ -98,8 +98,8 @@ workflow PIPELINE_INITIALISATION {
 
     // Check already if long reads are provided, for later parameter validation
     def hybrid = false
-    ch_raw_long_reads.map {
-        if (it) {
+    ch_raw_long_reads.combine(ch_raw_short_reads).map { long_reads, short_reads ->
+        if (long_reads && short_reads) {
             hybrid = true
         }
     }
