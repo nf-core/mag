@@ -355,7 +355,8 @@ workflow MAG {
     LONGREAD_PREPROCESSING(
         ch_raw_long_reads,
         ch_short_reads,
-        ch_lambda_db
+        ch_lambda_db,
+        ch_host_fasta
     )
 
     ch_versions = ch_versions.mix(LONGREAD_PREPROCESSING.out.versions)
