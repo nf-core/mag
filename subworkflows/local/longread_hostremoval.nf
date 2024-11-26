@@ -14,18 +14,14 @@ workflow LONGREAD_HOSTREMOVAL {
     take:
     reads     // [ [ meta ], [ reads ] ]
     reference // /path/to/fasta
-    index     // /path/to/index
 
     main:
     ch_versions       = Channel.empty()
     ch_multiqc_files  = Channel.empty()
 
-    if ( !params.longread_hostremoval_index ) {
-        ch_minimap2_index = MINIMAP2_HOST_INDEX ( [ [], reference ] ).index
-        ch_versions       = ch_versions.mix( MINIMAP2_HOST_INDEX.out.versions )
-    } else {
-        ch_minimap2_index = index
-    }
+
+    ch_minimap2_index = MINIMAP2_HOST_INDEX ( [ [], reference ] ).index
+    ch_versions       = ch_versions.mix( MINIMAP2_HOST_INDEX.out.versions )
 
     MINIMAP2_HOST_ALIGN ( reads, ch_minimap2_index, true, 'bai', false, false )
     ch_versions        = ch_versions.mix( MINIMAP2_HOST_ALIGN.out.versions.first() )

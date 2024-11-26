@@ -117,6 +117,11 @@
                         "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
                         "installed_by": ["modules"]
                     },
+                    "flye": {
+                        "branch": "master",
+                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
+                        "installed_by": ["modules"]
+                    },
                     "freebayes": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
@@ -195,6 +200,11 @@
                     "metaeuk/easypredict": {
                         "branch": "master",
                         "git_sha": "30d06da5bd7ae67be32758bf512cd75a4325d386",
+                        "installed_by": ["modules"]
+                    },
+                    "metamdbg/asm": {
+                        "branch": "master",
+                        "git_sha": "7c08494acb5aba0763c5c6db87f82b249de87ea8",
                         "installed_by": ["modules"]
                     },
                     "minimap2/align": {

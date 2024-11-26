@@ -24,6 +24,8 @@ include { ANCIENT_DNA_ASSEMBLY_VALIDATION                       } from '../subwo
 include { DOMAIN_CLASSIFICATION                                 } from '../subworkflows/local/domain_classification'
 include { DEPTHS                                                } from '../subworkflows/local/depths'
 include { LONGREAD_PREPROCESSING                                } from '../subworkflows/local/longread_preprocessing'
+include { LONGREAD_ASSEMBLY                                     } from '../subworkflows/local/longread_assembly'
+
 
 //
 // MODULE: Installed directly from nf-core/modules
@@ -583,12 +585,20 @@ workflow MAG {
             ch_versions = ch_versions.mix(MEGAHIT.out.versions.first())
         }
 
+        // LONGREAD ASSEMBLY
 
+        LONGREAD_ASSEMBLY(
+            ch_long_reads_grouped
+        )
+
+        ch_longread_assembled_contigs = LONGREAD_ASSEMBLY.out.contigs
+        ch_assembled_contigs = ch_assembled_contigs.mix(ch_longread_assembled_contigs)
 
         GUNZIP_ASSEMBLIES(ch_assembled_contigs)
         ch_versions = ch_versions.mix(GUNZIP_ASSEMBLIES.out.versions)
 
         ch_assemblies = GUNZIP_ASSEMBLIES.out.gunzip
+
     }
     else {
         ch_assemblies_split = ch_input_assemblies.branch { meta, assembly ->
