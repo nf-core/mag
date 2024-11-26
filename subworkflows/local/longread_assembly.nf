@@ -13,11 +13,11 @@ workflow LONGREAD_ASSEMBLY {
     ch_assembled_contigs = Channel.empty()
     ch_versions = Channel.empty()
 
-    if ("flye" in params.longread_assemblers){
+    if (!params.skip_flye) {
 
         FLYE (
             ch_long_reads,
-            params.flye_mode
+            "--" + params.flye_mode
         )
 
         ch_flye_assemblies = FLYE.out.fasta.map { meta, assembly ->
@@ -28,11 +28,11 @@ workflow LONGREAD_ASSEMBLY {
         ch_versions = ch_versions.mix(FLYE.out.versions.first())
     }
 
-    if ("metamdbg" in params.longread_assemblers){
+    if (!params.skip_metamdbg) {
 
         METAMDBG_ASM (
             ch_long_reads,
-            params.longread_sequencing_technology
+            params.metamdbg_mode
         )
 
         ch_metamdbg_assemblies = METAMDBG_ASM.out.contigs.map { meta, assembly ->

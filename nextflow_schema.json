@@ -584,6 +584,28 @@
                 "skip_quast": {
                     "type": "boolean",
                     "description": "Skip metaQUAST."
+                },
+                "skip_metamdbg": {
+                    "type": "boolean",
+                    "description": "Skip MetaDBG assembly."
+                },
+                "skip_flye": {
+                    "type": "boolean",
+                    "description": "Skip Flye assembly."
+                },
+                "flye_mode": {
+                    "type": "string",
+                    "description": "Flye assembly mode.",
+                    "enum": ["pacbio-raw", "pacbio-corr", "pacbio-hifi", "nano-raw", "nano-corr", "nano-hq"],
+                    "default": "nano-raw",
+                    "help_text": "Flye run mode"
+                },
+                "metamdbg_mode": {
+                    "type": "string",
+                    "description": "Input type for MetaDBG assembly.",
+                    "enum": ["ont", "hifi"],
+                    "default": "ont",
+                    "help_text": "Input type for MetaDBG assembly"
                 }
             }
         },
