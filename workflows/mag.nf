@@ -890,7 +890,8 @@ workflow MAG {
                 ch_bin_qc_summary.ifEmpty([]),
                 ch_quast_bins_summary.ifEmpty([]),
                 ch_gtdbtk_summary.ifEmpty([]),
-                ch_cat_global_summary.ifEmpty([])
+                ch_cat_global_summary.ifEmpty([]),
+                params.binqc_tool
             )
         }
 
