@@ -592,12 +592,16 @@ workflow MAG {
         )
 
         ch_longread_assembled_contigs = LONGREAD_ASSEMBLY.out.contigs
-        ch_assembled_contigs = ch_assembled_contigs.mix(ch_longread_assembled_contigs)
 
         GUNZIP_ASSEMBLIES(ch_assembled_contigs)
         ch_versions = ch_versions.mix(GUNZIP_ASSEMBLIES.out.versions)
+        ch_shortread_assemblies = GUNZIP_ASSEMBLIES.out.gunzip
 
-        ch_assemblies = GUNZIP_ASSEMBLIES.out.gunzip
+        GUNZIP_ASSEMBLIES(ch_longread_assembled_contigs)
+        ch_versions = ch_versions.mix(GUNZIP_ASSEMBLIES.out.versions)
+        ch_longread_assemblies = GUNZIP_ASSEMBLIES.out.gunzip
+
+        ch_assemblies = ch_shortread_assemblies.mix(ch_longread_assemblies)
 
     }
     else {
@@ -655,10 +659,14 @@ workflow MAG {
 
     if (!params.skip_binning || params.ancient_dna) {
         BINNING_PREPARATION(
-            ch_assemblies,
-            ch_short_reads
+            ch_shortread_assemblies,
+            ch_short_reads,
+            ch_longread_assemblies,
+            ch_long_reads
         )
-        ch_versions = ch_versions.mix(BINNING_PREPARATION.out.bowtie2_version.first())
+        ch_versions = ch_versions.mix(BINNING_PREPARATION.out.versions.first())
+
+
     }
 
     /*
