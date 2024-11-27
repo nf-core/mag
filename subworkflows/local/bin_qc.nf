@@ -2,26 +2,26 @@
  * BUSCO/CheckM/CheckM2/GUNC: Quantitative measures for the assessment of genome assembly
  */
 
-include { BUSCO_DB_PREPARATION              } from '../../modules/local/busco_db_preparation'
-include { BUSCO                             } from '../../modules/local/busco'
-include { BUSCO_SAVE_DOWNLOAD               } from '../../modules/local/busco_save_download'
-include { BUSCO_SUMMARY                     } from '../../modules/local/busco_summary'
-include { CHECKM_QA                         } from '../../modules/nf-core/checkm/qa/main'
-include { CHECKM_LINEAGEWF                  } from '../../modules/nf-core/checkm/lineagewf/main'
-include { CHECKM2_PREDICT                   } from '../../modules/nf-core/checkm2/predict/main'
-include { COMBINE_TSV as COMBINE_BINQC_TSV  } from '../../modules/local/combine_tsv'
-include { GUNC_DOWNLOADDB                   } from '../../modules/nf-core/gunc/downloaddb/main'
-include { GUNC_RUN                          } from '../../modules/nf-core/gunc/run/main'
-include { GUNC_MERGECHECKM                  } from '../../modules/nf-core/gunc/mergecheckm/main'
+include { BUSCO_DB_PREPARATION             } from '../../modules/local/busco_db_preparation'
+include { BUSCO                            } from '../../modules/local/busco'
+include { BUSCO_SAVE_DOWNLOAD              } from '../../modules/local/busco_save_download'
+include { BUSCO_SUMMARY                    } from '../../modules/local/busco_summary'
+include { CHECKM_QA                        } from '../../modules/nf-core/checkm/qa/main'
+include { CHECKM_LINEAGEWF                 } from '../../modules/nf-core/checkm/lineagewf/main'
+include { CHECKM2_PREDICT                  } from '../../modules/nf-core/checkm2/predict/main'
+include { COMBINE_TSV as COMBINE_BINQC_TSV } from '../../modules/local/combine_tsv'
+include { GUNC_DOWNLOADDB                  } from '../../modules/nf-core/gunc/downloaddb/main'
+include { GUNC_RUN                         } from '../../modules/nf-core/gunc/run/main'
+include { GUNC_MERGECHECKM                 } from '../../modules/nf-core/gunc/mergecheckm/main'
 
 
 workflow BIN_QC {
     take:
-    ch_bins        // [ [ meta] , fasta           ], input bins (mandatory)
-    ch_checkm_db   // [ db                        ], presupplied CheckM database (optional)
-    ch_checkm2_db  // [ [meta]  , db              ], presupplied CheckM2 database (optional)
-    ch_busco_db    // [ [meta]  , db              ], presupplied BUSCO database (optional)
-    ch_gunc_db     // [ db                        ], presupplied GUNC database (optional)
+    ch_bins       // [ [ meta] , fasta ], input bins (mandatory)
+    ch_checkm_db  // [ db              ], presupplied CheckM database (optional)
+    ch_checkm2_db // [ [meta]  , db    ], presupplied CheckM2 database (optional)
+    ch_busco_db   // [ [meta]  , db    ], presupplied BUSCO database (optional)
+    ch_gunc_db    // [ db              ], presupplied GUNC database (optional)
 
     main:
     qc_summary = []
@@ -73,9 +73,9 @@ workflow BIN_QC {
         BUSCO(ch_input_bins_for_qc, ch_db_for_busco)
 
         BUSCO_SUMMARY(
-            BUSCO.out.summary_domain.collect { v -> v[1] }.ifEmpty([]),
-            BUSCO.out.summary_specific.collect { v -> v[1] }.ifEmpty([]),
-            BUSCO.out.failed_bin.collect { v -> v[1] }.ifEmpty([])
+            BUSCO.out.summary_domain.collect { _meta, summary -> summary }.ifEmpty([]),
+            BUSCO.out.summary_specific.collect { _meta, summary -> summary }.ifEmpty([]),
+            BUSCO.out.failed_bin.collect { _meta, summary -> summary }.ifEmpty([])
         )
 
         ch_multiqc_files = ch_multiqc_files.mix(
@@ -109,7 +109,7 @@ workflow BIN_QC {
 
         CHECKM_QA(ch_checkmqa_input, [])
 
-        COMBINE_BINQC_TSV(CHECKM_QA.out.output.collect { v -> v[1] })
+        COMBINE_BINQC_TSV(CHECKM_QA.out.output.collect { summary -> summary[1] })
 
         qc_summary = COMBINE_BINQC_TSV.out.combined
         ch_versions = ch_versions.mix(CHECKM_QA.out.versions.first())
@@ -120,7 +120,7 @@ workflow BIN_QC {
          */
         CHECKM2_PREDICT(ch_input_bins_for_qc.groupTuple(), ch_checkm2_db)
 
-        COMBINE_BINQC_TSV(CHECKM2_PREDICT.out.checkm2_tsv.collect { v -> v[1] })
+        COMBINE_BINQC_TSV(CHECKM2_PREDICT.out.checkm2_tsv.collect { summary -> summary[1] })
 
         qc_summary = COMBINE_BINQC_TSV.out.combined
         ch_versions = ch_versions.mix(CHECKM2_PREDICT.out.versions.first())
@@ -151,7 +151,7 @@ workflow BIN_QC {
 
         // Make sure to keep directory in sync with modules.conf
         GUNC_RUN.out.maxcss_level_tsv
-            .map { v -> v[1] }
+            .map { _meta, gunc_summary -> gunc_summary }
             .collectFile(
                 name: "gunc_summary.tsv",
                 keepHeader: true,
@@ -166,7 +166,7 @@ workflow BIN_QC {
 
             // Make sure to keep directory in sync with modules.conf
             GUNC_MERGECHECKM.out.tsv
-                .map { v -> v[1] }
+                .map { _meta, gunc_checkm_summary -> gunc_checkm_summary }
                 .collectFile(
                     name: "gunc_checkm_summary.tsv",
                     keepHeader: true,
@@ -176,7 +176,7 @@ workflow BIN_QC {
     }
 
     emit:
-    qc_summary      = qc_summary
-    multiqc_files   = ch_multiqc_files
-    versions        = ch_versions
+    qc_summary    = qc_summary
+    multiqc_files = ch_multiqc_files
+    versions      = ch_versions
 }

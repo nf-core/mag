@@ -583,14 +583,14 @@ If the parameter `--save_checkm_reference` is set, additionally the used the Che
 
 #### CheckM2
 
-[CheckM2](https://github.com/chklovski/CheckM2) is atool for assessing the quality of metagenome-derived genomes. It uses a machine learning approach to predict the completeness and contamination of a genome regardless of its taxonomic lineage.
+[CheckM2](https://github.com/chklovski/CheckM2) is a tool for assessing the quality of metagenome-derived genomes. It uses a machine learning approach to predict the completeness and contamination of a genome regardless of its taxonomic lineage.
 
 <details markdown="1">
 <summary>Output files</summary>
 
 - `GenomeBinning/QC/CheckM2/`
   - `[assembler]-[binner]-[domain]-[refinement]-[sample/group]/quality_report.tsv`: Detailed statistics about bins informing completeness and contamamination scores. This should normally be your main file to use to evaluate your results.
-  - `[assembler]-[binner]-[domain]-[refinement]-[sample/group]/`: Intermediate files for CheckM2 results, including CheckM2 generated annotations, log, and Diamond alignment results.
+  - `[assembler]-[binner]-[domain]-[refinement]-[sample/group]/`: Intermediate files for CheckM2 results, including CheckM2 generated annotations, log, and DIAMOND alignment results.
 - `GenomeBinning/QC/`
   - `checkm2_summary.tsv`: A summary table of the CheckM2 results for all bins.
 

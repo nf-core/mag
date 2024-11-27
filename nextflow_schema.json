@@ -783,7 +783,7 @@
                 "checkm2_db_version": {
                     "type": "integer",
                     "default": 5571251,
-                    "description": "CheckM2 database version number to download (Zenodo ID, for reference check https://zenodo.org/records/5571251)."
+                    "description": "CheckM2 database version number to download (Zenodo record ID, for reference check https://zenodo.org/records/5571251)."
                 },
                 "save_checkm2_data": {
                     "type": "boolean",
