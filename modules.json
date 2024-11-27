@@ -54,12 +54,12 @@
                     },
                     "checkm/lineagewf": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "git_sha": "3ea318161b8788623cec477bde0f089180b2245b",
                         "installed_by": ["modules"]
                     },
                     "checkm/qa": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "git_sha": "3ea318161b8788623cec477bde0f089180b2245b",
                         "installed_by": ["modules"]
                     },
                     "checkm2/databasedownload": {
@@ -154,12 +154,12 @@
                     },
                     "gunc/mergecheckm": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "git_sha": "b6515a01897b11b64b3368858c0359b4c813ad1e",
                         "installed_by": ["modules"]
                     },
                     "gunc/run": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "git_sha": "b6515a01897b11b64b3368858c0359b4c813ad1e",
                         "installed_by": ["modules"]
                     },
                     "gunzip": {
