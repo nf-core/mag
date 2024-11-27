@@ -126,7 +126,7 @@ workflow BIN_QC {
         )
 
         ch_multiqc_files = ch_multiqc_files.mix(
-            BUSCO.out.summary_domain.mix(BUSCO.out.summary_specific).map { it[1] }
+            BUSCO.out.summary_domain.mix(BUSCO.out.summary_specific).map { _meta, summary -> summary }
         )
         qc_summary = BUSCO_SUMMARY.out.summary
         ch_versions = ch_versions.mix(BUSCO.out.versions.first())
