@@ -2,6 +2,8 @@
  * BUSCO/CheckM/CheckM2/GUNC: Quantitative measures for the assessment of genome assembly
  */
 
+include { ARIA2 as ARIA2_UNTAR             } from '../../modules/nf-core/aria2/main'
+include { CHECKM2_DATABASEDOWNLOAD         } from '../../modules/nf-core/checkm2/databasedownload/main'
 include { BUSCO_DB_PREPARATION             } from '../../modules/local/busco_db_preparation'
 include { BUSCO                            } from '../../modules/local/busco'
 include { BUSCO_SAVE_DOWNLOAD              } from '../../modules/local/busco_save_download'
@@ -17,11 +19,7 @@ include { GUNC_MERGECHECKM                 } from '../../modules/nf-core/gunc/me
 
 workflow BIN_QC {
     take:
-    ch_bins       // [ [ meta] , fasta ], input bins (mandatory)
-    ch_checkm_db  // [ db              ], presupplied CheckM database (optional)
-    ch_checkm2_db // [ [meta]  , db    ], presupplied CheckM2 database (optional)
-    ch_busco_db   // [ [meta]  , db    ], presupplied BUSCO database (optional)
-    ch_gunc_db    // [ db              ], presupplied GUNC database (optional)
+    ch_bins // [ [ meta] , fasta ], input bins (mandatory)
 
     main:
     qc_summary = []
@@ -29,6 +27,55 @@ workflow BIN_QC {
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
 
+
+    /*
+    ================================
+     * Setup databases
+    ================================
+     */
+
+    if (params.busco_db) {
+        ch_busco_db = file(params.busco_db, checkIfExists: true)
+    }
+    else {
+        ch_busco_db = []
+    }
+
+    if (params.checkm_db) {
+        ch_checkm_db = file(params.checkm_db, checkIfExists: true)
+    }
+    else if (!params.skip_binqc && params.binqc_tool == 'checkm') {
+        ARIA2_UNTAR(params.checkm_download_url)
+        ch_checkm_db = ARIA2_UNTAR.out.downloaded_file
+    }
+    else {
+        ch_checkm_db = []
+    }
+
+    if (params.checkm2_db) {
+        ch_checkm2_db = [[:], file(params.checkm2_db, checkIfExists: true)]
+    }
+    else if (!params.skip_binqc && params.binqc_tool == 'checkm2') {
+        CHECKM2_DATABASEDOWNLOAD(params.checkm2_db_version)
+        ch_checkm2_db = CHECKM2_DATABASEDOWNLOAD.out.database
+    }
+    else {
+        ch_checkm2_db = []
+    }
+
+    if (params.gunc_db) {
+        ch_gunc_db = file(params.gunc_db, checkIfExists: true)
+    }
+    else {
+        ch_gunc_db = Channel.empty()
+    }
+
+
+    /*
+    ================================
+     * Run QC tools
+    ================================
+     */
 
     if (params.binqc_tool == "busco") {
         /*

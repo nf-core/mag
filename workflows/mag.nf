@@ -26,7 +26,6 @@ include { LONGREAD_PREPROCESSING                                } from '../subwo
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { ARIA2 as ARIA2_UNTAR                                  } from '../modules/nf-core/aria2/main'
 include { FASTQC as FASTQC_RAW                                  } from '../modules/nf-core/fastqc/main'
 include { FASTQC as FASTQC_TRIMMED                              } from '../modules/nf-core/fastqc/main'
 include { SEQTK_MERGEPE                                         } from '../modules/nf-core/seqtk/mergepe/main'
@@ -50,7 +49,6 @@ include { PRODIGAL                                              } from '../modul
 include { PROKKA                                                } from '../modules/nf-core/prokka/main'
 include { MMSEQS_DATABASES                                      } from '../modules/nf-core/mmseqs/databases/main'
 include { METAEUK_EASYPREDICT                                   } from '../modules/nf-core/metaeuk/easypredict/main'
-include { CHECKM2_DATABASEDOWNLOAD                              } from '../modules/nf-core/checkm2/databasedownload/main'
 
 //
 // MODULE: Local to the pipeline
@@ -100,34 +98,6 @@ workflow MAG {
     }
     else {
         ch_host_fasta = Channel.empty()
-    }
-
-    if (params.busco_db) {
-        ch_busco_db = file(params.busco_db, checkIfExists: true)
-    }
-    else {
-        ch_busco_db = []
-    }
-
-    if (params.checkm_db) {
-        ch_checkm_db = file(params.checkm_db, checkIfExists: true)
-    }
-    else {
-        ch_checkm_db = []
-    }
-
-    if (params.checkm2_db) {
-        ch_checkm2_db = [[:], file(params.checkm2_db, checkIfExists: true)]
-    }
-    else {
-        ch_checkm2_db = []
-    }
-
-    if (params.gunc_db) {
-        ch_gunc_db = file(params.gunc_db, checkIfExists: true)
-    }
-    else {
-        ch_gunc_db = Channel.empty()
     }
 
     if (params.kraken2_db) {
@@ -183,18 +153,6 @@ workflow MAG {
     }
     else {
         ch_metaeuk_db = Channel.empty()
-    }
-
-    // Get checkM database if not supplied
-    if (!params.skip_binqc && params.binqc_tool == 'checkm' && !params.checkm_db) {
-        ARIA2_UNTAR(params.checkm_download_url)
-        ch_checkm_db = ARIA2_UNTAR.out.downloaded_file
-    }
-
-    // Get CheckM2 database if not supplied
-    if (!params.skip_binqc && params.binqc_tool == 'checkm2' && !params.checkm2_db) {
-        CHECKM2_DATABASEDOWNLOAD(params.checkm2_db_version)
-        ch_checkm2_db = CHECKM2_DATABASEDOWNLOAD.out.database
     }
 
     // Get mmseqs db for MetaEuk if requested
@@ -793,13 +751,7 @@ workflow MAG {
         * Bin QC subworkflows: for checking bin completeness with either BUSCO, CHECKM, CHECKM2, and/or GUNC
         */
 
-        BIN_QC(
-            ch_input_for_postbinning,
-            ch_checkm_db,
-            ch_checkm2_db,
-            ch_busco_db,
-            ch_gunc_db
-        )
+        BIN_QC(ch_input_for_postbinning)
 
         ch_bin_qc_summary = BIN_QC.out.qc_summary
         ch_versions = ch_versions.mix(BIN_QC.out.versions)
