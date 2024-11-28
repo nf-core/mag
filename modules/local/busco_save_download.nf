@@ -3,16 +3,16 @@ process BUSCO_SAVE_DOWNLOAD {
     maxForks 1
 
     conda "conda-forge::bash=5.2.21"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/ubuntu:20.04' :
-        'nf-core/ubuntu:20.04' }"
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
+        ? 'https://depot.galaxyproject.org/singularity/ubuntu:20.04'
+        : 'nf-core/ubuntu:20.04' }"
 
     input:
     path(busco_downloads)
 
     output:
-    path('busco_downloads/**', includeInputs: true), emit: busco_files
-    path "versions.yml"                            , emit: versions
+    path 'busco_downloads/**', includeInputs: true, emit: busco_files
+    path 'versions.yml'                           , emit: versions
 
     script:
     """
