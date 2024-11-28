@@ -23,9 +23,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Tool    | Previous version | New version |
 | ------- | ---------------- | ----------- |
-| chopper |                  | 0.9.0       |
-| nanoq   |                  | 0.10.0      |
+| CheckM  | 1.2.1            | 1.2.3       |
 | CheckM2 |                  | 1.0.2       |
+| chopper |                  | 0.9.0       |
+| GUNC    | 1.0.5            | 1.0.6       |
+| nanoq   |                  | 0.10.0      |
 
 ### `Deprecated`
 
