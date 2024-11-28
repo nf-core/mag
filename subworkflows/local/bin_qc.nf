@@ -181,9 +181,6 @@ workflow BIN_QC {
             .filter { meta, _bins ->
                 meta.domain != "eukarya"
             }
-            .flatMap { meta, bins ->
-                bins.collect { bin -> [meta, bin] }
-            }
 
         if (params.gunc_db) {
             ch_db_for_gunc = ch_gunc_db
