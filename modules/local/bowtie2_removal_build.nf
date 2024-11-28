@@ -10,14 +10,14 @@ process BOWTIE2_REMOVAL_BUILD {
     path fasta
 
     output:
-    path 'bt2_index_base*', emit: index
-    path "versions.yml"   , emit: versions
+    path "*.bt2"        , emit: index
+    path "versions.yml" , emit: versions
 
     script:
     def args = task.ext.args ?: ''
     """
     mkdir bowtie
-    bowtie2-build --threads $task.cpus $fasta "bt2_index_base"
+    bowtie2-build --threads $task.cpus $fasta ${fasta.simpleName}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

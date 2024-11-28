@@ -9,7 +9,7 @@
 [![GitHub Actions Linting Status](https://github.com/nf-core/mag/actions/workflows/linting.yml/badge.svg)](https://github.com/nf-core/mag/actions/workflows/linting.yml)[![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/mag/results)[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.3589527-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.3589527)
 [![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)[![Cite Publication](https://img.shields.io/badge/Cite%20Us!-Cite%20Publication-orange)](https://doi.org/10.1093/nargab/lqac007)
 
-[![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A523.04.0-23aa62.svg)](https://www.nextflow.io/)
+[![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A524.04.2-23aa62.svg)](https://www.nextflow.io/)
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
@@ -58,8 +58,7 @@ nextflow run nf-core/mag -profile <docker/singularity/podman/shifter/charlieclou
 ```
 
 > [!WARNING]
-> Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_;
-> see [docs](https://nf-co.re/usage/configuration#custom-configuration-files).
+> Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_; see [docs](https://nf-co.re/docs/usage/getting_started/configuration#custom-configuration-files).
 
 For more details and further functionality, please refer to the [usage documentation](https://nf-co.re/mag/usage) and the [parameter documentation](https://nf-co.re/mag/parameters).
 
@@ -77,14 +76,26 @@ When group-wise co-assembly is enabled, `SPAdes` is run on accordingly pooled re
 
 ## Credits
 
-nf-core/mag was written by [Hadrien Gourlé](https://hadriengourle.com) at [SLU](https://slu.se), [Daniel Straub](https://github.com/d4straub) and [Sabrina Krakau](https://github.com/skrakau) at the [Quantitative Biology Center (QBiC)](http://qbic.life). [James A. Fellows Yates](https://github.com/jfy133) and [Maxime Borry](https://github.com/maxibor) at the [Max Planck Institute for Evolutionary Anthropology](https://www.eva.mpg.de) joined in version 2.2.0. More recent contributors include [Jim Downie](https://github.com/prototaxites) and [Carson Miller](https://github.com/CarsonJM).
+nf-core/mag was written by [Hadrien Gourlé](https://hadriengourle.com) at [SLU](https://slu.se), [Daniel Straub](https://github.com/d4straub) and [Sabrina Krakau](https://github.com/skrakau) at the [Quantitative Biology Center (QBiC)](http://qbic.life). [James A. Fellows Yates](https://github.com/jfy133) and [Maxime Borry](https://github.com/maxibor) at the [Max Planck Institute for Evolutionary Anthropology](https://www.eva.mpg.de) joined in version 2.2.0.
+
+Other code contributors include:
+
+- [Antonia Schuster](https://github.com/AntoniaSchuster)
+- [Alexander Ramos](https://github.com/alxndrdiaz)
+- [Carson Miller](https://github.com/CarsonJM)
+- [Daniel Lundin](https://github.com/erikrikarddaniel)
+- [Danielle Callan](https://github.com/d-callan)
+- [Gregory Sprenger](https://github.com/gregorysprenger)
+- [Jim Downie](https://github.com/prototaxites)
+- [Phil Palmer](https://github.com/PhilPalmer)
+- [@willros](https://github.com/willros)
+- [Adam Rosenbaum](https://github.com/muabnezor)
 
 Long read processing was inspired by [caspargross/HybridAssembly](https://github.com/caspargross/HybridAssembly) written by Caspar Gross [@caspargross](https://github.com/caspargross)
 
 We thank the following people for their extensive assistance in the development of this pipeline:
 
 - [Alexander Peltzer](https://github.com/apeltzer)
-- [Antonia Schuster](https://github.com/antoniaschuster)
 - [Phil Ewels](https://github.com/ewels)
 - [Gisela Gabernet](https://github.com/ggabernet)
 - [Harshil Patel](https://github.com/drpatelh)

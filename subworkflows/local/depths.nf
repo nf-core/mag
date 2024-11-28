@@ -10,6 +10,14 @@ def getColNo(filename) {
     return lines[0].split('\t').size()
 }
 
+/*
+ * Get number of rows in a file
+ */
+def getRowNo(filename) {
+    lines = file(filename).readLines()
+    return lines.size()
+}
+
 workflow DEPTHS {
     take:
     bins_unbins     //channel: val(meta), [ path(bins) ]
@@ -53,9 +61,10 @@ workflow DEPTHS {
         .collectFile(name:'sample_groups.tsv'){ meta, reads -> meta.id + '\t' + meta.group + '\n' }
 
     // Filter MAG depth files: use only those for plotting that contain depths for > 2 samples
+    // as well as > 2 bins
     ch_mag_depths_plot = MAG_DEPTHS.out.depths
         .map { meta, bin_depths_file ->
-            if (getColNo(bin_depths_file) > 2) [ meta, bin_depths_file ]
+            if (getColNo(bin_depths_file) > 2 && getRowNo(bin_depths_file) > 2) [ meta, bin_depths_file ]
         }
 
     MAG_DEPTHS_PLOT ( ch_mag_depths_plot, ch_sample_groups.collect() )

@@ -9,8 +9,6 @@
 ----------------------------------------------------------------------------------------
 */
 
-nextflow.enable.dsl = 2
-
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     IMPORT FUNCTIONS / MODULES / SUBWORKFLOWS / WORKFLOWS
@@ -20,7 +18,6 @@ nextflow.enable.dsl = 2
 include { MAG                     } from './workflows/mag'
 include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_mag_pipeline'
 include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_mag_pipeline'
-
 include { getGenomeAttribute      } from './subworkflows/local/utils_nfcore_mag_pipeline'
 
 /*
@@ -60,10 +57,8 @@ workflow NFCORE_MAG {
         raw_long_reads,
         input_assemblies
     )
-
     emit:
     multiqc_report = MAG.out.multiqc_report // channel: /path/to/multiqc_report.html
-
 }
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -74,13 +69,11 @@ workflow NFCORE_MAG {
 workflow {
 
     main:
-
     //
     // SUBWORKFLOW: Run initialisation tasks
     //
     PIPELINE_INITIALISATION (
         params.version,
-        params.help,
         params.validate_params,
         params.monochrome_logs,
         args,
@@ -96,7 +89,6 @@ workflow {
         PIPELINE_INITIALISATION.out.raw_long_reads,
         PIPELINE_INITIALISATION.out.input_assemblies
     )
-
     //
     // SUBWORKFLOW: Run completion tasks
     //

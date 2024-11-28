@@ -74,8 +74,8 @@ workflow GTDBTK {
         gtdb_dir = gtdb.listFiles()
         ch_db_for_gtdbtk = Channel
                             .of(gtdb_dir)
-                            .map{['gtdb', it]}
-                            .groupTuple()
+                            .collect()
+                            .map { ["gtdb", it] }
     } else {
         error("Unsupported object given to --gtdb, database must be supplied as either a directory or a .tar.gz file!")
     }
@@ -90,6 +90,7 @@ workflow GTDBTK {
     GTDBTK_CLASSIFYWF (
         ch_filtered_bins.passed.groupTuple(),
         ch_db_for_gtdbtk,
+        params.gtdbtk_pplacer_useram ? false : true,
         gtdb_mash
     )
 

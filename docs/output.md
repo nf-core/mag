@@ -109,12 +109,39 @@ The pipeline uses Nanolyse to map the reads against the Lambda phage and removes
 
 </details>
 
-### Filtlong and porechop
+### Long read adapter removal
 
-The pipeline uses filtlong and porechop to perform quality control of the long reads that are eventually provided with the TSV input file.
+The pipeline uses porecho_abi or porechop to perform adaptertrimming of the long reads that are eventually provided with the TSV input file.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `QC_longreads/porechop/`
+  - `[sample]_[run]_porechop_trimmed.fastq.gz`: If `--longread_adaptertrimming_tool 'porechop'`, the adapter trimmed FASTQ files from porechop
+  - `[sample]_[run]_porechop-abi_trimmed.fastq.gz`: If `--longread_adaptertrimming_tool 'porechop_abi'`, the adapter trimmed FASTQ files from porechop_ABI
+
+</details>
+
+### Long read filtering
+
+The pipeline uses filtlong, chopper, or nanoq for quality filtering of long reads, specified with `--longread_filtering_tool <filtlong|chopper|nanoq>`. Only filtlong is capable of filtering long reads against short reads, and is therefore currently recommended in the hybrid mode. If chopper is selected as long read filtering tool, Lambda Phage removal will be performed with chopper as well, instead of nanolyse.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `QC_longreads/Filtlong/`
+  - `[sample]_[run]_filtlong.fastq.gz`: The length and quality filtered reads in FASTQ from Filtlong
+- `QC_longreads/Nanoq/`
+  - `[sample]_[run]_nanoq_filtered.fastq.gz`: The length and quality filtered reads in FASTQ from Nanoq
+- `QC_longreads/Chopper/`
+  - `[sample]_[run]_nanoq_chopper.fastq.gz`: The length and quality filtered, optionally phage lambda removed reads in FASTQ from Chopper
+
+</details>
+
+Trimmed and filtered FASTQ output directories and files will only exist if `--save_porechop_reads` and/or `--save_filtered_longreads` (respectively) are provided to the run command .
 
 No direct host read removal is performed for long reads.
-However, since within this pipeline filtlong uses a read quality based on k-mer matches to the already filtered short reads, reads not overlapping those short reads might be discarded.
+However, since within this pipeline filtlong uses a read quality based on k-mer matches to the already filtered short reads, reads not overlapping those short reads might be discarded. Note that this only applies when using filtlong as long read filtering tool.
 The lower the parameter `--longreads_length_weight`, the higher the impact of the read qualities for filtering.
 For further documentation see the [filtlong online documentation](https://github.com/rrwick/Filtlong).
 
@@ -206,10 +233,10 @@ Trimmed (short) reads are assembled with both megahit and SPAdes. Hybrid assembl
 <summary>Output files</summary>
 
 - `Assembly/SPAdes/`
-  - `[sample/group]_scaffolds.fasta.gz`: Compressed assembled scaffolds in fasta format
-  - `[sample/group]_graph.gfa.gz`: Compressed assembly graph in gfa format
-  - `[sample/group]_contigs.fasta.gz`: Compressed assembled contigs in fasta format
-  - `[sample/group].log`: Log file
+  - `[sample/group].scaffolds.fa.gz`: Compressed assembled scaffolds in fasta format
+  - `[sample/group].assembly.gfa.gz`: Compressed assembly graph in gfa format
+  - `[sample/group].contigs.fa.gz`: Compressed assembled contigs in fasta format
+  - `[sample/group].spades.log`: Log file
   - `QC/[sample/group]/`: Directory containing QUAST files and Bowtie2 mapping logs
     - `SPAdes-[sample].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the sample that the metagenome was assembled from, only present if `--coassemble_group` is not set.
     - `SPAdes-[sample/group]-[sampleToMap].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the respective sample ("sampleToMap").
@@ -225,10 +252,10 @@ SPAdesHybrid is a part of the [SPAdes](http://cab.spbu.ru/software/spades/) soft
 <summary>Output files</summary>
 
 - `Assembly/SPAdesHybrid/`
-  - `[sample/group]_scaffolds.fasta.gz`: Compressed assembled scaffolds in fasta format
-  - `[sample/group]_graph.gfa.gz`: Compressed assembly graph in gfa format
-  - `[sample/group]_contigs.fasta.gz`: Compressed assembled contigs in fasta format
-  - `[sample/group].log`: Log file
+  - `[sample/group].scaffolds.fa.gz`: Compressed assembled scaffolds in fasta format
+  - `[sample/group].assembly.gfa.gz`: Compressed assembly graph in gfa format
+  - `[sample/group].contigs.fa.gz`: Compressed assembled contigs in fasta format
+  - `[sample/group].spades.log`: Log file
   - `QC/[sample/group]/`: Directory containing QUAST files and Bowtie2 mapping logs
     - `SPAdesHybrid-[sample].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the sample that the metagenome was assembled from, only present if `--coassemble_group` is not set.
     - `SPAdesHybrid-[sample/group]-[sampleToMap].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the respective sample ("sampleToMap").
@@ -454,7 +481,7 @@ For each bin or refined bin the median sequencing depth is computed based on the
 - `GenomeBinning/depths/bins/`
   - `bin_depths_summary.tsv`: Summary of bin sequencing depths for all samples. Depths are available for samples mapped against the corresponding assembly, i.e. according to the mapping strategy specified with `--binning_map_mode`. Only for short reads.
   - `bin_refined_depths_summary.tsv`: Summary of sequencing depths for refined bins for all samples, if refinement was performed. Depths are available for samples mapped against the corresponding assembly, i.e. according to the mapping strategy specified with `--binning_map_mode`. Only for short reads.
-  - `[assembler]-[binner]-[sample/group]-binDepths.heatmap.png`: Clustered heatmap showing bin abundances of the assembly across samples. Bin depths are transformed to centered log-ratios and bins as well as samples are clustered by Euclidean distance. Again, sample depths are available according to the mapping strategy specified with `--binning_map_mode`.
+  - `[assembler]-[binner]-[sample/group]-binDepths.heatmap.png`: Clustered heatmap showing bin abundances of the assembly across samples. Bin depths are transformed to centered log-ratios and bins as well as samples are clustered by Euclidean distance. Again, sample depths are available according to the mapping strategy specified with `--binning_map_mode`. If a sample produces only a single bin, a heatmap will not be provided.
 
 </details>
 
@@ -565,9 +592,9 @@ If the parameter `--save_checkm_reference` is set, additionally the used the Che
 - `[gunc-database].dmnd`
 - `GUNC/`
   - `raw/`
-    - `[assembler]-[binner]-[domain]-[refinement]-[sample/group]/GUNC_checkM.merged.tsv`: Per sample GUNC [output](https://grp-bork.embl-community.io/gunc/output.html) containing with taxonomic and completeness QC statistics.
+    - `[assembler]-[binner]-[domain]-[refinement]-[sample/group]/[fasta input file name]/GUNC_checkM.merged.tsv`: Per sample GUNC [output](https://grp-bork.embl-community.io/gunc/output.html) containing with taxonomic and completeness QC statistics.
   - `checkmmerged/`
-    - `[assembler]-[binner]-[domain]-[refinement]-[sample/group]/GUNC.progenomes_2.1.maxCSS_level.tsv`: Per sample GUNC output merged with output from [CheckM](#checkm)
+    - `[assembler]-[binner]-[domain]-[refinement]-[sample/group]/[checkm input file name]/GUNC.progenomes_2.1.maxCSS_level.tsv`: Per sample GUNC output merged with output from [CheckM](#checkm)
 
 </details>
 
