@@ -2,11 +2,11 @@
  * Binning with MetaBAT2 and MaxBin2
  */
 
-include { METABAT2_METABAT2                                            } from '../../modules/nf-core/metabat2/metabat2/main'
-include { METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS                         } from '../../modules/nf-core/metabat2/jgisummarizebamcontigdepths/main'
-include { MAXBIN2                                                      } from '../../modules/nf-core/maxbin2/main'
-include { GUNZIP as GUNZIP_BINS                                        } from '../../modules/nf-core/gunzip/main'
-include { GUNZIP as GUNZIP_UNBINS                                      } from '../../modules/nf-core/gunzip/main'
+include { METABAT2_METABAT2                                                                      } from '../../modules/nf-core/metabat2/metabat2/main'
+include { METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS                                                   } from '../../modules/nf-core/metabat2/jgisummarizebamcontigdepths/main'
+include { MAXBIN2                                                                                } from '../../modules/nf-core/maxbin2/main'
+include { GUNZIP as GUNZIP_BINS                                                                  } from '../../modules/nf-core/gunzip/main'
+include { GUNZIP as GUNZIP_UNBINS                                                                } from '../../modules/nf-core/gunzip/main'
 
 include { CONVERT_DEPTHS                        } from '../../modules/local/convert_depths'
 include { ADJUST_MAXBIN2_EXT                    } from '../../modules/local/adjust_maxbin2_ext'
