@@ -35,11 +35,11 @@ workflow LONGREAD_HOSTREMOVAL {
     SAMTOOLS_HOSTREMOVED_VIEW ( ch_minimap2_mapped , [[],[]], [] )
     ch_versions      = ch_versions.mix( SAMTOOLS_HOSTREMOVED_VIEW.out.versions.first() )
 
-    SAMTOOLS_HOSTREMOVED_FASTQ ( SAMTOOLS_HOSTREMOVED_VIEW.out.bam, false )
+    SAMTOOLS_HOSTREMOVED_FASTQ ( SAMTOOLS_HOSTREMOVED_VIEW.out.bam )
     ch_versions      = ch_versions.mix( SAMTOOLS_HOSTREMOVED_FASTQ.out.versions.first() )
 
     // Indexing whole BAM for host removal statistics
-    SAMTOOLS_INDEX ( MINIMAP2_HOST_ALIGN.out.bam )
+    SAMTOOLS_HOSTREMOVED_INDEX ( MINIMAP2_HOST_ALIGN.out.bam )
     ch_versions      = ch_versions.mix( SAMTOOLS_HOSTREMOVED_INDEX.out.versions.first() )
 
     bam_bai = MINIMAP2_HOST_ALIGN.out.bam

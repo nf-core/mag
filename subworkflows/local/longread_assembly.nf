@@ -44,7 +44,7 @@ workflow LONGREAD_ASSEMBLY {
     }
 
     emit:
-    assemblies = ch_assemblies
+    assemblies = ch_assembled_contigs
     versions = ch_versions
 
 }

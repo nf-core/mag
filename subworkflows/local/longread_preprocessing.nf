@@ -103,8 +103,7 @@ workflow LONGREAD_PREPROCESSING {
         if ( params.host_fasta ) {
             LONGREAD_HOSTREMOVAL (
                 ch_long_reads,
-                ch_host_fasta,
-                null
+                ch_host_fasta
             )
             ch_long_reads = LONGREAD_HOSTREMOVAL.out.reads
             ch_versions = ch_versions.mix(LONGREAD_HOSTREMOVAL.out.versions)

@@ -48,7 +48,8 @@ include { CAT_FASTQ                                             } from '../modul
 include { MEGAHIT                                               } from '../modules/nf-core/megahit/main'
 include { SPADES as METASPADES                                  } from '../modules/nf-core/spades/main'
 include { SPADES as METASPADESHYBRID                            } from '../modules/nf-core/spades/main'
-include { GUNZIP as GUNZIP_ASSEMBLIES                           } from '../modules/nf-core/gunzip'
+include { GUNZIP as GUNZIP_SHORTREAD_ASSEMBLIES                 } from '../modules/nf-core/gunzip'
+include { GUNZIP as GUNZIP_LONGREAD_ASSEMBLIES                 } from '../modules/nf-core/gunzip'
 include { GUNZIP as GUNZIP_ASSEMBLYINPUT                        } from '../modules/nf-core/gunzip'
 include { PRODIGAL                                              } from '../modules/nf-core/prodigal/main'
 include { PROKKA                                                } from '../modules/nf-core/prokka/main'
@@ -591,15 +592,15 @@ workflow MAG {
             ch_long_reads_grouped
         )
 
-        ch_longread_assembled_contigs = LONGREAD_ASSEMBLY.out.contigs
+        ch_longread_assembled_contigs = LONGREAD_ASSEMBLY.out.assemblies
 
-        GUNZIP_ASSEMBLIES(ch_assembled_contigs)
-        ch_versions = ch_versions.mix(GUNZIP_ASSEMBLIES.out.versions)
-        ch_shortread_assemblies = GUNZIP_ASSEMBLIES.out.gunzip
+        GUNZIP_SHORTREAD_ASSEMBLIES(ch_assembled_contigs)
+        ch_versions = ch_versions.mix(GUNZIP_SHORTREAD_ASSEMBLIES.out.versions)
+        ch_shortread_assemblies = GUNZIP_SHORTREAD_ASSEMBLIES.out.gunzip
 
-        GUNZIP_ASSEMBLIES(ch_longread_assembled_contigs)
-        ch_versions = ch_versions.mix(GUNZIP_ASSEMBLIES.out.versions)
-        ch_longread_assemblies = GUNZIP_ASSEMBLIES.out.gunzip
+        GUNZIP_LONGREAD_ASSEMBLIES(ch_longread_assembled_contigs)
+        ch_versions = ch_versions.mix(GUNZIP_LONGREAD_ASSEMBLIES.out.versions)
+        ch_longread_assemblies = GUNZIP_LONGREAD_ASSEMBLIES.out.gunzip
 
         ch_assemblies = ch_shortread_assemblies.mix(ch_longread_assemblies)
 
@@ -1072,7 +1073,7 @@ workflow MAG {
     }
 
     if (!params.skip_binning || params.ancient_dna) {
-        ch_multiqc_files = ch_multiqc_files.mix(BINNING_PREPARATION.out.bowtie2_assembly_multiqc.collect().ifEmpty([]))
+        ch_multiqc_files = ch_multiqc_files.mix(BINNING_PREPARATION.out.multiqc_files.collect().ifEmpty([]))
     }
 
     if (!params.skip_binning && !params.skip_prokka) {
