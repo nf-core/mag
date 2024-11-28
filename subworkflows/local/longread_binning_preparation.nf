@@ -10,12 +10,20 @@ workflow LONGREAD_BINNING_PREPARATION {
     ch_versions       = Channel.empty()
 
     MINIMAP2_ASSEMBLY_INDEX ( assemblies )
-    MINIMAP2_ASSEMBLY_ALIGN ( reads, MINIMAP2_ASSEMBLY_INDEX.out.index, true, 'bai', false, false )
+
+    ch_combined_reads_idx = reads
+        .combine(MINIMAP2_ASSEMBLY_INDEX.out.index)
+
+    ch_minimap2_input_reads = ch_combined_reads_idx
+        .map { meta, reads, meta_idx ,index -> [ meta, reads ] }
+    ch_minimap2_input_idx = ch_combined_reads_idx
+        .map { meta, reads, meta_idx, index -> [ meta_idx, index ] }
+
+    MINIMAP2_ASSEMBLY_ALIGN ( ch_minimap2_input_reads, ch_minimap2_input_idx, true, 'bai', false, false )
     ch_versions      = ch_versions.mix( MINIMAP2_ASSEMBLY_ALIGN.out.versions.first() )
 
     ch_minimap2_aligned = MINIMAP2_ASSEMBLY_ALIGN.out.bam
         .join(MINIMAP2_ASSEMBLY_ALIGN.out.index, by: 0)
-    ch_minimap2_aligned.view()
 
     if (params.binning_map_mode == 'all'){
         ch_grouped_mappings = ch_minimap2_aligned
