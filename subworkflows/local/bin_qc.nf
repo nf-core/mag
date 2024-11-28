@@ -115,6 +115,8 @@ workflow BIN_QC {
                 .toSortedList()
                 .flatten()
             BUSCO_SAVE_DOWNLOAD(ch_downloads)
+
+            ch_versions = ch_versions.mix(BUSCO_SAVE_DOWNLOAD.out.versions.first())
         }
 
         BUSCO(ch_input_bins_for_qc, ch_db_for_busco)
