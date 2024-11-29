@@ -19,8 +19,9 @@ workflow LONGREAD_HOSTREMOVAL {
     ch_versions       = Channel.empty()
     ch_multiqc_files  = Channel.empty()
 
+    ch_host_reference = reference.map { [ [:], it ] }
 
-    ch_minimap2_index = MINIMAP2_HOST_INDEX ( [ [], reference ] ).index
+    ch_minimap2_index = MINIMAP2_HOST_INDEX ( ch_host_reference ).index
     ch_versions       = ch_versions.mix( MINIMAP2_HOST_INDEX.out.versions )
 
     MINIMAP2_HOST_ALIGN ( reads, ch_minimap2_index, true, 'bai', false, false )
@@ -45,7 +46,7 @@ workflow LONGREAD_HOSTREMOVAL {
     bam_bai = MINIMAP2_HOST_ALIGN.out.bam
         .join(SAMTOOLS_HOSTREMOVED_INDEX.out.bai)
 
-    SAMTOOLS_HOSTREMOVED_STATS ( bam_bai, [[],reference] )
+    SAMTOOLS_HOSTREMOVED_STATS ( bam_bai, ch_host_reference )
     ch_versions = ch_versions.mix(SAMTOOLS_HOSTREMOVED_STATS.out.versions.first())
     ch_multiqc_files = ch_multiqc_files.mix( SAMTOOLS_HOSTREMOVED_STATS.out.stats )
 
