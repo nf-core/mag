@@ -28,8 +28,8 @@ process SAMTOOLS_LONGREAD_FASTQ {
         $args \\
         --threads ${task.cpus-1} \\
         -0 ${prefix}_other.fastq.gz \\
-        $input \\
-        $output
+        $output \\
+        $input
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
