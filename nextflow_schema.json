@@ -742,6 +742,11 @@
                     "description": "Exclude unbinned contigs in the post-binning steps (bin QC, taxonomic classification, and annotation steps).",
                     "help": "If you're not interested in assemby results that are not considered 'genome level', excluding unbinned contigs can greatly speed up downstream steps such as Prokka, that can be quite slow and spin up many tasks.",
                     "default": false
+                },
+                "longread_percentidentity": {
+                    "type": "number",
+                    "default": 90,
+                    "description": "Minimum percent identity for long reads mapping back to assembled contigs."
                 }
             }
         },
