@@ -43,26 +43,7 @@
             }
         },
         "required": ["sample", "group"],
-        "allOf": [
-            {
-                "if": {
-                    "required": ["short_reads_2"]
-                },
-                "then": {
-                    "required": ["short_reads_1"]
-                }
-            },
-            {
-                "if": {
-                    "not": {
-                        "allOf": [{ "required": ["short_reads_1"] }, { "required": ["short_reads_2"] }]
-                    }
-                },
-                "then": {
-                    "required": ["long_reads"]
-                }
-            }
-        ]
+        "anyOf": [{ "required": ["short_reads_1"] }, { "required": ["long_reads"] }]
     },
     "uniqueEntries": ["sample", "run"],
     "dependentRequired": {

@@ -616,6 +616,10 @@ workflow MAG {
 
         ch_assemblies = Channel.empty()
         ch_assemblies = ch_assemblies.mix(ch_assemblies_split.ungzip, GUNZIP_ASSEMBLYINPUT.out.gunzip)
+        ch_shortread_assemblies = Channel.empty()
+        ch_shortread_assemblies = ch_shortread_assemblies.mix(ch_assemblies_split.ungzip, GUNZIP_ASSEMBLYINPUT.out.gunzip)
+        // TODO ALSO FIX FOR LONGREAD
+        ch_longread_assemblies = Channel.empty()
     }
 
     ch_quast_multiqc = Channel.empty()
