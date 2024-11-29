@@ -32,7 +32,6 @@ workflow SHORTREAD_PREPROCESSING {
     ch_versions = ch_versions.mix(FASTQC_RAW.out.versions.first())
     ch_multiqc_files = ch_multiqc_files.mix(FASTQC_RAW.out.zip)
 
-    ch_bowtie2_removal_host_multiqc = Channel.empty()
     if (!params.skip_clipping) {
         if (params.clip_tool == 'fastp') {
             FASTP(
