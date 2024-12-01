@@ -59,7 +59,7 @@
                     },
                     "checkm/qa": {
                         "branch": "master",
-                        "git_sha": "3ea318161b8788623cec477bde0f089180b2245b",
+                        "git_sha": "867961a8ef91135475ca48c83743646038be4196",
                         "installed_by": ["modules"]
                     },
                     "checkm2/databasedownload": {
