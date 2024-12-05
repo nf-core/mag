@@ -44,7 +44,7 @@ workflow BIN_QC {
     if (params.checkm_db) {
         ch_checkm_db = file(params.checkm_db, checkIfExists: true)
     }
-    else if (!params.skip_binqc && params.binqc_tool == 'checkm') {
+    else if (params.binqc_tool == 'checkm') {
         ARIA2_UNTAR(params.checkm_download_url)
         ch_checkm_db = ARIA2_UNTAR.out.downloaded_file
     }
@@ -55,7 +55,7 @@ workflow BIN_QC {
     if (params.checkm2_db) {
         ch_checkm2_db = [[:], file(params.checkm2_db, checkIfExists: true)]
     }
-    else if (!params.skip_binqc && params.binqc_tool == 'checkm2') {
+    else if (params.binqc_tool == 'checkm2') {
         CHECKM2_DATABASEDOWNLOAD(params.checkm2_db_version)
         ch_checkm2_db = CHECKM2_DATABASEDOWNLOAD.out.database
     }

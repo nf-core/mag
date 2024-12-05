@@ -615,10 +615,12 @@ workflow MAG {
         * Bin QC subworkflows: for checking bin completeness with either BUSCO, CHECKM, CHECKM2, and/or GUNC
         */
 
-        BIN_QC(ch_input_for_postbinning)
+        if (!params.skip_binqc) {
+            BIN_QC(ch_input_for_postbinning)
 
-        ch_bin_qc_summary = BIN_QC.out.qc_summary
-        ch_versions = ch_versions.mix(BIN_QC.out.versions)
+            ch_bin_qc_summary = BIN_QC.out.qc_summary
+            ch_versions = ch_versions.mix(BIN_QC.out.versions)
+        }
 
         ch_quast_bins_summary = Channel.empty()
         if (!params.skip_quast) {
