@@ -26,10 +26,10 @@ workflow PIPELINE_INITIALISATION {
     take:
     version           // boolean: Display version and exit
     validate_params   // boolean: Boolean whether to validate parameters against the schema at runtime
-    monochrome_logs   // boolean: Do not use coloured log outputs
+    _monochrome_logs  // boolean: Do not use coloured log outputs
     nextflow_cli_args //   array: List of positional nextflow CLI args
     outdir            //  string: The output directory where the results will be saved
-    input             //  string: Path to input samplesheet
+    _input            //  string: Path to input samplesheet
 
     main:
 
@@ -77,7 +77,7 @@ workflow PIPELINE_INITIALISATION {
         }
 
     // Prepare FASTQs channel and separate short and long reads and prepare
-    ch_raw_short_reads = ch_samplesheet.map { meta, sr1, sr2, lr ->
+    ch_raw_short_reads = ch_samplesheet.map { meta, sr1, sr2, _lr ->
         meta.run = meta.run == [] ? "0" : meta.run
         meta.single_end = params.single_end
 
@@ -89,7 +89,7 @@ workflow PIPELINE_INITIALISATION {
         }
     }
 
-    ch_raw_long_reads = ch_samplesheet.map { meta, sr1, sr2, lr ->
+    ch_raw_long_reads = ch_samplesheet.map { meta, _sr1, _sr2, lr ->
         if (lr) {
             meta.run = meta.run == [] ? "0" : meta.run
             return [meta, lr]
@@ -129,13 +129,13 @@ workflow PIPELINE_INITIALISATION {
     // Cross validation of input assembly and read IDs: ensure groups are all represented between reads and assemblies
     if (params.assembly_input) {
         ch_read_ids = ch_samplesheet
-            .map { meta, sr1, sr2, lr -> params.coassemble_group ? meta.group : meta.id }
+            .map { meta, _sr1, _sr2, _lr -> params.coassemble_group ? meta.group : meta.id }
             .unique()
             .toList()
             .sort()
 
         ch_assembly_ids = ch_input_assemblies
-            .map { meta, fasta -> params.coassemble_group ? meta.group : meta.id }
+            .map { meta, _fasta -> params.coassemble_group ? meta.group : meta.id }
             .unique()
             .toList()
             .sort()
@@ -286,14 +286,14 @@ def validateInputParameters(hybrid) {
 
     // Check if BUSCO parameters combinations are valid
     if (params.skip_binqc && params.binqc_tool == 'checkm') {
-        error('[nf-core/mag] ERROR: Both --skip_binqc and --binqc_tool 'checkm' are specified! Invalid combination, please specify either --skip_binqc or --binqc_tool.')
+        error("[nf-core/mag] ERROR: Both --skip_binqc and --binqc_tool 'checkm' are specified! Invalid combination, please specify either --skip_binqc or --binqc_tool.")
     }
     if (params.skip_binqc) {
         if (params.busco_db) {
-            error('[nf-core/mag] ERROR: Both --skip_binqc and --busco_db are specified! Invalid combination, please specify either --skip_binqc or --binqc_tool 'busco' with --busco_db.')
+            error("[nf-core/mag] ERROR: Both --skip_binqc and --busco_db are specified! Invalid combination, please specify either --skip_binqc or --binqc_tool 'busco' with --busco_db.")
         }
         if (params.busco_auto_lineage_prok) {
-            error('[nf-core/mag] ERROR: Both --skip_binqc and --busco_auto_lineage_prok are specified! Invalid combination, please specify either --skip_binqc or --binqc_tool 'busco' with --busco_auto_lineage_prok.')
+            error("[nf-core/mag] ERROR: Both --skip_binqc and --busco_auto_lineage_prok are specified! Invalid combination, please specify either --skip_binqc or --binqc_tool 'busco' with --busco_auto_lineage_prok.")
         }
     }
 
