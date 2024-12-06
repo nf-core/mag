@@ -24,6 +24,7 @@ include { ANCIENT_DNA_ASSEMBLY_VALIDATION                       } from '../subwo
 include { DOMAIN_CLASSIFICATION                                 } from '../subworkflows/local/domain_classification'
 include { DEPTHS                                                } from '../subworkflows/local/depths'
 include { LONGREAD_PREPROCESSING                                } from '../subworkflows/local/longread_preprocessing'
+include { LONGREAD_ASSEMBLY                                     } from '../subworkflows/local/longread_assembly'
 include { SHORTREAD_PREPROCESSING                               } from '../subworkflows/local/shortread_preprocessing'
 
 //
@@ -39,7 +40,8 @@ include { KRAKENTOOLS_KREPORT2KRONA as KREPORT2KRONA_CENTRIFUGE } from '../modul
 include { MEGAHIT                                               } from '../modules/nf-core/megahit/main'
 include { SPADES as METASPADES                                  } from '../modules/nf-core/spades/main'
 include { SPADES as METASPADESHYBRID                            } from '../modules/nf-core/spades/main'
-include { GUNZIP as GUNZIP_ASSEMBLIES                           } from '../modules/nf-core/gunzip'
+include { GUNZIP as GUNZIP_SHORTREAD_ASSEMBLIES                 } from '../modules/nf-core/gunzip'
+include { GUNZIP as GUNZIP_LONGREAD_ASSEMBLIES                 } from '../modules/nf-core/gunzip'
 include { GUNZIP as GUNZIP_ASSEMBLYINPUT                        } from '../modules/nf-core/gunzip'
 include { PRODIGAL                                              } from '../modules/nf-core/prodigal/main'
 include { PROKKA                                                } from '../modules/nf-core/prokka/main'
@@ -218,7 +220,8 @@ workflow MAG {
     LONGREAD_PREPROCESSING(
         ch_raw_long_reads,
         ch_short_reads,
-        ch_lambda_db
+        ch_lambda_db,
+        ch_host_fasta
     )
 
     ch_versions = ch_versions.mix(LONGREAD_PREPROCESSING.out.versions)
@@ -446,12 +449,24 @@ workflow MAG {
             ch_versions = ch_versions.mix(MEGAHIT.out.versions.first())
         }
 
+        // LONGREAD ASSEMBLY
 
+        LONGREAD_ASSEMBLY(
+            ch_long_reads_grouped
+        )
 
-        GUNZIP_ASSEMBLIES(ch_assembled_contigs)
-        ch_versions = ch_versions.mix(GUNZIP_ASSEMBLIES.out.versions)
+        ch_longread_assembled_contigs = LONGREAD_ASSEMBLY.out.assemblies
 
-        ch_assemblies = GUNZIP_ASSEMBLIES.out.gunzip
+        GUNZIP_SHORTREAD_ASSEMBLIES(ch_assembled_contigs)
+        ch_versions = ch_versions.mix(GUNZIP_SHORTREAD_ASSEMBLIES.out.versions)
+        ch_shortread_assemblies = GUNZIP_SHORTREAD_ASSEMBLIES.out.gunzip
+
+        GUNZIP_LONGREAD_ASSEMBLIES(ch_longread_assembled_contigs)
+        ch_versions = ch_versions.mix(GUNZIP_LONGREAD_ASSEMBLIES.out.versions)
+        ch_longread_assemblies = GUNZIP_LONGREAD_ASSEMBLIES.out.gunzip
+
+        ch_assemblies = ch_shortread_assemblies.mix(ch_longread_assemblies)
+
     }
     else {
         ch_assemblies_split = ch_input_assemblies.branch { meta, assembly ->
@@ -464,6 +479,10 @@ workflow MAG {
 
         ch_assemblies = Channel.empty()
         ch_assemblies = ch_assemblies.mix(ch_assemblies_split.ungzip, GUNZIP_ASSEMBLYINPUT.out.gunzip)
+        ch_shortread_assemblies = Channel.empty()
+        ch_shortread_assemblies = ch_shortread_assemblies.mix(ch_assemblies_split.ungzip, GUNZIP_ASSEMBLYINPUT.out.gunzip)
+        // TODO ALSO FIX FOR LONGREAD
+        ch_longread_assemblies = Channel.empty()
     }
 
     ch_quast_multiqc = Channel.empty()
@@ -508,10 +527,14 @@ workflow MAG {
 
     if (!params.skip_binning || params.ancient_dna) {
         BINNING_PREPARATION(
-            ch_assemblies,
-            ch_short_reads
+            ch_shortread_assemblies,
+            ch_short_reads,
+            ch_longread_assemblies,
+            ch_long_reads
         )
-        ch_versions = ch_versions.mix(BINNING_PREPARATION.out.bowtie2_version.first())
+        ch_versions = ch_versions.mix(BINNING_PREPARATION.out.versions.first())
+
+
     }
 
     /*
@@ -891,7 +914,7 @@ workflow MAG {
     }
 
     if (!params.skip_binning || params.ancient_dna) {
-        ch_multiqc_files = ch_multiqc_files.mix(BINNING_PREPARATION.out.bowtie2_assembly_multiqc.collect().ifEmpty([]))
+        ch_multiqc_files = ch_multiqc_files.mix(BINNING_PREPARATION.out.multiqc_files.collect().ifEmpty([]))
     }
 
     if (!params.skip_binning && !params.skip_prokka) {

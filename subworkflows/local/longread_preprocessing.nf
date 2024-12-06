@@ -11,11 +11,15 @@ include { FILTLONG                                              } from '../../mo
 include { CHOPPER                                               } from '../../modules/nf-core/chopper'
 include { NANOQ                                                 } from '../../modules/nf-core/nanoq'
 
+// include other subworkflows here
+include { LONGREAD_HOSTREMOVAL                                  } from './longread_hostremoval'
+
 workflow LONGREAD_PREPROCESSING {
     take:
     ch_raw_long_reads         // [ [meta] , fastq] (mandatory)
     ch_short_reads            // [ [meta] , fastq1, fastq2] (mandatory)
-    ch_lambda_db            // [fasta]
+    ch_lambda_db              // [fasta]
+    ch_host_fasta             // [fasta]
 
     main:
     ch_versions = Channel.empty()
@@ -65,12 +69,16 @@ workflow LONGREAD_PREPROCESSING {
         if (params.longread_filtering_tool == 'filtlong') {
             // join long and short reads by sample name
             ch_short_reads_tmp = ch_short_reads
-                .map { meta, sr -> [ meta.id, meta, sr ] }
+                .map { meta, sr -> [ meta.id, sr ] }
 
             ch_short_and_long_reads = ch_long_reads
                 .map { meta, lr -> [ meta.id, meta, lr ] }
-                .join(ch_short_reads_tmp, by: 0)
-                .map { id, meta_lr, lr, meta_sr, sr -> [ meta_lr, sr, lr ] }  // should not occur for single-end, since SPAdes (hybrid) does not support single-end
+                .view()
+            ch_short_and_long_reads = ch_long_reads
+                .map { meta, lr -> [ meta.id, meta, lr ] }
+                .join(ch_short_reads_tmp, by: 0, remainder: true)
+                .filter { it[1] != null } // Make sure long reads are not null, which happens if ch_short_reads is empty
+                .map { id, meta_lr, lr, sr -> [ meta_lr, sr ? sr : [], lr ] }  // should not occur for single-end, since SPAdes (hybrid) does not support single-end
 
             FILTLONG (
                 ch_short_and_long_reads
@@ -93,6 +101,17 @@ workflow LONGREAD_PREPROCESSING {
             )
             ch_long_reads = CHOPPER.out.fastq
             ch_versions = ch_versions.mix(CHOPPER.out.versions.first())
+        }
+
+        // host removal long reads
+        if ( params.host_fasta ) {
+            LONGREAD_HOSTREMOVAL (
+                ch_long_reads,
+                ch_host_fasta
+            )
+            ch_long_reads = LONGREAD_HOSTREMOVAL.out.reads
+            ch_versions = ch_versions.mix(LONGREAD_HOSTREMOVAL.out.versions)
+            ch_multiqc_files = ch_multiqc_files.mix( LONGREAD_HOSTREMOVAL.out.multiqc_files )
         }
 
         NANOPLOT_FILTERED (
