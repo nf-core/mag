@@ -29,7 +29,7 @@ workflow PIPELINE_INITIALISATION {
     _monochrome_logs  // boolean: Do not use coloured log outputs
     nextflow_cli_args //   array: List of positional nextflow CLI args
     outdir            //  string: The output directory where the results will be saved
-    _input            //  string: Path to input samplesheet
+    input             //  string: Path to input samplesheet
 
     main:
 
@@ -71,7 +71,7 @@ workflow PIPELINE_INITIALISATION {
 
     // Validate FASTQ input
     ch_samplesheet = Channel
-        .fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json"))
+        .fromList(samplesheetToList(input, "${projectDir}/assets/schema_input.json"))
         .map {
             validateInputSamplesheet(it[0], it[1], it[2], it[3])
         }
