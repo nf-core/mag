@@ -16,7 +16,7 @@ include { FASTA_BINNING_CONCOCT                 } from '../../subworkflows/nf-co
 workflow BINNING {
     take:
     assemblies           // channel: [ val(meta), path(assembly), path(bams), path(bais) ]
-    reads                // channel: [ val(meta), [ reads ] ]
+    _reads                // channel: [ val(meta), [ reads ] ]
 
     main:
 
@@ -24,7 +24,7 @@ workflow BINNING {
 
     // generate coverage depths for each contig
     ch_summarizedepth_input = assemblies
-                                .map { meta, assembly, bams, bais ->
+                                .map { meta, _assembly, bams, bais ->
                                     [ meta, bams, bais ]
                                 }
 
@@ -45,7 +45,7 @@ workflow BINNING {
             [ meta_new, assembly, bams, bais ]
         }
         .join( ch_metabat_depths, by: 0 )
-        .map { meta, assembly, bams, bais, depths ->
+        .map { meta, assembly, _bams, _bais, depths ->
             [ meta, assembly, depths ]
         }
 
