@@ -67,7 +67,7 @@ workflow LONGREAD_PREPROCESSING {
         ch_short_and_long_reads = ch_long_reads
             .map { meta, lr -> [ meta.id, meta, lr ] }
             .join(ch_short_reads_tmp, by: 0)
-            .map { id, meta_lr, lr, meta_sr, sr -> [ meta_lr, sr, lr ] }  // should not occur for single-end, since SPAdes (hybrid) does not support single-end
+            .map { _id, meta_lr, lr, _meta_sr, sr -> [ meta_lr, sr, lr ] }  // should not occur for single-end, since SPAdes (hybrid) does not support single-end
 
         FILTLONG (
             ch_short_and_long_reads
