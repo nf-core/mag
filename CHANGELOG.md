@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#716](https://github.com/nf-core/mag/pull/692) - Make short read processing a subworkflow (added by @muabnezor)
 - [#708](https://github.com/nf-core/mag/pull/708) - Fixed channel passed as GUNC input (added by @dialvarezs)
+- [#727](https://github.com/nf-core/mag/pull/727) - Fixed misspecified multi-FASTQ input for single-end data in MEGAHIT (reported by John Richards, fix by @jfy133)
 
 ### `Dependencies`
 
