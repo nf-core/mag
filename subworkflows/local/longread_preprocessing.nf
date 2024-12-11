@@ -73,9 +73,6 @@ workflow LONGREAD_PREPROCESSING {
 
             ch_short_and_long_reads = ch_long_reads
                 .map { meta, lr -> [ meta.id, meta, lr ] }
-                .view()
-            ch_short_and_long_reads = ch_long_reads
-                .map { meta, lr -> [ meta.id, meta, lr ] }
                 .join(ch_short_reads_tmp, by: 0, remainder: true)
                 .filter { it[1] != null } // Make sure long reads are not null, which happens if ch_short_reads is empty
                 .map { id, meta_lr, lr, sr -> [ meta_lr, sr ? sr : [], lr ] }  // should not occur for single-end, since SPAdes (hybrid) does not support single-end
