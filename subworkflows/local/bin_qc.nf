@@ -161,7 +161,10 @@ workflow BIN_QC {
         COMBINE_BINQC_TSV(CHECKM_QA.out.output.collect { summary -> summary[1] })
 
         qc_summary = COMBINE_BINQC_TSV.out.combined
-        ch_versions = ch_versions.mix(CHECKM_QA.out.versions.first())
+        ch_versions = ch_versions.mix(
+            CHECKM_QA.out.versions.first(),
+            COMBINE_BINQC_TSV.out.versions
+        )
     }
     else if (params.binqc_tool == "checkm2") {
         /*
@@ -172,7 +175,10 @@ workflow BIN_QC {
         COMBINE_BINQC_TSV(CHECKM2_PREDICT.out.checkm2_tsv.collect { summary -> summary[1] })
 
         qc_summary = COMBINE_BINQC_TSV.out.combined
-        ch_versions = ch_versions.mix(CHECKM2_PREDICT.out.versions.first())
+        ch_versions = ch_versions.mix(
+            CHECKM2_PREDICT.out.versions.first(),
+            COMBINE_BINQC_TSV.out.versions
+        )
     }
 
     if (params.run_gunc) {

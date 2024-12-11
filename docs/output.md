@@ -596,7 +596,7 @@ If the parameter `--save_checkm_reference` is set, additionally the used the Che
 
 </details>
 
-If the parameter `--save_checkm2_reference` is set, the CheckM2 reference datasets will be stored in the output directory.
+If the parameter `--save_checkm2_data` is set, the CheckM2 reference datasets will be stored in the output directory.
 
 <details markdown="1">
 <summary>Output files</summary>

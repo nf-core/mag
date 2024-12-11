@@ -42,7 +42,7 @@
 
 - [CheckM2](https://doi.org/10.1038/s41592-023-01940-w)
 
-  > Chklovski, A., Parks, D. H., Woodcroft, B. J., & Tyson, G. W. (2023). CheckM2: a rapid, scalable and accurate tool for assessing microbial genome quality using machine learning. Nature Methods, 20(8), 1203-1212.
+  > Chklovski, A., Parks, D. H., Woodcroft, B. J., & Tyson, G. W. (2023). CheckM2: a rapid, scalable and accurate tool for assessing microbial genome quality using machine learning. Nature Methods, 20(8), 1203-1212. doi: https://doi.org/10.1038/s41592-023-01940-w
 
 - [Chopper](https://doi.org/10.1093/bioinformatics/bty149)
 

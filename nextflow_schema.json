@@ -778,12 +778,12 @@
                 "checkm2_db": {
                     "type": "string",
                     "description": "Path to local folder containing already downloaded and uncompressed CheckM2 database (.dmnd file).",
-                    "help_text": "The pipeline can also download this for you if not specified, and you can save the resulting directory into your output directory by specifying `--save_checkm2_data`. You should move this directory to somewhere else on your machine (and supply back to the pipeline in future runs again with `--checkm2_db`."
+                    "help_text": "The pipeline can also download this for you if not specified, and you can save the resulting directory into your output directory by specifying `--save_checkm2_data`. You should move this directory to somewhere else on your machine (and supply back to the pipeline in future runs again with `--checkm2_db`)."
                 },
                 "checkm2_db_version": {
                     "type": "integer",
                     "default": 5571251,
-                    "description": "CheckM2 database version number to download (Zenodo record ID, for reference check https://zenodo.org/records/5571251)."
+                    "description": "CheckM2 database version number to download (Zenodo record ID, for reference check the canonical reference https://zenodo.org/records/5571251, and pick the Zenodo ID of the database version of your choice)."
                 },
                 "save_checkm2_data": {
                     "type": "boolean",
