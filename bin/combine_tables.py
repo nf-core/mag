@@ -122,7 +122,7 @@ def main(args=None):
         busco_results = pd.read_csv(args.busco_summary, sep="\t")
         busco_bins = set(busco_results["Input_file"])
 
-        if set(bins) != busco_bins and len(busco_bins.intersection(bins)) > 0:
+        if set(bins) != busco_bins and len(busco_bins.intersection(set(bins))) > 0:
             warnings.warn("Bins in BUSCO summary do not match bins in bin depths summary")
         elif len(busco_bins.intersection(set(bins))) == 0:
             sys.exit("Bins in BUSCO summary do not match bins in bin depths summary!")
