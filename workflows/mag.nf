@@ -165,9 +165,6 @@ workflow MAG {
         ch_metaeuk_db = Channel.empty()
     }
 
-    // Additional info for completion email and summary
-    def busco_failed_bins = [:]
-
     // Get checkM database if not supplied
 
     if (!params.skip_binqc && params.binqc_tool == 'checkm' && !params.checkm_db) {
@@ -655,17 +652,12 @@ workflow MAG {
             */
 
             BUSCO_QC(
+                ch_input_bins_for_qc.groupTuple(),
                 ch_busco_db,
-                ch_input_bins_for_qc
+                'auto_prok'
             )
             ch_busco_summary = BUSCO_QC.out.summary
             ch_versions = ch_versions.mix(BUSCO_QC.out.versions.first())
-            // process information if BUSCO analysis failed for individual bins due to no matching genes
-            BUSCO_QC.out.failed_bin.splitCsv(sep: '\t').map { bin, error ->
-                if (!bin.contains(".unbinned.")) {
-                    busco_failed_bins[bin] = error
-                }
-            }
         }
 
         if (!params.skip_binqc && params.binqc_tool == 'checkm') {
