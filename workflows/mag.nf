@@ -654,7 +654,7 @@ workflow MAG {
             BUSCO_QC(
                 ch_input_bins_for_qc.groupTuple(),
                 ch_busco_db,
-                params.busco_lineage
+                params.busco_auto_lineage_prok ? 'auto_prok' : 'auto'
             )
             ch_busco_summary = BUSCO_QC.out.summary
             ch_versions = ch_versions.mix(BUSCO_QC.out.versions.first())
