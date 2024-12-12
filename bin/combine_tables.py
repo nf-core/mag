@@ -116,15 +116,15 @@ def main(args=None):
     results.columns = [
         "Depth " + str(col) if col != "bin" else col for col in results.columns
     ]
-    bins = set(results["bin"])
+    bins = results["bin"].sort_values().reset_index(drop=True)
 
     if args.busco_summary:
         busco_results = pd.read_csv(args.busco_summary, sep="\t")
         busco_bins = set(busco_results["Input_file"])
 
-        if bins != busco_bins and len(busco_bins.intersection(bins)) > 0:
+        if set(bins) != busco_bins and len(busco_bins.intersection(bins)) > 0:
             warnings.warn("Bins in BUSCO summary do not match bins in bin depths summary")
-        elif len(busco_bins.intersection(bins)) == 0:
+        elif len(busco_bins.intersection(set(bins))) == 0:
             sys.exit("Bins in BUSCO summary do not match bins in bin depths summary!")
         results = pd.merge(
             results, busco_results, left_on="bin", right_on="Input_file", how="outer"
