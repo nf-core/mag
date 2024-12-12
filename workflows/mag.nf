@@ -352,9 +352,9 @@ workflow MAG {
         ch_assemblies = Channel.empty()
         ch_assemblies = ch_assemblies.mix(ch_assemblies_split.ungzip, GUNZIP_ASSEMBLYINPUT.out.gunzip)
         ch_shortread_assemblies = ch_assemblies
-            .filter { it[0].assembler not in ['FLYE', 'METAMDBG']}
+            .filter { it[0].assembler.toUpperCase() in ['SPADES', 'SPADESHYBRID', 'MEGAHIT']}
         ch_longread_assemblies = ch_assemblies
-            .filter { it[0].assembler in ['FLYE', 'METAMDBG']}
+            .filter { it[0].assembler.toUpperCase() in ['FLYE', 'METAMDBG']}
     }
 
     ch_quast_multiqc = Channel.empty()
