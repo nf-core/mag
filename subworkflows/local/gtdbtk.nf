@@ -21,6 +21,7 @@ workflow GTDBTK {
         // Collect completeness and contamination metrics from busco summary
         ch_bin_metrics = busco_summary
             .splitCsv(header: true, sep: '\t')
+            .filter { row -> row.Complete != '' }
             .map { row ->
                         def completeness  = Double.parseDouble(row.'Complete')
                         def contamination = Double.parseDouble(row.'Duplicated')
