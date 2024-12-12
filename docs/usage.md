@@ -43,6 +43,16 @@ sample2,0,0,data/sample2_R1.fastq.gz,data/sample2_R2.fastq.gz,data/sample2.fastq
 sample3,1,0,data/sample3_R1.fastq.gz,data/sample3_R2.fastq.gz,
 ```
 
+If only long read data is available, the columns `short_reads_1` and `short_reads_2` is simply left empty:
+
+```csv title="samplesheet.csv"
+sample,run,group,short_reads_1,short_reads_2,long_reads
+sample1,1,0,,,data/sample1.fastq.gz
+sample1,2,0,,,data/sample1.fastq.gz
+sample2,0,0,,,data/sample2.fastq.gz
+sample3,1,0,,,data/sample3.fastq.gz
+```
+
 Please note the following requirements:
 
 - a minimum 5 of comma-separated columns
@@ -50,7 +60,6 @@ Please note the following requirements:
 - Must contain the header `sample,group,short_reads_1,short_reads_2,long_reads` (where `run` can be optionally added)
 - Run IDs must be unique within a multi-run sample. A sample with multiple runs will be automatically concatenated.
 - FastQ files must be compressed (`.fastq.gz`, `.fq.gz`)
-- `long_reads` can only be provided in combination with paired-end short read data
 - Within one samplesheet either only single-end or only paired-end reads can be specified
 - If single-end reads are specified, the command line parameter `--single_end` must be specified as well
 

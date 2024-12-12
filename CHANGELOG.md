@@ -10,13 +10,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#692](https://github.com/nf-core/mag/pull/692) - Added Nanoq as optional longread filtering tool (added by @muabnezor)
 - [#692](https://github.com/nf-core/mag/pull/692) - Added chopper as optional longread filtering tool and/or phage lambda removal tool (added by @muabnezor)
 - [#708](https://github.com/nf-core/mag/pull/708) - Added `--exclude_unbins_from_postbinning` parameter to exclude unbinned contigs from post-binning processes, speeding up Prokka in some cases (added by @dialvarezs)
+- [#718](https://github.com/nf-core/mag/pull/718) - Added metaMDBG and Flye as longread assemblers (added by @muabnezor)
+- [#718](https://github.com/nf-core/mag/pull/718) - Added host removal for long reads using minimap2 as aligner (added by @muabnezor)
 
 ### `Changed`
+
+- [#718](https://github.com/nf-core/mag/pull/718) - Longread only input (added by @muabnezor)
 
 ### `Fixed`
 
 - [#716](https://github.com/nf-core/mag/pull/692) - Make short read processing a subworkflow (added by @muabnezor)
 - [#708](https://github.com/nf-core/mag/pull/708) - Fixed channel passed as GUNC input (added by @dialvarezs)
+- [#718](https://github.com/nf-core/mag/pull/718) - refactoring assembly into subworkflow (added by @muabnezor)
 
 ### `Dependencies`
 
