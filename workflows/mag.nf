@@ -657,7 +657,7 @@ workflow MAG {
                 params.busco_auto_lineage_prok ? 'auto_prok' : 'auto'
             )
             ch_busco_summary = BUSCO_QC.out.summary
-            ch_versions = ch_versions.mix(BUSCO_QC.out.versions.first())
+            ch_versions = ch_versions.mix(BUSCO_QC.out.versions)
         }
 
         if (!params.skip_binqc && params.binqc_tool == 'checkm') {
