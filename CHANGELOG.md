@@ -25,10 +25,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Dependencies`
 
-| Tool    | Previous version | New version |
-| ------- | ---------------- | ----------- |
-| chopper |                  | 0.9.0       |
-| nanoq   |                  | 0.10.0      |
+| Tool     | Previous version | New version |
+| -------- | ---------------- | ----------- |
+| chopper  |                  | 0.9.0       |
+| nanoq    |                  | 0.10.0      |
+| flye     |                  | 2.9.5       |
+| metamdbg |                  | 1.0         |
+| minimap2 |                  | 2.28        |
 
 ### `Deprecated`
 
