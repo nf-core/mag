@@ -16,49 +16,19 @@ workflow BUSCO_QC {
     main:
     if (!busco_db.isEmpty()) {
         if (busco_db.extension in ['gz', 'tgz']) {
-            BUSCO_UNTAR(busco_db.map { db -> [[id: 'busco_db'], db] })
+            BUSCO_UNTAR([[id: 'busco_db'], busco_db])
 
-            busco_lineage = busco_db.getSimpleName()
+            if (busco_db.getSimpleName().contains('odb')) {
+                busco_lineage = busco_db.getSimpleName()
+            }
             busco_db = BUSCO_UNTAR.out.untar.map { it[1] }
-
-            // Expects to be tar.gz!
-            // ch_db_for_busco = BUSCO_DB_PREPARATION(busco_db).db.map { meta, db ->
-            //     def meta_new = [:]
-            //     meta_new['id'] = meta
-            //     meta_new['lineage'] = 'Y'
-            //     [meta_new, db]
-            // }
         }
-        // else if (busco_db.isDirectory()) {
-        //     // Set meta to match expected channel cardinality for BUSCO
-        //     ch_db_for_busco = Channel
-        //         .of(busco_db)
-        //         .map { db ->
-        //             def meta = [:]
-        //             meta['id'] = db.getBaseName()
-        //             if (meta['id'].contains('odb10') == true) {
-        //                 meta['lineage'] = 'Y'
-        //             }
-        //             else {
-        //                 meta['lineage'] = 'N'
-        //             }
-        //             [meta, db]
-        //         }
-        //         .collect()
-        // }
-        // BUSCO_BUSCO(bins, params.busco_lineage)
+        else if (busco_db.isDirectory()) {
+            if (busco_db.name.contains('odb')) {
+                busco_lineage = busco_db.name
+            }
+        }
     }
-    // else {
-        // Set BUSCO database to empty to allow for --auto-lineage
-    //     ch_db_for_busco = Channel
-    //         .of([])
-    //         .map { empty_db ->
-    //             def meta = [:]
-    //             meta['lineage'] = ''
-    //             [meta, []]
-    //         }
-    //         .collect()
-    // }
 
     BUSCO_BUSCO( bins, 'genome', busco_lineage, busco_db, [] )
 
@@ -68,7 +38,7 @@ workflow BUSCO_QC {
     //     BUSCO_SAVE_DOWNLOAD(ch_downloads)
     // }
 
-    COMBINE_BUSCO_TSV(BUSCO_BUSCO.out.batch_summary.collect())
+    COMBINE_BUSCO_TSV(BUSCO_BUSCO.out.batch_summary.map { it[1] }.collect())
 
     emit:
     summary    = COMBINE_BUSCO_TSV.out.combined

@@ -7,7 +7,7 @@ process COMBINE_TSV {
         'biocontainers/bioawk:1.0--hed695b0_5' }"
 
     input:
-    path(bin_summaries)
+    path(bin_summaries, stageAs: "bin_summaries/*.tsv")
 
     output:
     path("*.tsv")      , emit: combined

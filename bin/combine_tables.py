@@ -120,11 +120,11 @@ def main(args=None):
     if args.busco_summary:
         busco_results = pd.read_csv(args.busco_summary, sep="\t")
         if not bins.equals(
-            busco_results["GenomeBin"].sort_values().reset_index(drop=True)
+            busco_results["Input_file"].sort_values().reset_index(drop=True)
         ):
             sys.exit("Bins in BUSCO summary do not match bins in bin depths summary!")
         results = pd.merge(
-            results, busco_results, left_on="bin", right_on="GenomeBin", how="outer"
+            results, busco_results, left_on="bin", right_on="Input_file", how="outer"
         )  # assuming depths for all bins are given
 
     if args.checkm_summary:
