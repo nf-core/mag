@@ -19,7 +19,7 @@ workflow BINNING_PREPARATION {
     ch_grouped_mappings = SHORTREAD_BINNING_PREPARATION.out.grouped_mappings
         .mix( LONGREAD_BINNING_PREPARATION.out.grouped_mappings )
 
-    ch_versions = ch_versions.mix( SHORTREAD_BINNING_PREPARATION.out.bowtie2_version )
+    ch_versions = ch_versions.mix( SHORTREAD_BINNING_PREPARATION.out.versions )
     ch_versions = ch_versions.mix( LONGREAD_BINNING_PREPARATION.out.versions )
     ch_multiqc_files = ch_multiqc_files.mix( SHORTREAD_BINNING_PREPARATION.out.bowtie2_assembly_multiqc )
 

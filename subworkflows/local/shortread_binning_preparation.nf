@@ -11,6 +11,8 @@ workflow SHORTREAD_BINNING_PREPARATION {
     reads                // channel: [ val(meta), [ reads ] ]
 
     main:
+
+    ch_versions = Channel.empty()
     // build bowtie2 index for all assemblies
     BOWTIE2_ASSEMBLY_BUILD ( assemblies )
 
@@ -44,8 +46,10 @@ workflow SHORTREAD_BINNING_PREPARATION {
         .groupTuple(by: 0)
         .map { meta, assembly, bams, bais -> [ meta, assembly.sort()[0], bams, bais ] }     // multiple symlinks to the same assembly -> use first of sorted list
 
+    ch_versions = ch_versions.mix( BOWTIE2_ASSEMBLY_ALIGN.out.versions.first() )
+
     emit:
     bowtie2_assembly_multiqc = BOWTIE2_ASSEMBLY_ALIGN.out.log.map { assembly_meta, reads_meta, log -> [ log ] }
-    bowtie2_version          = BOWTIE2_ASSEMBLY_ALIGN.out.versions
+    versions                 = ch_versions
     grouped_mappings         = ch_grouped_mappings
 }

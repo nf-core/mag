@@ -404,7 +404,7 @@ workflow MAG {
             ch_longread_assemblies,
             ch_long_reads
         )
-        ch_versions = ch_versions.mix(BINNING_PREPARATION.out.versions.first())
+        ch_versions = ch_versions.mix(BINNING_PREPARATION.out.versions)
 
 
     }
