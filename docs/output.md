@@ -554,7 +554,7 @@ Besides the reference files or output files created by BUSCO, the following summ
 
 #### CheckM
 
-[CheckM](https://ecogenomics.github.io/CheckM/) CheckM provides a set of tools for assessing the quality of genomes recovered from isolates, single cells, or metagenomes. It provides robust estimates of genome completeness and contamination by using collocated sets of genes that are ubiquitous and single-copy within a phylogenetic lineage
+[CheckM](https://ecogenomics.github.io/CheckM/) provides a set of tools for assessing the quality of genomes recovered from isolates, single cells, or metagenomes. It provides robust estimates of genome completeness and contamination by using collocated sets of genes that are ubiquitous and single-copy within a phylogenetic lineage
 
 By default, nf-core/mag runs CheckM with the `check_lineage` workflow that places genome bins on a reference tree to define lineage-marker sets, to check for completeness and contamination based on lineage-specific marker genes. and then subsequently runs `qa` to generate the summary files.
 
@@ -564,7 +564,8 @@ By default, nf-core/mag runs CheckM with the `check_lineage` workflow that place
 - `GenomeBinning/QC/CheckM/`
   - `[assembler]-[binner]-[domain]-[refinement]-[sample/group]_qa.txt`: Detailed statistics about bins informing completeness and contamamination scores (output of `checkm qa`). This should normally be your main file to use to evaluate your results.
   - `[assembler]-[binner]-[domain]-[refinement]-[sample/group]_wf.tsv`: Overall summary file for completeness and contamination (output of `checkm lineage_wf`).
-  - `[assembler]-[binner]-[domain]-[refinement]-[sample/group]/`: intermediate files for CheckM results, including CheckM generated annotations, log, lineage markers etc.
+  - `[assembler]-[binner]-[domain]-[refinement]-[sample/group]/`: Intermediate files for CheckM results, including CheckM generated annotations, log, lineage markers etc.
+- `GenomeBinning/QC/`
   - `checkm_summary.tsv`: A summary table of the CheckM results for all bins (output of `checkm qa`).
 
 </details>
@@ -577,6 +578,31 @@ If the parameter `--save_checkm_reference` is set, additionally the used the Che
 - `GenomeBinning/QC/CheckM/`
   - `checkm_downloads/`: All CheckM reference files downloaded from the CheckM FTP server, when not supplied by the user.
     - `checkm_data_2015_01_16/*`: a range of directories and files required for CheckM to run.
+
+</details>
+
+#### CheckM2
+
+[CheckM2](https://github.com/chklovski/CheckM2) is a tool for assessing the quality of metagenome-derived genomes. It uses a machine learning approach to predict the completeness and contamination of a genome regardless of its taxonomic lineage.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `GenomeBinning/QC/CheckM2/`
+  - `[assembler]-[binner]-[domain]-[refinement]-[sample/group]/quality_report.tsv`: Detailed statistics about bins informing completeness and contamamination scores. This should normally be your main file to use to evaluate your results.
+  - `[assembler]-[binner]-[domain]-[refinement]-[sample/group]/`: Intermediate files for CheckM2 results, including CheckM2 generated annotations, log, and DIAMOND alignment results.
+- `GenomeBinning/QC/`
+  - `checkm2_summary.tsv`: A summary table of the CheckM2 results for all bins.
+
+</details>
+
+If the parameter `--save_checkm2_data` is set, the CheckM2 reference datasets will be stored in the output directory.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `GenomeBinning/QC/CheckM2/`
+  - `checkm2_downloads/CheckM2_database/*.dmnd`: Diamond database used by CheckM2.
 
 </details>
 

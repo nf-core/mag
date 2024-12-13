@@ -14,11 +14,9 @@ include { methodsDescriptionText                                } from '../subwo
 //
 include { BINNING_PREPARATION                                   } from '../subworkflows/local/binning_preparation'
 include { BINNING                                               } from '../subworkflows/local/binning'
+include { BIN_QC                                                } from '../subworkflows/local/bin_qc'
 include { BINNING_REFINEMENT                                    } from '../subworkflows/local/binning_refinement'
-include { BUSCO_QC                                              } from '../subworkflows/local/busco_qc'
 include { VIRUS_IDENTIFICATION                                  } from '../subworkflows/local/virus_identification'
-include { CHECKM_QC                                             } from '../subworkflows/local/checkm_qc'
-include { GUNC_QC                                               } from '../subworkflows/local/gunc_qc'
 include { GTDBTK                                                } from '../subworkflows/local/gtdbtk'
 include { ANCIENT_DNA_ASSEMBLY_VALIDATION                       } from '../subworkflows/local/ancient_dna'
 include { DOMAIN_CLASSIFICATION                                 } from '../subworkflows/local/domain_classification'
@@ -29,7 +27,6 @@ include { SHORTREAD_PREPROCESSING                               } from '../subwo
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { ARIA2 as ARIA2_UNTAR                                  } from '../modules/nf-core/aria2/main'
 include { UNTAR as CENTRIFUGEDB_UNTAR                           } from '../modules/nf-core/untar/main'
 include { CENTRIFUGE_CENTRIFUGE                                 } from '../modules/nf-core/centrifuge/centrifuge/main'
 include { CENTRIFUGE_KREPORT                                    } from '../modules/nf-core/centrifuge/kreport/main'
@@ -66,7 +63,7 @@ include { COMBINE_TSV as COMBINE_SUMMARY_TSV                    } from '../modul
 
 workflow MAG {
     take:
-    ch_raw_short_reads  // channel: samplesheet read in from --input
+    ch_raw_short_reads // channel: samplesheet read in from --input
     ch_raw_long_reads
     ch_input_assemblies
 
@@ -90,24 +87,6 @@ workflow MAG {
     }
     else {
         ch_host_fasta = Channel.empty()
-    }
-
-    if (params.busco_db) {
-        ch_busco_db = file(params.busco_db, checkIfExists: true)
-    }
-    else {
-        ch_busco_db = []
-    }
-
-    if (params.checkm_db) {
-        ch_checkm_db = file(params.checkm_db, checkIfExists: true)
-    }
-
-    if (params.gunc_db) {
-        ch_gunc_db = file(params.gunc_db, checkIfExists: true)
-    }
-    else {
-        ch_gunc_db = Channel.empty()
     }
 
     if (params.kraken2_db) {
@@ -163,16 +142,6 @@ workflow MAG {
     }
     else {
         ch_metaeuk_db = Channel.empty()
-    }
-
-    // Additional info for completion email and summary
-    def busco_failed_bins = [:]
-
-    // Get checkM database if not supplied
-
-    if (!params.skip_binqc && params.binqc_tool == 'checkm' && !params.checkm_db) {
-        ARIA2_UNTAR(params.checkm_download_url)
-        ch_checkm_db = ARIA2_UNTAR.out.downloaded_file
     }
 
     // Get mmseqs db for MetaEuk if requested
@@ -503,8 +472,7 @@ workflow MAG {
     ================================================================================
     */
 
-    ch_busco_summary = Channel.empty()
-    ch_checkm_summary = Channel.empty()
+    ch_bin_qc_summary = Channel.empty()
 
     if (!params.skip_binning || params.ancient_dna) {
         BINNING_PREPARATION(
@@ -644,58 +612,14 @@ workflow MAG {
         ch_versions = ch_versions.mix(DEPTHS.out.versions)
 
         /*
-        * Bin QC subworkflows: for checking bin completeness with either BUSCO, CHECKM, and/or GUNC
+        * Bin QC subworkflows: for checking bin completeness with either BUSCO, CHECKM, CHECKM2, and/or GUNC
         */
 
-        ch_input_bins_for_qc = ch_input_for_postbinning.transpose()
+        if (!params.skip_binqc) {
+            BIN_QC(ch_input_for_postbinning)
 
-        if (!params.skip_binqc && params.binqc_tool == 'busco') {
-            /*
-            * BUSCO subworkflow: Quantitative measures for the assessment of genome assembly
-            */
-
-            BUSCO_QC(
-                ch_busco_db,
-                ch_input_bins_for_qc
-            )
-            ch_busco_summary = BUSCO_QC.out.summary
-            ch_versions = ch_versions.mix(BUSCO_QC.out.versions.first())
-            // process information if BUSCO analysis failed for individual bins due to no matching genes
-            BUSCO_QC.out.failed_bin.splitCsv(sep: '\t').map { bin, error ->
-                if (!bin.contains(".unbinned.")) {
-                    busco_failed_bins[bin] = error
-                }
-            }
-        }
-
-        if (!params.skip_binqc && params.binqc_tool == 'checkm') {
-            /*
-            * CheckM subworkflow: Quantitative measures for the assessment of genome assembly
-            */
-
-            ch_input_bins_for_checkm = ch_input_bins_for_qc.filter { meta, bins ->
-                meta.domain != "eukarya"
-            }
-
-            CHECKM_QC(
-                ch_input_bins_for_checkm.groupTuple(),
-                ch_checkm_db
-            )
-            ch_checkm_summary = CHECKM_QC.out.summary
-
-            ch_versions = ch_versions.mix(CHECKM_QC.out.versions)
-        }
-
-        if (params.run_gunc && params.binqc_tool == 'checkm') {
-            GUNC_QC(ch_input_bins_for_checkm, ch_gunc_db, CHECKM_QC.out.checkm_tsv)
-            ch_versions = ch_versions.mix(GUNC_QC.out.versions)
-        }
-        else if (params.run_gunc) {
-            ch_input_bins_for_gunc = ch_input_for_postbinning.filter { meta, bins ->
-                meta.domain != "eukarya"
-            }
-            GUNC_QC(ch_input_bins_for_gunc, ch_gunc_db, [])
-            ch_versions = ch_versions.mix(GUNC_QC.out.versions)
+            ch_bin_qc_summary = BIN_QC.out.qc_summary
+            ch_versions = ch_versions.mix(BIN_QC.out.versions)
         }
 
         ch_quast_bins_summary = Channel.empty()
@@ -766,8 +690,7 @@ workflow MAG {
 
                 GTDBTK(
                     ch_gtdb_bins,
-                    ch_busco_summary,
-                    ch_checkm_summary,
+                    ch_bin_qc_summary,
                     gtdb,
                     gtdb_mash
                 )
@@ -782,11 +705,11 @@ workflow MAG {
         if ((!params.skip_binqc) || !params.skip_quast || !params.skip_gtdbtk) {
             BIN_SUMMARY(
                 ch_input_for_binsummary,
-                ch_busco_summary.ifEmpty([]),
-                ch_checkm_summary.ifEmpty([]),
+                ch_bin_qc_summary.ifEmpty([]),
                 ch_quast_bins_summary.ifEmpty([]),
                 ch_gtdbtk_summary.ifEmpty([]),
-                ch_cat_global_summary.ifEmpty([])
+                ch_cat_global_summary.ifEmpty([]),
+                params.binqc_tool
             )
         }
 
@@ -899,7 +822,7 @@ workflow MAG {
     }
 
     if (!params.skip_binning && !params.skip_binqc && params.binqc_tool == 'busco') {
-        ch_multiqc_files = ch_multiqc_files.mix(BUSCO_QC.out.multiqc.collect().ifEmpty([]))
+        ch_multiqc_files = ch_multiqc_files.mix(BIN_QC.out.multiqc_files.collect().ifEmpty([]))
     }
 
 
