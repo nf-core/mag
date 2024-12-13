@@ -109,6 +109,7 @@ jobs:
             test_virus_identification,
             test_single_end,
             test_concoct,
+            test_longread,
           ]
     steps:
       - name: Free some space

@@ -62,6 +62,10 @@
 
 - [Filtlong](https://github.com/rrwick/Filtlong)
 
+- [Flye](https://www.nature.com/articles/s41592-020-00971-x)
+
+  > Kolmogorov, M., Bickhart, D.M., Behsaz, B. et al. metaFlye: scalable long-read metagenome assembly using repeat graphs. Nat Methods 17, 1103–1110 (2020). https://doi.org/10.1038/s41592-020-00971-x
+
 - [Freebayes](https://arxiv.org/abs/1207.3907)
 
   > Garrison E, Marth G. Haplotype-based variant detection from short-read sequencing. arXiv preprint arXiv:1207.3907 [q-bio.GN] 2012
@@ -101,6 +105,14 @@
 - [MetaEuk](https://doi.org/10.1186/s40168-020-00808-x)
 
   > Levy Karin, E., Mirdita, M. & Söding, J. MetaEuk—sensitive, high-throughput gene discovery, and annotation for large-scale eukaryotic metagenomics. Microbiome 8, 48 (2020). 10.1186/s40168-020-00808-x
+
+- [metaMDBG](https://www.nature.com/articles/s41587-023-01983-6)
+
+  > Benoit, G., Raguideau, S., James, R. et al. High-quality metagenome assembly from long accurate reads with metaMDBG. Nat Biotechnol 42, 1378–1383 (2024). https://doi.org/10.1038/s41587-023-01983-6
+
+- [minimap2](https://academic.oup.com/bioinformatics/article/34/18/3094/4994778?login=true)
+
+  > Li, H. (2018). Minimap2: pairwise alignment for nucleotide sequences. Bioinformatics , 34(18), 3094–3100. https://doi.org/10.1093/bioinformatics/bty191
 
 - [MMseqs2](https://www.nature.com/articles/nbt.3988)
 
