@@ -138,7 +138,7 @@ def main(args=None):
         ]
         checkm_results = pd.read_csv(args.binqc_summary, usecols=use_columns, sep="\t")
         checkm_results["Bin Id"] = checkm_results["Bin Id"] + ".fa"
-        if not bins.equals(checkm_results["Bin Id"].sort_values().reset_index(drop=True)):
+        if not set(checkm_results["Bin Id"]).issubset(set(bins)):
             sys.exit("Bins in CheckM summary do not match bins in bin depths summary!")
         results = pd.merge(
             results, checkm_results, left_on="bin", right_on="Bin Id", how="outer"
