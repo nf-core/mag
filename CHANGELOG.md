@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
+- [#731](https://github.com/nf-core/mag/pull/731) - Updated to nf-core 3.1.0 `TEMPLATE` (by @jfy133)
+
 ### `Fixed`
 
 - [#716](https://github.com/nf-core/mag/pull/692) - Make short read processing a subworkflow (added by @muabnezor)
