@@ -189,7 +189,7 @@
                     },
                     "megahit": {
                         "branch": "master",
-                        "git_sha": "7755db15e36b30da564cd67fffdfe18a255092aa",
+                        "git_sha": "9142b390538283705c084e4d612170972ff60326",
                         "installed_by": ["modules"]
                     },
                     "metabat2/jgisummarizebamcontigdepths": {
