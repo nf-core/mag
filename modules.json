@@ -38,7 +38,7 @@
                     },
                     "busco/busco": {
                         "branch": "master",
-                        "git_sha": "9a19690b0a3fae05fa1a6ad90a0720d681429e31",
+                        "git_sha": "d34caf3c0d3cf5b9bae0fae6107bab0933c96f37",
                         "installed_by": ["modules"]
                     },
                     "cat/fastq": {
