@@ -40,6 +40,10 @@
 
   > Parks, D. H., Imelfort, M., Skennerton, C. T., Hugenholtz, P., & Tyson, G. W. (2015). CheckM: assessing the quality of microbial genomes recovered from isolates, single cells, and metagenomes. Genome Research, 25(7), 1043–1055. doi: 10.1101/gr.186072.114
 
+- [CheckM2](https://doi.org/10.1038/s41592-023-01940-w)
+
+  > Chklovski, A., Parks, D. H., Woodcroft, B. J., & Tyson, G. W. (2023). CheckM2: a rapid, scalable and accurate tool for assessing microbial genome quality using machine learning. Nature Methods, 20(8), 1203-1212. doi: https://doi.org/10.1038/s41592-023-01940-w
+
 - [Chopper](https://doi.org/10.1093/bioinformatics/bty149)
 
   > De Coster W, D'Hert S, Schultz DT, Cruts M, Van Broeckhoven C. NanoPack: visualizing and processing long-read sequencing data. Bioinformatics. 2018 Aug 1;34(15):2666-2669. doi: 10.1093/bioinformatics/bty149
