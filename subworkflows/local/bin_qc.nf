@@ -79,6 +79,8 @@ workflow BIN_QC {
         /*
          * BUSCO
          */
+        busco_lineage = params.busco_auto_lineage_prok ? 'auto_prok' : 'auto'
+
         if (!ch_busco_db.isEmpty()) {
             if (ch_busco_db.extension in ['gz', 'tgz']) {
                 BUSCO_UNTAR([[id: 'busco_db'], ch_busco_db])
