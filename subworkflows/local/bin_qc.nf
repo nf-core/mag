@@ -3,11 +3,8 @@
  */
 
 include { ARIA2 as ARIA2_UNTAR             } from '../../modules/nf-core/aria2/main'
+include { BUSCO_BUSCO                      } from '../../modules/nf-core/busco/busco/main'
 include { CHECKM2_DATABASEDOWNLOAD         } from '../../modules/nf-core/checkm2/databasedownload/main'
-include { BUSCO_DB_PREPARATION             } from '../../modules/local/busco_db_preparation'
-include { BUSCO                            } from '../../modules/local/busco'
-include { BUSCO_SAVE_DOWNLOAD              } from '../../modules/local/busco_save_download'
-include { BUSCO_SUMMARY                    } from '../../modules/local/busco_summary'
 include { CHECKM_QA                        } from '../../modules/nf-core/checkm/qa/main'
 include { CHECKM_LINEAGEWF                 } from '../../modules/nf-core/checkm/lineagewf/main'
 include { CHECKM2_PREDICT                  } from '../../modules/nf-core/checkm2/predict/main'
@@ -15,6 +12,7 @@ include { COMBINE_TSV as COMBINE_BINQC_TSV } from '../../modules/local/combine_t
 include { GUNC_DOWNLOADDB                  } from '../../modules/nf-core/gunc/downloaddb/main'
 include { GUNC_RUN                         } from '../../modules/nf-core/gunc/run/main'
 include { GUNC_MERGECHECKM                 } from '../../modules/nf-core/gunc/mergecheckm/main'
+include { UNTAR as BUSCO_UNTAR             } from '../../modules/nf-core/untar'
 
 
 workflow BIN_QC {
@@ -83,55 +81,31 @@ workflow BIN_QC {
          */
         if (!ch_busco_db.isEmpty()) {
             if (ch_busco_db.extension in ['gz', 'tgz']) {
-                // Expects to be tar.gz!
-                BUSCO_DB_PREPARATION(ch_busco_db)
-                ch_db_for_busco = BUSCO_DB_PREPARATION.out.db.map { meta, db ->
-                    [[id: meta, lineage: 'Y'], db]
+                BUSCO_UNTAR([[id: 'busco_db'], ch_busco_db])
+
+                if (ch_busco_db.getSimpleName().contains('odb')) {
+                    busco_lineage = ch_busco_db.getSimpleName()
+                }
+                busco_db = BUSCO_UNTAR.out.untar.map { it[1] }
+            }
+            else if (busco_db.isDirectory()) {
+                if (busco_db.name.matches(/odb\d+$/)) {
+                    busco_lineage = busco_db.name
                 }
             }
-            else if (ch_busco_db.isDirectory()) {
-                // Set meta to match expected channel cardinality for BUSCO
-                ch_db_for_busco = Channel
-                    .of(ch_busco_db)
-                    .collect { db ->
-                        def basename = db.getBaseName()
-                        def lineage = basename.contains('odb10') ? 'Y' : 'N'
-                        [[id: basename, lineage: lineage], db]
-                    }
-            }
-        }
-        else {
-            // Set BUSCO database to empty to allow for --auto-lineage
-            ch_db_for_busco = Channel
-                .of([[lineage: ''], []])
-                .collect()
         }
 
-        if (params.save_busco_db) {
-            // publish files downloaded by Busco
-            ch_downloads = BUSCO.out.busco_downloads
-                .groupTuple()
-                .map { _lin, downloads -> downloads[0] }
-                .toSortedList()
-                .flatten()
-            BUSCO_SAVE_DOWNLOAD(ch_downloads)
+        BUSCO_BUSCO(ch_bins, 'genome', busco_lineage, busco_db, [])
 
-            ch_versions = ch_versions.mix(BUSCO_SAVE_DOWNLOAD.out.versions.first())
-        }
+        COMBINE_BINQC_TSV(BUSCO_BUSCO.out.batch_summary.map { it[1] }.collect())
 
-        BUSCO(ch_input_bins_for_qc, ch_db_for_busco)
-
-        BUSCO_SUMMARY(
-            BUSCO.out.summary_domain.collect { _meta, summary -> summary }.ifEmpty([]),
-            BUSCO.out.summary_specific.collect { _meta, summary -> summary }.ifEmpty([]),
-            BUSCO.out.failed_bin.collect { _meta, summary -> summary }.ifEmpty([])
+        ch_versions = ch_versions.mix(
+            BUSCO_BUSCO.out.versions.first(),
+            COMBINE_BINQC_TSV.out.versions
         )
-
         ch_multiqc_files = ch_multiqc_files.mix(
-            BUSCO.out.summary_domain.mix(BUSCO.out.summary_specific).map { _meta, summary -> summary }
+            BUSCO_BUSCO.out.short_summaries_txt.map { it[1] }.flatten()
         )
-        qc_summary = BUSCO_SUMMARY.out.summary
-        ch_versions = ch_versions.mix(BUSCO.out.versions.first())
     }
     else if (params.binqc_tool == "checkm") {
         /*
@@ -185,10 +159,9 @@ workflow BIN_QC {
         /*
          * GUNC
          */
-        ch_input_bins_for_gunc = ch_bins
-            .filter { meta, _bins ->
-                meta.domain != "eukarya"
-            }
+        ch_input_bins_for_gunc = ch_bins.filter { meta, _bins ->
+            meta.domain != "eukarya"
+        }
 
         if (params.gunc_db) {
             ch_db_for_gunc = ch_gunc_db
