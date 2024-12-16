@@ -218,6 +218,12 @@
                     "description": "Base URL or local path to location of pipeline test dataset files",
                     "default": "https://raw.githubusercontent.com/nf-core/test-datasets/",
                     "hidden": true
+                },
+                "trace_report_suffix": {
+                    "type": "string",
+                    "fa_icon": "far calendar",
+                    "description": "Suffix to add to the trace report filename. Default is the date and time in the format yyyy-MM-dd_HH-mm-ss.",
+                    "hidden": true
                 }
             }
         },
@@ -503,7 +509,7 @@
                 },
                 "gtdbtk_min_completeness": {
                     "type": "number",
-                    "default": 50.0,
+                    "default": 50,
                     "description": "Min. bin completeness (in %) required to apply GTDB-tk classification.",
                     "help_text": "Completeness assessed with BUSCO analysis (100% - %Missing). Must be greater than 0 (min. 0.01) to avoid GTDB-tk errors. If too low, GTDB-tk classification results can be impaired due to not enough marker genes!",
                     "minimum": 0.01,
@@ -511,7 +517,7 @@
                 },
                 "gtdbtk_max_contamination": {
                     "type": "number",
-                    "default": 10.0,
+                    "default": 10,
                     "description": "Max. bin contamination (in %) allowed to apply GTDB-tk classification.",
                     "help_text": "Contamination approximated based on BUSCO analysis (%Complete and duplicated). If too high, GTDB-tk classification results can be impaired due to contamination!",
                     "minimum": 0,
@@ -519,7 +525,7 @@
                 },
                 "gtdbtk_min_perc_aa": {
                     "type": "number",
-                    "default": 10.0,
+                    "default": 10,
                     "description": "Min. fraction of AA (in %) in the MSA for bins to be kept.",
                     "minimum": 0,
                     "maximum": 100
@@ -596,6 +602,16 @@
                 "skip_prodigal": {
                     "type": "boolean",
                     "description": "Skip Prodigal gene prediction"
+                },
+                "prokka_with_compliance": {
+                    "type": "boolean",
+                    "help_text": "Sometimes Prokka will complain that your contig names are too long and fail.\n\nThis particularly happens with metaSPAdes assemblies.\n\nYou can turn on this flag which will tell Prokka to truncate the contig names for you.\nHowever this also requires you to specify a sequencing centre name (specified with `--prokka_compliance_centre`).\n\n:::warning\nTruncating contig names may make it harder to associated contig annotations with their original contigs!\n:::\n",
+                    "description": "Turn on Prokka complicance mode for truncating contig names for NCBI/ENA compatibility."
+                },
+                "prokka_compliance_centre": {
+                    "type": "string",
+                    "help_text": "Specify the sequencing centre name for making NCBI Genbank/ENA compatible annotation files (required when specifying `--prokka_with_compliance`).",
+                    "description": "Specify sequencing centre name required for Prokka's compliance mode."
                 },
                 "skip_prokka": {
                     "type": "boolean",
@@ -718,8 +734,7 @@
                 "exclude_unbins_from_postbinning": {
                     "type": "boolean",
                     "description": "Exclude unbinned contigs in the post-binning steps (bin QC, taxonomic classification, and annotation steps).",
-                    "help": "If you're not interested in assemby results that are not considered 'genome level', excluding unbinned contigs can greatly speed up downstream steps such as Prokka, that can be quite slow and spin up many tasks.",
-                    "default": false
+                    "help": "If you're not interested in assemby results that are not considered 'genome level', excluding unbinned contigs can greatly speed up downstream steps such as Prokka, that can be quite slow and spin up many tasks."
                 }
             }
         },
@@ -731,13 +746,13 @@
             "properties": {
                 "skip_binqc": {
                     "type": "boolean",
-                    "description": "Disable bin QC with BUSCO or CheckM."
+                    "description": "Disable bin QC with BUSCO, CheckM or CheckM2."
                 },
                 "binqc_tool": {
                     "type": "string",
                     "default": "busco",
                     "description": "Specify which tool for bin quality-control validation to use.",
-                    "enum": ["busco", "checkm"]
+                    "enum": ["busco", "checkm", "checkm2"]
                 },
                 "busco_db": {
                     "type": "string",
@@ -774,6 +789,21 @@
                     "type": "boolean",
                     "description": "Save the used CheckM reference files downloaded when not using --checkm_db parameter.",
                     "help_text": "If specified, the directories and files decompressed from the `tar.gz` file downloaded from the [CheckM FTP server](https://data.ace.uq.edu.au/public/CheckM_databases/) will be stored in your output directory alongside your CheckM results."
+                },
+                "checkm2_db": {
+                    "type": "string",
+                    "description": "Path to local folder containing already downloaded and uncompressed CheckM2 database (.dmnd file).",
+                    "help_text": "The pipeline can also download this for you if not specified, and you can save the resulting directory into your output directory by specifying `--save_checkm2_data`. You should move this directory to somewhere else on your machine (and supply back to the pipeline in future runs again with `--checkm2_db`)."
+                },
+                "checkm2_db_version": {
+                    "type": "integer",
+                    "default": 5571251,
+                    "description": "CheckM2 database version number to download (Zenodo record ID, for reference check the canonical reference https://zenodo.org/records/5571251, and pick the Zenodo ID of the database version of your choice)."
+                },
+                "save_checkm2_data": {
+                    "type": "boolean",
+                    "description": "Save the used CheckM2 reference files downloaded when not using --checkm2_db parameter.",
+                    "help_text": "If specified, the directories and files decompressed from the `tar.gz` file downloaded from the [Zenodo repository](https://zenodo.org/records/5571251) will be stored in your output directory alongside your CheckM2 results."
                 },
                 "refine_bins_dastool": {
                     "type": "boolean",
