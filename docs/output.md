@@ -111,7 +111,7 @@ The pipeline uses Nanolyse to map the reads against the Lambda phage and removes
 
 ### Long read adapter removal
 
-The pipeline uses porecho_abi or porechop to perform adaptertrimming of the long reads that are eventually provided with the TSV input file.
+The pipeline uses porecho_abi or porechop to perform adapter trimming of the long reads that are eventually provided with the TSV input file.
 
 <details markdown="1">
 <summary>Output files</summary>
@@ -138,7 +138,7 @@ The pipeline uses filtlong, chopper, or nanoq for quality filtering of long read
 
 </details>
 
-Trimmed and filtered FASTQ output directories and files will only exist if `--save_porechop_reads` and/or `--save_filtered_longreads` (respectively) are provided to the run command .
+Trimmed and filtered FASTQ output directories and files will only exist if `--save_porechop_reads` and/or `--save_filtered_longreads` (respectively) are provided to the run command.
 
 No direct host read removal is performed for long reads.
 However, since within this pipeline filtlong uses a read quality based on k-mer matches to the already filtered short reads, reads not overlapping those short reads might be discarded. Note that this only applies when using filtlong as long read filtering tool.
