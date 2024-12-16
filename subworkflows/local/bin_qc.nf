@@ -88,19 +88,20 @@ workflow BIN_QC {
                 if (ch_busco_db.getSimpleName().contains('odb')) {
                     busco_lineage = ch_busco_db.getSimpleName()
                 }
-                busco_db = BUSCO_UNTAR.out.untar.map { it[1] }
+                ch_busco_db = BUSCO_UNTAR.out.untar.map { it[1] }
             }
-            else if (busco_db.isDirectory()) {
-                if (busco_db.name.matches(/odb\d+$/)) {
-                    busco_lineage = busco_db.name
+            else if (ch_busco_db.isDirectory()) {
+                if (ch_busco_db.name.matches(/odb\d+$/)) {
+                    busco_lineage = ch_busco_db.name
                 }
             }
         }
 
-        BUSCO_BUSCO(ch_bins, 'genome', busco_lineage, busco_db, [])
+        BUSCO_BUSCO(ch_bins, 'genome', busco_lineage, ch_busco_db, [])
 
         COMBINE_BINQC_TSV(BUSCO_BUSCO.out.batch_summary.map { it[1] }.collect())
 
+        qc_summary = COMBINE_BINQC_TSV.out.combined
         ch_versions = ch_versions.mix(
             BUSCO_BUSCO.out.versions.first(),
             COMBINE_BINQC_TSV.out.versions
