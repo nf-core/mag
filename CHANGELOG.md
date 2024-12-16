@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
+- [#731](https://github.com/nf-core/mag/pull/731) - Updated to nf-core 3.1.0 `TEMPLATE` (by @jfy133)
+
 ### `Fixed`
 
 - [#707](https://github.com/nf-core/mag/pull/708) - Fixed channel passed as GUNC input (added by @dialvarezs)
