@@ -16,7 +16,7 @@ include { RENAME_POSTDASTOOL                                              } from
 workflow BINNING_REFINEMENT {
     take:
     ch_contigs_for_dastool // channel: [ val(meta), path(contigs) ]
-    bins           // channel: [ val(meta), path(bins) ]
+    bins                   // channel: [ val(meta), path(bins) ]
 
     main:
     ch_versions = Channel.empty()
@@ -24,13 +24,13 @@ workflow BINNING_REFINEMENT {
     // remove domain information, will add it back later
     // everything here is either unclassified or a prokaryote
     ch_bins = bins
-        .map { meta, bins ->
+        .map { meta, bin_list ->
             def meta_new = meta - meta.subMap(['domain','refinement'])
-            [meta_new, bins]
+            [meta_new, bin_list]
         }
         .groupTuple()
         .map {
-            meta, bins -> [meta, bins.flatten()]
+            meta, bin_list -> [meta, bin_list.flatten()]
         }
 
     // prepare bins
@@ -87,27 +87,27 @@ workflow BINNING_REFINEMENT {
             }
         .groupTuple()
         .map {
-            meta, bins ->
+            meta, bin_list ->
                 def domain_class = params.bin_domain_classification ? 'prokarya' : 'unclassified'
                 def meta_new = meta + [refinement: 'dastool_refined', domain: domain_class]
-                [ meta_new, bins ]
+                [ meta_new, bin_list ]
             }
 
     ch_input_for_renamedastool = DASTOOL_DASTOOL.out.bins
         .map {
-            meta, bins ->
+            meta, bin_list ->
                 def domain_class = params.bin_domain_classification ? 'prokarya' : 'unclassified'
                 def meta_new = meta + [refinement: 'dastool_refined', binner: 'DASTool', domain: domain_class]
-                [ meta_new, bins ]
+                [ meta_new, bin_list ]
             }
 
     RENAME_POSTDASTOOL ( ch_input_for_renamedastool )
 
     refined_unbins = RENAME_POSTDASTOOL.out.refined_unbins
         .map {
-            meta, bins ->
+            meta, bin_list ->
                 def meta_new = meta + [refinement: 'dastool_refined_unbinned']
-                [meta_new, bins]
+                [meta_new, bin_list]
         }
 
     emit:
