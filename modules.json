@@ -36,6 +36,11 @@
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
                         "installed_by": ["modules"]
                     },
+                    "busco/busco": {
+                        "branch": "master",
+                        "git_sha": "d34caf3c0d3cf5b9bae0fae6107bab0933c96f37",
+                        "installed_by": ["modules"]
+                    },
                     "cat/fastq": {
                         "branch": "master",
                         "git_sha": "5c460c5a4736974abde2843294f35307ee2b0e5e",
