@@ -26,7 +26,7 @@ workflow PIPELINE_INITIALISATION {
     take:
     version           // boolean: Display version and exit
     validate_params   // boolean: Boolean whether to validate parameters against the schema at runtime
-    monochrome_logs   // boolean: Do not use coloured log outputs
+    _monochrome_logs  // boolean: Do not use coloured log outputs
     nextflow_cli_args //   array: List of positional nextflow CLI args
     outdir            //  string: The output directory where the results will be saved
     input             //  string: Path to input samplesheet
@@ -71,13 +71,13 @@ workflow PIPELINE_INITIALISATION {
 
     // Validate FASTQ input
     ch_samplesheet = Channel
-        .fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json"))
+        .fromList(samplesheetToList(input, "${projectDir}/assets/schema_input.json"))
         .map {
             validateInputSamplesheet(it[0], it[1], it[2], it[3])
         }
 
     // Prepare FASTQs channel and separate short and long reads and prepare
-    ch_raw_short_reads = ch_samplesheet.map { meta, sr1, sr2, lr ->
+    ch_raw_short_reads = ch_samplesheet.map { meta, sr1, sr2, _lr ->
         meta.run = meta.run == [] ? "0" : meta.run
         meta.single_end = params.single_end
 
@@ -89,7 +89,7 @@ workflow PIPELINE_INITIALISATION {
         }
     }
 
-    ch_raw_long_reads = ch_samplesheet.map { meta, sr1, sr2, lr ->
+    ch_raw_long_reads = ch_samplesheet.map { meta, _sr1, _sr2, lr ->
         if (lr) {
             meta.run = meta.run == [] ? "0" : meta.run
             return [meta, lr]
@@ -129,13 +129,13 @@ workflow PIPELINE_INITIALISATION {
     // Cross validation of input assembly and read IDs: ensure groups are all represented between reads and assemblies
     if (params.assembly_input) {
         ch_read_ids = ch_samplesheet
-            .map { meta, sr1, sr2, lr -> params.coassemble_group ? meta.group : meta.id }
+            .map { meta, _sr1, _sr2, _lr -> params.coassemble_group ? meta.group : meta.id }
             .unique()
             .toList()
             .sort()
 
         ch_assembly_ids = ch_input_assemblies
-            .map { meta, fasta -> params.coassemble_group ? meta.group : meta.id }
+            .map { meta, _fasta -> params.coassemble_group ? meta.group : meta.id }
             .unique()
             .toList()
             .sort()
@@ -175,7 +175,7 @@ workflow PIPELINE_COMPLETION {
 
     main:
     summary_params = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
-
+    def multiqc_reports = multiqc_report.toList()
     //
     // Completion email and summary
     //
@@ -188,7 +188,7 @@ workflow PIPELINE_COMPLETION {
                 plaintext_email,
                 outdir,
                 monochrome_logs,
-                multiqc_report.toList()
+                multiqc_reports.getVal(),
             )
         }
 
@@ -286,14 +286,14 @@ def validateInputParameters(hybrid) {
 
     // Check if BUSCO parameters combinations are valid
     if (params.skip_binqc && params.binqc_tool == 'checkm') {
-        error('[nf-core/mag] ERROR: Both --skip_binqc and --binqc_tool 'checkm' are specified! Invalid combination, please specify either --skip_binqc or --binqc_tool.')
+        error("[nf-core/mag] ERROR: Both --skip_binqc and --binqc_tool 'checkm' are specified! Invalid combination, please specify either --skip_binqc or --binqc_tool.")
     }
     if (params.skip_binqc) {
         if (params.busco_db) {
-            error('[nf-core/mag] ERROR: Both --skip_binqc and --busco_db are specified! Invalid combination, please specify either --skip_binqc or --binqc_tool 'busco' with --busco_db.')
+            error("[nf-core/mag] ERROR: Both --skip_binqc and --busco_db are specified! Invalid combination, please specify either --skip_binqc or --binqc_tool 'busco' with --busco_db.")
         }
         if (params.busco_auto_lineage_prok) {
-            error('[nf-core/mag] ERROR: Both --skip_binqc and --busco_auto_lineage_prok are specified! Invalid combination, please specify either --skip_binqc or --binqc_tool 'busco' with --busco_auto_lineage_prok.')
+            error("[nf-core/mag] ERROR: Both --skip_binqc and --busco_auto_lineage_prok are specified! Invalid combination, please specify either --skip_binqc or --binqc_tool 'busco' with --busco_auto_lineage_prok.")
         }
     }
 
@@ -309,12 +309,17 @@ def validateInputParameters(hybrid) {
         error('[nf-core/mag] ERROR: Invalid parameter combination: parameter --save_cat_db specified, but not --cat_db_generate! Note also that the parameter --save_cat_db does not work in combination with --cat_db.')
     }
 
-    // Chech MetaEuk db paramaters
+    // Check MetaEuk db paramaters
     if (params.metaeuk_mmseqs_db && params.metaeuk_db) {
         error('[nf-core/mag] ERROR: Invalid parameter combination: both --metaeuk_mmseqs_db and --metaeuk_db are specified! Please specify either --metaeuk_mmseqs_db or --metaeuk_db.')
     }
     if (params.save_mmseqs_db && !params.metaeuk_mmseqs_db) {
         error('[nf-core/mag] ERROR: Invalid parameter combination: --save_mmseqs_db supplied but no database has been requested for download with --metaeuk_mmseqs_db!')
+    }
+
+    // Check Prokka parameters
+    if (params.prokka_with_compliance && !params.prokka_compliance_centre) {
+        error('[nf-core/mag] ERROR: Invalid parameter combination: running PROKKA with compliance mode requires a centre name specified with `--prokka_compliance_centre <XYZ>`!')
     }
 }
 
@@ -384,7 +389,7 @@ def toolBibliographyText() {
 }
 
 def methodsDescriptionText(mqc_methods_yaml) {
-    // Convert  to a named map so can be used as with familar NXF ${workflow} variable syntax in the MultiQC YML file
+    // Convert  to a named map so can be used as with familiar NXF ${workflow} variable syntax in the MultiQC YML file
     def meta = [:]
     meta.workflow = workflow.toMap()
     meta["manifest_map"] = workflow.manifest.toMap()

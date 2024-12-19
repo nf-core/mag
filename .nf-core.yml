@@ -1,4 +1,3 @@
-bump_version: null
 lint:
   files_unchanged:
     - lib/NfcoreTemplate.groovy
@@ -6,17 +5,15 @@ lint:
     - config_defaults:
         - params.phix_reference
         - params.lambda_reference
-nf_core_version: 3.0.2
-org_path: null
+nf_core_version: 3.1.0
 repository_type: pipeline
 template:
-  author: "Hadrien Gourlé, Daniel Straub, Sabrina Krakau, James A. Fellows Yates, Maxime Borry"
+  author: "Hadrien Gourlé, Daniel Straub, Sabrina Krakau, James A. Fellows Yates,
+    Maxime Borry"
   description: Assembly, binning and annotation of metagenomes
   force: false
   is_nfcore: true
   name: mag
   org: nf-core
   outdir: .
-  skip_features: null
-  version: 3.2.1
-update: null
+  version: 3.3.0

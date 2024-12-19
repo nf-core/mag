@@ -14,35 +14,25 @@ include { methodsDescriptionText                                } from '../subwo
 //
 include { BINNING_PREPARATION                                   } from '../subworkflows/local/binning_preparation'
 include { BINNING                                               } from '../subworkflows/local/binning'
+include { BIN_QC                                                } from '../subworkflows/local/bin_qc'
 include { BINNING_REFINEMENT                                    } from '../subworkflows/local/binning_refinement'
-include { BUSCO_QC                                              } from '../subworkflows/local/busco_qc'
 include { VIRUS_IDENTIFICATION                                  } from '../subworkflows/local/virus_identification'
-include { CHECKM_QC                                             } from '../subworkflows/local/checkm_qc'
-include { GUNC_QC                                               } from '../subworkflows/local/gunc_qc'
 include { GTDBTK                                                } from '../subworkflows/local/gtdbtk'
 include { ANCIENT_DNA_ASSEMBLY_VALIDATION                       } from '../subworkflows/local/ancient_dna'
 include { DOMAIN_CLASSIFICATION                                 } from '../subworkflows/local/domain_classification'
 include { DEPTHS                                                } from '../subworkflows/local/depths'
 include { LONGREAD_PREPROCESSING                                } from '../subworkflows/local/longread_preprocessing'
+include { SHORTREAD_PREPROCESSING                               } from '../subworkflows/local/shortread_preprocessing'
 
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { ARIA2 as ARIA2_UNTAR                                  } from '../modules/nf-core/aria2/main'
-include { FASTQC as FASTQC_RAW                                  } from '../modules/nf-core/fastqc/main'
-include { FASTQC as FASTQC_TRIMMED                              } from '../modules/nf-core/fastqc/main'
-include { SEQTK_MERGEPE                                         } from '../modules/nf-core/seqtk/mergepe/main'
-include { BBMAP_BBNORM                                          } from '../modules/nf-core/bbmap/bbnorm/main'
-include { FASTP                                                 } from '../modules/nf-core/fastp/main'
-include { ADAPTERREMOVAL as ADAPTERREMOVAL_PE                   } from '../modules/nf-core/adapterremoval/main'
-include { ADAPTERREMOVAL as ADAPTERREMOVAL_SE                   } from '../modules/nf-core/adapterremoval/main'
 include { UNTAR as CENTRIFUGEDB_UNTAR                           } from '../modules/nf-core/untar/main'
 include { CENTRIFUGE_CENTRIFUGE                                 } from '../modules/nf-core/centrifuge/centrifuge/main'
 include { CENTRIFUGE_KREPORT                                    } from '../modules/nf-core/centrifuge/kreport/main'
 include { KRONA_KRONADB                                         } from '../modules/nf-core/krona/kronadb/main'
 include { KRONA_KTIMPORTTAXONOMY                                } from '../modules/nf-core/krona/ktimporttaxonomy/main'
 include { KRAKENTOOLS_KREPORT2KRONA as KREPORT2KRONA_CENTRIFUGE } from '../modules/nf-core/krakentools/kreport2krona/main'
-include { CAT_FASTQ                                             } from '../modules/nf-core/cat/fastq/main'
 include { MEGAHIT                                               } from '../modules/nf-core/megahit/main'
 include { SPADES as METASPADES                                  } from '../modules/nf-core/spades/main'
 include { SPADES as METASPADESHYBRID                            } from '../modules/nf-core/spades/main'
@@ -56,10 +46,6 @@ include { METAEUK_EASYPREDICT                                   } from '../modul
 //
 // MODULE: Local to the pipeline
 //
-include { BOWTIE2_REMOVAL_BUILD as BOWTIE2_HOST_REMOVAL_BUILD   } from '../modules/local/bowtie2_removal_build'
-include { BOWTIE2_REMOVAL_ALIGN as BOWTIE2_HOST_REMOVAL_ALIGN   } from '../modules/local/bowtie2_removal_align'
-include { BOWTIE2_REMOVAL_BUILD as BOWTIE2_PHIX_REMOVAL_BUILD   } from '../modules/local/bowtie2_removal_build'
-include { BOWTIE2_REMOVAL_ALIGN as BOWTIE2_PHIX_REMOVAL_ALIGN   } from '../modules/local/bowtie2_removal_align'
 include { KRAKEN2_DB_PREPARATION                                } from '../modules/local/kraken2_db_preparation'
 include { KRAKEN2                                               } from '../modules/local/kraken2'
 include { POOL_SINGLE_READS as POOL_SHORT_SINGLE_READS          } from '../modules/local/pool_single_reads'
@@ -77,7 +63,7 @@ include { COMBINE_TSV as COMBINE_SUMMARY_TSV                    } from '../modul
 
 workflow MAG {
     take:
-    ch_raw_short_reads  // channel: samplesheet read in from --input
+    ch_raw_short_reads // channel: samplesheet read in from --input
     ch_raw_long_reads
     ch_input_assemblies
 
@@ -101,24 +87,6 @@ workflow MAG {
     }
     else {
         ch_host_fasta = Channel.empty()
-    }
-
-    if (params.busco_db) {
-        ch_busco_db = file(params.busco_db, checkIfExists: true)
-    }
-    else {
-        ch_busco_db = []
-    }
-
-    if (params.checkm_db) {
-        ch_checkm_db = file(params.checkm_db, checkIfExists: true)
-    }
-
-    if (params.gunc_db) {
-        ch_gunc_db = file(params.gunc_db, checkIfExists: true)
-    }
-    else {
-        ch_gunc_db = Channel.empty()
     }
 
     if (params.kraken2_db) {
@@ -147,7 +115,9 @@ workflow MAG {
     }
 
     if (!params.keep_lambda) {
-        ch_nanolyse_db = Channel.value(file("${params.lambda_reference}"))
+        ch_lambda_db = Channel.value(file( "${params.lambda_reference}" ))
+    } else {
+        ch_lambda_db = Channel.empty()
     }
 
     if (params.genomad_db) {
@@ -174,16 +144,6 @@ workflow MAG {
         ch_metaeuk_db = Channel.empty()
     }
 
-    // Additional info for completion email and summary
-    def busco_failed_bins = [:]
-
-    // Get checkM database if not supplied
-
-    if (!params.skip_binqc && params.binqc_tool == 'checkm' && !params.checkm_db) {
-        ARIA2_UNTAR(params.checkm_download_url)
-        ch_checkm_db = ARIA2_UNTAR.out.downloaded_file
-    }
-
     // Get mmseqs db for MetaEuk if requested
     if (!params.skip_metaeuk && params.metaeuk_mmseqs_db) {
         MMSEQS_DATABASES(params.metaeuk_mmseqs_db)
@@ -197,145 +157,19 @@ workflow MAG {
     ================================================================================
     */
 
-    FASTQC_RAW(
-        ch_raw_short_reads
-    )
-    ch_versions = ch_versions.mix(FASTQC_RAW.out.versions.first())
-
-    ch_bowtie2_removal_host_multiqc = Channel.empty()
     if (!params.assembly_input) {
-        if (!params.skip_clipping) {
-            if (params.clip_tool == 'fastp') {
-                ch_clipmerge_out = FASTP(
-                    ch_raw_short_reads,
-                    [],
-                    params.fastp_save_trimmed_fail,
-                    []
-                )
-                ch_short_reads_prepped = FASTP.out.reads
-                ch_versions = ch_versions.mix(FASTP.out.versions.first())
-            }
-            else if (params.clip_tool == 'adapterremoval') {
+        SHORTREAD_PREPROCESSING(
+            ch_raw_short_reads,
+            ch_host_fasta,
+            ch_phix_db_file,
+            ch_metaeuk_db
+        )
 
-                // due to strange output file scheme in AR2, have to manually separate
-                // SE/PE to allow correct pulling of reads after.
-                ch_adapterremoval_in = ch_raw_short_reads.branch {
-                    single: it[0]['single_end']
-                    paired: !it[0]['single_end']
-                }
+        ch_versions = ch_versions.mix(SHORTREAD_PREPROCESSING.out.versions)
+        ch_multiqc_files = ch_multiqc_files.mix(SHORTREAD_PREPROCESSING.out.multiqc_files.collect { it[1] }.ifEmpty([]))
+        ch_short_reads = SHORTREAD_PREPROCESSING.out.short_reads
+        ch_short_reads_assembly = SHORTREAD_PREPROCESSING.out.short_reads_assembly
 
-                ADAPTERREMOVAL_PE(ch_adapterremoval_in.paired, [])
-                ADAPTERREMOVAL_SE(ch_adapterremoval_in.single, [])
-
-                ch_short_reads_prepped = Channel.empty()
-                ch_short_reads_prepped = ch_short_reads_prepped.mix(ADAPTERREMOVAL_SE.out.singles_truncated, ADAPTERREMOVAL_PE.out.paired_truncated)
-
-                ch_versions = ch_versions.mix(ADAPTERREMOVAL_PE.out.versions.first(), ADAPTERREMOVAL_SE.out.versions.first())
-            }
-        }
-        else {
-            ch_short_reads_prepped = ch_raw_short_reads
-        }
-
-        if (params.host_fasta) {
-            if (params.host_fasta_bowtie2index) {
-                ch_host_bowtie2index = file(params.host_fasta_bowtie2index, checkIfExists: true)
-            }
-            else {
-                BOWTIE2_HOST_REMOVAL_BUILD(
-                    ch_host_fasta
-                )
-                ch_host_bowtie2index = BOWTIE2_HOST_REMOVAL_BUILD.out.index
-            }
-        }
-
-        ch_bowtie2_removal_host_multiqc = Channel.empty()
-        if (params.host_fasta || params.host_genome) {
-            BOWTIE2_HOST_REMOVAL_ALIGN(
-                ch_short_reads_prepped,
-                ch_host_bowtie2index
-            )
-            ch_short_reads_hostremoved = BOWTIE2_HOST_REMOVAL_ALIGN.out.reads
-            ch_bowtie2_removal_host_multiqc = BOWTIE2_HOST_REMOVAL_ALIGN.out.log
-            ch_versions = ch_versions.mix(BOWTIE2_HOST_REMOVAL_ALIGN.out.versions.first())
-        }
-        else {
-            ch_short_reads_hostremoved = ch_short_reads_prepped
-        }
-
-        if (!params.keep_phix) {
-            BOWTIE2_PHIX_REMOVAL_BUILD(
-                ch_phix_db_file
-            )
-            BOWTIE2_PHIX_REMOVAL_ALIGN(
-                ch_short_reads_hostremoved,
-                BOWTIE2_PHIX_REMOVAL_BUILD.out.index
-            )
-            ch_short_reads_phixremoved = BOWTIE2_PHIX_REMOVAL_ALIGN.out.reads
-            ch_versions = ch_versions.mix(BOWTIE2_PHIX_REMOVAL_ALIGN.out.versions.first())
-        }
-        else {
-            ch_short_reads_phixremoved = ch_short_reads_hostremoved
-        }
-
-        if (!(params.keep_phix && params.skip_clipping && !(params.host_genome || params.host_fasta))) {
-            FASTQC_TRIMMED(
-                ch_short_reads_phixremoved
-            )
-            ch_versions = ch_versions.mix(FASTQC_TRIMMED.out.versions)
-        }
-
-        // Run/Lane merging
-
-        ch_short_reads_forcat = ch_short_reads_phixremoved
-            .map { meta, reads ->
-                def meta_new = meta - meta.subMap('run')
-                [meta_new, reads]
-            }
-            .groupTuple()
-            .branch { meta, reads ->
-                cat: reads.size() >= 2
-                skip_cat: true
-            }
-
-        CAT_FASTQ(ch_short_reads_forcat.cat.map { meta, reads -> [meta, reads.flatten()] })
-
-        // Ensure we don't have nests of nests so that structure is in form expected for assembly
-        ch_short_reads_catskipped = ch_short_reads_forcat.skip_cat.map { meta, reads ->
-            def new_reads = meta.single_end ? reads[0] : reads.flatten()
-            [meta, new_reads]
-        }
-
-        // Combine single run and multi-run-merged data
-        ch_short_reads = Channel.empty()
-        ch_short_reads = CAT_FASTQ.out.reads.mix(ch_short_reads_catskipped)
-        ch_versions = ch_versions.mix(CAT_FASTQ.out.versions.first())
-
-        if (params.bbnorm) {
-            if (params.coassemble_group) {
-                // Interleave pairs, to be able to treat them as single ends when calling bbnorm. This prepares
-                // for dropping the single_end parameter, but keeps assembly modules as they are, i.e. not
-                // accepting a mix of single end and pairs.
-                SEQTK_MERGEPE(
-                    ch_short_reads.filter { !it[0].single_end }
-                )
-                ch_versions = ch_versions.mix(SEQTK_MERGEPE.out.versions.first())
-                // Combine the interleaved pairs with any single end libraries. Set the meta.single_end to true (used by the bbnorm module).
-                ch_bbnorm = SEQTK_MERGEPE.out.reads
-                    .mix(ch_short_reads.filter { it[0].single_end })
-                    .map { [[id: sprintf("group%s", it[0].group), group: it[0].group, single_end: true], it[1]] }
-                    .groupTuple()
-            }
-            else {
-                ch_bbnorm = ch_short_reads
-            }
-            BBMAP_BBNORM(ch_bbnorm)
-            ch_versions = ch_versions.mix(BBMAP_BBNORM.out.versions)
-            ch_short_reads_assembly = BBMAP_BBNORM.out.fastq
-        }
-        else {
-            ch_short_reads_assembly = ch_short_reads
-        }
     }
     else {
         ch_short_reads = ch_raw_short_reads.map { meta, reads ->
@@ -353,10 +187,11 @@ workflow MAG {
     LONGREAD_PREPROCESSING(
         ch_raw_long_reads,
         ch_short_reads,
-        ch_nanolyse_db
+        ch_lambda_db
     )
 
     ch_versions = ch_versions.mix(LONGREAD_PREPROCESSING.out.versions)
+    ch_multiqc_files = ch_multiqc_files.mix(LONGREAD_PREPROCESSING.out.multiqc_files.collect { it[1] }.ifEmpty([]))
     ch_long_reads = LONGREAD_PREPROCESSING.out.long_reads
 
     /*
@@ -637,8 +472,7 @@ workflow MAG {
     ================================================================================
     */
 
-    ch_busco_summary = Channel.empty()
-    ch_checkm_summary = Channel.empty()
+    ch_bin_qc_summary = Channel.empty()
 
     if (!params.skip_binning || params.ancient_dna) {
         BINNING_PREPARATION(
@@ -769,68 +603,28 @@ workflow MAG {
             ch_input_for_postbinning_bins_unbins = ch_binning_results_bins.mix(ch_binning_results_unbins)
         }
 
-        DEPTHS(ch_input_for_postbinning_bins_unbins, BINNING.out.metabat2depths, ch_short_reads)
+        ch_input_for_postbinning = params.exclude_unbins_from_postbinning
+            ? ch_input_for_postbinning_bins
+            : ch_input_for_postbinning_bins_unbins
+
+        DEPTHS(ch_input_for_postbinning, BINNING.out.metabat2depths, ch_short_reads)
         ch_input_for_binsummary = DEPTHS.out.depths_summary
         ch_versions = ch_versions.mix(DEPTHS.out.versions)
 
         /*
-        * Bin QC subworkflows: for checking bin completeness with either BUSCO, CHECKM, and/or GUNC
+        * Bin QC subworkflows: for checking bin completeness with either BUSCO, CHECKM, CHECKM2, and/or GUNC
         */
 
-        ch_input_bins_for_qc = ch_input_for_postbinning_bins_unbins.transpose()
+        if (!params.skip_binqc) {
+            BIN_QC(ch_input_for_postbinning)
 
-        if (!params.skip_binqc && params.binqc_tool == 'busco') {
-            /*
-            * BUSCO subworkflow: Quantitative measures for the assessment of genome assembly
-            */
-
-            BUSCO_QC(
-                ch_busco_db,
-                ch_input_bins_for_qc
-            )
-            ch_busco_summary = BUSCO_QC.out.summary
-            ch_versions = ch_versions.mix(BUSCO_QC.out.versions.first())
-            // process information if BUSCO analysis failed for individual bins due to no matching genes
-            BUSCO_QC.out.failed_bin.splitCsv(sep: '\t').map { bin, error ->
-                if (!bin.contains(".unbinned.")) {
-                    busco_failed_bins[bin] = error
-                }
-            }
-        }
-
-        if (!params.skip_binqc && params.binqc_tool == 'checkm') {
-            /*
-            * CheckM subworkflow: Quantitative measures for the assessment of genome assembly
-            */
-
-            ch_input_bins_for_checkm = ch_input_bins_for_qc.filter { meta, bins ->
-                meta.domain != "eukarya"
-            }
-
-            CHECKM_QC(
-                ch_input_bins_for_checkm.groupTuple(),
-                ch_checkm_db
-            )
-            ch_checkm_summary = CHECKM_QC.out.summary
-
-            ch_versions = ch_versions.mix(CHECKM_QC.out.versions)
-        }
-
-        if (params.run_gunc && params.binqc_tool == 'checkm') {
-            GUNC_QC(ch_input_bins_for_checkm, ch_gunc_db, CHECKM_QC.out.checkm_tsv)
-            ch_versions = ch_versions.mix(GUNC_QC.out.versions)
-        }
-        else if (params.run_gunc) {
-            ch_input_bins_for_gunc = ch_input_for_postbinning_bins_unbins.filter { meta, bins ->
-                meta.domain != "eukarya"
-            }
-            GUNC_QC(ch_input_bins_for_qc, ch_gunc_db, [])
-            ch_versions = ch_versions.mix(GUNC_QC.out.versions)
+            ch_bin_qc_summary = BIN_QC.out.qc_summary
+            ch_versions = ch_versions.mix(BIN_QC.out.versions)
         }
 
         ch_quast_bins_summary = Channel.empty()
         if (!params.skip_quast) {
-            ch_input_for_quast_bins = ch_input_for_postbinning_bins_unbins
+            ch_input_for_quast_bins = ch_input_for_postbinning
                 .groupTuple()
                 .map { meta, bins ->
                     def new_bins = bins.flatten()
@@ -859,7 +653,7 @@ workflow MAG {
             ch_cat_db = CAT_DB_GENERATE.out.db
         }
         CAT(
-            ch_input_for_postbinning_bins_unbins,
+            ch_input_for_postbinning,
             ch_cat_db
         )
         // Group all classification results for each sample in a single file
@@ -890,14 +684,13 @@ workflow MAG {
             ch_gtdbtk_summary = Channel.empty()
             if (gtdb) {
 
-                ch_gtdb_bins = ch_input_for_postbinning_bins_unbins.filter { meta, bins ->
+                ch_gtdb_bins = ch_input_for_postbinning.filter { meta, bins ->
                     meta.domain != "eukarya"
                 }
 
                 GTDBTK(
                     ch_gtdb_bins,
-                    ch_busco_summary,
-                    ch_checkm_summary,
+                    ch_bin_qc_summary,
                     gtdb,
                     gtdb_mash
                 )
@@ -912,11 +705,11 @@ workflow MAG {
         if ((!params.skip_binqc) || !params.skip_quast || !params.skip_gtdbtk) {
             BIN_SUMMARY(
                 ch_input_for_binsummary,
-                ch_busco_summary.ifEmpty([]),
-                ch_checkm_summary.ifEmpty([]),
+                ch_bin_qc_summary.ifEmpty([]),
                 ch_quast_bins_summary.ifEmpty([]),
                 ch_gtdbtk_summary.ifEmpty([]),
-                ch_cat_global_summary.ifEmpty([])
+                ch_cat_global_summary.ifEmpty([]),
+                params.binqc_tool
             )
         }
 
@@ -925,7 +718,7 @@ workflow MAG {
          */
 
         if (!params.skip_prokka) {
-            ch_bins_for_prokka = ch_input_for_postbinning_bins_unbins
+            ch_bins_for_prokka = ch_input_for_postbinning
                 .transpose()
                 .map { meta, bin ->
                     def meta_new = meta + [id: bin.getBaseName()]
@@ -944,7 +737,7 @@ workflow MAG {
         }
 
         if (!params.skip_metaeuk && (params.metaeuk_db || params.metaeuk_mmseqs_db)) {
-            ch_bins_for_metaeuk = ch_input_for_postbinning_bins_unbins
+            ch_bins_for_metaeuk = ch_input_for_postbinning
                 .transpose()
                 .filter { meta, bin ->
                     meta.domain in ["eukarya", "unclassified"]
@@ -965,7 +758,7 @@ workflow MAG {
     softwareVersionsToYAML(ch_versions)
         .collectFile(
             storeDir: "${params.outdir}/pipeline_info",
-            name: 'nf_core_' + 'pipeline_software_' + 'mqc_' + 'versions.yml',
+            name: 'nf_core_'  +  'mag_software_'  + 'mqc_'  + 'versions.yml',
             sort: true,
             newLine: true
         )
@@ -1009,32 +802,6 @@ workflow MAG {
         )
     )
 
-    ch_multiqc_files = ch_multiqc_files.mix(FASTQC_RAW.out.zip.collect { it[1] }.ifEmpty([]))
-    ch_multiqc_files = ch_multiqc_files.mix(LONGREAD_PREPROCESSING.out.multiqc_files.collect { it[1] }.ifEmpty([]))
-
-    if (!params.assembly_input) {
-
-        if (!params.skip_clipping && params.clip_tool == 'adapterremoval') {
-            ch_multiqc_files = ch_multiqc_files.mix(ADAPTERREMOVAL_PE.out.settings.collect { it[1] }.ifEmpty([]))
-            ch_multiqc_files = ch_multiqc_files.mix(ADAPTERREMOVAL_SE.out.settings.collect { it[1] }.ifEmpty([]))
-        }
-        else if (!params.skip_clipping && params.clip_tool == 'fastp') {
-            ch_multiqc_files = ch_multiqc_files.mix(FASTP.out.json.collect { it[1] }.ifEmpty([]))
-        }
-
-        if (!(params.keep_phix && params.skip_clipping && !(params.host_genome || params.host_fasta))) {
-            ch_multiqc_files = ch_multiqc_files.mix(FASTQC_TRIMMED.out.zip.collect { it[1] }.ifEmpty([]))
-        }
-
-        if (params.host_fasta || params.host_genome) {
-            ch_multiqc_files = ch_multiqc_files.mix(BOWTIE2_HOST_REMOVAL_ALIGN.out.log.collect { it[1] }.ifEmpty([]))
-        }
-
-        if (!params.keep_phix) {
-            ch_multiqc_files = ch_multiqc_files.mix(BOWTIE2_PHIX_REMOVAL_ALIGN.out.log.collect { it[1] }.ifEmpty([]))
-        }
-    }
-
     ch_multiqc_files = ch_multiqc_files.mix(CENTRIFUGE_KREPORT.out.kreport.collect { it[1] }.ifEmpty([]))
     ch_multiqc_files = ch_multiqc_files.mix(KRAKEN2.out.report.collect { it[1] }.ifEmpty([]))
 
@@ -1055,7 +822,7 @@ workflow MAG {
     }
 
     if (!params.skip_binning && !params.skip_binqc && params.binqc_tool == 'busco') {
-        ch_multiqc_files = ch_multiqc_files.mix(BUSCO_QC.out.multiqc.collect().ifEmpty([]))
+        ch_multiqc_files = ch_multiqc_files.mix(BIN_QC.out.multiqc_files.collect().ifEmpty([]))
     }
 
 

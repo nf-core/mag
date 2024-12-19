@@ -40,6 +40,14 @@
 
   > Parks, D. H., Imelfort, M., Skennerton, C. T., Hugenholtz, P., & Tyson, G. W. (2015). CheckM: assessing the quality of microbial genomes recovered from isolates, single cells, and metagenomes. Genome Research, 25(7), 1043–1055. doi: 10.1101/gr.186072.114
 
+- [CheckM2](https://doi.org/10.1038/s41592-023-01940-w)
+
+  > Chklovski, A., Parks, D. H., Woodcroft, B. J., & Tyson, G. W. (2023). CheckM2: a rapid, scalable and accurate tool for assessing microbial genome quality using machine learning. Nature Methods, 20(8), 1203-1212. doi: https://doi.org/10.1038/s41592-023-01940-w
+
+- [Chopper](https://doi.org/10.1093/bioinformatics/bty149)
+
+  > De Coster W, D'Hert S, Schultz DT, Cruts M, Van Broeckhoven C. NanoPack: visualizing and processing long-read sequencing data. Bioinformatics. 2018 Aug 1;34(15):2666-2669. doi: 10.1093/bioinformatics/bty149
+
 - [CONCOCT](https://doi.org/10.1038/nmeth.3103)
 
   > Alneberg, J., Bjarnason, B. S., de Bruijn, I., Schirmer, M., Quick, J., Ijaz, U. Z., Lahti, L., Loman, N. J., Andersson, A. F., & Quince, C. (2014). Binning metagenomic contigs by coverage and composition. Nature Methods, 11(11), 1144–1146. doi: 10.1038/nmeth.3103
@@ -113,6 +121,10 @@
 - [NanoPlot](https://doi.org/10.1093/bioinformatics/bty149)
 
   > De Coster, W., D’Hert, S., Schultz, D. T., Cruts, M., & Van Broeckhoven, C. (2018). NanoPack: visualizing and processing long-read sequencing data. Bioinformatics, 34(15), 2666-2669. doi: 10.1093/bioinformatics/bty149.
+
+- [Nanoq](https://doi.org/10.21105/joss.02991)
+
+  > Steinig, E., Coin, L. (2022). Nanoq: ultra-fast quality control for nanopore reads. Journal of Open Source Software, 7(69), 2991, doi: 10.21105/joss.02991
 
 - [Porechop](https://github.com/rrwick/Porechop)
 

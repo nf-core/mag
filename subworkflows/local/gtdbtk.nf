@@ -9,8 +9,7 @@ include { GTDBTK_SUMMARY        } from '../../modules/local/gtdbtk_summary'
 workflow GTDBTK {
     take:
     bins              // channel: [ val(meta), [bins] ]
-    busco_summary     // channel: path
-    checkm_summary    // channel: path
+    bin_qc_summary    // channel: path
     gtdb              // channel: path
     gtdb_mash         // channel: path
 
@@ -19,14 +18,13 @@ workflow GTDBTK {
     ch_bin_metrics = Channel.empty()
     if ( params.binqc_tool == 'busco' ){
         // Collect completeness and contamination metrics from busco summary
-        ch_bin_metrics = busco_summary
+        ch_bin_metrics = bin_qc_summary
             .splitCsv(header: true, sep: '\t')
             .map { row ->
                         def completeness  = -1
                         def contamination = -1
                         def missing, duplicated
-                        def busco_db = file(params.busco_db)
-                        if (busco_db.getBaseName().contains('odb10')) {
+                        if (params.busco_db && file(params.busco_db).getBaseName().contains('odb10')) {
                             missing    = row.'%Missing (specific)'      // TODO or just take '%Complete'?
                             duplicated = row.'%Complete and duplicated (specific)'
                         } else {
@@ -38,13 +36,15 @@ workflow GTDBTK {
                         [row.'GenomeBin', completeness, contamination]
             }
     } else {
-        // Collect completeness and contamination metrics from checkm summary
-        ch_bin_metrics = checkm_summary
+        // Collect completeness and contamination metrics from CheckM/CheckM2 summary
+        bin_name = params.binqc_tool == 'checkm' ? 'Bin Id' : 'Name'
+
+        ch_bin_metrics = bin_qc_summary
             .splitCsv(header: true, sep: '\t')
             .map { row ->
                         def completeness  = Double.parseDouble(row.'Completeness')
                         def contamination = Double.parseDouble(row.'Contamination')
-                        [row.'Bin Id' + ".fa", completeness, contamination]
+                        [row[bin_name] + ".fa", completeness, contamination]
             }
     }
 
