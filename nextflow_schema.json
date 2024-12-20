@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "https://raw.githubusercontent.com/nf-core/mag/master/nextflow_schema.json",
+    "$id": "https://raw.githubusercontent.com/nf-core/mag/main/nextflow_schema.json",
     "title": "nf-core/mag pipeline parameters",
     "description": "Assembly, binning and annotation of metagenomes",
     "type": "object",
