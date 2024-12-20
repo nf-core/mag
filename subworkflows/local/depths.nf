@@ -6,7 +6,7 @@ include { MAG_DEPTHS_SUMMARY                    } from '../../modules/local/mag_
  * Get number of columns in file (first line)
  */
 def getColNo(filename) {
-    lines  = file(filename).readLines()
+    def lines  = file(filename).readLines()
     return lines[0].split('\t').size()
 }
 
@@ -14,7 +14,7 @@ def getColNo(filename) {
  * Get number of rows in a file
  */
 def getRowNo(filename) {
-    lines = file(filename).readLines()
+    def lines = file(filename).readLines()
     return lines.size()
 }
 
@@ -40,7 +40,7 @@ workflow DEPTHS {
         .combine(depths, by: 0)
         .transpose()
         .map {
-            meta_combine, meta, bins, depth ->
+            _meta_combine, meta, bins, depth ->
             def meta_new = meta - meta.subMap('domain','refinement')
             [meta_new, bins, depth]
         }
@@ -58,7 +58,7 @@ workflow DEPTHS {
     // Plot bin depths heatmap for each assembly and mapped samples (according to `binning_map_mode`)
     // create file containing group information for all samples
     ch_sample_groups = reads
-        .collectFile(name:'sample_groups.tsv'){ meta, reads -> meta.id + '\t' + meta.group + '\n' }
+        .collectFile(name:'sample_groups.tsv'){ meta, _sample_reads -> meta.id + '\t' + meta.group + '\n' }
 
     // Filter MAG depth files: use only those for plotting that contain depths for > 2 samples
     // as well as > 2 bins

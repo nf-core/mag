@@ -21,20 +21,24 @@ workflow BINNING_PREPARATION {
             .combine(reads)
     } else if (params.binning_map_mode == 'group'){
         // combine assemblies with reads of samples from same group
-        ch_reads_bowtie2 = reads.map{ meta, reads -> [ meta.group, meta, reads ] }
+        ch_reads_bowtie2 = reads.map{ meta, sample_reads -> [ meta.group, meta, sample_reads ] }
         ch_bowtie2_input = BOWTIE2_ASSEMBLY_BUILD.out.assembly_index
             .map { meta, assembly, index -> [ meta.group, meta, assembly, index ] }
             .combine(ch_reads_bowtie2, by: 0)
-            .map { group, assembly_meta, assembly, index, reads_meta, reads -> [ assembly_meta, assembly, index, reads_meta, reads ] }
+            .map { _group, assembly_meta, assembly, index, reads_meta, sample_reads ->
+                [ assembly_meta, assembly, index, reads_meta, sample_reads ]
+            }
 
     } else {
         // i.e. --binning_map_mode 'own'
         // combine assemblies (not co-assembled) with reads from own sample
-        ch_reads_bowtie2 = reads.map{ meta, reads -> [ meta.id, meta, reads ] }
+        ch_reads_bowtie2 = reads.map{ meta, sample_reads -> [ meta.id, meta, sample_reads ] }
         ch_bowtie2_input = BOWTIE2_ASSEMBLY_BUILD.out.assembly_index
             .map { meta, assembly, index -> [ meta.id, meta, assembly, index ] }
             .combine(ch_reads_bowtie2, by: 0)
-            .map { id, assembly_meta, assembly, index, reads_meta, reads -> [ assembly_meta, assembly, index, reads_meta, reads ] }
+            .map { _id, assembly_meta, assembly, index, reads_meta, sample_reads ->
+                [ assembly_meta, assembly, index, reads_meta, sample_reads ]
+            }
 
     }
 
@@ -45,7 +49,7 @@ workflow BINNING_PREPARATION {
         .map { meta, assembly, bams, bais -> [ meta, assembly.sort()[0], bams, bais ] }     // multiple symlinks to the same assembly -> use first of sorted list
 
     emit:
-    bowtie2_assembly_multiqc = BOWTIE2_ASSEMBLY_ALIGN.out.log.map { assembly_meta, reads_meta, log -> [ log ] }
+    bowtie2_assembly_multiqc = BOWTIE2_ASSEMBLY_ALIGN.out.log.map { _assembly_meta, _reads_meta, log -> [ log ] }
     bowtie2_version          = BOWTIE2_ASSEMBLY_ALIGN.out.versions
     grouped_mappings         = ch_grouped_mappings
 }
