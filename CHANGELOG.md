@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## dev [unreleased]
+## 3.3.0 [2024-12-16]
 
 ### `Added`
 
@@ -13,8 +13,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#707](https://github.com/nf-core/mag/pull/707) - Make Bin QC a subworkflow (added by @dialvarezs)
 - [#707](https://github.com/nf-core/mag/pull/707) - Added CheckM2 as an alternative bin completeness and QC tool (added by @dialvarezs)
 - [#708](https://github.com/nf-core/mag/pull/708) - Added `--exclude_unbins_from_postbinning` parameter to exclude unbinned contigs from post-binning processes, speeding up Prokka in some cases (added by @dialvarezs)
+- [#732](https://github.com/nf-core/mag/pull/732) - Added support for Prokka's compliance mode with `--prokka_with_compliance --prokka_compliance_centre <xyz>` (reported by @audy and @Thomieh73, added by @jfy133)
 
 ### `Changed`
+
+- [#731](https://github.com/nf-core/mag/pull/731) - Updated to nf-core 3.1.0 `TEMPLATE` (by @jfy133)
 
 ### `Fixed`
 
