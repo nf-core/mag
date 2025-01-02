@@ -100,6 +100,8 @@ workflow BIN_QC {
         BUSCO_BUSCO(ch_bins, 'genome', busco_lineage, ch_busco_db, [])
 
         qc_summaries = BUSCO_BUSCO.out.batch_summary
+            .map { _meta, summary -> [[id: 'busco'], summary] }
+            .groupTuple()
         ch_versions = ch_versions.mix(BUSCO_BUSCO.out.versions.first())
         ch_multiqc_files = ch_multiqc_files.mix(
             BUSCO_BUSCO.out.short_summaries_txt.map { it[1] }.flatten()
@@ -131,6 +133,8 @@ workflow BIN_QC {
         CHECKM_QA(ch_checkmqa_input, [])
 
         qc_summaries = CHECKM_QA.out.output
+            .map { _meta, summary -> [[id: 'checkm'], summary] }
+            .groupTuple()
         ch_versions = ch_versions.mix(CHECKM_QA.out.versions.first())
     }
     else if (params.binqc_tool == "checkm2") {
@@ -140,6 +144,8 @@ workflow BIN_QC {
         CHECKM2_PREDICT(ch_input_bins_for_qc.groupTuple(), ch_checkm2_db)
 
         qc_summaries = CHECKM2_PREDICT.out
+            .map { _meta, summary -> [[id: 'checkm2'], summary] }
+            .groupTuple()
         ch_versions = ch_versions.mix(CHECKM2_PREDICT.out.versions.first())
     }
 
@@ -189,11 +195,7 @@ workflow BIN_QC {
     }
 
     // Combine QC summaries (same process for all tools)
-    CONCAT_BINQC_TSV(
-        qc_summaries.map { _meta, summary -> summary }.collect().map { summaries -> [[:], summaries] },
-        'tsv',
-        'tsv',
-    )
+    CONCAT_BINQC_TSV(qc_summaries, 'tsv', 'tsv')
     qc_summary = CONCAT_BINQC_TSV.out.csv
     ch_versions = ch_versions.mix(CONCAT_BINQC_TSV.out.versions)
 
