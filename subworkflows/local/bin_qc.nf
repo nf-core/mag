@@ -8,7 +8,7 @@ include { CHECKM2_DATABASEDOWNLOAD         } from '../../modules/nf-core/checkm2
 include { CHECKM_QA                        } from '../../modules/nf-core/checkm/qa/main'
 include { CHECKM_LINEAGEWF                 } from '../../modules/nf-core/checkm/lineagewf/main'
 include { CHECKM2_PREDICT                  } from '../../modules/nf-core/checkm2/predict/main'
-include { COMBINE_TSV as COMBINE_BINQC_TSV } from '../../modules/local/combine_tsv'
+include { CSVTK_CONCAT as CONCAT_BINQC_TSV } from '../../modules/nf-core/csvtk/concat/main'
 include { GUNC_DOWNLOADDB                  } from '../../modules/nf-core/gunc/downloaddb/main'
 include { GUNC_RUN                         } from '../../modules/nf-core/gunc/run/main'
 include { GUNC_MERGECHECKM                 } from '../../modules/nf-core/gunc/mergecheckm/main'
@@ -99,13 +99,8 @@ workflow BIN_QC {
 
         BUSCO_BUSCO(ch_bins, 'genome', busco_lineage, ch_busco_db, [])
 
-        COMBINE_BINQC_TSV(BUSCO_BUSCO.out.batch_summary.map { it[1] }.collect())
-
-        qc_summary = COMBINE_BINQC_TSV.out.combined
-        ch_versions = ch_versions.mix(
-            BUSCO_BUSCO.out.versions.first(),
-            COMBINE_BINQC_TSV.out.versions
-        )
+        qc_summaries = BUSCO_BUSCO.out.batch_summary
+        ch_versions = ch_versions.mix(BUSCO_BUSCO.out.versions.first())
         ch_multiqc_files = ch_multiqc_files.mix(
             BUSCO_BUSCO.out.short_summaries_txt.map { it[1] }.flatten()
         )
@@ -135,13 +130,8 @@ workflow BIN_QC {
 
         CHECKM_QA(ch_checkmqa_input, [])
 
-        COMBINE_BINQC_TSV(CHECKM_QA.out.output.collect { summary -> summary[1] })
-
-        qc_summary = COMBINE_BINQC_TSV.out.combined
-        ch_versions = ch_versions.mix(
-            CHECKM_QA.out.versions.first(),
-            COMBINE_BINQC_TSV.out.versions
-        )
+        qc_summaries = CHECKM_QA.out.output
+        ch_versions = ch_versions.mix(CHECKM_QA.out.versions.first())
     }
     else if (params.binqc_tool == "checkm2") {
         /*
@@ -149,13 +139,8 @@ workflow BIN_QC {
          */
         CHECKM2_PREDICT(ch_input_bins_for_qc.groupTuple(), ch_checkm2_db)
 
-        COMBINE_BINQC_TSV(CHECKM2_PREDICT.out.checkm2_tsv.collect { summary -> summary[1] })
-
-        qc_summary = COMBINE_BINQC_TSV.out.combined
-        ch_versions = ch_versions.mix(
-            CHECKM2_PREDICT.out.versions.first(),
-            COMBINE_BINQC_TSV.out.versions
-        )
+        qc_summaries = CHECKM2_PREDICT.out
+        ch_versions = ch_versions.mix(CHECKM2_PREDICT.out.versions.first())
     }
 
     if (params.run_gunc) {
@@ -183,7 +168,7 @@ workflow BIN_QC {
             .collectFile(
                 name: "gunc_summary.tsv",
                 keepHeader: true,
-                storeDir: "${params.outdir}/GenomeBinning/QC/"
+                storeDir: "${params.outdir}/GenomeBinning/QC/",
             )
 
         if (params.binqc_tool == 'checkm') {
@@ -198,10 +183,19 @@ workflow BIN_QC {
                 .collectFile(
                     name: "gunc_checkm_summary.tsv",
                     keepHeader: true,
-                    storeDir: "${params.outdir}/GenomeBinning/QC/"
+                    storeDir: "${params.outdir}/GenomeBinning/QC/",
                 )
         }
     }
+
+    // Combine QC summaries (same process for all tools)
+    CONCAT_BINQC_TSV(
+        qc_summaries.map { _meta, summary -> summary }.collect().map { summaries -> [[:], summaries] },
+        'tsv',
+        'tsv',
+    )
+    qc_summary = CONCAT_BINQC_TSV.out.csv
+    ch_versions = ch_versions.mix(CONCAT_BINQC_TSV.out.versions)
 
     emit:
     qc_summary    = qc_summary
