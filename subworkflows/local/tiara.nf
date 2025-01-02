@@ -1,7 +1,7 @@
 include { TIARA_TIARA                                                  } from '../../modules/nf-core/tiara/tiara/main'
 include { TIARA_CLASSIFY                                               } from '../../modules/local/tiara_classify'
 include { DASTOOL_FASTATOCONTIG2BIN as DASTOOL_FASTATOCONTIG2BIN_TIARA } from '../../modules/nf-core/dastool/fastatocontig2bin/main'
-include { COMBINE_TSV as TIARA_SUMMARY                                 } from '../../modules/local/combine_tsv'
+include { CSVTK_CONCAT as TIARA_SUMMARY                                } from '../../modules/nf-core/csvtk/concat/main'
 
 workflow TIARA {
     take:
@@ -118,8 +118,11 @@ workflow TIARA {
             [ classification ]
         }
         .collect()
+        .map { classifications ->
+            [[:], classifications]
+        }
 
-    TIARA_SUMMARY(ch_bin_classifications)
+    TIARA_SUMMARY(ch_bin_classifications, 'tsv', 'tsv')
 
     emit:
     classified_bins   = ch_classified_bins

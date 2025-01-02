@@ -59,7 +59,6 @@ include { CAT_DB_GENERATE                                       } from '../modul
 include { CAT                                                   } from '../modules/local/cat'
 include { CAT_SUMMARY                                           } from '../modules/local/cat_summary'
 include { BIN_SUMMARY                                           } from '../modules/local/bin_summary'
-include { COMBINE_TSV as COMBINE_SUMMARY_TSV                    } from '../modules/local/combine_tsv'
 
 workflow MAG {
     take:
