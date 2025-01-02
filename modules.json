@@ -69,7 +69,7 @@
                     },
                     "checkm2/databasedownload": {
                         "branch": "master",
-                        "git_sha": "e17652681c856afaf2e240ba4c98bf4631a0fe2d",
+                        "git_sha": "ad43b5d5d464698d11b599b004adc1c00615ef1b",
                         "installed_by": ["modules"]
                     },
                     "checkm2/predict": {
