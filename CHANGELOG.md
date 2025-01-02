@@ -7,19 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
+- [#730](https://github.com/nf-core/mag/pull/730) - Migrated from local BUSCO module to nf-core one (added by @dialvarezs)
+
 ### `Changed`
 
 ### `Fixed`
 
 ### `Dependencies`
 
-### `Dependencies`
+| Tool    | Previous version | New version |
+| ------- | ---------------- | ----------- |
+| BUSCO   | 5.4.3            | 5.8.2       |
+| csvtk   |                  | 0.30.0      |
+
+### `Deprecated`
+
+- [#730](https://github.com/nf-core/mag/pull/730) - Deprecated `--busco_clean` due to not being supported in the nf-core BUSCO module
 
 ## 3.3.0 [2024-12-19]
 
 ### `Added`
 
-- [#730](https://github.com/nf-core/mag/pull/730) - Migrated from local BUSCO module to nf-core one (added by @dialvarezs)
 - [#692](https://github.com/nf-core/mag/pull/692) - Added Nanoq as optional longread filtering tool (added by @muabnezor)
 - [#692](https://github.com/nf-core/mag/pull/692) - Added chopper as optional longread filtering tool and/or phage lambda removal tool (added by @muabnezor)
 - [#707](https://github.com/nf-core/mag/pull/707) - Make Bin QC a subworkflow (added by @dialvarezs)
@@ -43,7 +51,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Tool    | Previous version | New version |
 | ------- | ---------------- | ----------- |
-| BUSCO   | 5.4.3            | 5.8.2       |
 | CheckM  | 1.2.1            | 1.2.3       |
 | CheckM2 |                  | 1.0.2       |
 | chopper |                  | 0.9.0       |
@@ -51,8 +58,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | nanoq   |                  | 0.10.0      |
 
 ### `Deprecated`
-
-- [#730](https://github.com/nf-core/mag/pull/730) - Deprecated `--busco_clean` due to not being supported in the nf-core BUSCO module
 
 ## 3.2.1 [2024-10-30]
 
