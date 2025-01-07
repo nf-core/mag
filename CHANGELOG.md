@@ -57,7 +57,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | GUNC     | 1.0.5            | 1.0.6       |
 | nanoq    |                  | 0.10.0      |
 
-
 ### `Deprecated`
 
 ## 3.2.1 [2024-10-30]
