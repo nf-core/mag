@@ -768,11 +768,6 @@
                     "description": "Save the used BUSCO lineage datasets provided via `--busco_db`.",
                     "help_text": "Useful to allow reproducibility, as BUSCO datasets are frequently updated and old versions do not always remain accessible."
                 },
-                "busco_clean": {
-                    "type": "boolean",
-                    "description": "Enable clean-up of temporary files created during BUSCO runs.",
-                    "help_text": "By default, BUSCO creates a large number of intermediate files every run. This may cause problems on some clusters which have file number limits in plate, particularly with large numbers of bins. Enabling this option cleans these files, reducing the total file count of the work directory."
-                },
                 "checkm_download_url": {
                     "type": "string",
                     "default": "https://zenodo.org/records/7401545/files/checkm_data_2015_01_16.tar.gz",
