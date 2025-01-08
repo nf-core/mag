@@ -109,7 +109,7 @@
                     },
                     "csvtk/concat": {
                         "branch": "master",
-                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
+                        "git_sha": "aa5c23023134cf2d8b75a95d53557890e40261b9",
                         "installed_by": ["modules"]
                     },
                     "dastool/dastool": {

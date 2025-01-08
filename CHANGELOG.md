@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | Tool  | Previous version | New version |
 | ----- | ---------------- | ----------- |
 | BUSCO | 5.4.3            | 5.8.2       |
-| csvtk |                  | 0.30.0      |
+| csvtk |                  | 0.31.0      |
 
 ### `Deprecated`
 
