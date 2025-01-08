@@ -9,7 +9,7 @@ include { GTDBTK_SUMMARY        } from '../../modules/local/gtdbtk_summary'
 workflow GTDBTK {
     take:
     bins              // channel: [ val(meta), [bins] ]
-    bin_qc_summary    // channel: [ val(meta), path ]
+    bin_qc_summary    // channel: path
     gtdb              // channel: path
     gtdb_mash         // channel: path
 
