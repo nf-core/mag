@@ -196,7 +196,7 @@ workflow BIN_QC {
 
     // Combine QC summaries (same process for all tools)
     CONCAT_BINQC_TSV(qc_summaries, 'tsv', 'tsv')
-    qc_summary = CONCAT_BINQC_TSV.out.csv
+    qc_summary = CONCAT_BINQC_TSV.out.csv.map { _meta, summary -> summary }
     ch_versions = ch_versions.mix(CONCAT_BINQC_TSV.out.versions)
 
     emit:

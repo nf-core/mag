@@ -22,16 +22,16 @@ workflow GTDBTK {
     ]
 
     ch_bin_metrics = bin_qc_summary
-        .map { _meta, summary -> summary }
         .splitCsv(header: true, sep: '\t')
         .map { row -> qc_columns[params.binqc_tool].collect { col -> row[col] } }
         .filter { row -> row[1] != '' }
         .map { row ->
-            row = row[0] + row[1..2].collect { value -> Double.parseDouble(value) }
+            row = [row[0]] + row[1..2].collect { value -> Double.parseDouble(value) }
             // CheckM / CheckM2 removes the .fa extension from the bin name
             if (params.binqc_tool in ['checkm', 'checkm2']) {
-                row[1] = row[1] + '.fa'
+                row[0] = row[0] + '.fa'
             }
+            row
         }
 
     // Filter bins based on collected metrics: completeness, contamination
