@@ -9,7 +9,7 @@ include { GTDBTK_SUMMARY        } from '../../modules/local/gtdbtk_summary'
 workflow GTDBTK {
     take:
     bins              // channel: [ val(meta), [bins] ]
-    bin_qc_summary    // channel: path
+    bin_qc_summary    // channel: [ val(meta), path ]
     gtdb              // channel: path
     gtdb_mash         // channel: path
 
@@ -22,6 +22,7 @@ workflow GTDBTK {
     ]
 
     ch_bin_metrics = bin_qc_summary
+        .map { _meta, summary -> summary }
         .splitCsv(header: true, sep: '\t')
         .map { row -> qc_columns[params.binqc_tool].collect { col -> row[col] } }
         .filter { row -> row[1] != '' }
