@@ -6,7 +6,7 @@
 include { MINIMAP2_INDEX as MINIMAP2_HOST_INDEX                 } from '../../modules/nf-core/minimap2/index/main'
 include { MINIMAP2_ALIGN as MINIMAP2_HOST_ALIGN                 } from '../../modules/nf-core/minimap2/align/main'
 include { SAMTOOLS_VIEW as SAMTOOLS_HOSTREMOVED_VIEW            } from '../../modules/nf-core/samtools/view/main'
-include { SAMTOOLS_LONGREAD_FASTQ as SAMTOOLS_HOSTREMOVED_FASTQ } from '../../modules/local/samtools/fastq_longread/main'
+include { SAMTOOLS_FASTQ as SAMTOOLS_HOSTREMOVED_FASTQ          } from '../../modules/nf-core/samtools/fastq/main'
 include { SAMTOOLS_INDEX as SAMTOOLS_HOSTREMOVED_INDEX          } from '../../modules/nf-core/samtools/index/main'
 include { SAMTOOLS_STATS as SAMTOOLS_HOSTREMOVED_STATS          } from '../../modules/nf-core/samtools/stats/main'
 
@@ -36,7 +36,7 @@ workflow LONGREAD_HOSTREMOVAL {
     SAMTOOLS_HOSTREMOVED_VIEW ( ch_minimap2_mapped , [[],[]], [] )
     ch_versions      = ch_versions.mix( SAMTOOLS_HOSTREMOVED_VIEW.out.versions.first() )
 
-    SAMTOOLS_HOSTREMOVED_FASTQ ( SAMTOOLS_HOSTREMOVED_VIEW.out.bam )
+    SAMTOOLS_HOSTREMOVED_FASTQ ( SAMTOOLS_HOSTREMOVED_VIEW.out.bam, false )
     ch_versions      = ch_versions.mix( SAMTOOLS_HOSTREMOVED_FASTQ.out.versions.first() )
 
     // Indexing whole BAM for host removal statistics
