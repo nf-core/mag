@@ -98,11 +98,14 @@ workflow PIPELINE_INITIALISATION {
 
     // Check already if long reads are provided, for later parameter validation
     def hybrid = false
-    ch_raw_long_reads.map {
-        if (it) {
-            hybrid = true
+    ch_raw_long_reads
+        .map { meta, lr -> [ meta.id, lr ] }
+        .join(ch_raw_long_reads.map {meta, sr1 -> [meta.id, sr1] }, by: 0, remainder: true)
+        .map { id, lr, sr1 ->
+            if (lr && sr1) {
+                hybrid = true
+            }
         }
-    }
 
     //
     // Custom validation for pipeline parameters
