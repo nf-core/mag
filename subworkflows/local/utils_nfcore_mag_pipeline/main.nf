@@ -227,7 +227,7 @@ def validateInputParameters(hybrid) {
         if (!params.skip_spades && params.spades_fix_cpus == -1) {
             log.warn("[nf-core/mag]: At least one assembly process is run with a parameter to ensure reproducible results, but SPAdes not. Consider using the parameter '--spades_fix_cpus'.")
         }
-        if (hybrid && params.skip_spadeshybrid && params.spadeshybrid_fix_cpus == -1) {
+        if (hybrid && !params.skip_spadeshybrid && params.spadeshybrid_fix_cpus == -1) {
             log.warn("[nf-core/mag]: At least one assembly process is run with a parameter to ensure reproducible results, but SPAdes hybrid not. Consider using the parameter '--spadeshybrid_fix_cpus'.")
         }
         if (!params.skip_megahit && !params.megahit_fix_cpu_1) {
@@ -246,12 +246,6 @@ def validateInputParameters(hybrid) {
     // Check if parameters for host contamination removal are valid
     if (params.host_fasta && params.host_genome) {
         error('[nf-core/mag] ERROR: Both host fasta reference and iGenomes genome are specified to remove host contamination! Invalid combination, please specify either --host_fasta or --host_genome.')
-    }
-    if (hybrid && (params.host_fasta || params.host_genome)) {
-        log.warn('[nf-core/mag]: Host read removal is only applied to short reads. Long reads might be filtered indirectly by Filtlong, which is set to use read qualities estimated based on k-mer matches to the short, already filtered reads.')
-        if (params.longreads_length_weight > 1) {
-            log.warn("[nf-core/mag]: The parameter --longreads_length_weight is ${params.longreads_length_weight}, causing the read length being more important for long read filtering than the read quality. Set --longreads_length_weight to 1 in order to assign equal weights.")
-        }
     }
     if (params.host_genome) {
         if (!params.genomes) {
