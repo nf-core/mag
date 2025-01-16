@@ -276,7 +276,7 @@
                     "type": "string",
                     "default": "fastp",
                     "description": "Specify which adapter clipping tool to use.",
-                    "enum": ["fastp", "adapterremoval"]
+                    "enum": ["fastp", "adapterremoval", "trimmomatic"]
                 },
                 "save_clipped_reads": {
                     "type": "boolean",
