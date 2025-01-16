@@ -64,6 +64,16 @@ workflow SHORTREAD_PREPROCESSING {
             ch_multiqc_files = ch_multiqc_files.mix(ADAPTERREMOVAL_PE.out.settings)
             ch_multiqc_files = ch_multiqc_files.mix(ADAPTERREMOVAL_SE.out.settings)
         }
+     else if (params.clip_tool == 'trimmomatic') {
+
+            TRIMMOMATIC(ch_raw_short_reads)
+
+            ch_short_reads_prepped = Channel.empty()
+            ch_short_reads_prepped = TRIMMOMATIC.out.trimmed_reads
+
+            ch_versions      = ch_versions.mix(TRIMMOMATIC.out.versions.first())
+            ch_multiqc_files = ch_multiqc_files.mix(TRIMMOMATIC.out.summary)
+        }
     }
     else {
         ch_short_reads_prepped = ch_raw_short_reads
