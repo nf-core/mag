@@ -5,7 +5,7 @@
 include { FASTQC as FASTQC_RAW                                } from '../../modules/nf-core/fastqc/main'
 include { FASTQC as FASTQC_TRIMMED                            } from '../../modules/nf-core/fastqc/main'
 include { FASTP                                               } from '../../modules/nf-core/fastp/main'
-include { TRIMMOMATIC                                         } from '../../modules/nf-core/Trimmomatic/main'
+include { TRIMMOMATIC                                         } from '../../modules/nf-core/trimmomatic/main'
 include { ADAPTERREMOVAL as ADAPTERREMOVAL_PE                 } from '../../modules/nf-core/adapterremoval/main'
 include { ADAPTERREMOVAL as ADAPTERREMOVAL_SE                 } from '../../modules/nf-core/adapterremoval/main'
 include { BOWTIE2_REMOVAL_BUILD as BOWTIE2_HOST_REMOVAL_BUILD } from '../../modules/local/bowtie2_removal_build'
