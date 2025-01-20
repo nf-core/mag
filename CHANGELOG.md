@@ -3,13 +3,19 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## dev [unreleased]
+## 3.3.1dev [unreleased]
 
 ### `Added`
 
+- [#745](https://github.com/nf-core/mag/pull/745) - Added `trimmomatic` as an additional pre-processing tool (added by @Pranjal-Bioinfo & @GallVp).
+
 ### `Changed`
 
+- [#745](https://github.com/nf-core/mag/pull/745) - Added pipeline parameter `spades_use_contigs_not_scaffolds` to use contigs instead of scaffolds (added by @Pranjal-Bioinfo & @GallVp).
+
 ### `Fixed`
+
+- [#745](https://github.com/nf-core/mag/pull/745) - Set `concoct/cut_up_fasta.py` default params in `modules.config` (added by @Pranjal-Bioinfo & @GallVp).
 
 ### `Dependencies`
 
