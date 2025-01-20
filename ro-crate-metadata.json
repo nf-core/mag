@@ -105,7 +105,7 @@
             },
             "mentions": [
                 {
-                    "@id": "#69a630c2-4ecb-45c8-aa72-507b7379fdc9"
+                    "@id": "#21020cd0-8c47-4a1a-84a3-6e758cb60d64"
                 }
             ],
             "name": "nf-core/mag"
@@ -127,7 +127,11 @@
         },
         {
             "@id": "main.nf",
-            "@type": ["File", "SoftwareSourceCode", "ComputationalWorkflow"],
+            "@type": [
+                "File",
+                "SoftwareSourceCode",
+                "ComputationalWorkflow"
+            ],
             "creator": [
                 {
                     "@id": "#jfy133@gmail.com"
@@ -163,7 +167,9 @@
                 "nanopore",
                 "nanopore-sequencing"
             ],
-            "license": ["MIT"],
+            "license": [
+                "MIT"
+            ],
             "maintainer": [
                 {
                     "@id": "#jfy133@gmail.com"
@@ -178,15 +184,22 @@
                     "@id": "https://orcid.org/0000-0001-9807-1082"
                 }
             ],
-            "name": ["nf-core/mag"],
+            "name": [
+                "nf-core/mag"
+            ],
             "programmingLanguage": {
                 "@id": "https://w3id.org/workflowhub/workflow-ro-crate#nextflow"
             },
             "sdPublisher": {
                 "@id": "https://nf-co.re/"
             },
-            "url": ["https://github.com/nf-core/mag", "https://nf-co.re/mag/dev/"],
-            "version": ["3.3.1dev"]
+            "url": [
+                "https://github.com/nf-core/mag",
+                "https://nf-co.re/mag/dev/"
+            ],
+            "version": [
+                "3.3.1dev"
+            ]
         },
         {
             "@id": "https://w3id.org/workflowhub/workflow-ro-crate#nextflow",
