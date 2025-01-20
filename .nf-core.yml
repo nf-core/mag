@@ -1,11 +1,11 @@
 lint:
   files_unchanged:
-  - lib/NfcoreTemplate.groovy
+    - lib/NfcoreTemplate.groovy
   nextflow_config:
-  - config_defaults:
-    - params.phix_reference
-    - params.lambda_reference
-nf_core_version: 3.1.1
+    - config_defaults:
+        - params.phix_reference
+        - params.lambda_reference
+nf_core_version: 3.1.2
 repository_type: pipeline
 template:
   author: "Hadrien Gourl\xE9, Daniel Straub, Sabrina Krakau, James A. Fellows Yates,\
@@ -16,4 +16,4 @@ template:
   name: mag
   org: nf-core
   outdir: .
-  version: 3.3.0
+  version: 3.3.1dev
