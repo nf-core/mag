@@ -64,7 +64,7 @@ workflow SHORTREAD_PREPROCESSING {
             ch_multiqc_files = ch_multiqc_files.mix(ADAPTERREMOVAL_PE.out.settings)
             ch_multiqc_files = ch_multiqc_files.mix(ADAPTERREMOVAL_SE.out.settings)
         }
-     else if (params.clip_tool == 'trimmomatic') {
+        else if (params.clip_tool == 'trimmomatic') {
 
             TRIMMOMATIC(ch_raw_short_reads)
 
