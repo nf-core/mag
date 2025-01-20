@@ -591,6 +591,10 @@
                     "description": "Additional custom options for SPAdes and SPAdesHybrid. Do not specify `--meta` as this will be added for you!",
                     "help_text": "An example is adjusting k-mers (\"-k 21,33,55,77\") or adding [advanced options](https://github.com/ablab/spades#advanced-options). But not --meta, -t, -m, -o or --out-prefix, because these are already in use. Must be used like this: --spades_options \"-k 21,33,55,77\")"
                 },
+                "spades_use_contigs_not_scaffolds": {
+                    "type": "boolean",
+                    "description": "Specify whether to use contigs or scaffolds assembled by SPAdes"
+                },
                 "megahit_options": {
                     "type": "string",
                     "description": "Additional custom options for MEGAHIT.",
