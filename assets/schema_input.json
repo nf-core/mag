@@ -10,24 +10,43 @@
             "sample": {
                 "type": "string",
                 "pattern": "^\\S+$",
-                "errorMessage": "Sample name must be provided and cannot contain spaces",
                 "meta": ["id"]
             },
-            "fastq_1": {
-                "type": "string",
-                "format": "file-path",
-                "exists": true,
-                "pattern": "^\\S+\\.f(ast)?q\\.gz$",
-                "errorMessage": "FastQ file for reads 1 must be provided, cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
+            "run": {
+                "type": ["string", "integer"],
+                "pattern": "^\\S+$",
+                "meta": ["run"],
+                "unique": ["sample"]
             },
-            "fastq_2": {
+            "group": {
+                "type": ["string", "integer"],
+                "pattern": "^\\S+$",
+                "meta": ["group"]
+            },
+            "short_reads_1": {
                 "type": "string",
                 "format": "file-path",
                 "exists": true,
-                "pattern": "^\\S+\\.f(ast)?q\\.gz$",
-                "errorMessage": "FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
+                "pattern": "^\\S+\\.f(ast)?q\\.gz$"
+            },
+            "short_reads_2": {
+                "type": "string",
+                "format": "file-path",
+                "exists": true,
+                "pattern": "^\\S+\\.f(ast)?q\\.gz$"
+            },
+            "long_reads": {
+                "type": "string",
+                "format": "file-path",
+                "exists": true,
+                "pattern": "^\\S+\\.f(ast)?q\\.gz$"
             }
         },
-        "required": ["sample", "fastq_1"]
+        "required": ["sample", "group", "short_reads_1"]
+    },
+    "uniqueEntries": ["sample", "run"],
+    "dependentRequired": {
+        "short_reads_2": ["short_reads_1"],
+        "long_reads": ["short_reads_1", "short_reads_2"]
     }
 }

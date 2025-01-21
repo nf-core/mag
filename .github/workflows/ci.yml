@@ -44,6 +44,11 @@ jobs:
           - isMaster: false
             profile: "singularity"
     steps:
+      - name: Free some space
+        run: |
+          sudo rm -rf "/usr/local/share/boost"
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+
       - name: Check out pipeline code
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
@@ -85,3 +90,45 @@ jobs:
       - name: "Run pipeline with test data ${{ matrix.NXF_VER }} | ${{ matrix.test_name }} | ${{ matrix.profile }}"
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile ${{ matrix.test_name }},${{ matrix.profile }} --outdir ./results
+
+  profiles:
+    name: Run workflow profile
+    # Only run on push if this is the nf-core dev branch (merged PRs)
+    if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/mag') }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # Run remaining test profiles with minimum nextflow version
+        test_name:
+          [
+            test_host_rm,
+            test_hybrid,
+            test_hybrid_host_rm,
+            test_busco_auto,
+            test_ancient_dna,
+            test_adapterremoval,
+            test_binrefinement,
+            test_virus_identification,
+            test_single_end,
+            test_concoct,
+          ]
+    steps:
+      - name: Free some space
+        run: |
+          sudo rm -rf "/usr/local/share/boost"
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+
+      - name: Check out pipeline code
+        uses: actions/checkout@v2
+
+      - name: Install Nextflow
+        run: |
+          wget -qO- get.nextflow.io | bash
+          sudo mv nextflow /usr/local/bin/
+
+      - name: Clean up Disk space
+        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
+
+      - name: Run pipeline with ${{ matrix.test_name }} test profile
+        run: |
+          nextflow run ${GITHUB_WORKSPACE} -profile ${{ matrix.test_name }},docker --outdir ./results
