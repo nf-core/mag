@@ -9,11 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
+- [#731](https://github.com/nf-core/mag/pull/747) - Updated to nf-core 3.1.2 `TEMPLATE` (by @jfy133)
+
 ### `Fixed`
 
 ### `Dependencies`
 
-### `Dependencies`
+### `Deprecated`
 
 ## 3.3.0 [2024-12-19]
 
