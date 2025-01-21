@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
+- [#748](https://github.com/nf-core/mag/pull/748) - Fix broken phix reference channel when skipping phix removal (reported by @amizeranschi, fix by @muabnezor)
+
 ### `Dependencies`
 
 ### `Dependencies`
