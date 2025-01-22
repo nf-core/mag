@@ -113,6 +113,9 @@ workflow MAG {
     if (!params.keep_phix) {
         ch_phix_db_file = Channel.value(file("${params.phix_reference}"))
     }
+    else {
+        ch_phix_db_file = Channel.empty()
+    }
 
     if (!params.keep_lambda) {
         ch_lambda_db = Channel.value(file("${params.lambda_reference}"))
