@@ -29,6 +29,8 @@ process BOWTIE2_ASSEMBLY_ALIGN {
         samtools view -@ "${task.cpus}" -bS | \
         samtools sort -@ "${task.cpus}" -o "${name}.bam"
     samtools index "${name}.bam"
+    touch "${name}.bam"
+    touch "${name}.bam.bai"
 
     if [ ${name} = "${assembly_meta.assembler}-${assembly_meta.id}-${assembly_meta.id}" ] ; then
         mv "${name}.bowtie2.log" "${assembly_meta.assembler}-${assembly_meta.id}.bowtie2.log"
