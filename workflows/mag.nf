@@ -806,10 +806,10 @@ workflow MAG {
     ch_multiqc_files = ch_multiqc_files.mix(KRAKEN2.out.report.collect { it[1] }.ifEmpty([]))
 
     if (!params.skip_quast) {
-        ch_multiqc_files = ch_multiqc_files.mix(QUAST.out.report.dump(tag: 'pre-collect').collect().dump(tag: 'post-collect').ifEmpty([]))
+        ch_multiqc_files = ch_multiqc_files.mix(QUAST.out.report.collect().ifEmpty([]))
 
         if (!params.skip_binning) {
-            ch_multiqc_files = ch_multiqc_files.mix(QUAST_BINS.out.dir.dump(tag: 'pre-collect-bin').collect().dump(tag: 'post-collect-bin').ifEmpty([]))
+            ch_multiqc_files = ch_multiqc_files.mix(QUAST_BINS.out.dir.collect().ifEmpty([]))
         }
     }
 
@@ -827,7 +827,7 @@ workflow MAG {
 
 
     MULTIQC(
-        ch_multiqc_files.collect().dump(tag: 'final_mqc'),
+        ch_multiqc_files.collect(),
         ch_multiqc_config.toList(),
         ch_multiqc_custom_config.toList(),
         ch_multiqc_logo.toList(),
