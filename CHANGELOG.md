@@ -11,9 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
-### `Dependencies`
+- [#752](https://github.com/nf-core/mag/pull/752) - Fix QUAST results not being displayed when skipping certain steps (reported by @amizeranschi, fix by @jfy133)
 
 ### `Dependencies`
+
+### `Deprecated`
 
 ## 3.3.0 [2024-12-19]
 
