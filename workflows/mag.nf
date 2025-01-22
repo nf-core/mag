@@ -63,7 +63,7 @@ include { COMBINE_TSV as COMBINE_SUMMARY_TSV                    } from '../modul
 
 workflow MAG {
     take:
-    ch_raw_short_reads // channel: samplesheet read in from --input
+    ch_raw_short_reads  // channel: samplesheet read in from --input
     ch_raw_long_reads
     ch_input_assemblies
 
@@ -115,8 +115,9 @@ workflow MAG {
     }
 
     if (!params.keep_lambda) {
-        ch_lambda_db = Channel.value(file( "${params.lambda_reference}" ))
-    } else {
+        ch_lambda_db = Channel.value(file("${params.lambda_reference}"))
+    }
+    else {
         ch_lambda_db = Channel.empty()
     }
 
@@ -162,14 +163,13 @@ workflow MAG {
             ch_raw_short_reads,
             ch_host_fasta,
             ch_phix_db_file,
-            ch_metaeuk_db
+            ch_metaeuk_db,
         )
 
         ch_versions = ch_versions.mix(SHORTREAD_PREPROCESSING.out.versions)
         ch_multiqc_files = ch_multiqc_files.mix(SHORTREAD_PREPROCESSING.out.multiqc_files.collect { it[1] }.ifEmpty([]))
         ch_short_reads = SHORTREAD_PREPROCESSING.out.short_reads
         ch_short_reads_assembly = SHORTREAD_PREPROCESSING.out.short_reads_assembly
-
     }
     else {
         ch_short_reads = ch_raw_short_reads.map { meta, reads ->
@@ -187,7 +187,7 @@ workflow MAG {
     LONGREAD_PREPROCESSING(
         ch_raw_long_reads,
         ch_short_reads,
-        ch_lambda_db
+        ch_lambda_db,
     )
 
     ch_versions = ch_versions.mix(LONGREAD_PREPROCESSING.out.versions)
@@ -218,7 +218,7 @@ workflow MAG {
         ch_short_reads,
         ch_db_for_centrifuge,
         false,
-        false
+        false,
     )
     ch_versions = ch_versions.mix(CENTRIFUGE_CENTRIFUGE.out.versions.first())
 
@@ -255,7 +255,7 @@ workflow MAG {
 
     KRAKEN2(
         ch_short_reads,
-        ch_db_for_kraken2
+        ch_db_for_kraken2,
     )
     ch_versions = ch_versions.mix(KRAKEN2.out.versions.first())
 
@@ -287,7 +287,7 @@ workflow MAG {
 
         KRONA_KTIMPORTTAXONOMY(
             ch_tax_classifications,
-            ch_krona_db
+            ch_krona_db,
         )
         ch_versions = ch_versions.mix(KRONA_KTIMPORTTAXONOMY.out.versions.first())
     }
@@ -450,7 +450,7 @@ workflow MAG {
     if (!params.skip_prodigal) {
         PRODIGAL(
             ch_assemblies,
-            'gff'
+            'gff',
         )
         ch_versions = ch_versions.mix(PRODIGAL.out.versions.first())
     }
@@ -477,7 +477,7 @@ workflow MAG {
     if (!params.skip_binning || params.ancient_dna) {
         BINNING_PREPARATION(
             ch_assemblies,
-            ch_short_reads
+            ch_short_reads,
         )
         ch_versions = ch_versions.mix(BINNING_PREPARATION.out.bowtie2_version.first())
     }
@@ -505,13 +505,13 @@ workflow MAG {
         if (params.ancient_dna && !params.skip_ancient_damagecorrection) {
             BINNING(
                 BINNING_PREPARATION.out.grouped_mappings.join(ANCIENT_DNA_ASSEMBLY_VALIDATION.out.contigs_recalled).map { it -> [it[0], it[4], it[2], it[3]] },
-                ch_short_reads
+                ch_short_reads,
             )
         }
         else {
             BINNING(
                 BINNING_PREPARATION.out.grouped_mappings,
-                ch_short_reads
+                ch_short_reads,
             )
         }
         ch_versions = ch_versions.mix(BINNING.out.versions)
@@ -654,7 +654,7 @@ workflow MAG {
         }
         CAT(
             ch_input_for_postbinning,
-            ch_cat_db
+            ch_cat_db,
         )
         // Group all classification results for each sample in a single file
         ch_cat_summary = CAT.out.tax_classification_names.collectFile(keepHeader: true) { meta, classification ->
@@ -692,7 +692,7 @@ workflow MAG {
                     ch_gtdb_bins,
                     ch_bin_qc_summary,
                     gtdb,
-                    gtdb_mash
+                    gtdb_mash,
                 )
                 ch_versions = ch_versions.mix(GTDBTK.out.versions.first())
                 ch_gtdbtk_summary = GTDBTK.out.summary
@@ -709,7 +709,7 @@ workflow MAG {
                 ch_quast_bins_summary.ifEmpty([]),
                 ch_gtdbtk_summary.ifEmpty([]),
                 ch_cat_global_summary.ifEmpty([]),
-                params.binqc_tool
+                params.binqc_tool,
             )
         }
 
@@ -731,7 +731,7 @@ workflow MAG {
             PROKKA(
                 ch_bins_for_prokka,
                 [],
-                []
+                [],
             )
             ch_versions = ch_versions.mix(PROKKA.out.versions.first())
         }
@@ -758,9 +758,9 @@ workflow MAG {
     softwareVersionsToYAML(ch_versions)
         .collectFile(
             storeDir: "${params.outdir}/pipeline_info",
-            name: 'nf_core_'  +  'mag_software_'  + 'mqc_'  + 'versions.yml',
+            name: 'nf_core_' + 'mag_software_' + 'mqc_' + 'versions.yml',
             sort: true,
-            newLine: true
+            newLine: true,
         )
         .set { ch_collated_versions }
 
@@ -798,7 +798,7 @@ workflow MAG {
     ch_multiqc_files = ch_multiqc_files.mix(
         ch_methods_description.collectFile(
             name: 'methods_description_mqc.yaml',
-            sort: true
+            sort: true,
         )
     )
 
@@ -806,10 +806,10 @@ workflow MAG {
     ch_multiqc_files = ch_multiqc_files.mix(KRAKEN2.out.report.collect { it[1] }.ifEmpty([]))
 
     if (!params.skip_quast) {
-        ch_multiqc_files = ch_multiqc_files.mix(QUAST.out.report.collect().ifEmpty([]))
+        ch_multiqc_files = ch_multiqc_files.mix(QUAST.out.report.dump(tag: 'pre-collect').collect().dump(tag: 'post-collect').ifEmpty([]))
 
         if (!params.skip_binning) {
-            ch_multiqc_files = ch_multiqc_files.mix(QUAST_BINS.out.dir.collect().ifEmpty([]))
+            ch_multiqc_files = ch_multiqc_files.mix(QUAST_BINS.out.dir.dump(tag: 'pre-collect-bin').collect().dump(tag: 'post-collect-bin').ifEmpty([]))
         }
     }
 
@@ -827,12 +827,12 @@ workflow MAG {
 
 
     MULTIQC(
-        ch_multiqc_files.collect(),
+        ch_multiqc_files.collect().dump(tag: 'final_mqc'),
         ch_multiqc_config.toList(),
         ch_multiqc_custom_config.toList(),
         ch_multiqc_logo.toList(),
         [],
-        []
+        [],
     )
 
     emit:

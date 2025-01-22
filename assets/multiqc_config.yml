@@ -18,7 +18,7 @@ data_format: "yaml"
 run_modules:
   - fastqc
   - fastp
-  - adapterRemoval
+  - adapterremoval
   - custom_content
   - bowtie2
   - busco
@@ -35,7 +35,7 @@ top_modules:
       path_filters_exclude:
         - "*trimmed*"
   - "fastp"
-  - "adapterRemoval"
+  - "adapterremoval"
   - "porechop"
   - "filtlong"
   - "fastqc":
@@ -118,12 +118,12 @@ custom_data:
 sp:
   host_removal:
     fn: "host_removal_metrics.tsv"
-  adapterRemoval:
+  adapterremoval:
     fn: "*_ar2.settings"
   kraken:
     fn_re: ".*[kraken2|centrifuge].*report.txt"
   quast:
-    fn_re: "report.*.tsv"
+    fn: "report*.tsv"
   filtlong:
     num_lines: 20
     fn_re: ".*_filtlong.log"
