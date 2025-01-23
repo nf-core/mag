@@ -80,13 +80,21 @@ workflow MAG {
         host_fasta = params.genomes[params.host_genome].fasta ?: false
         ch_host_fasta = Channel.value(file("${host_fasta}"))
         host_bowtie2index = params.genomes[params.host_genome].bowtie2 ?: false
-        ch_host_bowtie2index = Channel.value(file("${host_bowtie2index}/*"))
+        ch_host_bowtie2index = Channel.fromPath("${host_bowtie2index}", checkIfExists: true).first()
     }
     else if (params.host_fasta) {
-        ch_host_fasta = Channel.value(file("${params.host_fasta}"))
+        ch_host_fasta = Channel.fromPath("${params.host_fasta}", checkIfExists: true).first() ?: false
+
+        if (params.host_fasta_bowtie2index) {
+            ch_host_bowtie2index = Channel.fromPath("${params.host_fasta_bowtie2index}", checkIfExists: true).first()
+        }
+        else {
+            ch_host_bowtie2index = Channel.empty()
+        }
     }
     else {
         ch_host_fasta = Channel.empty()
+        ch_host_bowtie2index = Channel.empty()
     }
 
     if (params.kraken2_db) {
@@ -165,6 +173,7 @@ workflow MAG {
         SHORTREAD_PREPROCESSING(
             ch_raw_short_reads,
             ch_host_fasta,
+            ch_host_bowtie2index,
             ch_phix_db_file,
             ch_metaeuk_db,
         )
