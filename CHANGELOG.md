@@ -3,17 +3,23 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## dev [unreleased]
+## v3.3.1dev - [unreleased]
 
 ### `Added`
 
 ### `Changed`
 
+- [#731](https://github.com/nf-core/mag/pull/747) - Updated to nf-core 3.1.2 `TEMPLATE` (by @jfy133)
+
 ### `Fixed`
 
-### `Dependencies`
+- [#748](https://github.com/nf-core/mag/pull/748) - Fix broken phix reference channel when skipping phix removal (reported by @amizeranschi, fix by @muabnezor)
+- [#752](https://github.com/nf-core/mag/pull/752) - Fix QUAST results not being displayed when skipping certain steps (reported by @amizeranschi, fix by @jfy133)
+- [#753](https://github.com/nf-core/mag/pull/753) - Fix iGenomes reference support for host removal reference genome (reported by @Thomieh73, fix by @jfy133)
 
-### `Dependencies`
+### `Deprecated`
+
+### `Deprecated`
 
 ## 3.3.0 [2024-12-19]
 
