@@ -24,13 +24,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#707](https://github.com/nf-core/mag/pull/707) - Make Bin QC a subworkflow (added by @dialvarezs)
 - [#707](https://github.com/nf-core/mag/pull/707) - Added CheckM2 as an alternative bin completeness and QC tool (added by @dialvarezs)
 - [#708](https://github.com/nf-core/mag/pull/708) - Added `--exclude_unbins_from_postbinning` parameter to exclude unbinned contigs from post-binning processes, speeding up Prokka in some cases (added by @dialvarezs)
-- [#718](https://github.com/nf-core/mag/pull/718) - Added metaMDBG and Flye as longread assemblers (added by @muabnezor)
+- [#718](https://github.com/nf-core/mag/pull/718) - Added metaMDBG and (meta)Flye as long read assemblers (suggested by ljmesi [and many others] added by @muabnezor)
 - [#718](https://github.com/nf-core/mag/pull/718) - Added host removal for long reads using minimap2 as aligner (added by @muabnezor)
 - [#732](https://github.com/nf-core/mag/pull/732) - Added support for Prokka's compliance mode with `--prokka_with_compliance --prokka_compliance_centre <xyz>` (reported by @audy and @Thomieh73, added by @jfy133)
 
 ### `Changed`
 
-- [#718](https://github.com/nf-core/mag/pull/718) - Longread only input (added by @muabnezor)
+- [#718](https://github.com/nf-core/mag/pull/718) - Longread only input is now an option (added by @muabnezor)
 - [#731](https://github.com/nf-core/mag/pull/731) - Updated to nf-core 3.1.0 `TEMPLATE` (by @jfy133)
 
 ### `Fixed`
@@ -40,7 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#716](https://github.com/nf-core/mag/pull/692) - Make short read processing a subworkflow (added by @muabnezor)
 - [#708](https://github.com/nf-core/mag/pull/708) - Fixed channel passed as GUNC input (added by @dialvarezs)
 - [#729](https://github.com/nf-core/mag/pull/729) - Fixed misspecified multi-FASTQ input for single-end data in MEGAHIT (reported by John Richards, fix by @jfy133)
-- [#718](https://github.com/nf-core/mag/pull/718) - refactoring assembly into subworkflow (added by @muabnezor)
+- [#718](https://github.com/nf-core/mag/pull/718) - refactoring assembly steps into subworkflow (added by @muabnezor)
 
 ### `Dependencies`
 

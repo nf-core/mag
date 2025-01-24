@@ -267,7 +267,7 @@ SPAdesHybrid is a part of the [SPAdes](http://cab.spbu.ru/software/spades/) soft
 
 ### Flye
 
-[Flye](https://github.com/mikolmogorov/Flye) assembler is optionally run on long reads.
+[Flye](https://github.com/mikolmogorov/Flye) is a _de novo_ assembler for single-molecule sequencing reads, such as those produced by PacBio and Oxford Nanopore Technologies.
 
 <details markdown="1">
 <summary>Output files</summary>
@@ -282,7 +282,7 @@ SPAdesHybrid is a part of the [SPAdes](http://cab.spbu.ru/software/spades/) soft
 
 ### metaMDBG
 
-[metaMDBG](https://github.com/GaetanBenoitDev/metaMDBG) assembler is optionally run on long reads.
+[metaMDBG](https://github.com/GaetanBenoitDev/metaMDBG) is a fast and low-memory assembler for long and accurate metagenomics reads (e.g. PacBio HiFi, Nanopore r10.4)
 
 <details markdown="1">
 <summary>Output files</summary>

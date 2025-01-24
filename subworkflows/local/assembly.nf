@@ -128,7 +128,6 @@ workflow ASSEMBLY {
     )
     ch_versions = ch_versions.mix(LONGREAD_ASSEMBLY.out.versions)
 
-
     ch_shortread_assembled_contigs = SHORTREAD_ASSEMBLY.out.assembled_contigs.mix(HYBRID_ASSEMBLY.out.assembled_contigs)
     ch_longread_assembled_contigs = LONGREAD_ASSEMBLY.out.assembled_contigs
 

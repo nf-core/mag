@@ -9,7 +9,6 @@ workflow SHORTREAD_ASSEMBLY {
     ch_short_reads_spades
 
     main:
-
     ch_versions = Channel.empty()
     ch_assembled_contigs = Channel.empty()
 

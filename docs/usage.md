@@ -43,7 +43,7 @@ sample2,0,0,data/sample2_R1.fastq.gz,data/sample2_R2.fastq.gz,data/sample2.fastq
 sample3,1,0,data/sample3_R1.fastq.gz,data/sample3_R2.fastq.gz,
 ```
 
-If only long read data is available, the columns `short_reads_1` and `short_reads_2` is simply left empty:
+If only long read data is available, the columns `short_reads_1` and `short_reads_2` can be simply left empty:
 
 ```csv title="samplesheet.csv"
 sample,run,group,short_reads_1,short_reads_2,long_reads
@@ -52,6 +52,8 @@ sample1,2,0,,,data/sample1.fastq.gz
 sample2,0,0,,,data/sample2.fastq.gz
 sample3,1,0,,,data/sample3.fastq.gz
 ```
+
+In this case only long-read only assemblies will be able to be executed (e.g. Flye or MetaMDBG).
 
 Please note the following requirements:
 
