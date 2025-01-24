@@ -42,7 +42,7 @@ workflow PIPELINE_INITIALISATION {
         version,
         true,
         outdir,
-        workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1
+        workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1,
     )
 
     //
@@ -51,7 +51,7 @@ workflow PIPELINE_INITIALISATION {
     UTILS_NFSCHEMA_PLUGIN(
         workflow,
         validate_params,
-        null
+        null,
     )
 
     //
@@ -342,6 +342,7 @@ def validateInputSamplesheet(meta, sr1, sr2, lr) {
 //
 // Get attribute from genome config file e.g. fasta
 //
+// Note: user uses --host_genome in mag
 def getGenomeAttribute(attribute) {
     if (params.genomes && params.host_genome && params.genomes.containsKey(params.host_genome)) {
         if (params.genomes[params.host_genome].containsKey(attribute)) {
@@ -350,13 +351,14 @@ def getGenomeAttribute(attribute) {
     }
     return null
 }
-
 //
 // Exit pipeline if incorrect --genome key provided
 //
+// Note: user uses --host_genome in mag
+
 def genomeExistsError() {
-    if (params.genomes && params.host_genome && !params.genomes.containsKey(params.genome)) {
-        def error_string = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" + "  Genome '${params.host_genome}' not found in any config files provided to the pipeline.\n" + "  Currently, the available genome keys are:\n" + "  ${params.host_genomes.keySet().join(", ")}\n" + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+    if (params.genomes && params.host_genome && !params.genomes.containsKey(params.host_genome)) {
+        def error_string = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" + "  Genome '${params.host_genome}' not found in any config files provided to the pipeline.\n" + "  Currently, the available genome keys are:\n" + "  ${params.genomes.keySet().join(", ")}\n" + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
         error(error_string)
     }
 }
@@ -371,7 +373,7 @@ def toolCitationText() {
         "Tools used in the workflow included:",
         "FastQC (Andrews 2010),",
         "MultiQC (Ewels et al. 2016)",
-        "."
+        ".",
     ].join(' ').trim()
 
     return citation_text
@@ -383,7 +385,7 @@ def toolBibliographyText() {
     // Uncomment function in methodsDescriptionText to render in MultiQC report
     def reference_text = [
         "<li>Andrews S, (2010) FastQC, URL: https://www.bioinformatics.babraham.ac.uk/projects/fastqc/).</li>",
-        "<li>Ewels, P., Magnusson, M., Lundin, S., & Käller, M. (2016). MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics , 32(19), 3047–3048. doi: /10.1093/bioinformatics/btw354</li>"
+        "<li>Ewels, P., Magnusson, M., Lundin, S., & Käller, M. (2016). MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics , 32(19), 3047–3048. doi: /10.1093/bioinformatics/btw354</li>",
     ].join(' ').trim()
 
     return reference_text

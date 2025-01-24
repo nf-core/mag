@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#748](https://github.com/nf-core/mag/pull/748) - Fix broken phix reference channel when skipping phix removal (reported by @amizeranschi, fix by @muabnezor)
 - [#752](https://github.com/nf-core/mag/pull/752) - Fix QUAST results not being displayed when skipping certain steps (reported by @amizeranschi, fix by @jfy133)
+- [#753](https://github.com/nf-core/mag/pull/753) - Fix iGenomes reference support for host removal reference genome (reported by @Thomieh73, fix by @jfy133)
 
 ### `Deprecated`
 
