@@ -248,6 +248,9 @@ def validateInputParameters(hybrid) {
     if (params.host_fasta && params.host_genome) {
         error('[nf-core/mag] ERROR: Both host fasta reference and iGenomes genome are specified to remove host contamination! Invalid combination, please specify either --host_fasta or --host_genome.')
     }
+    if (hybrid && (params.host_fasta || params.host_genome) && params.longread_filtering_tool == "filtlong" && params.longreads_length_weight > 0 ) {
+        log.warn("[nf-core/mag]: The parameter --longreads_length_weight is ${params.longreads_length_weight}, causing the read length being more important for long read filtering than the read quality. Set --longreads_length_weight to 1 in order to assign equal weights.")
+    }
     if (params.host_genome) {
         if (!params.genomes) {
             error('[nf-core/mag] ERROR: No config file containing genomes provided!')

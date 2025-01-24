@@ -22,7 +22,6 @@ include { ANCIENT_DNA_ASSEMBLY_VALIDATION                       } from '../subwo
 include { DOMAIN_CLASSIFICATION                                 } from '../subworkflows/local/domain_classification'
 include { DEPTHS                                                } from '../subworkflows/local/depths'
 include { LONGREAD_PREPROCESSING                                } from '../subworkflows/local/longread_preprocessing'
-include { LONGREAD_ASSEMBLY                                     } from '../subworkflows/local/longread_assembly'
 include { SHORTREAD_PREPROCESSING                               } from '../subworkflows/local/shortread_preprocessing'
 include { ASSEMBLY                                              } from '../subworkflows/local/assembly'
 
@@ -115,8 +114,6 @@ workflow MAG {
 
     if (!params.keep_phix) {
         ch_phix_db_file = Channel.value(file("${params.phix_reference}"))
-    } else {
-        ch_phix_db_file = Channel.empty()
     }
     else {
         ch_phix_db_file = Channel.empty()

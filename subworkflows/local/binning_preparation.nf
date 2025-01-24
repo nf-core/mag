@@ -12,7 +12,6 @@ workflow BINNING_PREPARATION {
     main:
     ch_versions       = Channel.empty()
     ch_multiqc_files  = Channel.empty()
-        // multiple symlinks to the same assembly -> use first of sorted list
     SHORTREAD_BINNING_PREPARATION ( shortread_assemblies, shortreads )
     LONGREAD_BINNING_PREPARATION ( longread_assemblies, longreads )
 
