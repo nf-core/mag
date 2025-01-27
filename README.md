@@ -3,7 +3,9 @@
     <source media="(prefers-color-scheme: dark)" srcset="docs/images/mag_logo_mascot_dark.png">
     <img alt="nf-core/mag" src="docs/images/mag_logo_mascot_light.png">
   </picture>
-</h1>[![GitHub Actions CI Status](https://github.com/nf-core/mag/actions/workflows/ci.yml/badge.svg)](https://github.com/nf-core/mag/actions/workflows/ci.yml)
+</h1>
+
+[![GitHub Actions CI Status](https://github.com/nf-core/mag/actions/workflows/ci.yml/badge.svg)](https://github.com/nf-core/mag/actions/workflows/ci.yml)
 [![GitHub Actions Linting Status](https://github.com/nf-core/mag/actions/workflows/linting.yml/badge.svg)](https://github.com/nf-core/mag/actions/workflows/linting.yml)[![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/mag/results)[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.3589527-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.3589527)
 [![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)
 [![Cite Publication](https://img.shields.io/badge/Cite%20Us!-Cite%20Publication-orange)](https://doi.org/10.1093/nargab/lqac007)
@@ -25,6 +27,11 @@
 </p>
 
 ## Pipeline summary
+
+## Usage
+
+> [!NOTE]
+> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.
 
 By default, the pipeline currently performs the following: it supports both short and long reads, quality trims the reads and adapters with [fastp](https://github.com/OpenGene/fastp) and [Porechop](https://github.com/rrwick/Porechop), and performs basic QC with [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/), and merge multiple sequencing runs.
 

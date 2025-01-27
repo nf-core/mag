@@ -18,10 +18,11 @@ include { BBMAP_BBNORM                                        } from '../../modu
 
 workflow SHORTREAD_PREPROCESSING {
     take:
-    ch_raw_short_reads        // [ [meta] , fastq1, fastq2] (mandatory)
-    ch_host_fasta             // [fasta] (optional)
-    ch_phix_db_file           // [fasta] (optional)
-    ch_metaeuk_db             // [fasta] (optional)
+    ch_raw_short_reads   // [ [meta] , fastq1, fastq2] (mandatory)
+    ch_host_fasta        // [fasta] (optional)
+    ch_host_genome_index // fasta (optional)
+    ch_phix_db_file      // [fasta] (optional)
+    ch_metaeuk_db        // [fasta] (optional)
 
     main:
     ch_versions = Channel.empty()
@@ -39,12 +40,11 @@ workflow SHORTREAD_PREPROCESSING {
                 ch_raw_short_reads,
                 [],
                 params.fastp_save_trimmed_fail,
-                []
+                [],
             )
             ch_short_reads_prepped = FASTP.out.reads
             ch_versions = ch_versions.mix(FASTP.out.versions.first())
             ch_multiqc_files = ch_multiqc_files.mix(FASTP.out.json)
-
         }
         else if (params.clip_tool == 'adapterremoval') {
 
@@ -91,11 +91,14 @@ workflow SHORTREAD_PREPROCESSING {
             ch_host_bowtie2index = BOWTIE2_HOST_REMOVAL_BUILD.out.index
         }
     }
+    else if (params.host_genome) {
+        ch_host_bowtie2index = ch_host_genome_index
+    }
 
     if (params.host_fasta || params.host_genome) {
         BOWTIE2_HOST_REMOVAL_ALIGN(
             ch_short_reads_prepped,
-            ch_host_bowtie2index
+            ch_host_bowtie2index,
         )
         ch_short_reads_hostremoved = BOWTIE2_HOST_REMOVAL_ALIGN.out.reads
         ch_versions = ch_versions.mix(BOWTIE2_HOST_REMOVAL_ALIGN.out.versions.first())
@@ -111,7 +114,7 @@ workflow SHORTREAD_PREPROCESSING {
         )
         BOWTIE2_PHIX_REMOVAL_ALIGN(
             ch_short_reads_hostremoved,
-            BOWTIE2_PHIX_REMOVAL_BUILD.out.index
+            BOWTIE2_PHIX_REMOVAL_BUILD.out.index,
         )
         ch_short_reads_phixremoved = BOWTIE2_PHIX_REMOVAL_ALIGN.out.reads
         ch_versions = ch_versions.mix(BOWTIE2_PHIX_REMOVAL_ALIGN.out.versions.first())
@@ -182,8 +185,8 @@ workflow SHORTREAD_PREPROCESSING {
     }
 
     emit:
-    short_reads = ch_short_reads
+    short_reads          = ch_short_reads
     short_reads_assembly = ch_short_reads_assembly
-    versions = ch_versions
-    multiqc_files = ch_multiqc_files
+    versions             = ch_versions
+    multiqc_files        = ch_multiqc_files
 }
