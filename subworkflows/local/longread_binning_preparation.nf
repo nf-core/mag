@@ -34,16 +34,19 @@ workflow LONGREAD_BINNING_PREPARATION {
     ch_minimap2_input_reads = ch_minimap2_input
         .map { meta_idx, index, meta, reads -> [ meta_idx, reads ] }
     ch_minimap2_input_idx = ch_minimap2_input
-        .map { meta_idx, index, meta, reads -> [ meta_idx, index ] }
+        .map { meta_idx, index, meta, reads -> [ meta, index ] }
 
     MINIMAP2_ASSEMBLY_ALIGN ( ch_minimap2_input_reads, ch_minimap2_input_idx, true, 'bai', false, false )
     ch_versions      = ch_versions.mix( MINIMAP2_ASSEMBLY_ALIGN.out.versions.first() )
 
-    ch_grouped_mappings = MINIMAP2_ASSEMBLY_ALIGN.out.bam
-        .combine(MINIMAP2_ASSEMBLY_ALIGN.out.index, by: 0)
-        .combine(assemblies, by: 0)
+    ch_grouped_mappings_reads = MINIMAP2_ASSEMBLY_ALIGN.out.bam
         .groupTuple(by: 0)
-        .map { meta, bams, bais, assembly -> [ meta, assembly.sort()[0], bams, bais ] }
+    ch_grouped_mappings_index = MINIMAP2_ASSEMBLY_ALIGN.out.index
+        .groupTuple(by: 0)
+    ch_grouped_mappings = ch_grouped_mappings_reads
+        .combine(ch_grouped_mappings_index, by: 0)
+        .combine(assemblies, by: 0)
+        .map { meta, bams, bais, assembly -> [ meta, assembly, bams, bais ] }
 
     emit:
     versions           = ch_versions
