@@ -78,7 +78,7 @@ workflow SHORTREAD_PREPROCESSING {
                 ch_host_fasta.map { fasta -> [[id: fasta.getSimpleName()], fasta] }
             )
             ch_host_bowtie2index = BOWTIE2_HOST_REMOVAL_BUILD.out.index
-            ch_versions = ch_versions.mix(BOWTIE2_HOST_REMOVAL_BUILD.out.versions.first())
+            ch_versions = ch_versions.mix(BOWTIE2_HOST_REMOVAL_BUILD.out.versions)
         }
     }
     else if (params.host_genome) {
@@ -105,7 +105,7 @@ workflow SHORTREAD_PREPROCESSING {
         BOWTIE2_PHIX_REMOVAL_BUILD(
             ch_phix_db_file.map { fasta -> [[id: fasta.getSimpleName()], fasta] }
         )
-        ch_versions = ch_versions.mix(BOWTIE2_PHIX_REMOVAL_BUILD.out.versions.first())
+        ch_versions = ch_versions.mix(BOWTIE2_PHIX_REMOVAL_BUILD.out.versions)
 
         BOWTIE2_PHIX_REMOVAL_ALIGN(
             ch_short_reads_hostremoved,

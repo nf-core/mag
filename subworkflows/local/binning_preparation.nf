@@ -22,9 +22,8 @@ workflow BINNING_PREPARATION {
     if (params.binning_map_mode == 'all') {
         // combine assemblies with reads of all samples
         ch_bowtie2_input = BOWTIE2_ASSEMBLY_BUILD.out.index
-            .combine(reads)
             .join(assemblies)
-            .map { meta, index, assembly -> [meta.group, meta, assembly, index] }
+            .combine(reads)
     }
     else if (params.binning_map_mode == 'group') {
         // combine assemblies with reads of samples from same group
