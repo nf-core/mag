@@ -4,6 +4,7 @@
 
 include { BOWTIE2_BUILD as BOWTIE2_ASSEMBLY_BUILD } from '../../modules/nf-core/bowtie2/build'
 include { BOWTIE2_ALIGN as BOWTIE2_ASSEMBLY_ALIGN } from '../../modules/nf-core/bowtie2/align'
+include { SAMTOOLS_SORT                           } from '../../modules/nf-core/samtools/sort/main'
 
 workflow BINNING_PREPARATION {
     take:
@@ -36,10 +37,22 @@ workflow BINNING_PREPARATION {
             .combine(ch_reads_bowtie2, by: 0)
             .map { _id, assembly_meta, assembly, index, reads_meta, fastq -> [assembly_meta, assembly, index, reads_meta, fastq] }
     }
+    // TODO: run current mag with dumping `ch_bowtie2_input` before adn after alignment to see what info is in meta
+    // and what is dropped. See if all should be exported, and either merge all meta into one one object or
+    // call `meta2` etc. within `modules.config for prefix/tag
 
-    BOWTIE2_ASSEMBLY_ALIGN(ch_bowtie2_input)
+    ch_bowtie2_align_input = ch_bowtie2_input.map { id, assembly_meta, index, reads_meta, fastq ->
+        [id, assembly_meta, index, reads_meta, fastq]
+    }
+    // TODO finish constructing this to go into BOWTIE2_ASSEMBLY_ALIGN
+
+    BOWTIE2_ASSEMBLY_ALIGN(ch_bowtie2_input, [], [], false, false)
+    // TODO fix ch_bowtie2_input to match, maybe single object?
+    SAMTOOLS_SORT(BOWTIE2_ASSEMBLY_ALIGN.out.bam, [])
+    ch_sorted_assembly_bams = SAMTOOLS_SORT.out.bam.join(SAMTOOLS_SORT.out.csi)
+
     // group mappings for one assembly
-    ch_grouped_mappings = BOWTIE2_ASSEMBLY_ALIGN.out.mappings
+    ch_grouped_mappings = ch_sorted_assembly_bams
         .groupTuple(by: 0)
         .map { meta, assembly, bams, bais -> [meta, assembly.sort()[0], bams, bais] }
 
