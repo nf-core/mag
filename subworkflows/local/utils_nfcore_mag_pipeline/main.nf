@@ -15,7 +15,6 @@ include { completionSummary       } from '../../nf-core/utils_nfcore_pipeline'
 include { imNotification          } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NFCORE_PIPELINE   } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NEXTFLOW_PIPELINE } from '../../nf-core/utils_nextflow_pipeline'
-include { Nextpie                 } from '../../../lib/functions'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -192,36 +191,6 @@ workflow PIPELINE_COMPLETION {
                 monochrome_logs,
                 multiqc_reports.getVal(),
             )
-
-	// Nextpie
-	// params.nextpie_enable defined in nextflow.config
-	if(params.nextpie_enable){
-
-		// Logging
-		// params.workflow_name and params.workflow_ver come from nextflow.config.
-		// Refer above code block
-		log.info "workflow: " + params.workflow_name
-		log.info "version : " + params.workflow_ver
-		// params.group is taken from commandline using --group flag
-		log.info "group   : " + params.group
-		log.info "project : " + workflow.runName
-
-		// Push run metadata when group and name is provided
-		if(params.name && params.group){
-			log.info "Pushing metadata to Nextpie http://${params.nextpie_host}:${params.nextpie_port}"
-			log.info "Response: " +
-			Nextpie(host      = params.nextpie_host,
-				port      = params.nextpie_port,
-				traceFile = "${params.outDir}/pipeline_info/Trace.txt",
-				Workflow  = params.workflow_name,
-				Version   = params.workflow_ver,
-				Group     = params.group,
-				Project   = workflow.runName,
-				APIkey    = params.nextpie_api_key).toString()
-		}else{
-			log.info "Run metadata pushing to Nextflow skipped (no --group --name provided)."
-			}
-		}
         }
 
         completionSummary(monochrome_logs)
