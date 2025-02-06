@@ -2,18 +2,18 @@
  * SHORTREAD_PREPROCESSING: Preprocessing and QC for short reads
  */
 
-include { FASTQC as FASTQC_RAW                                } from '../../modules/nf-core/fastqc/main'
-include { FASTQC as FASTQC_TRIMMED                            } from '../../modules/nf-core/fastqc/main'
-include { FASTP                                               } from '../../modules/nf-core/fastp/main'
-include { ADAPTERREMOVAL as ADAPTERREMOVAL_PE                 } from '../../modules/nf-core/adapterremoval/main'
-include { ADAPTERREMOVAL as ADAPTERREMOVAL_SE                 } from '../../modules/nf-core/adapterremoval/main'
-include { BOWTIE2_REMOVAL_BUILD as BOWTIE2_HOST_REMOVAL_BUILD } from '../../modules/local/bowtie2_removal_build'
-include { BOWTIE2_REMOVAL_ALIGN as BOWTIE2_HOST_REMOVAL_ALIGN } from '../../modules/local/bowtie2_removal_align'
-include { BOWTIE2_REMOVAL_BUILD as BOWTIE2_PHIX_REMOVAL_BUILD } from '../../modules/local/bowtie2_removal_build'
-include { BOWTIE2_REMOVAL_ALIGN as BOWTIE2_PHIX_REMOVAL_ALIGN } from '../../modules/local/bowtie2_removal_align'
-include { CAT_FASTQ                                           } from '../../modules/nf-core/cat/fastq/main'
-include { SEQTK_MERGEPE                                       } from '../../modules/nf-core/seqtk/mergepe/main'
-include { BBMAP_BBNORM                                        } from '../../modules/nf-core/bbmap/bbnorm/main'
+include { FASTQC as FASTQC_RAW                        } from '../../modules/nf-core/fastqc/main'
+include { FASTQC as FASTQC_TRIMMED                    } from '../../modules/nf-core/fastqc/main'
+include { FASTP                                       } from '../../modules/nf-core/fastp/main'
+include { ADAPTERREMOVAL as ADAPTERREMOVAL_PE         } from '../../modules/nf-core/adapterremoval/main'
+include { ADAPTERREMOVAL as ADAPTERREMOVAL_SE         } from '../../modules/nf-core/adapterremoval/main'
+include { BOWTIE2_BUILD as BOWTIE2_HOST_REMOVAL_BUILD } from '../../modules/nf-core/bowtie2/build/main.nf'
+include { BOWTIE2_ALIGN as BOWTIE2_HOST_REMOVAL_ALIGN } from '../../modules/nf-core/bowtie2/align/main.nf'
+include { BOWTIE2_BUILD as BOWTIE2_PHIX_REMOVAL_BUILD } from '../../modules/nf-core/bowtie2/build/main.nf'
+include { BOWTIE2_ALIGN as BOWTIE2_PHIX_REMOVAL_ALIGN } from '../../modules/nf-core/bowtie2/align/main.nf'
+include { CAT_FASTQ                                   } from '../../modules/nf-core/cat/fastq/main'
+include { SEQTK_MERGEPE                               } from '../../modules/nf-core/seqtk/mergepe/main'
+include { BBMAP_BBNORM                                } from '../../modules/nf-core/bbmap/bbnorm/main'
 
 workflow SHORTREAD_PREPROCESSING {
     take:
@@ -75,9 +75,10 @@ workflow SHORTREAD_PREPROCESSING {
         }
         else {
             BOWTIE2_HOST_REMOVAL_BUILD(
-                ch_host_fasta
+                ch_host_fasta.map { fasta -> [[id: fasta.getSimpleName()], fasta] }
             )
             ch_host_bowtie2index = BOWTIE2_HOST_REMOVAL_BUILD.out.index
+            ch_versions = ch_versions.mix(BOWTIE2_HOST_REMOVAL_BUILD.out.versions)
         }
     }
     else if (params.host_genome) {
@@ -88,8 +89,11 @@ workflow SHORTREAD_PREPROCESSING {
         BOWTIE2_HOST_REMOVAL_ALIGN(
             ch_short_reads_prepped,
             ch_host_bowtie2index,
+            [[:], []],
+            true,
+            false,
         )
-        ch_short_reads_hostremoved = BOWTIE2_HOST_REMOVAL_ALIGN.out.reads
+        ch_short_reads_hostremoved = BOWTIE2_HOST_REMOVAL_ALIGN.out.fastq
         ch_versions = ch_versions.mix(BOWTIE2_HOST_REMOVAL_ALIGN.out.versions.first())
         ch_multiqc_files = ch_multiqc_files.mix(BOWTIE2_HOST_REMOVAL_ALIGN.out.log)
     }
@@ -99,13 +103,18 @@ workflow SHORTREAD_PREPROCESSING {
 
     if (!params.keep_phix) {
         BOWTIE2_PHIX_REMOVAL_BUILD(
-            ch_phix_db_file
+            ch_phix_db_file.map { fasta -> [[id: fasta.getSimpleName()], fasta] }
         )
+        ch_versions = ch_versions.mix(BOWTIE2_PHIX_REMOVAL_BUILD.out.versions)
+
         BOWTIE2_PHIX_REMOVAL_ALIGN(
             ch_short_reads_hostremoved,
             BOWTIE2_PHIX_REMOVAL_BUILD.out.index,
+            [[:], []],
+            true,
+            false,
         )
-        ch_short_reads_phixremoved = BOWTIE2_PHIX_REMOVAL_ALIGN.out.reads
+        ch_short_reads_phixremoved = BOWTIE2_PHIX_REMOVAL_ALIGN.out.fastq
         ch_versions = ch_versions.mix(BOWTIE2_PHIX_REMOVAL_ALIGN.out.versions.first())
         ch_multiqc_files = ch_multiqc_files.mix(BOWTIE2_PHIX_REMOVAL_ALIGN.out.log)
     }
