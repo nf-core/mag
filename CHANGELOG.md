@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Changed`
 
 - [#731](https://github.com/nf-core/mag/pull/747) - Updated to nf-core 3.1.2 `TEMPLATE` (by @jfy133)
+- [#755](https://github.com/nf-core/mag/pull/755) - Updated to nf-core 3.2.0 `TEMPLATE` (by @jfy133)
 
 ### `Fixed`
 
