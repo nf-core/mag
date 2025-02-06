@@ -13,7 +13,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#755](https://github.com/nf-core/mag/pull/755) - Updated to nf-core 3.2.0 `TEMPLATE` (by @jfy133)
 - [#754](https://github.com/nf-core/mag/pull/754) - Replaced local module with nf-core module for all Bowtie2 processes (reported by @MeriamOs, fix by @jfy133)
 
-
 ### `Fixed`
 
 - [#748](https://github.com/nf-core/mag/pull/748) - Fix broken phix reference channel when skipping phix removal (reported by @amizeranschi, fix by @muabnezor)
