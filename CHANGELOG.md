@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
+- [#758](https://github.com/nf-core/mag/pull/758) - Added new diagram in metro-map style (by @jfy133, @prototaxites, @d4straub)
+
 ### `Changed`
 
 - [#731](https://github.com/nf-core/mag/pull/747) - Updated to nf-core 3.1.2 `TEMPLATE` (by @jfy133)
