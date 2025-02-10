@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v3.3.1dev - [unreleased]
+## v3.3.1 - [2025-03-13]
 
 ### `Added`
 
@@ -20,8 +20,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#752](https://github.com/nf-core/mag/pull/752) - Fix QUAST results not being displayed when skipping certain steps (reported by @amizeranschi, fix by @jfy133)
 - [#753](https://github.com/nf-core/mag/pull/753) - Fix iGenomes reference support for host removal reference genome (reported by @Thomieh73, fix by @jfy133)
 - [#759](https://github.com/nf-core/mag/pull/758) - Fixed parameters that allow both files or directories to not error with directories, and general file input validation improvements (repoted by @mjfi2sb3, fix by @jfy133)
-
-### `Deprecated`
 
 ### `Deprecated`
 
