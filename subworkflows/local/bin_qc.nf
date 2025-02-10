@@ -83,7 +83,7 @@ workflow BIN_QC {
 
         if (!ch_busco_db.isEmpty()) {
             if (ch_busco_db.extension in ['gz', 'tgz']) {
-                BUSCO_UNTAR(ch_busco_db.map{db -> [[id: 'busco_db'], db]})
+                BUSCO_UNTAR([[id: 'busco_db'], ch_busco_db])
 
                 if (ch_busco_db.getSimpleName().contains('odb')) {
                     busco_lineage = ch_busco_db.getSimpleName()
@@ -143,7 +143,7 @@ workflow BIN_QC {
          */
         CHECKM2_PREDICT(ch_input_bins_for_qc.groupTuple(), ch_checkm2_db)
 
-        qc_summaries = CHECKM2_PREDICT.out
+        qc_summaries = CHECKM2_PREDICT.out.checkm2_tsv
             .map { _meta, summary -> [[id: 'checkm2'], summary] }
             .groupTuple()
         ch_versions = ch_versions.mix(CHECKM2_PREDICT.out.versions.first())
