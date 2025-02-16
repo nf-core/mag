@@ -36,6 +36,11 @@
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
                         "installed_by": ["modules"]
                     },
+                    "busco/busco": {
+                        "branch": "master",
+                        "git_sha": "d34caf3c0d3cf5b9bae0fae6107bab0933c96f37",
+                        "installed_by": ["modules"]
+                    },
                     "cat/fastq": {
                         "branch": "master",
                         "git_sha": "5c460c5a4736974abde2843294f35307ee2b0e5e",
@@ -64,12 +69,12 @@
                     },
                     "checkm2/databasedownload": {
                         "branch": "master",
-                        "git_sha": "e17652681c856afaf2e240ba4c98bf4631a0fe2d",
+                        "git_sha": "ad43b5d5d464698d11b599b004adc1c00615ef1b",
                         "installed_by": ["modules"]
                     },
                     "checkm2/predict": {
                         "branch": "master",
-                        "git_sha": "e17652681c856afaf2e240ba4c98bf4631a0fe2d",
+                        "git_sha": "ad43b5d5d464698d11b599b004adc1c00615ef1b",
                         "installed_by": ["modules"]
                     },
                     "chopper": {
@@ -101,6 +106,11 @@
                         "branch": "master",
                         "git_sha": "baa30accc6c50ea8a98662417d4f42ed18966353",
                         "installed_by": ["fasta_binning_concoct"]
+                    },
+                    "csvtk/concat": {
+                        "branch": "master",
+                        "git_sha": "aa5c23023134cf2d8b75a95d53557890e40261b9",
+                        "installed_by": ["modules"]
                     },
                     "dastool/dastool": {
                         "branch": "master",
