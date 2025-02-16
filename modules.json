@@ -184,7 +184,7 @@
                     },
                     "maxbin2": {
                         "branch": "master",
-                        "git_sha": "283613159e079152f1336cef0db1c836086206e0",
+                        "git_sha": "376c622c91dc6a06af19f4de7f0c103bc0573b3f",
                         "installed_by": ["modules"]
                     },
                     "megahit": {
