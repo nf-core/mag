@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
+- [#726](https://github.com/nf-core/mag/pull/726) - Fix language server errores (by @dialvarezs).
+
 ### `Dependencies`
 
 ### `Deprecated`

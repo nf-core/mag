@@ -64,7 +64,7 @@
                     },
                     "checkm2/databasedownload": {
                         "branch": "master",
-                        "git_sha": "e17652681c856afaf2e240ba4c98bf4631a0fe2d",
+                        "git_sha": "81880787133db07d9b4c1febd152c090eb8325dc",
                         "installed_by": ["modules"]
                     },
                     "checkm2/predict": {
@@ -184,7 +184,7 @@
                     },
                     "maxbin2": {
                         "branch": "master",
-                        "git_sha": "283613159e079152f1336cef0db1c836086206e0",
+                        "git_sha": "376c622c91dc6a06af19f4de7f0c103bc0573b3f",
                         "installed_by": ["modules"]
                     },
                     "megahit": {
@@ -249,7 +249,7 @@
                     },
                     "prokka": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "git_sha": "81880787133db07d9b4c1febd152c090eb8325dc",
                         "installed_by": ["modules"]
                     },
                     "pydamage/analyze": {

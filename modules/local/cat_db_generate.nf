@@ -6,9 +6,9 @@ process CAT_DB_GENERATE {
         'biocontainers/mulled-v2-75e2a26f10cbf3629edf2d1600db3fed5ebe6e04:eae321284604f7dabbdf121e3070bda907b91266-0' }"
 
     output:
-    tuple env(DB_NAME), path("database/*"), path("taxonomy/*"), emit: db
-    path("CAT_prepare_*.tar.gz"), optional:true               , emit: db_tar_gz
-    path "versions.yml"                                       , emit: versions
+    tuple env('DB_NAME'), path("database/*"), path("taxonomy/*"), emit: db
+    path("CAT_prepare_*.tar.gz"), optional:true                 , emit: db_tar_gz
+    path "versions.yml"                                         , emit: versions
 
     script:
     def save_db = params.save_cat_db ? "Y" : "N"

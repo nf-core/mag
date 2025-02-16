@@ -124,7 +124,7 @@ workflow BIN_QC {
         BUSCO_SUMMARY(
             BUSCO.out.summary_domain.collect { _meta, summary -> summary }.ifEmpty([]),
             BUSCO.out.summary_specific.collect { _meta, summary -> summary }.ifEmpty([]),
-            BUSCO.out.failed_bin.collect { _meta, summary -> summary }.ifEmpty([])
+            BUSCO.out.failed_bin.collect { _meta, summary -> summary }.ifEmpty([]),
         )
 
         ch_multiqc_files = ch_multiqc_files.mix(
@@ -163,7 +163,7 @@ workflow BIN_QC {
         qc_summary = COMBINE_BINQC_TSV.out.combined
         ch_versions = ch_versions.mix(
             CHECKM_QA.out.versions.first(),
-            COMBINE_BINQC_TSV.out.versions
+            COMBINE_BINQC_TSV.out.versions,
         )
     }
     else if (params.binqc_tool == "checkm2") {
@@ -177,7 +177,7 @@ workflow BIN_QC {
         qc_summary = COMBINE_BINQC_TSV.out.combined
         ch_versions = ch_versions.mix(
             CHECKM2_PREDICT.out.versions.first(),
-            COMBINE_BINQC_TSV.out.versions
+            COMBINE_BINQC_TSV.out.versions,
         )
     }
 
@@ -185,10 +185,9 @@ workflow BIN_QC {
         /*
          * GUNC
          */
-        ch_input_bins_for_gunc = ch_bins
-            .filter { meta, _bins ->
-                meta.domain != "eukarya"
-            }
+        ch_input_bins_for_gunc = ch_bins.filter { meta, _bins ->
+            meta.domain != "eukarya"
+        }
 
         if (params.gunc_db) {
             ch_db_for_gunc = ch_gunc_db
@@ -207,7 +206,7 @@ workflow BIN_QC {
             .collectFile(
                 name: "gunc_summary.tsv",
                 keepHeader: true,
-                storeDir: "${params.outdir}/GenomeBinning/QC/"
+                storeDir: "${params.outdir}/GenomeBinning/QC/",
             )
 
         if (params.binqc_tool == 'checkm') {
@@ -222,7 +221,7 @@ workflow BIN_QC {
                 .collectFile(
                     name: "gunc_checkm_summary.tsv",
                     keepHeader: true,
-                    storeDir: "${params.outdir}/GenomeBinning/QC/"
+                    storeDir: "${params.outdir}/GenomeBinning/QC/",
                 )
         }
     }

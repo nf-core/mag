@@ -14,7 +14,6 @@ process BOWTIE2_ASSEMBLY_BUILD {
     path "versions.yml"                                     , emit: versions
 
     script:
-    def args = task.ext.args ?: ''
     """
     mkdir bowtie
     bowtie2-build --threads $task.cpus $assembly "bt2_index_base"
