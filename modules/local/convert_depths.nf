@@ -15,9 +15,8 @@ process CONVERT_DEPTHS {
     path "versions.yml"                                   , emit: versions
 
     script:
-    def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    gunzip -f $depth
+    gunzip -f ${depth}
 
     # Determine the number of abundance columns
     n_abund=\$(awk 'NR==1 {print int((NF-3)/2)}' ${depth.toString() - '.gz'})

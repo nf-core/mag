@@ -15,7 +15,7 @@ workflow LONGREAD_PREPROCESSING {
     take:
     ch_raw_long_reads         // [ [meta] , fastq] (mandatory)
     ch_short_reads            // [ [meta] , fastq1, fastq2] (mandatory)
-    ch_lambda_db            // [fasta]
+    ch_lambda_db              // [fasta]
 
     main:
     ch_versions = Channel.empty()
