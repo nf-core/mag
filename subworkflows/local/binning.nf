@@ -3,7 +3,8 @@
  */
 
 include { METABAT2_METABAT2                                                                      } from '../../modules/nf-core/metabat2/metabat2/main'
-include { METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS                                                   } from '../../modules/nf-core/metabat2/jgisummarizebamcontigdepths/main'
+include { METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS as METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_SHORTREAD } from '../../modules/nf-core/metabat2/jgisummarizebamcontigdepths/main'
+include { METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS as METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_LONGREAD  } from '../../modules/nf-core/metabat2/jgisummarizebamcontigdepths/main'
 include { MAXBIN2                                                                                } from '../../modules/nf-core/maxbin2/main'
 include { GUNZIP as GUNZIP_BINS                                                                  } from '../../modules/nf-core/gunzip/main'
 include { GUNZIP as GUNZIP_UNBINS                                                                } from '../../modules/nf-core/gunzip/main'
@@ -22,21 +23,30 @@ workflow BINNING {
 
     ch_versions = Channel.empty()
 
-    // generate coverage depths for each contig
+    // generate coverage depths for each contig and branch by assembler type
     ch_summarizedepth_input = assemblies
-                                .map { meta, assembly, bams, bais ->
-                                    [ meta, bams, bais ]
-                                }
+        .map { meta, assembly, bams, bais ->
+            [ meta, bams, bais ]
+        }
+        .branch {
+            longread: it[0].assembler in ['FLYE', 'METAMDBG']
+            shortread: true
+        }
 
-    METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS ( ch_summarizedepth_input )
+    // Process each through appropriate module
+    METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_LONGREAD ( ch_summarizedepth_input.longread )
+    METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_SHORTREAD ( ch_summarizedepth_input.shortread )
 
-    ch_metabat_depths = METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS.out.depth
+    // Merge the outputs
+    ch_metabat_depths = METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_LONGREAD.out.depth
+        .mix(METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_SHORTREAD.out.depth)
         .map { meta, depths ->
             def meta_new = meta + [binner: 'MetaBAT2']
             [ meta_new, depths ]
         }
 
-    ch_versions = ch_versions.mix(METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS.out.versions.first())
+    ch_versions = ch_versions.mix(METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_LONGREAD.out.versions.first())
+    ch_versions = ch_versions.mix(METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_SHORTREAD.out.versions.first())
 
     // combine depths back with assemblies
     ch_metabat2_input = assemblies
