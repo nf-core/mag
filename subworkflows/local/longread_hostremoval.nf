@@ -5,10 +5,10 @@
 
 include { MINIMAP2_INDEX as MINIMAP2_HOST_INDEX                 } from '../../modules/nf-core/minimap2/index/main'
 include { MINIMAP2_ALIGN as MINIMAP2_HOST_ALIGN                 } from '../../modules/nf-core/minimap2/align/main'
-include { SAMTOOLS_VIEW as SAMTOOLS_HOSTREMOVED_VIEW            } from '../../modules/nf-core/samtools/view/main'
-include { SAMTOOLS_FASTQ as SAMTOOLS_HOSTREMOVED_FASTQ          } from '../../modules/nf-core/samtools/fastq/main'
+include { SAMTOOLS_UNMAPPED as SAMTOOLS_HOSTREMOVED_UNMAPPED    } from '../../modules/local/samtools_unmapped'
 include { SAMTOOLS_INDEX as SAMTOOLS_HOSTREMOVED_INDEX          } from '../../modules/nf-core/samtools/index/main'
 include { SAMTOOLS_STATS as SAMTOOLS_HOSTREMOVED_STATS          } from '../../modules/nf-core/samtools/stats/main'
+
 
 workflow LONGREAD_HOSTREMOVAL {
     take:
@@ -33,11 +33,8 @@ workflow LONGREAD_HOSTREMOVAL {
         }
 
     // Generate unmapped reads FASTQ for downstream taxprofiling
-    SAMTOOLS_HOSTREMOVED_VIEW ( ch_minimap2_mapped , [[],[]], [] )
-    ch_versions      = ch_versions.mix( SAMTOOLS_HOSTREMOVED_VIEW.out.versions.first() )
-
-    SAMTOOLS_HOSTREMOVED_FASTQ ( SAMTOOLS_HOSTREMOVED_VIEW.out.bam, false )
-    ch_versions      = ch_versions.mix( SAMTOOLS_HOSTREMOVED_FASTQ.out.versions.first() )
+    SAMTOOLS_HOSTREMOVED_UNMAPPED ( ch_minimap2_mapped )
+    ch_versions      = ch_versions.mix( SAMTOOLS_HOSTREMOVED_UNMAPPED.out.versions.first() )
 
     // Indexing whole BAM for host removal statistics
     SAMTOOLS_HOSTREMOVED_INDEX ( MINIMAP2_HOST_ALIGN.out.bam )
@@ -52,7 +49,7 @@ workflow LONGREAD_HOSTREMOVAL {
 
     emit:
     stats              = SAMTOOLS_HOSTREMOVED_STATS.out.stats     //channel: [val(meta), [reads  ] ]
-    reads              = SAMTOOLS_HOSTREMOVED_FASTQ.out.other   // channel: [ val(meta), [ reads ] ]
+    reads              = SAMTOOLS_HOSTREMOVED_UNMAPPED.out.fastq   // channel: [ val(meta), [ reads ] ]
     versions           = ch_versions                 // channel: [ versions.yml ]
     multiqc_files      = ch_multiqc_files
 }

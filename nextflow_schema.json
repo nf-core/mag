@@ -760,8 +760,11 @@
                 },
                 "longread_percentidentity": {
                     "type": "number",
-                    "default": 90,
                     "description": "Minimum percent identity for long reads mapping back to assembled contigs."
+                },
+                "shortread_percentidentity": {
+                    "type": "number",
+                    "description": "Minimum percent identity for short reads mapping back to assembled contigs."
                 }
             }
         },
