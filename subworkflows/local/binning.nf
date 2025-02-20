@@ -144,6 +144,6 @@ workflow BINNING {
     bins_gz                                      = ch_binning_results_gzipped_final
     unbinned                                     = ch_splitfasta_results_gunzipped
     unbinned_gz                                  = SPLIT_FASTA.out.unbinned
-    metabat2depths                               = METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS.out.depth
+    metabat2depths                               = ch_metabat_depths
     versions                                     = ch_versions
 }
