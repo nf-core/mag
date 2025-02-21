@@ -81,10 +81,10 @@ workflow PIPELINE_INITIALISATION {
         meta.run = meta.run == [] ? "0" : meta.run
         meta.single_end = params.single_end
 
-        if (params.single_end) {
+        if (params.single_end && sr1) {
             return [meta, [sr1]]
         }
-        else {
+        else if (sr1 && sr2) {
             return [meta, [sr1, sr2]]
         }
     }
@@ -98,11 +98,14 @@ workflow PIPELINE_INITIALISATION {
 
     // Check already if long reads are provided, for later parameter validation
     def hybrid = false
-    ch_raw_long_reads.map {
-        if (it) {
-            hybrid = true
+    ch_raw_long_reads
+        .map { meta, lr -> [ meta.id, lr ] }
+        .join(ch_raw_long_reads.map {meta, sr1 -> [meta.id, sr1] }, by: 0, remainder: true)
+        .map { id, lr, sr1 ->
+            if (lr && sr1) {
+                hybrid = true
+            }
         }
-    }
 
     //
     // Custom validation for pipeline parameters
@@ -225,7 +228,7 @@ def validateInputParameters(hybrid) {
         if (!params.skip_spades && params.spades_fix_cpus == -1) {
             log.warn("[nf-core/mag]: At least one assembly process is run with a parameter to ensure reproducible results, but SPAdes not. Consider using the parameter '--spades_fix_cpus'.")
         }
-        if (hybrid && params.skip_spadeshybrid && params.spadeshybrid_fix_cpus == -1) {
+        if (hybrid && !params.skip_spadeshybrid && params.spadeshybrid_fix_cpus == -1) {
             log.warn("[nf-core/mag]: At least one assembly process is run with a parameter to ensure reproducible results, but SPAdes hybrid not. Consider using the parameter '--spadeshybrid_fix_cpus'.")
         }
         if (!params.skip_megahit && !params.megahit_fix_cpu_1) {
@@ -245,11 +248,8 @@ def validateInputParameters(hybrid) {
     if (params.host_fasta && params.host_genome) {
         error('[nf-core/mag] ERROR: Both host fasta reference and iGenomes genome are specified to remove host contamination! Invalid combination, please specify either --host_fasta or --host_genome.')
     }
-    if (hybrid && (params.host_fasta || params.host_genome)) {
-        log.warn('[nf-core/mag]: Host read removal is only applied to short reads. Long reads might be filtered indirectly by Filtlong, which is set to use read qualities estimated based on k-mer matches to the short, already filtered reads.')
-        if (params.longreads_length_weight > 1) {
-            log.warn("[nf-core/mag]: The parameter --longreads_length_weight is ${params.longreads_length_weight}, causing the read length being more important for long read filtering than the read quality. Set --longreads_length_weight to 1 in order to assign equal weights.")
-        }
+    if (hybrid && (params.host_fasta || params.host_genome) && params.longread_filtering_tool == "filtlong" && params.longreads_length_weight > 0 ) {
+        log.warn("[nf-core/mag]: The parameter --longreads_length_weight is ${params.longreads_length_weight}, causing the read length being more important for long read filtering than the read quality. Set --longreads_length_weight to 1 in order to assign equal weights.")
     }
     if (params.host_genome) {
         if (!params.genomes) {
@@ -329,7 +329,7 @@ def validateInputParameters(hybrid) {
 //
 def validateInputSamplesheet(meta, sr1, sr2, lr) {
 
-    if (!sr2 && !params.single_end) {
+    if ((!sr2 && !lr) && !params.single_end) {
         error("[nf-core/mag] ERROR: Single-end data must be executed with `--single_end`. Note that it is not possible to mix single- and paired-end data in one run! Check input TSV for sample: ${meta.id}")
     }
     if (sr2 && params.single_end) {

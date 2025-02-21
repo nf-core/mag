@@ -42,11 +42,11 @@
                 "pattern": "^\\S+\\.f(ast)?q\\.gz$"
             }
         },
-        "required": ["sample", "group", "short_reads_1"]
+        "required": ["sample", "group"],
+        "anyOf": [{ "required": ["short_reads_1"] }, { "required": ["long_reads"] }]
     },
     "uniqueEntries": ["sample", "run"],
     "dependentRequired": {
-        "short_reads_2": ["short_reads_1"],
-        "long_reads": ["short_reads_1", "short_reads_2"]
+        "short_reads_2": ["short_reads_1"]
     }
 }
