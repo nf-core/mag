@@ -444,6 +444,12 @@
                     "description": "Specify which long read filtering tool to use.",
                     "enum": ["filtlong", "nanoq", "chopper"],
                     "default": "filtlong"
+                },
+                "longread_mapping_mode": {
+                    "type": "string",
+                    "default": "map-ont",
+                    "enum": ["map-ont", "lr:hq", "map-pb", "map-hifi"],
+                    "description": "parameter passed to minimap2 when building index for long read mapping."
                 }
             }
         },
