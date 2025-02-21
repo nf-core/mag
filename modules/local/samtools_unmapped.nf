@@ -11,7 +11,7 @@ process SAMTOOLS_UNMAPPED {
     tuple val(meta), path(input), path(index)
 
     output:
-    tuple val(meta), path("${prefix}.fastq.gz"), emit: fastq
+    tuple val(meta), path("*hostremoved.fastq.gz"), emit: fastq
     path  "versions.yml",                        emit: versions
 
     when:
@@ -21,7 +21,7 @@ process SAMTOOLS_UNMAPPED {
     def args = task.ext.args ?: ''
     def args2 = task.ext.args2 ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def mapped = "-o ${prefix}.mapped.fastq.gz"
+    def mapped = "-o ${prefix}_mapped.fastq.gz"
 
     """
     samtools \\
@@ -45,7 +45,7 @@ process SAMTOOLS_UNMAPPED {
 
     stub:
     def args = task.ext.args ?: ''
-    prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta.id}"
     """
     touch ${prefix}.fastq.gz
 
