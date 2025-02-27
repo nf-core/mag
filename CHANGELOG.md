@@ -37,6 +37,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#753](https://github.com/nf-core/mag/pull/753) - Fix iGenomes reference support for host removal reference genome (reported by @Thomieh73, fix by @jfy133)
 - [#759](https://github.com/nf-core/mag/pull/758) - Fixed parameters that allow both files or directories to not error with directories, and general file input validation improvements (reported by @mjfi2sb3, fix by @jfy133)
 
+### `Deprecated`
+
 ## 3.3.0 [2024-12-19]
 
 ### `Added`
