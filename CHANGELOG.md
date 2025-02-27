@@ -3,26 +3,39 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v3.3.1dev - [unreleased]
+## dev [unreleased]
 
 ### `Added`
 
 ### `Changed`
 
+- [#754](https://github.com/nf-core/mag/pull/754) - Replaced local module with nf-core module for all Bowtie2 processes (reported by @MeriamOs, fix by @jfy133)
+
+### `Fixed`
+
+- [#754](https://github.com/nf-core/mag/pull/754) - Fix version reporting in binning preparation and ancient DNA workflows (fix by @jfy133)
+
+### `Dependencies`
+
+### `Deprecated`
+
+## v3.3.1 - [2025-02-13]
+
+### `Added`
+
+- [#758](https://github.com/nf-core/mag/pull/758) - Added new diagram in metro-map style (by @jfy133, @prototaxites, @d4straub)
+
+### `Changed`
+
 - [#731](https://github.com/nf-core/mag/pull/747) - Updated to nf-core 3.1.2 `TEMPLATE` (by @jfy133)
 - [#755](https://github.com/nf-core/mag/pull/755) - Updated to nf-core 3.2.0 `TEMPLATE` (by @jfy133)
-- [#754](https://github.com/nf-core/mag/pull/754) - Replaced local module with nf-core module for all Bowtie2 processes (reported by @MeriamOs, fix by @jfy133)
 
 ### `Fixed`
 
 - [#748](https://github.com/nf-core/mag/pull/748) - Fix broken phix reference channel when skipping phix removal (reported by @amizeranschi, fix by @muabnezor)
 - [#752](https://github.com/nf-core/mag/pull/752) - Fix QUAST results not being displayed when skipping certain steps (reported by @amizeranschi, fix by @jfy133)
 - [#753](https://github.com/nf-core/mag/pull/753) - Fix iGenomes reference support for host removal reference genome (reported by @Thomieh73, fix by @jfy133)
-- [#754](https://github.com/nf-core/mag/pull/754) - Fix version reporting in binning preparation and ancient DNA workflows (fix by @jfy133)
-
-### `Deprecated`
-
-### `Deprecated`
+- [#759](https://github.com/nf-core/mag/pull/758) - Fixed parameters that allow both files or directories to not error with directories, and general file input validation improvements (reported by @mjfi2sb3, fix by @jfy133)
 
 ## 3.3.0 [2024-12-19]
 
