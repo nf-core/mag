@@ -17,6 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Dependencies`
 
+| Tool    | Previous version | New version |
+| ------- | ---------------- | ----------- |
+| Bowtie2 | 2.4.2            | 2.5.2       |
+
 ### `Deprecated`
 
 ## v3.3.1 - [2025-02-13]
