@@ -97,7 +97,7 @@ workflow BIN_QC {
             }
         }
 
-        BUSCO_BUSCO(ch_bins, 'genome', busco_lineage, ch_busco_db, [])
+        BUSCO_BUSCO(ch_bins, 'genome', busco_lineage, ch_busco_db, [], params.busco_clean)
 
         qc_summaries = BUSCO_BUSCO.out.batch_summary
             .map { _meta, summary -> [[id: 'busco'], summary] }

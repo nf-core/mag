@@ -30,8 +30,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Deprecated`
 
-- [#730](https://github.com/nf-core/mag/pull/730) - Deprecated `--busco_clean` due to not being supported in the nf-core BUSCO module
-
 ## 3.3.0 [2024-12-19]
 
 ### `Added`
