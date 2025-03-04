@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
+- [#769](https://github.com/nf-core/mag/pull/769) - Fix megahit not emitting correct filenames due to suboptimal arguments ordering (reported and fix by @IceGreb)
+
 ### `Dependencies`
 
 ### `Deprecated`
