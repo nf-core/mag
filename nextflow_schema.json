@@ -817,9 +817,9 @@
                 },
                 "checkm2_db": {
                     "type": "string",
-                    "description": "Path to local folder containing already downloaded and uncompressed CheckM2 database (.dmnd file).",
-                    "help_text": "The pipeline can also download this for you if not specified, and you can save the resulting directory into your output directory by specifying `--save_checkm2_data`. You should move this directory to somewhere else on your machine (and supply back to the pipeline in future runs again with `--checkm2_db`).",
-                    "format": "directory-path",
+                    "description": "Path to local file of an already downloaded and uncompressed CheckM2 database (.dmnd file).",
+                    "help_text": "The pipeline can also download this for you if not specified, and you can save the resulting directory into your output directory by specifying `--save_checkm2_data`. You should move this file to somewhere else on your machine (and supply back to the pipeline in future runs again with `--checkm2_db`).",
+                    "format": "file-path",
                     "exists": true
                 },
                 "checkm2_db_version": {
