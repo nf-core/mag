@@ -21,8 +21,8 @@ process UNTAR {
     def args = task.ext.args ?: ''
     def args2 = task.ext.args2 ?: ''
     prefix = task.ext.prefix ?: (meta.id ? "${meta.id}" : archive.baseName.toString().replaceFirst(/\.tar$/, ""))
-    basedir = meta.basedir ?: '.'
-    output_dir = basedir != '.' ? basedir : prefix
+    basedir = task.ext.basedir ?: '.'
+    output_dir = basedir != '.' ? basedir.split("/")[0] : prefix
 
     """
     mkdir -p ${basedir}/${prefix}
