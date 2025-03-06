@@ -83,17 +83,12 @@ workflow BIN_QC {
 
         if (!ch_busco_db.isEmpty()) {
             if (ch_busco_db.extension in ['gz', 'tgz']) {
-                BUSCO_UNTAR([[id: 'busco_db'], ch_busco_db])
+                BUSCO_UNTAR([[id: ch_busco_db.getSimpleName()], ch_busco_db])
 
                 if (ch_busco_db.getSimpleName().contains('odb')) {
                     busco_lineage = ch_busco_db.getSimpleName()
                 }
                 ch_busco_db = BUSCO_UNTAR.out.untar.map { it[1] }
-            }
-            else if (ch_busco_db.isDirectory()) {
-                if (ch_busco_db.name.matches(/odb\d+$/)) {
-                    busco_lineage = ch_busco_db.name
-                }
             }
         }
 
