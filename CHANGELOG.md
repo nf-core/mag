@@ -3,7 +3,22 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v3.3.1 - [2025-03-13]
+## dev [unreleased]
+
+### `Added`
+
+### `Changed`
+
+### `Fixed`
+
+- [#769](https://github.com/nf-core/mag/pull/769) - Fix megahit not emitting correct filenames due to suboptimal arguments ordering (reported and fix by @IceGreb)
+- [#771](https://github.com/nf-core/mag/pull/771) - Fix misspecified checkm2 database parameter check (reported by @dpelegri and fix by @jfy133)
+
+### `Dependencies`
+
+### `Deprecated`
+
+## v3.3.1 - [2025-02-13]
 
 ### `Added`
 
