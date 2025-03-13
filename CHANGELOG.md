@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
+- [#730](https://github.com/nf-core/mag/pull/730) - Migrated from local BUSCO module to nf-core one, updating version (by @dialvarezs)
+- [#730](https://github.com/nf-core/mag/pull/730) - Update default BUSCO database to bacteria_odb12 on tests (by @dialvarezs)
+
 ### `Fixed`
 
 - [#769](https://github.com/nf-core/mag/pull/769) - Fix megahit not emitting correct filenames due to suboptimal arguments ordering (reported and fix by @IceGreb)
@@ -16,18 +19,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Dependencies`
 
+| Tool  | Previous version | New version |
+| ----- | ---------------- | ----------- |
+| BUSCO | 5.4.3            | 5.8.3       |
+| csvtk |                  | 0.31.0      |
+
 ### `Deprecated`
 
 ## v3.3.1 - [2025-02-13]
 
 ### `Added`
 
-- [#730](https://github.com/nf-core/mag/pull/730) - Migrated from local BUSCO module to nf-core one (added by @dialvarezs)
 - [#758](https://github.com/nf-core/mag/pull/758) - Added new diagram in metro-map style (by @jfy133, @prototaxites, @d4straub)
 
 ### `Changed`
 
-- [#730](https://github.com/nf-core/mag/pull/730) - Update default BUSCO database to bacteria_odb12 (by @dialvarezs)
 - [#731](https://github.com/nf-core/mag/pull/747) - Updated to nf-core 3.1.2 `TEMPLATE` (by @jfy133)
 - [#755](https://github.com/nf-core/mag/pull/755) - Updated to nf-core 3.2.0 `TEMPLATE` (by @jfy133)
 
@@ -37,11 +43,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#752](https://github.com/nf-core/mag/pull/752) - Fix QUAST results not being displayed when skipping certain steps (reported by @amizeranschi, fix by @jfy133)
 - [#753](https://github.com/nf-core/mag/pull/753) - Fix iGenomes reference support for host removal reference genome (reported by @Thomieh73, fix by @jfy133)
 - [#759](https://github.com/nf-core/mag/pull/758) - Fixed parameters that allow both files or directories to not error with directories, and general file input validation improvements (reported by @mjfi2sb3, fix by @jfy133)
-
-| Tool  | Previous version | New version |
-| ----- | ---------------- | ----------- |
-| BUSCO | 5.4.3            | 5.8.2       |
-| csvtk |                  | 0.31.0      |
 
 ### `Deprecated`
 
