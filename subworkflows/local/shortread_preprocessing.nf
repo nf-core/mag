@@ -21,7 +21,6 @@ workflow SHORTREAD_PREPROCESSING {
     ch_host_fasta        // [fasta] (optional)
     ch_host_genome_index // fasta (optional)
     ch_phix_db_file      // [fasta] (optional)
-    ch_metaeuk_db        // [fasta] (optional)
 
     main:
     ch_versions = Channel.empty()
@@ -129,7 +128,7 @@ workflow SHORTREAD_PREPROCESSING {
             [meta_new, reads]
         }
         .groupTuple()
-        .branch { meta, reads ->
+        .branch { _meta, reads ->
             cat: reads.size() >= 2
             skip_cat: true
         }
@@ -159,7 +158,7 @@ workflow SHORTREAD_PREPROCESSING {
             // Combine the interleaved pairs with any single end libraries. Set the meta.single_end to true (used by the bbnorm module).
             ch_bbnorm = SEQTK_MERGEPE.out.reads
                 .mix(ch_short_reads.filter { it[0].single_end })
-                .map { [[id: sprintf("group%s", it[0].group), group: it[0].group, single_end: true], it[1]] }
+                .map { [[id: "group${it[0].group}", group: it[0].group, single_end: true], it[1]] }
                 .groupTuple()
         }
         else {
