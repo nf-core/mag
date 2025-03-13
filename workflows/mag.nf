@@ -570,10 +570,6 @@ workflow MAG {
                 meta.domain != "eukarya"
             }
 
-            // ch_eukarya_bins_dastool = ch_binning_results_bins.filter { meta, bins ->
-            //     meta.domain == "eukarya"
-            // }
-
             if (params.ancient_dna) {
                 ch_contigs_for_binrefinement = ANCIENT_DNA_ASSEMBLY_VALIDATION.out.contigs_recalled
             }
@@ -582,11 +578,6 @@ workflow MAG {
             }
 
             BINNING_REFINEMENT(ch_contigs_for_binrefinement, ch_prokarya_bins_dastool)
-            // ch_refined_bins = ch_eukarya_bins_dastool
-            //     .map{ meta, bins ->
-            //             def meta_new = meta + [refinement: 'eukaryote_unrefined']
-            //             [meta_new, bins]
-            //         }.mix( BINNING_REFINEMENT.out.refined_bins)
 
             ch_refined_bins = BINNING_REFINEMENT.out.refined_bins
             ch_refined_unbins = BINNING_REFINEMENT.out.refined_unbins
