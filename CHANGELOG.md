@@ -9,12 +9,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
+- [#754](https://github.com/nf-core/mag/pull/754) - Replaced local module with nf-core module for all Bowtie2 processes (reported by @MeriamOs, fix by @jfy133)
+- [#754](https://github.com/nf-core/mag/pull/754) - Made filenames consistent for all bowtie2 assembly-aligning output (fix by @jfy133)
+
 ### `Fixed`
 
+- [#754](https://github.com/nf-core/mag/pull/754) - Fix version reporting in binning preparation and ancient DNA workflows (fix by @jfy133)
 - [#769](https://github.com/nf-core/mag/pull/769) - Fix megahit not emitting correct filenames due to suboptimal arguments ordering (reported and fix by @IceGreb)
 - [#771](https://github.com/nf-core/mag/pull/771) - Fix misspecified checkm2 database parameter check (reported by @dpelegri and fix by @jfy133)
 
 ### `Dependencies`
+
+| Tool    | Previous version | New version |
+| ------- | ---------------- | ----------- |
+| Bowtie2 | 2.4.2            | 2.5.2       |
 
 ### `Deprecated`
 

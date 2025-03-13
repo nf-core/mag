@@ -491,7 +491,7 @@ workflow MAG {
             ch_assemblies,
             ch_short_reads,
         )
-        ch_versions = ch_versions.mix(BINNING_PREPARATION.out.bowtie2_version.first())
+        ch_versions = ch_versions.mix(BINNING_PREPARATION.out.versions)
     }
 
     /*
@@ -502,7 +502,7 @@ workflow MAG {
 
     if (params.ancient_dna) {
         ANCIENT_DNA_ASSEMBLY_VALIDATION(BINNING_PREPARATION.out.grouped_mappings)
-        ch_versions = ch_versions.mix(ANCIENT_DNA_ASSEMBLY_VALIDATION.out.versions.first())
+        ch_versions = ch_versions.mix(ANCIENT_DNA_ASSEMBLY_VALIDATION.out.versions)
     }
 
     /*

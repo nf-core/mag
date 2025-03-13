@@ -219,9 +219,9 @@ Trimmed (short) reads are assembled with both megahit and SPAdes. Hybrid assembl
   - `[sample/group].contigs.fa.gz`: Compressed metagenome assembly in fasta format
   - `[sample/group].log`: Log file
   - `QC/[sample/group]/`: Directory containing QUAST files and Bowtie2 mapping logs
-    - `MEGAHIT-[sample].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the sample that the metagenome was assembled from, only present if `--coassemble_group` is not set.
+    - `MEGAHIT-[sample]-[sampleToMap].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the sample that the metagenome was assembled from, only present if `--coassemble_group` is not set.
     - `MEGAHIT-[sample/group]-[sampleToMap].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the respective sample ("sampleToMap").
-    - `MEGAHIT-[sample].[bam/bai]`: Optionally saved BAM file of the Bowtie2 mapping of reads against the assembly.
+    - `MEGAHIT-[sample]-[sampleToMap].[bam/bai]`: Optionally saved BAM file of the Bowtie2 mapping of reads against the assembly.
 
 </details>
 
@@ -238,9 +238,9 @@ Trimmed (short) reads are assembled with both megahit and SPAdes. Hybrid assembl
   - `[sample/group].contigs.fa.gz`: Compressed assembled contigs in fasta format
   - `[sample/group].spades.log`: Log file
   - `QC/[sample/group]/`: Directory containing QUAST files and Bowtie2 mapping logs
-    - `SPAdes-[sample].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the sample that the metagenome was assembled from, only present if `--coassemble_group` is not set.
+    - `SPAdes-[sample]-[sampleToMap].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the sample that the metagenome was assembled from, only present if `--coassemble_group` is not set.
     - `SPAdes-[sample/group]-[sampleToMap].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the respective sample ("sampleToMap").
-    - `SPAdes-[sample].[bam/bai]`: Optionally saved BAM file of the Bowtie2 mapping of reads against the assembly.
+    - `SPAdes-[sample]-[sampleToMap].[bam/bai]`: Optionally saved BAM file of the Bowtie2 mapping of reads against the assembly.
 
 </details>
 
