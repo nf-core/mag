@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Added`
 
 ### `Changed`
+
 - [#774](https://github.com/nf-core/mag/pull/774) - Update CheckM2 to v1.1.0 and default database (by @dialvarezs).
 
 ### `Fixed`
