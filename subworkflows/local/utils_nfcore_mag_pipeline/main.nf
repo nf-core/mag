@@ -101,7 +101,7 @@ workflow PIPELINE_INITIALISATION {
             .collect()
             .map {
                 if (it.size() > 1) {
-                    exit(1,"Multiple short read sequencing platforms found in samplesheet. Use same platform for all samples.")
+                    exit(1,"Multiple short read sequencing platforms found in samplesheet. Use same platform for all samples when running with binning_map_mode 'all'.")
                 }
             }
         ch_samplesheet
@@ -110,7 +110,7 @@ workflow PIPELINE_INITIALISATION {
             .collect()
             .map {
                 if (it.size() > 1) {
-                    exit(1,"Multiple short read sequencing platforms found in samplesheet. Use same platform for all samples.")
+                    exit(1,"Multiple long read sequencing platforms found in samplesheet. Use same platform for all samples when running with binning_map_mode 'all'.")
                 }
             }
     }
