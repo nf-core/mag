@@ -50,6 +50,7 @@
                     "GENEMIND",
                     "TAPESTRI"
                 ],
+                "default": "ILLUMINA",
                 "meta": ["sr_platform"]
             },
             "long_reads": {
@@ -61,6 +62,7 @@
             "long_reads_platform": {
                 "type": "string",
                 "enum": ["OXFORD_NANOPORE", "PACBIO_SMRT"],
+                "default": "OXFORD_NANOPORE",
                 "meta": ["lr_platform"]
             }
         },
