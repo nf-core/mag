@@ -80,7 +80,7 @@ workflow PIPELINE_INITIALISATION {
     ch_raw_short_reads = ch_samplesheet.map { meta, sr1, sr2, _lr ->
         meta.run = meta.run == [] ? "0" : meta.run
         meta.single_end = params.single_end
-
+        meta.sr_platform = meta.sr_platform == [] ? "ILLUMINA" : meta.sr_platform
         if (params.single_end && sr1) {
             return [meta, [sr1]]
         }
@@ -89,12 +89,35 @@ workflow PIPELINE_INITIALISATION {
         }
     }
 
+    // Check that all short read sequencing platforms are the same within a group
+    ch_raw_short_reads
+        .map { meta, sr -> [ meta.group, meta.sr_platform ] }
+        .groupTuple(by: 0)
+        .map { group, platform ->
+            def platforms = platform.unique()
+            if (platforms.size() > 1 && params.binning_map_mode != 'own') {
+                exit(1, "Multiple short read sequencing platforms found for group ${group}: ${platforms.join(', ')}. Run with '--binning_map_mode own' or use same platform for all samples in a group.")
+            }
+        }
+
     ch_raw_long_reads = ch_samplesheet.map { meta, _sr1, _sr2, lr ->
         if (lr) {
             meta.run = meta.run == [] ? "0" : meta.run
+            meta.lr_platform = meta.lr_platform == [] ? "OXFORD_NANOPORE" : meta.lr_platform
             return [meta, lr]
         }
     }
+
+    // Check that all long read sequencing platforms are the same within a group
+    ch_raw_long_reads
+        .map { meta, lr -> [ meta.group, meta.lr_platform ] }
+        .groupTuple(by: 0)
+        .map { group, platform ->
+            def platforms = platform.unique()
+            if (platforms.size() > 1 && params.binning_map_mode != 'own') {
+                exit(1, "Multiple long read sequencing platforms found for group ${group}: ${platforms.join(', ')}. Run with '--binning_map_mode own' or use same platform for all samples in a group.")
+            }
+        }
 
     // Check already if long reads are provided, for later parameter validation
     def hybrid = false

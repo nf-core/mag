@@ -35,11 +35,33 @@
                 "exists": true,
                 "pattern": "^\\S+\\.f(ast)?q\\.gz$"
             },
+            "short_reads_platform": {
+                "type": "string",
+                "enum": [
+                    "ILLUMINA",
+                    "BGISEQ",
+                    "LS454",
+                    "ION_TORRENT",
+                    "DNBSEQ",
+                    "ELEMENT",
+                    "ULTIMA",
+                    "VELA_DIAGNOSTICS",
+                    "GENAPSYS",
+                    "GENEMIND",
+                    "TAPESTRI"
+                ],
+                "meta": ["sr_platform"]
+            },
             "long_reads": {
                 "type": "string",
                 "format": "file-path",
                 "exists": true,
                 "pattern": "^\\S+\\.f(ast)?q\\.gz$"
+            },
+            "long_reads_platform": {
+                "type": "string",
+                "enum": ["OXFORD_NANOPORE", "PACBIO_SMRT"],
+                "meta": ["lr_platform"]
             }
         },
         "required": ["sample", "group"],
