@@ -78,7 +78,7 @@ workflow PIPELINE_INITIALISATION {
 
     // if coassemble_group or binning_map_mode is set to not 'own', check if all samples in a group have the same platform
     ch_samplesheet
-        .map { meta, _sr1, _sr2, lr -> [ meta.group, meta.sr_platform, meta.lr_platform ] }
+        .map { meta, _sr1, _sr2, _lr -> [ meta.group, meta.sr_platform, meta.lr_platform ] }
         .groupTuple(by: 0)
         .map { group, sr_platform, lr_platform ->
             def sr_platforms = sr_platform.unique()
@@ -96,7 +96,7 @@ workflow PIPELINE_INITIALISATION {
     // if binning_map_mode is set to 'all', check if all samples have the same platform
     if (params.binning_map_mode == "all") {
         ch_samplesheet
-            .map { meta, _sr1, _sr2, lr -> meta.sr_platform }
+            .map { meta, _sr1, _sr2, _lr -> meta.sr_platform }
             .unique()
             .collect()
             .map {
@@ -105,7 +105,7 @@ workflow PIPELINE_INITIALISATION {
                 }
             }
         ch_samplesheet
-            .map { meta, _sr1, _sr2, lr -> meta.lr_platform }
+            .map { meta, _sr1, _sr2, _lr -> meta.lr_platform }
             .unique()
             .collect()
             .map {
