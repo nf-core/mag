@@ -14,7 +14,7 @@ workflow ANCIENT_DNA_ASSEMBLY_VALIDATION {
 
         PYDAMAGE_ANALYZE(
             input.map {
-                meta, contigs, bam, bai -> [
+                meta, _contigs, bam, bai -> [
                     meta, bam[0], bai[0]
                 ]
             }

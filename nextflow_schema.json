@@ -15,7 +15,7 @@
                 "input": {
                     "type": "string",
                     "mimetype": "text/csv",
-                    "format": "file-path-pattern",
+                    "format": "file-path",
                     "exists": true,
                     "schema": "assets/schema_input.json",
                     "pattern": "^\\S+\\.csv$",
@@ -32,7 +32,7 @@
                 "assembly_input": {
                     "type": "string",
                     "mimetype": "text/csv",
-                    "format": "file-path-pattern",
+                    "format": "file-path",
                     "exists": true,
                     "schema": "assets/schema_assembly_input.json",
                     "pattern": "^\\S+\\.csv$",
@@ -324,12 +324,16 @@
                 "host_fasta": {
                     "type": "string",
                     "description": "Fasta reference file for host contamination removal.",
-                    "help_text": "This parameter is mutually exclusive with `--host_genome`. The reference can be masked. Host read removal is done with Bowtie2."
+                    "help_text": "This parameter is mutually exclusive with `--host_genome`. The reference can be masked. Host read removal is done with Bowtie2.",
+                    "format": "file-path",
+                    "exists": true
                 },
                 "host_fasta_bowtie2index": {
                     "type": "string",
                     "description": "Bowtie2 index directory corresponding to `--host_fasta` reference file for host contamination removal.",
-                    "help_text": "This parameter must be used in combination with `--host_fasta`, and should be a directory containing files from the output of `bowtie2-build`, i.e. files ending in `.bt2`"
+                    "help_text": "This parameter must be used in combination with `--host_fasta`, and should be a directory containing files from the output of `bowtie2-build`, i.e. files ending in `.bt2`",
+                    "format": "directory-path",
+                    "exists": true
                 },
                 "host_removal_verysensitive": {
                     "type": "boolean",
@@ -351,7 +355,9 @@
                     "type": "string",
                     "default": "${baseDir}/assets/data/GCA_002596845.1_ASM259684v1_genomic.fna.gz",
                     "description": "Genome reference used to remove Illumina PhiX contaminant reads.",
-                    "hidden": true
+                    "hidden": true,
+                    "format": "file-path",
+                    "exists": true
                 },
                 "skip_clipping": {
                     "type": "boolean",
@@ -419,7 +425,9 @@
                     "type": "string",
                     "default": "${baseDir}/assets/data/GCA_000840245.1_ViralProj14204_genomic.fna.gz",
                     "hidden": true,
-                    "description": "Genome reference used to remove ONT Lambda contaminant reads."
+                    "description": "Genome reference used to remove ONT Lambda contaminant reads.",
+                    "format": "file-path",
+                    "exists": true
                 },
                 "save_lambdaremoved_reads": {
                     "type": "boolean",
@@ -461,21 +469,24 @@
             "properties": {
                 "centrifuge_db": {
                     "type": "string",
-                    "format": "file-path",
+                    "format": "path",
                     "exists": true,
                     "description": "Database for taxonomic binning with centrifuge.",
                     "help_text": "Local directory containing `*.cf` files, or a URL or local path to a downloaded compressed tar archive of a Centrifuge database. E.g. ftp://ftp.ccb.jhu.edu/pub/infphilo/centrifuge/data/p_compressed+h+v.tar.gz."
                 },
                 "kraken2_db": {
                     "type": "string",
-                    "format": "file-path",
+                    "format": "path",
+                    "exists": true,
                     "description": "Database for taxonomic binning with kraken2.",
                     "help_text": "Path to a local directory, archive file, or a URL to compressed tar archive that contains at least the three files `hash.k2d`, `opts.k2d` and `taxo.k2d`. E.g. ftp://ftp.ccb.jhu.edu/pub/data/kraken2_dbs/minikraken_8GB_202003.tgz."
                 },
                 "krona_db": {
                     "type": "string",
                     "description": "Database for taxonomic binning with krona",
-                    "help_text": "Path to `taxonomy.tab` file for Krona, instead of downloading the default file. Point at the `.tab` file."
+                    "help_text": "Path to `taxonomy.tab` file for Krona, instead of downloading the default file. Point at the `.tab` file.",
+                    "format": "file-path",
+                    "exists": true
                 },
                 "skip_krona": {
                     "type": "boolean",
@@ -484,7 +495,9 @@
                 "cat_db": {
                     "type": "string",
                     "description": "Database for taxonomic classification of metagenome assembled genomes. Can be either a zipped file or a directory containing the extracted output of such.",
-                    "help_text": "E.g. https://tbb.bio.uu.nl/bastiaan/CAT_prepare/CAT_prepare_20210107.tar.gz. This parameter is mutually exclusive with `--cat_db_generate`. The file needs to contain a folder named `*taxonomy*` and `*database*` that hold the respective files."
+                    "help_text": "E.g. https://tbb.bio.uu.nl/bastiaan/CAT_prepare/CAT_prepare_20210107.tar.gz. This parameter is mutually exclusive with `--cat_db_generate`. The file needs to contain a folder named `*taxonomy*` and `*database*` that hold the respective files.",
+                    "format": "path",
+                    "exists": true
                 },
                 "cat_db_generate": {
                     "type": "boolean",
@@ -507,15 +520,19 @@
                 "gtdb_db": {
                     "type": "string",
                     "description": "Specify the location of a GTDBTK database. Can be either an uncompressed directory or a `.tar.gz` archive. If not specified will be downloaded for you when GTDBTK or binning QC is not skipped.",
-                    "default": "https://data.gtdb.ecogenomic.org/releases/release220/220.0/auxillary_files/gtdbtk_package/full_package/gtdbtk_r220_data.tar.gz"
+                    "default": "https://data.gtdb.ecogenomic.org/releases/release220/220.0/auxillary_files/gtdbtk_package/full_package/gtdbtk_r220_data.tar.gz",
+                    "format": "path",
+                    "exists": true
                 },
                 "gtdb_mash": {
                     "type": "string",
-                    "description": "Specify the location of a GTDBTK mash database. If missing, GTDB-Tk will skip the ani_screening step"
+                    "description": "Specify the location of a GTDBTK mash database. If missing, GTDB-Tk will skip the ani_screening step",
+                    "format": "path",
+                    "exists": true
                 },
                 "gtdbtk_min_completeness": {
                     "type": "number",
-                    "default": 50.0,
+                    "default": 50,
                     "description": "Min. bin completeness (in %) required to apply GTDB-tk classification.",
                     "help_text": "Completeness assessed with BUSCO analysis (100% - %Missing). Must be greater than 0 (min. 0.01) to avoid GTDB-tk errors. If too low, GTDB-tk classification results can be impaired due to not enough marker genes!",
                     "minimum": 0.01,
@@ -523,7 +540,7 @@
                 },
                 "gtdbtk_max_contamination": {
                     "type": "number",
-                    "default": 10.0,
+                    "default": 10,
                     "description": "Max. bin contamination (in %) allowed to apply GTDB-tk classification.",
                     "help_text": "Contamination approximated based on BUSCO analysis (%Complete and duplicated). If too high, GTDB-tk classification results can be impaired due to contamination!",
                     "minimum": 0,
@@ -531,7 +548,7 @@
                 },
                 "gtdbtk_min_perc_aa": {
                     "type": "number",
-                    "default": 10.0,
+                    "default": 10,
                     "description": "Min. fraction of AA (in %) in the MSA for bins to be kept.",
                     "minimum": 0,
                     "maximum": 100
@@ -553,11 +570,6 @@
                     "type": "boolean",
                     "description": "Speed up pplacer step of GTDB-Tk by loading to memory.",
                     "help_text": "Will be faster than writing to disk (default setting), however at the expense of much larger memory (RAM) requirements for GDTBTK/CLASSIFY."
-                },
-                "genomad_db": {
-                    "type": "string",
-                    "description": "Database for virus classification with geNomad",
-                    "help_text": "Must be a directory containing the uncompressed contents from https://zenodo.org/doi/10.5281/zenodo.6994741 (nf-core/mag tested with v1.1)"
                 }
             }
         },
@@ -657,7 +669,9 @@
                 "metaeuk_db": {
                     "type": "string",
                     "description": "Path to either a local fasta file of protein sequences, or to a directory containing an mmseqs2-formatted database, for annotation of eukaryotic genomes.",
-                    "help_text": "One option would be the databases from the MetaEuk publication (https://wwwuser.gwdg.de/~compbiol/metaeuk/), however it should be noted that these are focused on marine eukaryotes."
+                    "help_text": "One option would be the databases from the MetaEuk publication (https://wwwuser.gwdg.de/~compbiol/metaeuk/), however it should be noted that these are focused on marine eukaryotes.",
+                    "format": "file-path",
+                    "exists": true
                 },
                 "save_mmseqs_db": {
                     "type": "boolean",
@@ -673,6 +687,13 @@
                 "run_virus_identification": {
                     "type": "boolean",
                     "description": "Run virus identification."
+                },
+                "genomad_db": {
+                    "type": "string",
+                    "description": "Database for virus classification with geNomad",
+                    "help_text": "Must be a directory containing the uncompressed contents from https://zenodo.org/doi/10.5281/zenodo.6994741 (nf-core/mag tested with v1.1)",
+                    "format": "path",
+                    "exists": true
                 },
                 "genomad_min_score": {
                     "type": "number",
@@ -793,7 +814,9 @@
                 "busco_db": {
                     "type": "string",
                     "description": "Download URL for BUSCO lineage dataset, or path to a tar.gz archive, or local directory containing already downloaded and unpacked lineage datasets.",
-                    "help_text": "E.g. https://busco-data.ezlab.org/v5/data/lineages/bacteria_odb10.2024-01-08.tar.gz or '/path/to/buscodb' (files still need to be unpacked manually). Available databases are listed here: https://busco-data.ezlab.org/v5/data/lineages/."
+                    "help_text": "E.g. https://busco-data.ezlab.org/v5/data/lineages/bacteria_odb10.2024-01-08.tar.gz or '/path/to/buscodb' (files still need to be unpacked manually). Available databases are listed here: https://busco-data.ezlab.org/v5/data/lineages/.",
+                    "format": "path",
+                    "exists": true
                 },
                 "busco_auto_lineage_prok": {
                     "type": "boolean",
@@ -819,7 +842,9 @@
                 "checkm_db": {
                     "type": "string",
                     "description": "Path to local folder containing already downloaded and uncompressed CheckM database.",
-                    "help_text": "The pipeline can also download this for you if not specified, and you can save the resulting directory into your output directory by specifying `--save_checkm_data`. You should move this directory to somewhere else on your machine (and supply back to the pipeline in future runs again with `--checkm_db`."
+                    "help_text": "The pipeline can also download this for you if not specified, and you can save the resulting directory into your output directory by specifying `--save_checkm_data`. You should move this directory to somewhere else on your machine (and supply back to the pipeline in future runs again with `--checkm_db`.",
+                    "format": "directory-path",
+                    "exists": true
                 },
                 "save_checkm_data": {
                     "type": "boolean",
@@ -828,8 +853,10 @@
                 },
                 "checkm2_db": {
                     "type": "string",
-                    "description": "Path to local folder containing already downloaded and uncompressed CheckM2 database (.dmnd file).",
-                    "help_text": "The pipeline can also download this for you if not specified, and you can save the resulting directory into your output directory by specifying `--save_checkm2_data`. You should move this directory to somewhere else on your machine (and supply back to the pipeline in future runs again with `--checkm2_db`)."
+                    "description": "Path to local file of an already downloaded and uncompressed CheckM2 database (.dmnd file).",
+                    "help_text": "The pipeline can also download this for you if not specified, and you can save the resulting directory into your output directory by specifying `--save_checkm2_data`. You should move this file to somewhere else on your machine (and supply back to the pipeline in future runs again with `--checkm2_db`).",
+                    "format": "file-path",
+                    "exists": true
                 },
                 "checkm2_db_version": {
                     "type": "integer",
@@ -864,7 +891,9 @@
                 },
                 "gunc_db": {
                     "type": "string",
-                    "description": "Specify a path to a pre-downloaded GUNC dmnd database file"
+                    "description": "Specify a path to a pre-downloaded GUNC dmnd database file",
+                    "format": "file-path",
+                    "exists": true
                 },
                 "gunc_database_type": {
                     "type": "string",

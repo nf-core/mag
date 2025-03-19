@@ -169,7 +169,6 @@ workflow MAG {
             ch_host_fasta,
             ch_host_bowtie2index,
             ch_phix_db_file,
-            ch_metaeuk_db,
         )
 
         ch_versions = ch_versions.mix(SHORTREAD_PREPROCESSING.out.versions)
@@ -321,7 +320,7 @@ workflow MAG {
 
     }
     else {
-        ch_assemblies_split = ch_input_assemblies.branch { meta, assembly ->
+        ch_assemblies_split = ch_input_assemblies.branch { _meta, assembly ->
             gzipped: assembly.getExtension() == "gz"
             ungzip: true
         }
@@ -337,7 +336,6 @@ workflow MAG {
             .filter { it[0].assembler.toUpperCase() in ['FLYE', 'METAMDBG']}
     }
 
-    ch_quast_multiqc = Channel.empty()
     if (!params.skip_quast) {
         QUAST(ch_assemblies)
         ch_versions = ch_versions.mix(QUAST.out.versions.first())
@@ -410,14 +408,12 @@ workflow MAG {
         // Make sure if running aDNA subworkflow to use the damage-corrected contigs for higher accuracy
         if (params.ancient_dna && !params.skip_ancient_damagecorrection) {
             BINNING(
-                BINNING_PREPARATION.out.grouped_mappings.join(ANCIENT_DNA_ASSEMBLY_VALIDATION.out.contigs_recalled).map { it -> [it[0], it[4], it[2], it[3]] },
-                ch_short_reads,
+                BINNING_PREPARATION.out.grouped_mappings.join(ANCIENT_DNA_ASSEMBLY_VALIDATION.out.contigs_recalled).map { it -> [it[0], it[4], it[2], it[3]] }
             )
         }
         else {
             BINNING(
-                BINNING_PREPARATION.out.grouped_mappings,
-                ch_short_reads,
+                BINNING_PREPARATION.out.grouped_mappings
             )
         }
         ch_versions = ch_versions.mix(BINNING.out.versions)
@@ -464,27 +460,18 @@ workflow MAG {
 
         // If any two of the binners are both skipped at once, do not run because DAS_Tool needs at least one
         if (params.refine_bins_dastool) {
-            ch_prokarya_bins_dastool = ch_binning_results_bins.filter { meta, bins ->
+            ch_prokarya_bins_dastool = ch_binning_results_bins.filter { meta, _bins ->
                 meta.domain != "eukarya"
-            }
-
-            ch_eukarya_bins_dastool = ch_binning_results_bins.filter { meta, bins ->
-                meta.domain == "eukarya"
             }
 
             if (params.ancient_dna) {
                 ch_contigs_for_binrefinement = ANCIENT_DNA_ASSEMBLY_VALIDATION.out.contigs_recalled
             }
             else {
-                ch_contigs_for_binrefinement = BINNING_PREPARATION.out.grouped_mappings.map { meta, contigs, bam, bai -> [meta, contigs] }
+                ch_contigs_for_binrefinement = BINNING_PREPARATION.out.grouped_mappings.map { meta, contigs, _bam, _bai -> [meta, contigs] }
             }
 
             BINNING_REFINEMENT(ch_contigs_for_binrefinement, ch_prokarya_bins_dastool)
-            // ch_refined_bins = ch_eukarya_bins_dastool
-            //     .map{ meta, bins ->
-            //             def meta_new = meta + [refinement: 'eukaryote_unrefined']
-            //             [meta_new, bins]
-            //         }.mix( BINNING_REFINEMENT.out.refined_bins)
 
             ch_refined_bins = BINNING_REFINEMENT.out.refined_bins
             ch_refined_unbins = BINNING_REFINEMENT.out.refined_unbins
@@ -590,7 +577,7 @@ workflow MAG {
             ch_gtdbtk_summary = Channel.empty()
             if (gtdb) {
 
-                ch_gtdb_bins = ch_input_for_postbinning.filter { meta, bins ->
+                ch_gtdb_bins = ch_input_for_postbinning.filter { meta, _bins ->
                     meta.domain != "eukarya"
                 }
 
@@ -630,7 +617,7 @@ workflow MAG {
                     def meta_new = meta + [id: bin.getBaseName()]
                     [meta_new, bin]
                 }
-                .filter { meta, bin ->
+                .filter { meta, _bin ->
                     meta.domain != "eukarya"
                 }
 
@@ -645,7 +632,7 @@ workflow MAG {
         if (!params.skip_metaeuk && (params.metaeuk_db || params.metaeuk_mmseqs_db)) {
             ch_bins_for_metaeuk = ch_input_for_postbinning
                 .transpose()
-                .filter { meta, bin ->
+                .filter { meta, _bin ->
                     meta.domain in ["eukarya", "unclassified"]
                 }
                 .map { meta, bin ->

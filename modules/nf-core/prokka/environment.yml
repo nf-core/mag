@@ -4,5 +4,5 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - bioconda::megahit=1.2.9
-  - conda-forge::pigz=2.8
+  - bioconda::prokka=1.14.6
+  - conda-forge::openjdk=8.0.412
