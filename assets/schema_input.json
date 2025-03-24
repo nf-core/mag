@@ -31,21 +31,21 @@
                 "format": "file-path",
                 "exists": true,
                 "pattern": "^\\S+\\.f(ast)?q\\.gz$",
-                "errorMessage": "short_reads_1 needs to be a file path with no spaces!"
+                "errorMessage": "short_reads_1 needs to be a file path with no spaces.\n\nFile needs to exist!"
             },
             "short_reads_2": {
                 "type": "string",
                 "format": "file-path",
                 "exists": true,
                 "pattern": "^\\S+\\.f(ast)?q\\.gz$",
-                "errorMessage": "short_reads_2 needs to be a file path with no spaces!"
+                "errorMessage": "short_reads_2 needs to be a file path with no spaces.\n\nFile needs to exist!"
             },
             "long_reads": {
                 "type": "string",
                 "format": "file-path",
                 "exists": true,
                 "pattern": "^\\S+\\.f(ast)?q\\.gz$",
-                "errorMessage": "long_reads needs to be a file path with no spaces!"
+                "errorMessage": "long_reads needs to be a file path with no spaces.\n\nFile needs to exist!"
             }
         },
         "required": ["sample", "group", "short_reads_1"]
