@@ -27,6 +27,7 @@
                     "type": "boolean",
                     "description": "Specifies that the input is single-end reads.",
                     "fa_icon": "fas fa-align-center",
+                    "default": false,
                     "help_text": "By default, the pipeline expects paired-end data. If you have single-end data, you need to specify `--single_end` on the command line when you launch the pipeline. A normal glob pattern, enclosed in quotation marks, can then be used for `--input`. For example:\n\n```bash\n--single_end --input '*.fastq'\n```\n\nIt is not possible to run a mixture of single-end and paired-end files in one run."
                 },
                 "assembly_input": {
@@ -44,7 +45,8 @@
                     "type": "string",
                     "format": "directory-path",
                     "description": "The output directory where the results will be saved. You have to use absolute paths to storage on Cloud infrastructure.",
-                    "fa_icon": "fas fa-folder-open"
+                    "fa_icon": "fas fa-folder-open",
+                    "help_text": "Specify the path to the output directory where the results will be saved."
                 },
                 "email": {
                     "type": "string",
@@ -71,6 +73,7 @@
                     "description": "Do not load the iGenomes reference config.",
                     "fa_icon": "fas fa-ban",
                     "hidden": true,
+                    "default": false,
                     "help_text": "Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`."
                 },
                 "igenomes_base": {
@@ -79,6 +82,7 @@
                     "description": "The base path to the igenomes reference files",
                     "fa_icon": "fas fa-ban",
                     "hidden": true,
+                    "exists": true,
                     "default": "s3://ngi-igenomes/igenomes/"
                 }
             }
@@ -99,6 +103,7 @@
                 },
                 "custom_config_base": {
                     "type": "string",
+                    "format": "directory-path",
                     "description": "Base directory for Institutional configs.",
                     "default": "https://raw.githubusercontent.com/nf-core/configs/master",
                     "hidden": true,
@@ -142,7 +147,8 @@
                     "type": "boolean",
                     "description": "Display version and exit.",
                     "fa_icon": "fas fa-question-circle",
-                    "hidden": true
+                    "hidden": true,
+                    "default": false
                 },
                 "publish_dir_mode": {
                     "type": "string",
@@ -155,6 +161,7 @@
                 },
                 "monochrome_logs": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Use monochrome_logs",
                     "hidden": true
                 },
@@ -168,6 +175,7 @@
                 },
                 "plaintext_email": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Send plain-text email instead of HTML.",
                     "fa_icon": "fas fa-remove-format",
                     "hidden": true
@@ -196,12 +204,14 @@
                 },
                 "multiqc_logo": {
                     "type": "string",
+                    "format": "file-path",
                     "description": "Custom logo file to supply to MultiQC. File name must also be set in the MultiQC config file",
                     "fa_icon": "fas fa-image",
                     "hidden": true
                 },
                 "multiqc_methods_description": {
                     "type": "string",
+                    "format": "file-path",
                     "description": "Custom MultiQC yaml file containing HTML including a methods description.",
                     "fa_icon": "fas fa-cog"
                 },
@@ -214,16 +224,19 @@
                 },
                 "pipelines_testdata_base_path": {
                     "type": "string",
+                    "format": "directory-path",
                     "fa_icon": "far fa-check-circle",
                     "description": "Base URL or local path to location of pipeline test dataset files",
                     "default": "https://raw.githubusercontent.com/nf-core/test-datasets/",
-                    "hidden": true
+                    "hidden": true,
+                    "help_text": "Location of pipeline test dataset files"
                 },
                 "trace_report_suffix": {
                     "type": "string",
                     "fa_icon": "far calendar",
                     "description": "Suffix to add to the trace report filename. Default is the date and time in the format yyyy-MM-dd_HH-mm-ss.",
-                    "hidden": true
+                    "hidden": true,
+                    "pattern": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])_(0\\d|1\\d|2[0-3])-[0-5]\\d-[0-5]\\d$"
                 }
             }
         },
@@ -235,6 +248,7 @@
             "properties": {
                 "megahit_fix_cpu_1": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Fix number of CPUs for MEGAHIT to 1. Not increased with retries.",
                     "help_text": "MEGAHIT only generates reproducible results when run single-threaded. \n\nWhen using this parameter do not change the number of CPUs for the `megahit` process with a custom config file. This would result in an error.\n\nDefault: The number of CPUs is specified in the `base.config` file, and increased with each retry."
                 },
@@ -273,6 +287,7 @@
                 },
                 "save_clipped_reads": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Specify to save the resulting clipped FASTQ files to --outdir."
                 },
                 "reads_minlength": {
@@ -294,6 +309,7 @@
                 },
                 "fastp_save_trimmed_fail": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Save reads that fail fastp filtering in a separate file. Not used downstream."
                 },
                 "adapterremoval_minquality": {
@@ -303,17 +319,20 @@
                 },
                 "adapterremoval_trim_quality_stretch": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Turn on quality trimming by consecutive stretch of low quality bases, rather than by window.",
                     "help_text": "Default base-quality trimming is set to trim by 'windows', as in FastP. Specifying this flag will use trim via contiguous stretch of low quality bases (Ns) instead.\n\n> Replaces --trimwindows 4 with --trimqualities in AdapterRemoval"
                 },
                 "adapterremoval_adapter1": {
                     "type": "string",
                     "default": "AGATCGGAAGAGCACACGTCTGAACTCCAGTCACNNNNNNATCTCGTATGCCGTCTTCTGCTTG",
+                    "pattern": "^[ATGCRYKMSWBDHVN]*$",
                     "description": "Forward read adapter to be trimmed by AdapterRemoval."
                 },
                 "adapterremoval_adapter2": {
                     "type": "string",
                     "default": "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT",
+                    "pattern": "^[ATGCRYKMSWBDHVN]*$",
                     "description": "Reverse read adapter to be trimmed by AdapterRemoval for paired end data."
                 },
                 "host_genome": {
@@ -337,18 +356,22 @@
                 },
                 "host_removal_verysensitive": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Use the `--very-sensitive` instead of the`--sensitive`setting for Bowtie 2 to map reads against the host genome."
                 },
                 "host_removal_save_ids": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Save the read IDs of removed host reads."
                 },
                 "save_hostremoved_reads": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Specify to save input FASTQ files with host reads removed to --outdir."
                 },
                 "keep_phix": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Keep reads similar to the Illumina internal standard PhiX genome."
                 },
                 "phix_reference": {
@@ -361,14 +384,17 @@
                 },
                 "skip_clipping": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Skip read preprocessing using fastp or adapterremoval."
                 },
                 "save_phixremoved_reads": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Specify to save input FASTQ files with phiX reads removed to --outdir."
                 },
                 "bbnorm": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Run BBnorm to normalize sequence depth."
                 },
                 "bbnorm_target": {
@@ -383,6 +409,7 @@
                 },
                 "save_bbnorm_reads": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Save normalized read files to output directory."
                 }
             }
@@ -395,6 +422,7 @@
             "properties": {
                 "skip_adapter_trimming": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Skip removing adapter sequences from long reads."
                 },
                 "longreads_min_length": {
@@ -419,6 +447,7 @@
                 },
                 "keep_lambda": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Keep reads similar to the ONT internal standard Escherichia virus Lambda genome."
                 },
                 "lambda_reference": {
@@ -431,14 +460,17 @@
                 },
                 "save_lambdaremoved_reads": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Specify to save input FASTQ files with lamba reads removed  to --outdir."
                 },
                 "save_porechop_reads": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Specify to save the resulting clipped FASTQ files to --outdir."
                 },
                 "save_filtered_longreads": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Specify to save the resulting length filtered long read FASTQ files to --outdir."
                 },
                 "longread_adaptertrimming_tool": {
@@ -484,6 +516,7 @@
                 },
                 "skip_krona": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Skip creating a krona plot for taxonomic binning."
                 },
                 "cat_db": {
@@ -495,20 +528,24 @@
                 },
                 "cat_db_generate": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Generate CAT database.",
                     "help_text": "Download the taxonomy files from NCBI taxonomy, the nr database and generate CAT database. This parameter is mutually exclusive with `--cat_db`. Useful to build a CAT database with the same DIAMOND version as used for running CAT classification, avoiding compatibility problems."
                 },
                 "save_cat_db": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Save the CAT database generated when specified by `--cat_db_generate`.",
                     "help_text": "Useful to allow reproducibility, as old versions of prebuild CAT databases do not always remain accessible and underlying NCBI taxonomy and nr databases change."
                 },
                 "cat_official_taxonomy": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Only return official taxonomic ranks (Kingdom, Phylum, etc.) when running CAT."
                 },
                 "skip_gtdbtk": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Skip the running of GTDB, as well as the automatic download of the database"
                 },
                 "gtdb_db": {
@@ -562,6 +599,7 @@
                 },
                 "gtdbtk_pplacer_useram": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Speed up pplacer step of GTDB-Tk by loading to memory.",
                     "help_text": "Will be faster than writing to disk (default setting), however at the expense of much larger memory (RAM) requirements for GDTBTK/CLASSIFY."
                 }
@@ -575,6 +613,7 @@
             "properties": {
                 "coassemble_group": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Co-assemble samples within one group, instead of assembling each sample separately."
                 },
                 "spades_options": {
@@ -589,18 +628,22 @@
                 },
                 "skip_spades": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Skip Illumina-only SPAdes assembly."
                 },
                 "skip_spadeshybrid": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Skip SPAdes hybrid assembly."
                 },
                 "skip_megahit": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Skip MEGAHIT assembly."
                 },
                 "skip_quast": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Skip metaQUAST."
                 }
             }
@@ -613,10 +656,12 @@
             "properties": {
                 "skip_prodigal": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Skip Prodigal gene prediction"
                 },
                 "prokka_with_compliance": {
                     "type": "boolean",
+                    "default": false,
                     "help_text": "Sometimes Prokka will complain that your contig names are too long and fail.\n\nThis particularly happens with metaSPAdes assemblies.\n\nYou can turn on this flag which will tell Prokka to truncate the contig names for you.\nHowever this also requires you to specify a sequencing centre name (specified with `--prokka_compliance_centre`).\n\n:::warning\nTruncating contig names may make it harder to associated contig annotations with their original contigs!\n:::\n",
                     "description": "Turn on Prokka complicance mode for truncating contig names for NCBI/ENA compatibility."
                 },
@@ -627,14 +672,21 @@
                 },
                 "skip_prokka": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Skip Prokka genome annotation."
                 },
                 "skip_metaeuk": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Skip MetaEuk gene prediction and annotation"
                 },
                 "metaeuk_mmseqs_db": {
                     "type": "string",
+                    "enum": [
+                        "UniRef100", "UniRef90", "UniRef50", "UniProtKB", "UniProtKB/TrEMBL", "UniProtKB/Swiss-Prot",
+                        "NR", "NT", "GTDB", "PDB", "PDB70", "Pfam-A.full", "Pfam-A.seed", "Pfam-B", "CDD", "eggNOG",
+                        "VOGDB", "dbCAN2", "SILVA", "Resfinder", "Kalamari"
+                    ],
                     "description": "A string containing the name of one of the databases listed in the [mmseqs2 documentation](https://github.com/soedinglab/MMseqs2/wiki#downloading-databases). This database will be downloaded and formatted for eukaryotic genome annotation. Incompatible with --metaeuk_db.",
                     "help_text": "mmseqs2 lists a large number of databases, not all of which are appropriate for use with MetaEuk. MetaEuk requires protein inputs, so you should select one of the Aminoacid or Profile options."
                 },
@@ -647,6 +699,7 @@
                 },
                 "save_mmseqs_db": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Save the downloaded mmseqs2 database specified in `--metaeuk_mmseqs_db`."
                 }
             }
@@ -658,6 +711,7 @@
             "properties": {
                 "run_virus_identification": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Run virus identification."
                 },
                 "genomad_db": {
@@ -694,18 +748,22 @@
                 },
                 "skip_binning": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Skip metagenome binning entirely"
                 },
                 "skip_metabat2": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Skip MetaBAT2 Binning"
                 },
                 "skip_maxbin2": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Skip MaxBin2 Binning"
                 },
                 "skip_concoct": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Skip CONCOCT Binning"
                 },
                 "min_contig_size": {
@@ -727,17 +785,20 @@
                     "help_text": "Contigs that do not fulfill the thresholds of `--min_length_unbinned_contigs` and `--max_unbinned_contigs` are pooled for downstream analysis and reporting, except contigs that also do not fullfill `--min_contig_size` are not considered further."
                 },
                 "bowtie2_mode": {
-                    "type": "string",
+                    "type": ["string", "boolean"],
                     "description": "Bowtie2 alignment mode",
-                    "help_text": "Bowtie2 alignment mode options, for example: `--very-fast` , `--very-sensitive-local -N 1` , ... Must be used like this: --bowtie2_mode \"--very-sensitive\""
+                    "help_text": "Bowtie2 alignment mode options, for example: `--very-fast` , `--very-sensitive-local -N 1` , ... Must be used like this: --bowtie2_mode \"--very-sensitive\"",
+                    "pattern": "^\\\".*\\\"$"
                 },
                 "save_assembly_mapped_reads": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Save the output of mapping raw reads back to assembled contigs",
                     "help_text": "Specify to save the BAM and BAI files generated when mapping input reads back to the assembled contigs (performed in preparation for binning and contig depth estimations)."
                 },
                 "bin_domain_classification": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Enable domain-level (prokaryote or eukaryote) classification of bins using Tiara. Processes which are domain-specific will then only receive bins matching the domain requirement.",
                     "help_text": "Enable this if it is likely that your metagenome samples contain a mixture of eukaryotic and prokaryotic genomes. This will ensure that prokaryote-only steps only receive putatively prokaryotic genomes, and vice-versa. Additionally, may improve the performance of DAS Tool by ensuring it only receives prokaryotic genomes."
                 },
@@ -754,6 +815,7 @@
                 },
                 "exclude_unbins_from_postbinning": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Exclude unbinned contigs in the post-binning steps (bin QC, taxonomic classification, and annotation steps).",
                     "help": "If you're not interested in assemby results that are not considered 'genome level', excluding unbinned contigs can greatly speed up downstream steps such as Prokka, that can be quite slow and spin up many tasks."
                 }
@@ -767,6 +829,7 @@
             "properties": {
                 "skip_binqc": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Disable bin QC with BUSCO, CheckM or CheckM2."
                 },
                 "binqc_tool": {
@@ -784,20 +847,25 @@
                 },
                 "busco_auto_lineage_prok": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Run BUSCO with automated lineage selection, but ignoring eukaryotes (saves runtime)."
                 },
                 "save_busco_db": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Save the used BUSCO lineage datasets provided via `--busco_db`.",
                     "help_text": "Useful to allow reproducibility, as BUSCO datasets are frequently updated and old versions do not always remain accessible."
                 },
                 "busco_clean": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Enable clean-up of temporary files created during BUSCO runs.",
                     "help_text": "By default, BUSCO creates a large number of intermediate files every run. This may cause problems on some clusters which have file number limits in plate, particularly with large numbers of bins. Enabling this option cleans these files, reducing the total file count of the work directory."
                 },
                 "checkm_download_url": {
                     "type": "string",
+                    "format": "file-path",
+                    "exists": true,
                     "default": "https://zenodo.org/records/7401545/files/checkm_data_2015_01_16.tar.gz",
                     "hidden": true,
                     "description": "URL pointing to checkM database for auto download, if local path not supplied.",
@@ -812,6 +880,7 @@
                 },
                 "save_checkm_data": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Save the used CheckM reference files downloaded when not using --checkm_db parameter.",
                     "help_text": "If specified, the directories and files decompressed from the `tar.gz` file downloaded from the [CheckM FTP server](https://data.ace.uq.edu.au/public/CheckM_databases/) will be stored in your output directory alongside your CheckM results."
                 },
@@ -829,11 +898,13 @@
                 },
                 "save_checkm2_data": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Save the used CheckM2 reference files downloaded when not using --checkm2_db parameter.",
                     "help_text": "If specified, the directories and files decompressed from the `tar.gz` file downloaded from the [Zenodo repository](https://zenodo.org/records/5571251) will be stored in your output directory alongside your CheckM2 results."
                 },
                 "refine_bins_dastool": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Turn on bin refinement using DAS Tool."
                 },
                 "refine_bins_dastool_threshold": {
@@ -851,6 +922,7 @@
                 },
                 "run_gunc": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Turn on GUNC genome chimerism checks"
                 },
                 "gunc_db": {
@@ -867,6 +939,7 @@
                 },
                 "gunc_save_db": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Save the used GUNC reference files downloaded when not using --gunc_db parameter.",
                     "help_text": "If specified, the corresponding DIAMOND file downloaded from the GUNC server will be stored in your output directory alongside your GUNC results."
                 }
@@ -880,6 +953,7 @@
             "properties": {
                 "ancient_dna": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Turn on/off the ancient DNA subworfklow"
                 },
                 "pydamage_accuracy": {
@@ -889,6 +963,7 @@
                 },
                 "skip_ancient_damagecorrection": {
                     "type": "boolean",
+                    "default": false,
                     "description": "deactivate damage correction of ancient contigs using variant and consensus calling"
                 },
                 "freebayes_ploidy": {
