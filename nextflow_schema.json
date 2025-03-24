@@ -235,7 +235,6 @@
                     "fa_icon": "far calendar",
                     "description": "Suffix to add to the trace report filename. Default is the date and time in the format yyyy-MM-dd_HH-mm-ss.",
                     "hidden": true,
-                    "pattern": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])_(0\\d|1\\d|2[0-3])-[0-5]\\d-[0-5]\\d$"
                 }
             }
         },
