@@ -759,10 +759,10 @@
                     "help_text": "Contigs that do not fulfill the thresholds of `--min_length_unbinned_contigs` and `--max_unbinned_contigs` are pooled for downstream analysis and reporting, except contigs that also do not fullfill `--min_contig_size` are not considered further."
                 },
                 "bowtie2_mode": {
-                    "type": ["string", "boolean"],
+                    "type": "string",
                     "description": "Bowtie2 alignment mode",
-                    "help_text": "Bowtie2 alignment mode options, for example: `--very-fast` , `--very-sensitive-local -N 1` , ... Must be used like this: --bowtie2_mode \"--very-sensitive\"",
-                    "pattern": "^\\'.*\\'$"
+                    "help_text": "Bowtie2 alignment mode options, for example: `--very-fast` , `--very-sensitive-local -N 1` , ... Must be used like this: --bowtie2_mode=\"--very-sensitive\"",
+                    "pattern": "^[-\\w]*$"
                 },
                 "save_assembly_mapped_reads": {
                     "type": "boolean",
