@@ -44,7 +44,8 @@
                     "type": "string",
                     "format": "directory-path",
                     "description": "The output directory where the results will be saved. You have to use absolute paths to storage on Cloud infrastructure.",
-                    "fa_icon": "fas fa-folder-open"
+                    "fa_icon": "fas fa-folder-open",
+                    "help_text": "Specify the path to the output directory where the results will be saved."
                 },
                 "email": {
                     "type": "string",
@@ -71,6 +72,7 @@
                     "description": "Do not load the iGenomes reference config.",
                     "fa_icon": "fas fa-ban",
                     "hidden": true,
+                    "default": false,
                     "help_text": "Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`."
                 },
                 "igenomes_base": {
@@ -99,6 +101,7 @@
                 },
                 "custom_config_base": {
                     "type": "string",
+                    "format": "directory-path",
                     "description": "Base directory for Institutional configs.",
                     "default": "https://raw.githubusercontent.com/nf-core/configs/master",
                     "hidden": true,
@@ -142,7 +145,8 @@
                     "type": "boolean",
                     "description": "Display version and exit.",
                     "fa_icon": "fas fa-question-circle",
-                    "hidden": true
+                    "hidden": true,
+                    "default": false
                 },
                 "publish_dir_mode": {
                     "type": "string",
@@ -196,28 +200,31 @@
                 },
                 "multiqc_logo": {
                     "type": "string",
+                    "format": "file-path",
                     "description": "Custom logo file to supply to MultiQC. File name must also be set in the MultiQC config file",
                     "fa_icon": "fas fa-image",
                     "hidden": true
                 },
                 "multiqc_methods_description": {
                     "type": "string",
+                    "format": "file-path",
                     "description": "Custom MultiQC yaml file containing HTML including a methods description.",
                     "fa_icon": "fas fa-cog"
                 },
                 "validate_params": {
                     "type": "boolean",
                     "description": "Boolean whether to validate parameters against the schema at runtime",
-                    "default": true,
                     "fa_icon": "fas fa-check-square",
                     "hidden": true
                 },
                 "pipelines_testdata_base_path": {
                     "type": "string",
+                    "format": "directory-path",
                     "fa_icon": "far fa-check-circle",
                     "description": "Base URL or local path to location of pipeline test dataset files",
                     "default": "https://raw.githubusercontent.com/nf-core/test-datasets/",
-                    "hidden": true
+                    "hidden": true,
+                    "help_text": "Location of pipeline test dataset files"
                 },
                 "trace_report_suffix": {
                     "type": "string",
@@ -309,11 +316,13 @@
                 "adapterremoval_adapter1": {
                     "type": "string",
                     "default": "AGATCGGAAGAGCACACGTCTGAACTCCAGTCACNNNNNNATCTCGTATGCCGTCTTCTGCTTG",
+                    "pattern": "^[ATGCRYKMSWBDHVN]*$",
                     "description": "Forward read adapter to be trimmed by AdapterRemoval."
                 },
                 "adapterremoval_adapter2": {
                     "type": "string",
                     "default": "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT",
+                    "pattern": "^[ATGCRYKMSWBDHVN]*$",
                     "description": "Reverse read adapter to be trimmed by AdapterRemoval for paired end data."
                 },
                 "host_genome": {
@@ -635,6 +644,29 @@
                 },
                 "metaeuk_mmseqs_db": {
                     "type": "string",
+                    "enum": [
+                        "UniRef100",
+                        "UniRef90",
+                        "UniRef50",
+                        "UniProtKB",
+                        "UniProtKB/TrEMBL",
+                        "UniProtKB/Swiss-Prot",
+                        "NR",
+                        "NT",
+                        "GTDB",
+                        "PDB",
+                        "PDB70",
+                        "Pfam-A.full",
+                        "Pfam-A.seed",
+                        "Pfam-B",
+                        "CDD",
+                        "eggNOG",
+                        "VOGDB",
+                        "dbCAN2",
+                        "SILVA",
+                        "Resfinder",
+                        "Kalamari"
+                    ],
                     "description": "A string containing the name of one of the databases listed in the [mmseqs2 documentation](https://github.com/soedinglab/MMseqs2/wiki#downloading-databases). This database will be downloaded and formatted for eukaryotic genome annotation. Incompatible with --metaeuk_db.",
                     "help_text": "mmseqs2 lists a large number of databases, not all of which are appropriate for use with MetaEuk. MetaEuk requires protein inputs, so you should select one of the Aminoacid or Profile options."
                 },
@@ -729,7 +761,8 @@
                 "bowtie2_mode": {
                     "type": "string",
                     "description": "Bowtie2 alignment mode",
-                    "help_text": "Bowtie2 alignment mode options, for example: `--very-fast` , `--very-sensitive-local -N 1` , ... Must be used like this: --bowtie2_mode \"--very-sensitive\""
+                    "help_text": "Bowtie2 alignment mode options, for example: `--very-fast` , `--very-sensitive-local -N 1` , ... Must be used like this: --bowtie2_mode=\"--very-sensitive\"",
+                    "pattern": "^[-\\w]*$"
                 },
                 "save_assembly_mapped_reads": {
                     "type": "boolean",
@@ -798,6 +831,8 @@
                 },
                 "checkm_download_url": {
                     "type": "string",
+                    "format": "file-path",
+                    "exists": true,
                     "default": "https://zenodo.org/records/7401545/files/checkm_data_2015_01_16.tar.gz",
                     "hidden": true,
                     "description": "URL pointing to checkM database for auto download, if local path not supplied.",
