@@ -57,6 +57,7 @@ FastQC is run for visualising the general quality metrics of the sequencing runs
 - `QC_shortreads/fastp/[sample]/`
   - `fastp.html`: Interactive report
   - `fastp.json`: Report in json format
+  - `[sample_id]*.fastq.gz`: Clipped reads in FASTQ format (if `--save_clipped_reads` provided)
 
 </details>
 
@@ -69,6 +70,20 @@ FastQC is run for visualising the general quality metrics of the sequencing runs
 
 - `QC_shortreads/adapterremoval/[sample]/`
   - `[sample]_ar2.settings`: AdapterRemoval log file.
+  - `[sample_id]*.fastq.gz`: Clipped reads in FASTQ format (if `--save_clipped_reads` provided)
+
+</details>
+
+### Trimmomatic
+
+[Trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic) performs a variety of useful trimming tasks for illumina paired-end and single ended data.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `QC_shortreads/trimmomatic/[sample]/`
+  - `[sample]_trimmomatic_trim.log`: Trimmomatic log file.
+  - `[sample_id]*.fastq.gz`: Clipped reads in FASTQ format (if `--save_clipped_reads` provided)
 
 </details>
 

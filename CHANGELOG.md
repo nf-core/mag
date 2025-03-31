@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
-- [#745](https://github.com/nf-core/mag/pull/745) - Added pipeline parameter `spades_use_contigs_not_scaffolds` to use contigs instead of scaffolds (added by @Pranjal-Bioinfo & @GallVp).
+- [#745](https://github.com/nf-core/mag/pull/745) - Added pipeline parameter `spades_downstreaminput` to use contigs instead of scaffolds (added by @Pranjal-Bioinfo & @GallVp).
 - [#745](https://github.com/nf-core/mag/pull/745) - Added `trimmomatic` as an additional pre-processing tool (added by @Pranjal-Bioinfo & @GallVp).
 - [#777](https://github.com/nf-core/mag/pull/777) - Improved input validation through additional JSON keywords and error messages (by @agusinac)
 

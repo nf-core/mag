@@ -391,11 +391,10 @@ workflow MAG {
 
         if (!params.single_end && !params.skip_spades) {
             METASPADES(ch_short_reads_spades.map { meta, reads -> [meta, reads, [], []] }, [], [])
-            ch_spades_assemblies = ( params.spades_use_contigs_not_scaffolds ? METASPADES.out.contigs : METASPADES.out.scaffolds )
-                .map { meta, assembly ->
-                    def meta_new = meta + [assembler: 'SPAdes']
-                    [meta_new, assembly]
-                }
+            ch_spades_assemblies = (params.spades_downstreaminput ? METASPADES.out.contigs : METASPADES.out.scaffolds).map { meta, assembly ->
+                def meta_new = meta + [assembler: 'SPAdes']
+                [meta_new, assembly]
+            }
             ch_assembled_contigs = ch_assembled_contigs.mix(ch_spades_assemblies)
             ch_versions = ch_versions.mix(METASPADES.out.versions.first())
         }
