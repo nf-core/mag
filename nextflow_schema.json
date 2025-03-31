@@ -859,7 +859,7 @@
                 },
                 "checkm2_db_version": {
                     "type": "integer",
-                    "default": 5571251,
+                    "default": 14897628,
                     "description": "CheckM2 database version number to download (Zenodo record ID, for reference check the canonical reference https://zenodo.org/records/5571251, and pick the Zenodo ID of the database version of your choice)."
                 },
                 "save_checkm2_data": {

@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
+- [#774](https://github.com/nf-core/mag/pull/774) - Update CheckM2 to v1.1.0 and default database (by @dialvarezs).
+
 ### `Fixed`
 
 - [#726](https://github.com/nf-core/mag/pull/726) - Fix formatting errors to follow Nextflow best practice (by @dialvarezs).
@@ -18,6 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#771](https://github.com/nf-core/mag/pull/771) - Fix misspecified checkm2 database parameter check (reported by @dpelegri and fix by @jfy133)
 
 ### `Dependencies`
+
+| Tool    | Previous version | New version |
+| ------- | ---------------- | ----------- |
+| CheckM2 | 1.0.2            | 1.1.0       |
 
 ### `Deprecated`
 
