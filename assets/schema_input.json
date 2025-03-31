@@ -10,30 +10,35 @@
             "sample": {
                 "type": "string",
                 "pattern": "^\\S+$",
-                "meta": ["id"]
+                "meta": ["id"],
+                "errorMessage": "Sample needs to be string or integer with no spaces!"
             },
             "run": {
                 "type": ["string", "integer"],
                 "pattern": "^\\S+$",
                 "meta": ["run"],
-                "unique": ["sample"]
+                "unique": ["sample"],
+                "errorMessage": "Run needs to be string or integer with no spaces!"
             },
             "group": {
                 "type": ["string", "integer"],
                 "pattern": "^\\S+$",
-                "meta": ["group"]
+                "meta": ["group"],
+                "errorMessage": "Group needs to be string or integer with no spaces!"
             },
             "short_reads_1": {
                 "type": "string",
                 "format": "file-path",
                 "exists": true,
-                "pattern": "^\\S+\\.f(ast)?q\\.gz$"
+                "pattern": "^\\S+\\.f(ast)?q\\.gz$",
+                "errorMessage": "short_reads_1 needs to be a file path with no spaces.\n\nFile needs to exist!"
             },
             "short_reads_2": {
                 "type": "string",
                 "format": "file-path",
                 "exists": true,
-                "pattern": "^\\S+\\.f(ast)?q\\.gz$"
+                "pattern": "^\\S+\\.f(ast)?q\\.gz$",
+                "errorMessage": "short_reads_2 needs to be a file path with no spaces.\n\nFile needs to exist!"
             },
             "short_reads_platform": {
                 "type": "string",
@@ -64,6 +69,8 @@
                 "enum": ["OXFORD_NANOPORE", "PACBIO_SMRT"],
                 "default": "OXFORD_NANOPORE",
                 "meta": ["lr_platform"]
+                "pattern": "^\\S+\\.f(ast)?q\\.gz$",
+                "errorMessage": "long_reads needs to be a file path with no spaces.\n\nFile needs to exist!"
             }
         },
         "required": ["sample", "group"],

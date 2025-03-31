@@ -620,7 +620,7 @@ If the parameter `--save_checkm_reference` is set, additionally the used the Che
 <summary>Output files</summary>
 
 - `GenomeBinning/QC/CheckM2/`
-  - `[assembler]-[binner]-[domain]-[refinement]-[sample/group]/quality_report.tsv`: Detailed statistics about bins informing completeness and contamamination scores. This should normally be your main file to use to evaluate your results.
+  - `[assembler]-[binner]-[domain]-[refinement]-[sample/group]_checkm2_report.tsv`: Detailed statistics about bins informing completeness and contamamination scores. This should normally be your main file to use to evaluate your results.
   - `[assembler]-[binner]-[domain]-[refinement]-[sample/group]/`: Intermediate files for CheckM2 results, including CheckM2 generated annotations, log, and DIAMOND alignment results.
 - `GenomeBinning/QC/`
   - `checkm2_summary.tsv`: A summary table of the CheckM2 results for all bins.
