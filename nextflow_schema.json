@@ -72,7 +72,6 @@
                     "description": "Do not load the iGenomes reference config.",
                     "fa_icon": "fas fa-ban",
                     "hidden": true,
-                    "default": false,
                     "help_text": "Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`."
                 },
                 "igenomes_base": {
@@ -145,8 +144,7 @@
                     "type": "boolean",
                     "description": "Display version and exit.",
                     "fa_icon": "fas fa-question-circle",
-                    "hidden": true,
-                    "default": false
+                    "hidden": true
                 },
                 "publish_dir_mode": {
                     "type": "string",
@@ -215,7 +213,8 @@
                     "type": "boolean",
                     "description": "Boolean whether to validate parameters against the schema at runtime",
                     "fa_icon": "fas fa-check-square",
-                    "hidden": true
+                    "hidden": true,
+                    "default": true
                 },
                 "pipelines_testdata_base_path": {
                     "type": "string",
@@ -595,7 +594,8 @@
                     "type": "string",
                     "description": "Specify whether to use contigs or scaffolds assembled by SPAdes",
                     "help_text": "Be default the SPAdes documentation recommends using scaffolds rather than contigs, as these are longer as they combine multiple contigs. However there is an increased risk of misassemblies or chimeras. Use this flag to specify to just use contigs for downstream processes such as binning.",
-                    "enum": ["scaffolds", "contigs"]
+                    "enum": ["scaffolds", "contigs"],
+                    "default": "scaffolds"
                 },
                 "megahit_options": {
                     "type": "string",
@@ -763,6 +763,20 @@
                     "default": 100,
                     "description": "Maximal number of contigs that are not part of any bin but treated as individual genome.",
                     "help_text": "Contigs that do not fulfill the thresholds of `--min_length_unbinned_contigs` and `--max_unbinned_contigs` are pooled for downstream analysis and reporting, except contigs that also do not fullfill `--min_contig_size` are not considered further."
+                },
+                "bin_concoct_chunksize": {
+                    "type": "integer",
+                    "default": 10000,
+                    "description": "Specify length of sub-contigs cut up prior CONCOCT binnning"
+                },
+                "bin_concoct_overlap": {
+                    "type": "integer",
+                    "default": 0,
+                    "description": "Specify the overlap between each sub-contig prior CONCOCT binnning"
+                },
+                "bin_concoct_donotconcatlast": {
+                    "type": "boolean",
+                    "description": "Specify to not append the last contig less than sub-contig length to the last correct length contig"
                 },
                 "bowtie2_mode": {
                     "type": "string",
