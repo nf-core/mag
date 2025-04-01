@@ -28,6 +28,7 @@ run_modules:
   - prokka
   - porechop
   - filtlong
+  - trimmomatic
 
 ## Module order
 top_modules:
@@ -37,6 +38,7 @@ top_modules:
         - "*trimmed*"
   - "fastp"
   - "adapterremoval"
+  - "trimmomatic"
   - "porechop"
   - "filtlong"
   - "fastqc":
@@ -137,6 +139,8 @@ extra_fn_clean_exts:
   - "phix_removed"
   - "centrifuge_kreport"
   - "_fastp"
+  - "_trimmomatic_trim.log"
+  - "_trimmomatic_trim"
 
 ## Prettification
 custom_logo: "mag_logo_mascot_light.png"

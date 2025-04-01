@@ -3,10 +3,13 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## dev [unreleased]
+## 3.3.1dev [unreleased]
 
 ### `Added`
 
+- [#745](https://github.com/nf-core/mag/pull/745) - Added pipeline parameter `spades_downstreaminput` to use contigs instead of scaffolds (by @Pranjal-Bioinfo, @jfy133, @GallVp & @sateeshperi).
+- [#745](https://github.com/nf-core/mag/pull/745) - Added `trimmomatic` as an additional pre-processing tool (by @Pranjal-Bioinfo, @jfy133, @GallVp & @sateeshperi).
+- [#745](https://github.com/nf-core/mag/pull/745) - Added parameters for `concoct/cut_up_fasta.py` including `bin_concoct_chunksize`, `bin_concoct_overlap` and `bin_concoct_donotconcatlast` (by @Pranjal-Bioinfo, @jfy133, @GallVp & @sateeshperi).
 - [#777](https://github.com/nf-core/mag/pull/777) - Improved input validation through additional JSON keywords and error messages (by @agusinac)
 
 ### `Changed`
