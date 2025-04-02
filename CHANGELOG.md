@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | Tool    | Previous version | New version |
 | ------- | ---------------- | ----------- |
 | CheckM2 | 1.0.2            | 1.1.0       |
+| SPAdes  | 4.0.0            | 4.1.0       |
 
 ### `Deprecated`
 
