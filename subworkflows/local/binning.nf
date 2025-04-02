@@ -141,6 +141,9 @@ workflow BINNING {
         .filter { meta, _bin ->
             meta.bin_total_length.toInteger() >= val_bin_min_size && meta.bin_total_length.toInteger() <= val_bin_max_size
         }
+        .map { meta, bin ->
+            [meta.minus([bin_total_length: meta.bin_total_length]), bin]
+        }
 
     // remove too-short contigs from unbinned contigs
     SPLIT_FASTA(ch_input_splitfasta)
@@ -150,7 +153,7 @@ workflow BINNING {
     ch_split_fasta_results_transposed = SPLIT_FASTA.out.unbinned.transpose()
     ch_versions = ch_versions.mix(SPLIT_FASTA.out.versions)
 
-    GUNZIP_BINS(ch_final_bins_for_gunzip.dump(tag: 'ch_final_bins_for_gunzip'))
+    GUNZIP_BINS(ch_final_bins_for_gunzip)
     ch_binning_results_gunzipped = GUNZIP_BINS.out.gunzip.groupTuple(by: 0)
 
     GUNZIP_UNBINS(ch_split_fasta_results_transposed)
