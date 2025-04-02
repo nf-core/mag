@@ -764,6 +764,18 @@
                     "description": "Maximal number of contigs that are not part of any bin but treated as individual genome.",
                     "help_text": "Contigs that do not fulfill the thresholds of `--min_length_unbinned_contigs` and `--max_unbinned_contigs` are pooled for downstream analysis and reporting, except contigs that also do not fullfill `--min_contig_size` are not considered further."
                 },
+                "bin_min_size": {
+                    "type": "integer",
+                    "default": 0,
+                    "description": "Specify the shortest length a bin should be to retain for downstream processing (in base pairs)",
+                    "help_text": "This can speed up downstream processing by removing 'nonsense' bins (e.g. badly binned single short-contig bins, or unnaturally large bins). "
+                },
+                "bin_max_size": {
+                    "type": "integer",
+                    "default": 999999999999,
+                    "description": "Specify the longest length a bin should be to retain for downstream processing (in base pairs)",
+                    "help_text": "This can speed up downstream processing by removing 'nonsense' bins (e.g. badly binned single short-contig bins, or unnaturally large bins). "
+                },
                 "bin_concoct_chunksize": {
                     "type": "integer",
                     "default": 10000,
