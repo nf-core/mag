@@ -2,7 +2,7 @@
  * GTDB-Tk bin classification, using BUSCO QC to filter bins
  */
 
-include { GTDBTK_DB_PREPARATION } from '../../modules/local/gtdbtk_db_preparation'
+include { GTDBTK_DB_PREPARATION; GTDBTK_DB_INSPECT } from '../../modules/local/gtdbtk_db_preparation'
 include { GTDBTK_CLASSIFYWF     } from '../../modules/nf-core/gtdbtk/classifywf/main'
 include { GTDBTK_SUMMARY        } from '../../modules/local/gtdbtk_summary'
 
@@ -64,9 +64,14 @@ workflow GTDBTK {
                 return [it[0], it[1]]
         }
 
+    gtdb_image = [:]
     if ( gtdb.extension == 'gz' ) {
         // Expects to be tar.gz!
         ch_db_for_gtdbtk = GTDBTK_DB_PREPARATION ( gtdb ).db
+    } else if ( gtdb.extension == 'sqfs' ) {
+        // Database will be mounted via containerOptions.
+        gtdb_image = [ path : gtdb, mount : GTDBTK_DB_INSPECT( gtdb ).mount ]
+        ch_db_for_gtdbtk = ["gtdb", []]
     } else if ( gtdb.isDirectory() ) {
         // The classifywf module expects a list of the _contents_ of the GTDB
         // database, not just the directory itself (I'm not sure why). But
@@ -79,7 +84,7 @@ workflow GTDBTK {
                             .collect()
                             .map { ["gtdb", it] }
     } else {
-        error("Unsupported object given to --gtdb, database must be supplied as either a directory or a .tar.gz file!")
+        error("Unsupported object given to --gtdb, database must be supplied as either a directory or a .tar.gz file or a squash-fs image!")
     }
 
 
@@ -92,6 +97,7 @@ workflow GTDBTK {
     GTDBTK_CLASSIFYWF (
         ch_filtered_bins.passed.groupTuple(),
         ch_db_for_gtdbtk,
+        gtdb_image.mount,
         params.gtdbtk_pplacer_useram ? false : true,
         gtdb_mash
     )
