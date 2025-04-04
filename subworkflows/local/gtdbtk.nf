@@ -70,7 +70,7 @@ workflow GTDBTK {
         // Expects to be tar.gz!
         ch_db_for_gtdbtk = GTDBTK_DB_PREPARATION ( gtdb ).db
     } else if ( gtdb.extension == 'squashfs' ) {
-        if ( workflow.containerEngine == 'singularity' ) {
+        if ( workflow.containerEngine == 'singularity' || workflow.containerEngine == 'apptainer' ) {
             // Database will be mounted via containerOptions.
             gtdb_image = [ path : gtdb, mountOpts : GTDBTK_IMAGE_INSPECT( gtdb ).mountOpts ]
             ch_db_for_gtdbtk = ["gtdb", []]
