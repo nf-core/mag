@@ -70,9 +70,13 @@ workflow GTDBTK {
         // Expects to be tar.gz!
         ch_db_for_gtdbtk = GTDBTK_DB_PREPARATION ( gtdb ).db
     } else if ( gtdb.extension == 'squashfs' ) {
-        // Database will be mounted via containerOptions.
-        gtdb_image = [ path : gtdb, mountOpts : GTDBTK_IMAGE_INSPECT( gtdb ).mountOpts ]
-        ch_db_for_gtdbtk = ["gtdb", []]
+        if ( workflow.containerEngine == 'singularity' ) {
+            // Database will be mounted via containerOptions.
+            gtdb_image = [ path : gtdb, mountOpts : GTDBTK_IMAGE_INSPECT( gtdb ).mountOpts ]
+            ch_db_for_gtdbtk = ["gtdb", []]
+        } else {
+            error("Unsupported object given to --gtdb. squash-fs image is not compatible with workflow.containerEngine: ${workflow.containerEngine}.")
+        }
     } else if ( gtdb.isDirectory() ) {
         // The classifywf module expects a list of the _contents_ of the GTDB
         // database, not just the directory itself (I'm not sure why). But
