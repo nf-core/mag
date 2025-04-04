@@ -5,6 +5,7 @@
 include { FASTQC as FASTQC_RAW                                } from '../../modules/nf-core/fastqc/main'
 include { FASTQC as FASTQC_TRIMMED                            } from '../../modules/nf-core/fastqc/main'
 include { FASTP                                               } from '../../modules/nf-core/fastp/main'
+include { TRIMMOMATIC                                         } from '../../modules/nf-core/trimmomatic/main'
 include { ADAPTERREMOVAL as ADAPTERREMOVAL_PE                 } from '../../modules/nf-core/adapterremoval/main'
 include { ADAPTERREMOVAL as ADAPTERREMOVAL_SE                 } from '../../modules/nf-core/adapterremoval/main'
 include { BOWTIE2_REMOVAL_BUILD as BOWTIE2_HOST_REMOVAL_BUILD } from '../../modules/local/bowtie2_removal_build'
@@ -21,7 +22,6 @@ workflow SHORTREAD_PREPROCESSING {
     ch_host_fasta        // [fasta] (optional)
     ch_host_genome_index // fasta (optional)
     ch_phix_db_file      // [fasta] (optional)
-    ch_metaeuk_db        // [fasta] (optional)
 
     main:
     ch_versions = Channel.empty()
@@ -63,6 +63,16 @@ workflow SHORTREAD_PREPROCESSING {
             ch_versions = ch_versions.mix(ADAPTERREMOVAL_PE.out.versions.first(), ADAPTERREMOVAL_SE.out.versions.first())
             ch_multiqc_files = ch_multiqc_files.mix(ADAPTERREMOVAL_PE.out.settings)
             ch_multiqc_files = ch_multiqc_files.mix(ADAPTERREMOVAL_SE.out.settings)
+        }
+        else if (params.clip_tool == 'trimmomatic') {
+
+            TRIMMOMATIC(ch_raw_short_reads)
+
+            ch_short_reads_prepped = Channel.empty()
+            ch_short_reads_prepped = TRIMMOMATIC.out.trimmed_reads
+
+            ch_versions = ch_versions.mix(TRIMMOMATIC.out.versions.first())
+            ch_multiqc_files = ch_multiqc_files.mix(TRIMMOMATIC.out.out_log)
         }
     }
     else {
@@ -129,7 +139,7 @@ workflow SHORTREAD_PREPROCESSING {
             [meta_new, reads]
         }
         .groupTuple()
-        .branch { meta, reads ->
+        .branch { _meta, reads ->
             cat: reads.size() >= 2
             skip_cat: true
         }
@@ -159,7 +169,7 @@ workflow SHORTREAD_PREPROCESSING {
             // Combine the interleaved pairs with any single end libraries. Set the meta.single_end to true (used by the bbnorm module).
             ch_bbnorm = SEQTK_MERGEPE.out.reads
                 .mix(ch_short_reads.filter { it[0].single_end })
-                .map { [[id: sprintf("group%s", it[0].group), group: it[0].group, single_end: true], it[1]] }
+                .map { [[id: "group${it[0].group}", group: it[0].group, single_end: true], it[1]] }
                 .groupTuple()
         }
         else {

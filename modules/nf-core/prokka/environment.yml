@@ -4,4 +4,5 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - bioconda::checkm2=1.1.0
+  - bioconda::prokka=1.14.6
+  - conda-forge::openjdk=8.0.412

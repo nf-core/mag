@@ -33,7 +33,7 @@
 > [!NOTE]
 > If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.
 
-By default, the pipeline currently performs the following: it supports both short and long reads, quality trims the reads and adapters with [fastp](https://github.com/OpenGene/fastp) and [Porechop](https://github.com/rrwick/Porechop), and performs basic QC with [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/), and merge multiple sequencing runs.
+By default, the pipeline currently performs the following: it supports both short and long reads, quality trims the reads and adapters with [fastp](https://github.com/OpenGene/fastp), [AdapterRemoval](https://github.com/MikkelSchubert/adapterremoval), or [trimmomatic](https://github.com/usadellab/Trimmomatic) and [Porechop](https://github.com/rrwick/Porechop), and performs basic QC with [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/), and merges multiple sequencing runs.
 
 The pipeline then:
 
@@ -97,6 +97,7 @@ Other code contributors include:
 - [@willros](https://github.com/willros)
 - [Adam Rosenbaum](https://github.com/muabnezor)
 - [Diego Alvarez](https://github.com/dialvarezs)
+- [Nikolaos Vergoulidis](https://github.com/IceGreb)
 
 Long read processing was inspired by [caspargross/HybridAssembly](https://github.com/caspargross/HybridAssembly) written by Caspar Gross [@caspargross](https://github.com/caspargross)
 

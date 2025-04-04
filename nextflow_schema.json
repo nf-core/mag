@@ -44,7 +44,8 @@
                     "type": "string",
                     "format": "directory-path",
                     "description": "The output directory where the results will be saved. You have to use absolute paths to storage on Cloud infrastructure.",
-                    "fa_icon": "fas fa-folder-open"
+                    "fa_icon": "fas fa-folder-open",
+                    "help_text": "Specify the path to the output directory where the results will be saved."
                 },
                 "email": {
                     "type": "string",
@@ -99,6 +100,7 @@
                 },
                 "custom_config_base": {
                     "type": "string",
+                    "format": "directory-path",
                     "description": "Base directory for Institutional configs.",
                     "default": "https://raw.githubusercontent.com/nf-core/configs/master",
                     "hidden": true,
@@ -196,28 +198,32 @@
                 },
                 "multiqc_logo": {
                     "type": "string",
+                    "format": "file-path",
                     "description": "Custom logo file to supply to MultiQC. File name must also be set in the MultiQC config file",
                     "fa_icon": "fas fa-image",
                     "hidden": true
                 },
                 "multiqc_methods_description": {
                     "type": "string",
+                    "format": "file-path",
                     "description": "Custom MultiQC yaml file containing HTML including a methods description.",
                     "fa_icon": "fas fa-cog"
                 },
                 "validate_params": {
                     "type": "boolean",
                     "description": "Boolean whether to validate parameters against the schema at runtime",
-                    "default": true,
                     "fa_icon": "fas fa-check-square",
-                    "hidden": true
+                    "hidden": true,
+                    "default": true
                 },
                 "pipelines_testdata_base_path": {
                     "type": "string",
+                    "format": "directory-path",
                     "fa_icon": "far fa-check-circle",
                     "description": "Base URL or local path to location of pipeline test dataset files",
                     "default": "https://raw.githubusercontent.com/nf-core/test-datasets/",
-                    "hidden": true
+                    "hidden": true,
+                    "help_text": "Location of pipeline test dataset files"
                 },
                 "trace_report_suffix": {
                     "type": "string",
@@ -269,7 +275,7 @@
                     "type": "string",
                     "default": "fastp",
                     "description": "Specify which adapter clipping tool to use.",
-                    "enum": ["fastp", "adapterremoval"]
+                    "enum": ["fastp", "adapterremoval", "trimmomatic"]
                 },
                 "save_clipped_reads": {
                     "type": "boolean",
@@ -309,11 +315,13 @@
                 "adapterremoval_adapter1": {
                     "type": "string",
                     "default": "AGATCGGAAGAGCACACGTCTGAACTCCAGTCACNNNNNNATCTCGTATGCCGTCTTCTGCTTG",
+                    "pattern": "^[ATGCRYKMSWBDHVN]*$",
                     "description": "Forward read adapter to be trimmed by AdapterRemoval."
                 },
                 "adapterremoval_adapter2": {
                     "type": "string",
                     "default": "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT",
+                    "pattern": "^[ATGCRYKMSWBDHVN]*$",
                     "description": "Reverse read adapter to be trimmed by AdapterRemoval for paired end data."
                 },
                 "host_genome": {
@@ -582,6 +590,13 @@
                     "description": "Additional custom options for SPAdes and SPAdesHybrid. Do not specify `--meta` as this will be added for you!",
                     "help_text": "An example is adjusting k-mers (\"-k 21,33,55,77\") or adding [advanced options](https://github.com/ablab/spades#advanced-options). But not --meta, -t, -m, -o or --out-prefix, because these are already in use. Must be used like this: --spades_options \"-k 21,33,55,77\")"
                 },
+                "spades_downstreaminput": {
+                    "type": "string",
+                    "description": "Specify whether to use contigs or scaffolds assembled by SPAdes",
+                    "help_text": "Be default the SPAdes documentation recommends using scaffolds rather than contigs, as these are longer as they combine multiple contigs. However there is an increased risk of misassemblies or chimeras. Use this flag to specify to just use contigs for downstream processes such as binning.",
+                    "enum": ["scaffolds", "contigs"],
+                    "default": "scaffolds"
+                },
                 "megahit_options": {
                     "type": "string",
                     "description": "Additional custom options for MEGAHIT.",
@@ -635,6 +650,29 @@
                 },
                 "metaeuk_mmseqs_db": {
                     "type": "string",
+                    "enum": [
+                        "UniRef100",
+                        "UniRef90",
+                        "UniRef50",
+                        "UniProtKB",
+                        "UniProtKB/TrEMBL",
+                        "UniProtKB/Swiss-Prot",
+                        "NR",
+                        "NT",
+                        "GTDB",
+                        "PDB",
+                        "PDB70",
+                        "Pfam-A.full",
+                        "Pfam-A.seed",
+                        "Pfam-B",
+                        "CDD",
+                        "eggNOG",
+                        "VOGDB",
+                        "dbCAN2",
+                        "SILVA",
+                        "Resfinder",
+                        "Kalamari"
+                    ],
                     "description": "A string containing the name of one of the databases listed in the [mmseqs2 documentation](https://github.com/soedinglab/MMseqs2/wiki#downloading-databases). This database will be downloaded and formatted for eukaryotic genome annotation. Incompatible with --metaeuk_db.",
                     "help_text": "mmseqs2 lists a large number of databases, not all of which are appropriate for use with MetaEuk. MetaEuk requires protein inputs, so you should select one of the Aminoacid or Profile options."
                 },
@@ -726,10 +764,25 @@
                     "description": "Maximal number of contigs that are not part of any bin but treated as individual genome.",
                     "help_text": "Contigs that do not fulfill the thresholds of `--min_length_unbinned_contigs` and `--max_unbinned_contigs` are pooled for downstream analysis and reporting, except contigs that also do not fullfill `--min_contig_size` are not considered further."
                 },
+                "bin_concoct_chunksize": {
+                    "type": "integer",
+                    "default": 10000,
+                    "description": "Specify length of sub-contigs cut up prior CONCOCT binning"
+                },
+                "bin_concoct_overlap": {
+                    "type": "integer",
+                    "default": 0,
+                    "description": "Specify the overlap between each sub-contig prior CONCOCT binning"
+                },
+                "bin_concoct_donotconcatlast": {
+                    "type": "boolean",
+                    "description": "Specify to not append the last contig less than sub-contig length to the last correct length contig"
+                },
                 "bowtie2_mode": {
                     "type": "string",
                     "description": "Bowtie2 alignment mode",
-                    "help_text": "Bowtie2 alignment mode options, for example: `--very-fast` , `--very-sensitive-local -N 1` , ... Must be used like this: --bowtie2_mode \"--very-sensitive\""
+                    "help_text": "Bowtie2 alignment mode options, for example: `--very-fast` , `--very-sensitive-local -N 1` , ... Must be used like this: --bowtie2_mode=\"--very-sensitive\"",
+                    "pattern": "^[-\\w]*$"
                 },
                 "save_assembly_mapped_reads": {
                     "type": "boolean",
@@ -798,6 +851,8 @@
                 },
                 "checkm_download_url": {
                     "type": "string",
+                    "format": "file-path",
+                    "exists": true,
                     "default": "https://zenodo.org/records/7401545/files/checkm_data_2015_01_16.tar.gz",
                     "hidden": true,
                     "description": "URL pointing to checkM database for auto download, if local path not supplied.",
@@ -817,14 +872,14 @@
                 },
                 "checkm2_db": {
                     "type": "string",
-                    "description": "Path to local folder containing already downloaded and uncompressed CheckM2 database (.dmnd file).",
-                    "help_text": "The pipeline can also download this for you if not specified, and you can save the resulting directory into your output directory by specifying `--save_checkm2_data`. You should move this directory to somewhere else on your machine (and supply back to the pipeline in future runs again with `--checkm2_db`).",
-                    "format": "directory-path",
+                    "description": "Path to local file of an already downloaded and uncompressed CheckM2 database (.dmnd file).",
+                    "help_text": "The pipeline can also download this for you if not specified, and you can save the resulting directory into your output directory by specifying `--save_checkm2_data`. You should move this file to somewhere else on your machine (and supply back to the pipeline in future runs again with `--checkm2_db`).",
+                    "format": "file-path",
                     "exists": true
                 },
                 "checkm2_db_version": {
                     "type": "integer",
-                    "default": 5571251,
+                    "default": 14897628,
                     "description": "CheckM2 database version number to download (Zenodo record ID, for reference check the canonical reference https://zenodo.org/records/5571251, and pick the Zenodo ID of the database version of your choice)."
                 },
                 "save_checkm2_data": {
