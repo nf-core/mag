@@ -2,7 +2,8 @@
  * GTDB-Tk bin classification, using BUSCO QC to filter bins
  */
 
-include { GTDBTK_DB_PREPARATION; GTDBTK_DB_INSPECT } from '../../modules/local/gtdbtk_db_preparation'
+include { GTDBTK_DB_PREPARATION } from '../../modules/local/gtdbtk_db_preparation'
+include { GTDBTK_IMAGE_INSPECT } from '../../modules/local/gtdbtk_image_inspect'
 include { GTDBTK_CLASSIFYWF     } from '../../modules/nf-core/gtdbtk/classifywf/main'
 include { GTDBTK_SUMMARY        } from '../../modules/local/gtdbtk_summary'
 
@@ -70,7 +71,7 @@ workflow GTDBTK {
         ch_db_for_gtdbtk = GTDBTK_DB_PREPARATION ( gtdb ).db
     } else if ( gtdb.extension == 'sqfs' ) {
         // Database will be mounted via containerOptions.
-        gtdb_image = [ path : gtdb, mount : GTDBTK_DB_INSPECT( gtdb ).mount ]
+        gtdb_image = [ path : gtdb, mountOpts : GTDBTK_IMAGE_INSPECT( gtdb ).mountOpts ]
         ch_db_for_gtdbtk = ["gtdb", []]
     } else if ( gtdb.isDirectory() ) {
         // The classifywf module expects a list of the _contents_ of the GTDB
@@ -97,7 +98,7 @@ workflow GTDBTK {
     GTDBTK_CLASSIFYWF (
         ch_filtered_bins.passed.groupTuple(),
         ch_db_for_gtdbtk,
-        gtdb_image.mount,
+        gtdb_image.mountOpts,
         params.gtdbtk_pplacer_useram ? false : true,
         gtdb_mash
     )
