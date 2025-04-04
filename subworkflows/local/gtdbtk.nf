@@ -69,7 +69,7 @@ workflow GTDBTK {
     if ( gtdb.extension == 'gz' ) {
         // Expects to be tar.gz!
         ch_db_for_gtdbtk = GTDBTK_DB_PREPARATION ( gtdb ).db
-    } else if ( gtdb.extension == 'sqfs' ) {
+    } else if ( gtdb.extension == 'squashfs' ) {
         // Database will be mounted via containerOptions.
         gtdb_image = [ path : gtdb, mountOpts : GTDBTK_IMAGE_INSPECT( gtdb ).mountOpts ]
         ch_db_for_gtdbtk = ["gtdb", []]
