@@ -522,7 +522,7 @@
                 },
                 "gtdb_db": {
                     "type": "string",
-                    "description": "Specify the location of a GTDBTK database. Can be one of: an uncompressed directory; a `.tar.gz` archive; a squash-fs image with extension `.sqfs`. If not specified will be downloaded for you when GTDBTK or binning QC is not skipped.",
+                    "description": "Specify the location of a GTDBTK database. Can be one of: an uncompressed directory; a `.tar.gz` archive; a squash-fs image with extension `.squashfs`. If not specified, it will be downloaded for you when GTDBTK or binning QC is not skipped.  NOTE: The use of a squash-fs image is only available when singularity containerization is employed.",
                     "default": "https://data.gtdb.ecogenomic.org/releases/release220/220.0/auxillary_files/gtdbtk_package/full_package/gtdbtk_r220_data.tar.gz",
                     "format": "path",
                     "exists": true
