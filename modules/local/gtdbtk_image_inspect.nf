@@ -21,8 +21,8 @@ process GTDBTK_IMAGE_INSPECT {
 
     script:
     """
-    find -L database -mindepth 2 -maxdepth 2 \
-    -printf \"-B $database_image:\\\$NXF_TASK_WORKDIR/database/%f:image-src=/%P \"
+    find -L database -mindepth 1 -maxdepth 1 \
+    -printf \"-B $database_image:\\\$NXF_TASK_WORKDIR/database:image-src=/%P \"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
