@@ -9,9 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
+- [#730](https://github.com/nf-core/mag/pull/730) - Migrated from local BUSCO module to nf-core one, updating version (by @dialvarezs)
+- [#730](https://github.com/nf-core/mag/pull/730) - Update default BUSCO database to bacteria_odb12 on tests (by @dialvarezs)
+
 ### `Fixed`
 
 ### `Dependencies`
+
+| Tool  | Previous version | New version |
+| ----- | ---------------- | ----------- |
+| BUSCO | 5.4.3            | 5.8.3       |
+| csvtk |                  | 0.31.0      |
 
 ### `Deprecated`
 
