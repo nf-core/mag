@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## dev [unreleased]
+## 3.4.1 [unreleased]
 
 ### `Added`
 
@@ -14,16 +14,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
-- [#726](https://github.com/nf-core/mag/pull/726) - Fix formatting errors to follow Nextflow best practice (by @dialvarezs).
-- [#769](https://github.com/nf-core/mag/pull/769) - Fix megahit not emitting correct filenames due to suboptimal arguments ordering (reported and fix by @IceGreb)
-- [#771](https://github.com/nf-core/mag/pull/771) - Fix misspecified checkm2 database parameter check (reported by @dpelegri and fix by @jfy133)
-
 ### `Dependencies`
 
 | Tool  | Previous version | New version |
 | ----- | ---------------- | ----------- |
 | BUSCO | 5.4.3            | 5.8.3       |
 | csvtk |                  | 0.31.0      |
+
+### `Deprecated`
+
+## 3.4.0 [2025-04-04]
+
+### `Added`
+
+- [#745](https://github.com/nf-core/mag/pull/745) - Added pipeline parameter `spades_downstreaminput` to use contigs instead of scaffolds (by @Pranjal-Bioinfo, @jfy133, @GallVp & @sateeshperi).
+- [#745](https://github.com/nf-core/mag/pull/745) - Added `trimmomatic` as an additional pre-processing tool (by @Pranjal-Bioinfo, @jfy133, @GallVp & @sateeshperi).
+- [#745](https://github.com/nf-core/mag/pull/745) - Added parameters for `concoct/cut_up_fasta.py` including `bin_concoct_chunksize`, `bin_concoct_overlap` and `bin_concoct_donotconcatlast` (by @Pranjal-Bioinfo, @jfy133, @GallVp & @sateeshperi).
+- [#777](https://github.com/nf-core/mag/pull/777) - Improved input validation through additional JSON keywords and error messages (by @agusinac)
+
+### `Changed`
+
+- [#774](https://github.com/nf-core/mag/pull/774) - Update CheckM2 to v1.1.0 and default database (by @dialvarezs).
+
+### `Fixed`
+
+- [#726](https://github.com/nf-core/mag/pull/726) - Fix formatting errors to follow Nextflow best practice (by @dialvarezs).
+- [#769](https://github.com/nf-core/mag/pull/769) - Fix megahit not emitting correct filenames due to suboptimal arguments ordering (reported and fix by @IceGreb)
+- [#771](https://github.com/nf-core/mag/pull/771) - Fix misspecified checkm2 database parameter check (reported by @dpelegri and fix by @jfy133)
+
+### `Dependencies`
+
+| Tool    | Previous version | New version |
+| ------- | ---------------- | ----------- |
+| CheckM2 | 1.0.2            | 1.1.0       |
+| SPAdes  | 4.0.0            | 4.1.0       |
 
 ### `Deprecated`
 
