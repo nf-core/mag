@@ -18,7 +18,7 @@ process GTDBTK_IMAGE_INSPECT {
     val(database_image)
 
     output:
-    stdout emit: mountOpts
+    stdout emit: mount_opts
 
     script:
     """
