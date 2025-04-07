@@ -72,7 +72,7 @@ workflow GTDBTK {
     } else if ( gtdb.extension == 'squashfs' ) {
         if ( workflow.containerEngine == 'singularity' || workflow.containerEngine == 'apptainer' ) {
             // Database will be mounted via containerOptions.
-            gtdb_image = [ path : gtdb, mountOpts : GTDBTK_IMAGE_INSPECT( gtdb ).mountOpts ]
+            gtdb_image = [ path : gtdb, mount_opts : GTDBTK_IMAGE_INSPECT( gtdb ).mount_opts ]
             ch_db_for_gtdbtk = ["gtdb", []]
         } else {
             error("Unsupported object given to --gtdb. squash-fs image is not compatible with workflow.containerEngine: ${workflow.containerEngine}.")
@@ -102,7 +102,7 @@ workflow GTDBTK {
     GTDBTK_CLASSIFYWF (
         ch_filtered_bins.passed.groupTuple(),
         ch_db_for_gtdbtk,
-        gtdb_image.mountOpts,
+        gtdb_image.mount_opts,
         params.gtdbtk_pplacer_useram ? false : true,
         gtdb_mash
     )
