@@ -1,5 +1,6 @@
-/* Mount the database image and inspect directory structure.  Generate a container mount directive for each
- * depth-2 file and directory.  This is for compatability with GTDBTK_DB_PREPARATION which removes first path
+/* 
+ * Mount the database image and inspect directory structure.  Generate a container mount directive for each
+ * depth-1 file and directory.  This is for compatability with GTDBTK_DB_PREPARATION which removes first path
  * component during tar extraction.
  */
 process GTDBTK_IMAGE_INSPECT {
