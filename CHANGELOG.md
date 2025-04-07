@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#777](https://github.com/nf-core/mag/pull/777) - Improved input validation through additional JSON keywords and error messages (by @agusinac)
 - [#785](https://github.com/nf-core/mag/pull/785) - Allow squash-fs image as GTDB-Tk database.
-  
+
 ### `Changed`
 
 ### `Fixed`
