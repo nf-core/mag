@@ -127,7 +127,7 @@ workflow BINNING {
     ch_seqkitstats_results = SEQKIT_STATS.out.stats
         .splitCsv(sep: '\t', header: true, strip: true)
         .map { _meta, row ->
-            [[filename: row.file], [bin_total_length: row.sum_len]]
+            [[filename: row.file], [bin_total_length: row.sum_len.toInteger()]]
         }
 
     ch_final_bins_for_gunzip = ch_bins_for_seqkit
@@ -139,7 +139,7 @@ workflow BINNING {
             [meta + stats, bin]
         }
         .filter { meta, _bin ->
-            meta.bin_total_length.toInteger() >= val_bin_min_size && (val_bin_max_size ? meta.bin_total_length.toInteger() <= val_bin_max_size : true)
+            meta.bin_total_length >= val_bin_min_size && (val_bin_max_size ? meta.bin_total_length <= val_bin_max_size : true)
         }
         .ifEmpty {
             error("[nf-core/mag] ERROR: no bins passed the bin size filter specified between --bin_min_size ${val_bin_min_size} and --bin_max_size ${val_bin_max_size}. Please adjust parameters.")
