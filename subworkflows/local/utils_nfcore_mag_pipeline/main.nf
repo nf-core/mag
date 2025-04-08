@@ -222,7 +222,7 @@ def validateInputParameters(hybrid) {
 
     // Check binning length filter parameters are valid
     if (params.bin_max_size && (params.bin_max_size <= params.bin_min_size)) {
-        error("[nf-core/mag] ERROR: Invalid value to '--bin_max_size' specified! Value must be greater than --bin_min_size ${params.bin_min_size}. You gave: --bin_max_size ${params.bin_max_size}")
+        error("[nf-core/mag] ERROR: Invalid value specified for '--bin_max_size'! Value must be greater than --bin_min_size ${params.bin_min_size}. You gave: --bin_max_size ${params.bin_max_size}")
     }
 
     // Check if settings concerning reproducibility of used tools are consistent and print warning if not
