@@ -138,16 +138,12 @@ workflow BINNING {
         .map { _key, meta, bin, stats ->
             [meta + stats, bin]
         }
-        .dump(tag: 'prefilter')
         .filter { meta, _bin ->
-        println(val_bin_max_size ? meta.bin_total_length.toInteger() <= val_bin_max_size : true)
-            meta.bin_total_length.toInteger() >= val_bin_min_size && ( val_bin_max_size ? meta.bin_total_length.toInteger() <= val_bin_max_size : true )
+            meta.bin_total_length.toInteger() >= val_bin_min_size && (val_bin_max_size ? meta.bin_total_length.toInteger() <= val_bin_max_size : true)
         }
-        .dump(tag: 'postfilter')
         .ifEmpty {
             error("[nf-core/mag] ERROR: no bins passed the bin size filter specified between --bin_min_size ${val_bin_min_size} and --bin_max_size ${val_bin_max_size}. Please adjust parameters.")
         }
-        .dump(tag: 'postempty')
         .map { meta, bin ->
             [meta.minus([bin_total_length: meta.bin_total_length]), bin]
         }

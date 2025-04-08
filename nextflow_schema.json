@@ -772,9 +772,8 @@
                 },
                 "bin_max_size": {
                     "type": "integer",
-                    "default": 999999999999,
-                    "description": "Specify the longest length a bin should be to retain for downstream processing (in base pairs)",
-                    "help_text": "This can speed up downstream processing by removing 'nonsense' bins (e.g. badly binned single short-contig bins, or unnaturally large bins). "
+                    "description": "Specify the longest length a bin should be to retain for downstream processing (in base pairs). By default no limit.",
+                    "help_text": "This can speed up downstream processing by removing 'nonsense' bins (e.g. badly binned single short-contig bins, or unnaturally large bins).   By default no limit n size of largest bin."
                 },
                 "bin_concoct_chunksize": {
                     "type": "integer",
