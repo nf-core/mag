@@ -3,7 +3,6 @@
  */
 
 include { GTDBTK_DB_PREPARATION } from '../../modules/local/gtdbtk_db_preparation'
-include { GTDBTK_IMAGE_INSPECT } from '../../modules/local/gtdbtk_image_inspect'
 include { GTDBTK_CLASSIFYWF     } from '../../modules/nf-core/gtdbtk/classifywf/main'
 include { GTDBTK_SUMMARY        } from '../../modules/local/gtdbtk_summary'
 
@@ -65,14 +64,12 @@ workflow GTDBTK {
                 return [it[0], it[1]]
         }
 
-    gtdb_image = [:]
     if ( gtdb.extension == 'gz' ) {
         // Expects to be tar.gz!
         ch_db_for_gtdbtk = GTDBTK_DB_PREPARATION ( gtdb ).db
     } else if ( gtdb.extension == 'squashfs' ) {
         if ( workflow.containerEngine == 'singularity' || workflow.containerEngine == 'apptainer' ) {
             // Database will be mounted via containerOptions.
-            gtdb_image = [ path : gtdb, mount_opts : GTDBTK_IMAGE_INSPECT( gtdb ).mount_opts ]
             ch_db_for_gtdbtk = ["gtdb", []]
         } else {
             error("Unsupported object given to --gtdb. squash-fs image is not compatible with workflow.containerEngine: ${workflow.containerEngine}.")
@@ -102,7 +99,6 @@ workflow GTDBTK {
     GTDBTK_CLASSIFYWF (
         ch_filtered_bins.passed.groupTuple(),
         ch_db_for_gtdbtk,
-        gtdb_image.mount_opts,
         params.gtdbtk_pplacer_useram ? false : true,
         gtdb_mash
     )
