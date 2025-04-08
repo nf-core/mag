@@ -779,12 +779,12 @@
                 "bin_concoct_chunksize": {
                     "type": "integer",
                     "default": 10000,
-                    "description": "Specify length of sub-contigs cut up prior CONCOCT binnning"
+                    "description": "Specify length of sub-contigs cut up prior CONCOCT binning"
                 },
                 "bin_concoct_overlap": {
                     "type": "integer",
                     "default": 0,
-                    "description": "Specify the overlap between each sub-contig prior CONCOCT binnning"
+                    "description": "Specify the overlap between each sub-contig prior CONCOCT binning"
                 },
                 "bin_concoct_donotconcatlast": {
                     "type": "boolean",

@@ -3,7 +3,19 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 3.3.1dev [unreleased]
+## 3.4.1 [unreleased]
+
+### `Added`
+
+### `Changed`
+
+### `Fixed`
+
+### `Dependencies`
+
+### `Deprecated`
+
+## 3.4.0 [2025-04-04]
 
 ### `Added`
 
@@ -28,6 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | Tool    | Previous version | New version |
 | ------- | ---------------- | ----------- |
 | CheckM2 | 1.0.2            | 1.1.0       |
+| SPAdes  | 4.0.0            | 4.1.0       |
 
 ### `Deprecated`
 
