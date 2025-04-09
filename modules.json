@@ -64,12 +64,12 @@
                     },
                     "checkm2/databasedownload": {
                         "branch": "master",
-                        "git_sha": "81880787133db07d9b4c1febd152c090eb8325dc",
+                        "git_sha": "6b8947dd401a58b08ca19f1952dc1182d66e4d89",
                         "installed_by": ["modules"]
                     },
                     "checkm2/predict": {
                         "branch": "master",
-                        "git_sha": "e17652681c856afaf2e240ba4c98bf4631a0fe2d",
+                        "git_sha": "6b8947dd401a58b08ca19f1952dc1182d66e4d89",
                         "installed_by": ["modules"]
                     },
                     "chopper": {
@@ -144,7 +144,7 @@
                     },
                     "gtdbtk/classifywf": {
                         "branch": "master",
-                        "git_sha": "7b9ce4b817926f17ec82cc0099d2d0ff095a2fac",
+                        "git_sha": "0af81a2726a67bc060d4a9f04a42f0da05926e3d",
                         "installed_by": ["modules"]
                     },
                     "gunc/downloaddb": {
@@ -267,6 +267,11 @@
                         "git_sha": "fd742419940e01ba1c5ecb172c3e32ec840662fe",
                         "installed_by": ["modules"]
                     },
+                    "seqkit/stats": {
+                        "branch": "master",
+                        "git_sha": "9fe7867a4f012db581d7bd560228ded1074eb0e5",
+                        "installed_by": ["modules"]
+                    },
                     "seqtk/mergepe": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
@@ -274,12 +279,17 @@
                     },
                     "spades": {
                         "branch": "master",
-                        "git_sha": "cfebb244d8c83ae533bf2db399f9af361927d504",
+                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
                         "installed_by": ["modules"]
                     },
                     "tiara/tiara": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "installed_by": ["modules"]
+                    },
+                    "trimmomatic": {
+                        "branch": "master",
+                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
                         "installed_by": ["modules"]
                     },
                     "untar": {

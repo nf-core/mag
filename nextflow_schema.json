@@ -72,7 +72,6 @@
                     "description": "Do not load the iGenomes reference config.",
                     "fa_icon": "fas fa-ban",
                     "hidden": true,
-                    "default": false,
                     "help_text": "Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`."
                 },
                 "igenomes_base": {
@@ -145,8 +144,7 @@
                     "type": "boolean",
                     "description": "Display version and exit.",
                     "fa_icon": "fas fa-question-circle",
-                    "hidden": true,
-                    "default": false
+                    "hidden": true
                 },
                 "publish_dir_mode": {
                     "type": "string",
@@ -215,7 +213,8 @@
                     "type": "boolean",
                     "description": "Boolean whether to validate parameters against the schema at runtime",
                     "fa_icon": "fas fa-check-square",
-                    "hidden": true
+                    "hidden": true,
+                    "default": true
                 },
                 "pipelines_testdata_base_path": {
                     "type": "string",
@@ -276,7 +275,7 @@
                     "type": "string",
                     "default": "fastp",
                     "description": "Specify which adapter clipping tool to use.",
-                    "enum": ["fastp", "adapterremoval"]
+                    "enum": ["fastp", "adapterremoval", "trimmomatic"]
                 },
                 "save_clipped_reads": {
                     "type": "boolean",
@@ -591,6 +590,13 @@
                     "description": "Additional custom options for SPAdes and SPAdesHybrid. Do not specify `--meta` as this will be added for you!",
                     "help_text": "An example is adjusting k-mers (\"-k 21,33,55,77\") or adding [advanced options](https://github.com/ablab/spades#advanced-options). But not --meta, -t, -m, -o or --out-prefix, because these are already in use. Must be used like this: --spades_options \"-k 21,33,55,77\")"
                 },
+                "spades_downstreaminput": {
+                    "type": "string",
+                    "description": "Specify whether to use contigs or scaffolds assembled by SPAdes",
+                    "help_text": "Be default the SPAdes documentation recommends using scaffolds rather than contigs, as these are longer as they combine multiple contigs. However there is an increased risk of misassemblies or chimeras. Use this flag to specify to just use contigs for downstream processes such as binning.",
+                    "enum": ["scaffolds", "contigs"],
+                    "default": "scaffolds"
+                },
                 "megahit_options": {
                     "type": "string",
                     "description": "Additional custom options for MEGAHIT.",
@@ -758,10 +764,36 @@
                     "description": "Maximal number of contigs that are not part of any bin but treated as individual genome.",
                     "help_text": "Contigs that do not fulfill the thresholds of `--min_length_unbinned_contigs` and `--max_unbinned_contigs` are pooled for downstream analysis and reporting, except contigs that also do not fullfill `--min_contig_size` are not considered further."
                 },
+                "bin_min_size": {
+                    "type": "integer",
+                    "default": 0,
+                    "minimum": 0,
+                    "description": "Specify the shortest length a bin should be to retain for downstream processing (in base pairs)",
+                    "help_text": "This can speed up downstream processing by removing 'nonsense' bins (e.g. badly binned single short-contig bins, or unnaturally large bins). By default there is no lower limit the size of bins allowed to pass."
+                },
+                "bin_max_size": {
+                    "type": "integer",
+                    "description": "Specify the longest length a bin should be to retain for downstream processing (in base pairs). By default no limit.",
+                    "help_text": "This can speed up downstream processing by removing 'nonsense' bins (e.g. badly binned single short-contig bins, or unnaturally large bins). By default there is no upper limit on size of bins allowed to pass."
+                },
+                "bin_concoct_chunksize": {
+                    "type": "integer",
+                    "default": 10000,
+                    "description": "Specify length of sub-contigs cut up prior CONCOCT binning"
+                },
+                "bin_concoct_overlap": {
+                    "type": "integer",
+                    "default": 0,
+                    "description": "Specify the overlap between each sub-contig prior CONCOCT binning"
+                },
+                "bin_concoct_donotconcatlast": {
+                    "type": "boolean",
+                    "description": "Specify to not append the last contig less than sub-contig length to the last correct length contig"
+                },
                 "bowtie2_mode": {
                     "type": "string",
-                    "description": "Bowtie2 alignment mode",
-                    "help_text": "Bowtie2 alignment mode options, for example: `--very-fast` , `--very-sensitive-local -N 1` , ... Must be used like this: --bowtie2_mode=\"--very-sensitive\"",
+                    "description": "Specify alternative Bowtie2 settings for aligning reads back against the assembly.",
+                    "help_text": "You can specify here Bowtie2 alignment options. For example: `--very-fast` , `--very-sensitive-local -N 1` , ... Must be used like this: --bowtie2_mode=\"--very-sensitive\". By default no settings are defined, thus Bowtie2 runs with it's own internal defaults (e.g. end-to-end alignment)",
                     "pattern": "^[-\\w]*$"
                 },
                 "save_assembly_mapped_reads": {
@@ -859,7 +891,7 @@
                 },
                 "checkm2_db_version": {
                     "type": "integer",
-                    "default": 5571251,
+                    "default": 14897628,
                     "description": "CheckM2 database version number to download (Zenodo record ID, for reference check the canonical reference https://zenodo.org/records/5571251, and pick the Zenodo ID of the database version of your choice)."
                 },
                 "save_checkm2_data": {

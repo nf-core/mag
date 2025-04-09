@@ -3,14 +3,38 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## dev [unreleased]
+## 3.4.1 [unreleased]
 
 ### `Added`
 
+- [#784](https://github.com/nf-core/mag/pull/784) - Added `--bin_min_size` and `--bin_max_size` parameters to filter out bins based on size (requested by @maxibor, @alexhbnr, added by @jfy133, @prototaxites).
+
+### `Changed`
+
+- [#788](https://github.com/nf-core/mag/pull/788) - Tweak method of loading GTDB database in GTDBTK_CLASSIFYWF for more stability (reported by @alexhbnr, fix by @jfy133)
+
+### `Fixed`
+
+- [#789](https://github.com/nf-core/mag/pull/789) - Improve `--bowtie2_mode` description to clarify default settings (reported by @IceGreb, fix by @jfy133)
+
+### `Dependencies`
+
+### `Deprecated`
+
+## 3.4.0 [2025-04-04]
+
+### `Added`
+
+- [#745](https://github.com/nf-core/mag/pull/745) - Added pipeline parameter `spades_downstreaminput` to use contigs instead of scaffolds (by @Pranjal-Bioinfo, @jfy133, @GallVp & @sateeshperi).
+- [#745](https://github.com/nf-core/mag/pull/745) - Added `trimmomatic` as an additional pre-processing tool (by @Pranjal-Bioinfo, @jfy133, @GallVp & @sateeshperi).
+- [#745](https://github.com/nf-core/mag/pull/745) - Added parameters for `concoct/cut_up_fasta.py` including `bin_concoct_chunksize`, `bin_concoct_overlap` and `bin_concoct_donotconcatlast` (by @Pranjal-Bioinfo, @jfy133, @GallVp & @sateeshperi).
 - [#777](https://github.com/nf-core/mag/pull/777) - Improved input validation through additional JSON keywords and error messages (by @agusinac)
+- [#784](https://github.com/nf-core/mag/pull/784) - Add ability to filter out bins based on bin size for downstream using `--bin_min_size`, `--bin_max_size` (reported by @maxibor & @alexhbnr, fix by @jfy133)
 - [#785](https://github.com/nf-core/mag/pull/785) - Allow squash-fs image as GTDB-Tk database.
 
 ### `Changed`
+
+- [#774](https://github.com/nf-core/mag/pull/774) - Update CheckM2 to v1.1.0 and default database (by @dialvarezs).
 
 ### `Fixed`
 
@@ -19,6 +43,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#771](https://github.com/nf-core/mag/pull/771) - Fix misspecified checkm2 database parameter check (reported by @dpelegri and fix by @jfy133)
 
 ### `Dependencies`
+
+| Tool    | Previous version | New version |
+| ------- | ---------------- | ----------- |
+| CheckM2 | 1.0.2            | 1.1.0       |
+| SPAdes  | 4.0.0            | 4.1.0       |
 
 ### `Deprecated`
 

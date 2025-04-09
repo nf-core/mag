@@ -377,3 +377,13 @@ The following configuration settings are required to use the image.
     ```
                 containerOptions = "-B $params.gtdb_db:\$NXF_TASK_WORKDIR/database:image-src=/release220"
     ```
+## A note on bin filtering
+
+The pipeline offers the ability to filter out bins that fall outside of a certain size in base pairs (`--bin_max_length`, `--bin_min_length`).
+
+This can be useful if you have a set of target organisms that you know approximately the size of the genome for, or if you are looking to filter out small bins that are likely to be contaminants or assembly artifacts.
+By removing these bins, you can speed up run time of the pipeline considerably in some cases.
+
+This can also remove 'nonsense' bins of e.g. a single or a collection of very short contigs that can occur with more aggressive binners (e.g. CONCOCT), and can in some cases prevent GUNC [from running correctly](https://github.com/grp-bork/gunc/issues/42#issue-2148763805).
+
+Note that in this context, it is recommended to also set `--min_length_unbinned_contigs` to a suitably high value that corresponds to a reasonable bin size if the `-bin_*_length` parameters are used, so you have useful 'singular' contigs in the unbinned output.

@@ -220,6 +220,11 @@ def validateInputParameters(hybrid) {
         error("[nf-core/mag] ERROR: Invalid combination of parameter '--binning_map_mode own' and parameter '--coassemble_group'. Select either 'all' or 'group' mapping mode when performing group-wise co-assembly.")
     }
 
+    // Check binning length filter parameters are valid
+    if (params.bin_max_size && (params.bin_max_size <= params.bin_min_size)) {
+        error("[nf-core/mag] ERROR: Invalid value specified for '--bin_max_size'! Value must be greater than --bin_min_size ${params.bin_min_size}. You gave: --bin_max_size ${params.bin_max_size}")
+    }
+
     // Check if settings concerning reproducibility of used tools are consistent and print warning if not
     if (params.megahit_fix_cpu_1 || params.spades_fix_cpus != -1 || params.spadeshybrid_fix_cpus != -1) {
         if (!params.skip_spades && params.spades_fix_cpus == -1) {

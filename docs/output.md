@@ -57,6 +57,7 @@ FastQC is run for visualising the general quality metrics of the sequencing runs
 - `QC_shortreads/fastp/[sample]/`
   - `fastp.html`: Interactive report
   - `fastp.json`: Report in json format
+  - `[sample_id]*.fastq.gz`: Clipped reads in FASTQ format (if `--save_clipped_reads` provided)
 
 </details>
 
@@ -69,6 +70,20 @@ FastQC is run for visualising the general quality metrics of the sequencing runs
 
 - `QC_shortreads/adapterremoval/[sample]/`
   - `[sample]_ar2.settings`: AdapterRemoval log file.
+  - `[sample_id]*.fastq.gz`: Clipped reads in FASTQ format (if `--save_clipped_reads` provided)
+
+</details>
+
+### Trimmomatic
+
+[Trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic) performs a variety of useful trimming tasks for illumina paired-end and single ended data.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `QC_shortreads/trimmomatic/[sample]/`
+  - `[sample]_trimmomatic_trim.log`: Trimmomatic log file.
+  - `[sample_id]*.fastq.gz`: Clipped reads in FASTQ format (if `--save_clipped_reads` provided)
 
 </details>
 
@@ -589,7 +604,7 @@ If the parameter `--save_checkm_reference` is set, additionally the used the Che
 <summary>Output files</summary>
 
 - `GenomeBinning/QC/CheckM2/`
-  - `[assembler]-[binner]-[domain]-[refinement]-[sample/group]/quality_report.tsv`: Detailed statistics about bins informing completeness and contamamination scores. This should normally be your main file to use to evaluate your results.
+  - `[assembler]-[binner]-[domain]-[refinement]-[sample/group]_checkm2_report.tsv`: Detailed statistics about bins informing completeness and contamination scores. This should normally be your main file to use to evaluate your results.
   - `[assembler]-[binner]-[domain]-[refinement]-[sample/group]/`: Intermediate files for CheckM2 results, including CheckM2 generated annotations, log, and DIAMOND alignment results.
 - `GenomeBinning/QC/`
   - `checkm2_summary.tsv`: A summary table of the CheckM2 results for all bins.
