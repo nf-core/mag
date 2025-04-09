@@ -307,6 +307,10 @@ def validateInputParameters(hybrid) {
         log.warn('[nf-core/mag]: --skip_binqc is specified, but --skip_gtdbtk is explictly set to run! GTDB-tk will be omitted because GTDB-tk bin classification requires bin filtering based on BUSCO or CheckM QC results to avoid GTDB-tk errors.')
     }
 
+    if (params.busco_db.contains('_odb12.')) {
+        error("[nf-core/mag] ERROR: The BUSCO version used in the current version of nf-core/mag does not support 'odb10' database files. Please use odb10 databases instead. You supplied: --busco_db ${params.busco_db}")
+    }
+
     // Check if CAT parameters are valid
     if (params.cat_db && params.cat_db_generate) {
         error('[nf-core/mag] ERROR: Invalid combination of parameters --cat_db and --cat_db_generate is specified! Please specify either --cat_db or --cat_db_generate.')
