@@ -67,7 +67,7 @@ workflow GTDBTK {
     if ( gtdb.extension == 'gz' ) {
         // Expects to be tar.gz!
         ch_db_for_gtdbtk = GTDBTK_DB_PREPARATION ( gtdb ).db
-    } else if ( gtdb.extension ==~ /.*\.sq(uash)?fs$/ ) {
+    } else if ( gtdb.extension ==~ /sq(uash)?fs/ ) {
         if ( workflow.containerEngine == 'singularity' || workflow.containerEngine == 'apptainer' ) {
             // Database will be mounted via containerOptions.
             ch_db_for_gtdbtk = ["gtdb", []]
