@@ -338,7 +338,7 @@ If you are regularly getting such errors, you can try reducing the `--refine_bin
 
 ## A note on using squash-fs image as input for GTDB-Tk database
 
-Users with limited storage resources can now economize on indode consumption ( The uncompressed database requires 200K+ inodes! ) by providing the database for GTDB-Tk as a squash-fs image.  An image can be built using [squashfs-tools](https://github.com/plougher/squashfs-tools) from one of: a `tar.gz` format database; a directory containing the uncompressed database; the [split database](https://data.ace.uq.edu.au/public/gtdb/data/releases/release220/220.0/auxillary_files/gtdbtk_package/split_package).
+Users with limited storage resources can now economize on inode consumption (The uncompressed database requires 200K+ inodes!) by providing the database for GTDB-Tk as a squash-fs image.  An image can be built using [squashfs-tools](https://github.com/plougher/squashfs-tools) from one of: a `tar.gz` format database; a directory containing the uncompressed database; the [split database](https://data.ace.uq.edu.au/public/gtdb/data/releases/release220/220.0/auxillary_files/gtdbtk_package/split_package).
 
 - Build image from a `tar.gz` compressed database
     ```
