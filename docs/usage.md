@@ -338,45 +338,52 @@ If you are regularly getting such errors, you can try reducing the `--refine_bin
 
 ## A note on using squash-fs image as input for GTDB-Tk database
 
-Users with limited storage resources can now economize on inode consumption (The uncompressed database requires 200K+ inodes!) by providing the database for GTDB-Tk as a squash-fs image.  An image can be built using [squashfs-tools](https://github.com/plougher/squashfs-tools) from one of: a `tar.gz` format database; a directory containing the uncompressed database; the [split database](https://data.ace.uq.edu.au/public/gtdb/data/releases/release220/220.0/auxillary_files/gtdbtk_package/split_package).
+Users with limited storage resources can now economize on inode consumption (The uncompressed database requires 200K+ inodes!) by providing the database for GTDB-Tk as a squash-fs image. An image can be built using [squashfs-tools](https://github.com/plougher/squashfs-tools) from one of: a `tar.gz` format database; a directory containing the uncompressed database; the [split database](https://data.ace.uq.edu.au/public/gtdb/data/releases/release220/220.0/auxillary_files/gtdbtk_package/split_package).
 
 - Build image from a `tar.gz` compressed database
-    ```
-    $ gzip -cd gtdbtk_r220_data.tar.gz | mksquashfs - gtdbtk_r220.squashfs -tar
-    ```
+
+  ```
+  $ gzip -cd gtdbtk_r220_data.tar.gz | mksquashfs - gtdbtk_r220.squashfs -tar
+  ```
 
 - Build image from a directory containing an uncompressed database
-    ```
-    $ mksquashfs /path/to/database gtdbtk_r220.squashfs
-    ```
+
+  ```
+  $ mksquashfs /path/to/database gtdbtk_r220.squashfs
+  ```
 
 - Build image from the split database
-    ```
-    $ parallel wget ::: https://data.ace.uq.edu.au/public/gtdb/data/releases/release220/220.0/auxillary_files/gtdbtk_package/split_package/gtdbtk_r220_data.tar.gz.part_a?
-    $ cat gtdbtk_r220_data.tar.gz.part_* | gzip -cd - | mksquashfs - gtdbtk_r220.squashfs -tar
-    ```
+  ```
+  $ parallel wget ::: https://data.ace.uq.edu.au/public/gtdb/data/releases/release220/220.0/auxillary_files/gtdbtk_package/split_package/gtdbtk_r220_data.tar.gz.part_a?
+  $ cat gtdbtk_r220_data.tar.gz.part_* | gzip -cd - | mksquashfs - gtdbtk_r220.squashfs -tar
+  ```
 
 The following configuration settings are required to use the image.
+
 - Set `params.gtdb_db` to the image path.
 - Add the configuration block:
-    ```
-    process {
-        withName: GTDBTK_CLASSIFYWF {
-                containerOptions = "-B $params.gtdb_db:\$NXF_TASK_WORKDIR/database:image-src=<image_top-level-directory>"
-        }
-    }
 
-    ```
-    where `<image_top-level-directory>` is the top-level directory of the image file-system.  It can be determined with,
+  ```
+  process {
+      withName: GTDBTK_CLASSIFYWF {
+              containerOptions = "-B $params.gtdb_db:\$NXF_TASK_WORKDIR/database:image-src=<image_top-level-directory>"
+      }
+  }
 
-    ```
-    $ unsquashfs -l -max-depth 1 -d'' gtdbtk_r220.squashfs
-    ```
-    
-    For example, suppose that the output is `/release220`.  Then the `containerOptions` directive should be set to,
-    ```
-                containerOptions = "-B $params.gtdb_db:\$NXF_TASK_WORKDIR/database:image-src=/release220"
-    ```
+  ```
+
+  where `<image_top-level-directory>` is the top-level directory of the image file-system. It can be determined with,
+
+  ```
+  $ unsquashfs -l -max-depth 1 -d'' gtdbtk_r220.squashfs
+  ```
+
+  For example, suppose that the output is `/release220`. Then the `containerOptions` directive should be set to,
+
+  ```
+              containerOptions = "-B $params.gtdb_db:\$NXF_TASK_WORKDIR/database:image-src=/release220"
+  ```
+
 ## A note on bin filtering
 
 The pipeline offers the ability to filter out bins that fall outside of a certain size in base pairs (`--bin_max_length`, `--bin_min_length`).
