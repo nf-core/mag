@@ -75,11 +75,20 @@ workflow GTDBTK {
         // Expects to be tar.gz!
         ch_db_for_gtdbtk = GTDBTK_DB_PREPARATION(gtdb).db
     }
+    else if ( gtdb.extension ==~ /sq(uash)?fs/ ) {
+        // Expects to be squash-fs image.
+        if ( workflow.containerEngine == 'singularity' || workflow.containerEngine == 'apptainer' ) {
+            // Database image will be mounted via containerOptions.
+            ch_db_for_gtdbtk = ["gtdb", []]
+        } else {
+            error("Unsupported object given to --gtdb. squash-fs image is not compatible with workflow.containerEngine: ${workflow.containerEngine}.")
+        }
+    }
     else if (gtdb.isDirectory()) {
         ch_db_for_gtdbtk = [gtdb.simpleName, gtdb]
     }
     else {
-        error("Unsupported object given to --gtdb, database must be supplied as either a directory or a .tar.gz file!")
+        error("Unsupported object given to --gtdb, database must be supplied as either a directory or a .tar.gz file or a squash-fs image!")
     }
 
 
