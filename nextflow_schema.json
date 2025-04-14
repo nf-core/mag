@@ -764,6 +764,18 @@
                     "description": "Maximal number of contigs that are not part of any bin but treated as individual genome.",
                     "help_text": "Contigs that do not fulfill the thresholds of `--min_length_unbinned_contigs` and `--max_unbinned_contigs` are pooled for downstream analysis and reporting, except contigs that also do not fullfill `--min_contig_size` are not considered further."
                 },
+                "bin_min_size": {
+                    "type": "integer",
+                    "default": 0,
+                    "minimum": 0,
+                    "description": "Specify the shortest length a bin should be to retain for downstream processing (in base pairs)",
+                    "help_text": "This can speed up downstream processing by removing 'nonsense' bins (e.g. badly binned single short-contig bins, or unnaturally large bins). By default there is no lower limit the size of bins allowed to pass."
+                },
+                "bin_max_size": {
+                    "type": "integer",
+                    "description": "Specify the longest length a bin should be to retain for downstream processing (in base pairs). By default no limit.",
+                    "help_text": "This can speed up downstream processing by removing 'nonsense' bins (e.g. badly binned single short-contig bins, or unnaturally large bins). By default there is no upper limit on size of bins allowed to pass."
+                },
                 "bin_concoct_chunksize": {
                     "type": "integer",
                     "default": 10000,
@@ -780,8 +792,8 @@
                 },
                 "bowtie2_mode": {
                     "type": "string",
-                    "description": "Bowtie2 alignment mode",
-                    "help_text": "Bowtie2 alignment mode options, for example: `--very-fast` , `--very-sensitive-local -N 1` , ... Must be used like this: --bowtie2_mode=\"--very-sensitive\"",
+                    "description": "Specify alternative Bowtie2 settings for aligning reads back against the assembly.",
+                    "help_text": "You can specify here Bowtie2 alignment options. For example: `--very-fast` , `--very-sensitive-local -N 1` , ... Must be used like this: --bowtie2_mode=\"--very-sensitive\". By default no settings are defined, thus Bowtie2 runs with it's own internal defaults (e.g. end-to-end alignment)",
                     "pattern": "^[-\\w]*$"
                 },
                 "save_assembly_mapped_reads": {

@@ -7,12 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
+- [#784](https://github.com/nf-core/mag/pull/784) - Added `--bin_min_size` and `--bin_max_size` parameters to filter out bins based on size (requested by @maxibor, @alexhbnr, added by @jfy133, @prototaxites).
+
 ### `Changed`
 
 - [#730](https://github.com/nf-core/mag/pull/730) - Migrated from local BUSCO module to nf-core one, updating version (by @dialvarezs)
 - [#730](https://github.com/nf-core/mag/pull/730) - Update default BUSCO database to bacteria_odb12 on tests (by @dialvarezs)
+- [#788](https://github.com/nf-core/mag/pull/788) - Tweak method of loading GTDB database in GTDBTK_CLASSIFYWF for more stability (reported by @alexhbnr, fix by @jfy133)
 
 ### `Fixed`
+
+- [#789](https://github.com/nf-core/mag/pull/789) - Improve `--bowtie2_mode` description to clarify default settings (reported by @IceGreb, fix by @jfy133)
 
 ### `Dependencies`
 
@@ -31,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#745](https://github.com/nf-core/mag/pull/745) - Added `trimmomatic` as an additional pre-processing tool (by @Pranjal-Bioinfo, @jfy133, @GallVp & @sateeshperi).
 - [#745](https://github.com/nf-core/mag/pull/745) - Added parameters for `concoct/cut_up_fasta.py` including `bin_concoct_chunksize`, `bin_concoct_overlap` and `bin_concoct_donotconcatlast` (by @Pranjal-Bioinfo, @jfy133, @GallVp & @sateeshperi).
 - [#777](https://github.com/nf-core/mag/pull/777) - Improved input validation through additional JSON keywords and error messages (by @agusinac)
+- [#784](https://github.com/nf-core/mag/pull/784) - Add ability to filter out bins based on bin size for downstream using `--bin_min_size`, `--bin_max_size` (reported by @maxibor & @alexhbnr, fix by @jfy133)
 
 ### `Changed`
 

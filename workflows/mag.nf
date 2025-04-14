@@ -513,12 +513,16 @@ workflow MAG {
         // Make sure if running aDNA subworkflow to use the damage-corrected contigs for higher accuracy
         if (params.ancient_dna && !params.skip_ancient_damagecorrection) {
             BINNING(
-                BINNING_PREPARATION.out.grouped_mappings.join(ANCIENT_DNA_ASSEMBLY_VALIDATION.out.contigs_recalled).map { it -> [it[0], it[4], it[2], it[3]] }
+                BINNING_PREPARATION.out.grouped_mappings.join(ANCIENT_DNA_ASSEMBLY_VALIDATION.out.contigs_recalled).map { it -> [it[0], it[4], it[2], it[3]] },
+                params.bin_min_size,
+                params.bin_max_size,
             )
         }
         else {
             BINNING(
-                BINNING_PREPARATION.out.grouped_mappings
+                BINNING_PREPARATION.out.grouped_mappings,
+                params.bin_min_size,
+                params.bin_max_size,
             )
         }
         ch_versions = ch_versions.mix(BINNING.out.versions)

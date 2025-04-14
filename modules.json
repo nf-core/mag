@@ -154,7 +154,7 @@
                     },
                     "gtdbtk/classifywf": {
                         "branch": "master",
-                        "git_sha": "7b9ce4b817926f17ec82cc0099d2d0ff095a2fac",
+                        "git_sha": "0af81a2726a67bc060d4a9f04a42f0da05926e3d",
                         "installed_by": ["modules"]
                     },
                     "gunc/downloaddb": {
@@ -275,6 +275,11 @@
                     "samtools/faidx": {
                         "branch": "master",
                         "git_sha": "fd742419940e01ba1c5ecb172c3e32ec840662fe",
+                        "installed_by": ["modules"]
+                    },
+                    "seqkit/stats": {
+                        "branch": "master",
+                        "git_sha": "9fe7867a4f012db581d7bd560228ded1074eb0e5",
                         "installed_by": ["modules"]
                     },
                     "seqtk/mergepe": {
