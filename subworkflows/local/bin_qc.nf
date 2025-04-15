@@ -82,11 +82,11 @@ workflow BIN_QC {
 
         // Prepare database object depending on type
         // If directory, assumes sub structure of `params.busco_db/lineages/<taxa>_odb(10|12)`
-        if (ch_busco_db.extension in ['gz', 'tgz']) {
+        if (ch_busco_db && ch_busco_db.extension in ['gz', 'tgz']) {
             BUSCO_UNTAR([[id: ch_busco_db.getSimpleName()], ch_busco_db])
             ch_busco_db = BUSCO_UNTAR.out.untar.map { it[1] }
         }
-        else if (ch_busco_db.isDirectory()) {
+        else if (ch_busco_db && ch_busco_db.isDirectory()) {
             ch_busco_db = ch_busco_db
         }
         else {

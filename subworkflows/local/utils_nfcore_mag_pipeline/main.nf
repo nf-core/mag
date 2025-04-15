@@ -307,7 +307,7 @@ def validateInputParameters(hybrid) {
     }
 
     if (!params.skip_binqc && params.binqc_tool == 'busco') {
-        if (file(params.busco_db).isDirectory() && !file(params.busco_db).listFiles().any { it.toString().contains('lineages') }) {
+        if (params.busco_db && file(params.busco_db).isDirectory() && !file(params.busco_db).listFiles().any { it.toString().contains('lineages') }) {
             error("[nf-core/mag] ERROR: Directory supplied to `--busco_db` must contain a `lineages/` subdirectory that itself contains one or more BUSCO lineage files! Check: --busco_db ${params.busco_db}")
         }
     }
