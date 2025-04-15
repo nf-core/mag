@@ -306,8 +306,8 @@ def validateInputParameters(hybrid) {
         log.warn('[nf-core/mag]: WARNING: You have supplied a --busco_db directory, but not specified a lineage with `--busco_db_lineage` - this may cause BUSCO to attempt to auto-download files for you!')
     }
 
-    if (!params.skip_binqc && params.binqc_tool == 'busco' && file(params.busco_db).isDirectory()) {
-        if (!file(params.busco_db).listFiles().any { it.toString().contains('lineages') }) {
+    if (!params.skip_binqc && params.binqc_tool == 'busco') {
+        if (file(params.busco_db).isDirectory() && !file(params.busco_db).listFiles().any { it.toString().contains('lineages') }) {
             error("[nf-core/mag] ERROR: Directory supplied to `--busco_db` must contain a `lineages/` subdirectory that itself contains one or more BUSCO lineage files! Check: --busco_db ${params.busco_db}")
         }
     }
