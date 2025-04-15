@@ -11,8 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
-- [#730](https://github.com/nf-core/mag/pull/730) - Migrated from local BUSCO module to nf-core one, updating version (by @dialvarezs)
-- [#730](https://github.com/nf-core/mag/pull/730) - Update default BUSCO database to bacteria_odb12 on tests (by @dialvarezs)
+- [#730](https://github.com/nf-core/mag/pull/730) - Migrate from local BUSCO module to nf-core one, updating version (by @dialvarezs)
+- [#730](https://github.com/nf-core/mag/pull/730) - Use BUSCO database from nf-core test datasets (by @dialvarezs)
 - [#788](https://github.com/nf-core/mag/pull/788) - Tweak method of loading GTDB database in GTDBTK_CLASSIFYWF for more stability (reported by @alexhbnr, fix by @jfy133)
 
 ### `Fixed`

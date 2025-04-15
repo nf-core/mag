@@ -12,7 +12,7 @@ include { CSVTK_CONCAT as CONCAT_BINQC_TSV } from '../../modules/nf-core/csvtk/c
 include { GUNC_DOWNLOADDB                  } from '../../modules/nf-core/gunc/downloaddb/main'
 include { GUNC_RUN                         } from '../../modules/nf-core/gunc/run/main'
 include { GUNC_MERGECHECKM                 } from '../../modules/nf-core/gunc/mergecheckm/main'
-include { UNTAR as BUSCO_UNTAR             } from '../../modules/nf-core/untar'
+include { UNTAR as BUSCO_UNTAR             } from '../../modules/nf-core/untar/main'
 
 
 workflow BIN_QC {
