@@ -70,8 +70,7 @@ workflow PIPELINE_INITIALISATION {
     //
 
     // Validate FASTQ input
-    ch_samplesheet = Channel
-        .fromList(samplesheetToList(input, "${projectDir}/assets/schema_input.json"))
+    ch_samplesheet = Channel.fromList(samplesheetToList(input, "${projectDir}/assets/schema_input.json"))
         .map {
             validateInputSamplesheet(it[0], it[1], it[2], it[3])
         }
@@ -302,6 +301,17 @@ def validateInputParameters(hybrid) {
             error("[nf-core/mag] ERROR: Both --skip_binqc and --busco_auto_lineage_prok are specified! Invalid combination, please specify either --skip_binqc or --binqc_tool 'busco' with --busco_auto_lineage_prok.")
         }
     }
+
+    if (!params.skip_binqc && params.binqc_tool == 'busco' && params.busco_db && !params.busco_db_lineage) {
+        log.warn('[nf-core/mag]: WARNING: You have supplied a --busco_db directory, but not specified a lineage with `--busco_db_lineage` - this may cause BUSCO to attempt to auto-download files for you!')
+    }
+
+    if (!params.skip_binqc && params.binqc_tool == 'busco' && file(params.busco_db).isDirectory()) {
+        if (!file(params.busco_db).listFiles().any { it.toString().contains('lineages') }) {
+            error("[nf-core/mag] ERROR: Directory supplied to `--busco_db` must contain a `lineages/` subdirectory that itself contains one or more BUSCO lineage files! Check: --busco_db ${params.busco_db}")
+        }
+    }
+
 
     if (params.skip_binqc && !params.skip_gtdbtk) {
         log.warn('[nf-core/mag]: --skip_binqc is specified, but --skip_gtdbtk is explictly set to run! GTDB-tk will be omitted because GTDB-tk bin classification requires bin filtering based on BUSCO or CheckM QC results to avoid GTDB-tk errors.')

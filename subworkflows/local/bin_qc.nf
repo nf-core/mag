@@ -79,17 +79,30 @@ workflow BIN_QC {
         /*
          * BUSCO
          */
-        busco_lineage = params.busco_auto_lineage_prok ? 'auto_prok' : 'auto'
 
-        if (!ch_busco_db.isEmpty()) {
-            if (ch_busco_db.extension in ['gz', 'tgz']) {
-                BUSCO_UNTAR([[id: ch_busco_db.getSimpleName()], ch_busco_db])
+        // Prepare database object depending on type
+        // If directory, assumes sub structure of `params.busco_db/lineages/<taxa>_odb(10|12)`
+        if (ch_busco_db.extension in ['gz', 'tgz']) {
+            BUSCO_UNTAR([[id: ch_busco_db.getSimpleName()], ch_busco_db])
+            ch_busco_db = BUSCO_UNTAR.out.untar.map { it[1] }
+        }
+        else if (ch_busco_db.isDirectory()) {
+            ch_busco_db = ch_busco_db
+        }
+        else {
+            ch_busco_db = []
+        }
 
-                if (ch_busco_db.getSimpleName().contains('odb')) {
-                    busco_lineage = ch_busco_db.getSimpleName()
-                }
-                ch_busco_db = BUSCO_UNTAR.out.untar.map { it[1] }
-            }
+        // Specify a specific lineage otherwise just let BUSCO auto-select
+        // Warning: if not all lineages in `--busco_db` it will try to auto-download!
+        if (params.busco_db_lineage) {
+            busco_lineage = params.busco_db_lineage
+        }
+        else if (params.busco_auto_lineage_prok) {
+            busco_lineage = 'auto_prok'
+        }
+        else {
+            busco_lineage = 'auto'
         }
 
         BUSCO_BUSCO(ch_bins, 'genome', busco_lineage, ch_busco_db, [], params.busco_clean)

@@ -842,10 +842,16 @@
                 },
                 "busco_db": {
                     "type": "string",
-                    "description": "Download URL for BUSCO lineage dataset, or path to a tar.gz archive, or local directory containing already downloaded and unpacked lineage datasets.",
-                    "help_text": "E.g. https://busco-data.ezlab.org/v5/data/lineages/bacteria_odb10.2024-01-08.tar.gz or '/path/to/buscodb' (files still need to be unpacked manually). Available databases are listed here: https://busco-data.ezlab.org/v5/data/lineages/.",
+                    "description": "Download URL, tar.gz archive local path, or local uncompressed directory for an *_odb10 or *_odb12 BUSCO lineage datasets. If ",
+                    "help_text": "E.g. https://busco-data.ezlab.org/v5/data/lineages/bacteria_odb10.2024-01-08.tar.gz, `/path/to/bacteria_odb10.2024-01-08.tar.gz`. If supplying directory, the directory you supply must contain the structure of `<yourdb>/lineages/<taxa>_odb<XX>`, where you supply `--busco_db <yourdb>/ to the pipeline. The lineage directory (e.g. `bacteria_odb10`) should contain files such as 'dataset.cfg', and the directory 'hmms' at the top level.\n\nIf not supplying, BUSCO may try to download all necessary files for you!\n\nAvailable databases are listed here: [https://busco-data.ezlab.org/v5/data/lineages/](https://busco-data.ezlab.org/v5/data/lineages/).",
                     "format": "path",
                     "exists": true
+                },
+                "busco_db_lineage": {
+                    "type": "string",
+                    "description": "Name of the BUSCO *_odb10 or *_odb12 lineage to check against.",
+                    "help_text": "Typically used in combination with `--busco_db`, corresponding to the lineage files supplied within the `--busco_db` file or directroy.\n\nIf supplying without a `--busco_db`, or not supplying this nor `--busco_db` may require an internet connection for BUSCO's autodetection to work!",
+                    "pattern": ".*_odb(10|12)$"
                 },
                 "busco_auto_lineage_prok": {
                     "type": "boolean",
