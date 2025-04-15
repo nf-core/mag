@@ -843,7 +843,7 @@
                 "busco_db": {
                     "type": "string",
                     "description": "Download URL, tar.gz archive local path, or local uncompressed directory for an *_odb10 or *_odb12 BUSCO lineage datasets.",
-                    "help_text": "E.g. https://busco-data.ezlab.org/v5/data/lineages/bacteria_odb10.2024-01-08.tar.gz, `/path/to/bacteria_odb10.2024-01-08.tar.gz`. If supplying directory, the directory you supply must contain the structure of `<yourdb>/lineages/<taxa>_odb<XX>`, where you supply `--busco_db <yourdb>/ to the pipeline. The lineage directory (e.g. `bacteria_odb10`) should contain files such as 'dataset.cfg', and the directory 'hmms' at the top level.\n\nIf you want to allow BUSCO to perform auto-detection but offline, you must ensure all available lineage directories are present\n\nIf not supplying, BUSCO may try to download all necessary files for you!\n\nAvailable databases are listed here: [https://busco-data.ezlab.org/v5/data/lineages/](https://busco-data.ezlab.org/v5/data/lineages/).",
+                    "help_text": "E.g. https://busco-data.ezlab.org/v5/data/lineages/bacteria_odb10.2024-01-08.tar.gz, `/path/to/bacteria_odb10.2024-01-08.tar.gz`.\n\nFor more details, check the [BUSCO section in the usage documentation](https://nf-co.re/mag/latest/docs/usage/#busco).",
                     "format": "path",
                     "exists": true
                 },

@@ -97,6 +97,22 @@ group-1,1,SPAdes,SPAdes-group-1.contigs.fasta.gz
 
 When supplying pre-computed assemblies, reads **must** also be provided in the CSV input format to `--input`, and should be the reads used to build the assemblies, i.e., adapter-removed, run-merged etc.. Preprocessing steps will not be ran on raw reads when pre-computed assemblies are supplied. As long reads are only used for assembly, any long read fastq files listed in the reads CSV are ignored.
 
+### Databases
+
+#### BUSCO
+
+BUSCO can download lineage datasets automatically as it needs them, but this process can be slow if the internet connection is unstable, and may lead to redundant downloads across different samples. To avoid this, you can provide a local BUSCO lineage dataset using the --busco_db parameter. The local directory must follow a specific structure for BUSCO to recognize it.
+
+To prepare the lineage dataset, the recommended method is to use BUSCO's built-in download functionality before running the pipeline:
+
+```bash
+busco --download_path <your_db> --download <lineage>
+```
+
+This command downloads the specified lineage into the <your_db> directory and creates the required directory structure. <lineage> can be any supported dataset, such as `alphaproteobacteria_odb12`. You can also use `prokaryota` or `all` to download multiple lineages, which is necessary for automatic lineage selection in offline mode.
+
+Alternatively, you can manually download a lineage tarball from [https://busco-data.ezlab.org/v5/data/lineages/](https://busco-data.ezlab.org/v5/data/lineages/), extract it, and place it in the appropriate location: `<your_db>/lineages/<taxa>_odb<XX>`. The lineage directory (e.g., bacteria_odb12) should contain files such as `datase.cfg` and a `hmms/` subdirectory at the top level. Then, you must provide `--busco_db <your_db>` to the pipeline.
+
 ## Running the pipeline
 
 The typical command for running the pipeline is as follows:
