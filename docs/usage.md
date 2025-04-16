@@ -99,9 +99,18 @@ When supplying pre-computed assemblies, reads **must** also be provided in the C
 
 ### Databases
 
+nf-core/mag uses multiple tools that require additional databases.
+The pipeline will download these databases for you if not supplied via a pipeline-level parameter.
+However, we generally recommend you download these databases manually once, and place them in a long-term storage directory or cache from where you can re-use the databases across runs.
+Here we provide specific additional information for some of the downloading databases which can be more tricky to prepare.
+
+For any other database, or in doubt, please check the [parameters page](https://nf-co.re/mag/parameters).
+
 #### BUSCO
 
-BUSCO can download lineage datasets automatically as it needs them, but this process can be slow if the internet connection is unstable, and may lead to redundant downloads across different samples. To avoid this, you can provide a local BUSCO lineage dataset using the --busco_db parameter. The local directory must follow a specific structure for BUSCO to recognize it.
+BUSCO can download lineage datasets automatically as it needs them, but this process can be slow if the internet connection is unstable, and may lead to redundant downloads across different samples.
+To avoid this, you can provide a local copy of a BUSCO lineage dataset using the --busco_db parameter.
+The local directory must follow a specific structure for BUSCO to recognize it.
 
 To prepare the lineage dataset, the recommended method is to use BUSCO's built-in download functionality before running the pipeline:
 
@@ -109,9 +118,31 @@ To prepare the lineage dataset, the recommended method is to use BUSCO's built-i
 busco --download_path <your_db> --download <lineage>
 ```
 
-This command downloads the specified lineage into the <your_db> directory and creates the required directory structure. <lineage> can be any supported dataset, such as `alphaproteobacteria_odb12`. You can also use `prokaryota` or `all` to download multiple lineages, which is necessary for automatic lineage selection in offline mode.
+This command downloads the specified lineage into the `<your_db>/` directory and creates the required directory structure.
+`<lineage>` can be any [supported dataset](https://busco-data.ezlab.org/v5/data/lineages/), such as `alphaproteobacteria_odb12`.
+You can also specify `prokaryota` or `all` to download multiple lineages, which is necessary for automatic lineage selection in offline mode.
 
-Alternatively, you can manually download a lineage tarball from [https://busco-data.ezlab.org/v5/data/lineages/](https://busco-data.ezlab.org/v5/data/lineages/), extract it, and place it in the appropriate location: `<your_db>/lineages/<taxa>_odb<XX>`. The lineage directory (e.g., bacteria_odb12) should contain files such as `datase.cfg` and a `hmms/` subdirectory at the top level. Then, you must provide `--busco_db <your_db>` to the pipeline.
+Alternatively, you can manually download a lineage tarball from [https://busco-data.ezlab.org/v5/data/lineages/](https://busco-data.ezlab.org/v5/data/lineages/), extract it, and place it in the appropriate location: `<your_db>/lineages/<taxa>_odb<XX>`.
+The lineage directory (e.g., bacteria_odb12) should contain files such as `datase.cfg` and a `hmms/` subdirectory at the top level.
+Then, you must provide `--busco_db <your_db>/` to the pipeline.
+
+### CAT
+
+> [! WARNING]
+> This database is very large at ~180 GB!
+> This can take a long time, so we strongly recommend downloading and unzipping prior the pipeline run.
+
+This database can be downloaded from the [CAT developers' website](https://tbb.bio.uu.nl/bastiaan/CAT_prepare/), which is based in the Netherlands (and could be slow for other regions of the world)
+
+### GTDB
+
+> [! WARNING]
+> This database is very large at ~110 GB!
+> This can take a long time, so we strongly recommend downloading and unzipping prior the pipeline run.
+
+This database can be downloaded from the [GTDB developers' website](default: https://data.gtdb.ecogenomic.org/releases/release220/220.0/auxillary_files/gtdbtk_package/full_package/), which is based in Australia (and could be slow for other regions of the world).
+The developers also offer a 'split' archive of 10GB files that can be downloaded more stably and subsequently can be manually combined after [here](https://data.gtdb.ecogenomic.org/releases/release220/220.0/auxillary_files/gtdbtk_package/split_package/).
+More documentation can be seen [here](https://ecogenomics.github.io/GTDBTk/installing/index.html#gtdb-tk-reference-data).
 
 ## Running the pipeline
 
