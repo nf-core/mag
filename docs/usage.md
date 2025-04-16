@@ -214,7 +214,9 @@ You can fix this by using the prameter `--megahit_fix_cpu_1`. In both cases, do 
 
 MetaBAT2 is run by default with a fixed seed within this pipeline, thus producing reproducible results.
 
-To allow also reproducible bin QC with BUSCO, run BUSCO providing already downloaded lineage datasets (BUSCO will be run using automated lineage selection in offline mode) or provide a specific lineage dataset via `--busco_db` and use the parameter `--save_busco_db`. This may be useful since BUSCO datasets are frequently updated and old versions do not always remain (easily) accessible.
+By default, BUSCO runs in offline mode only when both a local database path is provided via `busco_db` and a specific lineage is set with `--busco_db_lineage`.
+Using auto lineage mode with BUSCO may lead to non-reproducible results, since the databases are frequently updated and automatic lineage selection depends on the version of the database used when running BUSCO.
+If reproducibility is essential, you should explicitly enable offline mode by adding `--offline` to the command-line arguments passed to the BUSCO process by setting `ext.args`.
 
 For the taxonomic bin classification with [CAT](https://github.com/dutilh/CAT), when running the pipeline with `--cat_db_generate` the parameter `--save_cat_db` can be used to also save the generated database to allow reproducibility in future runs. Note that when specifying a pre-built database with `--cat_db`, currently the database can not be saved.
 
