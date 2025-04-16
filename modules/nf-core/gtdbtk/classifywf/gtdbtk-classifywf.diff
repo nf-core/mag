@@ -1,0 +1,25 @@
+Changes in component 'nf-core/gtdbtk/classifywf'
+'modules/nf-core/gtdbtk/classifywf/environment.yml' is unchanged
+'modules/nf-core/gtdbtk/classifywf/meta.yml' is unchanged
+Changes in 'gtdbtk/classifywf/main.nf':
+--- modules/nf-core/gtdbtk/classifywf/main.nf
++++ modules/nf-core/gtdbtk/classifywf/main.nf
+@@ -32,7 +32,13 @@
+     prefix = task.ext.prefix ?: "${meta.id}"
+ 
+     """
+-    export GTDBTK_DATA_PATH="\$(find -L ${db} -name 'metadata' -type d -exec dirname {} \\;)"#
++    if [ -z "$db" ] && [ -z "\$GTDBTK_DATA_PATH" ]; then
++        echo "Error ${task.process}( ${task.index} ): input `db` is null, but environment variable GTDBTK_DATA_PATH is not set."
++        exit 1
++    fi
++    if [ -n "$db" ] && [ -z "\$GTDBTK_DATA_PATH" ]; then
++        export GTDBTK_DATA_PATH="\$(find -L ${db} -name 'metadata' -type d -exec dirname {} \\;)"
++    fi
+ 
+     if [ ${pplacer_scratch} != "" ] ; then
+         mkdir pplacer_tmp
+
+'modules/nf-core/gtdbtk/classifywf/tests/main.nf.test.snap' is unchanged
+'modules/nf-core/gtdbtk/classifywf/tests/main.nf.test' is unchanged
+************************************************************
