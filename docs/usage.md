@@ -349,7 +349,7 @@ Note that in this context, it is recommended to also set `--min_length_unbinned_
 
 ## A note on using squash-fs image as input for GTDB-Tk database
 
-Users with limited storage resources can now economize on inode consumption (The uncompressed database requires 200K+ inodes!) by providing the database for GTDB-Tk as a squash-fs image. An image can be built using [squashfs-tools](https://github.com/plougher/squashfs-tools) from one of: a `tar.gz` format database; a directory containing the uncompressed database; the [split database](https://data.ace.uq.edu.au/public/gtdb/data/releases/release220/220.0/auxillary_files/gtdbtk_package/split_package).
+Users with limited storage resources can now economize on inodes (The uncompressed database requires >200K inodes!) by providing the database for GTDB-Tk as a squash-fs image. An image can be built using [squashfs-tools](https://github.com/plougher/squashfs-tools) from one of: a `tar.gz` format database; a directory containing the uncompressed database; the [split database](https://data.ace.uq.edu.au/public/gtdb/data/releases/release220/220.0/auxillary_files/gtdbtk_package/split_package).
 
 - Build image from a `tar.gz` compressed database
 
@@ -393,3 +393,5 @@ The following configuration settings are required to use the image.
   ```
               containerOptions = "--env GTDBTK_DATA_PATH=database -B $params.gtdb_db:\$NXF_TASK_WORKDIR/\$GTDBTK_DATA_PATH:image-src=/release220"
   ```
+
+> **NB:** This feature is only available with container engines `apptainer` and `singularity`.
