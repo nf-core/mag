@@ -856,7 +856,7 @@
                 "busco_force_offline": {
                     "type": "boolean",
                     "description": "Force BUSCO to run in offline mode.",
-                    "help_text": "This will prevent BUSCO from trying to download lineage datasets from the internet, and instead use the local files specified in `--busco_db`, ensuring reproducibility."
+                    "help_text": "This will prevent BUSCO from trying to download lineage datasets from the internet, and instead use the local files specified in `--busco_db`, ensuring reproducibility. Ensure you have sufficient lineages in your `--busco_db` pre-downloaded and unpacked"
                 },
                 "busco_auto_lineage_prok": {
                     "type": "boolean",
