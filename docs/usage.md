@@ -141,7 +141,7 @@ This database can be downloaded from the [CAT developers' website](https://tbb.b
 > This can take a long time, so we strongly recommend downloading and unzipping prior the pipeline run.
 
 This database can be downloaded from the [GTDB developers' website](default: https://data.gtdb.ecogenomic.org/releases/release220/220.0/auxillary_files/gtdbtk_package/full_package/), which is based in Australia (and could be slow for other regions of the world).
-The developers also offer a 'split' archive of 10GB files that can be downloaded more stably from  [here](https://data.gtdb.ecogenomic.org/releases/release220/220.0/auxillary_files/gtdbtk_package/split_package/) and subsequently (manually) combined after.
+The developers also offer a 'split' archive of 10GB files that can be downloaded more stably from [here](https://data.gtdb.ecogenomic.org/releases/release220/220.0/auxillary_files/gtdbtk_package/split_package/) and subsequently (manually) combined after.
 More documentation can be seen [here](https://ecogenomics.github.io/GTDBTk/installing/index.html#gtdb-tk-reference-data).
 
 ## Running the pipeline
