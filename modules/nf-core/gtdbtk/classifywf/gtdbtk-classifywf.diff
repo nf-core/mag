@@ -1,6 +1,4 @@
 Changes in component 'nf-core/gtdbtk/classifywf'
-'modules/nf-core/gtdbtk/classifywf/environment.yml' is unchanged
-'modules/nf-core/gtdbtk/classifywf/meta.yml' is unchanged
 Changes in 'gtdbtk/classifywf/main.nf':
 --- modules/nf-core/gtdbtk/classifywf/main.nf
 +++ modules/nf-core/gtdbtk/classifywf/main.nf
@@ -19,6 +17,8 @@ Changes in 'gtdbtk/classifywf/main.nf':
      if [ "${pplacer_scratch}" != "" ] ; then
          mkdir pplacer_tmp
 
+'modules/nf-core/gtdbtk/classifywf/environment.yml' is unchanged
+'modules/nf-core/gtdbtk/classifywf/meta.yml' is unchanged
 'modules/nf-core/gtdbtk/classifywf/tests/main.nf.test.snap' is unchanged
 'modules/nf-core/gtdbtk/classifywf/tests/main.nf.test' is unchanged
 ************************************************************
