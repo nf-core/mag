@@ -59,7 +59,6 @@ include { CAT_DB_GENERATE                                       } from '../modul
 include { CAT                                                   } from '../modules/local/cat'
 include { CAT_SUMMARY                                           } from '../modules/local/cat_summary'
 include { BIN_SUMMARY                                           } from '../modules/local/bin_summary'
-include { COMBINE_TSV as COMBINE_SUMMARY_TSV                    } from '../modules/local/combine_tsv'
 
 workflow MAG {
     take:
@@ -618,7 +617,7 @@ workflow MAG {
         * Bin QC subworkflows: for checking bin completeness with either BUSCO, CHECKM, CHECKM2, and/or GUNC
         */
 
-        if (!params.skip_binqc) {
+    if (!params.skip_binqc) {
             BIN_QC(ch_input_for_postbinning)
 
             ch_bin_qc_summary = BIN_QC.out.qc_summary

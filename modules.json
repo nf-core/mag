@@ -36,6 +36,11 @@
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
                         "installed_by": ["modules"]
                     },
+                    "busco/busco": {
+                        "branch": "master",
+                        "git_sha": "ebfffb751c6c73b7a16afe7a1a35eb103f6a4563",
+                        "installed_by": ["modules"]
+                    },
                     "cat/fastq": {
                         "branch": "master",
                         "git_sha": "5c460c5a4736974abde2843294f35307ee2b0e5e",
@@ -101,6 +106,11 @@
                         "branch": "master",
                         "git_sha": "baa30accc6c50ea8a98662417d4f42ed18966353",
                         "installed_by": ["fasta_binning_concoct"]
+                    },
+                    "csvtk/concat": {
+                        "branch": "master",
+                        "git_sha": "aa5c23023134cf2d8b75a95d53557890e40261b9",
+                        "installed_by": ["modules"]
                     },
                     "dastool/dastool": {
                         "branch": "master",
@@ -294,8 +304,9 @@
                     },
                     "untar": {
                         "branch": "master",
-                        "git_sha": "5caf7640a9ef1d18d765d55339be751bb0969dfa",
-                        "installed_by": ["modules"]
+                        "git_sha": "81880787133db07d9b4c1febd152c090eb8325dc",
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/untar/untar.diff"
                     }
                 }
             },
