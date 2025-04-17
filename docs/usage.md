@@ -371,7 +371,7 @@ Users with limited storage resources can now economize on inodes (The uncompress
 
 The following configuration settings are required to use the image.
 
-- Set `params.gtdb_db` to the image path.
+- Set `params.gtdb_db` to the image path.  The file name extension must be `squashfs`.
 - Add the configuration block:
 
   ```
@@ -382,7 +382,7 @@ The following configuration settings are required to use the image.
   }
   ```
 
-  where `database` is the name of the mount directory under $NXF_TASK_WORKDIR, and `<image_top-level-directory>` is the top-level directory of the image file-system. There is nothing special about the name `database`.  The `<image_top-level-directory>` can be determined with,
+  where `database` is the name of the mount directory that will be created in `$NXF_TASK_WORKDIR`, and `<image_top-level-directory>` is the top-level directory of the image file-system. There is nothing special about the name `database`.  The `<image_top-level-directory>` can be determined with,
 
   ```
   $ unsquashfs -l -max-depth 1 -d'' gtdbtk_r220.squashfs
