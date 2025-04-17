@@ -377,12 +377,12 @@ The following configuration settings are required to use the image.
   ```
   process {
       withName: GTDBTK_CLASSIFYWF {
-              containerOptions = "--env GTDB_DB_PATH=database -B $params.gtdb_db:\$NXF_TASK_WORKDIR/database:image-src=<image_top-level-directory>"
+              containerOptions = "--env GTDBTK_DATA_PATH=database -B $params.gtdb_db:\$NXF_TASK_WORKDIR/\$GTDBTK_DATA_PATH:image-src=<image_top-level-directory>"
       }
   }
   ```
 
-  where `<image_top-level-directory>` is the top-level directory of the image file-system. It can be determined with,
+  where `database` is the name of the mount directory under $NXF_TASK_WORKDIR, and `<image_top-level-directory>` is the top-level directory of the image file-system. There is nothing special about the name `database`.  The `<image_top-level-directory>` can be determined with,
 
   ```
   $ unsquashfs -l -max-depth 1 -d'' gtdbtk_r220.squashfs
@@ -391,5 +391,5 @@ The following configuration settings are required to use the image.
   For example, suppose that the output is `/release220`. Then the `containerOptions` directive should be set to,
 
   ```
-              containerOptions = "-B $params.gtdb_db:\$NXF_TASK_WORKDIR/database:image-src=/release220"
+              containerOptions = "--env GTDBTK_DATA_PATH=database -B $params.gtdb_db:\$NXF_TASK_WORKDIR/\$GTDBTK_DATA_PATH:image-src=/release220"
   ```
