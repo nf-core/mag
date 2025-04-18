@@ -32,7 +32,14 @@ process GTDBTK_CLASSIFYWF {
     prefix = task.ext.prefix ?: "${meta.id}"
 
     """
-    export GTDBTK_DATA_PATH="\$(find -L ${db} -name 'metadata' -type d -exec dirname {} \\;)"
+    if [ -n "$db" ]; then
+        export GTDBTK_DATA_PATH="\$(find -L ${db} -name 'metadata' -type d -exec dirname {} \\;)"
+    elif [ -n "\$GTDBTK_DATA_PATH" ]; then
+        export GTDBTK_DATA_PATH
+    else
+        echo "Error ${task.process}( $prefix ): Input `db` is null, but environment variable GTDBTK_DATA_PATH is not set."
+        exit 1
+    fi
 
     if [ "${pplacer_scratch}" != "" ] ; then
         mkdir pplacer_tmp
