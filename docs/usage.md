@@ -346,3 +346,57 @@ By removing these bins, you can speed up run time of the pipeline considerably i
 This can also remove 'nonsense' bins of e.g. a single or a collection of very short contigs that can occur with more aggressive binners (e.g. CONCOCT), and can in some cases prevent GUNC [from running correctly](https://github.com/grp-bork/gunc/issues/42#issue-2148763805).
 
 Note that in this context, it is recommended to also set `--min_length_unbinned_contigs` to a suitably high value that corresponds to a reasonable bin size if the `-bin_*_length` parameters are used, so you have useful 'singular' contigs in the unbinned output.
+
+## A note on using SquashFS image as input for GTDB-Tk database
+
+Users with limited storage resources can economize on inodes (The uncompressed database requires >200K inodes!) by providing the database for GTDB-Tk as a SquashFS image. An image can be built using [squashfs-tools](https://github.com/plougher/squashfs-tools) from one of: a `tar.gz` format database; a directory containing the uncompressed database; the [split database](https://data.ace.uq.edu.au/public/gtdb/data/releases/release220/220.0/auxillary_files/gtdbtk_package/split_package).
+
+- Build image from a `tar.gz` compressed database
+
+  ```
+  $ gzip -cd gtdbtk_r220_data.tar.gz | mksquashfs - gtdbtk_r220.squashfs -tar
+  ```
+
+- Build image from a directory containing an uncompressed database
+
+  ```
+  $ mksquashfs /path/to/database gtdbtk_r220.squashfs
+  ```
+
+- Build image from the split database
+  ```
+  $ parallel wget ::: https://data.ace.uq.edu.au/public/gtdb/data/releases/release220/220.0/auxillary_files/gtdbtk_package/split_package/gtdbtk_r220_data.tar.gz.part_a?
+  $ cat gtdbtk_r220_data.tar.gz.part_* | gzip -cd - | mksquashfs - gtdbtk_r220.squashfs -tar
+  ```
+
+The following configuration settings are required to use the image.
+
+- Set `params.gtdb_db` to the absolute path of an existing directory at which the image file system will be
+bind-mounted to the container's file system.  To avoid a conflict between this mount target and the symbolic link
+to the mount target that will be created in the workDir of a `GTDBTK_CLASSIFYWF` task, the mount target should not
+terminate inside the workDir of a `GTDBTK_CLASSIFYWF` task.  Hint:  Don't use `"\$NXF_TASK_WORKDIR"` as the root
+path of `params.gtdb_db`.
+
+- Add the configuration block:
+
+  ```
+  process {
+      withName: GTDBTK_CLASSIFYWF {
+              containerOptions = "-B /path/to/gtdb.squashfs:${params.gtdb_db}:image-src=<image_top-level-directory>"
+      }
+  }
+  ```
+
+  where `<image_top-level-directory>` is the top-level directory of the image file-system.  It can be determined with,
+
+  ```
+  $ unsquashfs -l -max-depth 1 -d'' gtdbtk_r220.squashfs
+  ```
+
+  For example, suppose that the output is `/release220`. Then the `containerOptions` directive should be set to,
+
+  ```
+              containerOptions = "-B /path/to/gtdb.squashfs:${params.gtdb_db}:image-src=/release220"
+  ```
+
+> **NB:** This feature is only available with container engines `apptainer` and `singularity`.
