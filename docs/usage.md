@@ -347,56 +347,81 @@ This can also remove 'nonsense' bins of e.g. a single or a collection of very sh
 
 Note that in this context, it is recommended to also set `--min_length_unbinned_contigs` to a suitably high value that corresponds to a reasonable bin size if the `-bin_*_length` parameters are used, so you have useful 'singular' contigs in the unbinned output.
 
-## A note on using SquashFS image as input for GTDB-Tk database
+## A note on GTDB having too many files or using too many inodes
 
-Users with limited storage resources can economize on inodes (The uncompressed database requires >200K inodes!) by providing the database for GTDB-Tk as a SquashFS image. An image can be built using [squashfs-tools](https://github.com/plougher/squashfs-tools) from one of: a `tar.gz` format database; a directory containing the uncompressed database; the [split database](https://data.ace.uq.edu.au/public/gtdb/data/releases/release220/220.0/auxillary_files/gtdbtk_package/split_package).
+The GTDB is very large both in size and by the number of files it contains.
+The uncompressed database requires >200k inodes, which can be problematic for users with limited storage resources.
 
-- Build image from a `tar.gz` compressed database
+One work around for this is to economize on inodes by using a SquashFS image version of the `.tar.gz` GTDB archive, and supply this to the pipeline via a configuration file.
 
-  ```
-  $ gzip -cd gtdbtk_r220_data.tar.gz | mksquashfs - gtdbtk_r220.squashfs -tar
-  ```
+:::warning
+This feature is only available with container engines `apptainer` and `singularity`!
+:::
 
-- Build image from a directory containing an uncompressed database
+To generate your SquashFS image:
 
-  ```
-  $ mksquashfs /path/to/database gtdbtk_r220.squashfs
-  ```
+1. Install [squashfs-tools](https://github.com/plougher/squashfs-tools), if it is not already on your system
+2. Download the GTDB archive either via the full [`.tar.gz` archive](https://data.ace.uq.edu.au/public/gtdb/data/releases/release220/220.0/auxillary_files/gtdbtk_package/full_package/) or the [split database](https://data.ace.uq.edu.au/public/gtdb/data/releases/release220/220.0/auxillary_files/gtdbtk_package/split_package) version.
+3. Convert to a SquashFS image
 
-- Build image from the split database
-  ```
-  $ parallel wget ::: https://data.ace.uq.edu.au/public/gtdb/data/releases/release220/220.0/auxillary_files/gtdbtk_package/split_package/gtdbtk_r220_data.tar.gz.part_a?
-  $ cat gtdbtk_r220_data.tar.gz.part_* | gzip -cd - | mksquashfs - gtdbtk_r220.squashfs -tar
-  ```
+- Full package (compressed):
 
-The following configuration settings are required to use the image.
-
-- Set `params.gtdb_db` to the absolute path of an existing directory at which the image file system will be
-bind-mounted to the container's file system.  To avoid a conflict between this mount target and the symbolic link
-to the mount target that will be created in the workDir of a `GTDBTK_CLASSIFYWF` task, the mount target should not
-terminate inside the workDir of a `GTDBTK_CLASSIFYWF` task.  Hint:  Don't use `"\$NXF_TASK_WORKDIR"` as the root
-path of `params.gtdb_db`.
-
-- Add the configuration block:
-
-  ```
-  process {
-      withName: GTDBTK_CLASSIFYWF {
-              containerOptions = "-B /path/to/gtdb.squashfs:${params.gtdb_db}:image-src=<image_top-level-directory>"
-      }
-  }
+  ```bash
+  gzip -cd gtdbtk_r220_data.tar.gz | mksquashfs - gtdbtk_r220.squashfs -tar
   ```
 
-  where `<image_top-level-directory>` is the top-level directory of the image file-system.  It can be determined with,
+- Full package (uncompressed)
 
-  ```
-  $ unsquashfs -l -max-depth 1 -d'' gtdbtk_r220.squashfs
-  ```
-
-  For example, suppose that the output is `/release220`. Then the `containerOptions` directive should be set to,
-
-  ```
-              containerOptions = "-B /path/to/gtdb.squashfs:${params.gtdb_db}:image-src=/release220"
+  ```bash
+  mksquashfs /path/to/database gtdbtk_r220.squashfs
   ```
 
-> **NB:** This feature is only available with container engines `apptainer` and `singularity`.
+- Split package (compressed)
+
+  ```bash
+  cat gtdbtk_r220_data.tar.gz.part_* | gzip -cd - | mksquashfs - gtdbtk_r220.squashfs -tar
+  ```
+
+To use the image in the pipeline:
+
+1. Make an empty directory somewhere on your system
+2. Make a custom [Nextflow config](https://nextflow.io/docs/latest/config.html#configuration-file) file with the following settings
+
+   ```nextflow
+   process {
+       withName: GTDBTK_CLASSIFYWF {
+               containerOptions = "-B /<path>/<to>/<empty_dir>/gtdbtk_r220.squashfs:${params.gtdb_db}:image-src=/"
+       }
+   }
+   ```
+
+3. Supply the empty directory and config to the nextflow run `--gtdb_db /<path>/<to>/<empty_dir>/` to your `nextflow run` command
+
+   ```bash
+   nextflow run nf-core/mag -r <version> -profile <profiles> <...> --gtdb_db /<path>/<to>/<empty_dir>/ -c <custom>.config
+   ```
+
+:::warning
+Make sure to update the paths where indicated, and the GTDB release version if using a more recent one than r220!
+:::
+
+:::note
+If you have issues with this, you may need to specify a different `image-src=` so it corresponds to the directory structure within your `SquashFS` image.
+
+You can determine this with:
+
+```bash
+unsquashfs -l -max-depth 1 -d'' gtdbtk_r220.squashfs
+```
+
+And use the resulting the output in `image-src=`
+
+```nextflow
+process {
+    withName: GTDBTK_CLASSIFYWF {
+            containerOptions = "-B /<path>/<to>/<empty_dir>/gtdbtk_r220.squashfs:${params.gtdb_db}:image-src=/<output_from_unsquashfs_ls>"
+    }
+}
+```
+
+:::
