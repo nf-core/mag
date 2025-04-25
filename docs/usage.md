@@ -109,7 +109,7 @@ For any other database, or in doubt, please check the [parameters page](https://
 #### BUSCO
 
 BUSCO can download lineage datasets automatically as it needs them, but this process can be slow if the internet connection is unstable, and may lead to redundant downloads across different samples.
-To avoid this, you can provide a local copy of a BUSCO lineage dataset using the --busco_db parameter.
+To avoid this, you can provide a local copy of a BUSCO lineage dataset using the `--busco_db` parameter.
 The local directory must follow a specific structure for BUSCO to recognize it.
 
 To prepare the lineage dataset, the recommended method is to use BUSCO's built-in download functionality before running the pipeline:
@@ -123,8 +123,13 @@ This command downloads the specified lineage into the `<your_db>/` directory and
 You can also specify `prokaryota` or `all` to download multiple lineages, which is necessary for automatic lineage selection in offline mode.
 
 Alternatively, you can manually download a lineage tarball from [https://busco-data.ezlab.org/v5/data/lineages/](https://busco-data.ezlab.org/v5/data/lineages/), extract it, and place it in the appropriate location: `<your_db>/lineages/<taxa>_odb<XX>`.
-The lineage directory (e.g., bacteria_odb12) should contain files such as `datase.cfg` and a `hmms/` subdirectory at the top level.
-Then, you must provide `--busco_db <your_db>/` to the pipeline.
+The lineage directory (e.g., `bacteria_odb12`) should contain files such as `dataset.cfg` and a `hmms/` subdirectory at the top level.
+Then, you must provide `--busco_db <your_db>/` and `--busco_db_lineage <downloaded_lineage>` to the pipeline.
+You can also pass to `--busco_db` a URL pointing to a lineage tarball, or the tarball itself if stored locally.
+
+> [! WARNING]
+> When any kind of parameter is provided to `--busco_db`, BUSCO will run in offline mode.
+> If the lineage specified via `--busco_db_lineage` is not found locally, or if you attempt automatic lineage selection without having a complete lineage dataset pre-downloaded, BUSCO will fail.
 
 ### CAT
 
@@ -132,7 +137,7 @@ Then, you must provide `--busco_db <your_db>/` to the pipeline.
 > This database is very large at ~180 GB!
 > This can take a long time, so we strongly recommend downloading and unzipping prior the pipeline run.
 
-This database can be downloaded from the [CAT developers' website](https://tbb.bio.uu.nl/bastiaan/CAT_prepare/), which is based in the Netherlands (and could be slow for other regions of the world)
+This database can be downloaded from the [CAT developers' website](https://tbb.bio.uu.nl/bastiaan/CAT_prepare/), which is based in the Netherlands (and could be slow for other regions of the world).
 
 ### GTDB
 
@@ -141,7 +146,7 @@ This database can be downloaded from the [CAT developers' website](https://tbb.b
 > This can take a long time, so we strongly recommend downloading and unzipping prior the pipeline run.
 
 This database can be downloaded from the [GTDB developers' website](default: https://data.gtdb.ecogenomic.org/releases/release220/220.0/auxillary_files/gtdbtk_package/full_package/), which is based in Australia (and could be slow for other regions of the world).
-The developers also offer a 'split' archive of 10GB files that can be downloaded more stably and subsequently can be manually combined after [here](https://data.gtdb.ecogenomic.org/releases/release220/220.0/auxillary_files/gtdbtk_package/split_package/).
+The developers also offer a 'split' archive of 10GB files that can be downloaded more stably from [here](https://data.gtdb.ecogenomic.org/releases/release220/220.0/auxillary_files/gtdbtk_package/split_package/) and subsequently (manually) combined after.
 More documentation can be seen [here](https://ecogenomics.github.io/GTDBTk/installing/index.html#gtdb-tk-reference-data).
 
 ## Running the pipeline
@@ -214,7 +219,9 @@ You can fix this by using the prameter `--megahit_fix_cpu_1`. In both cases, do 
 
 MetaBAT2 is run by default with a fixed seed within this pipeline, thus producing reproducible results.
 
-To allow also reproducible bin QC with BUSCO, run BUSCO providing already downloaded lineage datasets (BUSCO will be run using automated lineage selection in offline mode) or provide a specific lineage dataset via `--busco_db` and use the parameter `--save_busco_db`. This may be useful since BUSCO datasets are frequently updated and old versions do not always remain (easily) accessible.
+By default, BUSCO runs in offline mode only when both a local database path is provided via `--busco_db` and a specific lineage is set with `--busco_db_lineage`.
+Using auto lineage mode with BUSCO may lead to non-reproducible results, since the databases are frequently updated and automatic lineage selection depends on the version of the database used when running BUSCO.
+If you have supplied all available lineages within your `--busco_db`, but want BUSCO to auto-select the lineage, and are running in an offline context, you can enable the parameter `--busco_force_offline`, for maximum reproducibility.
 
 For the taxonomic bin classification with [CAT](https://github.com/dutilh/CAT), when running the pipeline with `--cat_db_generate` the parameter `--save_cat_db` can be used to also save the generated database to allow reproducibility in future runs. Note that when specifying a pre-built database with `--cat_db`, currently the database can not be saved.
 
