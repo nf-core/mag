@@ -414,7 +414,7 @@ You can determine this with:
 unsquashfs -l -max-depth 1 -d'' gtdbtk_r220.squashfs
 ```
 
-And use the resulting the output in `image-src=`
+And use the resulting output in `image-src=`
 
 ```nextflow
 process {
