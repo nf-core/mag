@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Added`
 
 - [#784](https://github.com/nf-core/mag/pull/784) - Added `--bin_min_size` and `--bin_max_size` parameters to filter out bins based on size (requested by @maxibor, @alexhbnr, added by @jfy133, @prototaxites).
-- [#793](https://github.com/nf-core/mag/pull/793) - Document use of SquashFS image as GTDB-Tk database. ( by @muniheart )
+- [#793](https://github.com/nf-core/mag/pull/793) - Document use of a SquashFS image with `--gtdb_db` (by @muniheart).
 
 ### `Changed`
 
