@@ -15,9 +15,23 @@ workflow LONGREAD_ASSEMBLY {
 
     if (!params.skip_flye) {
 
-        FLYE (
+        /*FLYE (
             ch_long_reads,
             "--" + params.flye_mode
+        )
+        */
+
+        FLYE (
+            ch_long_reads,
+            ch_long_reads.map { meta, _fastq ->
+                if (meta.lr_platform == "OXFORD_NANOPORE") {
+                    "--nano-raw"
+                } else if (meta.lr_platform == "OXFORD_NANOPORE_HQ") {
+                    "--nano-hq"
+                } else {
+                    "--pacbio-hifi"
+                }
+            }
         )
 
         ch_flye_assemblies = FLYE.out.fasta.map { meta, assembly ->
@@ -32,7 +46,15 @@ workflow LONGREAD_ASSEMBLY {
 
         METAMDBG_ASM (
             ch_long_reads,
-            params.metamdbg_mode
+            ch_long_reads.map { meta, _fastq ->
+                if (meta.lr_platform == "OXFORD_NANOPORE") {
+                    "ont"
+                } else if (meta.lr_platform == "OXFORD_NANOPORE_HQ") {
+                    "ont"
+                } else {
+                    "hifi"
+                }
+            }
         )
 
         ch_metamdbg_assemblies = METAMDBG_ASM.out.contigs.map { meta, assembly ->

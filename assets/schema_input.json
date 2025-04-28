@@ -66,7 +66,7 @@
             },
             "long_reads_platform": {
                 "type": "string",
-                "enum": ["OXFORD_NANOPORE", "PACBIO_SMRT"],
+                "enum": ["OXFORD_NANOPORE", "OXFORD_NANOPORE_HQ", "PACBIO_SMRT"],
                 "default": "OXFORD_NANOPORE",
                 "meta": ["lr_platform"]
             }
