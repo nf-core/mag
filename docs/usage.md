@@ -424,5 +424,5 @@ process {
 }
 ```
 
-Where we update the `image-src`  and as above supply the same `/<path>/<to>/<empty_dir>/` path to `--gtdb_db`.
+Where we update the `image-src` and as above supply the same `/<path>/<to>/<empty_dir>/` path to `--gtdb_db`.
 :::
