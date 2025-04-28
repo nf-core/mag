@@ -69,8 +69,6 @@
                 "enum": ["OXFORD_NANOPORE", "PACBIO_SMRT"],
                 "default": "OXFORD_NANOPORE",
                 "meta": ["lr_platform"]
-                "pattern": "^\\S+\\.f(ast)?q\\.gz$",
-                "errorMessage": "long_reads needs to be a file path with no spaces.\n\nFile needs to exist!"
             }
         },
         "required": ["sample", "group"],

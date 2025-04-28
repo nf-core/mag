@@ -10,6 +10,7 @@ include { PORECHOP_ABI                                          } from '../../mo
 include { FILTLONG                                              } from '../../modules/nf-core/filtlong'
 include { CHOPPER                                               } from '../../modules/nf-core/chopper'
 include { NANOQ                                                 } from '../../modules/nf-core/nanoq'
+include { CAT_FASTQ as CAT_FASTQ_LONGREADS                      } from '../../modules/nf-core/cat/fastq/main'
 
 // include other subworkflows here
 include { LONGREAD_HOSTREMOVAL                                  } from './longread_hostremoval'
@@ -29,13 +30,6 @@ workflow LONGREAD_PREPROCESSING {
         ch_raw_long_reads
     )
     ch_versions = ch_versions.mix(NANOPLOT_RAW.out.versions.first())
-
-    ch_long_reads = ch_raw_long_reads
-                    .map {
-                        meta, reads ->
-                            def meta_new = meta - meta.subMap('run')
-                        [ meta_new, reads ]
-                    }
 
     if ( !params.assembly_input ) {
         if (!params.skip_adapter_trimming) {
@@ -116,6 +110,25 @@ workflow LONGREAD_PREPROCESSING {
         )
 
         ch_versions = ch_versions.mix(NANOPLOT_FILTERED.out.versions.first())
+
+        // Run merging
+        ch_long_reads_forcat = ch_long_reads
+            .map { meta, reads ->
+                def meta_new = meta - meta.subMap('run')
+                meta_new.single_end = true
+                [meta_new, reads]
+            }
+            .groupTuple()
+            .branch { _meta, reads ->
+                cat: reads.size() >= 2
+                skip_cat: true
+            }
+
+        CAT_FASTQ_LONGREADS(ch_long_reads_forcat.cat.map { meta, reads -> [meta, reads.flatten()] })
+        ch_versions = ch_versions.mix(CAT_FASTQ_LONGREADS.out.versions.first())
+
+        ch_long_reads = CAT_FASTQ_LONGREADS.out.reads.mix(ch_long_reads_forcat.skip_cat)
+
     }
 
     emit:
