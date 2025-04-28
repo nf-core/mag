@@ -49,6 +49,8 @@ workflow LONGREAD_PREPROCESSING {
                 ch_versions = ch_versions.mix(PORECHOP_PORECHOP.out.versions.first())
                 ch_multiqc_files = ch_multiqc_files.mix( PORECHOP_PORECHOP.out.log )
             }
+        } else {
+            ch_long_reads = ch_raw_long_reads
         }
 
         if (!params.keep_lambda && params.longread_filtering_tool != 'chopper') {
