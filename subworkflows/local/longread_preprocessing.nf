@@ -131,6 +131,8 @@ workflow LONGREAD_PREPROCESSING {
 
         ch_long_reads = CAT_FASTQ_LONGREADS.out.reads.mix(ch_long_reads_forcat.skip_cat)
 
+    } else {
+        ch_long_reads = ch_raw_long_reads
     }
 
     emit:
