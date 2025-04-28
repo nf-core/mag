@@ -390,7 +390,7 @@ To use the image in the pipeline:
    ```nextflow
    process {
        withName: GTDBTK_CLASSIFYWF {
-               containerOptions = "-B /<path>/<to>/<empty_dir>/gtdbtk_r220.squashfs:${params.gtdb_db}:image-src=/"
+               containerOptions = "-B /<path>/<to>/gtdbtk_r220.squashfs:${params.gtdb_db}:image-src=/"
        }
    }
    ```
@@ -419,7 +419,7 @@ And use the resulting output in `image-src=`
 ```nextflow
 process {
     withName: GTDBTK_CLASSIFYWF {
-            containerOptions = "-B /<path>/<to>/<empty_dir>/gtdbtk_r220.squashfs:${params.gtdb_db}:image-src=/<output_from_unsquashfs_ls>"
+            containerOptions = "-B /<path>/<to>/gtdbtk_r220.squashfs:${params.gtdb_db}:image-src=/<output_from_unsquashfs_ls>"
     }
 }
 ```
