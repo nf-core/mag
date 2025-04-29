@@ -849,13 +849,9 @@
                 },
                 "busco_db_lineage": {
                     "type": "string",
-                    "description": "Name of the BUSCO *_odb10 or *_odb12 lineage to check against.",
+                    "description": "Name of the BUSCO *_odb10 or *_odb12 lineage to check against. Additionally supports 'auto' and 'auto_prok' for automatic lineage selection mode.",
                     "help_text": "Typically used in combination with `--busco_db`, corresponding to the lineage files supplied within the `--busco_db` file or directroy.\n\nIf supplying without a `--busco_db`, will require an internet connection to work!",
-                    "pattern": ".*_odb(10|12)$"
-                },
-                "busco_auto_lineage_prok": {
-                    "type": "boolean",
-                    "description": "Run BUSCO with automated lineage selection, but ignoring eukaryotes (saves runtime)."
+                    "pattern": "(.*_odb(10|12))|auto(_prok)?$"
                 },
                 "save_busco_db": {
                     "type": "boolean",

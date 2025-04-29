@@ -93,19 +93,7 @@ workflow BIN_QC {
             ch_busco_db = []
         }
 
-        // Specify a specific lineage otherwise just let BUSCO auto-select
-        // Warning: if not all lineages in `--busco_db` it will try to auto-download!
-        if (params.busco_db_lineage) {
-            busco_lineage = params.busco_db_lineage
-        }
-        else if (params.busco_auto_lineage_prok) {
-            busco_lineage = 'auto_prok'
-        }
-        else {
-            busco_lineage = 'auto'
-        }
-
-        BUSCO_BUSCO(ch_bins, 'genome', busco_lineage, ch_busco_db, [], params.busco_clean)
+        BUSCO_BUSCO(ch_bins, 'genome', params.busco_db_lineage, ch_busco_db, [], params.busco_clean)
 
         ch_qc_summaries = BUSCO_BUSCO.out.batch_summary
             .map { _meta, summary -> [[id: 'busco'], summary] }

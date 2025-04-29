@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Added`
 
 - [#784](https://github.com/nf-core/mag/pull/784) - Added `--bin_min_size` and `--bin_max_size` parameters to filter out bins based on size (requested by @maxibor, @alexhbnr, added by @jfy133, @prototaxites).
-- [#730](https://github.com/nf-core/mag/pull/730) - Added `--busco_db_lineage` to allow specifying a specific lineage for BUSCO database (added by @jfy133).
+- [#730](https://github.com/nf-core/mag/pull/730) - Added `--busco_db_lineage` to allow specifying a specific lineage for BUSCO database and remove `--busco_auto_lineage_prok` (added by @jfy133, @dialvarezs).
 - [#793](https://github.com/nf-core/mag/pull/793) - Document use of a SquashFS image with `--gtdb_db`, useful for limited inode infrastructure (by @muniheart).
 
 ### `Changed`
