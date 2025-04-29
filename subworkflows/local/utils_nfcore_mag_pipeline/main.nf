@@ -297,9 +297,6 @@ def validateInputParameters(hybrid) {
         if (params.busco_db) {
             error("[nf-core/mag] ERROR: Both --skip_binqc and --busco_db are specified! Invalid combination, please specify either --skip_binqc or --binqc_tool 'busco' with --busco_db.")
         }
-        if (params.busco_db_lineage) {
-            error("[nf-core/mag] ERROR: Both --skip_binqc and --busco_db_lineage are specified! Invalid combination, please specify either --skip_binqc or --binqc_tool 'busco' with --busco_db_lineage.")
-        }
     }
 
     if (!params.skip_binqc && params.binqc_tool == 'busco' && params.busco_db && !params.busco_db_lineage) {
