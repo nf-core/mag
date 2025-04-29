@@ -842,16 +842,16 @@
                 },
                 "busco_db": {
                     "type": "string",
-                    "description": "Download URL, tar.gz archive local path, or local uncompressed directory for an *_odb10 or *_odb12 BUSCO lineage datasets.",
+                    "description": "Download URL, local tar.gz archive, or local uncompressed directory for an *_odb10 or *_odb12 BUSCO lineage dataset.",
                     "help_text": "E.g. https://busco-data.ezlab.org/v5/data/lineages/bacteria_odb10.2024-01-08.tar.gz, `/path/to/bacteria_odb10.2024-01-08.tar.gz`.\n\nFor more details, check the [BUSCO section in the usage documentation](https://nf-co.re/mag/latest/docs/usage/#busco).",
                     "format": "path",
                     "exists": true
                 },
                 "busco_db_lineage": {
                     "type": "string",
-                    "description": "Name of the BUSCO *_odb10 or *_odb12 lineage to check against. Additionally supports 'auto' and 'auto_prok' for automatic lineage selection mode.",
+                    "description": "Name of the BUSCO *_odb10 or *_odb12 lineage to check against. Additionally supports 'auto', 'auto_prok' and 'auto_euk' for automatic lineage selection mode.",
                     "help_text": "Typically used in combination with `--busco_db`, corresponding to the lineage files supplied within the `--busco_db` file or directroy.\n\nIf supplying without a `--busco_db`, will require an internet connection to work!",
-                    "pattern": "(.*_odb(10|12))|auto(_prok)?$"
+                    "pattern": "(.*_odb(10|12))|auto(_prok|_euk)?$"
                 },
                 "save_busco_db": {
                     "type": "boolean",

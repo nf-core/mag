@@ -289,26 +289,26 @@ def validateInputParameters(hybrid) {
         error("[nf-core/mag] ERROR: The parameter '--postbinning_input ${params.postbinning_input}' for downstream steps can only be specified if bin refinement is activated with --refine_bins_dastool! Check input.")
     }
 
-    // Check if BUSCO parameters combinations are valid
     if (params.skip_binqc && params.binqc_tool == 'checkm') {
         error("[nf-core/mag] ERROR: Both --skip_binqc and --binqc_tool 'checkm' are specified! Invalid combination, please specify either --skip_binqc or --binqc_tool.")
     }
+
+    // Check if BUSCO parameters combinations are valid
     if (params.skip_binqc) {
         if (params.busco_db) {
             error("[nf-core/mag] ERROR: Both --skip_binqc and --busco_db are specified! Invalid combination, please specify either --skip_binqc or --binqc_tool 'busco' with --busco_db.")
         }
     }
 
-    if (!params.skip_binqc && params.binqc_tool == 'busco' && params.busco_db && !params.busco_db_lineage) {
-        log.warn('[nf-core/mag]: WARNING: You have supplied a --busco_db directory, but not specified a lineage with `--busco_db_lineage` - this may cause BUSCO to attempt to auto-download files for you!')
-    }
-
     if (!params.skip_binqc && params.binqc_tool == 'busco') {
+        if (params.busco_db && !params.busco_db_lineage) {
+            log.warn('[nf-core/mag]: WARNING: You have supplied a database to --busco_db - BUSCO will run in offline mode. Please note that BUSCO may fail if you have an incomplete database and are running with --busco_db_lineage auto!')
+        }
+
         if (params.busco_db && file(params.busco_db).isDirectory() && !file(params.busco_db).listFiles().any { it.toString().contains('lineages') }) {
             error("[nf-core/mag] ERROR: Directory supplied to `--busco_db` must contain a `lineages/` subdirectory that itself contains one or more BUSCO lineage files! Check: --busco_db ${params.busco_db}")
         }
     }
-
 
     if (params.skip_binqc && !params.skip_gtdbtk) {
         log.warn('[nf-core/mag]: --skip_binqc is specified, but --skip_gtdbtk is explictly set to run! GTDB-tk will be omitted because GTDB-tk bin classification requires bin filtering based on BUSCO or CheckM QC results to avoid GTDB-tk errors.')
