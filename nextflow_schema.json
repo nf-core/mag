@@ -405,6 +405,10 @@
                     "type": "boolean",
                     "description": "Skip removing adapter sequences from long reads."
                 },
+                "skip_longread_filtering": {
+                    "type": "boolean",
+                    "description": "Skip filtering long reads."
+                },
                 "longreads_min_length": {
                     "type": "integer",
                     "default": 1000,

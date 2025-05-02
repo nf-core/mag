@@ -61,39 +61,40 @@ workflow LONGREAD_PREPROCESSING {
             ch_long_reads = NANOLYSE.out.fastq
             ch_versions = ch_versions.mix(NANOLYSE.out.versions.first())
         }
+        if (!params.skip_longread_filtering) {
+            if (params.longread_filtering_tool == 'filtlong') {
+                // join long and short reads by sample name
+                ch_short_reads_tmp = ch_short_reads
+                    .map { meta, sr -> [ meta.id, sr ] }
 
-        if (params.longread_filtering_tool == 'filtlong') {
-            // join long and short reads by sample name
-            ch_short_reads_tmp = ch_short_reads
-                .map { meta, sr -> [ meta.id, sr ] }
+                ch_short_and_long_reads = ch_long_reads
+                    .map { meta, lr -> [ meta.id, meta, lr ] }
+                    .join(ch_short_reads_tmp, by: 0, remainder: true)
+                    .filter { it[1] != null } // Make sure long reads are not null, which happens if ch_short_reads is empty
+                    .map { id, meta_lr, lr, sr -> [ meta_lr, sr ? sr : [], lr ] }  // should not occur for single-end, since SPAdes (hybrid) does not support single-end
 
-            ch_short_and_long_reads = ch_long_reads
-                .map { meta, lr -> [ meta.id, meta, lr ] }
-                .join(ch_short_reads_tmp, by: 0, remainder: true)
-                .filter { it[1] != null } // Make sure long reads are not null, which happens if ch_short_reads is empty
-                .map { id, meta_lr, lr, sr -> [ meta_lr, sr ? sr : [], lr ] }  // should not occur for single-end, since SPAdes (hybrid) does not support single-end
-
-            FILTLONG (
-                ch_short_and_long_reads
-            )
-            ch_long_reads = FILTLONG.out.reads
-            ch_versions = ch_versions.mix(FILTLONG.out.versions.first())
-            ch_multiqc_files = ch_multiqc_files.mix( FILTLONG.out.log )
-        } else if (params.longread_filtering_tool == 'nanoq') {
-            NANOQ (
-                ch_long_reads,
-                'fastq.gz'
-            )
-            ch_long_reads = NANOQ.out.reads
-            ch_versions = ch_versions.mix(NANOQ.out.versions.first())
-            ch_multiqc_files = ch_multiqc_files.mix(NANOQ.out.stats)
-        } else if (params.longread_filtering_tool == 'chopper') {
-            CHOPPER (
-                ch_long_reads,
-                ch_lambda_db.ifEmpty([])
-            )
-            ch_long_reads = CHOPPER.out.fastq
-            ch_versions = ch_versions.mix(CHOPPER.out.versions.first())
+                FILTLONG (
+                    ch_short_and_long_reads
+                )
+                ch_long_reads = FILTLONG.out.reads
+                ch_versions = ch_versions.mix(FILTLONG.out.versions.first())
+                ch_multiqc_files = ch_multiqc_files.mix( FILTLONG.out.log )
+            } else if (params.longread_filtering_tool == 'nanoq') {
+                NANOQ (
+                    ch_long_reads,
+                    'fastq.gz'
+                )
+                ch_long_reads = NANOQ.out.reads
+                ch_versions = ch_versions.mix(NANOQ.out.versions.first())
+                ch_multiqc_files = ch_multiqc_files.mix(NANOQ.out.stats)
+            } else if (params.longread_filtering_tool == 'chopper') {
+                CHOPPER (
+                    ch_long_reads,
+                    ch_lambda_db.ifEmpty([])
+                )
+                ch_long_reads = CHOPPER.out.fastq
+                ch_versions = ch_versions.mix(CHOPPER.out.versions.first())
+            }
         }
 
         // host removal long reads
@@ -107,11 +108,17 @@ workflow LONGREAD_PREPROCESSING {
             ch_multiqc_files = ch_multiqc_files.mix( LONGREAD_HOSTREMOVAL.out.multiqc_files )
         }
 
-        NANOPLOT_FILTERED (
-            ch_long_reads
-        )
-
-        ch_versions = ch_versions.mix(NANOPLOT_FILTERED.out.versions.first())
+        if (!(
+            params.skip_adapter_trimming &&
+            params.skip_longread_filtering &&
+            !params.host_fasta &&
+            params.keep_lambda
+        )) {
+            NANOPLOT_FILTERED (
+                ch_long_reads
+            )
+            ch_versions = ch_versions.mix(NANOPLOT_FILTERED.out.versions.first())
+        }
 
         // Run merging
         ch_long_reads_forcat = ch_long_reads
