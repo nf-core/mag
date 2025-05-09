@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
+- [#718](https://github.com/nf-core/mag/pull/718) - refactoring all assembly steps into subworkflows (added by @muabnezor)
 - [#788](https://github.com/nf-core/mag/pull/788) - Tweak method of loading GTDB database in GTDBTK_CLASSIFYWF for more stability (reported by @alexhbnr, fix by @jfy133)
 
 ### `Fixed`
@@ -102,7 +103,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#716](https://github.com/nf-core/mag/pull/692) - Make short read processing a subworkflow (added by @muabnezor)
 - [#708](https://github.com/nf-core/mag/pull/708) - Fixed channel passed as GUNC input (added by @dialvarezs)
 - [#729](https://github.com/nf-core/mag/pull/729) - Fixed misspecified multi-FASTQ input for single-end data in MEGAHIT (reported by John Richards, fix by @jfy133)
-- [#718](https://github.com/nf-core/mag/pull/718) - refactoring assembly steps into subworkflow (added by @muabnezor)
 
 ### `Dependencies`
 
