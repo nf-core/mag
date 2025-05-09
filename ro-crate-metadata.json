@@ -32,6 +32,9 @@
                     "@id": "assets/"
                 },
                 {
+                    "@id": "bin/"
+                },
+                {
                     "@id": "conf/"
                 },
                 {
@@ -42,6 +45,9 @@
                 },
                 {
                     "@id": "modules/"
+                },
+                {
+                    "@id": "modules/local/"
                 },
                 {
                     "@id": "modules/nf-core/"
@@ -121,10 +127,29 @@
         },
         {
             "@id": "main.nf",
-            "@type": ["File", "SoftwareSourceCode", "ComputationalWorkflow"],
+            "@type": [
+                "File",
+                "SoftwareSourceCode",
+                "ComputationalWorkflow"
+            ],
             "creator": [
                 {
+                    "@id": "#68351153+CarsonJM@users.noreply.github.com"
+                },
+                {
+                    "@id": "#jfy133@gmail.com"
+                },
+                {
+                    "@id": "#jfy133@gmail.com"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0003-0603-7907"
+                },
+                {
                     "@id": "https://orcid.org/0000-0001-9807-1082"
+                },
+                {
+                    "@id": "#42973691+d4straub@users.noreply.github.com"
                 }
             ],
             "dateCreated": "",
@@ -142,13 +167,26 @@
                 "nanopore",
                 "nanopore-sequencing"
             ],
-            "license": ["MIT"],
+            "license": [
+                "MIT"
+            ],
             "maintainer": [
                 {
+                    "@id": "#jfy133@gmail.com"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0003-0603-7907"
+                },
+                {
                     "@id": "https://orcid.org/0000-0001-9807-1082"
+                },
+                {
+                    "@id": "#42973691+d4straub@users.noreply.github.com"
                 }
             ],
-            "name": ["nf-core/mag"],
+            "name": [
+                "nf-core/mag"
+            ],
             "programmingLanguage": {
                 "@id": "https://w3id.org/workflowhub/workflow-ro-crate#nextflow"
             },
@@ -207,6 +245,11 @@
             "description": "Additional files"
         },
         {
+            "@id": "bin/",
+            "@type": "Dataset",
+            "description": "Scripts that must be callable from a pipeline process"
+        },
+        {
             "@id": "conf/",
             "@type": "Dataset",
             "description": "Configuration files"
@@ -225,6 +268,11 @@
             "@id": "modules/",
             "@type": "Dataset",
             "description": "Modules used by the pipeline"
+        },
+        {
+            "@id": "modules/local/",
+            "@type": "Dataset",
+            "description": "Pipeline-specific modules"
         },
         {
             "@id": "modules/nf-core/",
@@ -313,10 +361,34 @@
             "url": "https://nf-co.re/"
         },
         {
+            "@id": "#68351153+CarsonJM@users.noreply.github.com",
+            "@type": "Person",
+            "email": "68351153+CarsonJM@users.noreply.github.com",
+            "name": "Carson J Miller"
+        },
+        {
+            "@id": "#jfy133@gmail.com",
+            "@type": "Person",
+            "email": "jfy133@gmail.com",
+            "name": "James A. Fellows Yates"
+        },
+        {
+            "@id": "https://orcid.org/0000-0003-0603-7907",
+            "@type": "Person",
+            "email": "sabrina.krakau.qbic@gmail.com",
+            "name": "Sabrina Krakau"
+        },
+        {
             "@id": "https://orcid.org/0000-0001-9807-1082",
             "@type": "Person",
             "email": "gourlehadrien@gmail.com",
             "name": "Hadrien Gourl\u00e9"
+        },
+        {
+            "@id": "#42973691+d4straub@users.noreply.github.com",
+            "@type": "Person",
+            "email": "42973691+d4straub@users.noreply.github.com",
+            "name": "Daniel Straub"
         }
     ]
 }
