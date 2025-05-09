@@ -3,10 +3,13 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 3.4.1 [unreleased]
+## 3.4.1dev [date]
 
 ### `Added`
 
+- [#718](https://github.com/nf-core/mag/pull/718) - Add support for independent long-read metagenomic assembly (requested by  ljmesi and many others, added by @muabnezor)
+- [#718](https://github.com/nf-core/mag/pull/718) - Added metaMDBG and (meta)Flye as long read assemblers (added by @muabnezor)
+- [#718](https://github.com/nf-core/mag/pull/718) - Added host removal for long reads using minimap2 as aligner (added by @muabnezor)
 - [#784](https://github.com/nf-core/mag/pull/784) - Added `--bin_min_size` and `--bin_max_size` parameters to filter out bins based on size (requested by @maxibor, @alexhbnr, added by @jfy133, @prototaxites).
 - [#793](https://github.com/nf-core/mag/pull/793) - Document use of a SquashFS image with `--gtdb_db`, useful for limited inode infrastructure (by @muniheart).
 
@@ -19,6 +22,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#789](https://github.com/nf-core/mag/pull/789) - Improve `--bowtie2_mode` description to clarify default settings (reported by @IceGreb, fix by @jfy133)
 
 ### `Dependencies`
+
+| Tool     | Previous version | New version |
+| -------- | ---------------- | ----------- |
+| flye     |                  | 2.9.5       |
+| metamdbg |                  | 1.0         |
+| minimap2 |                  | 2.28        |
 
 ### `Deprecated`
 
@@ -80,13 +89,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#707](https://github.com/nf-core/mag/pull/707) - Make Bin QC a subworkflow (added by @dialvarezs)
 - [#707](https://github.com/nf-core/mag/pull/707) - Added CheckM2 as an alternative bin completeness and QC tool (added by @dialvarezs)
 - [#708](https://github.com/nf-core/mag/pull/708) - Added `--exclude_unbins_from_postbinning` parameter to exclude unbinned contigs from post-binning processes, speeding up Prokka in some cases (added by @dialvarezs)
-- [#718](https://github.com/nf-core/mag/pull/718) - Added metaMDBG and (meta)Flye as long read assemblers (suggested by ljmesi [and many others] added by @muabnezor)
-- [#718](https://github.com/nf-core/mag/pull/718) - Added host removal for long reads using minimap2 as aligner (added by @muabnezor)
 - [#732](https://github.com/nf-core/mag/pull/732) - Added support for Prokka's compliance mode with `--prokka_with_compliance --prokka_compliance_centre <xyz>` (reported by @audy and @Thomieh73, added by @jfy133)
 
 ### `Changed`
 
-- [#718](https://github.com/nf-core/mag/pull/718) - Longread only input is now an option (added by @muabnezor)
 - [#731](https://github.com/nf-core/mag/pull/731) - Updated to nf-core 3.1.0 `TEMPLATE` (by @jfy133)
 
 ### `Fixed`
@@ -102,11 +108,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Tool     | Previous version | New version |
 | -------- | ---------------- | ----------- |
-| chopper  |                  | 0.9.0       |
-| nanoq    |                  | 0.10.0      |
-| flye     |                  | 2.9.5       |
-| metamdbg |                  | 1.0         |
-| minimap2 |                  | 2.28        |
 | CheckM   | 1.2.1            | 1.2.3       |
 | CheckM2  |                  | 1.0.2       |
 | chopper  |                  | 0.9.0       |
