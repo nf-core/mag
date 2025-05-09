@@ -7,11 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
+- [#730](https://github.com/nf-core/mag/pull/730) - Added `--busco_db_lineage` to allow specifying a specific lineage for BUSCO database and remove `--busco_auto_lineage_prok` (added by @jfy133, @dialvarezs).
 - [#784](https://github.com/nf-core/mag/pull/784) - Added `--bin_min_size` and `--bin_max_size` parameters to filter out bins based on size (requested by @maxibor, @alexhbnr, added by @jfy133, @prototaxites).
 - [#793](https://github.com/nf-core/mag/pull/793) - Document use of a SquashFS image with `--gtdb_db`, useful for limited inode infrastructure (by @muniheart).
 
 ### `Changed`
 
+- [#730](https://github.com/nf-core/mag/pull/730) - Migrate from local BUSCO module to nf-core one, updating version (by @dialvarezs)
+- [#730](https://github.com/nf-core/mag/pull/730) - Use BUSCO database from nf-core test datasets (by @dialvarezs)
 - [#788](https://github.com/nf-core/mag/pull/788) - Tweak method of loading GTDB database in GTDBTK_CLASSIFYWF for more stability (reported by @alexhbnr, fix by @jfy133)
 
 ### `Fixed`
@@ -19,6 +22,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#789](https://github.com/nf-core/mag/pull/789) - Improve `--bowtie2_mode` description to clarify default settings (reported by @IceGreb, fix by @jfy133)
 
 ### `Dependencies`
+
+| Tool  | Previous version | New version |
+| ----- | ---------------- | ----------- |
+| BUSCO | 5.4.3            | 5.8.3       |
+| csvtk |                  | 0.31.0      |
 
 ### `Deprecated`
 

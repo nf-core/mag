@@ -530,21 +530,29 @@ For each bin or refined bin the median sequencing depth is computed based on the
 
 #### BUSCO
 
-[BUSCO](https://busco.ezlab.org/) is a tool used to assess the completeness of a genome assembly. It is run on all the genome bins and high quality contigs obtained by the applied binning and/or binning refinement methods (depending on the `--postbinning_input` parameter). By default, BUSCO is run in automated lineage selection mode in which it first tries to select the domain and then a more specific lineage based on phylogenetic placement. If available, result files for both the selected domain lineage and the selected more specific lineage are placed in the output directory. If a lineage dataset is specified already with `--busco_db`, only results for this specific lineage will be generated.
+[BUSCO](https://busco.ezlab.org/) is a tool used to assess the completeness of a genome assembly. It is run on all the genome bins and high quality contigs obtained by the applied binning and/or binning refinement methods (depending on the `--postbinning_input` parameter).
+By default, BUSCO is run in automated lineage selection mode in which it first tries to select the domain and then a more specific lineage based on phylogenetic placement.
+If available, result files for the selected lineage are placed in the output directory.
+If a lineage dataset is specified already with `--busco_db`, only results for this specific lineage will be generated.
 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `GenomeBinning/QC/BUSCO/`
-  - `[assembler]-[bin]_busco.log`: Log file containing the standard output of BUSCO.
-  - `[assembler]-[bin]_busco.err`: File containing potential error messages returned from BUSCO.
-  - `short_summary.domain.[lineage].[assembler]-[bin].txt`: BUSCO summary of the results for the selected domain when run in automated lineage selection mode. Not available for bins for which a viral lineage was selected.
-  - `short_summary.specific_lineage.[lineage].[assembler]-[bin].txt`: BUSCO summary of the results in case a more specific lineage than the domain could be selected or for the lineage provided via `--busco_db`.
-  - `[assembler]-[bin]_buscos.[lineage].fna.gz`: Nucleotide sequence of all identified BUSCOs for used lineages (domain or specific).
-  - `[assembler]-[bin]_buscos.[lineage].faa.gz`: Aminoacid sequence of all identified BUSCOs for used lineages (domain or specific).
-  - `[assembler]-[bin]_prodigal.gff`: Genes predicted with Prodigal.
+- `GenomeBinning/QC/BUSCO/[sample/group]/`
+  - `[sample/group]-[lineage]-busco.batch_summary.txt`: Summary table of the BUSCO results for the bins in the sample.
+  - `short_summary.generic.[lineage].[assembler]-[bin].{txt,json}`: A detailed BUSCO summary for each bin, available in both plain text and JSON format.
+  - `[sample/group]-[lineage]-busco.log`: Log file of the BUSCO run.
+  - `[assembler]-[bin]/`
+    - `prodigal_output/predicted_genes/predicted.{fna,faa}`: Predicted genes by Prodigal in FASTA format.
+    - `logs/`: Logs for each of the tools used by BUSCO.
+    - `run-[specific_lineage]:`
+      - `full_table.tsv`: A detailed table indicating the complete BUSCO gene list for the lineage, detailing their presence in the assembly.
+      - `missing_busco_list.tsv`: List of BUSCOs that were not found in the assembly.
+      - `busco_sequences/*/*.{fna,faa}`: Nucleotide and aminoacid sequences of all identified BUSCOs (single copy, multi copy and fragmented).
 
 </details>
+
+If the parameter `busco_clean` is set to `false`, the BUSCO directory will preserve additional files, including outputs from the tools BUSCO utilizes and the `auto_lineage/` directory. This directory contains results for each lineage tested during automated lineage selection.
 
 If the parameter `--save_busco_db` is set, additionally the used BUSCO lineage datasets are stored in the output directory.
 
@@ -553,7 +561,6 @@ If the parameter `--save_busco_db` is set, additionally the used BUSCO lineage d
 
 - `GenomeBinning/QC/BUSCO/`
   - `busco_downloads/`: All files and lineage datasets downloaded by BUSCO when run in automated lineage selection mode. (Can currently not be used to reproduce analysis, see the [nf-core/mag website documentation](https://nf-co.re/mag/usage#reproducibility) how to achieve reproducible BUSCO results).
-  - `reference/*.tar.gz`: BUSCO reference lineage dataset that was provided via `--busco_db`.
 
 </details>
 
