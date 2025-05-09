@@ -3,11 +3,12 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 3.4.1dev [date]
+## v3.4.1dev - [unreleased]
 
 ### `Added`
 
-- [#718](https://github.com/nf-core/mag/pull/718) - Add support for independent long-read metagenomic assembly (requested by  ljmesi and many others, added by @muabnezor)
+- [#730](https://github.com/nf-core/mag/pull/730) - Added `--busco_db_lineage` to allow specifying a specific lineage for BUSCO database and remove `--busco_auto_lineage_prok` (added by @jfy133, @dialvarezs).
+- [#718](https://github.com/nf-core/mag/pull/718) - Add support for independent long-read metagenomic assembly (requested by ljmesi and many others, added by @muabnezor)
 - [#718](https://github.com/nf-core/mag/pull/718) - Added metaMDBG and (meta)Flye as long read assemblers (added by @muabnezor)
 - [#718](https://github.com/nf-core/mag/pull/718) - Added host removal for long reads using minimap2 as aligner (added by @muabnezor)
 - [#784](https://github.com/nf-core/mag/pull/784) - Added `--bin_min_size` and `--bin_max_size` parameters to filter out bins based on size (requested by @maxibor, @alexhbnr, added by @jfy133, @prototaxites).
@@ -15,8 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
-- [#718](https://github.com/nf-core/mag/pull/718) - refactoring all assembly steps into subworkflows (added by @muabnezor)
+- [#730](https://github.com/nf-core/mag/pull/730) - Migrate from local BUSCO module to nf-core one, updating version (by @dialvarezs)
+- [#730](https://github.com/nf-core/mag/pull/730) - Use BUSCO database from nf-core test datasets (by @dialvarezs)
 - [#788](https://github.com/nf-core/mag/pull/788) - Tweak method of loading GTDB database in GTDBTK_CLASSIFYWF for more stability (reported by @alexhbnr, fix by @jfy133)
+- [#718](https://github.com/nf-core/mag/pull/718) - refactoring all assembly steps into subworkflows (added by @muabnezor)
 
 ### `Fixed`
 
@@ -26,6 +29,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Tool     | Previous version | New version |
 | -------- | ---------------- | ----------- |
+| BUSCO    | 5.4.3            | 5.8.3       |
+| csvtk    |                  | 0.31.0      |
 | flye     |                  | 2.9.5       |
 | metamdbg |                  | 1.0         |
 | minimap2 |                  | 2.28        |

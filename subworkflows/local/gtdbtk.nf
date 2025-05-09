@@ -14,49 +14,25 @@ workflow GTDBTK {
     gtdb_mash      // channel: path
 
     main:
-    // Filter bins: classify only medium & high quality MAGs
-    ch_bin_metrics = Channel.empty()
-    if (params.binqc_tool == 'busco') {
-        // Collect completeness and contamination metrics from busco summary
-        ch_bin_metrics = bin_qc_summary
-            .splitCsv(header: true, sep: '\t')
-            .map { row ->
-                def completeness = -1
-                def contamination = -1
-                def missing
-                def duplicated
-                def busco_db = file(params.busco_db)
-                if (busco_db.getBaseName().contains('odb10')) {
-                    missing = row.'%Missing (specific)'
-                    // TODO or just take '%Complete'?
-                    duplicated = row.'%Complete and duplicated (specific)'
-                }
-                else {
-                    missing = row.'%Missing (domain)'
-                    duplicated = row.'%Complete and duplicated (domain)'
-                }
-                if (missing != '') {
-                    completeness = 100.0 - Double.parseDouble(missing)
-                }
-                if (duplicated != '') {
-                    contamination = Double.parseDouble(duplicated)
-                }
-                [row.'GenomeBin', completeness, contamination]
-            }
-    }
-    else {
-        // Collect completeness and contamination metrics from CheckM/CheckM2 summary
-        bin_name = params.binqc_tool == 'checkm' ? 'Bin Id' : 'Name'
+    // Collect bin quality metrics
+    qc_columns = [
+        busco: ['Input_file', 'Complete', 'Duplicated'],
+        checkm: ['Bin Id', 'Completeness', 'Contamination'],
+        checkm2: ['Name', 'Completeness', 'Contamination']
+    ]
 
-        ch_bin_metrics = bin_qc_summary
-            .splitCsv(header: true, sep: '\t')
-            .map { row ->
-                def completeness = Double.parseDouble(row.'Completeness')
-                def contamination = Double.parseDouble(row.'Contamination')
-                [row[bin_name] + ".fa", completeness, contamination]
+    ch_bin_metrics = bin_qc_summary
+        .splitCsv(header: true, sep: '\t')
+        .map { row -> qc_columns[params.binqc_tool].collect { col -> row[col] } }
+        .filter { row -> row[1] != '' }
+        .map { row ->
+            row = [row[0]] + row[1..2].collect { value -> Double.parseDouble(value) }
+            // CheckM / CheckM2 removes the .fa extension from the bin name
+            if (params.binqc_tool in ['checkm', 'checkm2']) {
+                row[0] = row[0] + '.fa'
             }
-    }
-
+            row
+        }
 
     // Filter bins based on collected metrics: completeness, contamination
     ch_filtered_bins = bins

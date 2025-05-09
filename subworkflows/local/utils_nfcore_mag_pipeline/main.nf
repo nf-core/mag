@@ -70,8 +70,7 @@ workflow PIPELINE_INITIALISATION {
     //
 
     // Validate FASTQ input
-    ch_samplesheet = Channel
-        .fromList(samplesheetToList(input, "${projectDir}/assets/schema_input.json"))
+    ch_samplesheet = Channel.fromList(samplesheetToList(input, "${projectDir}/assets/schema_input.json"))
         .map {
             validateInputSamplesheet(it[0], it[1], it[2], it[3])
         }
@@ -328,16 +327,24 @@ def validateInputParameters(hybrid) {
         error("[nf-core/mag] ERROR: The parameter '--postbinning_input ${params.postbinning_input}' for downstream steps can only be specified if bin refinement is activated with --refine_bins_dastool! Check input.")
     }
 
-    // Check if BUSCO parameters combinations are valid
     if (params.skip_binqc && params.binqc_tool == 'checkm') {
         error("[nf-core/mag] ERROR: Both --skip_binqc and --binqc_tool 'checkm' are specified! Invalid combination, please specify either --skip_binqc or --binqc_tool.")
     }
+
+    // Check if BUSCO parameters combinations are valid
     if (params.skip_binqc) {
         if (params.busco_db) {
             error("[nf-core/mag] ERROR: Both --skip_binqc and --busco_db are specified! Invalid combination, please specify either --skip_binqc or --binqc_tool 'busco' with --busco_db.")
         }
-        if (params.busco_auto_lineage_prok) {
-            error("[nf-core/mag] ERROR: Both --skip_binqc and --busco_auto_lineage_prok are specified! Invalid combination, please specify either --skip_binqc or --binqc_tool 'busco' with --busco_auto_lineage_prok.")
+    }
+
+    if (!params.skip_binqc && params.binqc_tool == 'busco') {
+        if (params.busco_db && !params.busco_db_lineage) {
+            log.warn('[nf-core/mag]: WARNING: You have supplied a database to --busco_db - BUSCO will run in offline mode. Please note that BUSCO may fail if you have an incomplete database and are running with --busco_db_lineage auto!')
+        }
+
+        if (params.busco_db && file(params.busco_db).isDirectory() && !file(params.busco_db).listFiles().any { it.toString().contains('lineages') }) {
+            error("[nf-core/mag] ERROR: Directory supplied to `--busco_db` must contain a `lineages/` subdirectory that itself contains one or more BUSCO lineage files! Check: --busco_db ${params.busco_db}")
         }
     }
 
