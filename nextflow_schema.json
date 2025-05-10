@@ -678,9 +678,9 @@
                 },
                 "metaeuk_db": {
                     "type": "string",
-                    "description": "Path to either a local fasta file of protein sequences, or to a directory containing an mmseqs2-formatted database, for annotation of eukaryotic genomes.",
-                    "help_text": "One option would be the databases from the MetaEuk publication (https://wwwuser.gwdg.de/~compbiol/metaeuk/), however it should be noted that these are focused on marine eukaryotes.",
-                    "format": "file-path",
+                    "description": "Path to either a local fasta file of protein sequences, or to a directory containing an MMseqs2-formatted database, for annotation of eukaryotic genomes.",
+                    "help_text": "One option would be the databases from the MetaEuk publication (https://wwwuser.gwdg.de/~compbiol/metaeuk/), however it should be noted that these are focused on marine eukaryotes.\n\nIf supplying an mmseqs database, you must supply a directory that _within_ it has the `database`, `database.dbtype`, `database_h` etc. files. For example, for a pre-downloaded Kalamari database, you would supply `--mmseqs_db /<path>/<to>/mmseqs_db/Kalamari/. Where if you were to look inside the database you would see `mmseqs_db/Kalamari/database_h`",
+                    "format": "path",
                     "exists": true
                 },
                 "save_mmseqs_db": {
