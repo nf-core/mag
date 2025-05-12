@@ -122,7 +122,7 @@ workflow MAG {
         ch_lambda_db = Channel.value(file("${params.lambda_reference}"))
     }
     else {
-        ch_lambda_db = Channel.empty()
+        ch_lambda_db = Channel.value([])
     }
 
     if (params.genomad_db) {

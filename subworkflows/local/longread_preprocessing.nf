@@ -90,7 +90,7 @@ workflow LONGREAD_PREPROCESSING {
             } else if (params.longread_filtering_tool == 'chopper') {
                 CHOPPER (
                     ch_long_reads,
-                    ch_lambda_db.ifEmpty([])
+                    ch_lambda_db
                 )
                 ch_long_reads = CHOPPER.out.fastq
                 ch_versions = ch_versions.mix(CHOPPER.out.versions.first())
