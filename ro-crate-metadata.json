@@ -22,7 +22,11 @@
             "@id": "./",
             "@type": "Dataset",
             "creativeWorkStatus": "InProgress",
+<<<<<<< HEAD
             "datePublished": "2025-04-30T12:25:54+00:00",
+=======
+            "datePublished": "2025-05-12T07:34:56+00:00",
+>>>>>>> TEMPLATE
             "description": "<h1>\n  <picture>\n    <source media=\"(prefers-color-scheme: dark)\" srcset=\"docs/images/nf-core-mag_logo_dark.png\">\n    <img alt=\"nf-core/mag\" src=\"docs/images/nf-core-mag_logo_light.png\">\n  </picture>\n</h1>\n\n[![GitHub Actions CI Status](https://github.com/nf-core/mag/actions/workflows/ci.yml/badge.svg)](https://github.com/nf-core/mag/actions/workflows/ci.yml)\n[![GitHub Actions Linting Status](https://github.com/nf-core/mag/actions/workflows/linting.yml/badge.svg)](https://github.com/nf-core/mag/actions/workflows/linting.yml)[![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/mag/results)[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.XXXXXXX-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.XXXXXXX)\n[![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)\n\n[![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A524.04.2-23aa62.svg)](https://www.nextflow.io/)\n[![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)\n[![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)\n[![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)\n[![Launch on Seqera Platform](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Seqera%20Platform-%234256e7)](https://cloud.seqera.io/launch?pipeline=https://github.com/nf-core/mag)\n\n[![Get help on Slack](http://img.shields.io/badge/slack-nf--core%20%23mag-4A154B?labelColor=000000&logo=slack)](https://nfcore.slack.com/channels/mag)[![Follow on Twitter](http://img.shields.io/badge/twitter-%40nf__core-1DA1F2?labelColor=000000&logo=twitter)](https://twitter.com/nf_core)[![Follow on Mastodon](https://img.shields.io/badge/mastodon-nf__core-6364ff?labelColor=FFFFFF&logo=mastodon)](https://mstdn.science/@nf_core)[![Watch on YouTube](http://img.shields.io/badge/youtube-nf--core-FF0000?labelColor=000000&logo=youtube)](https://www.youtube.com/c/nf-core)\n\n## Introduction\n\n**nf-core/mag** is a bioinformatics pipeline that ...\n\n<!-- TODO nf-core:\n   Complete this sentence with a 2-3 sentence summary of what types of data the pipeline ingests, a brief overview of the\n   major pipeline sections and the types of output it produces. You're giving an overview to someone new\n   to nf-core here, in 15-20 seconds. For an example, see https://github.com/nf-core/rnaseq/blob/master/README.md#introduction\n-->\n\n<!-- TODO nf-core: Include a figure that guides the user through the major workflow steps. Many nf-core\n     workflows use the \"tube map\" design for that. See https://nf-co.re/docs/contributing/design_guidelines#examples for examples.   -->\n<!-- TODO nf-core: Fill in short bullet-pointed list of the default steps in the pipeline -->1. Read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))2. Present QC for raw reads ([`MultiQC`](http://multiqc.info/))\n\n## Usage\n\n> [!NOTE]\n> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.\n\n<!-- TODO nf-core: Describe the minimum required steps to execute the pipeline, e.g. how to prepare samplesheets.\n     Explain what rows and columns represent. For instance (please edit as appropriate):\n\nFirst, prepare a samplesheet with your input data that looks as follows:\n\n`samplesheet.csv`:\n\n```csv\nsample,fastq_1,fastq_2\nCONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz\n```\n\nEach row represents a fastq file (single-end) or a pair of fastq files (paired end).\n\n-->\n\nNow, you can run the pipeline using:\n\n<!-- TODO nf-core: update the following command to include all required parameters for a minimal example -->\n\n```bash\nnextflow run nf-core/mag \\\n   -profile <docker/singularity/.../institute> \\\n   --input samplesheet.csv \\\n   --outdir <OUTDIR>\n```\n\n> [!WARNING]\n> Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_; see [docs](https://nf-co.re/docs/usage/getting_started/configuration#custom-configuration-files).\n\nFor more details and further functionality, please refer to the [usage documentation](https://nf-co.re/mag/usage) and the [parameter documentation](https://nf-co.re/mag/parameters).\n\n## Pipeline output\n\nTo see the results of an example test run with a full size dataset refer to the [results](https://nf-co.re/mag/results) tab on the nf-core website pipeline page.\nFor more details about the output files and reports, please refer to the\n[output documentation](https://nf-co.re/mag/output).\n\n## Credits\n\nnf-core/mag was originally written by Hadrien Gourl\u00e9, Daniel Straub, Sabrina Krakau, James A. Fellows Yates, Maxime Borry.\n\nWe thank the following people for their extensive assistance in the development of this pipeline:\n\n<!-- TODO nf-core: If applicable, make list of people who have also contributed -->\n\n## Contributions and Support\n\nIf you would like to contribute to this pipeline, please see the [contributing guidelines](.github/CONTRIBUTING.md).\n\nFor further information or help, don't hesitate to get in touch on the [Slack `#mag` channel](https://nfcore.slack.com/channels/mag) (you can join with [this invite](https://nf-co.re/join/slack)).\n\n## Citations\n\n<!-- TODO nf-core: Add citation for pipeline after first release. Uncomment lines below and update Zenodo doi and badge at the top of this file. -->\n<!-- If you use nf-core/mag for your analysis, please cite it using the following doi: [10.5281/zenodo.XXXXXX](https://doi.org/10.5281/zenodo.XXXXXX) -->\n\n<!-- TODO nf-core: Add bibliography of tools and data used in your pipeline -->\n\nAn extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.\n\nYou can cite the `nf-core` publication as follows:\n\n> **The nf-core framework for community-curated bioinformatics pipelines.**\n>\n> Philip Ewels, Alexander Peltzer, Sven Fillinger, Harshil Patel, Johannes Alneberg, Andreas Wilm, Maxime Ulysse Garcia, Paolo Di Tommaso & Sven Nahnsen.\n>\n> _Nat Biotechnol._ 2020 Feb 13. doi: [10.1038/s41587-020-0439-x](https://dx.doi.org/10.1038/s41587-020-0439-x).\n",
             "hasPart": [
                 {
@@ -32,9 +36,12 @@
                     "@id": "assets/"
                 },
                 {
+<<<<<<< HEAD
                     "@id": "bin/"
                 },
                 {
+=======
+>>>>>>> TEMPLATE
                     "@id": "conf/"
                 },
                 {
@@ -47,9 +54,12 @@
                     "@id": "modules/"
                 },
                 {
+<<<<<<< HEAD
                     "@id": "modules/local/"
                 },
                 {
+=======
+>>>>>>> TEMPLATE
                     "@id": "modules/nf-core/"
                 },
                 {
@@ -105,7 +115,11 @@
             },
             "mentions": [
                 {
+<<<<<<< HEAD
                     "@id": "#72308396-6e79-404e-8ccb-749f04c66914"
+=======
+                    "@id": "#ffa754ef-0ed1-445d-9272-96b1d7c90ab6"
+>>>>>>> TEMPLATE
                 }
             ],
             "name": "nf-core/mag"
@@ -134,6 +148,7 @@
             ],
             "creator": [
                 {
+<<<<<<< HEAD
                     "@id": "#68351153+CarsonJM@users.noreply.github.com"
                 },
                 {
@@ -154,6 +169,13 @@
             ],
             "dateCreated": "",
             "dateModified": "2025-04-30T12:25:54Z",
+=======
+                    "@id": "https://orcid.org/0000-0001-9807-1082"
+                }
+            ],
+            "dateCreated": "",
+            "dateModified": "2025-05-12T09:34:56Z",
+>>>>>>> TEMPLATE
             "dct:conformsTo": "https://bioschemas.org/profiles/ComputationalWorkflow/1.0-RELEASE/",
             "keywords": [
                 "nf-core",
@@ -172,6 +194,7 @@
             ],
             "maintainer": [
                 {
+<<<<<<< HEAD
                     "@id": "#jfy133@gmail.com"
                 },
                 {
@@ -182,6 +205,9 @@
                 },
                 {
                     "@id": "#42973691+d4straub@users.noreply.github.com"
+=======
+                    "@id": "https://orcid.org/0000-0001-9807-1082"
+>>>>>>> TEMPLATE
                 }
             ],
             "name": [
@@ -193,8 +219,18 @@
             "sdPublisher": {
                 "@id": "https://nf-co.re/"
             },
+<<<<<<< HEAD
             "url": ["https://github.com/nf-core/mag", "https://nf-co.re/mag/dev/"],
             "version": ["3.4.1dev"]
+=======
+            "url": [
+                "https://github.com/nf-core/mag",
+                "https://nf-co.re/mag/dev/"
+            ],
+            "version": [
+                "3.4.1dev"
+            ]
+>>>>>>> TEMPLATE
         },
         {
             "@id": "https://w3id.org/workflowhub/workflow-ro-crate#nextflow",
@@ -209,11 +245,19 @@
             "version": "!>=24.04.2"
         },
         {
+<<<<<<< HEAD
             "@id": "#72308396-6e79-404e-8ccb-749f04c66914",
             "@type": "TestSuite",
             "instance": [
                 {
                     "@id": "#bac35876-3dce-4b5c-a3cd-c503b6874da0"
+=======
+            "@id": "#ffa754ef-0ed1-445d-9272-96b1d7c90ab6",
+            "@type": "TestSuite",
+            "instance": [
+                {
+                    "@id": "#7464838e-b741-4774-b741-ee941102c03a"
+>>>>>>> TEMPLATE
                 }
             ],
             "mainEntity": {
@@ -222,7 +266,11 @@
             "name": "Test suite for nf-core/mag"
         },
         {
+<<<<<<< HEAD
             "@id": "#bac35876-3dce-4b5c-a3cd-c503b6874da0",
+=======
+            "@id": "#7464838e-b741-4774-b741-ee941102c03a",
+>>>>>>> TEMPLATE
             "@type": "TestInstance",
             "name": "GitHub Actions workflow for testing nf-core/mag",
             "resource": "repos/nf-core/mag/actions/workflows/ci.yml",
@@ -245,11 +293,14 @@
             "description": "Additional files"
         },
         {
+<<<<<<< HEAD
             "@id": "bin/",
             "@type": "Dataset",
             "description": "Scripts that must be callable from a pipeline process"
         },
         {
+=======
+>>>>>>> TEMPLATE
             "@id": "conf/",
             "@type": "Dataset",
             "description": "Configuration files"
@@ -270,11 +321,14 @@
             "description": "Modules used by the pipeline"
         },
         {
+<<<<<<< HEAD
             "@id": "modules/local/",
             "@type": "Dataset",
             "description": "Pipeline-specific modules"
         },
         {
+=======
+>>>>>>> TEMPLATE
             "@id": "modules/nf-core/",
             "@type": "Dataset",
             "description": "nf-core modules"
@@ -361,6 +415,7 @@
             "url": "https://nf-co.re/"
         },
         {
+<<<<<<< HEAD
             "@id": "#68351153+CarsonJM@users.noreply.github.com",
             "@type": "Person",
             "email": "68351153+CarsonJM@users.noreply.github.com",
@@ -379,16 +434,21 @@
             "name": "Sabrina Krakau"
         },
         {
+=======
+>>>>>>> TEMPLATE
             "@id": "https://orcid.org/0000-0001-9807-1082",
             "@type": "Person",
             "email": "gourlehadrien@gmail.com",
             "name": "Hadrien Gourl\u00e9"
+<<<<<<< HEAD
         },
         {
             "@id": "#42973691+d4straub@users.noreply.github.com",
             "@type": "Person",
             "email": "42973691+d4straub@users.noreply.github.com",
             "name": "Daniel Straub"
+=======
+>>>>>>> TEMPLATE
         }
     ]
 }

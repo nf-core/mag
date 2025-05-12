@@ -242,8 +242,7 @@ workflow MAG {
             ch_db_for_kraken2 = KRAKEN2_DB_PREPARATION(ch_kraken2_db_file).db
         }
         else if (ch_kraken2_db_file.isDirectory()) {
-            ch_db_for_kraken2 = Channel
-                .fromPath("${ch_kraken2_db_file}/*.k2d")
+            ch_db_for_kraken2 = Channel.fromPath("${ch_kraken2_db_file}/*.k2d")
                 .collect()
                 .map { file ->
                     if (file.size() >= 3) {
@@ -617,7 +616,7 @@ workflow MAG {
         * Bin QC subworkflows: for checking bin completeness with either BUSCO, CHECKM, CHECKM2, and/or GUNC
         */
 
-    if (!params.skip_binqc) {
+        if (!params.skip_binqc) {
             BIN_QC(ch_input_for_postbinning)
 
             ch_bin_qc_summary = BIN_QC.out.qc_summary
