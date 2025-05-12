@@ -98,7 +98,7 @@ workflow LONGREAD_PREPROCESSING {
         }
 
         // host removal long reads
-        if ( params.host_fasta ) {
+        if ( params.host_fasta || params.host_genome ) {
             LONGREAD_HOSTREMOVAL (
                 ch_long_reads,
                 ch_host_fasta
