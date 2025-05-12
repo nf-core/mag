@@ -16,10 +16,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#730](https://github.com/nf-core/mag/pull/730) - Migrate from local BUSCO module to nf-core one, updating version (by @dialvarezs)
 - [#730](https://github.com/nf-core/mag/pull/730) - Use BUSCO database from nf-core test datasets (by @dialvarezs)
 - [#788](https://github.com/nf-core/mag/pull/788) - Tweak method of loading GTDB database in GTDBTK_CLASSIFYWF for more stability (reported by @alexhbnr, fix by @jfy133)
+- [#800](https://github.com/nf-core/mag/pull/800) - Default branch is now set to `main` (by @jfy133 and @mirpedrol)
 
 ### `Fixed`
 
 - [#789](https://github.com/nf-core/mag/pull/789) - Improve `--bowtie2_mode` description to clarify default settings (reported by @IceGreb, fix by @jfy133)
+- [#798](https://github.com/nf-core/mag/pull/798) - Fix overly strict database validation for `--metauk_db` and improve documentation (reported by @ruqse, fix by @jfy133)
 
 ### `Dependencies`
 
