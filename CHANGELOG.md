@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#730](https://github.com/nf-core/mag/pull/730) - Use BUSCO database from nf-core test datasets (by @dialvarezs)
 - [#788](https://github.com/nf-core/mag/pull/788) - Tweak method of loading GTDB database in GTDBTK_CLASSIFYWF for more stability (reported by @alexhbnr, fix by @jfy133)
 - [#800](https://github.com/nf-core/mag/pull/800) - Default branch is now set to `main` (by @jfy133 and @mirpedrol)
+- [#801](https://github.com/nf-core/mag/pull/800) - Increase CheckM memory requests to match [recommended requirements](https://github.com/nf-core/mag/pull/800) (by @jfy133) 
 
 ### `Fixed`
 
