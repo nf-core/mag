@@ -28,11 +28,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Dependencies`
 
-| Tool  | Previous version | New version |
-| ----- | ---------------- | ----------- |
-| BUSCO | 5.4.3            | 5.8.3       |
-| csvtk        |                  | 0.31.0      |
-| nextflow | 24.04.2 | 24.10.6 |
+| Tool     | Previous version | New version |
+| -------- | ---------------- | ----------- |
+| BUSCO    | 5.4.3            | 5.8.3       |
+| csvtk    |                  | 0.31.0      |
+| nextflow | 24.04.2          | 24.10.6     |
 
 ### `Deprecated`
 
