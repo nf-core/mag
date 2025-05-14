@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#730](https://github.com/nf-core/mag/pull/730) - Added `--busco_db_lineage` to allow specifying a specific lineage for BUSCO database (added by @jfy133, @dialvarezs)
 - [#784](https://github.com/nf-core/mag/pull/784) - Added `--bin_min_size` and `--bin_max_size` parameters to filter out bins based on size (requested by @maxibor, @alexhbnr, added by @jfy133, @prototaxites)
 - [#793](https://github.com/nf-core/mag/pull/793) - Document use of a SquashFS image with `--gtdb_db`, useful for limited inode infrastructure (by @muniheart)
-- [#805](https://github.com/nf-core/mag/pull/793) - Add support for fastp's `--trim_poly_g` option (by @jfy133).
+- [#805](https://github.com/nf-core/mag/pull/793) - Add support for fastp's `--trim_poly_g` option (by @jfy133)
 
 ### `Changed`
 
