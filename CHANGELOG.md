@@ -22,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#789](https://github.com/nf-core/mag/pull/789) - Improve `--bowtie2_mode` description to clarify default settings (reported by @IceGreb, fix by @jfy133)
 - [#798](https://github.com/nf-core/mag/pull/798) - Fix overly strict database validation for `--metauk_db` and improve documentation (reported by @ruqse, fix by @jfy133)
-- [#803](https://github.com/nf-core/mag/pull/803) - Fix broken memory specification for FASTQC (reported by @jmichaelegana, fix by @awgymer & @jfy133)
+- [#804](https://github.com/nf-core/mag/pull/804) - Fix broken memory specification for FASTQC (reported by @jmichaelegana, fix by @awgymer & @jfy133)
 
 ### `Dependencies`
 
