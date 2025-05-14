@@ -54,6 +54,7 @@ workflow ASSEMBLY {
                 def meta = [:]
                 meta.id = "group-${group}"
                 meta.group = group
+                meta.lr_platform = metas.lr_platform
                 [meta, reads.collect { it }]
             }
     }
