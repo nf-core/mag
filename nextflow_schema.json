@@ -302,6 +302,11 @@
                     "type": "boolean",
                     "description": "Save reads that fail fastp filtering in a separate file. Not used downstream."
                 },
+                "fastp_trim_polyg": {
+                    "type": "boolean",
+                    "description": "Turn on detecting and trimming of poly-G tails",
+                    "help_text": "This is particularly useful when dealing with Illumina 2 colour chemistry sequencing platforms, that will record 'G' in the absence of any light emitted.\n\nSee [here](https://sequencing.qcfail.com/articles/illumina-2-colour-chemistry-can-overcall-high-confidence-g-bases/) for more information on the artefact."
+                },
                 "adapterremoval_minquality": {
                     "type": "integer",
                     "default": 2,
@@ -851,7 +856,8 @@
                     "type": "string",
                     "description": "Name of the BUSCO *_odb10 or *_odb12 lineage to check against. Additionally supports 'auto', 'auto_prok' and 'auto_euk' for automatic lineage selection mode.",
                     "help_text": "Typically used in combination with `--busco_db`, corresponding to the lineage files supplied within the `--busco_db` file or directroy.\n\nIf supplying without a `--busco_db`, will require an internet connection to work!",
-                    "pattern": "(.*_odb(10|12))|auto(_prok|_euk)?$"
+                    "pattern": "(.*_odb(10|12))|auto(_prok|_euk)?$",
+                    "default": "auto"
                 },
                 "save_busco_db": {
                     "type": "boolean",

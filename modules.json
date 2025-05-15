@@ -191,10 +191,8 @@
                     },
                     "fastqc": {
                         "branch": "master",
-                        "git_sha": "08108058ea36a63f141c25c4e75f9f872a5b2296",
-                        "installed_by": [
-                            "modules"
-                        ]
+                        "git_sha": "b1966f36ec9de31927b2603d8f499960b2a4c294",
+                        "installed_by": ["modules"]
                     },
                     "filtlong": {
                         "branch": "master",
