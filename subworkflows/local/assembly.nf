@@ -38,6 +38,7 @@ workflow ASSEMBLY {
                 meta.id = "group-${group}"
                 meta.group = group
                 meta.single_end = assemble_as_single
+                meta.sr_platform = metas.sr_platform[0]
                 if (assemble_as_single) {
                     [meta, reads.collect { it }, []]
                 }
@@ -54,7 +55,7 @@ workflow ASSEMBLY {
                 def meta = [:]
                 meta.id = "group-${group}"
                 meta.group = group
-                meta.lr_platform = metas.lr_platform
+                meta.lr_platform = metas.lr_platform[0]
                 [meta, reads.collect { it }]
             }
     }

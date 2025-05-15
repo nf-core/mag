@@ -132,11 +132,10 @@ workflow LONGREAD_PREPROCESSING {
                 cat: reads.size() >= 2
                 skip_cat: true
             }
-
         CAT_FASTQ_LONGREADS(ch_long_reads_forcat.cat.map { meta, reads -> [meta, reads.flatten()] })
         ch_versions = ch_versions.mix(CAT_FASTQ_LONGREADS.out.versions.first())
 
-        ch_long_reads = CAT_FASTQ_LONGREADS.out.reads.mix(ch_long_reads_forcat.skip_cat)
+        ch_long_reads = CAT_FASTQ_LONGREADS.out.reads.mix(ch_long_reads_forcat.skip_cat.map { meta, reads -> [meta, reads[0]] })
 
     } else {
         ch_long_reads = ch_raw_long_reads
