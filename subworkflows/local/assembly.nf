@@ -89,7 +89,12 @@ workflow ASSEMBLY {
         }
         // long reads
         if (!params.single_end && !params.skip_spadeshybrid) {
-            POOL_LONG_READS(ch_long_reads_grouped)
+
+            ch_long_reads_grouped_for_pool = ch_long_reads_grouped.map { meta, reads -> [meta.id, meta, reads] }
+                .combine(ch_short_reads_grouped.map { meta, _reads1, _reads2 -> [meta.id, meta] }, by: 0)
+                .map { [it[1], it[2]] } //make sure no long reads are pooled for spades if there are no short reads
+
+            POOL_LONG_READS(ch_long_reads_grouped_for_pool)
             ch_long_reads_spades = POOL_LONG_READS.out.reads
         }
         else {
