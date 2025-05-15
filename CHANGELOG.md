@@ -3,16 +3,17 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v3.4.1dev - [unreleased]
+## v4.0.0 - [2025-05-16]
 
 ### `Added`
 
-- [#730](https://github.com/nf-core/mag/pull/730) - Added `--busco_db_lineage` to allow specifying a specific lineage for BUSCO database and remove `--busco_auto_lineage_prok` (added by @jfy133, @dialvarezs).
+- [#730](https://github.com/nf-core/mag/pull/730) - Added `--busco_db_lineage` to allow specifying a specific lineage for BUSCO database (added by @jfy133, @dialvarezs)
+- [#784](https://github.com/nf-core/mag/pull/784) - Added `--bin_min_size` and `--bin_max_size` parameters to filter out bins based on size (requested by @maxibor, @alexhbnr, added by @jfy133, @prototaxites)
+- [#793](https://github.com/nf-core/mag/pull/793) - Document use of a SquashFS image with `--gtdb_db`, useful for limited inode infrastructure (by @muniheart)
+- [#805](https://github.com/nf-core/mag/pull/793) - Add support for fastp's `--trim_poly_g` option (by @jfy133)
 - [#718](https://github.com/nf-core/mag/pull/718) - Add support for independent long-read metagenomic assembly (requested by ljmesi and many others, added by @muabnezor)
 - [#718](https://github.com/nf-core/mag/pull/718) - Added metaMDBG and (meta)Flye as long read assemblers (added by @muabnezor)
 - [#718](https://github.com/nf-core/mag/pull/718) - Added host removal for long reads using minimap2 as aligner (added by @muabnezor)
-- [#784](https://github.com/nf-core/mag/pull/784) - Added `--bin_min_size` and `--bin_max_size` parameters to filter out bins based on size (requested by @maxibor, @alexhbnr, added by @jfy133, @prototaxites).
-- [#793](https://github.com/nf-core/mag/pull/793) - Document use of a SquashFS image with `--gtdb_db`, useful for limited inode infrastructure (by @muniheart).
 
 ### `Changed`
 
@@ -21,11 +22,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#788](https://github.com/nf-core/mag/pull/788) - Tweak method of loading GTDB database in GTDBTK_CLASSIFYWF for more stability (reported by @alexhbnr, fix by @jfy133)
 - [#718](https://github.com/nf-core/mag/pull/718) - refactoring all assembly steps into subworkflows (added by @muabnezor)
 - [#800](https://github.com/nf-core/mag/pull/800) - Default branch is now set to `main` (by @jfy133 and @mirpedrol)
+- [#801](https://github.com/nf-core/mag/pull/800) - Increase CheckM memory requests to match [recommended requirements](https://github.com/nf-core/mag/pull/800) (by @jfy133)
 
 ### `Fixed`
 
 - [#789](https://github.com/nf-core/mag/pull/789) - Improve `--bowtie2_mode` description to clarify default settings (reported by @IceGreb, fix by @jfy133)
 - [#798](https://github.com/nf-core/mag/pull/798) - Fix overly strict database validation for `--metauk_db` and improve documentation (reported by @ruqse, fix by @jfy133)
+- [#804](https://github.com/nf-core/mag/pull/804) - Fix broken memory specification for FASTQC (reported by @jmichaelegana, fix by @awgymer & @jfy133)
 
 ### `Dependencies`
 
@@ -33,11 +36,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | -------- | ---------------- | ----------- |
 | BUSCO    | 5.4.3            | 5.8.3       |
 | csvtk    |                  | 0.31.0      |
+| nextflow | 24.04.2          | 24.10.6     |
 | flye     |                  | 2.9.5       |
 | metamdbg |                  | 1.0         |
 | minimap2 |                  | 2.28        |
 
 ### `Deprecated`
+
+- [#730](https://github.com/nf-core/mag/pull/730) - Remove `--busco_auto_lineage_prok` due to update and simplified usage of BUSCO (added by @jfy133, @dialvarezs)
 
 ## 3.4.0 [2025-04-04]
 
