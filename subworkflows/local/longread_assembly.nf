@@ -28,8 +28,12 @@ workflow LONGREAD_ASSEMBLY {
                     "--nano-raw"
                 } else if (meta.lr_platform == "OXFORD_NANOPORE_HQ") {
                     "--nano-hq"
-                } else {
+                } else if (meta.lr_platform == "PACBIO_HIFI") {
                     "--pacbio-hifi"
+                } else if (meta.lr_platform == "PACBIO_CLR") {
+                    "--pacbio-raw"
+                } else {
+                    []
                 }
             }
         )

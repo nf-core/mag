@@ -66,9 +66,9 @@
             },
             "long_reads_platform": {
                 "type": "string",
-                "enum": ["OXFORD_NANOPORE", "OXFORD_NANOPORE_HQ", "PACBIO_SMRT"],
+                "enum": ["OXFORD_NANOPORE", "OXFORD_NANOPORE_HQ", "PACBIO_CLR", "PACBIO_HIFI"],
                 "meta": ["lr_platform"],
-                "errorMessage": "long_reads_platform needs to be one of the following:\n\nOXFORD_NANOPORE, OXFORD_NANOPORE_HQ, PACBIO_SMRT"
+                "errorMessage": "long_reads_platform needs to be one of the following:\n\nOXFORD_NANOPORE, OXFORD_NANOPORE_HQ, PACBIO_CLR, PACBIO_HIFI"
             }
         },
         "required": ["sample", "group"],
