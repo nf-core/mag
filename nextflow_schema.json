@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "https://raw.githubusercontent.com/nf-core/mag/master/nextflow_schema.json",
+    "$id": "https://raw.githubusercontent.com/nf-core/mag/main/nextflow_schema.json",
     "title": "nf-core/mag pipeline parameters",
     "description": "Assembly, binning and annotation of metagenomes",
     "type": "object",
@@ -301,6 +301,11 @@
                 "fastp_save_trimmed_fail": {
                     "type": "boolean",
                     "description": "Save reads that fail fastp filtering in a separate file. Not used downstream."
+                },
+                "fastp_trim_polyg": {
+                    "type": "boolean",
+                    "description": "Turn on detecting and trimming of poly-G tails",
+                    "help_text": "This is particularly useful when dealing with Illumina 2 colour chemistry sequencing platforms, that will record 'G' in the absence of any light emitted.\n\nSee [here](https://sequencing.qcfail.com/articles/illumina-2-colour-chemistry-can-overcall-high-confidence-g-bases/) for more information on the artefact."
                 },
                 "adapterremoval_minquality": {
                     "type": "integer",
@@ -678,9 +683,9 @@
                 },
                 "metaeuk_db": {
                     "type": "string",
-                    "description": "Path to either a local fasta file of protein sequences, or to a directory containing an mmseqs2-formatted database, for annotation of eukaryotic genomes.",
-                    "help_text": "One option would be the databases from the MetaEuk publication (https://wwwuser.gwdg.de/~compbiol/metaeuk/), however it should be noted that these are focused on marine eukaryotes.",
-                    "format": "file-path",
+                    "description": "Path to either a local fasta file of protein sequences, or to a directory containing an MMseqs2-formatted database, for annotation of eukaryotic genomes.",
+                    "help_text": "One option would be the databases from the MetaEuk publication (https://wwwuser.gwdg.de/~compbiol/metaeuk/), however it should be noted that these are focused on marine eukaryotes.\n\nIf supplying an mmseqs database, you must supply a directory that _within_ it has the `database`, `database.dbtype`, `database_h` etc. files. For example, for a pre-downloaded Kalamari database, you would supply `--mmseqs_db /<path>/<to>/mmseqs_db/Kalamari/. Where if you were to look inside the database you would see `mmseqs_db/Kalamari/database_h`",
+                    "format": "path",
                     "exists": true
                 },
                 "save_mmseqs_db": {
@@ -764,6 +769,18 @@
                     "description": "Maximal number of contigs that are not part of any bin but treated as individual genome.",
                     "help_text": "Contigs that do not fulfill the thresholds of `--min_length_unbinned_contigs` and `--max_unbinned_contigs` are pooled for downstream analysis and reporting, except contigs that also do not fullfill `--min_contig_size` are not considered further."
                 },
+                "bin_min_size": {
+                    "type": "integer",
+                    "default": 0,
+                    "minimum": 0,
+                    "description": "Specify the shortest length a bin should be to retain for downstream processing (in base pairs)",
+                    "help_text": "This can speed up downstream processing by removing 'nonsense' bins (e.g. badly binned single short-contig bins, or unnaturally large bins). By default there is no lower limit the size of bins allowed to pass."
+                },
+                "bin_max_size": {
+                    "type": "integer",
+                    "description": "Specify the longest length a bin should be to retain for downstream processing (in base pairs). By default no limit.",
+                    "help_text": "This can speed up downstream processing by removing 'nonsense' bins (e.g. badly binned single short-contig bins, or unnaturally large bins). By default there is no upper limit on size of bins allowed to pass."
+                },
                 "bin_concoct_chunksize": {
                     "type": "integer",
                     "default": 10000,
@@ -780,8 +797,8 @@
                 },
                 "bowtie2_mode": {
                     "type": "string",
-                    "description": "Bowtie2 alignment mode",
-                    "help_text": "Bowtie2 alignment mode options, for example: `--very-fast` , `--very-sensitive-local -N 1` , ... Must be used like this: --bowtie2_mode=\"--very-sensitive\"",
+                    "description": "Specify alternative Bowtie2 settings for aligning reads back against the assembly.",
+                    "help_text": "You can specify here Bowtie2 alignment options. For example: `--very-fast` , `--very-sensitive-local -N 1` , ... Must be used like this: --bowtie2_mode=\"--very-sensitive\". By default no settings are defined, thus Bowtie2 runs with it's own internal defaults (e.g. end-to-end alignment)",
                     "pattern": "^[-\\w]*$"
                 },
                 "save_assembly_mapped_reads": {
@@ -830,14 +847,17 @@
                 },
                 "busco_db": {
                     "type": "string",
-                    "description": "Download URL for BUSCO lineage dataset, or path to a tar.gz archive, or local directory containing already downloaded and unpacked lineage datasets.",
-                    "help_text": "E.g. https://busco-data.ezlab.org/v5/data/lineages/bacteria_odb10.2024-01-08.tar.gz or '/path/to/buscodb' (files still need to be unpacked manually). Available databases are listed here: https://busco-data.ezlab.org/v5/data/lineages/.",
+                    "description": "Download URL, local tar.gz archive, or local uncompressed directory for an *_odb10 or *_odb12 BUSCO lineage dataset.",
+                    "help_text": "E.g. https://busco-data.ezlab.org/v5/data/lineages/bacteria_odb10.2024-01-08.tar.gz, `/path/to/bacteria_odb10.2024-01-08.tar.gz`.\n\nFor more details, check the [BUSCO section in the usage documentation](https://nf-co.re/mag/latest/docs/usage/#busco).",
                     "format": "path",
                     "exists": true
                 },
-                "busco_auto_lineage_prok": {
-                    "type": "boolean",
-                    "description": "Run BUSCO with automated lineage selection, but ignoring eukaryotes (saves runtime)."
+                "busco_db_lineage": {
+                    "type": "string",
+                    "description": "Name of the BUSCO *_odb10 or *_odb12 lineage to check against. Additionally supports 'auto', 'auto_prok' and 'auto_euk' for automatic lineage selection mode.",
+                    "help_text": "Typically used in combination with `--busco_db`, corresponding to the lineage files supplied within the `--busco_db` file or directroy.\n\nIf supplying without a `--busco_db`, will require an internet connection to work!",
+                    "pattern": "(.*_odb(10|12))|auto(_prok|_euk)?$",
+                    "default": "auto"
                 },
                 "save_busco_db": {
                     "type": "boolean",

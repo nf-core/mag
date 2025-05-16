@@ -5,6 +5,7 @@
 
 import argparse
 import sys
+import warnings
 
 import pandas as pd
 
@@ -110,10 +111,14 @@ def main(args=None):
 
     if args.binqc_summary and args.binqc_tool == "busco":
         busco_results = pd.read_csv(args.binqc_summary, sep="\t")
-        if not bins.equals(busco_results["GenomeBin"].sort_values().reset_index(drop=True)):
+        busco_bins = set(busco_results["Input_file"])
+
+        if set(bins) != busco_bins and len(busco_bins.intersection(set(bins))) > 0:
+            warnings.warn("Bins in BUSCO summary do not match bins in bin depths summary")
+        elif len(busco_bins.intersection(set(bins))) == 0:
             sys.exit("Bins in BUSCO summary do not match bins in bin depths summary!")
         results = pd.merge(
-            results, busco_results, left_on="bin", right_on="GenomeBin", how="outer"
+            results, busco_results, left_on="bin", right_on="Input_file", how="outer"
         )  # assuming depths for all bins are given
 
     if args.binqc_summary and args.binqc_tool == "checkm":
