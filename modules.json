@@ -62,6 +62,13 @@
                             "modules"
                         ]
                     },
+                    "catpack/addnames": {
+                        "branch": "master",
+                        "git_sha": "81880787133db07d9b4c1febd152c090eb8325dc",
+                        "installed_by": [
+                            "modules"
+                        ]
+                    },
                     "catpack/bins": {
                         "branch": "master",
                         "git_sha": "8e6e124ee1e7b9d6b8dacca408a936d56865322f",
@@ -72,6 +79,20 @@
                     "catpack/contigs": {
                         "branch": "master",
                         "git_sha": "81880787133db07d9b4c1febd152c090eb8325dc",
+                        "installed_by": [
+                            "modules"
+                        ]
+                    },
+                    "catpack/download": {
+                        "branch": "master",
+                        "git_sha": "81880787133db07d9b4c1febd152c090eb8325dc",
+                        "installed_by": [
+                            "modules"
+                        ]
+                    },
+                    "catpack/summarise": {
+                        "branch": "master",
+                        "git_sha": "8e6e124ee1e7b9d6b8dacca408a936d56865322f",
                         "installed_by": [
                             "modules"
                         ]
@@ -192,7 +213,9 @@
                     "fastqc": {
                         "branch": "master",
                         "git_sha": "b1966f36ec9de31927b2603d8f499960b2a4c294",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ]
                     },
                     "filtlong": {
                         "branch": "master",
