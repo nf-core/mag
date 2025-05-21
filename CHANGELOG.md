@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Added`
 
 - [#730](https://github.com/nf-core/mag/pull/730) - Added `--busco_db_lineage` to allow specifying a specific lineage for BUSCO database (added by @jfy133, @dialvarezs)
+- [#730](https://github.com/nf-core/mag/pull/730) - Added a new documentation section on database setup (by @jfy133, @dialvarezs)
 - [#784](https://github.com/nf-core/mag/pull/784) - Added `--bin_min_size` and `--bin_max_size` parameters to filter out bins based on size (requested by @maxibor, @alexhbnr, added by @jfy133, @prototaxites)
 - [#793](https://github.com/nf-core/mag/pull/793) - Document use of a SquashFS image with `--gtdb_db`, useful for limited inode infrastructure (by @muniheart)
 - [#805](https://github.com/nf-core/mag/pull/793) - Add support for fastp's `--trim_poly_g` option (by @jfy133)
@@ -32,7 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | -------- | ---------------- | ----------- |
 | BUSCO    | 5.4.3            | 5.8.3       |
 | csvtk    |                  | 0.31.0      |
-| nextflow | 24.04.2          | 24.10.6     |
+| nextflow | 24.04.2          | 25.04.2     |
 
 ### `Deprecated`
 
