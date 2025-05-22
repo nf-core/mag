@@ -63,6 +63,11 @@
                     },
                     "catpack/download": {
                         "branch": "master",
+                        "git_sha": "0d072082b4bbe653bc99d3e67fb3fc2d821ae171",
+                        "installed_by": ["modules"]
+                    },
+                    "catpack/prepare": {
+                        "branch": "master",
                         "git_sha": "81880787133db07d9b4c1febd152c090eb8325dc",
                         "installed_by": ["modules"]
                     },

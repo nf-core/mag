@@ -23,7 +23,7 @@ include { DOMAIN_CLASSIFICATION                                 } from '../subwo
 include { DEPTHS                                                } from '../subworkflows/local/depths'
 include { LONGREAD_PREPROCESSING                                } from '../subworkflows/local/longread_preprocessing'
 include { SHORTREAD_PREPROCESSING                               } from '../subworkflows/local/shortread_preprocessing'
-include { CAT                                                   } from '../subworkflows/local/cat'
+include { CATPACK                                               } from '../subworkflows/local/catpack'
 
 //
 // MODULE: Installed directly from nf-core/modules
@@ -43,9 +43,6 @@ include { PRODIGAL                                              } from '../modul
 include { PROKKA                                                } from '../modules/nf-core/prokka/main'
 include { MMSEQS_DATABASES                                      } from '../modules/nf-core/mmseqs/databases/main'
 include { METAEUK_EASYPREDICT                                   } from '../modules/nf-core/metaeuk/easypredict/main'
-// include { CATPACK_PREPARE                                       } from '../modules/nf-core/catpack/prepare/main'
-// include { CATPACK_BINS                                          } from '../modules/nf-core/catpack/bins/main'
-// include { CATPACK_CONTIGS                                       } from '../modules/nf-core/catpack/contigs/main'
 
 //
 // MODULE: Local to the pipeline
@@ -58,10 +55,6 @@ include { POOL_SINGLE_READS as POOL_LONG_READS                  } from '../modul
 include { QUAST                                                 } from '../modules/local/quast'
 include { QUAST_BINS                                            } from '../modules/local/quast_bins'
 include { QUAST_BINS_SUMMARY                                    } from '../modules/local/quast_bins_summary'
-// include { CAT_DB                                                } from '../modules/local/cat_db'
-// include { CAT_DB_GENERATE                                       } from '../modules/local/cat_db_generate'
-// include { CAT                                                   } from '../modules/local/cat'
-// include { CAT_SUMMARY                                           } from '../modules/local/cat_summary'
 include { BIN_SUMMARY                                           } from '../modules/local/bin_summary'
 
 workflow MAG {
@@ -477,8 +470,6 @@ workflow MAG {
     ================================================================================
     */
 
-    ch_bin_qc_summary = Channel.empty()
-
     if (!params.skip_binning || params.ancient_dna) {
         BINNING_PREPARATION(
             ch_assemblies,
@@ -612,6 +603,7 @@ workflow MAG {
         * Bin QC subworkflows: for checking bin completeness with either BUSCO, CHECKM, CHECKM2, and/or GUNC
         */
 
+        ch_bin_qc_summary = Channel.empty()
         if (!params.skip_binqc) {
             BIN_QC(ch_input_for_postbinning)
 
@@ -638,19 +630,24 @@ workflow MAG {
         }
 
         /*
-         * CAT: Bin Annotation Tool (BAT) are pipelines for the taxonomic classification of long DNA sequences and metagenome assembled genomes (MAGs/bins)
+         * CATPACK: bin / contig taxonomic classification
          */
-        CAT(
-            ch_input_for_postbinning_bins,
-            ch_input_for_postbinning_unbins
-        )
+        ch_catpack_summary = Channel.empty()
+        if (params.cat_db || params.cat_db_generate) {
+            CATPACK(
+                ch_input_for_postbinning_bins,
+                ch_input_for_postbinning_unbins,
+            )
+
+            ch_catpack_summary = CATPACK.out.summary
+            ch_versions = ch_versions.mix(CATPACK.out.versions)
+        }
 
         /*
          * GTDB-tk: taxonomic classifications using GTDB reference
          */
 
         if (!params.skip_gtdbtk) {
-
             ch_gtdbtk_summary = Channel.empty()
             if (gtdb) {
 
@@ -678,8 +675,7 @@ workflow MAG {
                 ch_bin_qc_summary.ifEmpty([]),
                 ch_quast_bins_summary.ifEmpty([]),
                 ch_gtdbtk_summary.ifEmpty([]),
-                // ch_cat_global_summary.ifEmpty([]),
-                [],
+                ch_catpack_summary.ifEmpty([]),
                 params.binqc_tool,
             )
         }

@@ -1,6 +1,6 @@
-process CATPACK_DOWNLOAD {
+process CATPACK_PREPARE {
     tag "${meta.id}"
-    label 'process_single'
+    label 'process_low'
 
     conda "${moduleDir}/environment.yml"
     container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
@@ -8,14 +8,14 @@ process CATPACK_DOWNLOAD {
         : 'biocontainers/cat:6.0.1--hdfd78af_1'}"
 
     input:
-    tuple val(meta), val(db)
+    tuple val(meta), path(db_fasta)
+    path names
+    path nodes
+    path acc2tax
 
     output:
-    tuple val(meta), path("${prefix}/*.${db}.gz"), emit: fasta
-    tuple val(meta), path("${prefix}/*.names.dmp"), emit: names
-    tuple val(meta), path("${prefix}/*.nodes.dmp"), emit: nodes
-    tuple val(meta), path("${prefix}/*accession2taxid*.gz"), emit: acc2tax
-    tuple val(meta), path("${prefix}/*.log"), emit: log
+    tuple val(meta), path("${prefix}/db/"), emit: db
+    tuple val(meta), path("${prefix}/tax/"), emit: taxonomy
     path "versions.yml", emit: versions
 
     when:
@@ -25,11 +25,14 @@ process CATPACK_DOWNLOAD {
     def args = task.ext.args ?: ''
     prefix = task.ext.prefix ?: "${meta.id}"
     """
-    CAT_pack \\
-        download \\
-        ${args} \\
-        --db ${db} \\
-        -o ${prefix}/
+    CAT_pack prepare \\
+        -n ${task.cpus} \\
+        --db_fasta ${db_fasta} \\
+        --names ${names} \\
+        --nodes ${nodes} \\
+        --acc2tax ${acc2tax} \\
+        --db_dir ${prefix}/ \\
+        ${args}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -38,21 +41,16 @@ process CATPACK_DOWNLOAD {
     """
 
     stub:
-    def args = task.ext.args ?: ''
     prefix = task.ext.prefix ?: "${meta.id}"
     """
-    echo "CAT_pack \\
-        download \\
-        ${args} \\
-        --db ${db}
-        -o ${prefix}/"
-
-    mkdir ${prefix}/
-    echo "" | gzip > ${prefix}/${prefix}.${db}.gz
-    touch ${prefix}/${prefix}.names.dmp
-    touch ${prefix}/${prefix}.nodes.dmp
-    echo "" | gzip > ${prefix}/${prefix}.accession2taxid.gz
-    touch ${prefix}/${prefix}.log
+    touch database.log
+    mkdir -p ${prefix}/db
+    touch ${prefix}/db/database.dmnd
+    touch ${prefix}/db/database.fastaid2LCAtaxid
+    touch ${prefix}/db/database.taxids_with_multiple_offspring
+    mkdir -p ${prefix}/tax
+    touch ${prefix}/tax/nodes.dmp
+    touch ${prefix}/tax/names.dmp
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
