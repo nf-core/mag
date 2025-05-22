@@ -59,7 +59,6 @@ include { CAT_DB_GENERATE                                       } from '../modul
 include { CAT                                                   } from '../modules/local/cat'
 include { CAT_SUMMARY                                           } from '../modules/local/cat_summary'
 include { BIN_SUMMARY                                           } from '../modules/local/bin_summary'
-include { COMBINE_TSV as COMBINE_SUMMARY_TSV                    } from '../modules/local/combine_tsv'
 
 workflow MAG {
     take:
@@ -243,8 +242,7 @@ workflow MAG {
             ch_db_for_kraken2 = KRAKEN2_DB_PREPARATION(ch_kraken2_db_file).db
         }
         else if (ch_kraken2_db_file.isDirectory()) {
-            ch_db_for_kraken2 = Channel
-                .fromPath("${ch_kraken2_db_file}/*.k2d")
+            ch_db_for_kraken2 = Channel.fromPath("${ch_kraken2_db_file}/*.k2d")
                 .collect()
                 .map { file ->
                     if (file.size() >= 3) {
@@ -514,12 +512,16 @@ workflow MAG {
         // Make sure if running aDNA subworkflow to use the damage-corrected contigs for higher accuracy
         if (params.ancient_dna && !params.skip_ancient_damagecorrection) {
             BINNING(
-                BINNING_PREPARATION.out.grouped_mappings.join(ANCIENT_DNA_ASSEMBLY_VALIDATION.out.contigs_recalled).map { it -> [it[0], it[4], it[2], it[3]] }
+                BINNING_PREPARATION.out.grouped_mappings.join(ANCIENT_DNA_ASSEMBLY_VALIDATION.out.contigs_recalled).map { it -> [it[0], it[4], it[2], it[3]] },
+                params.bin_min_size,
+                params.bin_max_size,
             )
         }
         else {
             BINNING(
-                BINNING_PREPARATION.out.grouped_mappings
+                BINNING_PREPARATION.out.grouped_mappings,
+                params.bin_min_size,
+                params.bin_max_size,
             )
         }
         ch_versions = ch_versions.mix(BINNING.out.versions)

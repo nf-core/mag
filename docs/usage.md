@@ -97,6 +97,58 @@ group-1,1,SPAdes,SPAdes-group-1.contigs.fasta.gz
 
 When supplying pre-computed assemblies, reads **must** also be provided in the CSV input format to `--input`, and should be the reads used to build the assemblies, i.e., adapter-removed, run-merged etc.. Preprocessing steps will not be ran on raw reads when pre-computed assemblies are supplied. As long reads are only used for assembly, any long read fastq files listed in the reads CSV are ignored.
 
+### Databases
+
+nf-core/mag uses multiple tools that require additional databases.
+The pipeline will download these databases for you if not supplied via a pipeline-level parameter.
+However, we generally recommend you download these databases manually once, and place them in a long-term storage directory or cache from where you can re-use the databases across runs.
+Here we provide specific additional information for some of the downloading databases which can be more tricky to prepare.
+
+For any other database, or in doubt, please check the [parameters page](https://nf-co.re/mag/parameters).
+
+#### BUSCO
+
+BUSCO can download lineage datasets automatically as it needs them, but this process can be slow if the internet connection is unstable, and may lead to redundant downloads across different samples.
+To avoid this, you can provide a local copy of a BUSCO lineage dataset using the `--busco_db` parameter.
+The local directory must follow a specific structure for BUSCO to recognize it.
+
+To prepare the lineage dataset, the recommended method is to use BUSCO's built-in download functionality before running the pipeline:
+
+```bash
+busco --download_path <your_db> --download <lineage>
+```
+
+This command downloads the specified lineage into the `<your_db>/` directory and creates the required directory structure.
+`<lineage>` can be any [supported dataset](https://busco-data.ezlab.org/v5/data/lineages/), such as `alphaproteobacteria_odb12`.
+You can also specify `prokaryota` or `all` to download multiple lineages, which is necessary for automatic lineage selection in offline mode.
+
+Alternatively, you can manually download a specific lineage tarball from [https://busco-data.ezlab.org/v5/data/lineages/](https://busco-data.ezlab.org/v5/data/lineages/), extract it, and place it in the appropriate location: `<your_db>/lineages/<taxa>_odb<XX>`.
+The lineage directory (e.g., `bacteria_odb12`) should contain files such as `dataset.cfg` and a `hmms/` subdirectory at the top level.
+Then, you must provide `--busco_db <your_db>/` and `--busco_db_lineage <downloaded_lineage>` to the pipeline.
+You can also pass to `--busco_db` a URL pointing to a lineage tarball, or the tarball itself if stored locally.
+
+> [! WARNING]
+> When any kind of parameter is provided to `--busco_db`, BUSCO will run in offline mode.
+> If the lineage specified via `--busco_db_lineage` is not found locally, or if you attempt automatic lineage selection without having a complete lineage dataset pre-downloaded, BUSCO will fail.
+
+### CAT
+
+> [! WARNING]
+> This database is very large at ~180 GB!
+> This can take a long time, so we strongly recommend downloading and unzipping prior the pipeline run.
+
+This database can be downloaded from the [CAT developers' website](https://tbb.bio.uu.nl/bastiaan/CAT_prepare/), which is based in the Netherlands (and could be slow for other regions of the world).
+
+### GTDB
+
+> [! WARNING]
+> This database is very large at ~110 GB!
+> This can take a long time, so we strongly recommend downloading and unzipping prior the pipeline run.
+
+This database can be downloaded from the [GTDB developers' website](default: https://data.gtdb.ecogenomic.org/releases/release220/220.0/auxillary_files/gtdbtk_package/full_package/), which is based in Australia (and could be slow for other regions of the world).
+The developers also offer a 'split' archive of 10GB files that can be downloaded more stably from [here](https://data.gtdb.ecogenomic.org/releases/release220/220.0/auxillary_files/gtdbtk_package/split_package/) and subsequently (manually) combined after.
+More documentation can be seen [here](https://ecogenomics.github.io/GTDBTk/installing/index.html#gtdb-tk-reference-data).
+
 ## Running the pipeline
 
 The typical command for running the pipeline is as follows:
@@ -167,7 +219,9 @@ You can fix this by using the prameter `--megahit_fix_cpu_1`. In both cases, do 
 
 MetaBAT2 is run by default with a fixed seed within this pipeline, thus producing reproducible results.
 
-To allow also reproducible bin QC with BUSCO, run BUSCO providing already downloaded lineage datasets (BUSCO will be run using automated lineage selection in offline mode) or provide a specific lineage dataset via `--busco_db` and use the parameter `--save_busco_db`. This may be useful since BUSCO datasets are frequently updated and old versions do not always remain (easily) accessible.
+Using the BUSCO auto-lineage mode with an internet connection may lead to non-reproducible results, since the databases are frequently updated and automatic lineage selection depends on the version of the database used when running BUSCO.
+Therefore, we strongly recommend downloading the required lineage datasets in advance and specifying the lineage to check against.
+To ensure reproducibility when using auto-lineage mode, download `all` lineages (see [Databases](#databases)) and provide the download path to `--busco_db`. This will enable offline mode and produce consistent results across runs.
 
 For the taxonomic bin classification with [CAT](https://github.com/dutilh/CAT), when running the pipeline with `--cat_db_generate` the parameter `--save_cat_db` can be used to also save the generated database to allow reproducibility in future runs. Note that when specifying a pre-built database with `--cat_db`, currently the database can not be saved.
 
@@ -335,3 +389,94 @@ DAS Tool may not always be able to refine bins due to insufficient recovery of e
 In this case, DAS Tool has not necessarily failed but was unable to complete the refinement. You will therefore not expect to find any output files in the `GenomeBinning/DASTool/` results directory for that particular sample.
 
 If you are regularly getting such errors, you can try reducing the `--refine_bins_dastool_threshold` value, which will modify the scoring threshold defined in the [DAS Tool publication](https://www.nature.com/articles/s41564-018-0171-1).
+
+## A note on bin filtering
+
+The pipeline offers the ability to filter out bins that fall outside of a certain size in base pairs (`--bin_max_length`, `--bin_min_length`).
+
+This can be useful if you have a set of target organisms that you know approximately the size of the genome for, or if you are looking to filter out small bins that are likely to be contaminants or assembly artifacts.
+By removing these bins, you can speed up run time of the pipeline considerably in some cases.
+
+This can also remove 'nonsense' bins of e.g. a single or a collection of very short contigs that can occur with more aggressive binners (e.g. CONCOCT), and can in some cases prevent GUNC [from running correctly](https://github.com/grp-bork/gunc/issues/42#issue-2148763805).
+
+Note that in this context, it is recommended to also set `--min_length_unbinned_contigs` to a suitably high value that corresponds to a reasonable bin size if the `-bin_*_length` parameters are used, so you have useful 'singular' contigs in the unbinned output.
+
+## A note on GTDB having too many files or using too many inodes
+
+The GTDB is very large both in size and by the number of files it contains.
+The uncompressed database requires >200k files (or more specifically: inodes), which can be problematic for users with limited storage resources.
+
+One workaround for this is to economize on files/inodes by using a SquashFS image version of the `.tar.gz` GTDB archive, and supply this to the pipeline via a configuration file.
+
+:::warning
+This feature is only available with container engines `apptainer` and `singularity`!
+:::
+
+To generate your SquashFS image:
+
+1. Install [squashfs-tools](https://github.com/plougher/squashfs-tools), if it is not already on your system
+2. Download the GTDB archive either via the full [`.tar.gz` archive](https://data.ace.uq.edu.au/public/gtdb/data/releases/release220/220.0/auxillary_files/gtdbtk_package/full_package/) or the [split database](https://data.ace.uq.edu.au/public/gtdb/data/releases/release220/220.0/auxillary_files/gtdbtk_package/split_package) version.
+3. Convert to a SquashFS image
+
+- Full package (compressed):
+
+  ```bash
+  gzip -cd gtdbtk_r220_data.tar.gz | mksquashfs - gtdbtk_r220.squashfs -tar
+  ```
+
+- Full package (uncompressed)
+
+  ```bash
+  mksquashfs /path/to/database gtdbtk_r220.squashfs
+  ```
+
+- Split package (compressed)
+
+  ```bash
+  cat gtdbtk_r220_data.tar.gz.part_* | gzip -cd - | mksquashfs - gtdbtk_r220.squashfs -tar
+  ```
+
+To use the image in the pipeline:
+
+1. Make an empty directory somewhere on your system
+2. Make a custom [Nextflow config](https://nextflow.io/docs/latest/config.html#configuration-file) file with the following settings
+
+   ```nextflow
+   process {
+       withName: GTDBTK_CLASSIFYWF {
+               containerOptions = "-B /<path>/<to>/gtdbtk_r220.squashfs:${params.gtdb_db}:image-src=/"
+       }
+   }
+   ```
+
+3. Supply the empty directory and config to the nextflow run `--gtdb_db /<path>/<to>/<empty_dir>/` to your `nextflow run` command
+
+   ```bash
+   nextflow run nf-core/mag -r <version> -profile <profiles> <...> --gtdb_db /<path>/<to>/<empty_dir>/ -c <custom>.config
+   ```
+
+:::warning
+Make sure to update the paths where indicated, and the GTDB release version if using a more recent one than r220!
+:::
+
+:::note
+If you have issues with this, you may need to specify a different `image-src=` so it corresponds to the directory structure within your `SquashFS` image.
+
+You can determine this with:
+
+```bash
+unsquashfs -l -max-depth 1 -d'' gtdbtk_r220.squashfs
+```
+
+And use the resulting output in `image-src=`
+
+```nextflow
+process {
+    withName: GTDBTK_CLASSIFYWF {
+            containerOptions = "-B /<path>/<to>/gtdbtk_r220.squashfs:${params.gtdb_db}:image-src=/<output_from_unsquashfs_ls>"
+    }
+}
+```
+
+Where we update the `image-src` and as above supply the same `/<path>/<to>/<empty_dir>/` path to `--gtdb_db`.
+:::
