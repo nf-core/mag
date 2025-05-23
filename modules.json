@@ -46,6 +46,36 @@
                         "git_sha": "5c460c5a4736974abde2843294f35307ee2b0e5e",
                         "installed_by": ["modules"]
                     },
+                    "catpack/addnames": {
+                        "branch": "master",
+                        "git_sha": "81880787133db07d9b4c1febd152c090eb8325dc",
+                        "installed_by": ["modules"]
+                    },
+                    "catpack/bins": {
+                        "branch": "master",
+                        "git_sha": "8e6e124ee1e7b9d6b8dacca408a936d56865322f",
+                        "installed_by": ["modules"]
+                    },
+                    "catpack/contigs": {
+                        "branch": "master",
+                        "git_sha": "81880787133db07d9b4c1febd152c090eb8325dc",
+                        "installed_by": ["modules"]
+                    },
+                    "catpack/download": {
+                        "branch": "master",
+                        "git_sha": "0d072082b4bbe653bc99d3e67fb3fc2d821ae171",
+                        "installed_by": ["modules"]
+                    },
+                    "catpack/prepare": {
+                        "branch": "master",
+                        "git_sha": "81880787133db07d9b4c1febd152c090eb8325dc",
+                        "installed_by": ["modules"]
+                    },
+                    "catpack/summarise": {
+                        "branch": "master",
+                        "git_sha": "8e6e124ee1e7b9d6b8dacca408a936d56865322f",
+                        "installed_by": ["modules"]
+                    },
                     "centrifuge/centrifuge": {
                         "branch": "master",
                         "git_sha": "9a07a1293d9b818d1e06d0f7b58152f74d462012",

@@ -520,6 +520,11 @@
                     "type": "boolean",
                     "description": "Only return official taxonomic ranks (Kingdom, Phylum, etc.) when running CAT."
                 },
+                "cat_classify_unbinned": {
+                    "type": "boolean",
+                    "description": "Classify unbinned contigs with CAT (contig mode).",
+                    "help_text": "This will run CAT classification on all unbinned contigs, which can be useful to get an idea of the taxonomic composition of the unbinned contigs."
+                },
                 "skip_gtdbtk": {
                     "type": "boolean",
                     "description": "Skip the running of GTDB, as well as the automatic download of the database"
