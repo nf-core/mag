@@ -82,24 +82,26 @@ workflow CATPACK {
     =========================================
      */
 
-    CATPACK_CONTIGS(ch_unbins, ch_cat_db.db, ch_cat_db.taxonomy, [[:], []], [[:], []])
+    if (params.cat_classify_unbinned) {
+        CATPACK_CONTIGS(ch_unbins, ch_cat_db.db, ch_cat_db.taxonomy, [[:], []], [[:], []])
 
-    CATPACK_ADDNAMES_UNBINS(CATPACK_CONTIGS.out.contig2classification, ch_cat_db.taxonomy)
+        CATPACK_ADDNAMES_UNBINS(CATPACK_CONTIGS.out.contig2classification, ch_cat_db.taxonomy)
 
-    ch_unbin_classification = CATPACK_ADDNAMES_UNBINS.out.txt
-        .join(ch_unbins)
-        .multiMap { meta, names, contigs ->
-            names: [meta, names]
-            contigs: [meta, contigs]
-        }
+        ch_unbin_classification = CATPACK_ADDNAMES_UNBINS.out.txt
+            .join(ch_unbins)
+            .multiMap { meta, names, contigs ->
+                names: [meta, names]
+                contigs: [meta, contigs]
+            }
 
-    CATPACK_SUMMARISE(ch_unbin_classification.names, ch_unbin_classification.contigs)
+        CATPACK_SUMMARISE(ch_unbin_classification.names, ch_unbin_classification.contigs)
 
-    ch_versions = ch_versions.mix(
-        CATPACK_CONTIGS.out.versions.first(),
-        CATPACK_ADDNAMES_UNBINS.out.versions.first(),
-        CATPACK_SUMMARISE.out.versions.first(),
-    )
+        ch_versions = ch_versions.mix(
+            CATPACK_CONTIGS.out.versions.first(),
+            CATPACK_ADDNAMES_UNBINS.out.versions.first(),
+            CATPACK_SUMMARISE.out.versions.first(),
+        )
+    }
 
     emit:
     summary  = CATPACK_ADDNAMES_BINS.out.txt.map { _meta, summary -> summary }

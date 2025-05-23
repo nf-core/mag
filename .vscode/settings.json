@@ -1,3 +1,24 @@
 {
-    "markdown.styles": ["public/vscode_markdown.css"]
+    "markdown.styles": [
+        "public/vscode_markdown.css"
+    ],
+    "workbench.colorCustomizations": {
+        "activityBar.activeBackground": "#2f7b49",
+        "activityBar.background": "#2f7b49",
+        "activityBar.foreground": "#e7e7e7",
+        "activityBar.inactiveForeground": "#e7e7e799",
+        "activityBarBadge.background": "#442c73",
+        "activityBarBadge.foreground": "#e7e7e7",
+        "commandCenter.border": "#e7e7e799",
+        "sash.hoverBorder": "#2f7b49",
+        "statusBar.background": "#215633",
+        "statusBar.foreground": "#e7e7e7",
+        "statusBarItem.hoverBackground": "#2f7b49",
+        "statusBarItem.remoteBackground": "#215633",
+        "statusBarItem.remoteForeground": "#e7e7e7",
+        "titleBar.activeBackground": "#215633",
+        "titleBar.activeForeground": "#e7e7e7",
+        "titleBar.inactiveBackground": "#21563399",
+        "titleBar.inactiveForeground": "#e7e7e799"
+    }
 }

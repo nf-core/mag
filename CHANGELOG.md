@@ -3,6 +3,21 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## dev - unreleased
+
+### `Added`
+
+- [#799](https://github.com/nf-core/mag/pull/799) - Add `--cat_classify_unbinned`, to enable taxonomic classification of unbinned contigs using CAT (by @dialvarezs)
+
+### `Changed`
+- [#799](https://github.comf/nf-core/mag/pull/799) - Migrate from local CAT modules to nf-core ones, updating version (by @dialvarezs)
+
+### `Dependencies`
+
+| Tool    | Previous version | New version |
+| ------- | ---------------- | ----------- |
+| CAT     | 5.2.3            | 6.0.1       |
+
 ## v4.0.0 - [2025-05-22]
 
 ### `Added`
