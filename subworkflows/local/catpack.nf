@@ -46,9 +46,9 @@ workflow CATPACK {
         CATPACK_DOWNLOAD([[id: 'cat_db_nr'], 'nr'])
         CATPACK_PREPARE(
             CATPACK_DOWNLOAD.out.fasta,
-            CATPACK_DOWNLOAD.out.names,
-            CATPACK_DOWNLOAD.out.nodes,
-            CATPACK_DOWNLOAD.out.acc2tax,
+            CATPACK_DOWNLOAD.out.names.map { _meta, names -> names },
+            CATPACK_DOWNLOAD.out.nodes.map { _meta, nodes -> nodes },
+            CATPACK_DOWNLOAD.out.acc2tax.map { _meta, acc2tax -> acc2tax },
         )
 
         ch_cat_db = CATPACK_PREPARE.out
