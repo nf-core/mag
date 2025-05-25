@@ -404,9 +404,9 @@ Note that in this context, it is recommended to also set `--min_length_unbinned_
 ## A note on GTDB having too many files or using too many inodes
 
 The GTDB is very large both in size and by the number of files it contains.
-The uncompressed database requires >200k inodes, which can be problematic for users with limited storage resources.
+The uncompressed database requires >200k files (or more specifically: inodes), which can be problematic for users with limited storage resources.
 
-One work around for this is to economize on inodes by using a SquashFS image version of the `.tar.gz` GTDB archive, and supply this to the pipeline via a configuration file.
+One workaround for this is to economize on files/inodes by using a SquashFS image version of the `.tar.gz` GTDB archive, and supply this to the pipeline via a configuration file.
 
 :::warning
 This feature is only available with container engines `apptainer` and `singularity`!
