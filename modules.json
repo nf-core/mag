@@ -63,12 +63,12 @@
                     },
                     "catpack/download": {
                         "branch": "master",
-                        "git_sha": "0d072082b4bbe653bc99d3e67fb3fc2d821ae171",
+                        "git_sha": "8c5c99341e42d34288b35af6a4fbbf300f21681f",
                         "installed_by": ["modules"]
                     },
                     "catpack/prepare": {
                         "branch": "master",
-                        "git_sha": "81880787133db07d9b4c1febd152c090eb8325dc",
+                        "git_sha": "8c5c99341e42d34288b35af6a4fbbf300f21681f",
                         "installed_by": ["modules"]
                     },
                     "catpack/summarise": {
