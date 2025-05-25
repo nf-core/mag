@@ -34,6 +34,7 @@ workflow CATPACK {
         else {
             ch_cat_db_dir = Channel.fromPath(params.cat_db, checkIfExists: true, type: 'dir')
                 .map { dir -> [[id: 'cat_db'], dir] }
+                .first()
         }
 
         ch_cat_db = ch_cat_db_dir.multiMap { meta, dir ->
