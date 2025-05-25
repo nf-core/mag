@@ -2,7 +2,7 @@
  * BUSCO/CheckM/CheckM2/GUNC: Quantitative measures for the assessment of genome assembly
  */
 
-include { ARIA2 as ARIA2_UNTAR             } from '../../modules/nf-core/aria2/main'
+include { ARIA2                            } from '../../modules/nf-core/aria2/main'
 include { BUSCO_BUSCO                      } from '../../modules/nf-core/busco/busco/main'
 include { CHECKM2_DATABASEDOWNLOAD         } from '../../modules/nf-core/checkm2/databasedownload/main'
 include { CHECKM_QA                        } from '../../modules/nf-core/checkm/qa/main'
@@ -13,6 +13,7 @@ include { GUNC_DOWNLOADDB                  } from '../../modules/nf-core/gunc/do
 include { GUNC_RUN                         } from '../../modules/nf-core/gunc/run/main'
 include { GUNC_MERGECHECKM                 } from '../../modules/nf-core/gunc/mergecheckm/main'
 include { UNTAR as BUSCO_UNTAR             } from '../../modules/nf-core/untar/main'
+include { UNTAR as CHECKM_UNTAR            } from '../../modules/nf-core/untar/main'
 
 
 workflow BIN_QC {
@@ -43,8 +44,9 @@ workflow BIN_QC {
         ch_checkm_db = file(params.checkm_db, checkIfExists: true)
     }
     else if (params.binqc_tool == 'checkm') {
-        ARIA2_UNTAR(params.checkm_download_url)
-        ch_checkm_db = ARIA2_UNTAR.out.downloaded_file
+        ARIA2([[id: 'checkm_db'], params.checkm_download_url])
+        CHECKM_UNTAR(ARIA2.out.downloaded_file)
+        ch_checkm_db = CHECKM_UNTAR.out.untar.map { it[1] }
     }
     else {
         ch_checkm_db = []

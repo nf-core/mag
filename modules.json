@@ -12,7 +12,7 @@
                     },
                     "aria2": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/aria2/aria2.diff"
                     },
@@ -43,7 +43,7 @@
                     },
                     "cat/fastq": {
                         "branch": "master",
-                        "git_sha": "5c460c5a4736974abde2843294f35307ee2b0e5e",
+                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
                         "installed_by": ["modules"]
                     },
                     "centrifuge/centrifuge": {
@@ -109,7 +109,7 @@
                     },
                     "csvtk/concat": {
                         "branch": "master",
-                        "git_sha": "aa5c23023134cf2d8b75a95d53557890e40261b9",
+                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
                         "installed_by": ["modules"]
                     },
                     "dastool/dastool": {
@@ -174,7 +174,7 @@
                     },
                     "gunzip": {
                         "branch": "master",
-                        "git_sha": "e06548bfa36ee31869b81041879dd6b3a83b1d57",
+                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
                         "installed_by": ["modules"]
                     },
                     "krakentools/kreport2krona": {
@@ -304,7 +304,7 @@
                     },
                     "untar": {
                         "branch": "master",
-                        "git_sha": "81880787133db07d9b4c1febd152c090eb8325dc",
+                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/untar/untar.diff"
                     }
