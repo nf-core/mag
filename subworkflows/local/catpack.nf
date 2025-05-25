@@ -61,7 +61,14 @@ workflow CATPACK {
     =========================================
      */
 
-    CATPACK_BINS(ch_bins, ch_cat_db.db, ch_cat_db.taxonomy, [[:], []], [[:], []], '.fa')
+    CATPACK_BINS(
+        ch_bins,            // input bins
+        ch_cat_db.db,       // database 'db' dir (contains diamond file mainly)
+        ch_cat_db.taxonomy, // database 'tax' dir (contains names/nodes.dmp)
+        [[:], []],          // pre-predicted proteins
+        [[:], []],          // pre-made diamond alignment table
+        '.fa',              // bin extension
+    )
 
     ch_bin_classification = CATPACK_BINS.out.bin2classification
         .map { _meta, summary -> [[id: 'bat_bins'], summary] }
@@ -84,7 +91,13 @@ workflow CATPACK {
      */
 
     if (params.cat_classify_unbinned) {
-        CATPACK_CONTIGS(ch_unbins, ch_cat_db.db, ch_cat_db.taxonomy, [[:], []], [[:], []])
+        CATPACK_CONTIGS(
+            ch_unbins,          // input contigs
+            ch_cat_db.db,       // database 'db' dir (contains diamond file mainly)
+            ch_cat_db.taxonomy, // database 'tax' dir (contains names/nodes.dmp)
+            [[:], []],          // pre-predicted proteins
+            [[:], []],          // pre-made diamond alignment table
+        )
 
         CATPACK_ADDNAMES_UNBINS(CATPACK_CONTIGS.out.contig2classification, ch_cat_db.taxonomy)
 
