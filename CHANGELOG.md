@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
-- [#811](https://github.comf/nf-core/mag/811) - Update aria2 and other util modules, and remove aria2 local patch (by @dialvarezs)
+- [#811](https://github.comf/nf-core/mag/811) - Update util modules, and remove aria2 module (by @dialvarezs)
 
 ## v4.0.0 - [2025-05-16]
 

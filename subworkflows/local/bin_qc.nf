@@ -2,7 +2,6 @@
  * BUSCO/CheckM/CheckM2/GUNC: Quantitative measures for the assessment of genome assembly
  */
 
-include { ARIA2                            } from '../../modules/nf-core/aria2/main'
 include { BUSCO_BUSCO                      } from '../../modules/nf-core/busco/busco/main'
 include { CHECKM2_DATABASEDOWNLOAD         } from '../../modules/nf-core/checkm2/databasedownload/main'
 include { CHECKM_QA                        } from '../../modules/nf-core/checkm/qa/main'
@@ -44,8 +43,8 @@ workflow BIN_QC {
         ch_checkm_db = file(params.checkm_db, checkIfExists: true)
     }
     else if (params.binqc_tool == 'checkm') {
-        ARIA2([[id: 'checkm_db'], params.checkm_download_url])
-        CHECKM_UNTAR(ARIA2.out.downloaded_file)
+        ch_checkm_db = [[id: 'checkm_db'], file(params.checkm_download_url, checkIfExists: true)]
+        CHECKM_UNTAR(ch_checkm_db)
         ch_checkm_db = CHECKM_UNTAR.out.untar.map { it[1] }
     }
     else {
