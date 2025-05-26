@@ -19,11 +19,10 @@ workflow HYBRID_ASSEMBLY {
             .map { meta, reads -> [meta.id, meta, reads] }
             .combine(ch_short_reads_spades_tmp, by: 0)
             .map { id, meta_long, long_reads, meta_short, short_reads ->
-                if (meta_long.lr_platform == "OXFORD_NANOPORE") {
-                    [meta_short, short_reads, [], long_reads]
-                } else if (meta.lr_platform == "OXFORD_NANOPORE_HQ") {
+                if (meta_long.lr_platform == "OXFORD_NANOPORE" || meta_long.lr_platform == "OXFORD_NANOPORE_HQ") {
                     [meta_short, short_reads, [], long_reads]
                 } else {
+                    // For PacBio
                     [meta_short, short_reads, long_reads, []]
                 }
             }

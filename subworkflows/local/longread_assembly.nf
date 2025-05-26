@@ -15,12 +15,6 @@ workflow LONGREAD_ASSEMBLY {
 
     if (!params.skip_flye) {
 
-        /*FLYE (
-            ch_long_reads,
-            "--" + params.flye_mode
-        )
-        */
-
         FLYE (
             ch_long_reads,
             ch_long_reads.map { meta, _fastq ->

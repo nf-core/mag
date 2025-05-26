@@ -139,11 +139,11 @@ workflow ASSEMBLY {
     ch_longread_assembled_contigs = LONGREAD_ASSEMBLY.out.assembled_contigs
 
     GUNZIP_SHORTREAD_ASSEMBLIES(ch_shortread_assembled_contigs)
-    ch_versions = ch_versions.mix(GUNZIP_SHORTREAD_ASSEMBLIES.out.versions)
+    ch_versions = ch_versions.mix(GUNZIP_SHORTREAD_ASSEMBLIES.out.versions.first())
     ch_shortread_assemblies = GUNZIP_SHORTREAD_ASSEMBLIES.out.gunzip
 
     GUNZIP_LONGREAD_ASSEMBLIES(ch_longread_assembled_contigs)
-    ch_versions = ch_versions.mix(GUNZIP_LONGREAD_ASSEMBLIES.out.versions)
+    ch_versions = ch_versions.mix(GUNZIP_LONGREAD_ASSEMBLIES.out.versions.first())
     ch_longread_assemblies = GUNZIP_LONGREAD_ASSEMBLIES.out.gunzip
 
     emit:

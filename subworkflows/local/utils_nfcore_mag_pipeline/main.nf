@@ -84,10 +84,10 @@ workflow PIPELINE_INITIALISATION {
             def lr_platforms = lr_platform.unique()
             if (sr_platforms.size() > 1 || lr_platforms.size() > 1) {
                 if (params.coassemble_group) {
-                    exit(1,"Multiple short- or long read sequencing platforms found for group ${group}. if --coassemble_group is used, use same platform for all samples in a group.")
+                    error("[nf-core/mag] ERROR: Multiple short- or long read sequencing platforms found for group ${group}. if --coassemble_group is used, use same platform for all samples in a group.")
                 }
                 if (params.binning_map_mode != 'own') {
-                    exit(1,"Multiple short- or long read sequencing platforms found for group ${group}. if --binning_map_mode is not 'own', use same platform for all samples in a group.")
+                    error("[nf-core/mag] ERROR: Multiple short- or long read sequencing platforms found for group ${group}. if --binning_map_mode is not 'own', use same platform for all samples in a group.")
                 }
             }
         }
@@ -100,7 +100,7 @@ workflow PIPELINE_INITIALISATION {
             .collect()
             .map {
                 if (it.size() > 1) {
-                    exit(1,"Multiple short read sequencing platforms found in samplesheet. Use same platform for all samples when running with binning_map_mode 'all'.")
+                    error("[nf-core/mag] ERROR: Multiple short read sequencing platforms found in samplesheet. Use same platform for all samples when running with binning_map_mode 'all'.")
                 }
             }
         ch_samplesheet
@@ -109,7 +109,7 @@ workflow PIPELINE_INITIALISATION {
             .collect()
             .map {
                 if (it.size() > 1) {
-                    exit(1,"Multiple long read sequencing platforms found in samplesheet. Use same platform for all samples when running with binning_map_mode 'all'.")
+                    error("[nf-core/mag] ERROR: Multiple long read sequencing platforms found in samplesheet. Use same platform for all samples when running with binning_map_mode 'all'.")
                 }
             }
     }

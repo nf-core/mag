@@ -28,9 +28,9 @@ At a minimum CSV file should contain the following columns:
 
 `sample,group,short_reads_1,short_reads_2,long_reads,short_reads_platform,long_reads_platform`
 
-The path to `long_reads` and `short_reads_2` is optional. Valid examples could look like the following:
+In cases of short-read only data run, the path to `long_reads` and `short_reads_2` is optional. Valid examples could look like the following:
 
-```csv title="samplesheet.csv"
+```csv title="samplesheet_mix.csv"
 sample,group,short_reads_1,short_reads_2,long_reads,short_reads_platform,long_reads_platform
 sample1,0,data/sample1_R1.fastq.gz,data/sample1_R2.fastq.gz,data/sample1.fastq.gz,ILLUMINA,OXFORD_NANOPORE
 sample2,0,data/sample2_R1.fastq.gz,data/sample2_R2.fastq.gz,data/sample2.fastq.gz,ILLUMINA,OXFORD_NANOPORE
@@ -39,7 +39,7 @@ sample3,1,data/sample3_R1.fastq.gz,data/sample3_R2.fastq.gz,,ILLUMINA,
 
 or
 
-```csv title="samplesheet.csv"
+```csv title="samplesheet_shortreadonly.csv"
 sample,group,short_reads_1,short_reads_2,long_reads,short_reads_platform
 sample1,0,data/sample1.fastq.gz,,,ILLUMINA
 sample2,0,data/sample2.fastq.gz,,,ILLUMINA
@@ -47,7 +47,7 @@ sample2,0,data/sample2.fastq.gz,,,ILLUMINA
 
 or to additionally to perform run merging of two runs of sample1:
 
-```csv title="samplesheet.csv"
+```csv title="samplesheet_mix_mergeruns.csv"
 sample,run,group,short_reads_1,short_reads_2,long_reads,short_reads_platform,long_reads_platform
 sample1,1,0,data/sample1_R1.fastq.gz,data/sample1_R2.fastq.gz,data/sample1.fastq.gz,ILLUMINA,OXFORD_NANOPORE
 sample1,2,0,data/sample1_R1.fastq.gz,data/sample1_R2.fastq.gz,data/sample1.fastq.gz,ILLUMINA,OXFORD_NANOPORE
@@ -57,7 +57,7 @@ sample3,1,0,data/sample3_R1.fastq.gz,data/sample3_R2.fastq.gz,,ILLUMINA,OXFORD_N
 
 If only long read data is available, the columns `short_reads_1` and `short_reads_2` can be left out:
 
-```csv title="samplesheet.csv"
+```csv title="samplesheet_longreadonly.csv"
 sample,run,group,long_reads,long_reads_platform
 sample1,1,0,data/sample1.fastq.gz,OXFORD_NANOPORE
 sample1,2,0,data/sample1.fastq.gz,OXFORD_NANOPORE

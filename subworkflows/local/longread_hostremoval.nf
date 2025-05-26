@@ -24,7 +24,6 @@ workflow LONGREAD_HOSTREMOVAL {
                 .map { host_meta, host_fasta, _meta, _reads ->
                     [ host_meta, host_fasta ]
                 }.first() // makes sure to only use the host fasta if the long read channel is not empty
-    ch_host_fasta_for_build.view()
     ch_minimap2_index = MINIMAP2_HOST_INDEX ( ch_host_fasta_for_build ).index
     ch_versions       = ch_versions.mix( MINIMAP2_HOST_INDEX.out.versions )
 
