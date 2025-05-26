@@ -5,7 +5,7 @@
 
 include { MINIMAP2_INDEX as MINIMAP2_HOST_INDEX                 } from '../../modules/nf-core/minimap2/index/main'
 include { MINIMAP2_ALIGN as MINIMAP2_HOST_ALIGN                 } from '../../modules/nf-core/minimap2/align/main'
-include { SAMTOOLS_UNMAPPED as SAMTOOLS_HOSTREMOVED_UNMAPPED    } from '../../modules/local/samtools_unmapped'
+include { SAMTOOLS_UNMAPPED as SAMTOOLS_HOSTREMOVED_UNMAPPED    } from '../../modules/local/samtoolsunmapped/main'
 include { SAMTOOLS_INDEX as SAMTOOLS_HOSTREMOVED_INDEX          } from '../../modules/nf-core/samtools/index/main'
 include { SAMTOOLS_STATS as SAMTOOLS_HOSTREMOVED_STATS          } from '../../modules/nf-core/samtools/stats/main'
 

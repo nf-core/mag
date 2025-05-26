@@ -40,6 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | flye     |                  | 2.9.5       |
 | metamdbg |                  | 1.0         |
 | minimap2 |                  | 2.28        |
+| samtools |                  | 1.21        |
 
 ### `Deprecated`
 

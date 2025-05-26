@@ -297,7 +297,7 @@ SPAdesHybrid is a part of the [SPAdes](http://cab.spbu.ru/software/spades/) soft
 
 ### metaMDBG
 
-[metaMDBG](https://github.com/GaetanBenoitDev/metaMDBG) is a fast and low-memory assembler for long and accurate metagenomics reads (e.g. PacBio HiFi, Nanopore r10.4)
+[metaMDBG](https://github.com/GaetanBenoitDev/metaMDBG) is a fast and low-memory assembler for long and accurate metagenomics reads (e.g. PacBio HiFi, Nanopore r10.4).
 
 <details markdown="1">
 <summary>Output files</summary>

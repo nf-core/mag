@@ -78,9 +78,11 @@ workflow ASSEMBLY {
                 POOL_SHORT_SINGLE_READS(
                     ch_short_reads_grouped.filter { it[0].single_end }
                 )
+                ch_versions = ch_versions.mix(POOL_SHORT_SINGLE_READS.out.versions.first())
                 POOL_PAIRED_READS(
                     ch_short_reads_grouped.filter { !it[0].single_end }
                 )
+                ch_versions = ch_versions.mix(POOL_PAIRED_READS.out.versions.first())
                 ch_short_reads_spades = POOL_SHORT_SINGLE_READS.out.reads.mix(POOL_PAIRED_READS.out.reads)
             }
         }
@@ -95,6 +97,7 @@ workflow ASSEMBLY {
                 .map { [it[1], it[2]] } //make sure no long reads are pooled for spades if there are no short reads
 
             POOL_LONG_READS(ch_long_reads_grouped_for_pool)
+            ch_versions = ch_versions.mix(POOL_LONG_READS.out.versions.first())
             ch_long_reads_spades = POOL_LONG_READS.out.reads
         }
         else {

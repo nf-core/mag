@@ -15,21 +15,18 @@ workflow LONGREAD_ASSEMBLY {
 
     if (!params.skip_flye) {
 
-        FLYE (
-            ch_long_reads,
-            ch_long_reads.map { meta, _fastq ->
-                if (meta.lr_platform == "OXFORD_NANOPORE") {
-                    "--nano-raw"
-                } else if (meta.lr_platform == "OXFORD_NANOPORE_HQ") {
-                    "--nano-hq"
-                } else if (meta.lr_platform == "PACBIO_HIFI") {
-                    "--pacbio-hifi"
-                } else if (meta.lr_platform == "PACBIO_CLR") {
-                    "--pacbio-raw"
-                } else {
-                    []
-                }
+        ch_long_reads_flye_input = ch_long_reads
+            .multiMap { meta, reads ->
+                reads: [meta, reads]
+                mode: meta.lr_platform == "OXFORD_NANOPORE" ? "--nano-raw" :
+                    meta.lr_platform == "OXFORD_NANOPORE_HQ" ? "--nano-hq" :
+                    meta.lr_platform == "PACBIO_HIFI" ? "--pacbio-hifi" :
+                    meta.lr_platform == "PACBIO_CLR" ? "--pacbio-raw" : []
             }
+
+        FLYE (
+            ch_long_reads_flye_input.reads,
+            ch_long_reads_flye_input.mode,
         )
 
         ch_flye_assemblies = FLYE.out.fasta.map { meta, assembly ->
@@ -42,17 +39,18 @@ workflow LONGREAD_ASSEMBLY {
 
     if (!params.skip_metamdbg) {
 
-        METAMDBG_ASM (
-            ch_long_reads,
-            ch_long_reads.map { meta, _fastq ->
-                if (meta.lr_platform == "OXFORD_NANOPORE") {
-                    "ont"
-                } else if (meta.lr_platform == "OXFORD_NANOPORE_HQ") {
-                    "ont"
-                } else {
-                    "hifi"
-                }
+        ch_long_reads_metamdbg_input = ch_long_reads
+            .multiMap { meta, reads ->
+                reads: [meta, reads]
+                mode: meta.lr_platform == "OXFORD_NANOPORE" ? "ont" :
+                    meta.lr_platform == "OXFORD_NANOPORE_HQ" ? "ont" :
+                    meta.lr_platform == "PACBIO_HIFI" ? "hifi" :
+                    meta.lr_platform == "PACBIO_CLR" ? "hifi" : []
             }
+
+        METAMDBG_ASM (
+            ch_long_reads_metamdbg_input.reads,
+            ch_long_reads_metamdbg_input.mode,
         )
 
         ch_metamdbg_assemblies = METAMDBG_ASM.out.contigs.map { meta, assembly ->
