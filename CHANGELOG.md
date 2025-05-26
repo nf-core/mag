@@ -3,24 +3,43 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v4.0.0 - [2025-05-16]
+## [unreleased]
 
 ### `Added`
 
-- [#730](https://github.com/nf-core/mag/pull/730) - Added `--busco_db_lineage` to allow specifying a specific lineage for BUSCO database (added by @jfy133, @dialvarezs)
-- [#784](https://github.com/nf-core/mag/pull/784) - Added `--bin_min_size` and `--bin_max_size` parameters to filter out bins based on size (requested by @maxibor, @alexhbnr, added by @jfy133, @prototaxites)
-- [#793](https://github.com/nf-core/mag/pull/793) - Document use of a SquashFS image with `--gtdb_db`, useful for limited inode infrastructure (by @muniheart)
-- [#805](https://github.com/nf-core/mag/pull/793) - Add support for fastp's `--trim_poly_g` option (by @jfy133)
 - [#718](https://github.com/nf-core/mag/pull/718) - Add support for independent long-read metagenomic assembly (requested by @ljmesi and many others, added by @muabnezor)
 - [#718](https://github.com/nf-core/mag/pull/718) - Added metaMDBG and (meta)Flye as long read assemblers (added by @muabnezor)
 - [#718](https://github.com/nf-core/mag/pull/718) - Added host removal for long reads using minimap2 as aligner (added by @muabnezor)
 
 ### `Changed`
 
+- [#718](https://github.com/nf-core/mag/pull/718) - Refactored all assembly steps into subworkflows (added by @muabnezor)
+
+### `Fixed`
+
+### `Dependencies`
+
+| flye     |                  | 2.9.5       |
+| metamdbg |                  | 1.0         |
+| minimap2 |                  | 2.28        |
+| samtools |                  | 1.21        |
+
+## v4.0.0 - [2025-05-22]
+
+### `Added`
+
+- [#730](https://github.com/nf-core/mag/pull/730) - Added `--busco_db_lineage` to allow specifying a specific lineage for BUSCO database (added by @jfy133, @dialvarezs)
+- [#730](https://github.com/nf-core/mag/pull/730) - Added a new documentation section on database setup (by @jfy133, @dialvarezs)
+- [#784](https://github.com/nf-core/mag/pull/784) - Added `--bin_min_size` and `--bin_max_size` parameters to filter out bins based on size (requested by @maxibor, @alexhbnr, added by @jfy133, @prototaxites)
+- [#793](https://github.com/nf-core/mag/pull/793) - Document use of a SquashFS image with `--gtdb_db`, useful for limited inode infrastructure (by @muniheart)
+- [#805](https://github.com/nf-core/mag/pull/793) - Add support for fastp's `--trim_poly_g` option (by @jfy133)
+
+
+### `Changed`
+
 - [#730](https://github.com/nf-core/mag/pull/730) - Migrate from local BUSCO module to nf-core one, updating version (by @dialvarezs)
 - [#730](https://github.com/nf-core/mag/pull/730) - Use BUSCO database from nf-core test datasets (by @dialvarezs)
 - [#788](https://github.com/nf-core/mag/pull/788) - Tweak method of loading GTDB database in GTDBTK_CLASSIFYWF for more stability (reported by @alexhbnr, fix by @jfy133)
-- [#718](https://github.com/nf-core/mag/pull/718) - Refactored all assembly steps into subworkflows (added by @muabnezor)
 - [#800](https://github.com/nf-core/mag/pull/800) - Default branch is now set to `main` (by @jfy133 and @mirpedrol)
 - [#801](https://github.com/nf-core/mag/pull/800) - Increase CheckM memory requests to match [recommended requirements](https://github.com/nf-core/mag/pull/800) (by @jfy133)
 
@@ -36,11 +55,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | -------- | ---------------- | ----------- |
 | BUSCO    | 5.4.3            | 5.8.3       |
 | csvtk    |                  | 0.31.0      |
-| nextflow | 24.04.2          | 24.10.6     |
-| flye     |                  | 2.9.5       |
-| metamdbg |                  | 1.0         |
-| minimap2 |                  | 2.28        |
-| samtools |                  | 1.21        |
+| nextflow | 24.04.2          | 25.04.2     |
 
 ### `Deprecated`
 
