@@ -19,10 +19,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Dependencies`
 
-| flye     |                  | 2.9.5       |
-| metamdbg |                  | 1.0         |
-| minimap2 |                  | 2.28        |
-| samtools |                  | 1.21        |
+| flye | | 2.9.5 |
+| metamdbg | | 1.0 |
+| minimap2 | | 2.28 |
+| samtools | | 1.21 |
 
 ## v4.0.0 - [2025-05-22]
 
@@ -33,7 +33,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#784](https://github.com/nf-core/mag/pull/784) - Added `--bin_min_size` and `--bin_max_size` parameters to filter out bins based on size (requested by @maxibor, @alexhbnr, added by @jfy133, @prototaxites)
 - [#793](https://github.com/nf-core/mag/pull/793) - Document use of a SquashFS image with `--gtdb_db`, useful for limited inode infrastructure (by @muniheart)
 - [#805](https://github.com/nf-core/mag/pull/793) - Add support for fastp's `--trim_poly_g` option (by @jfy133)
-
 
 ### `Changed`
 
