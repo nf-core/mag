@@ -55,8 +55,7 @@
                     "GENEMIND",
                     "TAPESTRI"
                 ],
-                "meta": ["sr_platform"],
-                "errorMessage": "short_reads_platform needs to be one of the following:\n\nILLUMINA, BGISEQ, LS454, ION_TORRENT, DNBSEQ, ELEMENT, ULTIMA, VELA_DIAGNOSTICS, GENAPSYS, GENEMIND, TAPESTRI"
+                "meta": ["sr_platform"]
             },
             "long_reads": {
                 "type": "string",
@@ -67,8 +66,7 @@
             "long_reads_platform": {
                 "type": "string",
                 "enum": ["OXFORD_NANOPORE", "OXFORD_NANOPORE_HQ", "PACBIO_CLR", "PACBIO_HIFI"],
-                "meta": ["lr_platform"],
-                "errorMessage": "long_reads_platform needs to be one of the following:\n\nOXFORD_NANOPORE, OXFORD_NANOPORE_HQ, PACBIO_CLR, PACBIO_HIFI"
+                "meta": ["lr_platform"]
             }
         },
         "required": ["sample", "group"],
