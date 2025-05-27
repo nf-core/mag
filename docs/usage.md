@@ -140,7 +140,7 @@ You can also pass to `--busco_db` a URL pointing to a lineage tarball, or the ta
 This database can be downloaded from the [CAT developers' website](https://tbb.bio.uu.nl/tina/CAT_pack_prepare/), which is based in the Netherlands (and could be slow for other regions of the world).
 
 > [!NOTE]
-> Only the `CAT_nr` database is supported by the pipeline.
+> By default, the pipeline will use the `NCBI nr` database.
 
 Enabling the `--cat_db_generate` option will create a new database using the latest version of the NCBI nr database. This requires a large download (over 200 GB) and several hours of subsequent processing. If you enable the `--save_cat_db` option, the database will be saved in the `Taxonomy/CAT/db` directory and can be reused in future runs by specifying its path with `--cat_db`.
 

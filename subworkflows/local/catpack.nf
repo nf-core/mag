@@ -46,12 +46,15 @@ workflow CATPACK {
         // download and build the database
         log.warn("[nf-core/mag]: Downloading CAT-nr database - this is very large and take a long time!")
         CATPACK_DOWNLOAD([[id: 'cat_db_nr'], 'nr'])
+        ch_versions = ch_versions.mix(CATPACK_DOWNLOAD.out.versions)
+
         CATPACK_PREPARE(
             CATPACK_DOWNLOAD.out.fasta,
             CATPACK_DOWNLOAD.out.names.map { _meta, names -> names },
             CATPACK_DOWNLOAD.out.nodes.map { _meta, nodes -> nodes },
             CATPACK_DOWNLOAD.out.acc2tax.map { _meta, acc2tax -> acc2tax },
         )
+        ch_versions = ch_versions.mix(CATPACK_PREPARE.out.versions)
 
         ch_cat_db = CATPACK_PREPARE.out
     }
@@ -70,20 +73,17 @@ workflow CATPACK {
         [[:], []],          // pre-made diamond alignment table
         '.fa',              // bin extension
     )
+    ch_versions = ch_versions.mix(CATPACK_BINS.out.versions.first())
 
     ch_bin_classification = CATPACK_BINS.out.bin2classification
         .map { _meta, summary -> [[id: 'bat_bins'], summary] }
         .groupTuple()
 
     CONCAT_CAT_BINS(ch_bin_classification, 'tsv', 'tsv')
+    ch_versions = ch_versions.mix(CONCAT_CAT_BINS.out.versions)
 
     CATPACK_ADDNAMES_BINS(CONCAT_CAT_BINS.out.csv, ch_cat_db.taxonomy)
-
-    ch_versions = ch_versions.mix(
-        CATPACK_BINS.out.versions.first(),
-        CONCAT_CAT_BINS.out.versions,
-        CATPACK_ADDNAMES_BINS.out.versions,
-    )
+    ch_versions = ch_versions.mix(CATPACK_ADDNAMES_BINS.out.versions)
 
     /*
     =========================================
@@ -99,8 +99,10 @@ workflow CATPACK {
             [[:], []],          // pre-predicted proteins
             [[:], []],          // pre-made diamond alignment table
         )
+        ch_versions = ch_versions.mix(CATPACK_CONTIGS.out.versions.first())
 
         CATPACK_ADDNAMES_UNBINS(CATPACK_CONTIGS.out.contig2classification, ch_cat_db.taxonomy)
+        ch_versions = ch_versions.mix(CATPACK_ADDNAMES_UNBINS.out.versions.first())
 
         ch_unbin_classification = CATPACK_ADDNAMES_UNBINS.out.txt
             .join(ch_unbins)
@@ -110,12 +112,7 @@ workflow CATPACK {
             }
 
         CATPACK_SUMMARISE(ch_unbin_classification.names, ch_unbin_classification.contigs)
-
-        ch_versions = ch_versions.mix(
-            CATPACK_CONTIGS.out.versions.first(),
-            CATPACK_ADDNAMES_UNBINS.out.versions.first(),
-            CATPACK_SUMMARISE.out.versions.first(),
-        )
+        ch_versions = ch_versions.mix(CATPACK_SUMMARISE.out.versions.first())
     }
 
     emit:
