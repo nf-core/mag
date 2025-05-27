@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
-- [#799](https://github.comf/nf-core/mag/pull/799) - Migrate from local CAT modules to nf-core ones, updating version (requested by @maxibor, added by @dialvarezs)
+- [#799](https://github.comf/nf-core/mag/pull/799) - Migrate from local CAT modules to nf-core ones, updating version (requested by @maxibor & @amizeranschi, added by @dialvarezs)
 
 ### `Fixed`
 
