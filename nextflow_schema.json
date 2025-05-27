@@ -528,8 +528,7 @@
                     "type": "string",
                     "description": "Specify the location of a GTDBTK database. Can be either an uncompressed directory or a `.tar.gz` archive. If not specified will be downloaded for you when GTDBTK or binning QC is not skipped.",
                     "default": "https://data.gtdb.ecogenomic.org/releases/release220/220.0/auxillary_files/gtdbtk_package/full_package/gtdbtk_r220_data.tar.gz",
-                    "format": "path",
-                    "exists": true
+                    "format": "path"
                 },
                 "gtdb_mash": {
                     "type": "string",
