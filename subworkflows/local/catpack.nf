@@ -44,6 +44,7 @@ workflow CATPACK {
     }
     else {
         // download and build the database
+        log.warn("[nf-core/mag]: Downloading CAT-nr database - this is very large and take a long time!")
         CATPACK_DOWNLOAD([[id: 'cat_db_nr'], 'nr'])
         CATPACK_PREPARE(
             CATPACK_DOWNLOAD.out.fasta,

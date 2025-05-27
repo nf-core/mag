@@ -523,7 +523,7 @@
                 "cat_classify_unbinned": {
                     "type": "boolean",
                     "description": "Classify unbinned contigs with CAT (contig mode).",
-                    "help_text": "This will run CAT classification on all unbinned contigs, which can be useful to get an idea of the taxonomic composition of the unbinned contigs."
+                    "help_text": "This will run CAT classification on all unbinned contigs, which can be useful to get an idea of the taxonomic composition of the unbinned contigs. In some cases this may extend run time of the pipeline."
                 },
                 "skip_gtdbtk": {
                     "type": "boolean",

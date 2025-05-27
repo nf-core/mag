@@ -134,7 +134,7 @@ You can also pass to `--busco_db` a URL pointing to a lineage tarball, or the ta
 ### CAT
 
 > [!WARNING]
-> This database (CAT_nr) is very large at ~200 GB!
+> The default database (CAT_nr) is very large at ~200 GB!
 > This can take a long time, so we strongly recommend downloading and unzipping prior the pipeline run.
 
 This database can be downloaded from the [CAT developers' website](https://tbb.bio.uu.nl/tina/CAT_pack_prepare/), which is based in the Netherlands (and could be slow for other regions of the world).
