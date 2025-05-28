@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Changed`
 
 - [#799](https://github.comf/nf-core/mag/pull/799) - Upgraded to latest version of CAT_pack modules (requested by @maxibor, added by @dialvarezs)
+- [#811](https://github.comf/nf-core/mag/811) - Update util modules, and remove aria2 module to replace with native Nextflow downloading of CheckM database (by @dialvarezs)
 
 ### `Fixed`
 
