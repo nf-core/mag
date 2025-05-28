@@ -3,7 +3,8 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [unreleased]
+
+## 4.1.0dev - [unreleased]
 
 ### `Added`
 
@@ -14,15 +15,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Changed`
 
 - [#718](https://github.com/nf-core/mag/pull/718) - Refactored all assembly steps into subworkflows (added by @muabnezor)
+- [#811](https://github.comf/nf-core/mag/811) - Update util modules, and remove aria2 module to replace with native Nextflow downloading of CheckM database (by @dialvarezs)
 
 ### `Fixed`
 
 ### `Dependencies`
 
+| Tool | Previous version | New version |
+| ---- | ---------------- | ----------- |
 | flye | | 2.9.5 |
 | metamdbg | | 1.0 |
 | minimap2 | | 2.28 |
 | samtools | | 1.21 |
+
+### `Deprecated`
+
 
 ## v4.0.0 - [2025-05-22]
 
