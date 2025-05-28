@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
+- [#???](https://github.com/nf-core/mag/pull/???) - Removed all leftover references to conda 'defaults' channel (by @jfy133)
+
 ### `Fixed`
 
 ### `Dependencies`

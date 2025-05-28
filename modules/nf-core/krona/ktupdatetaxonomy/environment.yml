@@ -4,5 +4,5 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - bioconda::porechop=0.2.4
-  - conda-forge::pigz=2.8
+  - bioconda::krona=2.8.1
+  - conda-forge::make=4.4.1

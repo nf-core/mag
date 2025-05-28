@@ -1,9 +1,10 @@
-name: krona_kronadb
+name: krona_ktupdatetaxonomy
 description: KronaTools Update Taxonomy downloads a taxonomy database
 keywords:
   - database
   - taxonomy
   - krona
+  - visualisation
 tools:
   - krona:
       description: Krona Tools is a set of scripts to create Krona charts from several
@@ -12,7 +13,7 @@ tools:
       documentation: https://github.com/marbl/Krona/wiki/Installing
       doi:
         10.1186/1471-2105-12-385
-        #  There is no input. This module downloads a pre-built taxonomy database for use with Krona Tools.
+        # There is no input. This module downloads a pre-built taxonomy database for use with Krona Tools.
       identifier: biotools:krona
 output:
   - db:
