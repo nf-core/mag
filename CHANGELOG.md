@@ -15,17 +15,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#718](https://github.com/nf-core/mag/pull/718) - Refactored all assembly steps into subworkflows (added by @muabnezor)
 - [#811](https://github.comf/nf-core/mag/811) - Update util modules, and remove aria2 module to replace with native Nextflow downloading of CheckM database (by @dialvarezs)
+- [#816](https://github.com/nf-core/mag/pull/816) - Removed all leftover references to conda 'defaults' channel (by @jfy133)
 
 ### `Fixed`
 
 ### `Dependencies`
 
-| Tool     | Previous version | New version |
-| -------- | ---------------- | ----------- |
-| flye     |                  | 2.9.5       |
-| metamdbg |                  | 1.0         |
-| minimap2 |                  | 2.28        |
-| samtools |                  | 1.21        |
+| Tool       | Previous version | New version |
+| ---------- | ---------------- | ----------- |
+| centrifuge | 1.0.4.1          | 1.0.4.2     |
+| nanolyse   | 1.41.6           | 1.44.1      |
+| flye       |                  | 2.9.5       |
+| metamdbg   |                  | 1.0         |
+| minimap2   |                  | 2.28        |
+| samtools   |                  | 1.21        |
 
 ### `Deprecated`
 
