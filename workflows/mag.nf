@@ -48,9 +48,7 @@ include { METAEUK_EASYPREDICT                                   } from '../modul
 //
 include { KRAKEN2_DB_PREPARATION                                } from '../modules/local/kraken2_db_preparation'
 include { KRAKEN2                                               } from '../modules/local/kraken2'
-include { CAT_FASTQ_SINGLE as POOL_SHORT_SINGLE_READS           } from '../modules/nf-core/cat/fastq/main.nf'
-include { CAT_FASTQ_PAIRED as POOL_PAIRED_READS                 } from '../modules/nf-core/cat/fastq/main.nf'
-include { CAT_FASTQ_SINGLE as POOL_LONG_READS                   } from '../modules/nf-core/cat/fastq/main.nf'
+include { CAT_FASTQ                                             } from '../modules/nf-core/cat/fastq/main.nf'
 include { QUAST                                                 } from '../modules/local/quast'
 include { QUAST_BINS                                            } from '../modules/local/quast_bins'
 include { QUAST_BINS_SUMMARY                                    } from '../modules/local/quast_bins_summary'
