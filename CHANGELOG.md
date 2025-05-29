@@ -10,14 +10,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Changed`
 
 - [#811](https://github.comf/nf-core/mag/811) - Update util modules, and remove aria2 module to replace with native Nextflow downloading of CheckM database (by @dialvarezs)
+- [#816](https://github.com/nf-core/mag/pull/816) - Removed all leftover references to conda 'defaults' channel (by @jfy133)
 
 ### `Fixed`
 
 ### `Dependencies`
 
-| Tool | Previous version | New version |
-| ---- | ---------------- | ----------- |
-|      |                  |             |
+| Tool       | Previous version | New version |
+| ---------- | ---------------- | ----------- |
+| centrifuge | 1.0.4.1          | 1.0.4.2     |
+| nanolyse   | 1.41.6           | 1.44.1      |
 
 ### `Deprecated`
 
