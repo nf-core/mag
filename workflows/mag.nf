@@ -46,19 +46,19 @@ include { METAEUK_EASYPREDICT                                   } from '../modul
 //
 // MODULE: Local to the pipeline
 //
-include { KRAKEN2_DB_PREPARATION                                } from '../modules/local/kraken2_db_preparation'
-include { KRAKEN2                                               } from '../modules/local/kraken2'
-include { POOL_SINGLE_READS as POOL_SHORT_SINGLE_READS          } from '../modules/local/pool_single_reads'
-include { POOL_PAIRED_READS                                     } from '../modules/local/pool_paired_reads'
-include { POOL_SINGLE_READS as POOL_LONG_READS                  } from '../modules/local/pool_single_reads'
-include { QUAST                                                 } from '../modules/local/quast'
-include { QUAST_BINS                                            } from '../modules/local/quast_bins'
-include { QUAST_BINS_SUMMARY                                    } from '../modules/local/quast_bins_summary'
-include { CAT_DB                                                } from '../modules/local/cat_db'
-include { CAT_DB_GENERATE                                       } from '../modules/local/cat_db_generate'
-include { CAT                                                   } from '../modules/local/cat'
-include { CAT_SUMMARY                                           } from '../modules/local/cat_summary'
-include { BIN_SUMMARY                                           } from '../modules/local/bin_summary'
+include { KRAKEN2_DB_PREPARATION                                } from '../modules/local/kraken2/db_preparation/main.nf'
+include { KRAKEN2                                               } from '../modules/local/kraken2/main.nf'
+include { POOL_SINGLE_READS as POOL_SHORT_SINGLE_READS          } from '../modules/local/pool/single_reads/main.nf'
+include { POOL_PAIRED_READS                                     } from '../modules/local/pool/paired_reads/main.nf'
+include { POOL_SINGLE_READS as POOL_LONG_READS                  } from '../modules/local/pool/single_reads/main.nf'
+include { QUAST                                                 } from '../modules/local/quast/main.nf'
+include { QUAST_BINS                                            } from '../modules/local/quast/bins/main.nf'
+include { QUAST_BINS_SUMMARY                                    } from '../modules/local/quast/bins_summary/main.nf'
+include { CAT_DB                                                } from '../modules/local/cat/db/main.nf'
+include { CAT_DB_GENERATE                                       } from '../modules/local/cat/db_generate/main.nf'
+include { CAT                                                   } from '../modules/local/cat/main.nf'
+include { CAT_SUMMARY                                           } from '../modules/local/cat/summary/main.nf'
+include { BIN_SUMMARY                                           } from '../modules/local/bin_summary/main.nf'
 
 workflow MAG {
     take:
