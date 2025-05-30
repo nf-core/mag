@@ -27,6 +27,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Deprecated`
 
+[#799](https://github.comf/nf-core/mag/pull/799) - Removed `--cat_official_taxonomy` in favour of `--cat_allow_unofficial_lineages` to control CAT's use of unofficial lineages (added by @dialvarezs)
+
 ## v4.0.0 - [2025-05-22]
 
 ### `Added`
