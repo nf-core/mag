@@ -516,9 +516,10 @@
                     "description": "Save the CAT database generated when specified by `--cat_db_generate`.",
                     "help_text": "Useful to allow reproducibility, as old versions of prebuild CAT databases do not always remain accessible and underlying NCBI taxonomy and nr databases change."
                 },
-                "cat_official_taxonomy": {
+                "cat_allow_unofficial_lineages": {
                     "type": "boolean",
-                    "description": "Only return official taxonomic ranks (Kingdom, Phylum, etc.) when running CAT."
+                    "description": "Allow unofficial lineages in CAT classification.",
+                    "help_text": "By default, CAT uses only official lineages for classification. This option enables unofficial lineages, which is useful with custom databases.\n\nNote that it disables classification result summarization, as this is not supported."
                 },
                 "cat_classify_unbinned": {
                     "type": "boolean",

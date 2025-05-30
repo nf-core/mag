@@ -1,15 +1,15 @@
 /*
  * CAT/BAT/RAT: tools for taxonomic classification of contigs and metagenome-assembled genomes (MAGs) and for taxonomic profiling of metagenomes
  */
-include { CATPACK_ADDNAMES as CATPACK_ADDNAMES_BINS   } from '../../modules/nf-core/catpack/addnames/main'
-include { CATPACK_ADDNAMES as CATPACK_ADDNAMES_UNBINS } from '../../modules/nf-core/catpack/addnames/main'
-include { CATPACK_BINS                                } from '../../modules/nf-core/catpack/bins/main'
-include { CATPACK_CONTIGS                             } from '../../modules/nf-core/catpack/contigs/main'
-include { CATPACK_DOWNLOAD                            } from '../../modules/nf-core/catpack/download/main'
-include { CATPACK_PREPARE                             } from '../../modules/nf-core/catpack/prepare/main'
-include { CATPACK_SUMMARISE                           } from '../../modules/nf-core/catpack/summarise/main'
-include { CSVTK_CONCAT as CONCAT_CAT_BINS             } from '../../modules/nf-core/csvtk/concat/main'
-include { UNTAR as CAT_DB_UNTAR                       } from '../../modules/nf-core/untar/main'
+include { CATPACK_ADDNAMES as CATPACK_ADDNAMES_BINS     } from '../../modules/nf-core/catpack/addnames/main'
+include { CATPACK_ADDNAMES as CATPACK_ADDNAMES_UNBINS   } from '../../modules/nf-core/catpack/addnames/main'
+include { CATPACK_BINS                                  } from '../../modules/nf-core/catpack/bins/main'
+include { CATPACK_CONTIGS as CATPACK_UNBINS             } from '../../modules/nf-core/catpack/contigs/main'
+include { CATPACK_DOWNLOAD                              } from '../../modules/nf-core/catpack/download/main'
+include { CATPACK_PREPARE                               } from '../../modules/nf-core/catpack/prepare/main'
+include { CATPACK_SUMMARISE as CATPACK_SUMMARISE_BINS   } from '../../modules/nf-core/catpack/summarise/main'
+include { CATPACK_SUMMARISE as CATPACK_SUMMARISE_UNBINS } from '../../modules/nf-core/catpack/summarise/main'
+include { UNTAR as CAT_DB_UNTAR                         } from '../../modules/nf-core/untar/main'
 
 
 workflow CATPACK {
@@ -75,15 +75,21 @@ workflow CATPACK {
     )
     ch_versions = ch_versions.mix(CATPACK_BINS.out.versions.first())
 
-    ch_bin_classification = CATPACK_BINS.out.bin2classification
-        .map { _meta, summary -> [[id: 'bat_bins'], summary] }
-        .groupTuple()
-
-    CONCAT_CAT_BINS(ch_bin_classification, 'tsv', 'tsv')
-    ch_versions = ch_versions.mix(CONCAT_CAT_BINS.out.versions)
-
-    CATPACK_ADDNAMES_BINS(CONCAT_CAT_BINS.out.csv, ch_cat_db.taxonomy)
+    CATPACK_ADDNAMES_BINS(CATPACK_BINS.out.bin2classification, ch_cat_db.taxonomy)
     ch_versions = ch_versions.mix(CATPACK_ADDNAMES_BINS.out.versions)
+
+    bin_summary = CATPACK_ADDNAMES_BINS.out.txt
+        .map { _meta, summary -> summary }
+        .collectFile(
+            name: 'bat_summary.tsv',
+            storeDir: "${params.outdir}/Taxonomy/CAT/",
+            keepHeader: true,
+        )
+
+    if (!params.cat_allow_unofficial_lineages) {
+        CATPACK_SUMMARISE_BINS(CATPACK_ADDNAMES_BINS.out.txt, [[:], []])
+        ch_versions = ch_versions.mix(CATPACK_SUMMARISE_BINS.out.versions.first())
+    }
 
     /*
     =========================================
@@ -92,30 +98,32 @@ workflow CATPACK {
      */
 
     if (params.cat_classify_unbinned) {
-        CATPACK_CONTIGS(
+        CATPACK_UNBINS(
             ch_unbins,          // input contigs
             ch_cat_db.db,       // database 'db' dir (contains diamond file mainly)
             ch_cat_db.taxonomy, // database 'tax' dir (contains names/nodes.dmp)
             [[:], []],          // pre-predicted proteins
             [[:], []],          // pre-made diamond alignment table
         )
-        ch_versions = ch_versions.mix(CATPACK_CONTIGS.out.versions.first())
+        ch_versions = ch_versions.mix(CATPACK_UNBINS.out.versions.first())
 
-        CATPACK_ADDNAMES_UNBINS(CATPACK_CONTIGS.out.contig2classification, ch_cat_db.taxonomy)
+        CATPACK_ADDNAMES_UNBINS(CATPACK_UNBINS.out.contig2classification, ch_cat_db.taxonomy)
         ch_versions = ch_versions.mix(CATPACK_ADDNAMES_UNBINS.out.versions.first())
 
-        ch_unbin_classification = CATPACK_ADDNAMES_UNBINS.out.txt
-            .join(ch_unbins)
-            .multiMap { meta, names, contigs ->
-                names: [meta, names]
-                contigs: [meta, contigs]
-            }
+        if (!params.cat_allow_unofficial_lineages) {
+            ch_unbin_classification = CATPACK_ADDNAMES_UNBINS.out.txt
+                .join(ch_unbins)
+                .multiMap { meta, names, contigs ->
+                    names: [meta, names]
+                    contigs: [meta, contigs]
+                }
 
-        CATPACK_SUMMARISE(ch_unbin_classification.names, ch_unbin_classification.contigs)
-        ch_versions = ch_versions.mix(CATPACK_SUMMARISE.out.versions.first())
+            CATPACK_SUMMARISE_UNBINS(ch_unbin_classification.names, ch_unbin_classification.contigs)
+            ch_versions = ch_versions.mix(CATPACK_SUMMARISE_UNBINS.out.versions.first())
+        }
     }
 
     emit:
-    summary  = CATPACK_ADDNAMES_BINS.out.txt.map { _meta, summary -> summary }
+    summary  = bin_summary
     versions = ch_versions
 }
