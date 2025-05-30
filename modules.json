@@ -72,14 +72,13 @@
                     },
                     "centrifuge/centrifuge": {
                         "branch": "master",
-                        "git_sha": "9a07a1293d9b818d1e06d0f7b58152f74d462012",
+                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
                         "installed_by": ["modules"]
                     },
                     "centrifuge/kreport": {
                         "branch": "master",
-                        "git_sha": "9a07a1293d9b818d1e06d0f7b58152f74d462012",
-                        "installed_by": ["modules"],
-                        "patch": "modules/nf-core/centrifuge/kreport/centrifuge-kreport.diff"
+                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "installed_by": ["modules"]
                     },
                     "checkm/lineagewf": {
                         "branch": "master",
@@ -108,27 +107,27 @@
                     },
                     "concoct/concoct": {
                         "branch": "master",
-                        "git_sha": "baa30accc6c50ea8a98662417d4f42ed18966353",
+                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
                         "installed_by": ["fasta_binning_concoct"]
                     },
                     "concoct/concoctcoveragetable": {
                         "branch": "master",
-                        "git_sha": "baa30accc6c50ea8a98662417d4f42ed18966353",
+                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
                         "installed_by": ["fasta_binning_concoct"]
                     },
                     "concoct/cutupfasta": {
                         "branch": "master",
-                        "git_sha": "73a6d7e6077b88aba1c5d6805635d79d6718270c",
+                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
                         "installed_by": ["fasta_binning_concoct"]
                     },
                     "concoct/extractfastabins": {
                         "branch": "master",
-                        "git_sha": "baa30accc6c50ea8a98662417d4f42ed18966353",
+                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
                         "installed_by": ["fasta_binning_concoct"]
                     },
                     "concoct/mergecutupclustering": {
                         "branch": "master",
-                        "git_sha": "baa30accc6c50ea8a98662417d4f42ed18966353",
+                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
                         "installed_by": ["fasta_binning_concoct"]
                     },
                     "csvtk/concat": {
@@ -203,17 +202,17 @@
                     },
                     "krakentools/kreport2krona": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
-                        "installed_by": ["modules"]
-                    },
-                    "krona/kronadb": {
-                        "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
                         "installed_by": ["modules"]
                     },
                     "krona/ktimporttaxonomy": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "installed_by": ["modules"]
+                    },
+                    "krona/ktupdatetaxonomy": {
+                        "branch": "master",
+                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
                         "installed_by": ["modules"]
                     },
                     "maxbin2": {
@@ -253,12 +252,12 @@
                     },
                     "nanolyse": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "git_sha": "81880787133db07d9b4c1febd152c090eb8325dc",
                         "installed_by": ["modules"]
                     },
                     "nanoplot": {
                         "branch": "master",
-                        "git_sha": "3135090b46f308a260fc9d5991d7d2f9c0785309",
+                        "git_sha": "457e8b54d1d2d3ec9208c55b66cdd573c976372f",
                         "installed_by": ["modules"]
                     },
                     "nanoq": {
@@ -273,7 +272,7 @@
                     },
                     "porechop/porechop": {
                         "branch": "master",
-                        "git_sha": "1d68c7f248d1a480c5959548a9234602b771199e",
+                        "git_sha": "dbf496251becaa54933305bb494b880253a84ee6",
                         "installed_by": ["modules"]
                     },
                     "prodigal": {

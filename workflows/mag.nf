@@ -31,7 +31,7 @@ include { CATPACK                                               } from '../subwo
 include { UNTAR as CENTRIFUGEDB_UNTAR                           } from '../modules/nf-core/untar/main'
 include { CENTRIFUGE_CENTRIFUGE                                 } from '../modules/nf-core/centrifuge/centrifuge/main'
 include { CENTRIFUGE_KREPORT                                    } from '../modules/nf-core/centrifuge/kreport/main'
-include { KRONA_KRONADB                                         } from '../modules/nf-core/krona/kronadb/main'
+include { KRONA_KTUPDATETAXONOMY                                } from '../modules/nf-core/krona/ktupdatetaxonomy/main'
 include { KRONA_KTIMPORTTAXONOMY                                } from '../modules/nf-core/krona/ktimporttaxonomy/main'
 include { KRAKENTOOLS_KREPORT2KRONA as KREPORT2KRONA_CENTRIFUGE } from '../modules/nf-core/krakentools/kreport2krona/main'
 include { MEGAHIT                                               } from '../modules/nf-core/megahit/main'
@@ -263,9 +263,9 @@ workflow MAG {
             ch_krona_db = ch_krona_db_file
         }
         else {
-            KRONA_KRONADB()
-            ch_krona_db = KRONA_KRONADB.out.db
-            ch_versions = ch_versions.mix(KRONA_KRONADB.out.versions)
+            KRONA_KTUPDATETAXONOMY()
+            ch_krona_db = KRONA_KTUPDATETAXONOMY.out.db
+            ch_versions = ch_versions.mix(KRONA_KTUPDATETAXONOMY.out.versions)
         }
 
         if (params.centrifuge_db) {
