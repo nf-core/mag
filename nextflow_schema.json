@@ -516,9 +516,15 @@
                     "description": "Save the CAT database generated when specified by `--cat_db_generate`.",
                     "help_text": "Useful to allow reproducibility, as old versions of prebuild CAT databases do not always remain accessible and underlying NCBI taxonomy and nr databases change."
                 },
-                "cat_official_taxonomy": {
+                "cat_allow_unofficial_lineages": {
                     "type": "boolean",
-                    "description": "Only return official taxonomic ranks (Kingdom, Phylum, etc.) when running CAT."
+                    "description": "Allow unofficial lineages in CAT classification.",
+                    "help_text": "By default, CAT only provides classifications enumerated at standard Linnaean taxonomic ranks. This option enables the output of non-standard ranks, which is useful with custom databases.\n\nNote that it disables classification result summarization, as this is not supported by CAT_pack summarise."
+                },
+                "cat_classify_unbinned": {
+                    "type": "boolean",
+                    "description": "Classify unbinned contigs with CAT (contig mode).",
+                    "help_text": "By default, nf-core/mag only runs CAT taxonomic classification on bins. Specifying this parameter will  additionally run CAT classification on all unbinned contigs, which can be useful to get an idea of the taxonomic composition of the unbinned contigs. In some cases this may significantly extend run time of the pipeline."
                 },
                 "skip_gtdbtk": {
                     "type": "boolean",
