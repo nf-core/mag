@@ -24,6 +24,7 @@ include { DEPTHS                                                } from '../subwo
 include { LONGREAD_PREPROCESSING                                } from '../subworkflows/local/longread_preprocessing'
 include { SHORTREAD_PREPROCESSING                               } from '../subworkflows/local/shortread_preprocessing'
 include { ASSEMBLY                                              } from '../subworkflows/local/assembly'
+include { CATPACK                                               } from '../subworkflows/local/catpack'
 
 //
 // MODULE: Installed directly from nf-core/modules
@@ -48,10 +49,6 @@ include { KRAKEN2                                               } from '../modul
 include { QUAST                                                 } from '../modules/local/quast'
 include { QUAST_BINS                                            } from '../modules/local/quast_bins'
 include { QUAST_BINS_SUMMARY                                    } from '../modules/local/quast_bins_summary'
-include { CAT_DB                                                } from '../modules/local/cat_db'
-include { CAT_DB_GENERATE                                       } from '../modules/local/cat_db_generate'
-include { CAT                                                   } from '../modules/local/cat'
-include { CAT_SUMMARY                                           } from '../modules/local/cat_summary'
 include { BIN_SUMMARY                                           } from '../modules/local/bin_summary'
 
 workflow MAG {
@@ -95,13 +92,6 @@ workflow MAG {
     }
     else {
         ch_kraken2_db_file = []
-    }
-
-    if (params.cat_db) {
-        ch_cat_db_file = Channel.value(file("${params.cat_db}"))
-    }
-    else {
-        ch_cat_db_file = Channel.empty()
     }
 
     if (params.krona_db) {
@@ -370,8 +360,6 @@ workflow MAG {
     ================================================================================
     */
 
-    ch_bin_qc_summary = Channel.empty()
-
     if (!params.skip_binning || params.ancient_dna) {
         BINNING_PREPARATION(
             ch_shortread_assemblies,
@@ -481,26 +469,25 @@ workflow MAG {
 
             if (params.postbinning_input == 'raw_bins_only') {
                 ch_input_for_postbinning_bins = ch_binning_results_bins
-                ch_input_for_postbinning_bins_unbins = ch_binning_results_bins.mix(ch_binning_results_unbins)
+                ch_input_for_postbinning_unbins = ch_binning_results_unbins
             }
             else if (params.postbinning_input == 'refined_bins_only') {
                 ch_input_for_postbinning_bins = ch_refined_bins
-                ch_input_for_postbinning_bins_unbins = ch_refined_bins.mix(ch_refined_unbins)
+                ch_input_for_postbinning_unbins = ch_refined_unbins
             }
             else if (params.postbinning_input == 'both') {
-                ch_all_bins = ch_binning_results_bins.mix(ch_refined_bins)
-                ch_input_for_postbinning_bins = ch_all_bins
-                ch_input_for_postbinning_bins_unbins = ch_all_bins.mix(ch_binning_results_unbins).mix(ch_refined_unbins)
+                ch_input_for_postbinning_bins = ch_binning_results_bins.mix(ch_refined_bins)
+                ch_input_for_postbinning_unbins = ch_binning_results_unbins.mix(ch_refined_unbins)
             }
         }
         else {
             ch_input_for_postbinning_bins = ch_binning_results_bins
-            ch_input_for_postbinning_bins_unbins = ch_binning_results_bins.mix(ch_binning_results_unbins)
+            ch_input_for_postbinning_unbins = ch_binning_results_unbins
         }
 
         ch_input_for_postbinning = params.exclude_unbins_from_postbinning
             ? ch_input_for_postbinning_bins
-            : ch_input_for_postbinning_bins_unbins
+            : ch_input_for_postbinning_bins.mix(ch_input_for_postbinning_unbins)
 
         DEPTHS(ch_input_for_postbinning, BINNING.out.metabat2depths, ch_short_reads)
         ch_input_for_binsummary = DEPTHS.out.depths_summary
@@ -510,6 +497,7 @@ workflow MAG {
         * Bin QC subworkflows: for checking bin completeness with either BUSCO, CHECKM, CHECKM2, and/or GUNC
         */
 
+        ch_bin_qc_summary = Channel.empty()
         if (!params.skip_binqc) {
             BIN_QC(ch_input_for_postbinning)
 
@@ -536,38 +524,17 @@ workflow MAG {
         }
 
         /*
-         * CAT: Bin Annotation Tool (BAT) are pipelines for the taxonomic classification of long DNA sequences and metagenome assembled genomes (MAGs/bins)
+         * CATPACK: bin / contig taxonomic classification
          */
-        ch_cat_db = Channel.empty()
-        if (params.cat_db) {
-            CAT_DB(ch_cat_db_file)
-            ch_cat_db = CAT_DB.out.db
-        }
-        else if (params.cat_db_generate) {
-            CAT_DB_GENERATE()
-            ch_cat_db = CAT_DB_GENERATE.out.db
-        }
-        CAT(
-            ch_input_for_postbinning,
-            ch_cat_db,
-        )
-        // Group all classification results for each sample in a single file
-        ch_cat_summary = CAT.out.tax_classification_names.collectFile(keepHeader: true) { meta, classification ->
-            ["${meta.id}.txt", classification]
-        }
-        // Group all classification results for the whole run in a single file
-        CAT_SUMMARY(
-            ch_cat_summary.collect()
-        )
-        ch_versions = ch_versions.mix(CAT.out.versions.first())
-        ch_versions = ch_versions.mix(CAT_SUMMARY.out.versions)
+        ch_catpack_summary = Channel.empty()
+        if (params.cat_db || params.cat_db_generate) {
+            CATPACK(
+                ch_input_for_postbinning_bins,
+                ch_input_for_postbinning_unbins,
+            )
 
-        // If CAT is not run, then the CAT global summary should be an empty channel
-        if (params.cat_db_generate || params.cat_db) {
-            ch_cat_global_summary = CAT_SUMMARY.out.combined
-        }
-        else {
-            ch_cat_global_summary = Channel.empty()
+            ch_catpack_summary = CATPACK.out.summary
+            ch_versions = ch_versions.mix(CATPACK.out.versions)
         }
 
         /*
@@ -575,7 +542,6 @@ workflow MAG {
          */
 
         if (!params.skip_gtdbtk) {
-
             ch_gtdbtk_summary = Channel.empty()
             if (gtdb) {
 
@@ -603,7 +569,7 @@ workflow MAG {
                 ch_bin_qc_summary.ifEmpty([]),
                 ch_quast_bins_summary.ifEmpty([]),
                 ch_gtdbtk_summary.ifEmpty([]),
-                ch_cat_global_summary.ifEmpty([]),
+                ch_catpack_summary.ifEmpty([]),
                 params.binqc_tool,
             )
         }

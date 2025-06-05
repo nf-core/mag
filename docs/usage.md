@@ -150,21 +150,28 @@ The lineage directory (e.g., `bacteria_odb12`) should contain files such as `dat
 Then, you must provide `--busco_db <your_db>/` and `--busco_db_lineage <downloaded_lineage>` to the pipeline.
 You can also pass to `--busco_db` a URL pointing to a lineage tarball, or the tarball itself if stored locally.
 
-> [! WARNING]
+> [!WARNING]
 > When any kind of parameter is provided to `--busco_db`, BUSCO will run in offline mode.
 > If the lineage specified via `--busco_db_lineage` is not found locally, or if you attempt automatic lineage selection without having a complete lineage dataset pre-downloaded, BUSCO will fail.
 
 ### CAT
 
-> [! WARNING]
-> This database is very large at ~180 GB!
+> [!WARNING]
+> The default database (CAT_nr) is very large at ~200 GB!
 > This can take a long time, so we strongly recommend downloading and unzipping prior the pipeline run.
 
-This database can be downloaded from the [CAT developers' website](https://tbb.bio.uu.nl/bastiaan/CAT_prepare/), which is based in the Netherlands (and could be slow for other regions of the world).
+This database can be downloaded from the [CAT developers' website](https://tbb.bio.uu.nl/tina/CAT_pack_prepare/), which is based in the Netherlands (and could be slow for other regions of the world).
+
+> [!NOTE]
+> By default, the pipeline will use the `NCBI nr` database.
+
+Enabling the `--cat_db_generate` option will create a new database using the latest version of the NCBI nr database.
+This requires a large download (over 200 GB) and several hours of subsequent processing.
+If you enable the `--save_cat_db` option, the database will be saved in the `Taxonomy/CAT/db` directory and can be reused in future runs by specifying its path with `--cat_db`.
 
 ### GTDB
 
-> [! WARNING]
+> [!WARNING]
 > This database is very large at ~110 GB!
 > This can take a long time, so we strongly recommend downloading and unzipping prior the pipeline run.
 

@@ -14,7 +14,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Changed`
 
 - [#718](https://github.com/nf-core/mag/pull/718) - Refactored all assembly steps into subworkflows (added by @muabnezor)
-- [#811](https://github.comf/nf-core/mag/811) - Update util modules, and remove aria2 module to replace with native Nextflow downloading of CheckM database (by @dialvarezs)
+- [#799](https://github.com/nf-core/mag/pull/799) - Add `--cat_classify_unbinned`, to enable taxonomic classification of unbinned contigs using CAT (requested by @amizeranschi, added by @dialvarezs)
+- [#799](https://github.com/nf-core/mag/pull/799) - Upgraded to latest version of CAT_pack modules (requested by @maxibor, added by @dialvarezs)
+- [#811](https://github.com/nf-core/mag/pull/811) - Update util modules, and remove aria2 module to replace with native Nextflow downloading of CheckM database (by @dialvarezs)
 - [#816](https://github.com/nf-core/mag/pull/816) - Removed all leftover references to conda 'defaults' channel (by @jfy133)
 
 ### `Fixed`
@@ -23,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Tool       | Previous version | New version |
 | ---------- | ---------------- | ----------- |
+| CAT        | 5.2.3            | 6.0.1       |
 | centrifuge | 1.0.4.1          | 1.0.4.2     |
 | nanolyse   | 1.41.6           | 1.44.1      |
 | flye       |                  | 2.9.5       |
@@ -31,6 +34,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | samtools   |                  | 1.21        |
 
 ### `Deprecated`
+
+[#799](https://github.comf/nf-core/mag/pull/799) - Removed `--cat_official_taxonomy` in favour of `--cat_allow_unofficial_lineages` to control CAT's use of unofficial lineages (added by @dialvarezs)
 
 ## v4.0.0 - [2025-05-22]
 

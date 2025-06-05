@@ -685,20 +685,33 @@ If `--gunc_save_db` is specified, the output directory will also contain the req
 
 ### CAT
 
-[CAT](https://github.com/dutilh/CAT) is a toolkit for annotating contigs and bins from metagenome-assembled-genomes. The nf-core/mag pipeline uses CAT to assign taxonomy to genome bins based on the taxnomy of the contigs.
+[CAT](https://github.com/MGXlab/CAT_pack) is a toolkit for annotating contigs and bins from metagenome-assembled-genomes. The nf-core/mag pipeline uses CAT to assign taxonomy to genome bins based on the taxnomy of the contigs.
 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `Taxonomy/CAT/[assembler]/[binner]/`
-  - `[assembler]-[binner]-[domain]-[refinement]-[sample/group].ORF2LCA.names.txt.gz`: Tab-delimited files containing the lineage of each contig, with full lineage names
-  - `[assembler]-[binner]-[domain]-[refinement]-[sample/group].bin2classification.names.txt.gz`: Taxonomy classification of the genome bins, with full lineage names
-- `Taxonomy/CAT/[assembler]/[binner]/raw/`
-  - `[assembler]-[binner]-[domain]-[refinement]-[sample/group].concatenated.predicted_proteins.faa.gz`: Predicted protein sequences for each genome bin, in fasta format
-  - `[assembler]-[binner]-[domain]-[refinement]-[sample/group].concatenated.predicted_proteins.gff.gz`: Predicted protein features for each genome bin, in gff format
-  - `[assembler]-[binner]-[domain]-[refinement]-[sample/group].ORF2LCA.txt.gz`: Tab-delimited files containing the lineage of each contig
-  - `[assembler]-[binner]-[domain]-[refinement]-[sample/group].bin2classification.txt.gz`: Taxonomy classification of the genome bins
-  - `[assembler]-[binner]-[domain]-[refinement]-[sample/group].log`: Log files
+- `Taxonomy/CAT/bat_summary.tsv`: Summary of the CAT taxonomic classification results for all bins.
+- `Taxonomy/CAT/[assembler]/[binner]/[sample/group]/bins/`
+  - `[assembler]-[binner]-[sample/group]-bins.ORF2LCA.txt`: Tab-delimited files containing the lineage of each contig
+  - `[assembler]-[binner]-[sample/group]-bins.bin2classification.txt`: Taxonomy classification of the genome bins
+  - `[assembler]-[binner]-[sample/group]-bins.bin2classification.names.txt`: Taxonomy classification of the genome bins, with full lineage names
+  - `[assembler]-[binner]-[sample/group]-bins.concatenated.alignment.diamond`: Diamond alignment of the predicted proteins against the CAT database
+  - `[assembler]-[binner]-[sample/group]-bins.concatenated.predicted_proteins.faa`: Predicted protein sequences for each genome bin, in fasta format
+  - `[assembler]-[binner]-[sample/group]-bins.concatenated.predicted_proteins.gff`: Predicted protein features for each genome bin, in gff format
+  - `[assembler]-[binner]-[sample/group]-bins.summary.txt`: Summary of the CAT taxonomic classification results
+  - `[assembler]-[binner]-[sample/group]-bins.log`: Log files
+
+If `--cat_classify_unbinned` is enabled, a similiar set of files is generated for unbinned contigs:
+
+- `Taxonomy/CAT/[assembler]/[binner]/[sample/group]/unbins/`
+  - `[assembler]-[binner]-[sample/group]-unbins.ORF2LCA.txt`: Tab-delimited files containing the lineage of each unbinned contig
+  - `[assembler]-[binner]-[sample/group]-unbins.contig2classification.txt`: Taxonomy classification of the unbinned contigs
+  - `[assembler]-[binner]-[sample/group]-unbins.contig2classification.names.txt`: Taxonomy classification of the unbinned contigs, with full lineage names
+  - `[assembler]-[binner]-[sample/group]-unbins.concatenated.alignment.diamond`: Diamond alignment of the predicted proteins against the CAT database
+  - `[assembler]-[binner]-[sample/group]-unbins.concatenated.predicted_proteins.faa`: Predicted protein sequences for each unbinned contig, in fasta format
+  - `[assembler]-[binner]-[sample/group]-unbins.concatenated.predicted_proteins.gff`: Predicted protein features for each unbinned contig, in gff format
+  - `[assembler]-[binner]-[sample/group]-unbins.summary.txt`: Summary of the CAT taxonomic classification results for unbinned contigs
+  - `[assembler]-[binner]-[sample/group]-unbins.log`: Log files for unbinned contigs
 
 </details>
 
@@ -707,7 +720,7 @@ If the parameters `--cat_db_generate` and `--save_cat_db` are set, additionally 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `Taxonomy/CAT/CAT_prepare_*.tar.gz`: Generated and used CAT database.
+- `Taxonomy/CAT/db`: Generated and used CAT database.
 
 </details>
 
