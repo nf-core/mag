@@ -12,36 +12,60 @@ The input data can be passed to nf-core/mag in two possible ways, either using t
 
 You can specify a CSV samplesheet input file that contains the paths to your FASTQ files and additional metadata. Furthermore when a `run` column is present, the pipeline will also run perform run- or lane-wise concatenation, for cases where you may have a sample or library sequenced with the same sequencing configuration across multiple runs. The optional run merging happens after short read QC (adapter clipping, host/PhiX removal etc.), and prior to normalisation, taxonomic profiling, and assembly.
 
+If short reads are provided (`short_reads_1`), the `short_reads_platform` column is required. Valid options include:
+
+- `ILLUMINA`, `BGISEQ`, `LS454`, `ION_TORRENT`, `DNBSEQ`, `ELEMENT`, `ULTIMA`, `VELA_DIAGNOSTICS`, `GENAPSYS`, `GENEMIND`, `TAPESTRI`.
+
+If long reads are provided (`long_reads`), the `long_reads_platform` column is required. Valid options include:
+
+- `OXFORD_NANOPORE`: Oxford Nanopore Technologies (ONT) reads, which may have higher error rates compared to newer technologies.
+- `OXFORD_NANOPORE_HQ`: High-quality ONT reads, typically with an error rate of less than 5%, achievable with the latest ONT chemistries and sequencing platforms. This option should generally be used unless working with older data.
+- `PACBIO_SMRT`: Pacific Biosciences Single Molecule Real-Time (SMRT) sequencing reads.
+
+These platform fields are important for downstream alignment and assembly tools.
+
 At a minimum CSV file should contain the following columns:
 
-`sample,group,short_reads_1,short_reads_2,long_reads`
+`sample,group,short_reads_1,short_reads_2,long_reads,short_reads_platform,long_reads_platform`
 
-The path to `long_reads` and `short_reads_2` is optional. Valid examples could look like the following:
+In cases of short-read only data run, the path to `long_reads` and `short_reads_2` is optional. Valid examples could look like the following:
 
-```csv title="samplesheet.csv"
-sample,group,short_reads_1,short_reads_2,long_reads
-sample1,0,data/sample1_R1.fastq.gz,data/sample1_R2.fastq.gz,data/sample1.fastq.gz
-sample2,0,data/sample2_R1.fastq.gz,data/sample2_R2.fastq.gz,data/sample2.fastq.gz
-sample3,1,data/sample3_R1.fastq.gz,data/sample3_R2.fastq.gz,
+```csv title="samplesheet_mix.csv"
+sample,group,short_reads_1,short_reads_2,long_reads,short_reads_platform,long_reads_platform
+sample1,0,data/sample1_R1.fastq.gz,data/sample1_R2.fastq.gz,data/sample1.fastq.gz,ILLUMINA,OXFORD_NANOPORE
+sample2,0,data/sample2_R1.fastq.gz,data/sample2_R2.fastq.gz,data/sample2.fastq.gz,ILLUMINA,OXFORD_NANOPORE
+sample3,1,data/sample3_R1.fastq.gz,data/sample3_R2.fastq.gz,,ILLUMINA,
 ```
 
 or
 
-```csv title="samplesheet.csv"
-sample,group,short_reads_1,short_reads_2,long_reads
-sample1,0,data/sample1.fastq.gz,,
-sample2,0,data/sample2.fastq.gz,,
+```csv title="samplesheet_shortreadonly.csv"
+sample,group,short_reads_1,short_reads_2,long_reads,short_reads_platform
+sample1,0,data/sample1.fastq.gz,,,ILLUMINA
+sample2,0,data/sample2.fastq.gz,,,ILLUMINA
 ```
 
 or to additionally to perform run merging of two runs of sample1:
 
-```csv title="samplesheet.csv"
-sample,run,group,short_reads_1,short_reads_2,long_reads
-sample1,1,0,data/sample1_R1.fastq.gz,data/sample1_R2.fastq.gz,data/sample1.fastq.gz
-sample1,2,0,data/sample1_R1.fastq.gz,data/sample1_R2.fastq.gz,data/sample1.fastq.gz
-sample2,0,0,data/sample2_R1.fastq.gz,data/sample2_R2.fastq.gz,data/sample2.fastq.gz
-sample3,1,0,data/sample3_R1.fastq.gz,data/sample3_R2.fastq.gz,
+```csv title="samplesheet_mix_mergeruns.csv"
+sample,run,group,short_reads_1,short_reads_2,long_reads,short_reads_platform,long_reads_platform
+sample1,1,0,data/sample1_R1.fastq.gz,data/sample1_R2.fastq.gz,data/sample1.fastq.gz,ILLUMINA,OXFORD_NANOPORE
+sample1,2,0,data/sample1_R1.fastq.gz,data/sample1_R2.fastq.gz,data/sample1.fastq.gz,ILLUMINA,OXFORD_NANOPORE
+sample2,0,0,data/sample2_R1.fastq.gz,data/sample2_R2.fastq.gz,data/sample2.fastq.gz,ILLUMINA,OXFORD_NANOPORE
+sample3,1,0,data/sample3_R1.fastq.gz,data/sample3_R2.fastq.gz,,ILLUMINA,OXFORD_NANOPORE
 ```
+
+If only long read data is available, the columns `short_reads_1` and `short_reads_2` can be left out:
+
+```csv title="samplesheet_longreadonly.csv"
+sample,run,group,long_reads,long_reads_platform
+sample1,1,0,data/sample1.fastq.gz,OXFORD_NANOPORE
+sample1,2,0,data/sample1.fastq.gz,OXFORD_NANOPORE
+sample2,0,0,data/sample2.fastq.gz,OXFORD_NANOPORE
+sample3,1,0,data/sample3.fastq.gz,OXFORD_NANOPORE
+```
+
+In this case only long-read only assemblies will be able to be executed (e.g. Flye or MetaMDBG).
 
 Please note the following requirements:
 
@@ -50,7 +74,6 @@ Please note the following requirements:
 - Must contain the header `sample,group,short_reads_1,short_reads_2,long_reads` (where `run` can be optionally added)
 - Run IDs must be unique within a multi-run sample. A sample with multiple runs will be automatically concatenated.
 - FastQ files must be compressed (`.fastq.gz`, `.fq.gz`)
-- `long_reads` can only be provided in combination with paired-end short read data
 - Within one samplesheet either only single-end or only paired-end reads can be specified
 - If single-end reads are specified, the command line parameter `--single_end` must be specified as well
 
@@ -67,10 +90,10 @@ The assembly CSV file should contain the following columns:
 Where `id` is the ID of the assembly, group is the assembly/binning group (see samplesheet information section for more details), `assembler` is the assembler used to produce the assembly (one of `MEGAHIT`, `SPAdes`, or `SPAdesHybrid`), and `fasta` is the path to the assembly fasta file. Input fasta files can be compressed or uncompressed, but compressed assemblies will be automatically uncompressed for use within the pipeline. The exact information required for each supplied assembly depends on whether the assemblies provided are single assemblies or group-wise co-assemblies. For the following example `--input` CSV:
 
 ```csv title="samplesheet.csv"
-sample,group,short_reads_1,short_reads_2,long_reads
-sample1,0,data/sample1_R1.fastq.gz,data/sample1_R2.fastq.gz,
-sample2,0,data/sample2_R1.fastq.gz,data/sample2_R2.fastq.gz,
-sample3,1,data/sample3_R1.fastq.gz,data/sample3_R2.fastq.gz,
+sample,group,short_reads_1,short_reads_2,long_reads,short_reads_platform
+sample1,0,data/sample1_R1.fastq.gz,data/sample1_R2.fastq.gz,,ILLUMINA
+sample2,0,data/sample2_R1.fastq.gz,data/sample2_R2.fastq.gz,,ILLUMINA
+sample3,1,data/sample3_R1.fastq.gz,data/sample3_R2.fastq.gz,,ILLUMINA
 ```
 
 If the assemblies are single assemblies, then the `id` and `group` columns should match those supplied in the `-input` read CSV files for each read set:

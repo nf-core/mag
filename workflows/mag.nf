@@ -23,6 +23,7 @@ include { DOMAIN_CLASSIFICATION                                 } from '../subwo
 include { DEPTHS                                                } from '../subworkflows/local/depths'
 include { LONGREAD_PREPROCESSING                                } from '../subworkflows/local/longread_preprocessing'
 include { SHORTREAD_PREPROCESSING                               } from '../subworkflows/local/shortread_preprocessing'
+include { ASSEMBLY                                              } from '../subworkflows/local/assembly'
 include { CATPACK                                               } from '../subworkflows/local/catpack'
 
 //
@@ -34,10 +35,6 @@ include { CENTRIFUGE_KREPORT                                    } from '../modul
 include { KRONA_KTUPDATETAXONOMY                                } from '../modules/nf-core/krona/ktupdatetaxonomy/main'
 include { KRONA_KTIMPORTTAXONOMY                                } from '../modules/nf-core/krona/ktimporttaxonomy/main'
 include { KRAKENTOOLS_KREPORT2KRONA as KREPORT2KRONA_CENTRIFUGE } from '../modules/nf-core/krakentools/kreport2krona/main'
-include { MEGAHIT                                               } from '../modules/nf-core/megahit/main'
-include { SPADES as METASPADES                                  } from '../modules/nf-core/spades/main'
-include { SPADES as METASPADESHYBRID                            } from '../modules/nf-core/spades/main'
-include { GUNZIP as GUNZIP_ASSEMBLIES                           } from '../modules/nf-core/gunzip'
 include { GUNZIP as GUNZIP_ASSEMBLYINPUT                        } from '../modules/nf-core/gunzip'
 include { PRODIGAL                                              } from '../modules/nf-core/prodigal/main'
 include { PROKKA                                                } from '../modules/nf-core/prokka/main'
@@ -49,9 +46,6 @@ include { METAEUK_EASYPREDICT                                   } from '../modul
 //
 include { KRAKEN2_DB_PREPARATION                                } from '../modules/local/kraken2_db_preparation'
 include { KRAKEN2                                               } from '../modules/local/kraken2'
-include { POOL_SINGLE_READS as POOL_SHORT_SINGLE_READS          } from '../modules/local/pool_single_reads'
-include { POOL_PAIRED_READS                                     } from '../modules/local/pool_paired_reads'
-include { POOL_SINGLE_READS as POOL_LONG_READS                  } from '../modules/local/pool_single_reads'
 include { QUAST                                                 } from '../modules/local/quast'
 include { QUAST_BINS                                            } from '../modules/local/quast_bins'
 include { QUAST_BINS_SUMMARY                                    } from '../modules/local/quast_bins_summary'
@@ -118,7 +112,7 @@ workflow MAG {
         ch_lambda_db = Channel.value(file("${params.lambda_reference}"))
     }
     else {
-        ch_lambda_db = Channel.empty()
+        ch_lambda_db = Channel.value([])
     }
 
     if (params.genomad_db) {
@@ -188,6 +182,7 @@ workflow MAG {
         ch_raw_long_reads,
         ch_short_reads,
         ch_lambda_db,
+        ch_host_fasta
     )
 
     ch_versions = ch_versions.mix(LONGREAD_PREPROCESSING.out.versions)
@@ -299,127 +294,18 @@ workflow MAG {
 
     if (!params.assembly_input) {
 
-        // Co-assembly preparation: grouping for MEGAHIT and for pooling for SPAdes
-        if (params.coassemble_group) {
-            // short reads
-            // group and set group as new id
-            ch_short_reads_grouped = ch_short_reads_assembly
-                .map { meta, reads -> [meta.group, meta, reads] }
-                .groupTuple(by: 0)
-                .map { group, _metas, reads ->
-                    def assemble_as_single = params.single_end || (params.bbnorm && params.coassemble_group)
-                    def meta = [:]
-                    meta.id = "group-${group}"
-                    meta.group = group
-                    meta.single_end = assemble_as_single
-                    if (assemble_as_single) {
-                        [meta, reads.collect { it }, []]
-                    }
-                    else {
-                        [meta, reads.collect { it[0] }, reads.collect { it[1] }]
-                    }
-                }
-            // long reads
-            // group and set group as new id
-            ch_long_reads_grouped = ch_long_reads
-                .map { meta, reads -> [meta.group, meta, reads] }
-                .groupTuple(by: 0)
-                .map { group, _metas, reads ->
-                    def meta = [:]
-                    meta.id = "group-${group}"
-                    meta.group = group
-                    [meta, reads.collect { it }]
-                }
-        }
-        else {
-            ch_short_reads_grouped = ch_short_reads_assembly
-                .filter { it[0].single_end }
-                .map { meta, reads -> [meta, [reads], []] }
-                .mix(
-                    ch_short_reads_assembly.filter { !it[0].single_end }.map { meta, reads -> [meta, [reads[0]], [reads[1]]] }
-                )
-            ch_long_reads_grouped = ch_long_reads
-        }
+        ASSEMBLY(
+            ch_short_reads_assembly,
+            ch_long_reads
+        )
+        ch_versions = ch_versions.mix(ASSEMBLY.out.versions)
 
-        if (!params.skip_spades || !params.skip_spadeshybrid) {
-            if (params.coassemble_group) {
-                if (params.bbnorm) {
-                    ch_short_reads_spades = ch_short_reads_grouped.map { [it[0], it[1]] }
-                }
-                else {
-                    POOL_SHORT_SINGLE_READS(
-                        ch_short_reads_grouped.filter { it[0].single_end }
-                    )
-                    POOL_PAIRED_READS(
-                        ch_short_reads_grouped.filter { !it[0].single_end }
-                    )
-                    ch_short_reads_spades = POOL_SHORT_SINGLE_READS.out.reads.mix(POOL_PAIRED_READS.out.reads)
-                }
-            }
-            else {
-                ch_short_reads_spades = ch_short_reads_assembly
-            }
-            // long reads
-            if (!params.single_end && !params.skip_spadeshybrid) {
-                POOL_LONG_READS(ch_long_reads_grouped)
-                ch_long_reads_spades = POOL_LONG_READS.out.reads
-            }
-            else {
-                ch_long_reads_spades = Channel.empty()
-            }
-        }
-        else {
-            ch_short_reads_spades = Channel.empty()
-            ch_long_reads_spades = Channel.empty()
-        }
+        ch_shortread_assemblies = ASSEMBLY.out.shortread_assemblies
+        ch_longread_assemblies = ASSEMBLY.out.longread_assemblies
 
-        // Assembly
-
-        ch_assembled_contigs = Channel.empty()
-
-        if (!params.single_end && !params.skip_spades) {
-            METASPADES(ch_short_reads_spades.map { meta, reads -> [meta, reads, [], []] }, [], [])
-            ch_spades_assemblies = (params.spades_downstreaminput == 'contigs' ? METASPADES.out.contigs : METASPADES.out.scaffolds).map { meta, assembly ->
-                def meta_new = meta + [assembler: 'SPAdes']
-                [meta_new, assembly]
-            }
-            ch_assembled_contigs = ch_assembled_contigs.mix(ch_spades_assemblies)
-            ch_versions = ch_versions.mix(METASPADES.out.versions.first())
-        }
-
-        if (!params.single_end && !params.skip_spadeshybrid) {
-            ch_short_reads_spades_tmp = ch_short_reads_spades.map { meta, reads -> [meta.id, meta, reads] }
-
-            ch_reads_spadeshybrid = ch_long_reads_spades
-                .map { meta, reads -> [meta.id, meta, reads] }
-                .combine(ch_short_reads_spades_tmp, by: 0)
-                .map { _id, _meta_long, long_reads, meta_short, short_reads -> [meta_short, short_reads, [], long_reads] }
-
-            METASPADESHYBRID(ch_reads_spadeshybrid, [], [])
-            ch_spadeshybrid_assemblies = METASPADESHYBRID.out.scaffolds.map { meta, assembly ->
-                def meta_new = meta + [assembler: "SPAdesHybrid"]
-                [meta_new, assembly]
-            }
-            ch_assembled_contigs = ch_assembled_contigs.mix(ch_spadeshybrid_assemblies)
-            ch_versions = ch_versions.mix(METASPADESHYBRID.out.versions.first())
-        }
-
-        if (!params.skip_megahit) {
-            MEGAHIT(ch_short_reads_grouped)
-            ch_megahit_assemblies = MEGAHIT.out.contigs.map { meta, assembly ->
-                def meta_new = meta + [assembler: 'MEGAHIT']
-                [meta_new, assembly]
-            }
-            ch_assembled_contigs = ch_assembled_contigs.mix(ch_megahit_assemblies)
-            ch_versions = ch_versions.mix(MEGAHIT.out.versions.first())
-        }
+        ch_assemblies = ch_shortread_assemblies.mix(ch_longread_assemblies)
 
 
-
-        GUNZIP_ASSEMBLIES(ch_assembled_contigs)
-        ch_versions = ch_versions.mix(GUNZIP_ASSEMBLIES.out.versions)
-
-        ch_assemblies = GUNZIP_ASSEMBLIES.out.gunzip
     }
     else {
         ch_assemblies_split = ch_input_assemblies.branch { _meta, assembly ->
@@ -432,6 +318,10 @@ workflow MAG {
 
         ch_assemblies = Channel.empty()
         ch_assemblies = ch_assemblies.mix(ch_assemblies_split.ungzip, GUNZIP_ASSEMBLYINPUT.out.gunzip)
+        ch_shortread_assemblies = ch_assemblies
+            .filter { it[0].assembler.toUpperCase() in ['SPADES', 'SPADESHYBRID', 'MEGAHIT']}
+        ch_longread_assemblies = ch_assemblies
+            .filter { it[0].assembler.toUpperCase() in ['FLYE', 'METAMDBG']}
     }
 
     if (!params.skip_quast) {
@@ -472,10 +362,14 @@ workflow MAG {
 
     if (!params.skip_binning || params.ancient_dna) {
         BINNING_PREPARATION(
-            ch_assemblies,
+            ch_shortread_assemblies,
             ch_short_reads,
+            ch_longread_assemblies,
+            ch_long_reads
         )
-        ch_versions = ch_versions.mix(BINNING_PREPARATION.out.bowtie2_version.first())
+        ch_versions = ch_versions.mix(BINNING_PREPARATION.out.versions)
+
+
     }
 
     /*
@@ -595,7 +489,16 @@ workflow MAG {
             ? ch_input_for_postbinning_bins
             : ch_input_for_postbinning_bins.mix(ch_input_for_postbinning_unbins)
 
-        DEPTHS(ch_input_for_postbinning, BINNING.out.metabat2depths, ch_short_reads)
+        // Combine short and long reads by meta.id and meta.group for DEPTHS, making sure that
+        // read channel are not empty
+        ch_reads_for_depths = ch_short_reads
+            .map { meta, reads -> [ [id: meta.id, group: meta.group], [short_reads: reads, long_reads: []] ] }
+            .mix(
+                ch_long_reads.map { meta, reads -> [ [id: meta.id, group: meta.group], [short_reads: [], long_reads: reads] ] }
+            )
+            .groupTuple(by: 0)
+
+        DEPTHS(ch_input_for_postbinning, BINNING.out.metabat2depths, ch_reads_for_depths)
         ch_input_for_binsummary = DEPTHS.out.depths_summary
         ch_versions = ch_versions.mix(DEPTHS.out.versions)
 
@@ -781,7 +684,7 @@ workflow MAG {
     }
 
     if (!params.skip_binning || params.ancient_dna) {
-        ch_multiqc_files = ch_multiqc_files.mix(BINNING_PREPARATION.out.bowtie2_assembly_multiqc.collect().ifEmpty([]))
+        ch_multiqc_files = ch_multiqc_files.mix(BINNING_PREPARATION.out.multiqc_files.collect().ifEmpty([]))
     }
 
     if (!params.skip_binning && !params.skip_prokka) {
