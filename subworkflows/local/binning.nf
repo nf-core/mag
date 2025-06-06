@@ -40,8 +40,9 @@ workflow BINNING {
     METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_SHORTREAD ( ch_summarizedepth_input.shortread )
 
     // Merge the outputs
-    ch_metabat_depths = METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_LONGREAD.out.depth
+    ch_combined_depths =  METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_LONGREAD.out.depth
         .mix(METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_SHORTREAD.out.depth)
+    ch_metabat_depths = ch_combined_depths
         .map { meta, depths ->
             def meta_new = meta + [binner: 'MetaBAT2']
             [ meta_new, depths ]
@@ -182,6 +183,6 @@ workflow BINNING {
     bins_gz                                      = ch_binning_results_gzipped_final
     unbinned                                     = ch_splitfasta_results_gunzipped
     unbinned_gz                                  = SPLIT_FASTA.out.unbinned
-    metabat2depths                               = ch_metabat_depths
+    metabat2depths                               = ch_combined_depths
     versions                                     = ch_versions
 }

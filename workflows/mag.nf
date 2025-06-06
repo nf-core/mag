@@ -489,7 +489,16 @@ workflow MAG {
             ? ch_input_for_postbinning_bins
             : ch_input_for_postbinning_bins.mix(ch_input_for_postbinning_unbins)
 
-        DEPTHS(ch_input_for_postbinning, BINNING.out.metabat2depths, ch_short_reads)
+        // Combine short and long reads by meta.id and meta.group for DEPTHS, making sure that
+        // read channel are not empty
+        ch_reads_for_depths = ch_short_reads
+            .map { meta, reads -> [ [id: meta.id, group: meta.group], [short_reads: reads, long_reads: []] ] }
+            .mix(
+                ch_long_reads.map { meta, reads -> [ [id: meta.id, group: meta.group], [short_reads: [], long_reads: reads] ] }
+            )
+            .groupTuple(by: 0)
+
+        DEPTHS(ch_input_for_postbinning, BINNING.out.metabat2depths, ch_reads_for_depths)
         ch_input_for_binsummary = DEPTHS.out.depths_summary
         ch_versions = ch_versions.mix(DEPTHS.out.versions)
 
