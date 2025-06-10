@@ -255,8 +255,6 @@ To ensure reproducibility when using auto-lineage mode, download `all` lineages 
 
 For the taxonomic bin classification with [CAT](https://github.com/dutilh/CAT), when running the pipeline with `--cat_db_generate` the parameter `--save_cat_db` can be used to also save the generated database to allow reproducibility in future runs. Note that when specifying a pre-built database with `--cat_db`, currently the database can not be saved.
 
-When it comes to visualizing taxonomic data using [Krona](https://github.com/marbl/Krona), you have the option to provide a taxonomy file, such as `taxonomy.tab`, using the `--krona_db` parameter. If you don't supply a taxonomy file, Krona is designed to automatically download the required taxonomy data for visualization.
-
 The taxonomic classification of bins with GTDB-Tk is not guaranteed to be reproducible, since the placement of bins in the reference tree is non-deterministic. However, the authors of the GTDB-Tk article examined the reproducibility on a set of 100 genomes across 50 trials and did not observe any difference (see [https://doi.org/10.1093/bioinformatics/btz848](https://doi.org/10.1093/bioinformatics/btz848)).
 
 ## Core Nextflow arguments

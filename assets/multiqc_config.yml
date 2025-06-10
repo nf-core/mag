@@ -24,7 +24,6 @@ run_modules:
   - bowtie2
   - busco
   - quast
-  - kraken
   - prokka
   - porechop
   - filtlong
@@ -57,27 +56,6 @@ top_modules:
         removed."
       path_filters:
         - "*_host_removed.bowtie2.log"
-  - "kraken":
-      name: "Kraken2"
-      anchor: "Kraken2"
-      target: "Kraken2"
-      doi: "10.1101/gr.210641.116"
-      path_filters:
-        - "*.kraken2_report.txt"
-  - "kraken":
-      name: "Centrifuge"
-      anchor: "centrifuge"
-      target: "Centrifuge"
-      doi: "10.1101/gr.210641.116"
-      info: "is a very rapid and memory-efficient system for the classification of DNA
-        sequences from microbial samples. The system uses a novel indexing scheme based
-        on the Burrows-Wheeler transform (BWT) and the Ferragina-Manzini (FM) index.
-        Note: Figure title"
-      extra: "ℹ️: plot title will say Kraken2 due to Centrifuge producing the same output
-        format as Kraken. If activated, see the actual Kraken2 results in the section
-        above."
-      path_filters:
-        - "*.centrifuge_kreport.txt"
   - "quast":
       name: "QUAST: assembly"
       info: "Assembly statistics of raw assemblies."
@@ -123,8 +101,6 @@ sp:
     fn: "host_removal_metrics.tsv"
   adapterremoval:
     fn: "*_ar2.settings"
-  kraken:
-    fn_re: ".*[kraken2|centrifuge].*report.txt"
   quast:
     fn: "report*.tsv"
   filtlong:
@@ -137,7 +113,6 @@ extra_fn_clean_exts:
   - "_ar2"
   - "host_removed"
   - "phix_removed"
-  - "centrifuge_kreport"
   - "_fastp"
   - "_trimmomatic_trim.log"
   - "_trimmomatic_trim"
@@ -164,8 +139,6 @@ table_columns_visible:
     after_filtering_gc_content: false
     pct_surviving: true
     pct_adapter: true
-  "Kraken2": false
-  "Centrifuge": false
   "QUAST: assembly":
     N75: true
     L50: true
@@ -214,14 +187,6 @@ table_columns_placement:
     overall_alignment_rate: 5000
   "Bowtie2: host removal":
     overall_alignment_rate: 6000
-  "Kraken2":
-    "% root": 8000
-    "% Top 5": 8100
-    "% Unclassified": 8200
-  "Centrifuge":
-    "% root": 9000
-    "% Top 5": 9100
-    "% Unclassified": 9200
   "QUAST: assembly":
     "N50": 10000
     "Total length": 11000
