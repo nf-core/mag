@@ -509,7 +509,6 @@ process {
 Where we update the `image-src` and as above supply the same `/<path>/<to>/<empty_dir>/` path to `--gtdb_db`.
 :::
 
-
 ## A note on taxonomic profiling
 
 Generating a taxonomic profile of raw sequencing reads prior to assembly can be highly informative, especially when you are not entirely sure what is in your metagenomic samples. This can help you identify potential contamination or better understand the taxonomic composition of your samples before proceeding with assembly and binning.
