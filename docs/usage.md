@@ -511,8 +511,10 @@ Where we update the `image-src` and as above supply the same `/<path>/<to>/<empt
 
 ## A note on taxonomic profiling
 
-Generating a taxonomic profile of raw sequencing reads prior to assembly can be highly informative, especially when you are not entirely sure what is in your metagenomic samples. This can help you identify potential contamination or better understand the taxonomic composition of your samples before proceeding with assembly and binning.
+Generating a taxonomic profile of raw sequencing reads prior to assembly can be highly informative, especially when you are not entirely sure what is in your metagenomic samples.
+This can help you identify potential contamination or better understand the taxonomic composition of your samples before proceeding with assembly and binning.
 
-Up until version 4.0.0, this pipeline offered raw read taxonomic profiling using [Centrifuge](https://github.com/centrifugal/centrifuge) and [Kraken2](https://github.com/DerrickWood/kraken2). This feature was removed in version 5.0.0 to strengthen the pipeline's focus on metagenome assembly and binning.
+Up until version 4.0.0, this pipeline offered raw read taxonomic profiling using [Centrifuge](https://github.com/centrifugal/centrifuge) and [Kraken2](https://github.com/DerrickWood/kraken2).
+This feature was removed in version 5.0.0 to strengthen the pipeline's focus on metagenome assembly and binning.
 
 If you require taxonomic profiling of raw reads, we recommend using [nf-core/taxprofiler](https://nf-co.re/taxprofiler/), which is specifically designed for taxonomic profiling of raw reads and supports a wide range of tools for this purpose.
