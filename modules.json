@@ -70,16 +70,6 @@
                         "git_sha": "8e6e124ee1e7b9d6b8dacca408a936d56865322f",
                         "installed_by": ["modules"]
                     },
-                    "centrifuge/centrifuge": {
-                        "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
-                        "installed_by": ["modules"]
-                    },
-                    "centrifuge/kreport": {
-                        "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
-                        "installed_by": ["modules"]
-                    },
                     "checkm/lineagewf": {
                         "branch": "master",
                         "git_sha": "3ea318161b8788623cec477bde0f089180b2245b",
@@ -201,21 +191,6 @@
                         "installed_by": ["modules"]
                     },
                     "gunzip": {
-                        "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
-                        "installed_by": ["modules"]
-                    },
-                    "krakentools/kreport2krona": {
-                        "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
-                        "installed_by": ["modules"]
-                    },
-                    "krona/ktimporttaxonomy": {
-                        "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
-                        "installed_by": ["modules"]
-                    },
-                    "krona/ktupdatetaxonomy": {
                         "branch": "master",
                         "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
                         "installed_by": ["modules"]
