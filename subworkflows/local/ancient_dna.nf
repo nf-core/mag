@@ -65,4 +65,3 @@ workflow ANCIENT_DNA_ASSEMBLY_VALIDATION {
         pydamage_filtered_results = PYDAMAGE_FILTER.out.csv      // channel: [ val(meta), path(csv) ]
         versions                  = ch_versions                  // channel: [ versions.yml ]
 }
-
