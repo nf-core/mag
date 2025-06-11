@@ -327,7 +327,7 @@
                     },
                     "trimmomatic": {
                         "branch": "master",
-                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
+                        "git_sha": "8864afe586537bf562eac7b83349c26207f3cb4d",
                         "installed_by": ["modules"]
                     },
                     "untar": {
