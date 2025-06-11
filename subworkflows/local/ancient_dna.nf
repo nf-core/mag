@@ -28,7 +28,7 @@ workflow ANCIENT_DNA_ASSEMBLY_VALIDATION {
         }
 
         if ( !params.skip_ancient_damagecorrection ) {
-            FAIDX(input.map { item -> [ item[0], item[1] ] }, [[],[]] )
+            FAIDX(input.map { item -> [ item[0], item[1] ] }, [[],[]], false )
             freebayes_input = input.join(FAIDX.out.fai)  // [val(meta), path(contigs), path(bam), path(bam_index), path(fai)]
                                 .multiMap{
                                     meta, contigs, bam, bai, fai ->

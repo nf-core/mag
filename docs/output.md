@@ -278,6 +278,37 @@ SPAdesHybrid is a part of the [SPAdes](http://cab.spbu.ru/software/spades/) soft
 
 </details>
 
+</details>
+
+### Flye
+
+[Flye](https://github.com/mikolmogorov/Flye) is a _de novo_ assembler for single-molecule sequencing reads, such as those produced by PacBio and Oxford Nanopore Technologies.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `Assembly/FLYE/`
+  - `[sample/group].assembly_graph.gfa.gz`: Compressed assembly graph in gfa format
+  - `[sample/group].assembly.fa.gz`: Compressed assembled contigs in fasta format
+  - `[sample/group].flye.log`: Log file
+  - `QC/[sample/group]/`: Directory containing QUAST files
+
+</details>
+
+### metaMDBG
+
+[metaMDBG](https://github.com/GaetanBenoitDev/metaMDBG) is a fast and low-memory assembler for long and accurate metagenomics reads (e.g. PacBio HiFi, Nanopore r10.4).
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `Assembly/METAMDBG/`
+  - `[sample/group].contigs.fa.gz`: Compressed assembled contigs in fasta format
+  - `[sample/group].metaMDBG.log`: Log file
+  - `QC/[sample/group]/`: Directory containing QUAST files
+
+</details>
+
 ### Metagenome QC with QUAST
 
 [QUAST](http://cab.spbu.ru/software/quast/) is a tool that evaluates metagenome assemblies by computing various metrics. The QUAST output is also included in the MultiQC report, as well as in the assembly directories themselves.
