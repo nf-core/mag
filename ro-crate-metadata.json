@@ -105,7 +105,7 @@
             },
             "mentions": [
                 {
-                    "@id": "#e166265c-4ec8-4120-a819-f5a620ba58b6"
+                    "@id": "#ba7a8ba7-f0b5-4ad9-a928-68ba0fd75150"
                 }
             ],
             "name": "nf-core/mag"
@@ -134,13 +134,13 @@
             ],
             "creator": [
                 {
-                    "@id": "#jfy133@gmail.com"
-                },
-                {
-                    "@id": "https://orcid.org/0000-0003-0603-7907"
+                    "@id": "https://orcid.org/0000-0001-9807-1082"
                 },
                 {
                     "@id": "#68351153+CarsonJM@users.noreply.github.com"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0003-0603-7907"
                 },
                 {
                     "@id": "#42973691+d4straub@users.noreply.github.com"
@@ -149,11 +149,11 @@
                     "@id": "#jfy133@gmail.com"
                 },
                 {
-                    "@id": "https://orcid.org/0000-0001-9807-1082"
+                    "@id": "#jfy133@gmail.com"
                 }
             ],
             "dateCreated": "",
-            "dateModified": "2025-05-27T07:25:09Z",
+            "dateModified": "2025-06-10T06:25:23Z",
             "dct:conformsTo": "https://bioschemas.org/profiles/ComputationalWorkflow/1.0-RELEASE/",
             "keywords": [
                 "nf-core",
@@ -172,7 +172,7 @@
             ],
             "maintainer": [
                 {
-                    "@id": "#jfy133@gmail.com"
+                    "@id": "https://orcid.org/0000-0001-9807-1082"
                 },
                 {
                     "@id": "https://orcid.org/0000-0003-0603-7907"
@@ -181,7 +181,7 @@
                     "@id": "#42973691+d4straub@users.noreply.github.com"
                 },
                 {
-                    "@id": "https://orcid.org/0000-0001-9807-1082"
+                    "@id": "#jfy133@gmail.com"
                 }
             ],
             "name": [
@@ -214,11 +214,11 @@
             "version": "!>=25.04.2"
         },
         {
-            "@id": "#e166265c-4ec8-4120-a819-f5a620ba58b6",
+            "@id": "#ba7a8ba7-f0b5-4ad9-a928-68ba0fd75150",
             "@type": "TestSuite",
             "instance": [
                 {
-                    "@id": "#3d1eff52-c96a-4a64-af5d-71d8d6d659d1"
+                    "@id": "#5dd4e3cd-d3bc-491f-921c-a85325636afb"
                 }
             ],
             "mainEntity": {
@@ -227,7 +227,7 @@
             "name": "Test suite for nf-core/mag"
         },
         {
-            "@id": "#3d1eff52-c96a-4a64-af5d-71d8d6d659d1",
+            "@id": "#5dd4e3cd-d3bc-491f-921c-a85325636afb",
             "@type": "TestInstance",
             "name": "GitHub Actions workflow for testing nf-core/mag",
             "resource": "repos/nf-core/mag/actions/workflows/nf-test.yml",
@@ -366,16 +366,10 @@
             "url": "https://nf-co.re/"
         },
         {
-            "@id": "#jfy133@gmail.com",
+            "@id": "https://orcid.org/0000-0001-9807-1082",
             "@type": "Person",
-            "email": "jfy133@gmail.com",
-            "name": "James Fellows Yates"
-        },
-        {
-            "@id": "https://orcid.org/0000-0003-0603-7907",
-            "@type": "Person",
-            "email": "sabrina.krakau.qbic@gmail.com",
-            "name": "Sabrina Krakau"
+            "email": "gourlehadrien@gmail.com",
+            "name": "Hadrien Gourl\u00e9"
         },
         {
             "@id": "#68351153+CarsonJM@users.noreply.github.com",
@@ -384,16 +378,22 @@
             "name": "Carson J Miller"
         },
         {
+            "@id": "https://orcid.org/0000-0003-0603-7907",
+            "@type": "Person",
+            "email": "sabrina.krakau.qbic@gmail.com",
+            "name": "Sabrina Krakau"
+        },
+        {
             "@id": "#42973691+d4straub@users.noreply.github.com",
             "@type": "Person",
             "email": "42973691+d4straub@users.noreply.github.com",
             "name": "Daniel Straub"
         },
         {
-            "@id": "https://orcid.org/0000-0001-9807-1082",
+            "@id": "#jfy133@gmail.com",
             "@type": "Person",
-            "email": "gourlehadrien@gmail.com",
-            "name": "Hadrien Gourl\u00e9"
+            "email": "jfy133@gmail.com",
+            "name": "James A. Fellows Yates"
         }
     ]
 }
