@@ -1,0 +1,29 @@
+
+🚀[1m nf-test 0.9.2[0m
+https://www.nf-test.com
+(c) 2021 - 2024 Lukas Forer and Sebastian Schoenherr
+
+Load .nf-test/plugins/nft-utils/0.0.3/nft-utils-0.0.3.jar
+
+[1mTest pipeline[0m
+
+  [1mTest[0m [9bb77663] '-profile test' java.lang.RuntimeException: Different Snapshot:
+
+[31mFAILED[0m (533.538s)
+
+  [31mAssertion failed: 
+  
+  1 of 2 assertions failed
+  [0m
+  [31mNextflow stdout:
+  
+  Monitor the execution with Seqera Platform using this URL: https://cloud.seqera.io/user/jfy133/watch/4dpRrwiEU3Pn2e
+  Nextflow stderr:
+  
+  [0m
+
+    Obsolete snapshots can only be checked if all tests of a file are executed successful.
+
+
+[1m[31mFAILURE: [0m[0mExecuted 1 tests in 534.024s (1 failed)
+
