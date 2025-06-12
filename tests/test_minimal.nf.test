@@ -23,8 +23,8 @@ nextflow_pipeline {
             def stable_name_qcshortreads = getAllFilesFromDir("$outputDir/QC_shortreads" , relative: true, includeDir: false )
             def stable_path_qcshortreads= getAllFilesFromDir("$outputDir/QC_shortreads"  , ignore: ['**/*.{svg,png}'])
 
+            assert workflow.success
             assertAll(
-                { assert workflow.success},
                 { assert snapshot(
                     // Number of successful tasks
                     workflow.trace.succeeded().size(),
