@@ -79,13 +79,17 @@ workflow SHORTREAD_PREPROCESSING {
         ch_short_reads_prepped = ch_raw_short_reads
     }
 
-    if (params.host_fasta) {
+    if (params.host_fasta || params.host_genome) {
         if (params.host_fasta_bowtie2index) {
             ch_host_bowtie2index = file(params.host_fasta_bowtie2index, checkIfExists: true)
         }
         else {
+            ch_host_fasta_for_build = ch_host_fasta.combine(ch_short_reads_prepped)
+                .map { host_fasta, meta, reads ->
+                    host_fasta
+                }.first() // makes sure to only use the host fasta if the short read channel is not empty
             BOWTIE2_HOST_REMOVAL_BUILD(
-                ch_host_fasta
+                ch_host_fasta_for_build
             )
             ch_host_bowtie2index = BOWTIE2_HOST_REMOVAL_BUILD.out.index
         }
@@ -108,8 +112,12 @@ workflow SHORTREAD_PREPROCESSING {
     }
 
     if (!params.keep_phix) {
+        ch_phix_fasta_for_build = ch_phix_db_file.combine(ch_short_reads_prepped)
+                .map { host_fasta, meta, reads ->
+                    host_fasta
+                }.first()
         BOWTIE2_PHIX_REMOVAL_BUILD(
-            ch_phix_db_file
+            ch_phix_fasta_for_build
         )
         BOWTIE2_PHIX_REMOVAL_ALIGN(
             ch_short_reads_hostremoved,
