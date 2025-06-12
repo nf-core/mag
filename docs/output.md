@@ -187,38 +187,6 @@ If the `--save_bbnorm_reads` parameter is set, the resulting FastQ files are sav
 
 </details>
 
-## Taxonomic classification of trimmed reads
-
-### Kraken
-
-Kraken2 classifies reads using a k-mer based approach as well as assigns taxonomy using a Lowest Common Ancestor (LCA) algorithm.
-
-<details markdown="1">
-<summary>Output files</summary>
-
-- `Taxonomy/kraken2/[sample]/`
-  - `kraken2.report`: Classification in the Kraken report format. See the [kraken2 manual](https://github.com/DerrickWood/kraken2/wiki/Manual#output-formats) for more details
-  - `taxonomy.krona.html`: Interactive pie chart produced by [KronaTools](https://github.com/marbl/Krona/wiki)
-
-</details>
-
-### Centrifuge
-
-Centrifuge is commonly used for the classification of DNA sequences from microbial samples. It uses an indexing scheme based on the Burrows-Wheeler transform (BWT) and the Ferragina-Manzini (FM) index.
-
-More information on the [Centrifuge](https://ccb.jhu.edu/software/centrifuge/) website
-
-<details markdown="1">
-<summary>Output files</summary>
-
-- `Taxonomy/centrifuge/[sample]/`
-  - `[sample].kreport.txt`: Classification in the Kraken report format. See the [kraken2 manual](https://github.com/DerrickWood/kraken2/wiki/Manual#output-formats) for more details
-  - `[sample].report.txt`: Tab-delimited result file. See the [centrifuge manual](https://ccb.jhu.edu/software/centrifuge/manual.shtml#centrifuge-classification-output) for information about the fields
-  - `[sample].results.txt`: Per read taxonomic classification information. See the [centrifuge manual](https://ccb.jhu.edu/software/centrifuge/manual.shtml#centrifuge-classification-output) for more details
-  - `[sample].html`: Interactive pie chart produced by [KronaTools](https://github.com/marbl/Krona/wiki)
-
-</details>
-
 ## Assembly
 
 Trimmed (short) reads are assembled with both megahit and SPAdes. Hybrid assembly is only supported by SPAdes.
@@ -275,6 +243,37 @@ SPAdesHybrid is a part of the [SPAdes](http://cab.spbu.ru/software/spades/) soft
     - `SPAdesHybrid-[sample].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the sample that the metagenome was assembled from, only present if `--coassemble_group` is not set.
     - `SPAdesHybrid-[sample/group]-[sampleToMap].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the respective sample ("sampleToMap").
     - `SPAdesHybrid-[sample].[bam/bai]`: Optionally saved BAM file of the Bowtie2 mapping of reads against the assembly.
+
+</details>
+
+</details>
+
+### Flye
+
+[Flye](https://github.com/mikolmogorov/Flye) is a _de novo_ assembler for single-molecule sequencing reads, such as those produced by PacBio and Oxford Nanopore Technologies.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `Assembly/FLYE/`
+  - `[sample/group].assembly_graph.gfa.gz`: Compressed assembly graph in gfa format
+  - `[sample/group].assembly.fa.gz`: Compressed assembled contigs in fasta format
+  - `[sample/group].flye.log`: Log file
+  - `QC/[sample/group]/`: Directory containing QUAST files
+
+</details>
+
+### metaMDBG
+
+[metaMDBG](https://github.com/GaetanBenoitDev/metaMDBG) is a fast and low-memory assembler for long and accurate metagenomics reads (e.g. PacBio HiFi, Nanopore r10.4).
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `Assembly/METAMDBG/`
+  - `[sample/group].contigs.fa.gz`: Compressed assembled contigs in fasta format
+  - `[sample/group].metaMDBG.log`: Log file
+  - `QC/[sample/group]/`: Directory containing QUAST files
 
 </details>
 
@@ -654,20 +653,33 @@ If `--gunc_save_db` is specified, the output directory will also contain the req
 
 ### CAT
 
-[CAT](https://github.com/dutilh/CAT) is a toolkit for annotating contigs and bins from metagenome-assembled-genomes. The nf-core/mag pipeline uses CAT to assign taxonomy to genome bins based on the taxnomy of the contigs.
+[CAT](https://github.com/MGXlab/CAT_pack) is a toolkit for annotating contigs and bins from metagenome-assembled-genomes. The nf-core/mag pipeline uses CAT to assign taxonomy to genome bins based on the taxnomy of the contigs.
 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `Taxonomy/CAT/[assembler]/[binner]/`
-  - `[assembler]-[binner]-[domain]-[refinement]-[sample/group].ORF2LCA.names.txt.gz`: Tab-delimited files containing the lineage of each contig, with full lineage names
-  - `[assembler]-[binner]-[domain]-[refinement]-[sample/group].bin2classification.names.txt.gz`: Taxonomy classification of the genome bins, with full lineage names
-- `Taxonomy/CAT/[assembler]/[binner]/raw/`
-  - `[assembler]-[binner]-[domain]-[refinement]-[sample/group].concatenated.predicted_proteins.faa.gz`: Predicted protein sequences for each genome bin, in fasta format
-  - `[assembler]-[binner]-[domain]-[refinement]-[sample/group].concatenated.predicted_proteins.gff.gz`: Predicted protein features for each genome bin, in gff format
-  - `[assembler]-[binner]-[domain]-[refinement]-[sample/group].ORF2LCA.txt.gz`: Tab-delimited files containing the lineage of each contig
-  - `[assembler]-[binner]-[domain]-[refinement]-[sample/group].bin2classification.txt.gz`: Taxonomy classification of the genome bins
-  - `[assembler]-[binner]-[domain]-[refinement]-[sample/group].log`: Log files
+- `Taxonomy/CAT/bat_summary.tsv`: Summary of the CAT taxonomic classification results for all bins.
+- `Taxonomy/CAT/[assembler]/[binner]/[sample/group]/bins/`
+  - `[assembler]-[binner]-[sample/group]-bins.ORF2LCA.txt`: Tab-delimited files containing the lineage of each contig
+  - `[assembler]-[binner]-[sample/group]-bins.bin2classification.txt`: Taxonomy classification of the genome bins
+  - `[assembler]-[binner]-[sample/group]-bins.bin2classification.names.txt`: Taxonomy classification of the genome bins, with full lineage names
+  - `[assembler]-[binner]-[sample/group]-bins.concatenated.alignment.diamond`: Diamond alignment of the predicted proteins against the CAT database
+  - `[assembler]-[binner]-[sample/group]-bins.concatenated.predicted_proteins.faa`: Predicted protein sequences for each genome bin, in fasta format
+  - `[assembler]-[binner]-[sample/group]-bins.concatenated.predicted_proteins.gff`: Predicted protein features for each genome bin, in gff format
+  - `[assembler]-[binner]-[sample/group]-bins.summary.txt`: Summary of the CAT taxonomic classification results
+  - `[assembler]-[binner]-[sample/group]-bins.log`: Log files
+
+If `--cat_classify_unbinned` is enabled, a similiar set of files is generated for unbinned contigs:
+
+- `Taxonomy/CAT/[assembler]/[binner]/[sample/group]/unbins/`
+  - `[assembler]-[binner]-[sample/group]-unbins.ORF2LCA.txt`: Tab-delimited files containing the lineage of each unbinned contig
+  - `[assembler]-[binner]-[sample/group]-unbins.contig2classification.txt`: Taxonomy classification of the unbinned contigs
+  - `[assembler]-[binner]-[sample/group]-unbins.contig2classification.names.txt`: Taxonomy classification of the unbinned contigs, with full lineage names
+  - `[assembler]-[binner]-[sample/group]-unbins.concatenated.alignment.diamond`: Diamond alignment of the predicted proteins against the CAT database
+  - `[assembler]-[binner]-[sample/group]-unbins.concatenated.predicted_proteins.faa`: Predicted protein sequences for each unbinned contig, in fasta format
+  - `[assembler]-[binner]-[sample/group]-unbins.concatenated.predicted_proteins.gff`: Predicted protein features for each unbinned contig, in gff format
+  - `[assembler]-[binner]-[sample/group]-unbins.summary.txt`: Summary of the CAT taxonomic classification results for unbinned contigs
+  - `[assembler]-[binner]-[sample/group]-unbins.log`: Log files for unbinned contigs
 
 </details>
 
@@ -676,7 +688,7 @@ If the parameters `--cat_db_generate` and `--save_cat_db` are set, additionally 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `Taxonomy/CAT/CAT_prepare_*.tar.gz`: Generated and used CAT database.
+- `Taxonomy/CAT/db`: Generated and used CAT database.
 
 </details>
 
@@ -810,7 +822,6 @@ Summary tool-specific plots and tables of following tools are currently displaye
 - bowtie2
 - BUSCO
 - QUAST
-- Kraken2 / Centrifuge
 - PROKKA
 
 ### Pipeline information
