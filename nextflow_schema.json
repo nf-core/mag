@@ -376,6 +376,11 @@
                     "type": "boolean",
                     "description": "Skip read preprocessing using fastp or adapterremoval."
                 },
+                "skip_short_read_qc": {
+                    "type": "boolean",
+                    "description": "Skip all QC steps for short reads.",
+                    "help": "Skips clipping and removal of phiX sequences as well as the second FastQC run. Does not affect host sequence removal or read-depth normalization for assembly."
+                },
                 "save_phixremoved_reads": {
                     "type": "boolean",
                     "description": "Specify to save input FASTQ files with phiX reads removed to --outdir."

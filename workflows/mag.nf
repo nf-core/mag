@@ -136,6 +136,7 @@ workflow MAG {
             ch_host_fasta,
             ch_host_bowtie2index,
             ch_phix_db_file,
+            params.skip_short_read_qc,
         )
 
         ch_versions = ch_versions.mix(SHORTREAD_PREPROCESSING.out.versions)
