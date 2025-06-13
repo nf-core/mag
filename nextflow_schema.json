@@ -376,7 +376,7 @@
                     "type": "boolean",
                     "description": "Skip read preprocessing using fastp or adapterremoval."
                 },
-                "skip_short_read_qc": {
+                "skip_shortread_qc": {
                     "type": "boolean",
                     "description": "Skip all QC steps for short reads.",
                     "help": "Skips clipping and removal of phiX sequences as well as the second FastQC run. Does not affect host sequence removal."
