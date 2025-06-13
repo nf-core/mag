@@ -111,11 +111,12 @@ workflow LONGREAD_PREPROCESSING {
 
         if (
             !(
+                skip_qc &&
                 params.skip_adapter_trimming &&
                 params.skip_longread_filtering &&
                 !params.host_fasta &&
                 params.keep_lambda
-            ) && !skip_qc
+            )
         ) {
             NANOPLOT_FILTERED (
                 ch_long_reads

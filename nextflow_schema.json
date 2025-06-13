@@ -379,7 +379,7 @@
                 "skip_shortread_qc": {
                     "type": "boolean",
                     "description": "Skip all QC steps for short reads.",
-                    "help": "Skips clipping and removal of phiX sequences as well as the second FastQC run. Does not affect host sequence removal."
+                    "help": "Skips clipping and removal of phiX sequences. Does not affect host sequence removal."
                 },
                 "save_phixremoved_reads": {
                     "type": "boolean",
