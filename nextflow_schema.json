@@ -379,7 +379,7 @@
                 "skip_short_read_qc": {
                     "type": "boolean",
                     "description": "Skip all QC steps for short reads.",
-                    "help": "Skips clipping and removal of phiX sequences as well as the second FastQC run. Does not affect host sequence removal or read-depth normalization for assembly."
+                    "help": "Skips clipping and removal of phiX sequences as well as the second FastQC run. Does not affect host sequence removal."
                 },
                 "save_phixremoved_reads": {
                     "type": "boolean",
@@ -418,6 +418,11 @@
                 "skip_longread_filtering": {
                     "type": "boolean",
                     "description": "Skip filtering long reads."
+                },
+                "skip_longread_qc": {
+                    "type": "boolean",
+                    "description": "Skip QC steps for long reads.",
+                    "help": "Skips adapter trimming and filtering, but not host sequence removal."
                 },
                 "longreads_min_length": {
                     "type": "integer",

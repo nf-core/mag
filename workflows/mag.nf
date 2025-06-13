@@ -162,6 +162,7 @@ workflow MAG {
         ch_short_reads,
         ch_lambda_db,
         ch_host_fasta,
+        params.skip_longread_qc,
     )
 
     ch_versions = ch_versions.mix(LONGREAD_PREPROCESSING.out.versions)
