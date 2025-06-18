@@ -505,6 +505,10 @@
                     "description": "Classify unbinned contigs with CAT (contig mode).",
                     "help_text": "By default, nf-core/mag only runs CAT taxonomic classification on bins. Specifying this parameter will  additionally run CAT classification on all unbinned contigs, which can be useful to get an idea of the taxonomic composition of the unbinned contigs. In some cases this may significantly extend run time of the pipeline."
                 },
+                "cat_no_suggestive_asterisks": {
+                    "type": "boolean",
+                    "description": "Specify to turn off CAT marking in output files most l"
+                },
                 "skip_gtdbtk": {
                     "type": "boolean",
                     "description": "Skip the running of GTDB, as well as the automatic download of the database"
@@ -561,6 +565,10 @@
                     "type": "boolean",
                     "description": "Speed up pplacer step of GTDB-Tk by loading to memory.",
                     "help_text": "Will be faster than writing to disk (default setting), however at the expense of much larger memory (RAM) requirements for GDTBTK/CLASSIFY."
+                },
+                "gtdbtk_use_full_tree": {
+                    "type": "boolean",
+                    "description": "Specify to have GTDBTk to use the full bacterial tree rather than the split tree (requires more memory!)"
                 }
             }
         },
@@ -640,6 +648,10 @@
                 "skip_prokka": {
                     "type": "boolean",
                     "description": "Skip Prokka genome annotation."
+                },
+                "prokka_fast_mode": {
+                    "type": "boolean",
+                    "description": "Specify to skip CDS/product searching in Prokka runs"
                 },
                 "skip_metaeuk": {
                     "type": "boolean",
