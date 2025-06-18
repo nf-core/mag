@@ -421,7 +421,7 @@
                 },
                 "skip_longread_qc": {
                     "type": "boolean",
-                    "description": "Skip QC steps for long reads.",
+                    "description": "Skip all default QC steps for long reads (adapter trimming, filtering, removal of lambda sequences).",
                     "help": "Skips adapter trimming and filtering, but not host sequence removal."
                 },
                 "longreads_min_length": {
