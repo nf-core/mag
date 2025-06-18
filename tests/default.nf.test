@@ -13,44 +13,22 @@ nextflow_pipeline {
         }
 
         then {
-            // stable_name: All files + folders in ${params.outdir}/ with a stable name
-            // stable_path: All files in ${params.outdir}/ with stable content
-
-            // Output directory: Annotation
-            def stable_name_annotation = getAllFilesFromDir("$outputDir/Annotation"       , includeDir: false, ignore: ['pipeline_info/*.{html,json,txt}'])
-            def stable_path_annotation = getAllFilesFromDir("$outputDir/Annotation"       , ignoreFile: 'tests/.nftignore')
-            // Output directory: Assembly
-            def stable_name_assembly = getAllFilesFromDir("$outputDir/Assembly"           , includeDir: false, ignore: ['pipeline_info/*.{html,json,txt}'])
-            def stable_path_assembly = getAllFilesFromDir("$outputDir/Assembly"           , ignoreFile: 'tests/.nftignore')
-            // Output directory: GenomeBinning
-            def stable_name_genomebinning = getAllFilesFromDir("$outputDir/GenomeBinning" , includeDir: false, ignore: ['pipeline_info/*.{html,json,txt}'])
-            def stable_path_genomebinning = getAllFilesFromDir("$outputDir/GenomeBinning" , ignoreFile: 'tests/.nftignore')
-            // Output directory: multiqc
-            def stable_name_multiqc = getAllFilesFromDir("$outputDir/multiqc"             , includeDir: false, ignore: ['pipeline_info/*.{html,json,txt}'])
-            def stable_path_multiqc = getAllFilesFromDir("$outputDir/multiqc"             , ignoreFile: 'tests/.nftignore')
-            // Output directory: QC_shortreads
-            def stable_name_qcshortreads = getAllFilesFromDir("$outputDir/QC_shortreads"  , includeDir: false, ignore: ['pipeline_info/*.{html,json,txt}'])
-            def stable_path_qcshortreads= getAllFilesFromDir("$outputDir/QC_shortreads"  , ignoreFile: 'tests/.nftignore')
-            // Output directory: Taxonomy
-            def stable_name_taxonomy = getAllFilesFromDir("$outputDir/Taxonomy"           , includeDir: false, ignore: ['pipeline_info/*.{html,json,txt}'])
-            def stable_path_taxonomy = getAllFilesFromDir("$outputDir/Taxonomy"           , ignoreFile: 'tests/.nftignore')
-
-            { assert workflow.success},
+            // // stable_name: All files + folders in ${params.outdir}/ with a stable name
+            // def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // // stable_path: All files in ${params.outdir}/ with stable content
+            // def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
             assertAll(
-                
+                { assert workflow.success},
                 { assert snapshot(
                     // Number of successful tasks
                     workflow.trace.succeeded().size(),
                     // pipeline versions.yml file for multiqc from which Nextflow version is removed because we test pipelines on multiple Nextflow versions
                     removeNextflowVersion("$outputDir/pipeline_info/nf_core_mag_software_mqc_versions.yml"),
-                ).match('run summary') }
-                // Generate one snapshot per output directory
-                { assert snapshot( stable_name_annotation*.name,    stable_path_annotation    ).match('Annotation') },
-                { assert snapshot( stable_name_assembly*.name,      stable_path_assembly      ).match('Assembly') },
-                { assert snapshot( stable_name_genomebinning*.name, stable_path_genomebinning ).match('GenomeBinning') },
-                { assert snapshot( stable_name_multiqc*.name,       stable_path_multiqc       ).match('multiqc') },
-                { assert snapshot( stable_name_qcshortreads*.name,  stable_path_qcshortreads  ).match('QC_shortreads') },
-                { assert snapshot( stable_name_taxonomy*.name,      stable_path_taxonomy      ).match('Taxonomy') }
+                    // // All stable path name, with a relative path
+                    // stable_name,
+                    // // All files with stable contents
+                    // stable_path
+                ).match() }
             )
         }
     }

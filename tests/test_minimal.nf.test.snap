@@ -14,14 +14,14 @@
                 "remove_phix/test_minigut_sample2_run0_phix_removed.bowtie2.log"
             ],
             [
-                "test_minigut_run0_raw_1_fastqc.html:md5,70be6a1f27fb9c191a0e79eb23238bca",
-                "test_minigut_run0_raw_2_fastqc.html:md5,d7b8d8ec4bd53b9bda6f52d5e58d7259",
-                "test_minigut_run0_trimmed_1_fastqc.html:md5,e14688ffa7a7d28ae8da85a5192a149d",
-                "test_minigut_run0_trimmed_2_fastqc.html:md5,8fa79b08503f41d4e301ba00e6f0111e",
-                "test_minigut_sample2_run0_raw_1_fastqc.html:md5,6195e273691508bd0907a2c0d8dd8d18",
-                "test_minigut_sample2_run0_raw_2_fastqc.html:md5,152f936a41e724e7c83215a311211ee0",
-                "test_minigut_sample2_run0_trimmed_1_fastqc.html:md5,6d8e648a80a2874aac0df7983bf45aa1",
-                "test_minigut_sample2_run0_trimmed_2_fastqc.html:md5,797d6750d645a51c9b1ac2591eac049f",
+                "test_minigut_run0_raw_1_fastqc.html:md5,58cc7ac211d257e8404bb82b45c9a1e3",
+                "test_minigut_run0_raw_2_fastqc.html:md5,3cde33031d294f05afa835f79f318aae",
+                "test_minigut_run0_trimmed_1_fastqc.html:md5,b5595a105019b33f47351e57a0a09754",
+                "test_minigut_run0_trimmed_2_fastqc.html:md5,d714bc7420a24d712a5f4efdedc8f52d",
+                "test_minigut_sample2_run0_raw_1_fastqc.html:md5,75786def5ccf2bebfe21944ee2551b3d",
+                "test_minigut_sample2_run0_raw_2_fastqc.html:md5,70325e008072f20446e90f56e65bde3d",
+                "test_minigut_sample2_run0_trimmed_1_fastqc.html:md5,8369f51d5c9729af3eed249e0491e48a",
+                "test_minigut_sample2_run0_trimmed_2_fastqc.html:md5,87a40453f809775a4f272082405f3382",
                 "test_minigut_run0_phix_removed.bowtie2.log:md5,4f10d4bc2b3f0be722807bbf16659621",
                 "test_minigut_sample2_run0_phix_removed.bowtie2.log:md5,f1530d72fd5626bb98c60400b294dc18"
             ]
@@ -30,7 +30,7 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.3"
         },
-        "timestamp": "2025-06-12T11:06:59.134511577"
+        "timestamp": "2025-06-18T10:34:10.171243339"
     },
     "-profile test_minimal": {
         "content": [
