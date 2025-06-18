@@ -132,12 +132,24 @@ workflow SHORTREAD_PREPROCESSING {
         ch_short_reads_phixremoved = ch_short_reads_hostremoved
     }
 
-    if (!(skip_qc && params.keep_phix && params.skip_clipping && !(params.host_genome || params.host_fasta))) {
-        FASTQC_TRIMMED(
-            ch_short_reads_phixremoved
-        )
-        ch_versions = ch_versions.mix(FASTQC_TRIMMED.out.versions)
-        ch_multiqc_files = ch_multiqc_files.mix(FASTQC_TRIMMED.out.zip)
+    /**
+     * Conditions for *not* running FASTQC_TRIMMED:
+     * - No host removal and skip_qc (params.skip_shortread_qc)
+     * - No host removal and *both* --keep_phix --skip_clipping
+     */
+    if ( !( ( skip_qc && !( params.host_fasta || params.host_genome ) ) ) ) {
+        if (
+            !(
+                params.keep_phix && params.skip_clipping &&
+                !( params.host_genome || params.host_fasta )
+            )
+        ) {
+            FASTQC_TRIMMED(
+                ch_short_reads_phixremoved
+            )
+            ch_versions = ch_versions.mix(FASTQC_TRIMMED.out.versions)
+            ch_multiqc_files = ch_multiqc_files.mix(FASTQC_TRIMMED.out.zip)
+        }
     }
 
     // Run/Lane merging

@@ -109,19 +109,23 @@ workflow LONGREAD_PREPROCESSING {
             ch_multiqc_files = ch_multiqc_files.mix( LONGREAD_HOSTREMOVAL.out.multiqc_files )
         }
 
-        if (
-            !(
-                skip_qc &&
-                params.skip_adapter_trimming &&
-                params.skip_longread_filtering &&
-                !params.host_fasta &&
-                params.keep_lambda
-            )
-        ) {
-            NANOPLOT_FILTERED (
-                ch_long_reads
-            )
-            ch_versions = ch_versions.mix(NANOPLOT_FILTERED.out.versions.first())
+        /**
+         * Conditions for *not* running NANOPLOT_FILTERED:
+         * - No host removal and skip_qc (params.skip_longread_qc)
+         * - No host removal and *all* --keep_lambda, --skip_adapter_trimming, --skip_longread_filtering
+         */
+        if ( !( ( skip_qc && !( params.host_fasta || params.host_genome ) ) ) ) {
+            if (
+                !(
+                    params.skip_adapter_trimming && params.skip_longread_filtering && params.keep_lambda &&
+                    !(params.host_fasta || params.host_genome )
+                )
+            ) {
+                NANOPLOT_FILTERED (
+                    ch_long_reads
+                )
+                ch_versions = ch_versions.mix(NANOPLOT_FILTERED.out.versions.first())
+            }
         }
 
         // Run merging
