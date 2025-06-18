@@ -378,7 +378,7 @@
                 },
                 "skip_shortread_qc": {
                     "type": "boolean",
-                    "description": "Skip all QC steps for short reads.",
+                    "description": "Skip all default QC steps for short reads (adapter trimming, phiX removal).",
                     "help": "Skips clipping and removal of phiX sequences. Does not affect host sequence removal."
                 },
                 "save_phixremoved_reads": {
