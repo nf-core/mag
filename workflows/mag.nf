@@ -136,6 +136,7 @@ workflow MAG {
             ch_host_fasta,
             ch_host_bowtie2index,
             ch_phix_db_file,
+            params.skip_shortread_qc,
         )
 
         ch_versions = ch_versions.mix(SHORTREAD_PREPROCESSING.out.versions)
@@ -161,6 +162,7 @@ workflow MAG {
         ch_short_reads,
         ch_lambda_db,
         ch_host_fasta,
+        params.skip_longread_qc,
     )
 
     ch_versions = ch_versions.mix(LONGREAD_PREPROCESSING.out.versions)
