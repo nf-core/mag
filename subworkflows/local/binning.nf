@@ -10,10 +10,10 @@ include { GUNZIP as GUNZIP_BINS                                                 
 include { GUNZIP as GUNZIP_UNBINS                                                                } from '../../modules/nf-core/gunzip/main'
 include { SEQKIT_STATS                                                                           } from '../../modules/nf-core/seqkit/stats/main'
 
-include { CONVERT_DEPTHS                        } from '../../modules/local/convert_depths'
-include { ADJUST_MAXBIN2_EXT                    } from '../../modules/local/adjust_maxbin2_ext'
-include { SPLIT_FASTA                           } from '../../modules/local/split_fasta'
-include { FASTA_BINNING_CONCOCT                 } from '../../subworkflows/nf-core/fasta_binning_concoct/main'
+include { CONVERT_DEPTHS                                                                         } from '../../modules/local/convert_depths'
+include { ADJUST_MAXBIN2_EXT                                                                     } from '../../modules/local/adjust_maxbin2_ext'
+include { SPLIT_FASTA                                                                            } from '../../modules/local/split_fasta'
+include { FASTA_BINNING_CONCOCT                                                                  } from '../../subworkflows/nf-core/fasta_binning_concoct/main'
 
 workflow BINNING {
     take:
@@ -28,7 +28,7 @@ workflow BINNING {
     // generate coverage depths for each contig and branch by assembler type
     ch_summarizedepth_input = assemblies
         .map { meta, assembly, bams, bais ->
-            [ meta, bams, bais ]
+            [meta, bams, bais]
         }
         .branch {
             longread: it[0].assembler in ['FLYE', 'METAMDBG']
@@ -36,17 +36,15 @@ workflow BINNING {
         }
 
     // Process each through appropriate module
-    METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_LONGREAD ( ch_summarizedepth_input.longread )
-    METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_SHORTREAD ( ch_summarizedepth_input.shortread )
+    METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_LONGREAD(ch_summarizedepth_input.longread)
+    METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_SHORTREAD(ch_summarizedepth_input.shortread)
 
     // Merge the outputs
-    ch_combined_depths =  METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_LONGREAD.out.depth
-        .mix(METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_SHORTREAD.out.depth)
-    ch_metabat_depths = ch_combined_depths
-        .map { meta, depths ->
-            def meta_new = meta + [binner: 'MetaBAT2']
-            [ meta_new, depths ]
-        }
+    ch_combined_depths = METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_LONGREAD.out.depth.mix(METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_SHORTREAD.out.depth)
+    ch_metabat_depths = ch_combined_depths.map { meta, depths ->
+        def meta_new = meta + [binner: 'MetaBAT2']
+        [meta_new, depths]
+    }
 
     ch_versions = ch_versions.mix(METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_LONGREAD.out.versions.first())
     ch_versions = ch_versions.mix(METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_SHORTREAD.out.versions.first())
@@ -151,9 +149,11 @@ workflow BINNING {
         .map { _key, meta, bin, stats ->
             [meta + stats, bin]
         }
+        .dump(tag: 'beforefilter')
         .filter { meta, _bin ->
             meta.bin_total_length >= val_bin_min_size && (val_bin_max_size ? meta.bin_total_length <= val_bin_max_size : true)
         }
+        .dump(tag: 'postfilter')
         .ifEmpty {
             error("[nf-core/mag] ERROR: no bins passed the bin size filter specified between --bin_min_size ${val_bin_min_size} and --bin_max_size ${val_bin_max_size}. Please adjust parameters.")
         }
@@ -179,10 +179,10 @@ workflow BINNING {
     ch_versions = ch_versions.mix(GUNZIP_UNBINS.out.versions.first())
 
     emit:
-    bins                                         = ch_binning_results_gunzipped
-    bins_gz                                      = ch_binning_results_gzipped_final
-    unbinned                                     = ch_splitfasta_results_gunzipped
-    unbinned_gz                                  = SPLIT_FASTA.out.unbinned
-    metabat2depths                               = ch_combined_depths
-    versions                                     = ch_versions
+    bins           = ch_binning_results_gunzipped
+    bins_gz        = ch_binning_results_gzipped_final
+    unbinned       = ch_splitfasta_results_gunzipped
+    unbinned_gz    = SPLIT_FASTA.out.unbinned
+    metabat2depths = ch_combined_depths
+    versions       = ch_versions
 }
