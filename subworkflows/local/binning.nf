@@ -152,7 +152,6 @@ workflow BINNING {
         .filter { meta, _bin ->
             meta.bin_total_length >= val_bin_min_size && (val_bin_max_size ? meta.bin_total_length <= val_bin_max_size : true)
         }
-        .dump(tag: 'postfilter')
         .ifEmpty {
             error("[nf-core/mag] ERROR: no bins passed the bin size filter specified between --bin_min_size ${val_bin_min_size} and --bin_max_size ${val_bin_max_size}. Please adjust parameters.")
         }
