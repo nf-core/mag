@@ -376,6 +376,11 @@
                     "type": "boolean",
                     "description": "Skip read preprocessing using fastp or adapterremoval."
                 },
+                "skip_shortread_qc": {
+                    "type": "boolean",
+                    "description": "Skip all default QC steps for short reads (adapter trimming, phiX removal).",
+                    "help": "Skips clipping and removal of phiX sequences. Does not affect host sequence removal as this is opt in."
+                },
                 "save_phixremoved_reads": {
                     "type": "boolean",
                     "description": "Specify to save input FASTQ files with phiX reads removed to --outdir."
@@ -413,6 +418,11 @@
                 "skip_longread_filtering": {
                     "type": "boolean",
                     "description": "Skip filtering long reads."
+                },
+                "skip_longread_qc": {
+                    "type": "boolean",
+                    "description": "Skip all default QC steps for long reads (adapter trimming, filtering, removal of lambda sequences).",
+                    "help": "Skips adapter trimming and filtering, but not host sequence removal."
                 },
                 "longreads_min_length": {
                     "type": "integer",
@@ -507,7 +517,7 @@
                 },
                 "cat_no_suggestive_asterisks": {
                     "type": "boolean",
-                    "description": "Specify to turn off CAT marking in output files most l"
+                    "description": "Specify to turn off CAT marking in output files most probable hits (when multiple) with an asterix."
                 },
                 "skip_gtdbtk": {
                     "type": "boolean",

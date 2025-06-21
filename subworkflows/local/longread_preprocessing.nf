@@ -21,6 +21,7 @@ workflow LONGREAD_PREPROCESSING {
     ch_short_reads            // [ [meta] , fastq1, fastq2] (mandatory)
     ch_lambda_db              // [fasta]
     ch_host_fasta             // [fasta]
+    skip_qc                   // [boolean]
 
     main:
     ch_versions = Channel.empty()
@@ -32,7 +33,7 @@ workflow LONGREAD_PREPROCESSING {
     ch_versions = ch_versions.mix(NANOPLOT_RAW.out.versions.first())
 
     if ( !params.assembly_input ) {
-        if (!params.skip_adapter_trimming) {
+        if (!params.skip_adapter_trimming && !skip_qc) {
             if (params.longread_adaptertrimming_tool &&
                 params.longread_adaptertrimming_tool == 'porechop_abi') {
                 PORECHOP_ABI (
@@ -53,7 +54,7 @@ workflow LONGREAD_PREPROCESSING {
             ch_long_reads = ch_raw_long_reads
         }
 
-        if (!params.keep_lambda && params.longread_filtering_tool != 'chopper') {
+        if (!params.keep_lambda && params.longread_filtering_tool != 'chopper' && !skip_qc) {
             NANOLYSE (
                 ch_long_reads,
                 ch_lambda_db
@@ -61,7 +62,7 @@ workflow LONGREAD_PREPROCESSING {
             ch_long_reads = NANOLYSE.out.fastq
             ch_versions = ch_versions.mix(NANOLYSE.out.versions.first())
         }
-        if (!params.skip_longread_filtering) {
+        if (!params.skip_longread_filtering && !skip_qc) {
             if (params.longread_filtering_tool == 'filtlong') {
                 // join long and short reads by sample name
                 ch_short_reads_tmp = ch_short_reads
@@ -108,16 +109,23 @@ workflow LONGREAD_PREPROCESSING {
             ch_multiqc_files = ch_multiqc_files.mix( LONGREAD_HOSTREMOVAL.out.multiqc_files )
         }
 
-        if (!(
-            params.skip_adapter_trimming &&
-            params.skip_longread_filtering &&
-            !params.host_fasta &&
-            params.keep_lambda
-        )) {
-            NANOPLOT_FILTERED (
-                ch_long_reads
-            )
-            ch_versions = ch_versions.mix(NANOPLOT_FILTERED.out.versions.first())
+        /**
+         * Conditions for *not* running NANOPLOT_FILTERED:
+         * - No host removal and skip_qc (params.skip_longread_qc)
+         * - No host removal and *all* --keep_lambda, --skip_adapter_trimming, --skip_longread_filtering
+         */
+        if ( !( ( skip_qc && !( params.host_fasta || params.host_genome ) ) ) ) {
+            if (
+                !(
+                    params.skip_adapter_trimming && params.skip_longread_filtering && params.keep_lambda &&
+                    !(params.host_fasta || params.host_genome )
+                )
+            ) {
+                NANOPLOT_FILTERED (
+                    ch_long_reads
+                )
+                ch_versions = ch_versions.mix(NANOPLOT_FILTERED.out.versions.first())
+            }
         }
 
         // Run merging
