@@ -149,7 +149,6 @@ workflow BINNING {
         .map { _key, meta, bin, stats ->
             [meta + stats, bin]
         }
-        .dump(tag: 'beforefilter')
         .filter { meta, _bin ->
             meta.bin_total_length >= val_bin_min_size && (val_bin_max_size ? meta.bin_total_length <= val_bin_max_size : true)
         }
