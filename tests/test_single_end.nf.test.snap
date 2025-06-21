@@ -108,7 +108,7 @@
                     "prokka": "1.14.6"
                 },
                 "PYDAMAGE_ANALYZE": {
-                    "pydamage": "Matplotlib created a temporary config/cache directory at /tmp/matplotlib-al8ku6xq because the default path (/.config/matplotlib) is not a writable directory; it is highly recommended to set the MPLCONFIGDIR environment variable to a writable directory, in particular to speed up the import of Matplotlib and to better support multiprocessing. 0.70"
+                    "pydamage": 1.0
                 },
                 "QUAST": {
                     "python": "3.7.6",
@@ -132,6 +132,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.3"
         },
-        "timestamp": "2025-06-21T08:46:59.952862182"
+        "timestamp": "2025-06-21T10:12:32.338161413"
     }
 }
