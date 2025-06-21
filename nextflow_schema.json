@@ -517,7 +517,7 @@
                 },
                 "cat_no_suggestive_asterisks": {
                     "type": "boolean",
-                    "description": "Specify to turn off CAT marking in output files most l"
+                    "description": "Specify to turn off CAT marking in output files most probable hits (when multiple) with an asterix."
                 },
                 "skip_gtdbtk": {
                     "type": "boolean",
