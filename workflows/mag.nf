@@ -230,7 +230,7 @@ workflow MAG {
 
     if (params.run_virus_identification) {
         VIRUS_IDENTIFICATION(ch_assemblies, ch_genomad_db)
-        ch_versions = ch_versions.mix(VIRUS_IDENTIFICATION.out.versions.first())
+        ch_versions = ch_versions.mix(VIRUS_IDENTIFICATION.out.versions)
     }
 
     /*
@@ -257,7 +257,7 @@ workflow MAG {
 
     if (params.ancient_dna) {
         ANCIENT_DNA_ASSEMBLY_VALIDATION(BINNING_PREPARATION.out.grouped_mappings)
-        ch_versions = ch_versions.mix(ANCIENT_DNA_ASSEMBLY_VALIDATION.out.versions.first())
+        ch_versions = ch_versions.mix(ANCIENT_DNA_ASSEMBLY_VALIDATION.out.versions)
     }
 
     /*
