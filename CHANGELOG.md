@@ -36,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | minimap2   |                  | 2.28        |
 | samtools   |                  | 1.21        |
 | nf-core    | 3.2.0            | 3.3.1       |
+| pydamage   | 0.7.0            | 1.0.0       |
 
 ### `Deprecated`
 
