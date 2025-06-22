@@ -375,9 +375,30 @@ workflow MAG {
             )
             .groupTuple(by: 0)
 
+        /*
+        * Generate additional post-binning statistics for Bin QC
+        */
+
         DEPTHS(ch_input_for_postbinning, BINNING.out.metabat2depths, ch_reads_for_depths)
         ch_input_for_binsummary = DEPTHS.out.depths_summary
         ch_versions = ch_versions.mix(DEPTHS.out.versions)
+
+        if (params.ancient_dna) {
+            /*
+                TODO:
+                    1. Add bin name (From file name) to bin meta
+                    2. Move all binning meta (including new one) into second meta
+                    3. Join second meta'd results to pydamage results
+                    4. Recombine the two metas
+                    5. Group pydamage info into file
+                    6. Make 'median averaging' process script
+                    7. merge exported averaged results TSV to bin qc
+            */
+            ch_contig_bin_assignments = ch_input_for_postbinning.transpose().dump(tag: 'pre-split').splitFasta(record: [header: true]).dump(tag: 'split_bins')
+            ch_pydamage_filtered_results = ANCIENT_DNA_ASSEMBLY_VALIDATION.out.pydamage_results.splitCsv().dump(tag: 'pydamage')
+
+            ch_pydamage_to_bins = ch_contig_bin_assignments.map{meta, bins}
+        }
 
         /*
         * Bin QC subworkflows: for checking bin completeness with either BUSCO, CHECKM, CHECKM2, and/or GUNC
