@@ -1,0 +1,35 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://raw.githubusercontent.com/nf-core/mag/main/assets/schema_input.json",
+    "title": "nf-core/mag pipeline - params.input schema",
+    "description": "Schema for the file provided with params.input",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "id": {
+                "type": "string",
+                "pattern": "^\\S+$",
+                "meta": ["id"]
+            },
+            "group": {
+                "type": ["string", "integer"],
+                "pattern": "^\\S+$",
+                "meta": ["group"]
+            },
+            "assembler": {
+                "type": "string",
+                "pattern": "MEGAHIT|SPAdes|SPAdesHybrid",
+                "meta": ["assembler"]
+            },
+            "fasta": {
+                "type": "string",
+                "format": "file-path",
+                "pattern": "^\\S+\\.(fasta|fas|fa|fna)(\\.gz)?$",
+                "exists": true
+            }
+        },
+        "required": ["id", "group", "assembler", "fasta"]
+    },
+    "allOf": [{ "uniqueEntries": ["fasta"] }]
+}
