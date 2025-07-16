@@ -141,7 +141,6 @@
                 "multiqc_report.html"
             ],
             [
-                "BETA-multiqc.parquet:md5,5f58e8c1828bdb0739d14ec269426c83",
                 "bowtie2_pe_plot-cnt.png:md5,f832dd604ed71ecfd7193419ad5ed41d",
                 "bowtie2_pe_plot-pct.png:md5,0825a02ba99c9772f802c128ce085dcc",
                 "fastqc-1-status-check-heatmap.png:md5,22b7cbec3cbf9fb765eac9a3b9c583f0",
