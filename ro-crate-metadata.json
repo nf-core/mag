@@ -135,6 +135,21 @@
             "creator": [
                 {
                     "@id": "https://orcid.org/0000-0001-9807-1082"
+                },
+                                {
+                    "@id": "#68351153+CarsonJM@users.noreply.github.com"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0003-0603-7907"
+                },
+                {
+                    "@id": "#42973691+d4straub@users.noreply.github.com"
+                },
+                {
+                    "@id": "#jfy133@gmail.com"
+                },
+                {
+                    "@id": "#jfy133@gmail.com"
                 }
             ],
             "dateCreated": "",
@@ -158,6 +173,15 @@
             "maintainer": [
                 {
                     "@id": "https://orcid.org/0000-0001-9807-1082"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0003-0603-7907"
+                },
+                {
+                    "@id": "#42973691+d4straub@users.noreply.github.com"
+                },
+                {
+                    "@id": "#jfy133@gmail.com"
                 }
             ],
             "name": [
@@ -346,6 +370,30 @@
             "@type": "Person",
             "email": "gourlehadrien@gmail.com",
             "name": "Hadrien Gourl\u00e9"
+        },
+        {
+            "@id": "#68351153+CarsonJM@users.noreply.github.com",
+            "@type": "Person",
+            "email": "68351153+CarsonJM@users.noreply.github.com",
+            "name": "Carson J Miller"
+        },
+        {
+            "@id": "https://orcid.org/0000-0003-0603-7907",
+            "@type": "Person",
+            "email": "sabrina.krakau.qbic@gmail.com",
+            "name": "Sabrina Krakau"
+        },
+        {
+            "@id": "#42973691+d4straub@users.noreply.github.com",
+            "@type": "Person",
+            "email": "42973691+d4straub@users.noreply.github.com",
+            "name": "Daniel Straub"
+        },
+        {
+            "@id": "#jfy133@gmail.com",
+            "@type": "Person",
+            "email": "jfy133@gmail.com",
+            "name": "James A. Fellows Yates"
         }
     ]
 }
