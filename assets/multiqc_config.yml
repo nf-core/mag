@@ -188,6 +188,7 @@ table_columns_visible:
     "Total length": true
     N50: true
   "Prokka": false
+# TODO add new plugins here
 
 table_columns_placement:
   "FastQC: raw reads":
@@ -241,6 +242,8 @@ table_columns_placement:
     bases: 21000
     CDS: 22000
     organism: 23000
+# TODO add BUSCO ?
+# TODO add new plugins here
 
 table_columns_name:
   "FastQC: raw reads":
@@ -263,6 +266,7 @@ table_columns_name:
     overall_alignment_rate: "% Aligned (Host)"
   "Bowtie2: assembly":
     overall_alignment_rate: "% Aligned (Assem.)"
+# TODO add new plugins here
 
 custom_table_header_config:
   general_stats_table:
