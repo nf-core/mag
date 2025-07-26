@@ -29,6 +29,9 @@ run_modules:
   - porechop
   - filtlong
   - trimmomatic
+  - checkm
+  - checkm2
+  - gtdb
 
 ## Module order
 top_modules:
@@ -103,7 +106,10 @@ top_modules:
         genome bins and kept, unbinned contigs for which the BUSCO analysis was successfull,
         i.e. not for contigs for which no BUSCO genes could be found. Bins for which
         a specific virus lineage was selected are also not shown."
+  - "checkm"
+  - "checkm2"
   - "prokka"
+  - "gtdb"
 
 custom_data:
   host_removal:
