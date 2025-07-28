@@ -187,7 +187,11 @@ table_columns_visible:
     "Largest contig": true
     "Total length": true
     N50: true
+  "BUSCO": false
   "Prokka": false
+  "CheckM": false
+  "CheckM2": false
+  "GTDB-Tk": false
 
 table_columns_placement:
   "FastQC: raw reads":
@@ -236,11 +240,24 @@ table_columns_placement:
   "QUAST: bins":
     "N50": 10000
     "Total length": 11000
+  Busco:
+    "complete_single_copy": 12000
+    "fragmented": 12100
+    "complete_duplicated": 12200
+    "missing": 12300
+  CheckM:
+    "Completeness": 13000
+    "Comtamination": 13100
+  CheckM2:
+    "Completeness": 14000
+    "Comtamination": 14100
   Prokka:
     contigs: 20000
     bases: 21000
     CDS: 22000
     organism: 23000
+  "GTDB-Tk":
+    "classification": 24000
 
 table_columns_name:
   "FastQC: raw reads":
