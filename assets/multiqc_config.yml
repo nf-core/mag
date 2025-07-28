@@ -31,7 +31,7 @@ run_modules:
   - trimmomatic
   - checkm
   - checkm2
-  - gtdb
+  - gtdbtk
 
 ## Module order
 top_modules:
@@ -109,7 +109,7 @@ top_modules:
   - "checkm"
   - "checkm2"
   - "prokka"
-  - "gtdb"
+  - "gtdbtk"
 
 custom_data:
   host_removal:
