@@ -132,6 +132,9 @@ workflow BIN_QC {
             .map { _meta, summary -> [[id: 'checkm'], summary] }
             .groupTuple()
         ch_versions = ch_versions.mix(CHECKM_QA.out.versions.first())
+        ch_multiqc_files = ch_multiqc_files.mix(
+            CHECKM_LINEAGEWF.out.checkm_tsv.map { it[1] }.flatten()
+        )
     }
     else if (params.binqc_tool == "checkm2") {
         /*
@@ -143,6 +146,9 @@ workflow BIN_QC {
             .map { _meta, summary -> [[id: 'checkm2'], summary] }
             .groupTuple()
         ch_versions = ch_versions.mix(CHECKM2_PREDICT.out.versions.first())
+        ch_multiqc_files = ch_multiqc_files.mix(
+            CHECKM2_PREDICT.out.checkm2_tsv.map { it[1] }.flatten()
+        )
     }
 
     if (params.run_gunc) {
