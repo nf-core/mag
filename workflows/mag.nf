@@ -826,6 +826,9 @@ workflow MAG {
         ch_multiqc_files = ch_multiqc_files.mix(BIN_QC.out.multiqc_files.collect().ifEmpty([]))
     }
 
+    if (!params.skip_gtdbtk) {
+        ch_multiqc_files = ch_multiqc_files.mix(GTDBTK.out.multiqc_files.collect().ifEmpty([]))
+    }
 
     MULTIQC(
         ch_multiqc_files.collect(),
