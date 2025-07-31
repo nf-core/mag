@@ -822,7 +822,7 @@ workflow MAG {
         ch_multiqc_files = ch_multiqc_files.mix(PROKKA.out.txt.collect { it[1] }.ifEmpty([]))
     }
 
-    if (!params.skip_binning && !params.skip_binqc && params.binqc_tool == 'busco') {
+    if (!params.skip_binning && !params.skip_binqc) {
         ch_multiqc_files = ch_multiqc_files.mix(BIN_QC.out.multiqc_files.collect().ifEmpty([]))
     }
 
