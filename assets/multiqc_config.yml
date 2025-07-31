@@ -241,16 +241,18 @@ table_columns_placement:
     "N50": 10000
     "Total length": 11000
   Busco:
-    "complete_single_copy": 12000
-    "fragmented": 12100
-    "complete_duplicated": 12200
-    "missing": 12300
+    "complete" : 12000
+    "complete_single_copy": 12100
+    "fragmented": 12200
+    "complete_duplicated": 12500
+    "missing": 12400
   CheckM:
     "Completeness": 13000
-    "Comtamination": 13100
+    "Contamination": 13100
   CheckM2:
     "Completeness": 14000
-    "Comtamination": 14100
+    "Contamination": 14100
+    "Genome_Size": 14200
   Prokka:
     contigs: 20000
     bases: 21000
