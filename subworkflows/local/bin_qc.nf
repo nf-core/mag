@@ -133,7 +133,7 @@ workflow BIN_QC {
             .groupTuple()
         ch_versions = ch_versions.mix(CHECKM_QA.out.versions.first())
         ch_multiqc_files = ch_multiqc_files.mix(
-            CHECKM_LINEAGEWF.out.checkm_tsv.map { it[1] }.flatten()
+            CHECKM_QA.out.output.map { it[1] }.flatten()
         )
     }
     else if (params.binqc_tool == "checkm2") {
