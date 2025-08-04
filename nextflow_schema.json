@@ -869,6 +869,11 @@
                     "description": "Specify which tool for bin quality-control validation to use.",
                     "enum": ["busco", "checkm", "checkm2"]
                 },
+                "binqc_tool_extras": {
+                    "type": "string",
+                    "description": "Comma-separated list of additional bin QC tools to run. These will not be added to the bin summary. (busco,checkm,checkm2)",
+                    "pattern": "^((busco|checkm|checkm2)?,?)*(?<!,)$"
+                },
                 "busco_db": {
                     "type": "string",
                     "description": "Download URL, local tar.gz archive, or local uncompressed directory for an *_odb10 or *_odb12 BUSCO lineage dataset.",
