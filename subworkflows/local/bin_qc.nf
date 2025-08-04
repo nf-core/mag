@@ -24,6 +24,7 @@ workflow BIN_QC {
     ch_input_bins_for_qc = ch_bins.transpose()
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
+    binqc_tool_extras = params.binqc_tool_extras ? params.binqc_tool_extras.split(',') : []
 
 
     /*
@@ -78,7 +79,7 @@ workflow BIN_QC {
     ================================
      */
     // ? If we add params.additional_binqc_tools this would need an extra check
-    if (params.binqc_tool == "busco" || "busco" in params.binqc_tool_extras) {
+    if (params.binqc_tool == "busco" || "busco" in binqc_tool_extras) {
         /*
          * BUSCO
          */
@@ -109,7 +110,7 @@ workflow BIN_QC {
         )
     }
     // ? If we add params.additional_binqc_tools this would need an extra check
-    if (params.binqc_tool == "checkm" || "checkm" in params.binqc_tool_extras) {
+    if (params.binqc_tool == "checkm" || "checkm" in binqc_tool_extras) {
         /*
          * CheckM
          */
@@ -145,7 +146,7 @@ workflow BIN_QC {
         )
     }
     // ? If we add params.additional_binqc_tools this would need an extra check
-    if (params.binqc_tool == "checkm2" || "checkm2" in params.binqc_tool_extras) {
+    if (params.binqc_tool == "checkm2" || "checkm2" in binqc_tool_extras) {
         /*
          * CheckM2
          */
@@ -190,7 +191,7 @@ workflow BIN_QC {
                 storeDir: "${params.outdir}/GenomeBinning/QC/",
             )
         // ? If we add params.additional_binqc_tools this would need an extra check
-        if (params.binqc_tool == 'checkm' || "checkm" in params.binqc_tool_extras) {
+        if (params.binqc_tool == 'checkm' || "checkm" in binqc_tool_extras) {
             ch_input_to_mergecheckm = GUNC_RUN.out.maxcss_level_tsv.combine(CHECKM_QA.out.output, by: 0)
 
             GUNC_MERGECHECKM(ch_input_to_mergecheckm)
