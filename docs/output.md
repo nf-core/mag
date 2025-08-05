@@ -602,6 +602,16 @@ If the parameter `--save_checkm_reference` is set, additionally the used the Che
 
 </details>
 
+Besides the reference files or output files created by CheckM, the following summary files will be generated:
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `GenomeBinning/QC/`
+  - `checkm_summary.tsv`: A summary table of the CheckM results.
+
+</details>
+
 #### CheckM2
 
 [CheckM2](https://github.com/chklovski/CheckM2) is a tool for assessing the quality of metagenome-derived genomes. It uses a machine learning approach to predict the completeness and contamination of a genome regardless of its taxonomic lineage.
@@ -624,6 +634,16 @@ If the parameter `--save_checkm2_data` is set, the CheckM2 reference datasets wi
 
 - `GenomeBinning/QC/CheckM2/`
   - `checkm2_downloads/CheckM2_database/*.dmnd`: Diamond database used by CheckM2.
+
+</details>
+
+Besides the reference files or output files created by CheckM, the following summary files will be generated:
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `GenomeBinning/QC/`
+  - `checkm2_summary.tsv`: A summary table of the CheckM2 results.
 
 </details>
 
