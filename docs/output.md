@@ -812,6 +812,9 @@ Summary tool-specific plots and tables of following tools are currently displaye
 - QUAST
 - Kraken2 / Centrifuge
 - PROKKA
+- BUSCO
+- CheckM
+- CheckM2
 
 ### Pipeline information
 
