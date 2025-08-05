@@ -8,9 +8,6 @@ include { CHECKM_QA                        } from '../../modules/nf-core/checkm/
 include { CHECKM_LINEAGEWF                 } from '../../modules/nf-core/checkm/lineagewf/main'
 include { CHECKM2_PREDICT                  } from '../../modules/nf-core/checkm2/predict/main'
 include { CSVTK_CONCAT as CONCAT_BINQC_TSV } from '../../modules/nf-core/csvtk/concat/main'
-include { CSVTK_CONCAT as CONCAT_BUSCO_TSV } from '../../modules/nf-core/csvtk/concat/main'
-include { CSVTK_CONCAT as CONCAT_CHECKM_TSV } from '../../modules/nf-core/csvtk/concat/main'
-include { CSVTK_CONCAT as CONCAT_CHECKM2_TSV } from '../../modules/nf-core/csvtk/concat/main'
 include { GUNC_DOWNLOADDB                  } from '../../modules/nf-core/gunc/downloaddb/main'
 include { GUNC_RUN                         } from '../../modules/nf-core/gunc/run/main'
 include { GUNC_MERGECHECKM                 } from '../../modules/nf-core/gunc/mergecheckm/main'
@@ -103,10 +100,13 @@ workflow BIN_QC {
                 .groupTuple()
         }
         else {
-            busco_summaries = BUSCO_BUSCO.out.batch_summary
-                .map { _meta, summary -> [[id: 'busco'], summary] }
-                .groupTuple()
-            CONCAT_BUSCO_TSV(busco_summaries, 'tsv', 'tsv')
+            BUSCO_BUSCO.out.batch_summary
+                .map { _meta, busco_summary -> busco_summary }
+                .collectFile(
+                    name: "busco_summary.tsv",
+                    keepHeader: true,
+                    storeDir: "${params.outdir}/GenomeBinning/QC/",
+                )
         }
         ch_versions = ch_versions.mix(BUSCO_BUSCO.out.versions.first())
         ch_multiqc_files = ch_multiqc_files.mix(
@@ -143,10 +143,13 @@ workflow BIN_QC {
                 .groupTuple()
         }
         else {
-            checkm_summaries = CHECKM_QA.out.output
-                .map { _meta, summary -> [[id: 'checkm'], summary] }
-                .groupTuple()
-            CONCAT_CHECKM_TSV(checkm_summaries, 'tsv', 'tsv')
+            CHECKM_QA.out.output
+                .map { _meta, checkm_summary -> checkm_summary }
+                .collectFile(
+                    name: "checkm_summary.tsv",
+                    keepHeader: true,
+                    storeDir: "${params.outdir}/GenomeBinning/QC/",
+                )
         }
         ch_versions = ch_versions.mix(CHECKM_QA.out.versions.first())
         ch_multiqc_files = ch_multiqc_files.mix(
@@ -164,10 +167,13 @@ workflow BIN_QC {
                 .groupTuple()
          }
          else {
-            checkm2_summaries = CHECKM2_PREDICT.out.checkm2_tsv
-                .map { _meta, summary -> [[id: 'checkm2'], summary] }
-                .groupTuple()
-            CONCAT_CHECKM2_TSV(checkm2_summaries, 'tsv', 'tsv')
+            CHECKM2_PREDICT.out.checkm2_tsv
+                .map { _meta, checkm2_summary -> checkm2_summary }
+                .collectFile(
+                    name: "checkm2_summary.tsv",
+                    keepHeader: true,
+                    storeDir: "${params.outdir}/GenomeBinning/QC/",
+                )
          }
         ch_versions = ch_versions.mix(CHECKM2_PREDICT.out.versions.first())
         ch_multiqc_files = ch_multiqc_files.mix(
