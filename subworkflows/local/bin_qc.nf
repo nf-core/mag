@@ -46,7 +46,6 @@ workflow BIN_QC {
     if (params.checkm_db) {
         ch_checkm_db = file(params.checkm_db, checkIfExists: true)
     }
-    // ? If we add params.additional_binqc_tools this would need an extra check
     else if (params.binqc_tool == 'checkm' || "checkm" in binqc_tool_extras) {
         ARIA2_UNTAR(params.checkm_download_url)
         ch_checkm_db = ARIA2_UNTAR.out.downloaded_file
@@ -58,7 +57,6 @@ workflow BIN_QC {
     if (params.checkm2_db) {
         ch_checkm2_db = [[:], file(params.checkm2_db, checkIfExists: true)]
     }
-    // ? If we add params.additional_binqc_tools this would need an extra check
     else if (params.binqc_tool == 'checkm2' || "checkm2" in binqc_tool_extras) {
         CHECKM2_DATABASEDOWNLOAD(params.checkm2_db_version)
         ch_checkm2_db = CHECKM2_DATABASEDOWNLOAD.out.database
@@ -80,7 +78,6 @@ workflow BIN_QC {
      * Run QC tools
     ================================
      */
-    // ? If we add params.additional_binqc_tools this would need an extra check
     if (params.binqc_tool == "busco" || "busco" in binqc_tool_extras) {
         /*
          * BUSCO
@@ -100,7 +97,6 @@ workflow BIN_QC {
         }
 
         BUSCO_BUSCO(ch_bins, 'genome', params.busco_db_lineage, ch_busco_db, [], params.busco_clean)
-        // ? If we add params.additional_binqc_tools this would need an extra check to only run if params.binqc_tool
         if (params.binqc_tool == "busco") {
             ch_qc_summaries = BUSCO_BUSCO.out.batch_summary
                 .map { _meta, summary -> [[id: 'busco'], summary] }
@@ -117,7 +113,6 @@ workflow BIN_QC {
             BUSCO_BUSCO.out.short_summaries_txt.map { it[1] }.flatten()
         )
     }
-    // ? If we add params.additional_binqc_tools this would need an extra check
     if (params.binqc_tool == "checkm" || "checkm" in binqc_tool_extras) {
         /*
          * CheckM
@@ -142,7 +137,6 @@ workflow BIN_QC {
             }
 
         CHECKM_QA(ch_checkmqa_input, [])
-        // ? If we add params.additional_binqc_tools this would need an extra check to only run if params.binqc_tool
         if (params.binqc_tool == "checkm") {
             ch_qc_summaries = CHECKM_QA.out.output
                 .map { _meta, summary -> [[id: 'checkm'], summary] }
@@ -159,13 +153,11 @@ workflow BIN_QC {
             CHECKM_QA.out.output.map { it[1] }.flatten()
         )
     }
-    // ? If we add params.additional_binqc_tools this would need an extra check
     if (params.binqc_tool == "checkm2" || "checkm2" in binqc_tool_extras) {
         /*
          * CheckM2
          */
         CHECKM2_PREDICT(ch_input_bins_for_qc.groupTuple(), ch_checkm2_db)
-        // ? If we add params.additional_binqc_tools this would need an extra check to only run if params.binqc_tool
          if (params.binqc_tool == "checkm2") {
             ch_qc_summaries = CHECKM2_PREDICT.out.checkm2_tsv
                 .map { _meta, summary -> [[id: 'checkm2'], summary] }
@@ -210,7 +202,6 @@ workflow BIN_QC {
                 keepHeader: true,
                 storeDir: "${params.outdir}/GenomeBinning/QC/",
             )
-        // ? If we add params.additional_binqc_tools this would need an extra check
         if (params.binqc_tool == 'checkm' || "checkm" in binqc_tool_extras) {
             ch_input_to_mergecheckm = GUNC_RUN.out.maxcss_level_tsv.combine(CHECKM_QA.out.output, by: 0)
 
@@ -227,12 +218,10 @@ workflow BIN_QC {
                 )
         }
     }
-    // ? Do we need something here too to do additional binqc tools? Maybe not?
     // Combine QC summaries (same process for all tools)
     CONCAT_BINQC_TSV(ch_qc_summaries, 'tsv', 'tsv')
     ch_qc_summary = CONCAT_BINQC_TSV.out.csv.map { _meta, summary -> summary }
     ch_versions = ch_versions.mix(CONCAT_BINQC_TSV.out.versions)
-    // ? Do we need something here too to do additional binqc tools?
     emit:
     qc_summary    = ch_qc_summary
     multiqc_files = ch_multiqc_files
