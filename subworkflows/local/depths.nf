@@ -50,8 +50,6 @@ workflow DEPTHS {
             [meta, bins.unique().flatten(), depth]
         }
 
-
-
     MAG_DEPTHS ( ch_depth_input )
     ch_versions = ch_versions.mix(MAG_DEPTHS.out.versions)
 

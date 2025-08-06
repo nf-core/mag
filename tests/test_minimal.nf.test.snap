@@ -1,0 +1,172 @@
+{
+    "QC_shortreads": {
+        "content": [
+            [
+                "fastqc/test_minigut_run0_raw_1_fastqc.html",
+                "fastqc/test_minigut_run0_raw_2_fastqc.html",
+                "fastqc/test_minigut_run0_trimmed_1_fastqc.html",
+                "fastqc/test_minigut_run0_trimmed_2_fastqc.html",
+                "fastqc/test_minigut_sample2_run0_raw_1_fastqc.html",
+                "fastqc/test_minigut_sample2_run0_raw_2_fastqc.html",
+                "fastqc/test_minigut_sample2_run0_trimmed_1_fastqc.html",
+                "fastqc/test_minigut_sample2_run0_trimmed_2_fastqc.html",
+                "remove_phix/test_minigut_run0_phix_removed.bowtie2.log",
+                "remove_phix/test_minigut_sample2_run0_phix_removed.bowtie2.log"
+            ],
+            [
+                "test_minigut_run0_phix_removed.bowtie2.log:md5,4f10d4bc2b3f0be722807bbf16659621",
+                "test_minigut_sample2_run0_phix_removed.bowtie2.log:md5,f1530d72fd5626bb98c60400b294dc18"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.3"
+        },
+        "timestamp": "2025-06-21T08:21:35.551549408"
+    },
+    "-profile test_minimal": {
+        "content": [
+            8,
+            {
+                "BOWTIE2_PHIX_REMOVAL_ALIGN": {
+                    "bowtie2": "2.4.2"
+                },
+                "FASTQC_RAW": {
+                    "fastqc": "0.12.1"
+                },
+                "FASTQC_TRIMMED": {
+                    "fastqc": "0.12.1"
+                },
+                "Workflow": {
+                    "nf-core/mag": "v4.1.0dev"
+                }
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.3"
+        },
+        "timestamp": "2025-06-12T09:58:29.858389008"
+    },
+    "multiqc": {
+        "content": [
+            [
+                "multiqc_data/BETA-multiqc.parquet",
+                "multiqc_data/bowtie2_pe_plot.yaml",
+                "multiqc_data/fastqc-1-status-check-heatmap.yaml",
+                "multiqc_data/fastqc-1_per_base_n_content_plot.yaml",
+                "multiqc_data/fastqc-1_per_base_sequence_quality_plot.yaml",
+                "multiqc_data/fastqc-1_per_sequence_gc_content_plot_Counts.yaml",
+                "multiqc_data/fastqc-1_per_sequence_gc_content_plot_Percentages.yaml",
+                "multiqc_data/fastqc-1_per_sequence_quality_scores_plot.yaml",
+                "multiqc_data/fastqc-1_sequence_counts_plot.yaml",
+                "multiqc_data/fastqc-1_sequence_duplication_levels_plot.yaml",
+                "multiqc_data/fastqc-status-check-heatmap.yaml",
+                "multiqc_data/fastqc_per_base_n_content_plot.yaml",
+                "multiqc_data/fastqc_per_base_sequence_quality_plot.yaml",
+                "multiqc_data/fastqc_per_sequence_gc_content_plot_Counts.yaml",
+                "multiqc_data/fastqc_per_sequence_gc_content_plot_Percentages.yaml",
+                "multiqc_data/fastqc_per_sequence_quality_scores_plot.yaml",
+                "multiqc_data/fastqc_sequence_counts_plot.yaml",
+                "multiqc_data/fastqc_sequence_duplication_levels_plot.yaml",
+                "multiqc_data/multiqc.log",
+                "multiqc_data/multiqc_bowtie2.yaml",
+                "multiqc_data/multiqc_citations.yaml",
+                "multiqc_data/multiqc_data.json",
+                "multiqc_data/multiqc_fastqc.yaml",
+                "multiqc_data/multiqc_fastqc_fastqc-1.yaml",
+                "multiqc_data/multiqc_general_stats.yaml",
+                "multiqc_data/multiqc_software_versions.yaml",
+                "multiqc_data/multiqc_sources.yaml",
+                "multiqc_plots/pdf/bowtie2_pe_plot-cnt.pdf",
+                "multiqc_plots/pdf/bowtie2_pe_plot-pct.pdf",
+                "multiqc_plots/pdf/fastqc-1-status-check-heatmap.pdf",
+                "multiqc_plots/pdf/fastqc-1_per_base_n_content_plot.pdf",
+                "multiqc_plots/pdf/fastqc-1_per_base_sequence_quality_plot.pdf",
+                "multiqc_plots/pdf/fastqc-1_per_sequence_gc_content_plot_Counts.pdf",
+                "multiqc_plots/pdf/fastqc-1_per_sequence_gc_content_plot_Percentages.pdf",
+                "multiqc_plots/pdf/fastqc-1_per_sequence_quality_scores_plot.pdf",
+                "multiqc_plots/pdf/fastqc-1_sequence_counts_plot-cnt.pdf",
+                "multiqc_plots/pdf/fastqc-1_sequence_counts_plot-pct.pdf",
+                "multiqc_plots/pdf/fastqc-1_sequence_duplication_levels_plot.pdf",
+                "multiqc_plots/pdf/fastqc-status-check-heatmap.pdf",
+                "multiqc_plots/pdf/fastqc_per_base_n_content_plot.pdf",
+                "multiqc_plots/pdf/fastqc_per_base_sequence_quality_plot.pdf",
+                "multiqc_plots/pdf/fastqc_per_sequence_gc_content_plot_Counts.pdf",
+                "multiqc_plots/pdf/fastqc_per_sequence_gc_content_plot_Percentages.pdf",
+                "multiqc_plots/pdf/fastqc_per_sequence_quality_scores_plot.pdf",
+                "multiqc_plots/pdf/fastqc_sequence_counts_plot-cnt.pdf",
+                "multiqc_plots/pdf/fastqc_sequence_counts_plot-pct.pdf",
+                "multiqc_plots/pdf/fastqc_sequence_duplication_levels_plot.pdf",
+                "multiqc_plots/png/bowtie2_pe_plot-cnt.png",
+                "multiqc_plots/png/bowtie2_pe_plot-pct.png",
+                "multiqc_plots/png/fastqc-1-status-check-heatmap.png",
+                "multiqc_plots/png/fastqc-1_per_base_n_content_plot.png",
+                "multiqc_plots/png/fastqc-1_per_base_sequence_quality_plot.png",
+                "multiqc_plots/png/fastqc-1_per_sequence_gc_content_plot_Counts.png",
+                "multiqc_plots/png/fastqc-1_per_sequence_gc_content_plot_Percentages.png",
+                "multiqc_plots/png/fastqc-1_per_sequence_quality_scores_plot.png",
+                "multiqc_plots/png/fastqc-1_sequence_counts_plot-cnt.png",
+                "multiqc_plots/png/fastqc-1_sequence_counts_plot-pct.png",
+                "multiqc_plots/png/fastqc-1_sequence_duplication_levels_plot.png",
+                "multiqc_plots/png/fastqc-status-check-heatmap.png",
+                "multiqc_plots/png/fastqc_per_base_n_content_plot.png",
+                "multiqc_plots/png/fastqc_per_base_sequence_quality_plot.png",
+                "multiqc_plots/png/fastqc_per_sequence_gc_content_plot_Counts.png",
+                "multiqc_plots/png/fastqc_per_sequence_gc_content_plot_Percentages.png",
+                "multiqc_plots/png/fastqc_per_sequence_quality_scores_plot.png",
+                "multiqc_plots/png/fastqc_sequence_counts_plot-cnt.png",
+                "multiqc_plots/png/fastqc_sequence_counts_plot-pct.png",
+                "multiqc_plots/png/fastqc_sequence_duplication_levels_plot.png",
+                "multiqc_plots/svg/bowtie2_pe_plot-cnt.svg",
+                "multiqc_plots/svg/bowtie2_pe_plot-pct.svg",
+                "multiqc_plots/svg/fastqc-1-status-check-heatmap.svg",
+                "multiqc_plots/svg/fastqc-1_per_base_n_content_plot.svg",
+                "multiqc_plots/svg/fastqc-1_per_base_sequence_quality_plot.svg",
+                "multiqc_plots/svg/fastqc-1_per_sequence_gc_content_plot_Counts.svg",
+                "multiqc_plots/svg/fastqc-1_per_sequence_gc_content_plot_Percentages.svg",
+                "multiqc_plots/svg/fastqc-1_per_sequence_quality_scores_plot.svg",
+                "multiqc_plots/svg/fastqc-1_sequence_counts_plot-cnt.svg",
+                "multiqc_plots/svg/fastqc-1_sequence_counts_plot-pct.svg",
+                "multiqc_plots/svg/fastqc-1_sequence_duplication_levels_plot.svg",
+                "multiqc_plots/svg/fastqc-status-check-heatmap.svg",
+                "multiqc_plots/svg/fastqc_per_base_n_content_plot.svg",
+                "multiqc_plots/svg/fastqc_per_base_sequence_quality_plot.svg",
+                "multiqc_plots/svg/fastqc_per_sequence_gc_content_plot_Counts.svg",
+                "multiqc_plots/svg/fastqc_per_sequence_gc_content_plot_Percentages.svg",
+                "multiqc_plots/svg/fastqc_per_sequence_quality_scores_plot.svg",
+                "multiqc_plots/svg/fastqc_sequence_counts_plot-cnt.svg",
+                "multiqc_plots/svg/fastqc_sequence_counts_plot-pct.svg",
+                "multiqc_plots/svg/fastqc_sequence_duplication_levels_plot.svg",
+                "multiqc_report.html"
+            ],
+            [
+                "bowtie2_pe_plot-cnt.png:md5,f832dd604ed71ecfd7193419ad5ed41d",
+                "bowtie2_pe_plot-pct.png:md5,0825a02ba99c9772f802c128ce085dcc",
+                "fastqc-1-status-check-heatmap.png:md5,22b7cbec3cbf9fb765eac9a3b9c583f0",
+                "fastqc-1_per_base_n_content_plot.png:md5,1aa0fec0580581ace6d7f6cb2627149c",
+                "fastqc-1_per_base_sequence_quality_plot.png:md5,00460797814f60e7ca119694cbefe137",
+                "fastqc-1_per_sequence_gc_content_plot_Counts.png:md5,13eaedd412f382314db5c6a96128cdf8",
+                "fastqc-1_per_sequence_gc_content_plot_Percentages.png:md5,61d09915e01f43b51963f21fcccd618a",
+                "fastqc-1_per_sequence_quality_scores_plot.png:md5,a23c76ee8753b916e617556cc5914a95",
+                "fastqc-1_sequence_counts_plot-cnt.png:md5,b2ce224607b6498919c064757c53ab6e",
+                "fastqc-1_sequence_counts_plot-pct.png:md5,11c2ce7cee1c29a4960055ec46051cc5",
+                "fastqc-1_sequence_duplication_levels_plot.png:md5,e0ac2799f10d769c094a2845c3dfbddb",
+                "fastqc-status-check-heatmap.png:md5,473d87c9a227f6679980bc01293f748f",
+                "fastqc_per_base_n_content_plot.png:md5,1aa0fec0580581ace6d7f6cb2627149c",
+                "fastqc_per_base_sequence_quality_plot.png:md5,00460797814f60e7ca119694cbefe137",
+                "fastqc_per_sequence_gc_content_plot_Counts.png:md5,13eaedd412f382314db5c6a96128cdf8",
+                "fastqc_per_sequence_gc_content_plot_Percentages.png:md5,61d09915e01f43b51963f21fcccd618a",
+                "fastqc_per_sequence_quality_scores_plot.png:md5,a23c76ee8753b916e617556cc5914a95",
+                "fastqc_sequence_counts_plot-cnt.png:md5,2db0a5dbbb9e0ff02d2a59f49f173605",
+                "fastqc_sequence_counts_plot-pct.png:md5,994d66d2361ddb596aedffa4e9ad351b",
+                "fastqc_sequence_duplication_levels_plot.png:md5,e0ac2799f10d769c094a2845c3dfbddb"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.6"
+        },
+        "timestamp": "2025-07-16T15:20:42.822939299"
+    }
+}

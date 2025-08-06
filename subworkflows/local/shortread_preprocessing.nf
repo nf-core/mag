@@ -22,6 +22,7 @@ workflow SHORTREAD_PREPROCESSING {
     ch_host_fasta        // [fasta] (optional)
     ch_host_genome_index // fasta (optional)
     ch_phix_db_file      // [fasta] (optional)
+    skip_qc              // [boolean]
 
     main:
     ch_versions = Channel.empty()
@@ -33,7 +34,7 @@ workflow SHORTREAD_PREPROCESSING {
     ch_versions = ch_versions.mix(FASTQC_RAW.out.versions.first())
     ch_multiqc_files = ch_multiqc_files.mix(FASTQC_RAW.out.zip)
 
-    if (!params.skip_clipping) {
+    if (!params.skip_clipping && !skip_qc) {
         if (params.clip_tool == 'fastp') {
             FASTP(
                 ch_raw_short_reads,
@@ -79,13 +80,17 @@ workflow SHORTREAD_PREPROCESSING {
         ch_short_reads_prepped = ch_raw_short_reads
     }
 
-    if (params.host_fasta) {
+    if (params.host_fasta || params.host_genome) {
         if (params.host_fasta_bowtie2index) {
             ch_host_bowtie2index = file(params.host_fasta_bowtie2index, checkIfExists: true)
         }
         else {
+            ch_host_fasta_for_build = ch_host_fasta.combine(ch_short_reads_prepped)
+                .map { host_fasta, meta, reads ->
+                    host_fasta
+                }.first() // makes sure to only use the host fasta if the short read channel is not empty
             BOWTIE2_HOST_REMOVAL_BUILD(
-                ch_host_fasta
+                ch_host_fasta_for_build
             )
             ch_host_bowtie2index = BOWTIE2_HOST_REMOVAL_BUILD.out.index
         }
@@ -107,9 +112,13 @@ workflow SHORTREAD_PREPROCESSING {
         ch_short_reads_hostremoved = ch_short_reads_prepped
     }
 
-    if (!params.keep_phix) {
+    if (!params.keep_phix && !skip_qc) {
+        ch_phix_fasta_for_build = ch_phix_db_file.combine(ch_short_reads_prepped)
+                .map { host_fasta, meta, reads ->
+                    host_fasta
+                }.first()
         BOWTIE2_PHIX_REMOVAL_BUILD(
-            ch_phix_db_file
+            ch_phix_fasta_for_build
         )
         BOWTIE2_PHIX_REMOVAL_ALIGN(
             ch_short_reads_hostremoved,
@@ -123,12 +132,24 @@ workflow SHORTREAD_PREPROCESSING {
         ch_short_reads_phixremoved = ch_short_reads_hostremoved
     }
 
-    if (!(params.keep_phix && params.skip_clipping && !(params.host_genome || params.host_fasta))) {
-        FASTQC_TRIMMED(
-            ch_short_reads_phixremoved
-        )
-        ch_versions = ch_versions.mix(FASTQC_TRIMMED.out.versions)
-        ch_multiqc_files = ch_multiqc_files.mix(FASTQC_TRIMMED.out.zip)
+    /**
+     * Conditions for *not* running FASTQC_TRIMMED:
+     * - No host removal and skip_qc (params.skip_shortread_qc)
+     * - No host removal and *both* --keep_phix --skip_clipping
+     */
+    if ( !( ( skip_qc && !( params.host_fasta || params.host_genome ) ) ) ) {
+        if (
+            !(
+                params.keep_phix && params.skip_clipping &&
+                !( params.host_genome || params.host_fasta )
+            )
+        ) {
+            FASTQC_TRIMMED(
+                ch_short_reads_phixremoved
+            )
+            ch_versions = ch_versions.mix(FASTQC_TRIMMED.out.versions)
+            ch_multiqc_files = ch_multiqc_files.mix(FASTQC_TRIMMED.out.zip)
+        }
     }
 
     // Run/Lane merging

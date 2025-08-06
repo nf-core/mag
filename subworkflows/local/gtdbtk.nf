@@ -18,7 +18,7 @@ workflow GTDBTK {
     qc_columns = [
         busco: ['Input_file', 'Complete', 'Duplicated'],
         checkm: ['Bin Id', 'Completeness', 'Contamination'],
-        checkm2: ['Name', 'Completeness', 'Contamination']
+        checkm2: ['Name', 'Completeness', 'Contamination'],
     ]
 
     ch_bin_metrics = bin_qc_summary

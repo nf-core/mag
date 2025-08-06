@@ -376,6 +376,11 @@
                     "type": "boolean",
                     "description": "Skip read preprocessing using fastp or adapterremoval."
                 },
+                "skip_shortread_qc": {
+                    "type": "boolean",
+                    "description": "Skip all default QC steps for short reads (adapter trimming, phiX removal).",
+                    "help": "Skips clipping and removal of phiX sequences. Does not affect host sequence removal as this is opt in."
+                },
                 "save_phixremoved_reads": {
                     "type": "boolean",
                     "description": "Specify to save input FASTQ files with phiX reads removed to --outdir."
@@ -409,6 +414,15 @@
                 "skip_adapter_trimming": {
                     "type": "boolean",
                     "description": "Skip removing adapter sequences from long reads."
+                },
+                "skip_longread_filtering": {
+                    "type": "boolean",
+                    "description": "Skip filtering long reads."
+                },
+                "skip_longread_qc": {
+                    "type": "boolean",
+                    "description": "Skip all default QC steps for long reads (adapter trimming, filtering, removal of lambda sequences).",
+                    "help": "Skips adapter trimming and filtering, but not host sequence removal."
                 },
                 "longreads_min_length": {
                     "type": "integer",
@@ -474,31 +488,6 @@
             "description": "Taxonomic classification is disabled by default. You have to specify one of the options below to activate it.",
             "default": "",
             "properties": {
-                "centrifuge_db": {
-                    "type": "string",
-                    "format": "path",
-                    "exists": true,
-                    "description": "Database for taxonomic binning with centrifuge.",
-                    "help_text": "Local directory containing `*.cf` files, or a URL or local path to a downloaded compressed tar archive of a Centrifuge database. E.g. ftp://ftp.ccb.jhu.edu/pub/infphilo/centrifuge/data/p_compressed+h+v.tar.gz."
-                },
-                "kraken2_db": {
-                    "type": "string",
-                    "format": "path",
-                    "exists": true,
-                    "description": "Database for taxonomic binning with kraken2.",
-                    "help_text": "Path to a local directory, archive file, or a URL to compressed tar archive that contains at least the three files `hash.k2d`, `opts.k2d` and `taxo.k2d`. E.g. ftp://ftp.ccb.jhu.edu/pub/data/kraken2_dbs/minikraken_8GB_202003.tgz."
-                },
-                "krona_db": {
-                    "type": "string",
-                    "description": "Database for taxonomic binning with krona",
-                    "help_text": "Path to `taxonomy.tab` file for Krona, instead of downloading the default file. Point at the `.tab` file.",
-                    "format": "file-path",
-                    "exists": true
-                },
-                "skip_krona": {
-                    "type": "boolean",
-                    "description": "Skip creating a krona plot for taxonomic binning."
-                },
                 "cat_db": {
                     "type": "string",
                     "description": "Database for taxonomic classification of metagenome assembled genomes. Can be either a zipped file or a directory containing the extracted output of such.",
@@ -516,9 +505,19 @@
                     "description": "Save the CAT database generated when specified by `--cat_db_generate`.",
                     "help_text": "Useful to allow reproducibility, as old versions of prebuild CAT databases do not always remain accessible and underlying NCBI taxonomy and nr databases change."
                 },
-                "cat_official_taxonomy": {
+                "cat_allow_unofficial_lineages": {
                     "type": "boolean",
-                    "description": "Only return official taxonomic ranks (Kingdom, Phylum, etc.) when running CAT."
+                    "description": "Allow unofficial lineages in CAT classification.",
+                    "help_text": "By default, CAT only provides classifications enumerated at standard Linnaean taxonomic ranks. This option enables the output of non-standard ranks, which is useful with custom databases.\n\nNote that it disables classification result summarization, as this is not supported by CAT_pack summarise."
+                },
+                "cat_classify_unbinned": {
+                    "type": "boolean",
+                    "description": "Classify unbinned contigs with CAT (contig mode).",
+                    "help_text": "By default, nf-core/mag only runs CAT taxonomic classification on bins. Specifying this parameter will  additionally run CAT classification on all unbinned contigs, which can be useful to get an idea of the taxonomic composition of the unbinned contigs. In some cases this may significantly extend run time of the pipeline."
+                },
+                "cat_no_suggestive_asterisks": {
+                    "type": "boolean",
+                    "description": "Specify to turn off CAT marking in output files most probable hits (when multiple) with an asterix."
                 },
                 "skip_gtdbtk": {
                     "type": "boolean",
@@ -528,8 +527,7 @@
                     "type": "string",
                     "description": "Specify the location of a GTDBTK database. Can be either an uncompressed directory or a `.tar.gz` archive. If not specified will be downloaded for you when GTDBTK or binning QC is not skipped.",
                     "default": "https://data.gtdb.ecogenomic.org/releases/release220/220.0/auxillary_files/gtdbtk_package/full_package/gtdbtk_r220_data.tar.gz",
-                    "format": "path",
-                    "exists": true
+                    "format": "path"
                 },
                 "gtdb_mash": {
                     "type": "string",
@@ -577,6 +575,10 @@
                     "type": "boolean",
                     "description": "Speed up pplacer step of GTDB-Tk by loading to memory.",
                     "help_text": "Will be faster than writing to disk (default setting), however at the expense of much larger memory (RAM) requirements for GDTBTK/CLASSIFY."
+                },
+                "gtdbtk_use_full_tree": {
+                    "type": "boolean",
+                    "description": "Specify to have GTDBTk to use the full bacterial tree rather than the split tree (requires more memory!)"
                 }
             }
         },
@@ -622,6 +624,14 @@
                 "skip_quast": {
                     "type": "boolean",
                     "description": "Skip metaQUAST."
+                },
+                "skip_metamdbg": {
+                    "type": "boolean",
+                    "description": "Skip MetaDBG assembly."
+                },
+                "skip_flye": {
+                    "type": "boolean",
+                    "description": "Skip Flye assembly."
                 }
             }
         },
@@ -648,6 +658,10 @@
                 "skip_prokka": {
                     "type": "boolean",
                     "description": "Skip Prokka genome annotation."
+                },
+                "prokka_fast_mode": {
+                    "type": "boolean",
+                    "description": "Specify to skip CDS/product searching in Prokka runs"
                 },
                 "skip_metaeuk": {
                     "type": "boolean",
@@ -825,7 +839,17 @@
                 "exclude_unbins_from_postbinning": {
                     "type": "boolean",
                     "description": "Exclude unbinned contigs in the post-binning steps (bin QC, taxonomic classification, and annotation steps).",
-                    "help": "If you're not interested in assemby results that are not considered 'genome level', excluding unbinned contigs can greatly speed up downstream steps such as Prokka, that can be quite slow and spin up many tasks."
+                    "help_text": "If you're not interested in assemby results that are not considered 'genome level', excluding unbinned contigs can greatly speed up downstream steps such as Prokka, that can be quite slow and spin up many tasks."
+                },
+                "longread_percentidentity": {
+                    "type": "number",
+                    "description": "Specify a minimum percent identity filter for long reads mapping back to assembled contigs.",
+                    "help_text": "If specified, this parameter sets the `--percentIdentity` flag of the `metabat2 jgisummarizebamcontigdepths` command that is used to generate a read-depth per contig depth post assembly mapping. It can be useful in some cases to get more accurate depth coverages for binning by removing spurious alignments that can inflate coverage."
+                },
+                "shortread_percentidentity": {
+                    "type": "number",
+                    "description": "Specify a minimum percent identity filter for short reads mapping back to assembled contigs.",
+                    "help_text": "If specified, this parameter sets the `--percentIdentity` flag of the `metabat2 jgisummarizebamcontigdepths` command that is used to generate a read-depth per contig depth post assembly mapping. It can be useful in some cases to get more accurate depth coverages for binning by removing spurious alignments that can inflate coverage."
                 }
             }
         },
