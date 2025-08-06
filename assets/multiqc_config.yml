@@ -28,6 +28,9 @@ run_modules:
   - porechop
   - filtlong
   - trimmomatic
+  - checkm
+  - checkm2
+  - gtdbtk
 
 ## Module order
 top_modules:
@@ -81,7 +84,10 @@ top_modules:
         genome bins and kept, unbinned contigs for which the BUSCO analysis was successfull,
         i.e. not for contigs for which no BUSCO genes could be found. Bins for which
         a specific virus lineage was selected are also not shown."
+  - "checkm"
+  - "checkm2"
   - "prokka"
+  - "gtdbtk"
 
 custom_data:
   host_removal:
@@ -154,7 +160,11 @@ table_columns_visible:
     "Largest contig": true
     "Total length": true
     N50: true
+  "BUSCO": false
   "Prokka": false
+  "CheckM": false
+  "CheckM2": false
+  "GTDB-Tk": false
 
 table_columns_placement:
   "FastQC: raw reads":
@@ -195,11 +205,26 @@ table_columns_placement:
   "QUAST: bins":
     "N50": 10000
     "Total length": 11000
+  Busco:
+    "complete": 12000
+    "complete_single_copy": 12100
+    "fragmented": 12200
+    "complete_duplicated": 12500
+    "missing": 12400
+  CheckM:
+    "Completeness": 13000
+    "Contamination": 13100
+  CheckM2:
+    "Completeness": 14000
+    "Contamination": 14100
+    "Genome_Size": 14200
   Prokka:
     contigs: 20000
     bases: 21000
     CDS: 22000
     organism: 23000
+  "GTDB-Tk":
+    "classification": 24000
 
 table_columns_name:
   "FastQC: raw reads":

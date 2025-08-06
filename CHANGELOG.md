@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#816](https://github.com/nf-core/mag/pull/816) - Removed all leftover references to conda 'defaults' channel (by @jfy133)
 - [#823](https://github.com/nf-core/mag/pull/823) - Updated to nf-core 3.3.1`TEMPLATE` (by @jfy133 )
 - [#827](https://github.com/nf-core/mag/pull/827) - Updated to nf-core 3.3.2`TEMPLATE` (by @dialvarezs)
+- [#841](https://github.com/nf-core/mag/pull/841) - MultiQC config updated to support CheckM, CheckM2, and GTDB-Tk (by @harper357)
 
 ### `Fixed`
 

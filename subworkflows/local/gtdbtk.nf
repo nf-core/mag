@@ -81,5 +81,6 @@ workflow GTDBTK {
 
     emit:
     summary  = GTDBTK_SUMMARY.out.summary
+    multiqc_files = GTDBTK_SUMMARY.out.summary
     versions = GTDBTK_CLASSIFYWF.out.versions
 }
