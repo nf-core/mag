@@ -241,7 +241,7 @@ table_columns_placement:
     "N50": 10000
     "Total length": 11000
   Busco:
-    "complete" : 12000
+    "complete": 12000
     "complete_single_copy": 12100
     "fragmented": 12200
     "complete_duplicated": 12500
