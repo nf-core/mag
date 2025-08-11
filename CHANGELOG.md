@@ -26,7 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
-- [#830](https://github.com/nf-core/mag/pull/830) - Fixed issue with large format Bowtie2 index files not being emitted from index module (reported by Nick Eckersley, fix by @jfy133)
+- [#843](https://github.com/nf-core/mag/pull/843) - Fixed issue with large format Bowtie2 index files not being emitted from index module (reported by Nick Eckersley, fix by @jfy133)
 
 ### `Dependencies`
 
