@@ -1,22 +1,22 @@
 process BOWTIE2_REMOVAL_BUILD {
-    tag "$fasta"
+    tag "${fasta}"
 
     conda "bioconda::bowtie2=2.4.2"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/bowtie2:2.4.2--py38h1c8e9b9_1' :
-        'biocontainers/bowtie2:2.4.2--py38h1c8e9b9_1' }"
+    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
+        ? 'https://depot.galaxyproject.org/singularity/bowtie2:2.4.2--py38h1c8e9b9_1'
+        : 'biocontainers/bowtie2:2.4.2--py38h1c8e9b9_1'}"
 
     input:
     path fasta
 
     output:
-    path "*.bt2"        , emit: index
-    path "versions.yml" , emit: versions
+    path "*.{bt2,bt2l}", emit: index
+    path "versions.yml", emit: versions
 
     script:
     """
     mkdir bowtie
-    bowtie2-build --threads $task.cpus $fasta ${fasta.simpleName}
+    bowtie2-build --threads ${task.cpus} ${fasta} ${fasta.simpleName}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

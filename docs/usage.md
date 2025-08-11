@@ -74,7 +74,7 @@ Please note the following requirements:
 - Must contain the header `sample,group,short_reads_1,short_reads_2,long_reads` (where `run` can be optionally added)
 - Run IDs must be unique within a multi-run sample. A sample with multiple runs will be automatically concatenated.
 - FastQ files must be compressed (`.fastq.gz`, `.fq.gz`)
-- Within one samplesheet either only single-end or only paired-end reads can be specified
+- Within one samplesheet either only single-end or only paired-end short reads can be specified
 - If single-end reads are specified, the command line parameter `--single_end` must be specified as well
 
 Again, by default, the group information is only used to compute co-abundances for the binning step, but not for group-wise co-assembly (see the parameter docs for [`--coassemble_group`](https://nf-co.re/mag/parameters#coassemble_group) and [`--binning_map_mode`](https://nf-co.re/mag/parameters#binning_map_mode) for more information about how this group information can be used).
