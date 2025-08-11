@@ -366,11 +366,10 @@
                 },
                 "phix_reference": {
                     "type": "string",
-                    "default": "${baseDir}/assets/data/GCA_002596845.1_ASM259684v1_genomic.fna.gz",
                     "description": "Genome reference used to remove Illumina PhiX contaminant reads.",
-                    "hidden": true,
                     "format": "file-path",
-                    "exists": true
+                    "exists": true,
+                    "help_text": "If not supplied, and keeping phix is turned off, an included genome (GCA_002596845.1) will be used "
                 },
                 "skip_clipping": {
                     "type": "boolean",
@@ -450,11 +449,10 @@
                 },
                 "lambda_reference": {
                     "type": "string",
-                    "default": "${baseDir}/assets/data/GCA_000840245.1_ViralProj14204_genomic.fna.gz",
-                    "hidden": true,
                     "description": "Genome reference used to remove ONT Lambda contaminant reads.",
                     "format": "file-path",
-                    "exists": true
+                    "exists": true,
+                    "help_text": "If not supplied, and keeping lambda is turned off, an included genome (GCA_000840245.1) will be used "
                 },
                 "save_lambdaremoved_reads": {
                     "type": "boolean",
