@@ -80,14 +80,14 @@ workflow MAG {
     }
 
     if (!params.keep_phix) {
-        ch_phix_db_file = Channel.value(file("${params.phix_reference}"))
+        ch_phix_db_file = params.phix_reference ? Channel.value(file("${params.phix_reference}", checkIfExists: true)) : Channel.value(file("${projectDir}/assets/data/GCA_002596845.1_ASM259684v1_genomic.fna.gz", checkIfExists: true))
     }
     else {
         ch_phix_db_file = Channel.empty()
     }
 
     if (!params.keep_lambda) {
-        ch_lambda_db = Channel.value(file("${params.lambda_reference}"))
+        ch_lambda_db = params.lambda_reference ? Channel.value(file("${params.lambda_reference}", checkIfExists: true)) : Channel.value(file("${projectDir}/assets/data/GCA_000840245.1_ViralProj14204_genomic.fna.gz", checkIfExists: true))
     }
     else {
         ch_lambda_db = Channel.value([])
