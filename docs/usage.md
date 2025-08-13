@@ -56,9 +56,18 @@ Please note the following requirements:
 
 ### The `group` parameter
 
-In MAG reconstruction, there are different strategies on how to both _assemble_ and _bin_ the samples. These are usually referred to as "individual" or "single" assembly and binning, versus "co-" or "pooled" assembly and binning. In the former, samples are processed individually. In the latter, samples are processed together. A common strategy is to assemble each sample individually (single assembly) and then pool all of the contigs together and map the reads against them (co-binning). This is usually chosen because since assembly is a computationally intensive process, it is very costly to assemble all samples together, even if it were to lead to better contigs. For binning, however, this isn't as limiting, and binning algorithms can leverage the fact that there is multiple samples for it to draw information from, hence the common strategy of combining single assembly and co-binning.
+In MAG reconstruction, there are different strategies on how to both _assemble_ and _bin_ the samples.
+These are usually referred to as "individual" or "single" assembly and binning, versus "co-" or "pooled" assembly and binning.
+In the former, samples are processed individually.
+In the latter, samples are processed together.
+A common strategy is to assemble each sample individually (single assembly) and then pool all of the contigs together and map the reads against them (co-binning).
+This is usually chosen because since assembly is a computationally intensive process, it is very costly to assemble all samples together, even if it were to lead to better contigs.
+For binning, however, this isn't as limiting, and binning algorithms can leverage the fact that there is multiple samples for it to draw information from, hence the common strategy of combining single assembly and co-binning.
 
-In nf-core/mag, by default, the group information is only used to compute co-abundances for the binning step, but not for group-wise co-assembly. That means that if you define one group for all of your samples, they will be assembled individually, and then binned in a pooled fashion, with samples being mapped to all contigs of all other samples. If you'd like to also _assemble_ your samples in a pooled fashion, see the parameter docs for [`--coassemble_group`](https://nf-co.re/mag/parameters#coassemble_group) and [`--binning_map_mode`](https://nf-co.re/mag/parameters#binning_map_mode).
+In nf-core/mag, by default, the group information from the input sample sheet in the is only used to compute co-abundances for the binning step, but not for group-wise co-assembly.
+That means that if you define one group for all of your samples, they will be assembled individually, and then binned in a pooled fashion, with samples being mapped to all contigs of all other samples.
+
+If you'd like to also _assemble_ your samples in a pooled fashion, see the parameter docs for [`--coassemble_group`](https://nf-co.re/mag/parameters#coassemble_group) and [`--binning_map_mode`](https://nf-co.re/mag/parameters#binning_map_mode).
 
 ### Supplying pre-computed assemblies
 
