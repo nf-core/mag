@@ -77,7 +77,20 @@ Please note the following requirements:
 - Within one samplesheet either only single-end or only paired-end short reads can be specified
 - If single-end reads are specified, the command line parameter `--single_end` must be specified as well
 
-Again, by default, the group information is only used to compute co-abundances for the binning step, but not for group-wise co-assembly (see the parameter docs for [`--coassemble_group`](https://nf-co.re/mag/parameters#coassemble_group) and [`--binning_map_mode`](https://nf-co.re/mag/parameters#binning_map_mode) for more information about how this group information can be used).
+### The `group` column
+
+In metagenomics, there are different strategies to deal with the _assembly_ and _binning_ of multiple samples.
+These are usually referred to as "individual" or "single" assembly and binning, versus "co-" or "pooled" assembly and binning.
+In the former, samples are processed independently.
+In the latter, samples are processed together.
+A common strategy is to assemble each sample individually (single assembly) and then pool all of the contigs together and map the reads against them (co-binning).
+This is usually chosen because since assembly is a computationally intensive process, it is very costly to assemble all samples together.
+For binning, however, resources aren't as limiting, and binning algorithms can leverage the fact that there are multiple samples from which to draw information, which can improve the quality of output bins.
+
+nf-core/mag, by default, follows this approach: the group information from the input sample sheet in is only used to compute co-abundances for the binning step (co-binning), but not for group-wise co-assembly (thus single assembly).
+That means that if you define one group for all of your samples, they will be assembled individually, and then binned in a pooled fashion, with samples being mapped to all contigs of all other samples.
+
+If you'd like to also _assemble_ your samples in a pooled fashion (co-assembly), see the parameter docs for [`--coassemble_group`](https://nf-co.re/mag/parameters#coassemble_group) and [`--binning_map_mode`](https://nf-co.re/mag/parameters#binning_map_mode).
 
 ### Supplying pre-computed assemblies
 
