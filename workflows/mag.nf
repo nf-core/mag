@@ -441,7 +441,7 @@ workflow MAG {
                     gtdb,
                     gtdb_mash,
                 )
-                ch_versions = ch_versions.mix(GTDBTK.out.versions.first())
+                ch_versions = ch_versions.mix(GTDBTK.out.versions)
                 ch_gtdbtk_summary = GTDBTK.out.summary
             }
         }
