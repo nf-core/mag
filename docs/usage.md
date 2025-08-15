@@ -90,7 +90,7 @@ For binning, however, resources aren't as limiting, and binning algorithms can l
 nf-core/mag, by default, follows this approach: the group information from the input sample sheet in is only used to compute co-abundances for the binning step (co-binning), but not for group-wise co-assembly (thus single assembly).
 That means that if you define one group for all of your samples, they will be assembled individually, and then binned in a pooled fashion, with samples being mapped to all contigs of all other samples.
 
-If you'd like to also _assemble_ your samples in a pooled fashion, see the parameter docs for [`--coassemble_group`](https://nf-co.re/mag/parameters#coassemble_group) and [`--binning_map_mode`](https://nf-co.re/mag/parameters#binning_map_mode).
+If you'd like to also _assemble_ your samples in a pooled fashion (co-assembly), see the parameter docs for [`--coassemble_group`](https://nf-co.re/mag/parameters#coassemble_group) and [`--binning_map_mode`](https://nf-co.re/mag/parameters#binning_map_mode).
 
 ### Supplying pre-computed assemblies
 
