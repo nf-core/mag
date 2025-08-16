@@ -8,12 +8,12 @@ include { SAMTOOLS_FAIDX as FAIDX}                                              
 
 workflow ANCIENT_DNA_ASSEMBLY_VALIDATION {
     take:
-        input //channel: [val(meta), path(contigs), path(bam), path(bam_index)]
+        ch_input //channel: [val(meta), path(contigs), path(bam), path(bam_index)]
     main:
         ch_versions = Channel.empty()
 
         PYDAMAGE_ANALYZE(
-            input.map {
+            ch_input.map {
                 meta, _contigs, bam, bai -> [
                     meta, bam[0], bai[0]
                 ]
@@ -28,8 +28,8 @@ workflow ANCIENT_DNA_ASSEMBLY_VALIDATION {
         }
 
         if ( !params.skip_ancient_damagecorrection ) {
-            FAIDX(input.map { item -> [ item[0], item[1] ] }, [[],[]], false )
-            freebayes_input = input.join(FAIDX.out.fai)  // [val(meta), path(contigs), path(bam), path(bam_index), path(fai)]
+            FAIDX(ch_input.map { item -> [ item[0], item[1] ] }, [[],[]], false )
+            freebayes_input = ch_input.join(FAIDX.out.fai)  // [val(meta), path(contigs), path(bam), path(bam_index), path(fai)]
                                 .multiMap{
                                     meta, contigs, bam, bai, fai ->
                                         reads: [ meta, bam, bai, [], [], [] ]
@@ -48,7 +48,7 @@ workflow ANCIENT_DNA_ASSEMBLY_VALIDATION {
             BCFTOOLS_INDEX_POST(BCFTOOLS_VIEW.out.vcf)
             BCFTOOLS_CONSENSUS(BCFTOOLS_VIEW.out.vcf
                                     .join(BCFTOOLS_INDEX_POST.out.tbi)
-                                    .join(input.map { item -> [ item[0], item[1] ] }))
+                                    .join(ch_input.map { item -> [ item[0], item[1] ] }))
 
             ch_corrected_contigs = BCFTOOLS_CONSENSUS.out.fasta
 

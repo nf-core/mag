@@ -8,13 +8,14 @@ include { FASTP                                               } from '../../modu
 include { TRIMMOMATIC                                         } from '../../modules/nf-core/trimmomatic/main'
 include { ADAPTERREMOVAL as ADAPTERREMOVAL_PE                 } from '../../modules/nf-core/adapterremoval/main'
 include { ADAPTERREMOVAL as ADAPTERREMOVAL_SE                 } from '../../modules/nf-core/adapterremoval/main'
-include { BOWTIE2_REMOVAL_BUILD as BOWTIE2_HOST_REMOVAL_BUILD } from '../../modules/local/bowtie2_removal_build'
-include { BOWTIE2_REMOVAL_ALIGN as BOWTIE2_HOST_REMOVAL_ALIGN } from '../../modules/local/bowtie2_removal_align'
-include { BOWTIE2_REMOVAL_BUILD as BOWTIE2_PHIX_REMOVAL_BUILD } from '../../modules/local/bowtie2_removal_build'
-include { BOWTIE2_REMOVAL_ALIGN as BOWTIE2_PHIX_REMOVAL_ALIGN } from '../../modules/local/bowtie2_removal_align'
 include { CAT_FASTQ                                           } from '../../modules/nf-core/cat/fastq/main'
 include { SEQTK_MERGEPE                                       } from '../../modules/nf-core/seqtk/mergepe/main'
 include { BBMAP_BBNORM                                        } from '../../modules/nf-core/bbmap/bbnorm/main'
+
+include { BOWTIE2_REMOVAL_BUILD as BOWTIE2_HOST_REMOVAL_BUILD } from '../../modules/local/bowtie2/removal_build/main'
+include { BOWTIE2_REMOVAL_ALIGN as BOWTIE2_HOST_REMOVAL_ALIGN } from '../../modules/local/bowtie2/removal_align/main'
+include { BOWTIE2_REMOVAL_BUILD as BOWTIE2_PHIX_REMOVAL_BUILD } from '../../modules/local/bowtie2/removal_build/main'
+include { BOWTIE2_REMOVAL_ALIGN as BOWTIE2_PHIX_REMOVAL_ALIGN } from '../../modules/local/bowtie2/removal_align/main'
 
 workflow SHORTREAD_PREPROCESSING {
     take:
@@ -22,7 +23,7 @@ workflow SHORTREAD_PREPROCESSING {
     ch_host_fasta        // [fasta] (optional)
     ch_host_genome_index // fasta (optional)
     ch_phix_db_file      // [fasta] (optional)
-    skip_qc              // [boolean]
+    val_skip_qc              // [boolean]
 
     main:
     ch_versions = Channel.empty()
@@ -34,7 +35,7 @@ workflow SHORTREAD_PREPROCESSING {
     ch_versions = ch_versions.mix(FASTQC_RAW.out.versions.first())
     ch_multiqc_files = ch_multiqc_files.mix(FASTQC_RAW.out.zip)
 
-    if (!params.skip_clipping && !skip_qc) {
+    if (!params.skip_clipping && !val_skip_qc) {
         if (params.clip_tool == 'fastp') {
             FASTP(
                 ch_raw_short_reads,
@@ -86,7 +87,7 @@ workflow SHORTREAD_PREPROCESSING {
         }
         else {
             ch_host_fasta_for_build = ch_host_fasta.combine(ch_short_reads_prepped)
-                .map { host_fasta, meta, reads ->
+                .map { host_fasta, _meta, _reads ->
                     host_fasta
                 }.first() // makes sure to only use the host fasta if the short read channel is not empty
             BOWTIE2_HOST_REMOVAL_BUILD(
@@ -112,9 +113,9 @@ workflow SHORTREAD_PREPROCESSING {
         ch_short_reads_hostremoved = ch_short_reads_prepped
     }
 
-    if (!params.keep_phix && !skip_qc) {
+    if (!params.keep_phix && !val_skip_qc) {
         ch_phix_fasta_for_build = ch_phix_db_file.combine(ch_short_reads_prepped)
-                .map { host_fasta, meta, reads ->
+                .map { host_fasta, _meta, _reads ->
                     host_fasta
                 }.first()
         BOWTIE2_PHIX_REMOVAL_BUILD(
@@ -137,7 +138,7 @@ workflow SHORTREAD_PREPROCESSING {
      * - No host removal and skip_qc (params.skip_shortread_qc)
      * - No host removal and *both* --keep_phix --skip_clipping
      */
-    if ( !( ( skip_qc && !( params.host_fasta || params.host_genome ) ) ) ) {
+    if ( !( ( val_skip_qc && !( params.host_fasta || params.host_genome ) ) ) ) {
         if (
             !(
                 params.keep_phix && params.skip_clipping &&

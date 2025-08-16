@@ -2,16 +2,17 @@
  * GTDB-Tk bin classification, using BUSCO QC to filter bins
  */
 
-include { GTDBTK_DB_PREPARATION } from '../../modules/local/gtdbtk_db_preparation'
 include { GTDBTK_CLASSIFYWF     } from '../../modules/nf-core/gtdbtk/classifywf/main'
-include { GTDBTK_SUMMARY        } from '../../modules/local/gtdbtk_summary'
+
+include { GTDBTK_DB_PREPARATION } from '../../modules/local/gtdbtk/db_preparation/main'
+include { GTDBTK_SUMMARY        } from '../../modules/local/gtdbtk/summary/main'
 
 workflow GTDBTK {
     take:
-    bins           // channel: [ val(meta), [bins] ]
-    bin_qc_summary // channel: path
-    gtdb           // channel: path
-    gtdb_mash      // channel: path
+    ch_bins           // channel: [ val(meta), [bins] ]
+    ch_bin_qc_summary // channel: path
+    ch_gtdb           // channel: path
+    ch_gtdb_mash      // channel: path
 
     main:
     // Collect bin quality metrics
@@ -21,12 +22,12 @@ workflow GTDBTK {
         checkm2: ['Name', 'Completeness', 'Contamination'],
     ]
 
-    ch_bin_metrics = bin_qc_summary
+    ch_bin_metrics = ch_bin_qc_summary
         .splitCsv(header: true, sep: '\t')
         .map { row -> qc_columns[params.binqc_tool].collect { col -> row[col] } }
         .filter { row -> row[1] != '' }
         .map { row ->
-            row = [row[0]] + row[1..2].collect { value -> Double.parseDouble(value) }
+            row = [row[0]] + row[1..2].collect { value -> Double.parseDouble("${value}") }
             // CheckM / CheckM2 removes the .fa extension from the bin name
             if (params.binqc_tool in ['checkm', 'checkm2']) {
                 row[0] = row[0] + '.fa'
@@ -35,7 +36,7 @@ workflow GTDBTK {
         }
 
     // Filter bins based on collected metrics: completeness, contamination
-    ch_filtered_bins = bins
+    ch_filtered_bins = ch_bins
         .transpose()
         .map { meta, bin -> [bin.getName(), bin, meta] }
         .join(ch_bin_metrics, failOnDuplicate: true)
@@ -47,12 +48,12 @@ workflow GTDBTK {
             return [it[0], it[1]]
         }
 
-    if (gtdb.extension == 'gz') {
+    if (ch_gtdb.extension == 'gz') {
         // Expects to be tar.gz!
-        ch_db_for_gtdbtk = GTDBTK_DB_PREPARATION(gtdb).db
+        ch_db_for_gtdbtk = GTDBTK_DB_PREPARATION(ch_gtdb).db
     }
-    else if (gtdb.isDirectory()) {
-        ch_db_for_gtdbtk = [gtdb.simpleName, gtdb]
+    else if (ch_gtdb.isDirectory()) {
+        ch_db_for_gtdbtk = [ch_gtdb.simpleName, ch_gtdb]
     }
     else {
         error("Unsupported object given to --gtdb, database must be supplied as either a directory or a .tar.gz file!")
@@ -69,7 +70,7 @@ workflow GTDBTK {
         ch_filtered_bins.passed.groupTuple(),
         ch_db_for_gtdbtk,
         params.gtdbtk_pplacer_useram ? false : true,
-        gtdb_mash,
+        ch_gtdb_mash,
     )
 
     GTDBTK_SUMMARY(
@@ -80,7 +81,7 @@ workflow GTDBTK {
     )
 
     emit:
-    summary  = GTDBTK_SUMMARY.out.summary
+    summary       = GTDBTK_SUMMARY.out.summary
     multiqc_files = GTDBTK_SUMMARY.out.summary
-    versions = GTDBTK_CLASSIFYWF.out.versions
+    versions      = GTDBTK_CLASSIFYWF.out.versions
 }

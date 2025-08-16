@@ -1,33 +1,34 @@
 include { TIARA_TIARA                                                  } from '../../modules/nf-core/tiara/tiara/main'
-include { TIARA_CLASSIFY                                               } from '../../modules/local/tiara_classify'
 include { DASTOOL_FASTATOCONTIG2BIN as DASTOOL_FASTATOCONTIG2BIN_TIARA } from '../../modules/nf-core/dastool/fastatocontig2bin/main'
 include { CSVTK_CONCAT as TIARA_SUMMARY                                } from '../../modules/nf-core/csvtk/concat/main'
 
+include { TIARA_CLASSIFY                                               } from '../../modules/local/tiara/classify/main'
+
 workflow TIARA {
     take:
-    assemblies // tuple val(meta), path(assembly)
-    bins       // tuple val(meta), path( [ bins ] )
-    unbins     // tuple val(meta), path( [ unbins ] )
+    ch_assemblies // tuple val(meta), path(assembly)
+    ch_bins       // tuple val(meta), path( [ bins ] )
+    ch_unbins     // tuple val(meta), path( [ unbins ] )
 
     main:
     ch_versions = Channel.empty()
 
-    bins = bins
+    ch_bins = ch_bins
         .map { meta, bin_list ->
             def meta_new = meta + [bin: 'bins']
             meta_new.bin = 'bins'
             [meta_new, bin_list]
         }
 
-    unbins = unbins
+    ch_unbins = ch_unbins
         .map { meta, unbin_list ->
             def meta_new = meta + [bin: 'unbins']
             [meta_new, unbin_list]
         }
 
-    ch_tiara_input = bins.mix(unbins)
+    ch_tiara_input = ch_bins.mix(ch_unbins)
 
-    TIARA_TIARA ( assemblies )
+    TIARA_TIARA ( ch_assemblies )
     ch_versions = ch_versions.mix(TIARA_TIARA.out.versions.first())
 
     // Need contig2bin file for each bin group
