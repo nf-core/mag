@@ -164,7 +164,6 @@
                 "MEGAHIT-MetaBAT2-test_minigut_sample2.tooShort.fa.gz:md5,f9479e7fb34586a2892cd7bc323d414a",
                 "MEGAHIT-MetaBAT2-test_minigut.unbinned.remaining.fa.gz:md5,7ac001a38113812061f8ef5c94e3f579",
                 "MEGAHIT-MetaBAT2-test_minigut_sample2.unbinned.remaining.fa.gz:md5,e1a969d6e292e10a81ef4236907984a9",
-                "DIAMOND_RESULTS.tsv:md5,41bf8167f7042fa93499757d0d8c12aa",
                 "MEGAHIT-MetaBAT2-test_minigut.1.faa:md5,ba436cbba64ce111f228da1e2daac642",
                 "MEGAHIT-MetaBAT2-test_minigut.2.faa:md5,577adc1aa1ebd51fed46f726ad90d9b3",
                 "quality_report.tsv:md5,9365828b072487af69333ecb35353255",
