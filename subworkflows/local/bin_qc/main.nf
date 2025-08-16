@@ -2,17 +2,17 @@
  * BUSCO/CheckM/CheckM2/GUNC: Quantitative measures for the assessment of genome assembly
  */
 
-include { BUSCO_BUSCO                      } from '../../modules/nf-core/busco/busco/main'
-include { CHECKM2_DATABASEDOWNLOAD         } from '../../modules/nf-core/checkm2/databasedownload/main'
-include { CHECKM_QA                        } from '../../modules/nf-core/checkm/qa/main'
-include { CHECKM_LINEAGEWF                 } from '../../modules/nf-core/checkm/lineagewf/main'
-include { CHECKM2_PREDICT                  } from '../../modules/nf-core/checkm2/predict/main'
-include { CSVTK_CONCAT as CONCAT_BINQC_TSV } from '../../modules/nf-core/csvtk/concat/main'
-include { GUNC_DOWNLOADDB                  } from '../../modules/nf-core/gunc/downloaddb/main'
-include { GUNC_RUN                         } from '../../modules/nf-core/gunc/run/main'
-include { GUNC_MERGECHECKM                 } from '../../modules/nf-core/gunc/mergecheckm/main'
-include { UNTAR as BUSCO_UNTAR             } from '../../modules/nf-core/untar/main'
-include { UNTAR as CHECKM_UNTAR            } from '../../modules/nf-core/untar/main'
+include { BUSCO_BUSCO                      } from '../../../modules/nf-core/busco/busco/main'
+include { CHECKM2_DATABASEDOWNLOAD         } from '../../../modules/nf-core/checkm2/databasedownload/main'
+include { CHECKM_QA                        } from '../../../modules/nf-core/checkm/qa/main'
+include { CHECKM_LINEAGEWF                 } from '../../../modules/nf-core/checkm/lineagewf/main'
+include { CHECKM2_PREDICT                  } from '../../../modules/nf-core/checkm2/predict/main'
+include { CSVTK_CONCAT as CONCAT_BINQC_TSV } from '../../../modules/nf-core/csvtk/concat/main'
+include { GUNC_DOWNLOADDB                  } from '../../../modules/nf-core/gunc/downloaddb/main'
+include { GUNC_RUN                         } from '../../../modules/nf-core/gunc/run/main'
+include { GUNC_MERGECHECKM                 } from '../../../modules/nf-core/gunc/mergecheckm/main'
+include { UNTAR as BUSCO_UNTAR             } from '../../../modules/nf-core/untar/main'
+include { UNTAR as CHECKM_UNTAR            } from '../../../modules/nf-core/untar/main'
 
 
 workflow BIN_QC {

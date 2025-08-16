@@ -2,10 +2,10 @@
  * GTDB-Tk bin classification, using BUSCO QC to filter bins
  */
 
-include { GTDBTK_CLASSIFYWF     } from '../../modules/nf-core/gtdbtk/classifywf/main'
+include { GTDBTK_CLASSIFYWF     } from '../../../modules/nf-core/gtdbtk/classifywf/main'
 
-include { GTDBTK_DB_PREPARATION } from '../../modules/local/gtdbtk/db_preparation/main'
-include { GTDBTK_SUMMARY        } from '../../modules/local/gtdbtk/summary/main'
+include { GTDBTK_DB_PREPARATION } from '../../../modules/local/gtdbtk/db_preparation/main'
+include { GTDBTK_SUMMARY        } from '../../../modules/local/gtdbtk/summary/main'
 
 workflow GTDBTK {
     take:

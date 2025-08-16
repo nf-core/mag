@@ -1,5 +1,5 @@
-include { SHORTREAD_BINNING_PREPARATION } from './shortread_binning_preparation'
-include { LONGREAD_BINNING_PREPARATION  } from './longread_binning_preparation'
+include { SHORTREAD_BINNING_PREPARATION } from './shortread/main'
+include { LONGREAD_BINNING_PREPARATION  } from './longread/main'
 
 workflow BINNING_PREPARATION {
     take:

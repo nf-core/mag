@@ -1,14 +1,14 @@
 // SUBWORKFLOWS
-include { SHORTREAD_ASSEMBLY                    } from './shortread_assembly'
-include { LONGREAD_ASSEMBLY                     } from './longread_assembly'
-include { HYBRID_ASSEMBLY                       } from './hybrid_assembly'
+include { SHORTREAD_ASSEMBLY                    } from './shortread/main'
+include { LONGREAD_ASSEMBLY                     } from './longread/main'
+include { HYBRID_ASSEMBLY                       } from './hybrid/main'
 
 // MODULES
-include { CAT_FASTQ as POOL_SHORT_SINGLE_READS  } from '../../modules/nf-core/cat/fastq'
-include { CAT_FASTQ as POOL_PAIRED_READS        } from '../../modules/nf-core/cat/fastq'
-include { CAT_FASTQ as POOL_LONG_READS          } from '../../modules/nf-core/cat/fastq'
-include { GUNZIP as GUNZIP_SHORTREAD_ASSEMBLIES } from '../../modules/nf-core/gunzip'
-include { GUNZIP as GUNZIP_LONGREAD_ASSEMBLIES  } from '../../modules/nf-core/gunzip'
+include { CAT_FASTQ as POOL_SHORT_SINGLE_READS  } from '../../../modules/nf-core/cat/fastq'
+include { CAT_FASTQ as POOL_PAIRED_READS        } from '../../../modules/nf-core/cat/fastq'
+include { CAT_FASTQ as POOL_LONG_READS          } from '../../../modules/nf-core/cat/fastq'
+include { GUNZIP as GUNZIP_SHORTREAD_ASSEMBLIES } from '../../../modules/nf-core/gunzip'
+include { GUNZIP as GUNZIP_LONGREAD_ASSEMBLIES  } from '../../../modules/nf-core/gunzip'
 
 workflow ASSEMBLY {
     take:
