@@ -1,19 +1,19 @@
 /*
  * Binning with MetaBAT2 and MaxBin2
  */
-include { FASTA_BINNING_CONCOCT                                                                  } from '../../subworkflows/nf-core/fasta_binning_concoct/main'
+include { FASTA_BINNING_CONCOCT                                                                  } from '../../../subworkflows/nf-core/fasta_binning_concoct/main'
 
-include { METABAT2_METABAT2                                                                      } from '../../modules/nf-core/metabat2/metabat2/main'
-include { METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS as METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_SHORTREAD } from '../../modules/nf-core/metabat2/jgisummarizebamcontigdepths/main'
-include { METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS as METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_LONGREAD  } from '../../modules/nf-core/metabat2/jgisummarizebamcontigdepths/main'
-include { MAXBIN2                                                                                } from '../../modules/nf-core/maxbin2/main'
-include { GUNZIP as GUNZIP_BINS                                                                  } from '../../modules/nf-core/gunzip/main'
-include { GUNZIP as GUNZIP_UNBINS                                                                } from '../../modules/nf-core/gunzip/main'
-include { SEQKIT_STATS                                                                           } from '../../modules/nf-core/seqkit/stats/main'
+include { METABAT2_METABAT2                                                                      } from '../../../modules/nf-core/metabat2/metabat2/main'
+include { METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS as METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_SHORTREAD } from '../../../modules/nf-core/metabat2/jgisummarizebamcontigdepths/main'
+include { METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS as METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_LONGREAD  } from '../../../modules/nf-core/metabat2/jgisummarizebamcontigdepths/main'
+include { MAXBIN2                                                                                } from '../../../modules/nf-core/maxbin2/main'
+include { GUNZIP as GUNZIP_BINS                                                                  } from '../../../modules/nf-core/gunzip/main'
+include { GUNZIP as GUNZIP_UNBINS                                                                } from '../../../modules/nf-core/gunzip/main'
+include { SEQKIT_STATS                                                                           } from '../../../modules/nf-core/seqkit/stats/main'
 
-include { CONVERT_DEPTHS                                                                         } from '../../modules/local/mag_depths/convert/main'
-include { ADJUST_MAXBIN2_EXT                                                                     } from '../../modules/local/adjust_maxbin2_ext/main'
-include { SPLIT_FASTA                                                                            } from '../../modules/local/split_fasta/main'
+include { CONVERT_DEPTHS                                                                         } from '../../../modules/local/mag_depths/convert/main'
+include { ADJUST_MAXBIN2_EXT                                                                     } from '../../../modules/local/adjust_maxbin2_ext/main'
+include { SPLIT_FASTA                                                                            } from '../../../modules/local/split_fasta/main'
 
 workflow BINNING {
     take:

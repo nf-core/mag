@@ -1,5 +1,5 @@
 // MODULES
-include { SPADES as METASPADESHYBRID } from '../../modules/nf-core/spades/main'
+include { SPADES as METASPADESHYBRID } from '../../../../modules/nf-core/spades/main'
 
 workflow HYBRID_ASSEMBLY {
 

@@ -2,12 +2,12 @@
 // Remove host reads via alignment and export off-target reads
 //
 
-include { MINIMAP2_INDEX as MINIMAP2_HOST_INDEX              } from '../../modules/nf-core/minimap2/index/main'
-include { MINIMAP2_ALIGN as MINIMAP2_HOST_ALIGN              } from '../../modules/nf-core/minimap2/align/main'
-include { SAMTOOLS_INDEX as SAMTOOLS_HOSTREMOVED_INDEX       } from '../../modules/nf-core/samtools/index/main'
-include { SAMTOOLS_STATS as SAMTOOLS_HOSTREMOVED_STATS       } from '../../modules/nf-core/samtools/stats/main'
+include { MINIMAP2_INDEX as MINIMAP2_HOST_INDEX              } from '../../../../modules/nf-core/minimap2/index/main'
+include { MINIMAP2_ALIGN as MINIMAP2_HOST_ALIGN              } from '../../../../modules/nf-core/minimap2/align/main'
+include { SAMTOOLS_INDEX as SAMTOOLS_HOSTREMOVED_INDEX       } from '../../../../modules/nf-core/samtools/index/main'
+include { SAMTOOLS_STATS as SAMTOOLS_HOSTREMOVED_STATS       } from '../../../../modules/nf-core/samtools/stats/main'
 
-include { SAMTOOLS_UNMAPPED as SAMTOOLS_HOSTREMOVED_UNMAPPED } from '../../modules/local/samtools/unmapped/main'
+include { SAMTOOLS_UNMAPPED as SAMTOOLS_HOSTREMOVED_UNMAPPED } from '../../../../modules/local/samtools/unmapped/main'
 
 
 workflow LONGREAD_HOSTREMOVAL {

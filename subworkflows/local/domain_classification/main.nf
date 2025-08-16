@@ -2,7 +2,7 @@
 * Domain classification with Tiara
 */
 
-include { TIARA } from '../../subworkflows/local/tiara'
+include { TIARA } from '../../../subworkflows/local/tiara'
 
 workflow DOMAIN_CLASSIFICATION {
     take:

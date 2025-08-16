@@ -2,9 +2,9 @@
  * geNomad: Identification of mobile genetic elements
  */
 
-include { GENOMAD_DOWNLOAD       } from '../../modules/nf-core/genomad/download/main'
-include { GENOMAD_ENDTOEND       } from '../../modules/nf-core/genomad/endtoend/main'
-include { UNTAR as GENOMAD_UNTAR } from '../../modules/nf-core/untar/main'
+include { GENOMAD_DOWNLOAD       } from '../../../modules/nf-core/genomad/download/main'
+include { GENOMAD_ENDTOEND       } from '../../../modules/nf-core/genomad/endtoend/main'
+include { UNTAR as GENOMAD_UNTAR } from '../../../modules/nf-core/untar/main'
 
 workflow VIRUS_IDENTIFICATION {
     take:

@@ -1,6 +1,6 @@
 //MODULES
-include { MEGAHIT              } from '../../modules/nf-core/megahit/main'
-include { SPADES as METASPADES } from '../../modules/nf-core/spades/main'
+include { MEGAHIT              } from '../../../../modules/nf-core/megahit/main'
+include { SPADES as METASPADES } from '../../../../modules/nf-core/spades/main'
 
 workflow SHORTREAD_ASSEMBLY {
     take:

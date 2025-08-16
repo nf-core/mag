@@ -1,6 +1,6 @@
-include { MAG_DEPTHS         } from '../../modules/local/mag_depths/get/main'
-include { MAG_DEPTHS_PLOT    } from '../../modules/local/mag_depths/plot/main'
-include { MAG_DEPTHS_SUMMARY } from '../../modules/local/mag_depths/summary/main'
+include { MAG_DEPTHS         } from '../../../modules/local/mag_depths/get/main'
+include { MAG_DEPTHS_PLOT    } from '../../../modules/local/mag_depths/plot/main'
+include { MAG_DEPTHS_SUMMARY } from '../../../modules/local/mag_depths/summary/main'
 
 /*
  * Get number of columns in file (first line)

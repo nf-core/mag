@@ -2,8 +2,8 @@
  * Binning preparation with Bowtie2
  */
 
-include { BOWTIE2_ASSEMBLY_BUILD } from '../../modules/local/bowtie2/assembly_build/main'
-include { BOWTIE2_ASSEMBLY_ALIGN } from '../../modules/local/bowtie2/assembly_align/main'
+include { BOWTIE2_ASSEMBLY_BUILD } from '../../../../../modules/local/bowtie2/assembly_build/main'
+include { BOWTIE2_ASSEMBLY_ALIGN } from '../../../../../modules/local/bowtie2/assembly_align/main'
 
 workflow SHORTREAD_BINNING_PREPARATION {
     take:

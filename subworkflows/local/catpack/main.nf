@@ -1,15 +1,15 @@
 /*
  * CAT/BAT/RAT: tools for taxonomic classification of contigs and metagenome-assembled genomes (MAGs) and for taxonomic profiling of metagenomes
  */
-include { CATPACK_ADDNAMES as CATPACK_ADDNAMES_BINS     } from '../../modules/nf-core/catpack/addnames/main'
-include { CATPACK_ADDNAMES as CATPACK_ADDNAMES_UNBINS   } from '../../modules/nf-core/catpack/addnames/main'
-include { CATPACK_BINS                                  } from '../../modules/nf-core/catpack/bins/main'
-include { CATPACK_CONTIGS as CATPACK_UNBINS             } from '../../modules/nf-core/catpack/contigs/main'
-include { CATPACK_DOWNLOAD                              } from '../../modules/nf-core/catpack/download/main'
-include { CATPACK_PREPARE                               } from '../../modules/nf-core/catpack/prepare/main'
-include { CATPACK_SUMMARISE as CATPACK_SUMMARISE_BINS   } from '../../modules/nf-core/catpack/summarise/main'
-include { CATPACK_SUMMARISE as CATPACK_SUMMARISE_UNBINS } from '../../modules/nf-core/catpack/summarise/main'
-include { UNTAR as CAT_DB_UNTAR                         } from '../../modules/nf-core/untar/main'
+include { CATPACK_ADDNAMES as CATPACK_ADDNAMES_BINS     } from '../../../modules/nf-core/catpack/addnames/main'
+include { CATPACK_ADDNAMES as CATPACK_ADDNAMES_UNBINS   } from '../../../modules/nf-core/catpack/addnames/main'
+include { CATPACK_BINS                                  } from '../../../modules/nf-core/catpack/bins/main'
+include { CATPACK_CONTIGS as CATPACK_UNBINS             } from '../../../modules/nf-core/catpack/contigs/main'
+include { CATPACK_DOWNLOAD                              } from '../../../modules/nf-core/catpack/download/main'
+include { CATPACK_PREPARE                               } from '../../../modules/nf-core/catpack/prepare/main'
+include { CATPACK_SUMMARISE as CATPACK_SUMMARISE_BINS   } from '../../../modules/nf-core/catpack/summarise/main'
+include { CATPACK_SUMMARISE as CATPACK_SUMMARISE_UNBINS } from '../../../modules/nf-core/catpack/summarise/main'
+include { UNTAR as CAT_DB_UNTAR                         } from '../../../modules/nf-core/untar/main'
 
 
 workflow CATPACK {

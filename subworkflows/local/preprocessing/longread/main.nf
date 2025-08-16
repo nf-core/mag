@@ -2,18 +2,18 @@
  * LONGREAD_PREPROCESSING: Preprocessing and QC for long reads
  */
 
-include { NANOPLOT as NANOPLOT_RAW         } from '../../modules/nf-core/nanoplot/main'
-include { NANOPLOT as NANOPLOT_FILTERED    } from '../../modules/nf-core/nanoplot/main'
-include { NANOLYSE                         } from '../../modules/nf-core/nanolyse/main'
-include { PORECHOP_PORECHOP                } from '../../modules/nf-core/porechop/porechop/main'
-include { PORECHOP_ABI                     } from '../../modules/nf-core/porechop/abi/main'
-include { FILTLONG                         } from '../../modules/nf-core/filtlong'
-include { CHOPPER                          } from '../../modules/nf-core/chopper'
-include { NANOQ                            } from '../../modules/nf-core/nanoq'
-include { CAT_FASTQ as CAT_FASTQ_LONGREADS } from '../../modules/nf-core/cat/fastq/main'
+include { NANOPLOT as NANOPLOT_RAW         } from '../../../../modules/nf-core/nanoplot/main'
+include { NANOPLOT as NANOPLOT_FILTERED    } from '../../../../modules/nf-core/nanoplot/main'
+include { NANOLYSE                         } from '../../../../modules/nf-core/nanolyse/main'
+include { PORECHOP_PORECHOP                } from '../../../../modules/nf-core/porechop/porechop/main'
+include { PORECHOP_ABI                     } from '../../../../modules/nf-core/porechop/abi/main'
+include { FILTLONG                         } from '../../../../modules/nf-core/filtlong'
+include { CHOPPER                          } from '../../../../modules/nf-core/chopper'
+include { NANOQ                            } from '../../../../modules/nf-core/nanoq'
+include { CAT_FASTQ as CAT_FASTQ_LONGREADS } from '../../../../modules/nf-core/cat/fastq/main'
 
 // include other subworkflows here
-include { LONGREAD_HOSTREMOVAL             } from './longread_hostremoval'
+include { LONGREAD_HOSTREMOVAL             } from '../../hostremoval/longread/main'
 
 workflow LONGREAD_PREPROCESSING {
     take:
