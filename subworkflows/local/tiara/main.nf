@@ -118,8 +118,7 @@ workflow TIARA {
         .map { _meta, classification ->
             [ classification ]
         }
-        .collect()
-        .map { classifications ->
+        .collect { classifications ->
             [[:], classifications]
         }
 
