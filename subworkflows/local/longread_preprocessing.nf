@@ -2,26 +2,26 @@
  * LONGREAD_PREPROCESSING: Preprocessing and QC for long reads
  */
 
-include { NANOPLOT as NANOPLOT_RAW                              } from '../../modules/nf-core/nanoplot/main'
-include { NANOPLOT as NANOPLOT_FILTERED                         } from '../../modules/nf-core/nanoplot/main'
-include { NANOLYSE                                              } from '../../modules/nf-core/nanolyse/main'
-include { PORECHOP_PORECHOP                                     } from '../../modules/nf-core/porechop/porechop/main'
-include { PORECHOP_ABI                                          } from '../../modules/nf-core/porechop/abi/main'
-include { FILTLONG                                              } from '../../modules/nf-core/filtlong'
-include { CHOPPER                                               } from '../../modules/nf-core/chopper'
-include { NANOQ                                                 } from '../../modules/nf-core/nanoq'
-include { CAT_FASTQ as CAT_FASTQ_LONGREADS                      } from '../../modules/nf-core/cat/fastq/main'
+include { NANOPLOT as NANOPLOT_RAW         } from '../../modules/nf-core/nanoplot/main'
+include { NANOPLOT as NANOPLOT_FILTERED    } from '../../modules/nf-core/nanoplot/main'
+include { NANOLYSE                         } from '../../modules/nf-core/nanolyse/main'
+include { PORECHOP_PORECHOP                } from '../../modules/nf-core/porechop/porechop/main'
+include { PORECHOP_ABI                     } from '../../modules/nf-core/porechop/abi/main'
+include { FILTLONG                         } from '../../modules/nf-core/filtlong'
+include { CHOPPER                          } from '../../modules/nf-core/chopper'
+include { NANOQ                            } from '../../modules/nf-core/nanoq'
+include { CAT_FASTQ as CAT_FASTQ_LONGREADS } from '../../modules/nf-core/cat/fastq/main'
 
 // include other subworkflows here
-include { LONGREAD_HOSTREMOVAL                                  } from './longread_hostremoval'
+include { LONGREAD_HOSTREMOVAL             } from './longread_hostremoval'
 
 workflow LONGREAD_PREPROCESSING {
     take:
-    ch_raw_long_reads         // [ [meta] , fastq] (mandatory)
-    ch_short_reads            // [ [meta] , fastq1, fastq2] (mandatory)
-    ch_lambda_db              // [fasta]
-    ch_host_fasta             // [fasta]
-    skip_qc                   // [boolean]
+    ch_raw_long_reads // [ [meta] , fastq] (mandatory)
+    ch_short_reads    // [ [meta] , fastq1, fastq2] (mandatory)
+    ch_lambda_db      // [fasta]
+    ch_host_fasta     // [fasta]
+    val_skip_qc           // [boolean]
 
     main:
     ch_versions = Channel.empty()
@@ -33,7 +33,7 @@ workflow LONGREAD_PREPROCESSING {
     ch_versions = ch_versions.mix(NANOPLOT_RAW.out.versions.first())
 
     if ( !params.assembly_input ) {
-        if (!params.skip_adapter_trimming && !skip_qc) {
+        if (!params.skip_adapter_trimming && !val_skip_qc) {
             if (params.longread_adaptertrimming_tool &&
                 params.longread_adaptertrimming_tool == 'porechop_abi') {
                 PORECHOP_ABI (
@@ -54,7 +54,7 @@ workflow LONGREAD_PREPROCESSING {
             ch_long_reads = ch_raw_long_reads
         }
 
-        if (!params.keep_lambda && params.longread_filtering_tool != 'chopper' && !skip_qc) {
+        if (!params.keep_lambda && params.longread_filtering_tool != 'chopper' && !val_skip_qc) {
             NANOLYSE (
                 ch_long_reads,
                 ch_lambda_db
@@ -62,7 +62,7 @@ workflow LONGREAD_PREPROCESSING {
             ch_long_reads = NANOLYSE.out.fastq
             ch_versions = ch_versions.mix(NANOLYSE.out.versions.first())
         }
-        if (!params.skip_longread_filtering && !skip_qc) {
+        if (!params.skip_longread_filtering && !val_skip_qc) {
             if (params.longread_filtering_tool == 'filtlong') {
                 // join long and short reads by sample name
                 ch_short_reads_tmp = ch_short_reads
@@ -72,7 +72,7 @@ workflow LONGREAD_PREPROCESSING {
                     .map { meta, lr -> [ meta.id, meta, lr ] }
                     .join(ch_short_reads_tmp, by: 0, remainder: true)
                     .filter { it[1] != null } // Make sure long reads are not null, which happens if ch_short_reads is empty
-                    .map { id, meta_lr, lr, sr -> [ meta_lr, sr ? sr : [], lr ] }  // should not occur for single-end, since SPAdes (hybrid) does not support single-end
+                    .map { _id, meta_lr, lr, sr -> [ meta_lr, sr ? sr : [], lr ] }  // should not occur for single-end, since SPAdes (hybrid) does not support single-end
 
                 FILTLONG (
                     ch_short_and_long_reads
@@ -114,7 +114,7 @@ workflow LONGREAD_PREPROCESSING {
          * - No host removal and skip_qc (params.skip_longread_qc)
          * - No host removal and *all* --keep_lambda, --skip_adapter_trimming, --skip_longread_filtering
          */
-        if ( !( ( skip_qc && !( params.host_fasta || params.host_genome ) ) ) ) {
+        if ( !( ( val_skip_qc && !( params.host_fasta || params.host_genome ) ) ) ) {
             if (
                 !(
                     params.skip_adapter_trimming && params.skip_longread_filtering && params.keep_lambda &&

@@ -1,11 +1,10 @@
-
 //MODULES
-include { MEGAHIT                                               } from '../../modules/nf-core/megahit/main'
-include { SPADES as METASPADES                                  } from '../../modules/nf-core/spades/main'
+include { MEGAHIT              } from '../../modules/nf-core/megahit/main'
+include { SPADES as METASPADES } from '../../modules/nf-core/spades/main'
 
 workflow SHORTREAD_ASSEMBLY {
     take:
-    ch_short_reads_grouped           // [ [meta] , fastq1, fastq2] (mandatory)
+    ch_short_reads_grouped // [ [meta] , fastq1, fastq2] (mandatory)
     ch_short_reads_spades
 
     main:
@@ -34,6 +33,5 @@ workflow SHORTREAD_ASSEMBLY {
 
     emit:
     assembled_contigs = ch_assembled_contigs
-    versions = ch_versions
-
+    versions          = ch_versions
 }

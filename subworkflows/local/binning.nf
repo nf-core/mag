@@ -1,6 +1,7 @@
 /*
  * Binning with MetaBAT2 and MaxBin2
  */
+include { FASTA_BINNING_CONCOCT                                                                  } from '../../subworkflows/nf-core/fasta_binning_concoct/main'
 
 include { METABAT2_METABAT2                                                                      } from '../../modules/nf-core/metabat2/metabat2/main'
 include { METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS as METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_SHORTREAD } from '../../modules/nf-core/metabat2/jgisummarizebamcontigdepths/main'
@@ -10,14 +11,13 @@ include { GUNZIP as GUNZIP_BINS                                                 
 include { GUNZIP as GUNZIP_UNBINS                                                                } from '../../modules/nf-core/gunzip/main'
 include { SEQKIT_STATS                                                                           } from '../../modules/nf-core/seqkit/stats/main'
 
-include { CONVERT_DEPTHS                                                                         } from '../../modules/local/convert_depths'
-include { ADJUST_MAXBIN2_EXT                                                                     } from '../../modules/local/adjust_maxbin2_ext'
-include { SPLIT_FASTA                                                                            } from '../../modules/local/split_fasta'
-include { FASTA_BINNING_CONCOCT                                                                  } from '../../subworkflows/nf-core/fasta_binning_concoct/main'
+include { CONVERT_DEPTHS                                                                         } from '../../modules/local/mag_depths/convert/main'
+include { ADJUST_MAXBIN2_EXT                                                                     } from '../../modules/local/adjust_maxbin2_ext/main'
+include { SPLIT_FASTA                                                                            } from '../../modules/local/split_fasta/main'
 
 workflow BINNING {
     take:
-    assemblies       // channel: [ val(meta), path(assembly), path(bams), path(bais) ]
+    ch_assemblies       // channel: [ val(meta), path(assembly), path(bams), path(bais) ]
     val_bin_min_size
     val_bin_max_size
 
@@ -26,8 +26,8 @@ workflow BINNING {
     ch_versions = Channel.empty()
 
     // generate coverage depths for each contig and branch by assembler type
-    ch_summarizedepth_input = assemblies
-        .map { meta, assembly, bams, bais ->
+    ch_summarizedepth_input = ch_assemblies
+        .map { meta, _assembly, bams, bais ->
             [meta, bams, bais]
         }
         .branch {
@@ -50,7 +50,7 @@ workflow BINNING {
     ch_versions = ch_versions.mix(METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_SHORTREAD.out.versions.first())
 
     // combine depths back with assemblies
-    ch_metabat2_input = assemblies
+    ch_metabat2_input = ch_assemblies
         .map { meta, assembly, bams, bais ->
             def meta_new = meta + [binner: 'MetaBAT2']
             [meta_new, assembly, bams, bais]
@@ -93,7 +93,7 @@ workflow BINNING {
     }
     if (!params.skip_concoct) {
 
-        ch_concoct_input = assemblies
+        ch_concoct_input = ch_assemblies
             .map { meta, bins, bams, bais ->
                 def meta_new = meta + [binner: 'CONCOCT']
                 [meta_new, bins, bams, bais]

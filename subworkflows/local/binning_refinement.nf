@@ -6,8 +6,9 @@ include { DASTOOL_FASTATOCONTIG2BIN as DASTOOL_FASTATOCONTIG2BIN_METABAT2 } from
 include { DASTOOL_FASTATOCONTIG2BIN as DASTOOL_FASTATOCONTIG2BIN_MAXBIN2  } from '../../modules/nf-core/dastool/fastatocontig2bin/main.nf'
 include { DASTOOL_FASTATOCONTIG2BIN as DASTOOL_FASTATOCONTIG2BIN_CONCOCT  } from '../../modules/nf-core/dastool/fastatocontig2bin/main.nf'
 include { DASTOOL_DASTOOL                                                 } from '../../modules/nf-core/dastool/dastool/main.nf'
-include { RENAME_PREDASTOOL                                               } from '../../modules/local/rename_predastool'
-include { RENAME_POSTDASTOOL                                              } from '../../modules/local/rename_postdastool'
+
+include { RENAME_PREDASTOOL                                               } from '../../modules/local/dastool/rename_pre/main'
+include { RENAME_POSTDASTOOL                                              } from '../../modules/local/dastool/rename_post/main'
 
 /*
  * Get number of columns in file (first line)
@@ -16,14 +17,14 @@ include { RENAME_POSTDASTOOL                                              } from
 workflow BINNING_REFINEMENT {
     take:
     ch_contigs_for_dastool // channel: [ val(meta), path(contigs) ]
-    bins                   // channel: [ val(meta), path(bins) ]
+    ch_bins                   // channel: [ val(meta), path(bins) ]
 
     main:
     ch_versions = Channel.empty()
 
     // remove domain information, will add it back later
     // everything here is either unclassified or a prokaryote
-    ch_bins = bins
+    ch_bins = ch_bins
         .map { meta, bin_list ->
             def meta_new = meta - meta.subMap(['domain','refinement'])
             [meta_new, bin_list]

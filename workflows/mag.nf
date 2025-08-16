@@ -38,10 +38,10 @@ include { METAEUK_EASYPREDICT             } from '../modules/nf-core/metaeuk/eas
 //
 // MODULE: Local to the pipeline
 //
-include { QUAST                           } from '../modules/local/quast'
-include { QUAST_BINS                      } from '../modules/local/quast_bins'
-include { QUAST_BINS_SUMMARY              } from '../modules/local/quast_bins_summary'
-include { BIN_SUMMARY                     } from '../modules/local/bin_summary'
+include { QUAST                           } from '../modules/local/quast/run/main'
+include { QUAST_BINS                      } from '../modules/local/quast/bins/main'
+include { QUAST_BINS_SUMMARY              } from '../modules/local/quast/bins_summary/main'
+include { BIN_SUMMARY                     } from '../modules/local/bin_summary/main'
 
 workflow MAG {
     take:
