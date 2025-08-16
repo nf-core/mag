@@ -1,19 +1,19 @@
 // SUBWORKFLOWS
-include { SHORTREAD_ASSEMBLY } from './shortread_assembly'
-include { LONGREAD_ASSEMBLY  } from './longread_assembly'
-include { HYBRID_ASSEMBLY    } from './hybrid_assembly'
+include { SHORTREAD_ASSEMBLY                    } from './shortread_assembly'
+include { LONGREAD_ASSEMBLY                     } from './longread_assembly'
+include { HYBRID_ASSEMBLY                       } from './hybrid_assembly'
 
 // MODULES
-include { POOL_SINGLE_READS as POOL_SHORT_SINGLE_READS          } from '../../modules/local/pool_single_reads'
-include { POOL_PAIRED_READS                                     } from '../../modules/local/pool_paired_reads'
-include { POOL_SINGLE_READS as POOL_LONG_READS                  } from '../../modules/local/pool_single_reads'
-include { GUNZIP as GUNZIP_SHORTREAD_ASSEMBLIES                 } from '../../modules/nf-core/gunzip'
-include { GUNZIP as GUNZIP_LONGREAD_ASSEMBLIES                  } from '../../modules/nf-core/gunzip'
+include { CAT_FASTQ as POOL_SHORT_SINGLE_READS  } from '../../modules/nf-core/cat/fastq'
+include { CAT_FASTQ as POOL_PAIRED_READS        } from '../../modules/nf-core/cat/fastq'
+include { CAT_FASTQ as POOL_LONG_READS          } from '../../modules/nf-core/cat/fastq'
+include { GUNZIP as GUNZIP_SHORTREAD_ASSEMBLIES } from '../../modules/nf-core/gunzip'
+include { GUNZIP as GUNZIP_LONGREAD_ASSEMBLIES  } from '../../modules/nf-core/gunzip'
 
 workflow ASSEMBLY {
     take:
-    ch_short_reads           // [ [meta] , fastq1, fastq2] (mandatory)
-    ch_long_reads            // [ [meta] , fastq] (mandatory)
+    ch_short_reads // [ [meta] , fastq1, fastq2] (mandatory)
+    ch_long_reads  // [ [meta] , fastq] (mandatory)
 
     main:
 
@@ -92,9 +92,11 @@ workflow ASSEMBLY {
         // long reads
         if (!params.single_end && !params.skip_spadeshybrid) {
 
-            ch_long_reads_grouped_for_pool = ch_long_reads_grouped.map { meta, reads -> [meta.id, meta, reads] }
+            ch_long_reads_grouped_for_pool = ch_long_reads_grouped
+                .map { meta, reads -> [meta.id, meta, reads] }
                 .combine(ch_short_reads_grouped.map { meta, _reads1, _reads2 -> [meta.id, meta] }, by: 0)
-                .map { [it[1], it[2]] } //make sure no long reads are pooled for spades if there are no short reads
+                .map { [it[1], it[2]] }
+            //make sure no long reads are pooled for spades if there are no short reads
 
             POOL_LONG_READS(ch_long_reads_grouped_for_pool)
             ch_versions = ch_versions.mix(POOL_LONG_READS.out.versions.first())
@@ -121,14 +123,14 @@ workflow ASSEMBLY {
     // SHORTREAD ASSEMBLY
     SHORTREAD_ASSEMBLY(
         ch_short_reads_grouped,
-        ch_short_reads_spades
+        ch_short_reads_spades,
     )
     ch_versions = ch_versions.mix(SHORTREAD_ASSEMBLY.out.versions)
 
     // HYBRID ASSEMBLY
     HYBRID_ASSEMBLY(
         ch_short_reads_spades,
-        ch_long_reads_spades
+        ch_long_reads_spades,
     )
     ch_versions = ch_versions.mix(HYBRID_ASSEMBLY.out.versions)
 
@@ -151,8 +153,7 @@ workflow ASSEMBLY {
 
     emit:
     shortread_assemblies = ch_shortread_assemblies
-    longread_assemblies = ch_longread_assemblies
-    versions = ch_versions
-    multiqc_files = ch_multiqc_files
-
+    longread_assemblies  = ch_longread_assemblies
+    versions             = ch_versions
+    multiqc_files        = ch_multiqc_files
 }
