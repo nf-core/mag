@@ -1,7 +1,7 @@
 {
     "-profile test_alternatives": {
         "content": [
-            40,
+            41,
             {
                 "BOWTIE2_ASSEMBLY_ALIGN": {
                     "bowtie2": "2.4.2",
