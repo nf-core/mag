@@ -76,13 +76,13 @@ nextflow_pipeline {
                 { assert snapshot(stable_name_multiqc,  stable_path_multiqc ).match('multiqc') },
                 { assert snapshot(
                         remove_phix_logs.collect {
-                            log -> (log.readLines().last() =~ /[0-9.]+% overall alignment rate/).find()
+                            log -> log.readLines().last() ==~ /[0-9.]+% overall alignment rate/
                         },
                         megahit_logs.collect {
                             log -> (log.readLines().last() =~ /ALL DONE. Time elapsed: [0-9.]+ seconds/).find()
                         },
                         bowtie2_logs.collect {
-                            log -> (log.readLines().last() =~ /[0-9.]+% overall alignment rate/).find()
+                            log -> log.readLines().last() ==~ /[0-9.]+% overall alignment rate/
                         },
                         checkm2_logs.collect {
                             log -> log.readLines().last().contains('CheckM2 finished successfully.')
