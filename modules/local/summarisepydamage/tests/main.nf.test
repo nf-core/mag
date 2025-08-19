@@ -1,0 +1,69 @@
+// TODO nf-core: Once you have added the required tests, please run the following command to build this file:
+// nf-core modules test summarisepydamage
+nextflow_process {
+
+    name "Test Process SUMMARISEPYDAMAGE"
+    script "../main.nf"
+    process "SUMMARISEPYDAMAGE"
+
+    tag "modules"
+    tag "modules_"
+    tag "summarisepydamage"
+    tag "pydamage_analyze"
+
+    setup {
+        run('PYDAMAGE_ANALYZE') {
+                script '../../../nf-core/pydamage/analyze/main.nf'
+                process {
+                    """
+                    input[0] = [
+                        [ id:'test' ],
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam.bai', checkIfExists: true)
+                    ]
+                    """
+                }
+        }
+    }
+
+    test("homo_sapiens - csv") {
+
+        when {
+            process {
+                """
+                input[0] = PYDAMAGE_ANALYZE.out.csv
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+
+    }
+
+    test("homo_sapiens - csv - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """                
+                input[0] = PYDAMAGE_ANALYZE.out.csv
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+
+    }
+
+}

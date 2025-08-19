@@ -386,18 +386,39 @@ workflow MAG {
         if (params.ancient_dna) {
             /*
                 TODO:
-                    1. Add bin name (From file name) to bin meta
-                    2. Move all binning meta (including new one) into second meta
-                    3. Join second meta'd results to pydamage results
-                    4. Recombine the two metas
+                    1. Add bin name (From file name) to bin meta ✅
+                    2. Move all binning meta (including new one) into second meta ✅
+                    3. Join second meta'd results to pydamage results ✅
+                    4. Recombine the two metas ✅
                     5. Group pydamage info into file
                     6. Make 'median averaging' process script
                     7. merge exported averaged results TSV to bin qc
-            */
-            ch_contig_bin_assignments = ch_input_for_postbinning.transpose().dump(tag: 'pre-split').splitFasta(record: [header: true]).dump(tag: 'split_bins')
-            ch_pydamage_filtered_results = ANCIENT_DNA_ASSEMBLY_VALIDATION.out.pydamage_results.splitCsv().dump(tag: 'pydamage')
+                    8. Move to subworkflow
 
-            ch_pydamage_to_bins = ch_contig_bin_assignments.map{meta, bins}
+                    WRONG! NEW IDEA:
+
+                    1. Take pydamage results
+                    2. R/python process to summarise
+                    3.Then do joining shenaningans
+            */
+
+            // Get sample ID for each contig (record header)
+            ch_contig_bin_assignments = ch_input_for_postbinning
+                .transpose()
+                .splitFasta(record: [header: true])
+                .map { meta, record -> [[id: meta.id, contig_id: record.header]] }
+
+            // Make useable sample id/contig name meta map for merging
+            ch_pydamage_filtered_results = ANCIENT_DNA_ASSEMBLY_VALIDATION.out.pydamage_results
+                .splitCsv(header: true)
+                .map { meta, pydamage_stats -> [[id: meta.id, contig_id: pydamage_stats.reference], meta, pydamage_stats] }
+
+            // Merge sample ID to pydamage results so we can group by contig AND node name for summarising
+            ch_pydamage_to_bins = ch_contig_bin_assignments
+                .join(ch_pydamage_filtered_results)
+                .map { _coremeta, meta, pydamage_stats -> [[id: meta.id] + pydamage_stats] }
+
+            channelToSamplesheet(ch_pydamage_to_bins, "${params.outdir}/Ancient_DNA/pydamage_results_aggregated", 'csv')
         }
 
         /*
@@ -603,4 +624,21 @@ workflow MAG {
     emit:
     multiqc_report = MULTIQC.out.report.toList() // channel: /path/to/multiqc_report.html
     versions       = ch_versions // channel: [ path(versions.yml) ]
+}
+
+// Constructs the header string and then the strings of each row, and
+def channelToSamplesheet(ch_list_for_samplesheet, path, format) {
+    def format_sep = ["csv": ",", "tsv": "\t", "txt": "\t"][format]
+
+    def ch_header = ch_list_for_samplesheet
+
+    ch_header
+        .first()
+        .map { it.keySet().join(format_sep) }
+        .concat(ch_list_for_samplesheet.map { it.values().join(format_sep) })
+        .collectFile(
+            name: "${path}.${format}",
+            newLine: true,
+            sort: false,
+        )
 }
