@@ -4,8 +4,7 @@ include { LONGREAD_ASSEMBLY                     } from './longread/main'
 include { HYBRID_ASSEMBLY                       } from './hybrid/main'
 
 // MODULES
-include { CAT_FASTQ as POOL_SHORT_SINGLE_READS  } from '../../../modules/nf-core/cat/fastq'
-include { CAT_FASTQ as POOL_PAIRED_READS        } from '../../../modules/nf-core/cat/fastq'
+include { CAT_FASTQ as POOL_SHORT_READS         } from '../../../modules/nf-core/cat/fastq'
 include { CAT_FASTQ as POOL_LONG_READS          } from '../../../modules/nf-core/cat/fastq'
 include { GUNZIP as GUNZIP_SHORTREAD_ASSEMBLIES } from '../../../modules/nf-core/gunzip'
 include { GUNZIP as GUNZIP_LONGREAD_ASSEMBLIES  } from '../../../modules/nf-core/gunzip'
@@ -75,15 +74,9 @@ workflow ASSEMBLY {
                 ch_short_reads_spades = ch_short_reads_grouped.map { [it[0], it[1]] }
             }
             else {
-                POOL_SHORT_SINGLE_READS(
-                    ch_short_reads_grouped.filter { it[0].single_end }
-                )
-                ch_versions = ch_versions.mix(POOL_SHORT_SINGLE_READS.out.versions.first())
-                POOL_PAIRED_READS(
-                    ch_short_reads_grouped.filter { !it[0].single_end }
-                )
-                ch_versions = ch_versions.mix(POOL_PAIRED_READS.out.versions.first())
-                ch_short_reads_spades = POOL_SHORT_SINGLE_READS.out.reads.mix(POOL_PAIRED_READS.out.reads)
+                POOL_SHORT_READS(ch_short_reads_grouped)
+                ch_versions = ch_versions.mix(POOL_SHORT_READS.out.versions.first())
+                ch_short_reads_spades = POOL_SHORT_READS.out.reads
             }
         }
         else {

@@ -11,8 +11,8 @@ workflow GTDBTK {
     take:
     ch_bins           // channel: [ val(meta), [bins] ]
     ch_bin_qc_summary // channel: path
-    ch_gtdb           // channel: path
-    ch_gtdb_mash      // channel: path
+    val_gtdb          // value: path
+    val_gtdb_mash     // value: path
 
     main:
     // Collect bin quality metrics
@@ -48,12 +48,12 @@ workflow GTDBTK {
             return [it[0], it[1]]
         }
 
-    if (ch_gtdb.extension == 'gz') {
+    if (val_gtdb.extension == 'gz') {
         // Expects to be tar.gz!
-        ch_db_for_gtdbtk = GTDBTK_DB_PREPARATION(ch_gtdb).db
+        ch_db_for_gtdbtk = GTDBTK_DB_PREPARATION(val_gtdb).db
     }
-    else if (ch_gtdb.isDirectory()) {
-        ch_db_for_gtdbtk = [ch_gtdb.simpleName, ch_gtdb]
+    else if (val_gtdb.isDirectory()) {
+        ch_db_for_gtdbtk = [val_gtdb.simpleName, val_gtdb]
     }
     else {
         error("Unsupported object given to --gtdb, database must be supplied as either a directory or a .tar.gz file!")
@@ -70,7 +70,7 @@ workflow GTDBTK {
         ch_filtered_bins.passed.groupTuple(),
         ch_db_for_gtdbtk,
         params.gtdbtk_pplacer_useram ? false : true,
-        ch_gtdb_mash,
+        val_gtdb_mash,
     )
 
     GTDBTK_SUMMARY(

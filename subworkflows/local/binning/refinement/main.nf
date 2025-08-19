@@ -17,14 +17,14 @@ include { RENAME_POSTDASTOOL                                              } from
 workflow BINNING_REFINEMENT {
     take:
     ch_contigs_for_dastool // channel: [ val(meta), path(contigs) ]
-    ch_bins                   // channel: [ val(meta), path(bins) ]
+    ch_in_bins             // channel: [ val(meta), path(bins) ]
 
     main:
     ch_versions = Channel.empty()
 
     // remove domain information, will add it back later
     // everything here is either unclassified or a prokaryote
-    ch_bins = ch_bins
+    ch_bins = ch_in_bins
         .map { meta, bin_list ->
             def meta_new = meta - meta.subMap(['domain','refinement'])
             [meta_new, bin_list]

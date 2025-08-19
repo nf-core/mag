@@ -7,20 +7,20 @@ include { TIARA_CLASSIFY                                               } from '.
 workflow TIARA {
     take:
     ch_assemblies // tuple val(meta), path(assembly)
-    ch_bins       // tuple val(meta), path( [ bins ] )
-    ch_unbins     // tuple val(meta), path( [ unbins ] )
+    ch_in_bins    // tuple val(meta), path( [ bins ] )
+    ch_in_unbins     // tuple val(meta), path( [ unbins ] )
 
     main:
     ch_versions = Channel.empty()
 
-    ch_bins = ch_bins
+    ch_bins = ch_in_bins
         .map { meta, bin_list ->
             def meta_new = meta + [bin: 'bins']
             meta_new.bin = 'bins'
             [meta_new, bin_list]
         }
 
-    ch_unbins = ch_unbins
+    ch_unbins = ch_in_unbins
         .map { meta, unbin_list ->
             def meta_new = meta + [bin: 'unbins']
             [meta_new, unbin_list]
