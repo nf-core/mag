@@ -1,7 +1,7 @@
 // SUBWORKFLOWS
-include { SHORTREAD_ASSEMBLY                    } from './shortread/main'
-include { LONGREAD_ASSEMBLY                     } from './longread/main'
-include { HYBRID_ASSEMBLY                       } from './hybrid/main'
+include { SHORTREAD_ASSEMBLY                    } from '../assembly_shortread/main'
+include { LONGREAD_ASSEMBLY                     } from '../assembly_longread/main'
+include { HYBRID_ASSEMBLY                       } from '../assembly_hybrid/main'
 
 // MODULES
 include { CAT_FASTQ as POOL_SHORT_READS         } from '../../../modules/nf-core/cat/fastq'
