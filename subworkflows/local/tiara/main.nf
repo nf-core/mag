@@ -2,7 +2,7 @@ include { TIARA_TIARA                                                  } from '.
 include { DASTOOL_FASTATOCONTIG2BIN as DASTOOL_FASTATOCONTIG2BIN_TIARA } from '../../../modules/nf-core/dastool/fastatocontig2bin/main'
 include { CSVTK_CONCAT as TIARA_SUMMARY                                } from '../../../modules/nf-core/csvtk/concat/main'
 
-include { TIARA_CLASSIFY                                               } from '../../../modules/local/tiara/classify/main'
+include { TIARA_CLASSIFY                                               } from '../../../modules/local/tiara_classify/main'
 
 workflow TIARA {
     take:

@@ -2,8 +2,8 @@
 * LONGREAD_ASSEMBLY: Assembly of long reads
 */
 
-include { FLYE         } from '../../../../modules/nf-core/flye/main'
-include { METAMDBG_ASM } from '../../../../modules/nf-core/metamdbg/asm/main'
+include { FLYE         } from '../../../modules/nf-core/flye/main'
+include { METAMDBG_ASM } from '../../../modules/nf-core/metamdbg/asm/main'
 
 workflow LONGREAD_ASSEMBLY {
     take:

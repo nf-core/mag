@@ -2,13 +2,13 @@
  * Binning with MetaBAT2 and MaxBin2
  */
 
-include { DASTOOL_FASTATOCONTIG2BIN as DASTOOL_FASTATOCONTIG2BIN_METABAT2 } from '../../../../modules/nf-core/dastool/fastatocontig2bin/main.nf'
-include { DASTOOL_FASTATOCONTIG2BIN as DASTOOL_FASTATOCONTIG2BIN_MAXBIN2  } from '../../../../modules/nf-core/dastool/fastatocontig2bin/main.nf'
-include { DASTOOL_FASTATOCONTIG2BIN as DASTOOL_FASTATOCONTIG2BIN_CONCOCT  } from '../../../../modules/nf-core/dastool/fastatocontig2bin/main.nf'
-include { DASTOOL_DASTOOL                                                 } from '../../../../modules/nf-core/dastool/dastool/main.nf'
+include { DASTOOL_FASTATOCONTIG2BIN as DASTOOL_FASTATOCONTIG2BIN_METABAT2 } from '../../../modules/nf-core/dastool/fastatocontig2bin/main.nf'
+include { DASTOOL_FASTATOCONTIG2BIN as DASTOOL_FASTATOCONTIG2BIN_MAXBIN2  } from '../../../modules/nf-core/dastool/fastatocontig2bin/main.nf'
+include { DASTOOL_FASTATOCONTIG2BIN as DASTOOL_FASTATOCONTIG2BIN_CONCOCT  } from '../../../modules/nf-core/dastool/fastatocontig2bin/main.nf'
+include { DASTOOL_DASTOOL                                                 } from '../../../modules/nf-core/dastool/dastool/main.nf'
 
-include { RENAME_PREDASTOOL                                               } from '../../../../modules/local/dastool/rename_pre/main'
-include { RENAME_POSTDASTOOL                                              } from '../../../../modules/local/dastool/rename_post/main'
+include { RENAME_PREDASTOOL                                               } from '../../../modules/local/dastool_rename_pre/main'
+include { RENAME_POSTDASTOOL                                              } from '../../../modules/local/dastool_rename_post/main'
 
 /*
  * Get number of columns in file (first line)

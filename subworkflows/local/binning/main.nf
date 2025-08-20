@@ -11,7 +11,7 @@ include { GUNZIP as GUNZIP_BINS                                                 
 include { GUNZIP as GUNZIP_UNBINS                                                                } from '../../../modules/nf-core/gunzip/main'
 include { SEQKIT_STATS                                                                           } from '../../../modules/nf-core/seqkit/stats/main'
 
-include { CONVERT_DEPTHS                                                                         } from '../../../modules/local/mag_depths/convert/main'
+include { CONVERT_DEPTHS                                                                         } from '../../../modules/local/mag_depths_convert/main'
 include { ADJUST_MAXBIN2_EXT                                                                     } from '../../../modules/local/adjust_maxbin2_ext/main'
 include { SPLIT_FASTA                                                                            } from '../../../modules/local/split_fasta/main'
 

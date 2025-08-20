@@ -1,5 +1,5 @@
-include { MINIMAP2_INDEX as MINIMAP2_ASSEMBLY_INDEX } from '../../../../../modules/nf-core/minimap2/index/main'
-include { MINIMAP2_ALIGN as MINIMAP2_ASSEMBLY_ALIGN } from '../../../../../modules/nf-core/minimap2/align/main'
+include { MINIMAP2_INDEX as MINIMAP2_ASSEMBLY_INDEX } from '../../../modules/nf-core/minimap2/index/main'
+include { MINIMAP2_ALIGN as MINIMAP2_ASSEMBLY_ALIGN } from '../../../modules/nf-core/minimap2/align/main'
 
 workflow LONGREAD_BINNING_PREPARATION {
     take:
