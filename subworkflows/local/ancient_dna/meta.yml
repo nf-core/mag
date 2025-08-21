@@ -69,6 +69,8 @@ output:
       description: File containing software versions
       pattern: "versions.yml"
 authors:
+  - "@maxibor"
+  - "@@alexhbnr"
   - "@jfy133"
 maintainers:
   - "@jfy133"
