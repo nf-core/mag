@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "tiara"
+description: Domain classification of DNA sequences using Tiara deep learning classifier
+keywords:
+  - domain classification
+  - tiara
+  - deep learning
+  - prokaryote
+  - eukaryote
+  - organelle
+components:
+  - csvtk/concat
+  - dastool/fastatocontig2bin
+  - tiara/tiara
+  - tiara/classify
+input:
+  - ch_assemblies:
+      description: Assembled contigs
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - assembly:
+            type: file
+            description: Assembled contigs in FASTA format
+            pattern: "*.{fasta,fa}"
+  - ch_in_bins:
+      description: Metagenomic bins
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - bins:
+            type: file
+            description: Metagenomic bins in FASTA format
+            pattern: "*.{fasta,fa}"
+  - ch_in_unbins:
+      description: Unbinned contigs
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - unbins:
+            type: file
+            description: Unbinned contigs in FASTA format
+            pattern: "*.{fasta,fa}"
+output:
+  - classified_bins:
+      description: Domain-classified bins
+      structure:
+        - meta:
+            type: map
+            description: Metadata map with domain information
+        - bins:
+            type: file
+            description: Domain-classified bins
+            pattern: "*.{fasta,fa}"
+  - classified_unbins:
+      description: Domain-classified unbinned contigs
+      structure:
+        - meta:
+            type: map
+            description: Metadata map with domain information
+        - unbins:
+            type: file
+            description: Domain-classified unbinned contigs
+            pattern: "*.{fasta,fa}"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@muabnezor"
+maintainers:
+  - "@jfy133"
+  - "@prototaxites"
+  - "@dialvarezs"
+  - "@d4straub"
+  - "@muabnezor"

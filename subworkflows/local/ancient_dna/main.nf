@@ -60,7 +60,7 @@ workflow ANCIENT_DNA_ASSEMBLY_VALIDATION {
 
 
     emit:
-        contigs_recalled          = ch_corrected_contigs // channel: [ val(meta), path(fasta) ]
+        contigs_recalled          = ch_corrected_contigs         // channel: [ val(meta), path(fasta) ]
         pydamage_results          = PYDAMAGE_ANALYZE.out.csv     // channel: [ val(meta), path(csv) ]
         pydamage_filtered_results = PYDAMAGE_FILTER.out.csv      // channel: [ val(meta), path(csv) ]
         versions                  = ch_versions                  // channel: [ versions.yml ]

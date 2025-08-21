@@ -23,7 +23,7 @@ workflow SHORTREAD_PREPROCESSING {
     ch_host_fasta        // [fasta] (optional)
     ch_host_genome_index // fasta (optional)
     ch_phix_db_file      // [fasta] (optional)
-    val_skip_qc              // [boolean]
+    val_skip_qc          // [boolean]
 
     main:
     ch_versions = Channel.empty()
