@@ -40,6 +40,9 @@ nextflow_pipeline {
             def bowtie2_logs = getAllFilesFromDir(
                 params.outdir, include: ['Assembly/MEGAHIT/QC/*/*.bowtie2.log']
             )
+            def megahit_contigs = getAllFilesFromDir(
+                params.outdir, include: ['Assembly/MEGAHIT/*.contigs.fa.gz']
+            )
 
             // Output dir: GenomeBinning
             def stable_name_binning = getAllFilesFromDir(
@@ -53,6 +56,12 @@ nextflow_pipeline {
             )
             def checkm2_diamond_results = getAllFilesFromDir(
                 params.outdir, include: ['GenomeBinning/QC/CheckM2/**/DIAMOND_RESULTS.tsv']
+            )
+            def metabat2_bins = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/MetaBAT2/bins/*.fa.gz']
+            )
+            def metabat2_unbins = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/MetaBAT2/{discarded,unbinned}/*.fa.gz']
             )
 
             // Output dir: multiqc
@@ -86,12 +95,21 @@ nextflow_pipeline {
                         },
                         checkm2_logs.collect {
                             log -> log.readLines().last().contains('CheckM2 finished successfully.')
-                        }
+                        },
                     ).match('logs')
                 },
                 { assert snapshot(
-                        checkm2_diamond_results.collect { results -> results.text.readLines().size() }
+                        checkm2_diamond_results.collect { results -> results.text.readLines().size() },
                     ).match('checkm2_diamond_results')
+                },
+                { assert snapshot(
+                        megahit_contigs.collect { contigs -> path("${contigs}").fasta.size() > 0 },
+                    ).match('contigs')
+                },
+                { assert snapshot(
+                        metabat2_bins.collect { bins -> path("${bins}").fasta.size() > 0 },
+                        metabat2_unbins.collect { bins -> path("${bins}").fasta.size() >= 0 },
+                    ).match('bins')
                 }
             )
         }
