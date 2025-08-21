@@ -84,33 +84,30 @@ nextflow_pipeline {
                 { assert snapshot(stable_name_binning,  stable_path_binning ).match('binning') },
                 { assert snapshot(stable_name_multiqc,  stable_path_multiqc ).match('multiqc') },
                 { assert snapshot(
-                        remove_phix_logs.collect {
-                            log -> log.readLines().last() ==~ /[0-9.]+% overall alignment rate/
-                        },
-                        megahit_logs.collect {
-                            log -> (log.readLines().last() =~ /ALL DONE. Time elapsed: [0-9.]+ seconds/).find()
-                        },
-                        bowtie2_logs.collect {
-                            log -> log.readLines().last() ==~ /[0-9.]+% overall alignment rate/
-                        },
-                        checkm2_logs.collect {
-                            log -> log.readLines().last().contains('CheckM2 finished successfully.')
-                        },
-                    ).match('logs')
-                },
-                { assert snapshot(
                         checkm2_diamond_results.collect { results -> results.text.readLines().size() },
                     ).match('checkm2_diamond_results')
                 },
-                { assert snapshot(
-                        megahit_contigs.collect { contigs -> path("${contigs}").fasta.size() > 0 },
-                    ).match('contigs')
+                // FASTA checks
+                { assert megahit_contigs.collect { contigs -> path("${contigs}").fasta.size() > 0 }.every() },
+                { assert metabat2_bins.collect { contigs -> path("${contigs}").fasta.size() > 0 }.every() },
+                { assert metabat2_unbins.collect { contigs -> path("${contigs}").fasta.size() >= 0 }.every() },
+                // Log checks
+                { assert remove_phix_logs.collect {
+                        log -> log.readLines().last() ==~ /[0-9.]+% overall alignment rate/
+                    }.every()
                 },
-                { assert snapshot(
-                        metabat2_bins.collect { bins -> path("${bins}").fasta.size() > 0 },
-                        metabat2_unbins.collect { bins -> path("${bins}").fasta.size() >= 0 },
-                    ).match('bins')
-                }
+                { assert megahit_logs.collect {
+                        log -> (log.readLines().last() =~ /ALL DONE. Time elapsed: [0-9.]+ seconds/).find()
+                    }.every()
+                },
+                { assert bowtie2_logs.collect {
+                        log -> log.readLines().last() ==~ /[0-9.]+% overall alignment rate/
+                    }.every()
+                },
+                { assert checkm2_logs.collect {
+                        log -> log.readLines().last().contains('CheckM2 finished successfully.')
+                    }.every()
+                },
             )
         }
     }
