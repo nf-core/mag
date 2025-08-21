@@ -12,19 +12,19 @@ include { methodsDescriptionText          } from '../subworkflows/local/utils_nf
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { BINNING_PREPARATION             } from '../subworkflows/local/binning_preparation'
-include { BINNING                         } from '../subworkflows/local/binning'
-include { BIN_QC                          } from '../subworkflows/local/bin_qc'
-include { BINNING_REFINEMENT              } from '../subworkflows/local/binning_refinement'
-include { VIRUS_IDENTIFICATION            } from '../subworkflows/local/virus_identification'
-include { GTDBTK                          } from '../subworkflows/local/gtdbtk'
-include { ANCIENT_DNA_ASSEMBLY_VALIDATION } from '../subworkflows/local/ancient_dna'
-include { DOMAIN_CLASSIFICATION           } from '../subworkflows/local/domain_classification'
-include { DEPTHS                          } from '../subworkflows/local/depths'
-include { LONGREAD_PREPROCESSING          } from '../subworkflows/local/longread_preprocessing'
-include { SHORTREAD_PREPROCESSING         } from '../subworkflows/local/shortread_preprocessing'
-include { ASSEMBLY                        } from '../subworkflows/local/assembly'
-include { CATPACK                         } from '../subworkflows/local/catpack'
+include { BINNING_PREPARATION             } from '../subworkflows/local/binning_preparation/main'
+include { BINNING                         } from '../subworkflows/local/binning/main'
+include { BIN_QC                          } from '../subworkflows/local/bin_qc/main'
+include { BINNING_REFINEMENT              } from '../subworkflows/local/binning_refinement/main'
+include { VIRUS_IDENTIFICATION            } from '../subworkflows/local/virus_identification/main'
+include { GTDBTK                          } from '../subworkflows/local/gtdbtk/main'
+include { ANCIENT_DNA_ASSEMBLY_VALIDATION } from '../subworkflows/local/ancient_dna/main'
+include { DOMAIN_CLASSIFICATION           } from '../subworkflows/local/domain_classification/main'
+include { DEPTHS                          } from '../subworkflows/local/depths/main'
+include { LONGREAD_PREPROCESSING          } from '../subworkflows/local/preprocessing_longread/main'
+include { SHORTREAD_PREPROCESSING         } from '../subworkflows/local/preprocessing_shortread/main'
+include { ASSEMBLY                        } from '../subworkflows/local/assembly/main'
+include { CATPACK                         } from '../subworkflows/local/catpack/main'
 
 //
 // MODULE: Installed directly from nf-core/modules
@@ -38,10 +38,10 @@ include { METAEUK_EASYPREDICT             } from '../modules/nf-core/metaeuk/eas
 //
 // MODULE: Local to the pipeline
 //
-include { QUAST                           } from '../modules/local/quast'
-include { QUAST_BINS                      } from '../modules/local/quast_bins'
-include { QUAST_BINS_SUMMARY              } from '../modules/local/quast_bins_summary'
-include { BIN_SUMMARY                     } from '../modules/local/bin_summary'
+include { QUAST                           } from '../modules/local/quast_run/main'
+include { QUAST_BINS                      } from '../modules/local/quast_bins/main'
+include { QUAST_BINS_SUMMARY              } from '../modules/local/quast_bins_summary/main'
+include { BIN_SUMMARY                     } from '../modules/local/bin_summary/main'
 
 workflow MAG {
     take:
