@@ -18,10 +18,10 @@ include { LONGREAD_HOSTREMOVAL             } from '../hostremoval_longread/main'
 workflow LONGREAD_PREPROCESSING {
     take:
     ch_raw_long_reads // [ [meta] , fastq] (mandatory)
-    ch_short_reads    // [ [meta] , fastq1, fastq2] (mandatory)
+    ch_short_reads    // [ [meta] , fastq1, fastq2]
     ch_lambda_db      // [fasta]
     ch_host_fasta     // [fasta]
-    val_skip_qc           // [boolean]
+    val_skip_qc       // [boolean]
 
     main:
     ch_versions = Channel.empty()

@@ -17,7 +17,6 @@ workflow ASSEMBLY {
     main:
 
     ch_versions = Channel.empty()
-    ch_multiqc_files = Channel.empty()
 
     /*
     ================================================================================
@@ -148,5 +147,4 @@ workflow ASSEMBLY {
     shortread_assemblies = ch_shortread_assemblies
     longread_assemblies  = ch_longread_assemblies
     versions             = ch_versions
-    multiqc_files        = ch_multiqc_files
 }
