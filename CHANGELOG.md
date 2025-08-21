@@ -25,7 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#827](https://github.com/nf-core/mag/pull/827) - Updated to nf-core 3.3.2`TEMPLATE` (by @dialvarezs)
 - [#841](https://github.com/nf-core/mag/pull/841) - MultiQC config updated to support CheckM, CheckM2, and GTDB-Tk (by @harper357)
 - [#844](https://github.com/nf-core/mag/pull/843) - Change loading mechanism of internal PhiX/Lambda databases to improve Dev UX when schema building (by @jfy133)
-- [#851](https://github.com/nf-core/mag/pull/851) - Improve structure of local modules and subworkflows, remove `POOL_READ_*` local modules in favor of nf-core cat/fastq (by @dialvarezs)
+- [#851](https://github.com/nf-core/mag/pull/851) - Improve structure of local modules and subworkflows (by @dialvarezs)
 
 ### `Fixed`
 
@@ -49,8 +49,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Deprecated`
 
-[#799](https://github.comf/nf-core/mag/pull/799) - Removed `--cat_official_taxonomy` in favour of `--cat_allow_unofficial_lineages` to control CAT's use of unofficial lineages (added by @dialvarezs)
-[#825](https://github.com/nf-core/mag/pull/825) - Removed `--centrifuge_db`, `--kraken2_db`, `--krona_db` and `--skip_krona` parameters following the removal of taxonomic profiling functionality. See nf-core/taxprofiler for replacement (added by @dialvarezs).
+- [#799](https://github.comf/nf-core/mag/pull/799) - Removed `--cat_official_taxonomy` in favour of `--cat_allow_unofficial_lineages` to control CAT's use of unofficial lineages (added by @dialvarezs)
+- [#825](https://github.com/nf-core/mag/pull/825) - Removed `--centrifuge_db`, `--kraken2_db`, `--krona_db` and `--skip_krona` parameters following the removal of taxonomic profiling functionality. See nf-core/taxprofiler for replacement (added by @dialvarezs)
+- [#851](https://github.com/nf-core/mag/pull/851) - Remove `POOL_READ_*` local modules in favor of nf-core cat/fastq (by @dialvarezs)
 
 ## v4.0.0 - [2025-05-22]
 
