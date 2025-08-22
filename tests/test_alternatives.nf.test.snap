@@ -52,7 +52,7 @@
                     "metabat2": 2.15
                 },
                 "METABAT2_METABAT2": {
-                    "metabat2": 2.15
+                    "metabat2": 2.17
                 },
                 "SPLIT_FASTA": {
                     "python": "3.6.7",
@@ -317,7 +317,7 @@
                 "multiqc_fastqc.yaml:md5,f50da8bfd062b9399911ba19b34831db",
                 "multiqc_fastqc_fastqc-1.yaml:md5,4c2c5a5e7b370b0668c1360b7927d0a8",
                 "multiqc_general_stats.yaml:md5,8b8cbb9d6fe349084e3d2fe2ffdecda8",
-                "multiqc_software_versions.yaml:md5,f4434599f453d081b78d4bc377993ba8",
+                "multiqc_software_versions.yaml:md5,72a933b80779be004544d95fc0c22ae7",
                 "multiqc_trimmomatic.yaml:md5,d4aaff3725c28801ae0577d97c2f9b30",
                 "trimmomatic_plot.yaml:md5,9557cd587ace0a93912179cb0deafe3b"
             ]
