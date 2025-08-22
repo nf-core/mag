@@ -12,7 +12,7 @@
                     "bowtie2": "2.4.2"
                 },
                 "BUSCO_BUSCO": {
-                    "busco": "5.8.3"
+                    "busco": "6.0.0"
                 },
                 "CATPACK_ADDNAMES_BINS": {
                     "catpack": 6.0
