@@ -17,13 +17,18 @@ workflow LONGREAD_ASSEMBLY {
 
         ch_long_reads_flye_input = ch_long_reads.multiMap { meta, reads ->
             reads: [meta, reads]
-            mode: meta.lr_platform == "OXFORD_NANOPORE"
-                ? "--nano-raw"
-                : meta.lr_platform == "OXFORD_NANOPORE_HQ"
-                    ? "--nano-hq"
-                    : meta.lr_platform == "PACBIO_HIFI"
-                        ? "--pacbio-hifi"
-                        : meta.lr_platform == "PACBIO_CLR" ? "--pacbio-raw" : []
+            mode: 
+                if(meta.lr_platform == "OXFORD_NANOPORE") {
+                    return "--nano-raw"
+                } else if (meta.lr_platform == "OXFORD_NANOPORE_HQ") { 
+                    return "--nano-hq"
+                } else if (meta.lr_platform == "PACBIO_HIFI") {
+                    return "--pacbio-hifi"
+                } else if (meta.lr_platform == "PACBIO_CLR") {
+                    return "--pacbio-raw"
+                } else {
+                    log.error("[nf-core/mag]: Error - incorrect lr_platform provided to Flye!")
+                }
         }
 
         FLYE(
