@@ -148,7 +148,7 @@
                     },
                     "filtlong": {
                         "branch": "master",
-                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "flye": {
@@ -223,7 +223,7 @@
                     },
                     "metamdbg/asm": {
                         "branch": "master",
-                        "git_sha": "c912aa8b29a17d6dbec3fdda71185fbe3e77ba59",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "minimap2/align": {
@@ -248,7 +248,7 @@
                     },
                     "nanolyse": {
                         "branch": "master",
-                        "git_sha": "81880787133db07d9b4c1febd152c090eb8325dc",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "nanoplot": {
@@ -273,7 +273,7 @@
                     },
                     "prodigal": {
                         "branch": "master",
-                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
+                        "git_sha": "ddb0d667cf6cdee3bab9497241de4bbf6b88d8cc",
                         "installed_by": ["modules"]
                     },
                     "prokka": {
@@ -313,7 +313,7 @@
                     },
                     "seqtk/mergepe": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "spades": {
