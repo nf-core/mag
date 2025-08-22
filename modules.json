@@ -33,7 +33,7 @@
                     },
                     "busco/busco": {
                         "branch": "master",
-                        "git_sha": "40ab92fb218b5aa43beff23ab1320c138971705f",
+                        "git_sha": "36c6c8445284e021d95ce30cdf743baef66b21aa",
                         "installed_by": ["modules"]
                     },
                     "cat/fastq": {
@@ -73,7 +73,7 @@
                     },
                     "checkm/lineagewf": {
                         "branch": "master",
-                        "git_sha": "3ea318161b8788623cec477bde0f089180b2245b",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "checkm/qa": {
@@ -253,7 +253,7 @@
                     },
                     "nanoplot": {
                         "branch": "master",
-                        "git_sha": "457e8b54d1d2d3ec9208c55b66cdd573c976372f",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "nanoq": {
