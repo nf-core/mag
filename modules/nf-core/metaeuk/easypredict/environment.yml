@@ -3,6 +3,5 @@
 channels:
   - conda-forge
   - bioconda
-
 dependencies:
-  - bioconda::gunc=1.0.6
+  - bioconda::metaeuk=6.a5d39d9
