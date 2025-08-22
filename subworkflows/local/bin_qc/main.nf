@@ -47,7 +47,7 @@ workflow BIN_QC {
         ch_checkm_db = [[id: 'checkm_db'], file(params.checkm_download_url, checkIfExists: true)]
 
         CHECKM_UNTAR(ch_checkm_db)
-        ch_versions = ch_versions.mix(CHECKM_UNTAR.out.versions)
+        ch_versions = ch_versions.mix(CHECKM_UNTAR.out.versions.first())
 
         ch_checkm_db = CHECKM_UNTAR.out.untar.map { it[1] }
     }
@@ -60,7 +60,7 @@ workflow BIN_QC {
     }
     else if (params.binqc_tool == 'checkm2' || "checkm2" in binqc_tool_extras) {
         CHECKM2_DATABASEDOWNLOAD(params.checkm2_db_version)
-        ch_versions = ch_versions.mix(CHECKM2_DATABASEDOWNLOAD.out.versions)
+        ch_versions = ch_versions.mix(CHECKM2_DATABASEDOWNLOAD.out.versions.first())
         ch_checkm2_db = CHECKM2_DATABASEDOWNLOAD.out.database
     }
     else {
@@ -88,7 +88,7 @@ workflow BIN_QC {
         // If directory, assumes sub structure of `params.busco_db/lineages/<taxa>_odb(10|12)`
         if (ch_busco_db && ch_busco_db.extension in ['gz', 'tgz']) {
             BUSCO_UNTAR([[id: ch_busco_db.getSimpleName()], ch_busco_db])
-            ch_versions = ch_versions.mix(BUSCO_UNTAR.out.versions)
+            ch_versions = ch_versions.mix(BUSCO_UNTAR.out.versions.first())
             ch_busco_db = BUSCO_UNTAR.out.untar.map { it[1] }
         }
         else if (ch_busco_db && ch_busco_db.isDirectory()) {
@@ -99,7 +99,7 @@ workflow BIN_QC {
         }
 
         BUSCO_BUSCO(ch_bins, 'genome', params.busco_db_lineage, ch_busco_db, [], params.busco_clean)
-        ch_versions = ch_versions.mix(BUSCO_BUSCO.out)
+        ch_versions = ch_versions.mix(BUSCO_BUSCO.out.versions.first())
 
         ch_qc_summaries = BUSCO_BUSCO.out.batch_summary
             .map { _meta, summary -> [[id: 'busco'], summary] }
@@ -123,7 +123,7 @@ workflow BIN_QC {
             }
 
         CHECKM_LINEAGEWF(ch_bins_for_checkmlineagewf.reads, ch_bins_for_checkmlineagewf.ext, ch_checkm_db)
-        ch_versions = ch_versions.mix(CHECKM_LINEAGEWF.out)
+        ch_versions = ch_versions.mix(CHECKM_LINEAGEWF.out.versions.first())
 
         ch_checkmqa_input = CHECKM_LINEAGEWF.out.checkm_output
             .join(CHECKM_LINEAGEWF.out.marker_file)
@@ -132,7 +132,7 @@ workflow BIN_QC {
             }
 
         CHECKM_QA(ch_checkmqa_input, [])
-        ch_versions = ch_versions.mix(CHECKM_QA.out)
+        ch_versions = ch_versions.mix(CHECKM_QA.out.versions.first())
 
         ch_qc_summaries = CHECKM_QA.out.output
             .map { _meta, summary -> [[id: 'checkm'], summary] }
@@ -146,7 +146,7 @@ workflow BIN_QC {
          * CheckM2
          */
         CHECKM2_PREDICT(ch_input_bins_for_qc.groupTuple(), ch_checkm2_db)
-        ch_versions = ch_versions.mix(CHECKM2_PREDICT.out)
+        ch_versions = ch_versions.mix(CHECKM2_PREDICT.out.versions.first())
 
         ch_qc_summaries = CHECKM2_PREDICT.out.checkm2_tsv
             .map { _meta, summary -> [[id: 'checkm2'], summary] }

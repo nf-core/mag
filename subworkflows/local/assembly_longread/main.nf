@@ -30,7 +30,7 @@ workflow LONGREAD_ASSEMBLY {
             ch_long_reads_flye_input.reads,
             ch_long_reads_flye_input.mode,
         )
-        ch_versions = ch_versions.mix(FLYE.out)
+        ch_versions = ch_versions.mix(FLYE.out.versions.first())
 
         ch_flye_assemblies = FLYE.out.fasta.map { meta, assembly ->
             def meta_new = meta + [assembler: "FLYE"]
@@ -56,7 +56,7 @@ workflow LONGREAD_ASSEMBLY {
             ch_long_reads_metamdbg_input.reads,
             ch_long_reads_metamdbg_input.mode,
         )
-        ch_versions = ch_versions.mix(METAMDBG_ASM.out)
+        ch_versions = ch_versions.mix(METAMDBG_ASM.out.versions.first())
 
         ch_metamdbg_assemblies = METAMDBG_ASM.out.contigs.map { meta, assembly ->
             def meta_new = meta + [assembler: "METAMDBG"]
