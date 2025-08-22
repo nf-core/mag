@@ -120,7 +120,7 @@ workflow MAG {
     // Get mmseqs db for MetaEuk if requested
     if (!params.skip_metaeuk && params.metaeuk_mmseqs_db) {
         MMSEQS_DATABASES(params.metaeuk_mmseqs_db)
-        ch_versions = ch_versions.mix(MMSEQS_DATABASES.out.versions.first())
+        ch_versions = ch_versions.mix(MMSEQS_DATABASES.out.versions)
         ch_metaeuk_db = MMSEQS_DATABASES.out.database
     }
 
@@ -193,7 +193,7 @@ workflow MAG {
         }
 
         GUNZIP_ASSEMBLYINPUT(ch_assemblies_split.gzipped)
-        ch_versions = ch_versions.mix(GUNZIP_ASSEMBLYINPUT.out.versions.first())
+        ch_versions = ch_versions.mix(GUNZIP_ASSEMBLYINPUT.out.versions)
 
         ch_assemblies = Channel.empty()
         ch_assemblies = ch_assemblies.mix(ch_assemblies_split.ungzip, GUNZIP_ASSEMBLYINPUT.out.gunzip)
@@ -203,7 +203,7 @@ workflow MAG {
 
     if (!params.skip_quast) {
         QUAST(ch_assemblies)
-        ch_versions = ch_versions.mix(QUAST.out.versions.first())
+        ch_versions = ch_versions.mix(QUAST.out.versions)
     }
 
     /*
@@ -217,7 +217,7 @@ workflow MAG {
             ch_assemblies,
             'gff',
         )
-        ch_versions = ch_versions.mix(PRODIGAL.out.versions.first())
+        ch_versions = ch_versions.mix(PRODIGAL.out.versions)
     }
 
     /*
@@ -400,12 +400,12 @@ workflow MAG {
                 }
 
             QUAST_BINS(ch_input_for_quast_bins)
-            ch_versions = ch_versions.mix(QUAST_BINS.out.versions.first())
+            ch_versions = ch_versions.mix(QUAST_BINS.out.versions)
             ch_quast_bin_summary = QUAST_BINS.out.quast_bin_summaries.collectFile(keepHeader: true) { meta, summary ->
                 ["${meta.id}.tsv", summary]
             }
             QUAST_BINS_SUMMARY(ch_quast_bin_summary.collect())
-            ch_versions = ch_versions.mix(QUAST_BINS_SUMMARY.out.versions.first())
+            ch_versions = ch_versions.mix(QUAST_BINS_SUMMARY.out.versions)
 
             ch_quast_bins_summary = QUAST_BINS_SUMMARY.out.summary
         }
@@ -459,7 +459,7 @@ workflow MAG {
                 ch_catpack_summary.ifEmpty([]),
                 params.binqc_tool,
             )
-            ch_versions = ch_versions.mix(BIN_SUMMARY.out.versions.first())
+            ch_versions = ch_versions.mix(BIN_SUMMARY.out.versions)
         }
 
         /*
@@ -482,7 +482,7 @@ workflow MAG {
                 [],
                 [],
             )
-            ch_versions = ch_versions.mix(PROKKA.out.versions.first())
+            ch_versions = ch_versions.mix(PROKKA.out.versions)
         }
 
         if (!params.skip_metaeuk && (params.metaeuk_db || params.metaeuk_mmseqs_db)) {
@@ -497,7 +497,7 @@ workflow MAG {
                 }
 
             METAEUK_EASYPREDICT(ch_bins_for_metaeuk, ch_metaeuk_db)
-            ch_versions = ch_versions.mix(METAEUK_EASYPREDICT.out.versions.first())
+            ch_versions = ch_versions.mix(METAEUK_EASYPREDICT.out.versions)
         }
     }
 

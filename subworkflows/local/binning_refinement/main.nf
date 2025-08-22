@@ -40,19 +40,19 @@ workflow BINNING_REFINEMENT {
         maxbin2: it[0]['binner'] == 'MaxBin2'
         concoct: it[0]['binner'] == 'CONCOCT'
     }
-    ch_versions = ch_versions.mix(RENAME_PREDASTOOL.out.versions.first())
+    ch_versions = ch_versions.mix(RENAME_PREDASTOOL.out.versions)
 
 
     // Generate DASTool auxilary files
     DASTOOL_FASTATOCONTIG2BIN_METABAT2(ch_bins_for_fastatocontig2bin.metabat2, "fa")
-    ch_versions = ch_versions.mix(DASTOOL_FASTATOCONTIG2BIN_METABAT2.out.versions.first())
+    ch_versions = ch_versions.mix(DASTOOL_FASTATOCONTIG2BIN_METABAT2.out.versions)
 
     // MaxBin2 bin extension was changed to 'fa' as well in RENAME_PREDASTOOL
     DASTOOL_FASTATOCONTIG2BIN_MAXBIN2(ch_bins_for_fastatocontig2bin.maxbin2, "fa")
-    ch_versions = ch_versions.mix(DASTOOL_FASTATOCONTIG2BIN_MAXBIN2.out.versions.first())
+    ch_versions = ch_versions.mix(DASTOOL_FASTATOCONTIG2BIN_MAXBIN2.out.versions)
 
     DASTOOL_FASTATOCONTIG2BIN_CONCOCT(ch_bins_for_fastatocontig2bin.concoct, "fa")
-    ch_versions = ch_versions.mix(DASTOOL_FASTATOCONTIG2BIN_CONCOCT.out.versions.first())
+    ch_versions = ch_versions.mix(DASTOOL_FASTATOCONTIG2BIN_CONCOCT.out.versions)
 
     // Run DASTOOL
     ch_fastatocontig2bin_for_dastool = Channel.empty()
@@ -74,7 +74,7 @@ workflow BINNING_REFINEMENT {
 
     // Run DAStool
     DASTOOL_DASTOOL(ch_input_for_dastool, [], [])
-    ch_versions = ch_versions.mix(DASTOOL_DASTOOL.out.versions.first())
+    ch_versions = ch_versions.mix(DASTOOL_DASTOOL.out.versions)
 
     // Prepare bins for downstream analysis (separate from unbins, add 'binner' info and group)
     // use DASTool as 'binner' info allowing according grouping of refined bin sets,
@@ -102,7 +102,7 @@ workflow BINNING_REFINEMENT {
     }
 
     RENAME_POSTDASTOOL(ch_input_for_renamedastool)
-    ch_versions = ch_versions.mix(RENAME_POSTDASTOOL.out.versions.first())
+    ch_versions = ch_versions.mix(RENAME_POSTDASTOOL.out.versions)
 
     refined_unbins = RENAME_POSTDASTOOL.out.refined_unbins.map { meta, bin_list ->
         def meta_new = meta + [refinement: 'dastool_refined_unbinned']

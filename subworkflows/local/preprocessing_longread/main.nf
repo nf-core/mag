@@ -30,7 +30,7 @@ workflow LONGREAD_PREPROCESSING {
     NANOPLOT_RAW(
         ch_raw_long_reads
     )
-    ch_versions = ch_versions.mix(NANOPLOT_RAW.out.versions.first())
+    ch_versions = ch_versions.mix(NANOPLOT_RAW.out.versions)
 
     if (!params.assembly_input) {
         if (!params.skip_adapter_trimming && !val_skip_qc) {
@@ -38,7 +38,7 @@ workflow LONGREAD_PREPROCESSING {
                 PORECHOP_ABI(
                     ch_raw_long_reads
                 )
-                ch_versions = ch_versions.mix(PORECHOP_ABI.out.versions.first())
+                ch_versions = ch_versions.mix(PORECHOP_ABI.out.versions)
                 ch_long_reads = PORECHOP_ABI.out.reads
                 ch_multiqc_files = ch_multiqc_files.mix(PORECHOP_ABI.out.log)
             }
@@ -46,7 +46,7 @@ workflow LONGREAD_PREPROCESSING {
                 PORECHOP_PORECHOP(
                     ch_raw_long_reads
                 )
-                ch_versions = ch_versions.mix(PORECHOP_PORECHOP.out.versions.first())
+                ch_versions = ch_versions.mix(PORECHOP_PORECHOP.out.versions)
                 ch_long_reads = PORECHOP_PORECHOP.out.reads
                 ch_multiqc_files = ch_multiqc_files.mix(PORECHOP_PORECHOP.out.log)
             }
@@ -60,7 +60,7 @@ workflow LONGREAD_PREPROCESSING {
                 ch_long_reads,
                 ch_lambda_db,
             )
-            ch_versions = ch_versions.mix(NANOLYSE.out.versions.first())
+            ch_versions = ch_versions.mix(NANOLYSE.out.versions)
             ch_long_reads = NANOLYSE.out.fastq
         }
         if (!params.skip_longread_filtering && !val_skip_qc) {
@@ -78,7 +78,7 @@ workflow LONGREAD_PREPROCESSING {
                 FILTLONG(
                     ch_short_and_long_reads
                 )
-                ch_versions = ch_versions.mix(FILTLONG.out.versions.first())
+                ch_versions = ch_versions.mix(FILTLONG.out.versions)
                 ch_long_reads = FILTLONG.out.reads
                 ch_multiqc_files = ch_multiqc_files.mix(FILTLONG.out.log)
             }
@@ -87,7 +87,7 @@ workflow LONGREAD_PREPROCESSING {
                     ch_long_reads,
                     'fastq.gz',
                 )
-                ch_versions = ch_versions.mix(NANOQ.out.versions.first())
+                ch_versions = ch_versions.mix(NANOQ.out.versions)
                 ch_long_reads = NANOQ.out.reads
                 ch_multiqc_files = ch_multiqc_files.mix(NANOQ.out.stats)
             }
@@ -96,7 +96,7 @@ workflow LONGREAD_PREPROCESSING {
                     ch_long_reads,
                     ch_lambda_db,
                 )
-                ch_versions = ch_versions.mix(CHOPPER.out.versions.first())
+                ch_versions = ch_versions.mix(CHOPPER.out.versions)
                 ch_long_reads = CHOPPER.out.fastq
             }
         }
@@ -122,7 +122,7 @@ workflow LONGREAD_PREPROCESSING {
                 NANOPLOT_FILTERED(
                     ch_long_reads
                 )
-                ch_versions = ch_versions.mix(NANOPLOT_FILTERED.out.versions.first())
+                ch_versions = ch_versions.mix(NANOPLOT_FILTERED.out.versions)
             }
         }
 
@@ -138,7 +138,7 @@ workflow LONGREAD_PREPROCESSING {
                 cat: reads.size() >= 2
                 skip_cat: true
             }
-        ch_versions = ch_versions.mix(CAT_FASTQ_LONGREADS.out.versions.first())
+        ch_versions = ch_versions.mix(CAT_FASTQ_LONGREADS.out.versions)
         CAT_FASTQ_LONGREADS(ch_long_reads_forcat.cat.map { meta, reads -> [meta, reads.flatten()] })
 
         ch_long_reads = CAT_FASTQ_LONGREADS.out.reads.mix(ch_long_reads_forcat.skip_cat.map { meta, reads -> [meta, reads[0]] })
