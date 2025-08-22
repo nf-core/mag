@@ -17,21 +17,13 @@ workflow LONGREAD_ASSEMBLY {
 
         ch_long_reads_flye_input = ch_long_reads.multiMap { meta, reads ->
             reads: [meta, reads]
-            if (meta.lr_platform == "OXFORD_NANOPORE") {
-                return "--nano-raw"
-            }
-            else if (meta.lr_platform == "OXFORD_NANOPORE_HQ") {
-                return "--nano-hq"
-            }
-            else if (meta.lr_platform == "PACBIO_HIFI") {
-                return "--pacbio-hifi"
-            }
-            else if (meta.lr_platform == "PACBIO_CLR") {
-                return "--pacbio-raw"
-            }
-            else {
-                log.error("[nf-core/mag]: ERROR - incorrect lr_platform provided to Flye!")
-            }
+            mode: meta.lr_platform == "OXFORD_NANOPORE"
+                ? "--nano-raw"
+                : meta.lr_platform == "OXFORD_NANOPORE_HQ"
+                    ? "--nano-hq"
+                    : meta.lr_platform == "PACBIO_HIFI"
+                        ? "--pacbio-hifi"
+                        : meta.lr_platform == "PACBIO_CLR" ? "--pacbio-raw" : []
         }
 
         FLYE(
@@ -51,21 +43,13 @@ workflow LONGREAD_ASSEMBLY {
 
         ch_long_reads_metamdbg_input = ch_long_reads.multiMap { meta, reads ->
             reads: [meta, reads]
-            if (meta.lr_platform == "OXFORD_NANOPORE") {
-                return "ont"
-            }
-            else if (meta.lr_platform == "OXFORD_NANOPORE_HQ") {
-                return "ont"
-            }
-            else if (meta.lr_platform == "PACBIO_HIFI") {
-                return "hifi"
-            }
-            else if (meta.lr_platform == "PACBIO_CLR") {
-                return "hifi"
-            }
-            else {
-                log.error("[nf-core/mag]: ERROR - incorrect lr_platform provided to MetaMDBG!")
-            }
+            mode: meta.lr_platform == "OXFORD_NANOPORE"
+                ? "ont"
+                : meta.lr_platform == "OXFORD_NANOPORE_HQ"
+                    ? "ont"
+                    : meta.lr_platform == "PACBIO_HIFI"
+                        ? "hifi"
+                        : meta.lr_platform == "PACBIO_CLR" ? "hifi" : []
         }
 
         METAMDBG_ASM(
