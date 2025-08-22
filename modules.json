@@ -208,12 +208,12 @@
                     },
                     "metabat2/jgisummarizebamcontigdepths": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "metabat2/metabat2": {
                         "branch": "master",
-                        "git_sha": "d2e220fdec3aa2f4482c70017df4cdf8a4c94f27",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "metaeuk/easypredict": {
