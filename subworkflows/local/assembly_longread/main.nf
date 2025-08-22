@@ -16,14 +16,24 @@ workflow LONGREAD_ASSEMBLY {
     if (!params.skip_flye) {
 
         ch_long_reads_flye_input = ch_long_reads.multiMap { meta, reads ->
+            def fly_mode = ""
+            if (meta.lr_platform == "OXFORD_NANOPORE") {
+                fly_mode = "nt"
+            }
+            else if (meta.lr_platform == "NANOPORE_HQ") {
+                fly_mode = "ont"
+            }
+            else if (meta.lr_platform == "PACBIO_HIFI") {
+                fly_mode = "hifi"
+            }
+            else if (meta.lr_platform == "PACBIO_CLR") {
+                fly_mode = "hifi"
+            }
+            else {
+                log.error("[nf-core/mag]: ERROR - unknown lr_platform provided to Flye!")
+            }
             reads: [meta, reads]
-            mode: meta.lr_platform == "OXFORD_NANOPORE"
-                ? "--nano-raw"
-                : meta.lr_platform == "OXFORD_NANOPORE_HQ"
-                    ? "--nano-hq"
-                    : meta.lr_platform == "PACBIO_HIFI"
-                        ? "--pacbio-hifi"
-                        : meta.lr_platform == "PACBIO_CLR" ? "--pacbio-raw" : []
+            mode: fly_mode
         }
 
         FLYE(
@@ -42,21 +52,24 @@ workflow LONGREAD_ASSEMBLY {
     if (!params.skip_metamdbg) {
 
         ch_long_reads_metamdbg_input = ch_long_reads.multiMap { meta, reads ->
-            fly_mode = ""
+            def metamdbg_mode = ""
             if (meta.lr_platform == "OXFORD_NANOPORE") {
-                def fly_mode = "nt"
+                metamdbg_mode = "nt"
             }
             else if (meta.lr_platform == "NANOPORE_HQ") {
-                def fly_mode = "ont"
+                metamdbg_mode = "ont"
             }
             else if (meta.lr_platform == "PACBIO_HIFI") {
-                def fly_mode = "hifi"
+                metamdbg_mode = "hifi"
             }
             else if (meta.lr_platform == "PACBIO_CLR") {
-                def fly_mode = "hifi"
+                metamdbg_mode = "hifi"
+            }
+            else {
+                log.error("[nf-core/mag]: ERROR - unknown lr_platform provided to MetaMDBG!")
             }
             reads: [meta, reads]
-            mode: fly_mode
+            mode: metamdbg_mode
         }
 
         METAMDBG_ASM(
