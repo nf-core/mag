@@ -48,7 +48,7 @@ workflow DEPTHS {
         }
 
     MAG_DEPTHS(ch_depth_input)
-    ch_versions = ch_versions.mix(MAG_DEPTHS.out.versions)
+    ch_versions = ch_versions.mix(MAG_DEPTHS.out.versions.first())
 
     // Plot bin depths heatmap for each assembly and mapped samples (according to `binning_map_mode`)
     // create file containing group information for all samples
@@ -63,6 +63,7 @@ workflow DEPTHS {
     }
 
     MAG_DEPTHS_PLOT(ch_mag_depths_plot, ch_sample_groups.collect())
+    ch_versions = ch_versions.mix(MAG_DEPTHS_PLOT.out.versions.first())
 
     //Depth files that are coming from bins and failed binning refinement are concatenated per meta
     ch_mag_depth_out = MAG_DEPTHS.out.depths.collectFile(keepHeader: true) { meta, depth ->
@@ -70,8 +71,7 @@ workflow DEPTHS {
     }
 
     MAG_DEPTHS_SUMMARY(ch_mag_depth_out.collect())
-    ch_versions = ch_versions.mix(MAG_DEPTHS_PLOT.out.versions)
-    ch_versions = ch_versions.mix(MAG_DEPTHS_SUMMARY.out.versions)
+    ch_versions = ch_versions.mix(MAG_DEPTHS_SUMMARY.out.versions.first())
 
     emit:
     depths_summary = MAG_DEPTHS_SUMMARY.out.summary

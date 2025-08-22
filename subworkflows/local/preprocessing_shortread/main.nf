@@ -64,7 +64,6 @@ workflow SHORTREAD_PREPROCESSING {
             ch_short_reads_prepped = Channel.empty()
             ch_short_reads_prepped = ch_short_reads_prepped.mix(ADAPTERREMOVAL_SE.out.singles_truncated, ADAPTERREMOVAL_PE.out.paired_truncated)
 
-            ch_versions = ch_versions.mix(ADAPTERREMOVAL_PE.out.versions.first(), ADAPTERREMOVAL_SE.out.versions.first())
             ch_multiqc_files = ch_multiqc_files.mix(ADAPTERREMOVAL_PE.out.settings)
             ch_multiqc_files = ch_multiqc_files.mix(ADAPTERREMOVAL_SE.out.settings)
         }
@@ -207,7 +206,7 @@ workflow SHORTREAD_PREPROCESSING {
             ch_bbnorm = ch_short_reads
         }
         BBMAP_BBNORM(ch_bbnorm)
-        ch_versions = ch_versions.mix(BBMAP_BBNORM.out.versions)
+        ch_versions = ch_versions.mix(BBMAP_BBNORM.out.versions.first())
         ch_short_reads_assembly = BBMAP_BBNORM.out.fastq
     }
     else {

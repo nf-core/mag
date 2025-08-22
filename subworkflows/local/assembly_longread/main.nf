@@ -7,7 +7,7 @@ include { METAMDBG_ASM } from '../../../modules/nf-core/metamdbg/asm/main'
 
 workflow LONGREAD_ASSEMBLY {
     take:
-    ch_long_reads            // [ [meta] , fastq] (mandatory)
+    ch_long_reads // [ [meta] , fastq] (mandatory)
 
     main:
     ch_assembled_contigs = Channel.empty()
@@ -15,54 +15,57 @@ workflow LONGREAD_ASSEMBLY {
 
     if (!params.skip_flye) {
 
-        ch_long_reads_flye_input = ch_long_reads
-            .multiMap { meta, reads ->
-                reads: [meta, reads]
-                mode: meta.lr_platform == "OXFORD_NANOPORE" ? "--nano-raw" :
-                    meta.lr_platform == "OXFORD_NANOPORE_HQ" ? "--nano-hq" :
-                    meta.lr_platform == "PACBIO_HIFI" ? "--pacbio-hifi" :
-                    meta.lr_platform == "PACBIO_CLR" ? "--pacbio-raw" : []
-            }
+        ch_long_reads_flye_input = ch_long_reads.multiMap { meta, reads ->
+            reads: [meta, reads]
+            mode: meta.lr_platform == "OXFORD_NANOPORE"
+                ? "--nano-raw"
+                : meta.lr_platform == "OXFORD_NANOPORE_HQ"
+                    ? "--nano-hq"
+                    : meta.lr_platform == "PACBIO_HIFI"
+                        ? "--pacbio-hifi"
+                        : meta.lr_platform == "PACBIO_CLR" ? "--pacbio-raw" : []
+        }
 
-        FLYE (
+        FLYE(
             ch_long_reads_flye_input.reads,
             ch_long_reads_flye_input.mode,
         )
+        ch_versions = ch_versions.mix(FLYE.out.versions.first())
 
         ch_flye_assemblies = FLYE.out.fasta.map { meta, assembly ->
-                def meta_new = meta + [assembler: "FLYE"]
-                [meta_new, assembly]
-            }
+            def meta_new = meta + [assembler: "FLYE"]
+            [meta_new, assembly]
+        }
         ch_assembled_contigs = ch_assembled_contigs.mix(ch_flye_assemblies)
-        ch_versions = ch_versions.mix(FLYE.out.versions.first())
     }
 
     if (!params.skip_metamdbg) {
 
-        ch_long_reads_metamdbg_input = ch_long_reads
-            .multiMap { meta, reads ->
-                reads: [meta, reads]
-                mode: meta.lr_platform == "OXFORD_NANOPORE" ? "ont" :
-                    meta.lr_platform == "OXFORD_NANOPORE_HQ" ? "ont" :
-                    meta.lr_platform == "PACBIO_HIFI" ? "hifi" :
-                    meta.lr_platform == "PACBIO_CLR" ? "hifi" : []
-            }
+        ch_long_reads_metamdbg_input = ch_long_reads.multiMap { meta, reads ->
+            reads: [meta, reads]
+            mode: meta.lr_platform == "OXFORD_NANOPORE"
+                ? "ont"
+                : meta.lr_platform == "OXFORD_NANOPORE_HQ"
+                    ? "ont"
+                    : meta.lr_platform == "PACBIO_HIFI"
+                        ? "hifi"
+                        : meta.lr_platform == "PACBIO_CLR" ? "hifi" : []
+        }
 
-        METAMDBG_ASM (
+        METAMDBG_ASM(
             ch_long_reads_metamdbg_input.reads,
             ch_long_reads_metamdbg_input.mode,
         )
+        ch_versions = ch_versions.mix(METAMDBG_ASM.out.versions.first())
 
         ch_metamdbg_assemblies = METAMDBG_ASM.out.contigs.map { meta, assembly ->
-                def meta_new = meta + [assembler: "METAMDBG"]
-                [meta_new, assembly]
-            }
+            def meta_new = meta + [assembler: "METAMDBG"]
+            [meta_new, assembly]
+        }
         ch_assembled_contigs = ch_assembled_contigs.mix(ch_metamdbg_assemblies)
-        ch_versions = ch_versions.mix( METAMDBG_ASM.out.versions.first() )
     }
 
     emit:
     assembled_contigs = ch_assembled_contigs
-    versions = ch_versions
-
+    versions          = ch_versions
 }
