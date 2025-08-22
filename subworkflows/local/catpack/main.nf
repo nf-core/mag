@@ -29,6 +29,8 @@ workflow CATPACK {
     if (params.cat_db) {
         if (params.cat_db.endsWith('.tar.gz')) {
             CAT_DB_UNTAR([[id: 'cat_db'], file(params.cat_db, checkIfExists: true)])
+            ch_versions = ch_versions.mix(CAT_DB_UNTAR.out.versions.first())
+
             ch_cat_db_dir = CAT_DB_UNTAR.out.untar
         }
         else {
@@ -66,12 +68,12 @@ workflow CATPACK {
      */
 
     CATPACK_BINS(
-        ch_bins,            // input bins
-        ch_cat_db.db,       // database 'db' dir (contains diamond file mainly)
-        ch_cat_db.taxonomy, // database 'tax' dir (contains names/nodes.dmp)
-        [[:], []],          // pre-predicted proteins
-        [[:], []],          // pre-made diamond alignment table
-        '.fa',              // bin extension
+        ch_bins,
+        ch_cat_db.db,
+        ch_cat_db.taxonomy,
+        [[:], []],
+        [[:], []],
+        '.fa',
     )
     ch_versions = ch_versions.mix(CATPACK_BINS.out.versions.first())
 
@@ -99,11 +101,11 @@ workflow CATPACK {
 
     if (params.cat_classify_unbinned) {
         CATPACK_UNBINS(
-            ch_unbins,          // input contigs
-            ch_cat_db.db,       // database 'db' dir (contains diamond file mainly)
-            ch_cat_db.taxonomy, // database 'tax' dir (contains names/nodes.dmp)
-            [[:], []],          // pre-predicted proteins
-            [[:], []],          // pre-made diamond alignment table
+            ch_unbins,
+            ch_cat_db.db,
+            ch_cat_db.taxonomy,
+            [[:], []],
+            [[:], []],
         )
         ch_versions = ch_versions.mix(CATPACK_UNBINS.out.versions.first())
 

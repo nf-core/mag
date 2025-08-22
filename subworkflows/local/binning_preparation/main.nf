@@ -12,10 +12,12 @@ workflow BINNING_PREPARATION {
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
     SHORTREAD_BINNING_PREPARATION(ch_shortread_assemblies, ch_shortreads)
-    LONGREAD_BINNING_PREPARATION(ch_longread_assemblies, ch_longreads)
+    ch_versions = ch_versions.mix(SHORTREAD_BINNING_PREPARATION.out.versions)
 
-    ch_grouped_mappings = SHORTREAD_BINNING_PREPARATION.out.grouped_mappings
-        .mix(LONGREAD_BINNING_PREPARATION.out.grouped_mappings)
+    LONGREAD_BINNING_PREPARATION(ch_longread_assemblies, ch_longreads)
+    ch_versions = ch_versions.mix(LONGREAD_BINNING_PREPARATION.out.versions)
+
+    ch_grouped_mappings = SHORTREAD_BINNING_PREPARATION.out.grouped_mappings.mix(LONGREAD_BINNING_PREPARATION.out.grouped_mappings)
 
     ch_versions = ch_versions.mix(SHORTREAD_BINNING_PREPARATION.out.versions)
     ch_versions = ch_versions.mix(LONGREAD_BINNING_PREPARATION.out.versions)

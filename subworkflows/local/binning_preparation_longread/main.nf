@@ -10,6 +10,7 @@ workflow LONGREAD_BINNING_PREPARATION {
     ch_versions = Channel.empty()
 
     MINIMAP2_ASSEMBLY_INDEX(ch_assemblies)
+    ch_versions = ch_versions.mix(MINIMAP2_ASSEMBLY_INDEX.out.versions.first())
 
     if (params.binning_map_mode == 'all') {
         ch_minimap2_input = MINIMAP2_ASSEMBLY_INDEX.out.index
