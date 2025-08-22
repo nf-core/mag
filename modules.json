@@ -33,7 +33,7 @@
                     },
                     "busco/busco": {
                         "branch": "master",
-                        "git_sha": "deeb89c7a9150091e69c9d7644836c40982c683b",
+                        "git_sha": "40ab92fb218b5aa43beff23ab1320c138971705f",
                         "installed_by": ["modules"]
                     },
                     "cat/fastq": {
@@ -43,32 +43,32 @@
                     },
                     "catpack/addnames": {
                         "branch": "master",
-                        "git_sha": "81880787133db07d9b4c1febd152c090eb8325dc",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "catpack/bins": {
                         "branch": "master",
-                        "git_sha": "8e6e124ee1e7b9d6b8dacca408a936d56865322f",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "catpack/contigs": {
                         "branch": "master",
-                        "git_sha": "81880787133db07d9b4c1febd152c090eb8325dc",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "catpack/download": {
                         "branch": "master",
-                        "git_sha": "8c5c99341e42d34288b35af6a4fbbf300f21681f",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "catpack/prepare": {
                         "branch": "master",
-                        "git_sha": "8c5c99341e42d34288b35af6a4fbbf300f21681f",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "catpack/summarise": {
                         "branch": "master",
-                        "git_sha": "8e6e124ee1e7b9d6b8dacca408a936d56865322f",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "checkm/lineagewf": {
@@ -78,7 +78,7 @@
                     },
                     "checkm/qa": {
                         "branch": "master",
-                        "git_sha": "867961a8ef91135475ca48c83743646038be4196",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "checkm2/databasedownload": {
@@ -88,12 +88,12 @@
                     },
                     "checkm2/predict": {
                         "branch": "master",
-                        "git_sha": "6b8947dd401a58b08ca19f1952dc1182d66e4d89",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "chopper": {
                         "branch": "master",
-                        "git_sha": "22737835af2db3dd0d5b6b332e75e160d0199fae",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "concoct/concoct": {
@@ -123,7 +123,7 @@
                     },
                     "csvtk/concat": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "dastool/dastool": {
@@ -153,7 +153,7 @@
                     },
                     "flye": {
                         "branch": "master",
-                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "freebayes": {
@@ -193,17 +193,17 @@
                     },
                     "gunzip": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "maxbin2": {
                         "branch": "master",
-                        "git_sha": "376c622c91dc6a06af19f4de7f0c103bc0573b3f",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "megahit": {
                         "branch": "master",
-                        "git_sha": "d6ff43e046fcbc552d18050470592c9974a23e67",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "metabat2/jgisummarizebamcontigdepths": {
@@ -258,7 +258,7 @@
                     },
                     "nanoq": {
                         "branch": "master",
-                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "porechop/abi": {
@@ -278,7 +278,7 @@
                     },
                     "prokka": {
                         "branch": "master",
-                        "git_sha": "81880787133db07d9b4c1febd152c090eb8325dc",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "pydamage/analyze": {
@@ -308,7 +308,7 @@
                     },
                     "seqkit/stats": {
                         "branch": "master",
-                        "git_sha": "9fe7867a4f012db581d7bd560228ded1074eb0e5",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "seqtk/mergepe": {
@@ -318,22 +318,22 @@
                     },
                     "spades": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "tiara/tiara": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "trimmomatic": {
                         "branch": "master",
-                        "git_sha": "8864afe586537bf562eac7b83349c26207f3cb4d",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "untar": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/untar/untar.diff"
                     }

@@ -4,4 +4,4 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - bioconda::busco=6.0.0
+  - conda-forge::tiara=1.0.3
