@@ -91,7 +91,7 @@ workflow BINNING {
         ch_versions = ch_versions.mix(MAXBIN2.out.versions)
 
         ADJUST_MAXBIN2_EXT(MAXBIN2.out.binned_fastas)
-        ch_versions = ch_versions.mix(ADJUST_MAXBIN2_EXT.out.versions)
+        ch_versions = ch_versions.mix(ADJUST_MAXBIN2_EXT.out.versions.first())
 
         ch_bins_for_seqkit = ch_bins_for_seqkit.mix(ADJUST_MAXBIN2_EXT.out.renamed_bins.transpose())
         ch_binning_results_gzipped_final = ch_binning_results_gzipped_final.mix(ADJUST_MAXBIN2_EXT.out.renamed_bins)
@@ -168,7 +168,7 @@ workflow BINNING {
 
     // remove too-short contigs from unbinned contigs
     SPLIT_FASTA(ch_input_splitfasta)
-    ch_versions = ch_versions.mix(SPLIT_FASTA.out.versions)
+    ch_versions = ch_versions.mix(SPLIT_FASTA.out.versions.first())
 
     // large unbinned contigs from SPLIT_FASTA for decompressing for MAG_DEPTHS,
     // first have to separate and re-group due to limitation of GUNZIP module

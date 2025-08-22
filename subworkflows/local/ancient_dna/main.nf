@@ -25,7 +25,7 @@ workflow ANCIENT_DNA_ASSEMBLY_VALIDATION {
     ch_versions = ch_versions.mix(PYDAMAGE_ANALYZE.out.versions.first())
 
     PYDAMAGE_FILTER(PYDAMAGE_ANALYZE.out.csv)
-    ch_versions = ch_versions.mix(PYDAMAGE_ANALYZE.out.versions.first())
+    ch_versions = ch_versions.mix(PYDAMAGE_FILTER.out.versions.first())
 
     if (params.skip_ancient_damagecorrection) {
         ch_corrected_contigs = Channel.empty()

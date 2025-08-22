@@ -46,7 +46,7 @@ workflow BIN_QC {
         ch_checkm_db = [[id: 'checkm_db'], file(params.checkm_download_url, checkIfExists: true)]
 
         CHECKM_UNTAR(ch_checkm_db)
-        ch_versions = ch_versions.mix(CHECKM2_UNTAR.out.versions.first())
+        ch_versions = ch_versions.mix(CHECKM_UNTAR.out.versions.first())
 
         ch_checkm_db = CHECKM_UNTAR.out.untar.map { it[1] }
     }
@@ -132,11 +132,11 @@ workflow BIN_QC {
             }
 
         CHECKM_QA(ch_checkmqa_input, [])
+        ch_versions = ch_versions.mix(CHECKM_QA.out.versions.first())
 
         ch_qc_summaries = CHECKM_QA.out.output
             .map { _meta, summary -> [[id: 'checkm'], summary] }
             .groupTuple()
-        ch_versions = ch_versions.mix(CHECKM_QA.out.versions.first())
         ch_multiqc_files = ch_multiqc_files.mix(
             CHECKM_QA.out.output.map { it[1] }.flatten()
         )
@@ -146,11 +146,11 @@ workflow BIN_QC {
          * CheckM2
          */
         CHECKM2_PREDICT(ch_input_bins_for_qc.groupTuple(), ch_checkm2_db)
+        ch_versions = ch_versions.mix(CHECKM2_PREDICT.out.versions.first())
 
         ch_qc_summaries = CHECKM2_PREDICT.out.checkm2_tsv
             .map { _meta, summary -> [[id: 'checkm2'], summary] }
             .groupTuple()
-        ch_versions = ch_versions.mix(CHECKM2_PREDICT.out.versions.first())
         ch_multiqc_files = ch_multiqc_files.mix(
             CHECKM2_PREDICT.out.checkm2_tsv.map { it[1] }.flatten()
         )
@@ -203,8 +203,9 @@ workflow BIN_QC {
 
     // Combine QC summaries (same process for all tools)
     CONCAT_BINQC_TSV(ch_qc_summaries, 'tsv', 'tsv')
-    ch_qc_summary = CONCAT_BINQC_TSV.out.csv.map { _meta, summary -> summary }
     ch_versions = ch_versions.mix(CONCAT_BINQC_TSV.out.versions)
+
+    ch_qc_summary = CONCAT_BINQC_TSV.out.csv.map { _meta, summary -> summary }
 
     emit:
     qc_summary    = ch_qc_summary

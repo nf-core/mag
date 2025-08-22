@@ -12,7 +12,7 @@ include { SAMTOOLS_UNMAPPED as SAMTOOLS_HOSTREMOVED_UNMAPPED } from '../../../mo
 
 workflow LONGREAD_HOSTREMOVAL {
     take:
-    ch_reads  // [ [ meta ], [ reads ] ]
+    ch_reads      // [ [ meta ], [ reads ] ]
     val_reference // path
 
     main:
@@ -28,13 +28,13 @@ workflow LONGREAD_HOSTREMOVAL {
         .first()
     // makes sure to only use the host fasta if the long read channel is not empty
     ch_minimap2_index = MINIMAP2_HOST_INDEX(ch_host_fasta_for_build).index
-    ch_versions = ch_versions.mix(MINIMAP2_HOST_INDEX.out.versions)
+    ch_versions = ch_versions.mix(MINIMAP2_HOST_INDEX.out.versions.first())
 
     MINIMAP2_HOST_ALIGN(ch_reads, ch_minimap2_index, true, 'bai', false, false)
-    ch_versions = ch_versions.mix(MINIMAP2_HOST_ALIGN.out.versions.first())
     ch_minimap2_mapped = MINIMAP2_HOST_ALIGN.out.bam.map { meta, reads ->
         [meta, reads, []]
     }
+    ch_versions = ch_versions.mix(MINIMAP2_HOST_ALIGN.out.versions.first())
 
     // Generate unmapped reads FASTQ for downstream taxprofiling
     SAMTOOLS_HOSTREMOVED_UNMAPPED(ch_minimap2_mapped)
@@ -51,8 +51,8 @@ workflow LONGREAD_HOSTREMOVAL {
     ch_multiqc_files = ch_multiqc_files.mix(SAMTOOLS_HOSTREMOVED_STATS.out.stats)
 
     emit:
-    stats         = SAMTOOLS_HOSTREMOVED_STATS.out.stats    //channel: [val(meta), [reads  ] ]
+    stats         = SAMTOOLS_HOSTREMOVED_STATS.out.stats //channel: [val(meta), [reads  ] ]
     reads         = SAMTOOLS_HOSTREMOVED_UNMAPPED.out.fastq // channel: [ val(meta), [ reads ] ]
-    versions      = ch_versions                             // channel: [ versions.yml ]
+    versions      = ch_versions // channel: [ versions.yml ]
     multiqc_files = ch_multiqc_files
 }
