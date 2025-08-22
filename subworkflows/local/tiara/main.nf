@@ -8,31 +8,29 @@ workflow TIARA {
     take:
     ch_assemblies // tuple val(meta), path(assembly)
     ch_in_bins    // tuple val(meta), path( [ bins ] )
-    ch_in_unbins     // tuple val(meta), path( [ unbins ] )
+    ch_in_unbins  // tuple val(meta), path( [ unbins ] )
 
     main:
     ch_versions = Channel.empty()
 
-    ch_bins = ch_in_bins
-        .map { meta, bin_list ->
-            def meta_new = meta + [bin: 'bins']
-            meta_new.bin = 'bins'
-            [meta_new, bin_list]
-        }
+    ch_bins = ch_in_bins.map { meta, bin_list ->
+        def meta_new = meta + [bin: 'bins']
+        meta_new.bin = 'bins'
+        [meta_new, bin_list]
+    }
 
-    ch_unbins = ch_in_unbins
-        .map { meta, unbin_list ->
-            def meta_new = meta + [bin: 'unbins']
-            [meta_new, unbin_list]
-        }
+    ch_unbins = ch_in_unbins.map { meta, unbin_list ->
+        def meta_new = meta + [bin: 'unbins']
+        [meta_new, unbin_list]
+    }
 
     ch_tiara_input = ch_bins.mix(ch_unbins)
 
-    TIARA_TIARA ( ch_assemblies )
+    TIARA_TIARA(ch_assemblies)
     ch_versions = ch_versions.mix(TIARA_TIARA.out.versions.first())
 
     // Need contig2bin file for each bin group
-    DASTOOL_FASTATOCONTIG2BIN_TIARA ( ch_tiara_input , 'fa')
+    DASTOOL_FASTATOCONTIG2BIN_TIARA(ch_tiara_input, 'fa')
     ch_versions = ch_versions.mix(DASTOOL_FASTATOCONTIG2BIN_TIARA.out.versions.first())
 
     // Need to per-assembly Tiara classifications to their bins
@@ -41,53 +39,47 @@ workflow TIARA {
         .combine(ch_tiara_input, by: 0)
         .map { meta, contig2bin, bin_list ->
             def meta_join = meta - meta.subMap('binner', 'bin')
-            [ meta_join, meta, contig2bin, bin_list ]
+            [meta_join, meta, contig2bin, bin_list]
         }
 
     ch_tiara_classify_input = ch_contigs_to_bin_tiara
-        .combine( TIARA_TIARA.out.classifications, by: 0)
+        .combine(TIARA_TIARA.out.classifications, by: 0)
         .map { _meta_join, meta, contig2bin, bin_list, classifications ->
-            [ meta, classifications, contig2bin, bin_list ]
+            [meta, classifications, contig2bin, bin_list]
         }
 
-    TIARA_CLASSIFY( ch_tiara_classify_input )
+    TIARA_CLASSIFY(ch_tiara_classify_input)
     ch_versions = ch_versions.mix(TIARA_CLASSIFY.out.versions.first())
 
-    ch_eukarya_bins = TIARA_CLASSIFY.out.eukarya_bins
-        .map { meta, bin_list ->
-            def meta_new = meta + [domain: 'eukarya']
-            [meta_new, bin_list]
-        }
+    ch_eukarya_bins = TIARA_CLASSIFY.out.eukarya_bins.map { meta, bin_list ->
+        def meta_new = meta + [domain: 'eukarya']
+        [meta_new, bin_list]
+    }
 
-    ch_prokarya_bins = TIARA_CLASSIFY.out.prokarya_bins
-        .map { meta, bin_list ->
-            def meta_new = meta + [domain: 'prokarya']
-            [meta_new, bin_list]
-        }
+    ch_prokarya_bins = TIARA_CLASSIFY.out.prokarya_bins.map { meta, bin_list ->
+        def meta_new = meta + [domain: 'prokarya']
+        [meta_new, bin_list]
+    }
 
-    ch_bacteria_bins = TIARA_CLASSIFY.out.bacteria_bins
-        .map { meta, bin_list ->
-            def meta_new = meta + [domain: 'bacteria']
-            [meta_new, bin_list]
-        }
+    ch_bacteria_bins = TIARA_CLASSIFY.out.bacteria_bins.map { meta, bin_list ->
+        def meta_new = meta + [domain: 'bacteria']
+        [meta_new, bin_list]
+    }
 
-    ch_archaea_bins = TIARA_CLASSIFY.out.archaea_bins
-        .map { meta, bin_list ->
-            def meta_new = meta + [domain: 'archaea']
-            [meta_new, bin_list]
-        }
+    ch_archaea_bins = TIARA_CLASSIFY.out.archaea_bins.map { meta, bin_list ->
+        def meta_new = meta + [domain: 'archaea']
+        [meta_new, bin_list]
+    }
 
-    ch_organelle_bins = TIARA_CLASSIFY.out.organelle_bins
-        .map { meta, bin_list ->
-            def meta_new = meta + [domain: 'organelle']
-            [meta_new, bin_list]
-        }
+    ch_organelle_bins = TIARA_CLASSIFY.out.organelle_bins.map { meta, bin_list ->
+        def meta_new = meta + [domain: 'organelle']
+        [meta_new, bin_list]
+    }
 
-    ch_unknown_bins = TIARA_CLASSIFY.out.unknown_bins
-        .map { meta, bin_list ->
-            def meta_new = meta + [domain: 'unknown']
-            [meta_new, bin_list]
-        }
+    ch_unknown_bins = TIARA_CLASSIFY.out.unknown_bins.map { meta, bin_list ->
+        def meta_new = meta + [domain: 'unknown']
+        [meta_new, bin_list]
+    }
 
     ch_classified_bins_unbins = ch_eukarya_bins
         .mix(ch_prokarya_bins)
@@ -116,13 +108,14 @@ workflow TIARA {
 
     ch_bin_classifications = TIARA_CLASSIFY.out.bin_classifications
         .map { _meta, classification ->
-            [ classification ]
+            [classification]
         }
         .collect { classifications ->
             [[:], classifications]
         }
 
     TIARA_SUMMARY(ch_bin_classifications, 'tsv', 'tsv')
+    ch_versions = ch_versions.mix(TIARA_SUMMARY.out.versions.first())
 
     emit:
     classified_bins   = ch_classified_bins
