@@ -74,7 +74,7 @@ workflow ASSEMBLY {
             }
             else {
                 POOL_SHORT_READS(ch_short_reads_grouped)
-                ch_versions = ch_versions.mix(POOL_SHORT_READS.out.versions.first())
+                ch_versions = ch_versions.mix(POOL_SHORT_READS.out)
                 ch_short_reads_spades = POOL_SHORT_READS.out.reads
             }
         }
@@ -91,7 +91,7 @@ workflow ASSEMBLY {
             //make sure no long reads are pooled for spades if there are no short reads
 
             POOL_LONG_READS(ch_long_reads_grouped_for_pool)
-            ch_versions = ch_versions.mix(POOL_LONG_READS.out.versions.first())
+            ch_versions = ch_versions.mix(POOL_LONG_READS.out)
             ch_long_reads_spades = POOL_LONG_READS.out.reads
         }
         else {
@@ -136,11 +136,11 @@ workflow ASSEMBLY {
     ch_longread_assembled_contigs = LONGREAD_ASSEMBLY.out.assembled_contigs
 
     GUNZIP_SHORTREAD_ASSEMBLIES(ch_shortread_assembled_contigs)
-    ch_versions = ch_versions.mix(GUNZIP_SHORTREAD_ASSEMBLIES.out.versions.first())
+    ch_versions = ch_versions.mix(GUNZIP_SHORTREAD_ASSEMBLIES.out)
     ch_shortread_assemblies = GUNZIP_SHORTREAD_ASSEMBLIES.out.gunzip
 
     GUNZIP_LONGREAD_ASSEMBLIES(ch_longread_assembled_contigs)
-    ch_versions = ch_versions.mix(GUNZIP_LONGREAD_ASSEMBLIES.out.versions.first())
+    ch_versions = ch_versions.mix(GUNZIP_LONGREAD_ASSEMBLIES.out)
     ch_longread_assemblies = GUNZIP_LONGREAD_ASSEMBLIES.out.gunzip
 
     emit:

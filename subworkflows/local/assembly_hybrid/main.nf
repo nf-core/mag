@@ -28,7 +28,7 @@ workflow HYBRID_ASSEMBLY {
             }
 
         METASPADESHYBRID(ch_reads_spadeshybrid, [], [])
-        ch_versions = ch_versions.mix(METASPADESHYBRID.out.versions.first())
+        ch_versions = ch_versions.mix(METASPADESHYBRID.out)
 
         ch_spadeshybrid_assemblies = METASPADESHYBRID.out.scaffolds.map { meta, assembly ->
             def meta_new = meta + [assembler: "SPAdesHybrid"]

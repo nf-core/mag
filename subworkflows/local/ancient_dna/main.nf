@@ -22,10 +22,10 @@ workflow ANCIENT_DNA_ASSEMBLY_VALIDATION {
             ]
         }
     )
-    ch_versions = ch_versions.mix(PYDAMAGE_ANALYZE.out.versions.first())
+    ch_versions = ch_versions.mix(PYDAMAGE_ANALYZE.out)
 
     PYDAMAGE_FILTER(PYDAMAGE_ANALYZE.out.csv)
-    ch_versions = ch_versions.mix(PYDAMAGE_FILTER.out.versions.first())
+    ch_versions = ch_versions.mix(PYDAMAGE_FILTER.out)
 
     if (params.skip_ancient_damagecorrection) {
         ch_corrected_contigs = Channel.empty()
@@ -33,7 +33,7 @@ workflow ANCIENT_DNA_ASSEMBLY_VALIDATION {
 
     if (!params.skip_ancient_damagecorrection) {
         FAIDX(ch_input.map { item -> [item[0], item[1]] }, [[], []], false)
-        ch_versions = ch_versions.mix(FAIDX.out.versions.first())
+        ch_versions = ch_versions.mix(FAIDX.out)
 
         freebayes_input = ch_input
             .join(FAIDX.out.fai)
@@ -50,18 +50,18 @@ workflow ANCIENT_DNA_ASSEMBLY_VALIDATION {
             [],
             [],
         )
-        ch_versions = ch_versions.mix(FREEBAYES.out.versions.first())
+        ch_versions = ch_versions.mix(FREEBAYES.out)
 
         BCFTOOLS_INDEX_PRE(FREEBAYES.out.vcf)
-        ch_versions = ch_versions.mix(BCFTOOLS_INDEX_PRE.out.versions.first())
+        ch_versions = ch_versions.mix(BCFTOOLS_INDEX_PRE.out)
         BCFTOOLS_VIEW(FREEBAYES.out.vcf.join(BCFTOOLS_INDEX_PRE.out.tbi), [], [], [])
-        ch_versions = ch_versions.mix(BCFTOOLS_VIEW.out.versions.first())
+        ch_versions = ch_versions.mix(BCFTOOLS_VIEW.out)
         BCFTOOLS_INDEX_POST(BCFTOOLS_VIEW.out.vcf)
-        ch_versions = ch_versions.mix(BCFTOOLS_INDEX_POST.out.versions.first())
+        ch_versions = ch_versions.mix(BCFTOOLS_INDEX_POST.out)
         BCFTOOLS_CONSENSUS(
             BCFTOOLS_VIEW.out.vcf.join(BCFTOOLS_INDEX_POST.out.tbi).join(ch_input.map { item -> [item[0], item[1]] })
         )
-        ch_versions = ch_versions.mix(BCFTOOLS_CONSENSUS.out.versions.first())
+        ch_versions = ch_versions.mix(BCFTOOLS_CONSENSUS.out)
 
         ch_corrected_contigs = BCFTOOLS_CONSENSUS.out.fasta
     }
