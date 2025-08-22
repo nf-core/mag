@@ -6,7 +6,6 @@ keywords:
   - example
   - genomics
 tools:
-  ## TODO nf-core: Add a description and other details for the software below
   - "summarisepydamage":
       description: "Processing script for summarising damage parameter estimation for ancient DNA by pyDamage."
       homepage: "https://nf-co.re/mag"
@@ -28,7 +27,6 @@ input:
           - edam: "http://edamontology.org/format_3752" # CSV
 
 output:
-  ### TODO nf-core: Add a description of all of the variables used as output
   bam:
     - - meta:
           type: map

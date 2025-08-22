@@ -383,44 +383,6 @@ workflow MAG {
         ch_input_for_binsummary = DEPTHS.out.depths_summary
         ch_versions = ch_versions.mix(DEPTHS.out.versions)
 
-        if (params.ancient_dna) {
-            /*
-                TODO:
-                    1. Add bin name (From file name) to bin meta ✅
-                    2. Move all binning meta (including new one) into second meta ✅
-                    3. Join second meta'd results to pydamage results ✅
-                    4. Recombine the two metas ✅
-                    5. Group pydamage info into file
-                    6. Make 'median averaging' process script
-                    7. merge exported averaged results TSV to bin qc
-                    8. Move to subworkflow
-
-                    WRONG! NEW IDEA:
-
-                    1. Take pydamage results
-                    2. R/python process to summarise
-                    3.Then do joining shenaningans
-            */
-
-            // Get sample ID for each contig (record header)
-            ch_contig_bin_assignments = ch_input_for_postbinning
-                .transpose()
-                .splitFasta(record: [header: true])
-                .map { meta, record -> [[id: meta.id, contig_id: record.header]] }
-
-            // Make useable sample id/contig name meta map for merging
-            ch_pydamage_filtered_results = ANCIENT_DNA_ASSEMBLY_VALIDATION.out.pydamage_results
-                .splitCsv(header: true)
-                .map { meta, pydamage_stats -> [[id: meta.id, contig_id: pydamage_stats.reference], meta, pydamage_stats] }
-
-            // Merge sample ID to pydamage results so we can group by contig AND node name for summarising
-            ch_pydamage_to_bins = ch_contig_bin_assignments
-                .join(ch_pydamage_filtered_results)
-                .map { _coremeta, meta, pydamage_stats -> [[id: meta.id] + pydamage_stats] }
-
-            channelToSamplesheet(ch_pydamage_to_bins, "${params.outdir}/Ancient_DNA/pydamage_results_aggregated", 'csv')
-        }
-
         /*
         * Bin QC subworkflows: for checking bin completeness with either BUSCO, CHECKM, CHECKM2, and/or GUNC
         */
@@ -491,6 +453,16 @@ workflow MAG {
             ch_gtdbtk_summary = Channel.empty()
         }
 
+        if (params.ancient_dna) {
+            // TODO Need to group together to merge into single table (all sampels in one ) then drop meta
+            ch_summarisepydamage = ANCIENT_DNA_ASSEMBLY_VALIDATION.out.pydamage_summarised_results
+        }
+        else {
+            ch_summarisepydamage = Channel.empty()
+        }
+
+
+
         if ((!params.skip_binqc) || !params.skip_quast || !params.skip_gtdbtk) {
             BIN_SUMMARY(
                 ch_input_for_binsummary,
@@ -498,6 +470,7 @@ workflow MAG {
                 ch_quast_bins_summary.ifEmpty([]),
                 ch_gtdbtk_summary.ifEmpty([]),
                 ch_catpack_summary.ifEmpty([]),
+                ch_summarisepydamage.ifEmpty([]),
                 params.binqc_tool,
             )
         }
