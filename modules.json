@@ -238,7 +238,7 @@
                     },
                     "mmseqs/databases": {
                         "branch": "master",
-                        "git_sha": "699e078133f580548aeb43114f93ac29928c6143",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "multiqc": {
@@ -283,12 +283,12 @@
                     },
                     "pydamage/analyze": {
                         "branch": "master",
-                        "git_sha": "accaad2af97d7bf7304eeff8435aa755384660a6",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "pydamage/filter": {
                         "branch": "master",
-                        "git_sha": "4637ad17a068e1dd608f0e971293a64ae1310fa2",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "samtools/faidx": {

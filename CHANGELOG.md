@@ -37,16 +37,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Tool       | Previous version | New version |
 | ---------- | ---------------- | ----------- |
-| BUSCO      | 5.8.3            | 6.0.0       |
+| BUSCO      | 5.2.3            | 6.0.1       |
 | CAT        | 5.2.3            | 6.0.1       |
 | centrifuge | 1.0.4.1          | 1.0.4.2     |
 | nanolyse   | 1.41.6           | 1.44.1      |
 | flye       |                  | 2.9.5       |
 | metamdbg   |                  | 1.0         |
 | minimap2   |                  | 2.29        |
+| mmseqs2    | 14.7e284         | 17.b804f    |
 | samtools   |                  | 1.21        |
 | nf-core    | 3.2.0            | 3.3.2       |
 | pydamage   | 0.7.0            | 1.0.0       |
+| seqtk      | 1.3              | 1.4         |
 | seqtk      | 1.3              | 1.4         |
 
 ### `Deprecated`
