@@ -15,7 +15,7 @@ workflow SHORTREAD_BINNING_PREPARATION {
     ch_versions = Channel.empty()
     // build bowtie2 index for all assemblies
     BOWTIE2_ASSEMBLY_BUILD(ch_assemblies)
-    ch_versions = ch_versions.mix(BOWTIE2_ASSEMBLY_BUILD.out)
+    ch_versions = ch_versions.mix(BOWTIE2_ASSEMBLY_BUILD.out.versions.first())
 
     // combine assemblies with sample reads for binning depending on specified mapping mode
     if (params.binning_map_mode == 'all') {
@@ -45,7 +45,7 @@ workflow SHORTREAD_BINNING_PREPARATION {
     }
 
     BOWTIE2_ASSEMBLY_ALIGN(ch_bowtie2_input)
-    ch_versions = ch_versions.mix(BOWTIE2_ASSEMBLY_ALIGN.out)
+    ch_versions = ch_versions.mix(BOWTIE2_ASSEMBLY_ALIGN.out.versions.first())
 
     // group mappings for one assembly
     ch_grouped_mappings = BOWTIE2_ASSEMBLY_ALIGN.out.mappings

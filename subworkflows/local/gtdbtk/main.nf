@@ -53,7 +53,7 @@ workflow GTDBTK {
     if (val_gtdb.extension == 'gz') {
         // Expects to be tar.gz!
         ch_db_for_gtdbtk = GTDBTK_DB_PREPARATION(val_gtdb).db
-        ch_versions = ch_versions.mix(GTDBTK_DB_PREPARATION.out.versions)
+        ch_versions = ch_versions.mix(GTDBTK_DB_PREPARATION.out.versions.first())
     }
     else if (val_gtdb.isDirectory()) {
         ch_db_for_gtdbtk = [val_gtdb.simpleName, val_gtdb]
@@ -75,7 +75,7 @@ workflow GTDBTK {
         params.gtdbtk_pplacer_useram ? false : true,
         val_gtdb_mash,
     )
-    ch_versions = ch_versions.mix(GTDBTK_CLASSIFYWF.out)
+    ch_versions = ch_versions.mix(GTDBTK_CLASSIFYWF.out.versions.first())
 
     GTDBTK_SUMMARY(
         ch_filtered_bins.discarded.map { it[1] }.collect().ifEmpty([]),
@@ -83,7 +83,7 @@ workflow GTDBTK {
         [],
         [],
     )
-    ch_versions = ch_versions.mix(GTDBTK_SUMMARY.out)
+    ch_versions = ch_versions.mix(GTDBTK_SUMMARY.out.versions.first())
 
     emit:
     summary       = GTDBTK_SUMMARY.out.summary

@@ -29,7 +29,7 @@ workflow CATPACK {
     if (params.cat_db) {
         if (params.cat_db.endsWith('.tar.gz')) {
             CAT_DB_UNTAR([[id: 'cat_db'], file(params.cat_db, checkIfExists: true)])
-            ch_versions = ch_versions.mix(CAT_DB_UNTAR.out.versions))
+            ch_versions = ch_versions.mix(CAT_DB_UNTAR.out.versions.first())
 
             ch_cat_db_dir = CAT_DB_UNTAR.out.untar
         }
@@ -75,7 +75,7 @@ workflow CATPACK {
         [[:], []],
         '.fa',
     )
-    ch_versions = ch_versions.mix(CATPACK_BINS.out)
+    ch_versions = ch_versions.mix(CATPACK_BINS.out.versions.first())
 
     CATPACK_ADDNAMES_BINS(CATPACK_BINS.out.bin2classification, ch_cat_db.taxonomy)
     ch_versions = ch_versions.mix(CATPACK_ADDNAMES_BINS.out.versions)
@@ -90,7 +90,7 @@ workflow CATPACK {
 
     if (!params.cat_allow_unofficial_lineages) {
         CATPACK_SUMMARISE_BINS(CATPACK_ADDNAMES_BINS.out.txt, [[:], []])
-        ch_versions = ch_versions.mix(CATPACK_SUMMARISE_BINS.out)
+        ch_versions = ch_versions.mix(CATPACK_SUMMARISE_BINS.out.versions.first())
     }
 
     /*
@@ -107,10 +107,10 @@ workflow CATPACK {
             [[:], []],
             [[:], []],
         )
-        ch_versions = ch_versions.mix(CATPACK_UNBINS.out)
+        ch_versions = ch_versions.mix(CATPACK_UNBINS.out.versions.first())
 
         CATPACK_ADDNAMES_UNBINS(CATPACK_UNBINS.out.contig2classification, ch_cat_db.taxonomy)
-        ch_versions = ch_versions.mix(CATPACK_ADDNAMES_UNBINS.out)
+        ch_versions = ch_versions.mix(CATPACK_ADDNAMES_UNBINS.out.versions.first())
 
         if (!params.cat_allow_unofficial_lineages) {
             ch_unbin_classification = CATPACK_ADDNAMES_UNBINS.out.txt
@@ -121,7 +121,7 @@ workflow CATPACK {
                 }
 
             CATPACK_SUMMARISE_UNBINS(ch_unbin_classification.names, ch_unbin_classification.contigs)
-            ch_versions = ch_versions.mix(CATPACK_SUMMARISE_UNBINS.out)
+            ch_versions = ch_versions.mix(CATPACK_SUMMARISE_UNBINS.out.versions.first())
         }
     }
 

@@ -27,11 +27,11 @@ workflow TIARA {
     ch_tiara_input = ch_bins.mix(ch_unbins)
 
     TIARA_TIARA(ch_assemblies)
-    ch_versions = ch_versions.mix(TIARA_TIARA.out)
+    ch_versions = ch_versions.mix(TIARA_TIARA.out.versions.first())
 
     // Need contig2bin file for each bin group
     DASTOOL_FASTATOCONTIG2BIN_TIARA(ch_tiara_input, 'fa')
-    ch_versions = ch_versions.mix(DASTOOL_FASTATOCONTIG2BIN_TIARA.out)
+    ch_versions = ch_versions.mix(DASTOOL_FASTATOCONTIG2BIN_TIARA.out.versions.first())
 
     // Need to per-assembly Tiara classifications to their bins
     // Have to remove binner information from the meta map to do this
@@ -49,7 +49,7 @@ workflow TIARA {
         }
 
     TIARA_CLASSIFY(ch_tiara_classify_input)
-    ch_versions = ch_versions.mix(TIARA_CLASSIFY.out)
+    ch_versions = ch_versions.mix(TIARA_CLASSIFY.out.versions.first())
 
     ch_eukarya_bins = TIARA_CLASSIFY.out.eukarya_bins.map { meta, bin_list ->
         def meta_new = meta + [domain: 'eukarya']
@@ -115,7 +115,7 @@ workflow TIARA {
         }
 
     TIARA_SUMMARY(ch_bin_classifications, 'tsv', 'tsv')
-    ch_versions = ch_versions.mix(TIARA_SUMMARY.out)
+    ch_versions = ch_versions.mix(TIARA_SUMMARY.out.versions.first())
 
     emit:
     classified_bins   = ch_classified_bins

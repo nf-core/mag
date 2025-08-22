@@ -16,7 +16,7 @@ workflow VIRUS_IDENTIFICATION {
 
     if (params.genomad_db && ch_genomad_db.extension == 'gz') {
         GENOMAD_UNTAR([[id: 'db'], ch_genomad_db])
-        ch_versions = ch_versions.mix(GENOMAD_UNTAR.out.versions)
+        ch_versions = ch_versions.mix(GENOMAD_UNTAR.out.versions.first())
         ch_db_for_genomad = GENOMAD_UNTAR.out.untar.map { _meta, db -> [db] }
     }
     else if (params.genomad_db) {
@@ -24,11 +24,11 @@ workflow VIRUS_IDENTIFICATION {
     }
     else {
         ch_db_for_genomad = GENOMAD_DOWNLOAD().genomad_db
-        ch_versions = ch_versions.mix(GENOMAD_DOWNLOAD.out)
+        ch_versions = ch_versions.mix(GENOMAD_DOWNLOAD.out.versions.first())
     }
 
     ch_identified_viruses = GENOMAD_ENDTOEND(ch_assemblies, ch_db_for_genomad).virus_fasta
-    ch_versions = ch_versions.mix(GENOMAD_ENDTOEND.out)
+    ch_versions = ch_versions.mix(GENOMAD_ENDTOEND.out.versions.first())
 
     emit:
     identified_viruses = ch_identified_viruses
