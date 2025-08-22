@@ -42,7 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | nanolyse   | 1.41.6           | 1.44.1      |
 | flye       |                  | 2.9.5       |
 | metamdbg   |                  | 1.0         |
-| minimap2   |                  | 2.28        |
+| minimap2   |                  | 2.29        |
 | samtools   |                  | 1.21        |
 | nf-core    | 3.2.0            | 3.3.2       |
 | pydamage   | 0.7.0            | 1.0.0       |
