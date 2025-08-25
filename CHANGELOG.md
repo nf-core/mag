@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#841](https://github.com/nf-core/mag/pull/841) - MultiQC config updated to support CheckM, CheckM2, and GTDB-Tk (by @harper357)
 - [#844](https://github.com/nf-core/mag/pull/843) - Change loading mechanism of internal PhiX/Lambda databases to improve Dev UX when schema building (by @jfy133)
 - [#851](https://github.com/nf-core/mag/pull/851) - Improve structure of local modules and subworkflows (by @dialvarezs)
+- [#853](https://github.com/nf-core/mag/pull/853) - Update nf-core modules and subworkflows (by @dialvarezs)
 
 ### `Fixed`
 
@@ -38,15 +39,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Tool       | Previous version | New version |
 | ---------- | ---------------- | ----------- |
+| BUSCO      | 5.8.3            | 6.0.0       |
 | CAT        | 5.2.3            | 6.0.1       |
 | centrifuge | 1.0.4.1          | 1.0.4.2     |
 | nanolyse   | 1.41.6           | 1.44.1      |
 | flye       |                  | 2.9.5       |
+| metabat2   | 2.15             | 2.17        |
 | metamdbg   |                  | 1.0         |
-| minimap2   |                  | 2.28        |
+| minimap2   |                  | 2.29        |
+| mmseqs2    | 14.7e284         | 17.b804f    |
 | samtools   |                  | 1.21        |
 | nf-core    | 3.2.0            | 3.3.2       |
 | pydamage   | 0.7.0            | 1.0.0       |
+| seqtk      | 1.3              | 1.4         |
 
 ### `Deprecated`
 
