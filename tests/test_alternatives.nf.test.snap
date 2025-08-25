@@ -348,7 +348,7 @@
                 "multiqc_fastqc.yaml:md5,f50da8bfd062b9399911ba19b34831db",
                 "multiqc_fastqc_fastqc-1.yaml:md5,4c2c5a5e7b370b0668c1360b7927d0a8",
                 "multiqc_general_stats.yaml:md5,8b8cbb9d6fe349084e3d2fe2ffdecda8",
-                "multiqc_software_versions.yaml:md5,6dbd1f36f76c96b310c0c2921b5fc9a9",
+                "multiqc_software_versions.yaml:md5,13a35a24875040df0018b0da426bcb65",
                 "multiqc_trimmomatic.yaml:md5,d4aaff3725c28801ae0577d97c2f9b30",
                 "trimmomatic_plot.yaml:md5,9557cd587ace0a93912179cb0deafe3b"
             ]
@@ -357,6 +357,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-08-25T16:23:26.296238393"
+        "timestamp": "2025-08-25T17:08:48.173464912"
     }
 }
