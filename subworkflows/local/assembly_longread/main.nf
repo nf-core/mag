@@ -54,7 +54,7 @@ workflow LONGREAD_ASSEMBLY {
         ch_long_reads_metamdbg_input = ch_long_reads.multiMap { meta, reads ->
             def metamdbg_mode = ""
             if (meta.lr_platform == "OXFORD_NANOPORE") {
-                metamdbg_mode = "nt"
+                metamdbg_mode = "ont"
             }
             else if (meta.lr_platform == "NANOPORE_HQ") {
                 metamdbg_mode = "ont"
