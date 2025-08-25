@@ -32,7 +32,7 @@ workflow SHORTREAD_PREPROCESSING {
     FASTQC_RAW(
         ch_raw_short_reads
     )
-    ch_versions = ch_versions.mix(FASTQC_RAW.out.versions.first())
+    ch_versions = ch_versions.mix(FASTQC_RAW.out.versions)
     ch_multiqc_files = ch_multiqc_files.mix(FASTQC_RAW.out.zip)
 
     if (!params.skip_clipping && !val_skip_qc) {
@@ -43,8 +43,8 @@ workflow SHORTREAD_PREPROCESSING {
                 params.fastp_save_trimmed_fail,
                 [],
             )
+            ch_versions = ch_versions.mix(FASTP.out.versions)
             ch_short_reads_prepped = FASTP.out.reads
-            ch_versions = ch_versions.mix(FASTP.out.versions.first())
             ch_multiqc_files = ch_multiqc_files.mix(FASTP.out.json)
         }
         else if (params.clip_tool == 'adapterremoval') {
@@ -57,23 +57,24 @@ workflow SHORTREAD_PREPROCESSING {
             }
 
             ADAPTERREMOVAL_PE(ch_adapterremoval_in.paired, [])
+            ch_versions = ch_versions.mix(ADAPTERREMOVAL_PE.out.versions)
             ADAPTERREMOVAL_SE(ch_adapterremoval_in.single, [])
+            ch_versions = ch_versions.mix(ADAPTERREMOVAL_SE.out.versions)
 
             ch_short_reads_prepped = Channel.empty()
             ch_short_reads_prepped = ch_short_reads_prepped.mix(ADAPTERREMOVAL_SE.out.singles_truncated, ADAPTERREMOVAL_PE.out.paired_truncated)
 
-            ch_versions = ch_versions.mix(ADAPTERREMOVAL_PE.out.versions.first(), ADAPTERREMOVAL_SE.out.versions.first())
             ch_multiqc_files = ch_multiqc_files.mix(ADAPTERREMOVAL_PE.out.settings)
             ch_multiqc_files = ch_multiqc_files.mix(ADAPTERREMOVAL_SE.out.settings)
         }
         else if (params.clip_tool == 'trimmomatic') {
 
             TRIMMOMATIC(ch_raw_short_reads)
+            ch_versions = ch_versions.mix(TRIMMOMATIC.out.versions)
 
             ch_short_reads_prepped = Channel.empty()
             ch_short_reads_prepped = TRIMMOMATIC.out.trimmed_reads
 
-            ch_versions = ch_versions.mix(TRIMMOMATIC.out.versions.first())
             ch_multiqc_files = ch_multiqc_files.mix(TRIMMOMATIC.out.out_log)
         }
     }
@@ -86,13 +87,18 @@ workflow SHORTREAD_PREPROCESSING {
             ch_host_bowtie2index = file(params.host_fasta_bowtie2index, checkIfExists: true)
         }
         else {
-            ch_host_fasta_for_build = ch_host_fasta.combine(ch_short_reads_prepped)
+            ch_host_fasta_for_build = ch_host_fasta
+                .combine(ch_short_reads_prepped)
                 .map { host_fasta, _meta, _reads ->
                     host_fasta
-                }.first() // makes sure to only use the host fasta if the short read channel is not empty
+                }
+                .first()
+            // makes sure to only use the host fasta if the short read channel is not empty
             BOWTIE2_HOST_REMOVAL_BUILD(
                 ch_host_fasta_for_build
             )
+            ch_versions = ch_versions.mix(BOWTIE2_HOST_REMOVAL_BUILD.out.versions)
+
             ch_host_bowtie2index = BOWTIE2_HOST_REMOVAL_BUILD.out.index
         }
     }
@@ -105,8 +111,9 @@ workflow SHORTREAD_PREPROCESSING {
             ch_short_reads_prepped,
             ch_host_bowtie2index,
         )
+        ch_versions = ch_versions.mix(BOWTIE2_HOST_REMOVAL_ALIGN.out.versions)
+
         ch_short_reads_hostremoved = BOWTIE2_HOST_REMOVAL_ALIGN.out.reads
-        ch_versions = ch_versions.mix(BOWTIE2_HOST_REMOVAL_ALIGN.out.versions.first())
         ch_multiqc_files = ch_multiqc_files.mix(BOWTIE2_HOST_REMOVAL_ALIGN.out.log)
     }
     else {
@@ -114,19 +121,24 @@ workflow SHORTREAD_PREPROCESSING {
     }
 
     if (!params.keep_phix && !val_skip_qc) {
-        ch_phix_fasta_for_build = ch_phix_db_file.combine(ch_short_reads_prepped)
-                .map { host_fasta, _meta, _reads ->
-                    host_fasta
-                }.first()
+        ch_phix_fasta_for_build = ch_phix_db_file
+            .combine(ch_short_reads_prepped)
+            .map { host_fasta, _meta, _reads ->
+                host_fasta
+            }
+            .first()
         BOWTIE2_PHIX_REMOVAL_BUILD(
             ch_phix_fasta_for_build
         )
+        ch_versions = ch_versions.mix(BOWTIE2_PHIX_REMOVAL_BUILD.out.versions)
+
         BOWTIE2_PHIX_REMOVAL_ALIGN(
             ch_short_reads_hostremoved,
             BOWTIE2_PHIX_REMOVAL_BUILD.out.index,
         )
+        ch_versions = ch_versions.mix(BOWTIE2_PHIX_REMOVAL_ALIGN.out.versions)
+
         ch_short_reads_phixremoved = BOWTIE2_PHIX_REMOVAL_ALIGN.out.reads
-        ch_versions = ch_versions.mix(BOWTIE2_PHIX_REMOVAL_ALIGN.out.versions.first())
         ch_multiqc_files = ch_multiqc_files.mix(BOWTIE2_PHIX_REMOVAL_ALIGN.out.log)
     }
     else {
@@ -138,13 +150,8 @@ workflow SHORTREAD_PREPROCESSING {
      * - No host removal and skip_qc (params.skip_shortread_qc)
      * - No host removal and *both* --keep_phix --skip_clipping
      */
-    if ( !( ( val_skip_qc && !( params.host_fasta || params.host_genome ) ) ) ) {
-        if (
-            !(
-                params.keep_phix && params.skip_clipping &&
-                !( params.host_genome || params.host_fasta )
-            )
-        ) {
+    if (!(val_skip_qc && !(params.host_fasta || params.host_genome))) {
+        if (!(params.keep_phix && params.skip_clipping && !(params.host_genome || params.host_fasta))) {
             FASTQC_TRIMMED(
                 ch_short_reads_phixremoved
             )
@@ -167,6 +174,8 @@ workflow SHORTREAD_PREPROCESSING {
         }
 
     CAT_FASTQ(ch_short_reads_forcat.cat.map { meta, reads -> [meta, reads.flatten()] })
+    ch_versions = ch_versions.mix(CAT_FASTQ.out.versions)
+
 
     // Ensure we don't have nests of nests so that structure is in form expected for assembly
     ch_short_reads_catskipped = ch_short_reads_forcat.skip_cat.map { meta, reads ->
@@ -177,7 +186,6 @@ workflow SHORTREAD_PREPROCESSING {
     // Combine single run and multi-run-merged data
     ch_short_reads = Channel.empty()
     ch_short_reads = CAT_FASTQ.out.reads.mix(ch_short_reads_catskipped)
-    ch_versions = ch_versions.mix(CAT_FASTQ.out.versions.first())
 
     if (params.bbnorm) {
         if (params.coassemble_group) {
@@ -187,7 +195,7 @@ workflow SHORTREAD_PREPROCESSING {
             SEQTK_MERGEPE(
                 ch_short_reads.filter { !it[0].single_end }
             )
-            ch_versions = ch_versions.mix(SEQTK_MERGEPE.out.versions.first())
+            ch_versions = ch_versions.mix(SEQTK_MERGEPE.out.versions)
             // Combine the interleaved pairs with any single end libraries. Set the meta.single_end to true (used by the bbnorm module).
             ch_bbnorm = SEQTK_MERGEPE.out.reads
                 .mix(ch_short_reads.filter { it[0].single_end })
