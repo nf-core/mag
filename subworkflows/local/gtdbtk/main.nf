@@ -29,7 +29,7 @@ workflow GTDBTK {
         .map { row -> qc_columns[params.binqc_tool].collect { col -> row[col] } }
         .filter { row -> row[1] != '' }
         .map { row ->
-            row = [row[0]] + row[1..2].collect { value -> Number.parseDouble("${value}") }
+            row = [row[0]] + row[1..2].collect { value -> "${value}".toDouble() }
             // CheckM / CheckM2 removes the .fa extension from the bin name
             if (params.binqc_tool in ['checkm', 'checkm2']) {
                 row[0] = row[0] + '.fa'

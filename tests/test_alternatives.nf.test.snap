@@ -1,15 +1,40 @@
 {
+    "checkm2_diamond_results": {
+        "content": [
+            [
+                806
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.6"
+        },
+        "timestamp": "2025-08-21T06:18:59.114965285"
+    },
     "-profile test_alternatives": {
         "content": [
             41,
             {
+                "BIN_SUMMARY": {
+                    "python": "3.10.6",
+                    "pandas": "1.4.3"
+                },
                 "BOWTIE2_ASSEMBLY_ALIGN": {
                     "bowtie2": "2.4.2",
                     "samtools": 1.11,
                     "pigz": "2.3.4"
                 },
+                "BOWTIE2_ASSEMBLY_BUILD": {
+                    "bowtie2": "2.4.2"
+                },
                 "BOWTIE2_PHIX_REMOVAL_ALIGN": {
                     "bowtie2": "2.4.2"
+                },
+                "BOWTIE2_PHIX_REMOVAL_BUILD": {
+                    "bowtie2": "2.4.2"
+                },
+                "CHECKM2_DATABASEDOWNLOAD": {
+                    "aria2": "1.37.0"
                 },
                 "CHECKM2_PREDICT": {
                     "checkm2": "1.1.0"
@@ -54,10 +79,16 @@
                 "METABAT2_METABAT2": {
                     "metabat2": 2.17
                 },
+                "SEQKIT_STATS": {
+                    "seqkit": "2.9.0"
+                },
                 "SPLIT_FASTA": {
                     "python": "3.6.7",
                     "biopython": "1.7.4",
                     "pandas": "1.1.5"
+                },
+                "TIARA_SUMMARY": {
+                    "csvtk": "0.31.0"
                 },
                 "TIARA_TIARA": {
                     "tiara": "1.0.3"
@@ -76,7 +107,7 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-08-21T06:18:58.772774309"
+        "timestamp": "2025-08-25T16:23:26.183903562"
     },
     "qc": {
         "content": [
@@ -317,7 +348,7 @@
                 "multiqc_fastqc.yaml:md5,f50da8bfd062b9399911ba19b34831db",
                 "multiqc_fastqc_fastqc-1.yaml:md5,4c2c5a5e7b370b0668c1360b7927d0a8",
                 "multiqc_general_stats.yaml:md5,8b8cbb9d6fe349084e3d2fe2ffdecda8",
-                "multiqc_software_versions.yaml:md5,72a933b80779be004544d95fc0c22ae7",
+                "multiqc_software_versions.yaml:md5,6dbd1f36f76c96b310c0c2921b5fc9a9",
                 "multiqc_trimmomatic.yaml:md5,d4aaff3725c28801ae0577d97c2f9b30",
                 "trimmomatic_plot.yaml:md5,9557cd587ace0a93912179cb0deafe3b"
             ]
@@ -326,18 +357,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-08-21T06:18:58.993087395"
-    },
-    "checkm2_diamond_results": {
-        "content": [
-            [
-                806
-            ]
-        ],
-        "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
-        },
-        "timestamp": "2025-08-21T06:18:59.114965285"
+        "timestamp": "2025-08-25T16:23:26.296238393"
     }
 }
