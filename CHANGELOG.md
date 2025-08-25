@@ -35,31 +35,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#843](https://github.com/nf-core/mag/pull/843) - Fixed issue with large format Bowtie2 index files not being emitted from index module (reported by Nick Eckersley, fix by @jfy133)
 - [#847](https://github.com/nf-core/mag/pull/847) - Allow the BBNorm process to use only 0.8 of the memory allocated to the task to stop if from oversubscribing memory (reported by and fix by @erikrikarddaniel)
 - [#850](https://github.com/nf-core/mag/pull/850) - Fixed some modules of the GDTBTk subworkflow not being represented in version lists (fix by @jfy133)
-- [#852](https://github.com/nf-core/mag/pull/852) - Fixed version reporting by ensure all modules are represented in final version.yml for MultiQC (by @jfy133)
+- [#853](https://github.com/nf-core/mag/pull/853) - Update porechop/abi to a patched version to prevent duplicated read names (reported by @palec87, fix by @jfy133)
 
 ### `Dependencies`
 
-| Tool       | Previous version | New version |
-| ---------- | ---------------- | ----------- |
-| bcftools   | 1.17             | 1.21        |
-| BUSCO      | 5.8.3            | 6.0.0       |
-| CAT        | 5.2.3            | 6.0.1       |
-| centrifuge | 1.0.4.1          | 1.0.4.2     |
-| dastool    | 1.1.6            | 1.1.7       |
-| nanolyse   | 1.41.6           | 1.44.1      |
-| fastp      | 0.23.4           | 0.24.0      |
-| flye       |                  | 2.9.5       |
-| Freebayes  | 1.3.6            | 1.3.10      |
-| geNomad    | 1.5.2            | 1.11.0      |
-| GTDB-Tk    | 2.4.0            | 2.4.1       |
-| metabat2   | 2.15             | 2.17        |
-| metamdbg   |                  | 1.0         |
-| minimap2   |                  | 2.29        |
-| mmseqs2    | 14.7e284         | 17.b804f    |
-| samtools   |                  | 1.21        |
-| nf-core    | 3.2.0            | 3.3.2       |
-| pydamage   | 0.7.0            | 1.0.0       |
-| seqtk      | 1.3              | 1.4         |
+| Tool         | Previous version | New version |
+| ------------ | ---------------- | ----------- |
+| BUSCO        | 5.8.3            | 6.0.0       |
+| CAT          | 5.2.3            | 6.0.1       |
+| centrifuge   | 1.0.4.1          | 1.0.4.2     |
+| nanolyse     | 1.41.6           | 1.44.1      |
+| flye         |                  | 2.9.5       |
+| metabat2     | 2.15             | 2.17        |
+| metamdbg     |                  | 1.0         |
+| minimap2     |                  | 2.29        |
+| mmseqs2      | 14.7e284         | 17.b804f    |
+| samtools     |                  | 1.21        |
+| nf-core      | 3.2.0            | 3.3.2       |
+| pydamage     | 0.7.0            | 1.0.0       |
+| seqtk        | 1.3              | 1.4         |
+| porechop_abi | 0.5.0            | 0.5.0post1  |
 
 ### `Deprecated`
 

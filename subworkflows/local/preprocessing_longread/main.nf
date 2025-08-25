@@ -36,10 +36,12 @@ workflow LONGREAD_PREPROCESSING {
         if (!params.skip_adapter_trimming && !val_skip_qc) {
             if (params.longread_adaptertrimming_tool && params.longread_adaptertrimming_tool == 'porechop_abi') {
                 PORECHOP_ABI(
-                    ch_raw_long_reads
+                    ch_raw_long_reads,
+                    [],
                 )
                 ch_versions = ch_versions.mix(PORECHOP_ABI.out.versions)
                 ch_long_reads = PORECHOP_ABI.out.reads
+                ch_versions = ch_versions.mix(PORECHOP_ABI.out.versions.first())
                 ch_multiqc_files = ch_multiqc_files.mix(PORECHOP_ABI.out.log)
             }
             else if (params.longread_adaptertrimming_tool == 'porechop') {
@@ -48,6 +50,7 @@ workflow LONGREAD_PREPROCESSING {
                 )
                 ch_versions = ch_versions.mix(PORECHOP_PORECHOP.out.versions)
                 ch_long_reads = PORECHOP_PORECHOP.out.reads
+                ch_versions = ch_versions.mix(PORECHOP_PORECHOP.out.versions.first())
                 ch_multiqc_files = ch_multiqc_files.mix(PORECHOP_PORECHOP.out.log)
             }
         }
@@ -80,6 +83,7 @@ workflow LONGREAD_PREPROCESSING {
                 )
                 ch_versions = ch_versions.mix(FILTLONG.out.versions)
                 ch_long_reads = FILTLONG.out.reads
+                ch_versions = ch_versions.mix(FILTLONG.out.versions.first())
                 ch_multiqc_files = ch_multiqc_files.mix(FILTLONG.out.log)
             }
             else if (params.longread_filtering_tool == 'nanoq') {
@@ -108,7 +112,6 @@ workflow LONGREAD_PREPROCESSING {
                 ch_host_fasta,
             )
             ch_versions = ch_versions.mix(LONGREAD_HOSTREMOVAL.out.versions)
-            ch_long_reads = LONGREAD_HOSTREMOVAL.out.reads
             ch_multiqc_files = ch_multiqc_files.mix(LONGREAD_HOSTREMOVAL.out.multiqc_files)
         }
 
