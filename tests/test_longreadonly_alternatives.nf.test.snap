@@ -1,0 +1,76 @@
+{
+    "-profile longreadonly_alternatives": {
+        "content": [
+            26,
+            {
+                "BUSCO_BUSCO": {
+                    "busco": "6.0.0"
+                },
+                "CONCAT_BINQC_TSV": {
+                    "csvtk": "0.31.0"
+                },
+                "CONVERT_DEPTHS": {
+                    "bioawk": 20110810
+                },
+                "GUNZIP_BINS": {
+                    "gunzip": 1.13
+                },
+                "GUNZIP_LONGREAD_ASSEMBLIES": {
+                    "gunzip": 1.13
+                },
+                "MAG_DEPTHS": {
+                    "python": "3.6.7",
+                    "pandas": "1.1.5"
+                },
+                "MAG_DEPTHS_SUMMARY": {
+                    "python": "3.10.6",
+                    "pandas": "1.4.3"
+                },
+                "MAXBIN2": {
+                    "maxbin2": "2.2.7"
+                },
+                "METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_LONGREAD": {
+                    "metabat2": 2.15
+                },
+                "METABAT2_METABAT2": {
+                    "metabat2": 2.17
+                },
+                "METAMDBG_ASM": {
+                    "metamdbg": 1.1
+                },
+                "MINIMAP2_ASSEMBLY_ALIGN": {
+                    "minimap2": "2.29-r1283",
+                    "samtools": 1.21
+                },
+                "NANOLYSE": {
+                    "nanolyse": "1.2.0"
+                },
+                "NANOPLOT_FILTERED": {
+                    "nanoplot": "1.44.1"
+                },
+                "NANOPLOT_RAW": {
+                    "nanoplot": "1.44.1"
+                },
+                "NANOQ": {
+                    "nanoq": "0.10.0"
+                },
+                "PORECHOP_PORECHOP": {
+                    "porechop": "0.2.4"
+                },
+                "SPLIT_FASTA": {
+                    "python": "3.6.7",
+                    "biopython": "1.7.4",
+                    "pandas": "1.1.5"
+                },
+                "Workflow": {
+                    "nf-core/mag": "v4.1.0dev"
+                }
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.6"
+        },
+        "timestamp": "2025-08-25T12:27:17.524160339"
+    }
+}

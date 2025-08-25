@@ -1,0 +1,110 @@
+{
+    "-profile longreadonly": {
+        "content": [
+            57,
+            {
+                "BUSCO_BUSCO": {
+                    "busco": "6.0.0"
+                },
+                "CONCAT_BINQC_TSV": {
+                    "csvtk": "0.31.0"
+                },
+                "CONVERT_DEPTHS": {
+                    "bioawk": 20110810
+                },
+                "FILTLONG": {
+                    "filtlong": "0.2.1"
+                },
+                "FLYE": {
+                    "flye": "2.9.5-b1801"
+                },
+                "GUNZIP_BINS": {
+                    "gunzip": 1.13
+                },
+                "GUNZIP_LONGREAD_ASSEMBLIES": {
+                    "gunzip": 1.13
+                },
+                "MAG_DEPTHS": {
+                    "python": "3.6.7",
+                    "pandas": "1.1.5"
+                },
+                "MAG_DEPTHS_SUMMARY": {
+                    "python": "3.10.6",
+                    "pandas": "1.4.3"
+                },
+                "MAXBIN2": {
+                    "maxbin2": "2.2.7"
+                },
+                "METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_LONGREAD": {
+                    "metabat2": 2.15
+                },
+                "METABAT2_METABAT2": {
+                    "metabat2": 2.17
+                },
+                "METAMDBG_ASM": {
+                    "metamdbg": 1.1
+                },
+                "MINIMAP2_ASSEMBLY_ALIGN": {
+                    "minimap2": "2.29-r1283",
+                    "samtools": 1.21
+                },
+                "MINIMAP2_HOST_ALIGN": {
+                    "minimap2": "2.29-r1283",
+                    "samtools": 1.21
+                },
+                "MINIMAP2_HOST_INDEX": {
+                    "minimap2": "2.29-r1283"
+                },
+                "NANOLYSE": {
+                    "nanolyse": "1.2.0"
+                },
+                "NANOPLOT_FILTERED": {
+                    "nanoplot": "1.44.1"
+                },
+                "NANOPLOT_RAW": {
+                    "nanoplot": "1.44.1"
+                },
+                "PORECHOP_ABI": {
+                    "porechop_abi": "0.5.0"
+                },
+                "PRODIGAL": {
+                    "prodigal": "2.6.3",
+                    "pigz": 2.6
+                },
+                "PROKKA": {
+                    "prokka": "1.14.6"
+                },
+                "QUAST": {
+                    "python": "3.7.6",
+                    "metaquast": "5.0.2"
+                },
+                "QUAST_BINS": {
+                    "python": "3.7.6",
+                    "metaquast": "5.0.2"
+                },
+                "SAMTOOLS_HOSTREMOVED_INDEX": {
+                    "samtools": 1.21
+                },
+                "SAMTOOLS_HOSTREMOVED_STATS": {
+                    "samtools": 1.21
+                },
+                "SAMTOOLS_HOSTREMOVED_UNMAPPED": {
+                    "samtools": 1.21
+                },
+                "SPLIT_FASTA": {
+                    "python": "3.6.7",
+                    "biopython": "1.7.4",
+                    "pandas": "1.1.5"
+                },
+                "Workflow": {
+                    "nf-core/mag": "v4.1.0dev"
+                }
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.6"
+        },
+        "timestamp": "2025-08-25T12:29:34.723936697"
+    }
+}
