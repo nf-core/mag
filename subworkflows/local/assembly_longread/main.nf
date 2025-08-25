@@ -18,16 +18,16 @@ workflow LONGREAD_ASSEMBLY {
         ch_long_reads_flye_input = ch_long_reads.multiMap { meta, reads ->
             def fly_mode = ""
             if (meta.lr_platform == "OXFORD_NANOPORE") {
-                fly_mode = "nt"
+                fly_mode = "--nano-raw"
             }
             else if (meta.lr_platform == "NANOPORE_HQ") {
-                fly_mode = "ont"
+                fly_mode = "--nano-hq"
             }
             else if (meta.lr_platform == "PACBIO_HIFI") {
-                fly_mode = "hifi"
+                fly_mode = "--pacbio-hifi"
             }
             else if (meta.lr_platform == "PACBIO_CLR") {
-                fly_mode = "hifi"
+                fly_mode = "--pacbio-raw"
             }
             else {
                 log.error("[nf-core/mag]: ERROR - unknown lr_platform provided to Flye!")
