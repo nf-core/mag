@@ -16,8 +16,8 @@ workflow VIRUS_IDENTIFICATION {
 
     if (params.genomad_db && ch_genomad_db.extension == 'gz') {
         GENOMAD_UNTAR([[id: 'db'], ch_genomad_db])
-        ch_db_for_genomad = GENOMAD_UNTAR.out.untar.map { _meta, db -> [db] }
         ch_versions = ch_versions.mix(GENOMAD_UNTAR.out.versions)
+        ch_db_for_genomad = GENOMAD_UNTAR.out.untar.map { _meta, db -> [db] }
     }
     else if (params.genomad_db) {
         ch_db_for_genomad = ch_genomad_db
