@@ -40,6 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Tool       | Previous version | New version |
 | ---------- | ---------------- | ----------- |
+| bcftools   | 1.17             | 1.21        |
 | BUSCO      | 5.8.3            | 6.0.0       |
 | CAT        | 5.2.3            | 6.0.1       |
 | centrifuge | 1.0.4.1          | 1.0.4.2     |

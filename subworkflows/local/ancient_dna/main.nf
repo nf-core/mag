@@ -59,7 +59,7 @@ workflow ANCIENT_DNA_ASSEMBLY_VALIDATION {
         BCFTOOLS_INDEX_POST(BCFTOOLS_VIEW.out.vcf)
         ch_versions = ch_versions.mix(BCFTOOLS_INDEX_POST.out.versions)
         BCFTOOLS_CONSENSUS(
-            BCFTOOLS_VIEW.out.vcf.join(BCFTOOLS_INDEX_POST.out.tbi).join(ch_input.map { item -> [item[0], item[1]] })
+            BCFTOOLS_VIEW.out.vcf.join(BCFTOOLS_INDEX_POST.out.tbi).join(ch_input.map { item -> [item[0], item[1], []] })
         )
         ch_versions = ch_versions.mix(BCFTOOLS_CONSENSUS.out.versions)
 
