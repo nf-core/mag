@@ -49,6 +49,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | fastp      | 0.23.4           | 0.24.0      |
 | flye       |                  | 2.9.5       |
 | Freebayes  | 1.3.6            | 1.3.10      |
+| geNomad    | 1.5.2            | 1.11.0      |
 | GTDB-Tk    | 2.4.0            | 2.4.1       |
 | metabat2   | 2.15             | 2.17        |
 | metamdbg   |                  | 1.0         |
