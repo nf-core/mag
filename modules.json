@@ -138,7 +138,7 @@
                     },
                     "fastp": {
                         "branch": "master",
-                        "git_sha": "d497a4868ace3302016ea8ed4b395072d5e833cd",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "fastqc": {
