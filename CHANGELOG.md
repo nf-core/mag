@@ -44,6 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | BUSCO      | 5.8.3            | 6.0.0       |
 | CAT        | 5.2.3            | 6.0.1       |
 | centrifuge | 1.0.4.1          | 1.0.4.2     |
+| dastool    | 1.1.6            | 1.1.7       |
 | nanolyse   | 1.41.6           | 1.44.1      |
 | fastp      | 0.23.4           | 0.24.0      |
 | flye       |                  | 2.9.5       |
