@@ -39,16 +39,16 @@ workflow ANCIENT_DNA_ASSEMBLY_VALIDATION {
             .join(FAIDX.out.fai)
             .multiMap { meta, contigs, bam, bai, fai ->
                 reads: [meta, bam, bai, [], [], []]
-                fasta: [contigs]
-                fai: [fai]
+                fasta: [meta, contigs]
+                fai: [meta, fai]
             }
         FREEBAYES(
             freebayes_input.reads,
             freebayes_input.fasta,
             freebayes_input.fai,
-            [],
-            [],
-            [],
+            [[], []],
+            [[], []],
+            [[], []],
         )
         ch_versions = ch_versions.mix(FREEBAYES.out.versions)
 

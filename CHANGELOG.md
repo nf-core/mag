@@ -47,6 +47,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | nanolyse   | 1.41.6           | 1.44.1      |
 | fastp      | 0.23.4           | 0.24.0      |
 | flye       |                  | 2.9.5       |
+| Freebayes  | 1.3.6            | 1.3.10      |
 | metabat2   | 2.15             | 2.17        |
 | metamdbg   |                  | 1.0         |
 | minimap2   |                  | 2.29        |
