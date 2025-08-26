@@ -125,5 +125,68 @@
             "nextflow": "25.04.6"
         },
         "timestamp": "2025-08-26T02:22:24.977532922"
+    },
+    "multiqc": {
+        "content": [
+            [
+                "multiqc/multiqc_data/BETA-multiqc.parquet",
+                "multiqc/multiqc_data/busco_plot_bacteria_odb10.yaml",
+                "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc_busco.yaml",
+                "multiqc/multiqc_data/multiqc_citations.yaml",
+                "multiqc/multiqc_data/multiqc_data.json",
+                "multiqc/multiqc_data/multiqc_general_stats.yaml",
+                "multiqc/multiqc_data/multiqc_prokka.yaml",
+                "multiqc/multiqc_data/multiqc_quast.yaml",
+                "multiqc/multiqc_data/multiqc_quast_quast-1.yaml",
+                "multiqc/multiqc_data/multiqc_software_versions.yaml",
+                "multiqc/multiqc_data/multiqc_sources.yaml",
+                "multiqc/multiqc_data/porechop.yaml",
+                "multiqc/multiqc_data/prokka_plot.yaml",
+                "multiqc/multiqc_data/quast_num_contigs.yaml",
+                "multiqc/multiqc_data/quast_table.yaml",
+                "multiqc/multiqc_plots/pdf/busco_plot_bacteria_odb10-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/busco_plot_bacteria_odb10-pct.pdf",
+                "multiqc/multiqc_plots/pdf/prokka_plot-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/prokka_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/quast_num_contigs-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/quast_num_contigs-pct.pdf",
+                "multiqc/multiqc_plots/pdf/quast_table.pdf",
+                "multiqc/multiqc_plots/png/busco_plot_bacteria_odb10-cnt.png",
+                "multiqc/multiqc_plots/png/busco_plot_bacteria_odb10-pct.png",
+                "multiqc/multiqc_plots/png/prokka_plot-cnt.png",
+                "multiqc/multiqc_plots/png/prokka_plot-pct.png",
+                "multiqc/multiqc_plots/png/quast_num_contigs-cnt.png",
+                "multiqc/multiqc_plots/png/quast_num_contigs-pct.png",
+                "multiqc/multiqc_plots/png/quast_table.png",
+                "multiqc/multiqc_plots/svg/busco_plot_bacteria_odb10-cnt.svg",
+                "multiqc/multiqc_plots/svg/busco_plot_bacteria_odb10-pct.svg",
+                "multiqc/multiqc_plots/svg/prokka_plot-cnt.svg",
+                "multiqc/multiqc_plots/svg/prokka_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/quast_num_contigs-cnt.svg",
+                "multiqc/multiqc_plots/svg/quast_num_contigs-pct.svg",
+                "multiqc/multiqc_plots/svg/quast_table.svg",
+                "multiqc/multiqc_report.html"
+            ],
+            [
+                "busco_plot_bacteria_odb10.yaml:md5,d2074ad0f75fa9cc83ecd40f60df18a1",
+                "multiqc_busco.yaml:md5,5a13ed660fdb656fe4720285e8ad3a29",
+                "multiqc_citations.yaml:md5,a2dc8129fc0a35448c4453633202ae29",
+                "multiqc_general_stats.yaml:md5,2ed9924f700cd139e0efeb7e17a30cdd",
+                "multiqc_prokka.yaml:md5,8608644f0600c48645562ddb42db8448",
+                "multiqc_quast.yaml:md5,77482119b35187eecfad2afce711026f",
+                "multiqc_quast_quast-1.yaml:md5,6489bdfeb4abd19085893b849d5a727f",
+                "multiqc_software_versions.yaml:md5,7d84c8de46d5ad1b66238d0cd36a4870",
+                "porechop.yaml:md5,828d96e2822bb4b4108ab706c00c4450",
+                "prokka_plot.yaml:md5,3ffd2f470a3760109d2fdd0f52f59211",
+                "quast_num_contigs.yaml:md5,710d04c92ddfbfaa827d5592f7adac07",
+                "quast_table.yaml:md5,bb19bda318c0a034e06c171bd81a0d48"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.6"
+        },
+        "timestamp": "2025-08-26T05:16:25.414216179"
     }
 }

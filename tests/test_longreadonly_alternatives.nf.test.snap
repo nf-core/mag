@@ -88,5 +88,41 @@
             "nextflow": "25.04.6"
         },
         "timestamp": "2025-08-26T02:19:01.494892348"
+    },
+    "multiqc": {
+        "content": [
+            [
+                "multiqc/multiqc_data/BETA-multiqc.parquet",
+                "multiqc/multiqc_data/busco_plot_bacteria_odb10.yaml",
+                "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc_busco.yaml",
+                "multiqc/multiqc_data/multiqc_citations.yaml",
+                "multiqc/multiqc_data/multiqc_data.json",
+                "multiqc/multiqc_data/multiqc_general_stats.yaml",
+                "multiqc/multiqc_data/multiqc_software_versions.yaml",
+                "multiqc/multiqc_data/multiqc_sources.yaml",
+                "multiqc/multiqc_data/porechop.yaml",
+                "multiqc/multiqc_plots/pdf/busco_plot_bacteria_odb10-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/busco_plot_bacteria_odb10-pct.pdf",
+                "multiqc/multiqc_plots/png/busco_plot_bacteria_odb10-cnt.png",
+                "multiqc/multiqc_plots/png/busco_plot_bacteria_odb10-pct.png",
+                "multiqc/multiqc_plots/svg/busco_plot_bacteria_odb10-cnt.svg",
+                "multiqc/multiqc_plots/svg/busco_plot_bacteria_odb10-pct.svg",
+                "multiqc/multiqc_report.html"
+            ],
+            [
+                "busco_plot_bacteria_odb10.yaml:md5,5b513941de8f45d7a89a26aa276135be",
+                "multiqc_busco.yaml:md5,6e6b3b7bd67bb07bab47b1b5736f1350",
+                "multiqc_citations.yaml:md5,cd0615b89829a041bc2a33cdb69b585b",
+                "multiqc_general_stats.yaml:md5,f5594b277c894e24b538c4ef9e468e3d",
+                "multiqc_software_versions.yaml:md5,07eb3da9e2afb571bba5ac1ddc8d699d",
+                "porechop.yaml:md5,828d96e2822bb4b4108ab706c00c4450"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.6"
+        },
+        "timestamp": "2025-08-26T05:11:51.145816832"
     }
 }
