@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#844](https://github.com/nf-core/mag/pull/843) - Change loading mechanism of internal PhiX/Lambda databases to improve Dev UX when schema building (by @jfy133)
 - [#851](https://github.com/nf-core/mag/pull/851) - Improve structure of local modules and subworkflows (by @dialvarezs)
 - [#853](https://github.com/nf-core/mag/pull/853) - Update nf-core modules and subworkflows (by @dialvarezs)
+- [#856](https://github.com/nf-core/mag/pull/856) - Update more nf-core modules (by @dialvarezs)
 
 ### `Fixed`
 
