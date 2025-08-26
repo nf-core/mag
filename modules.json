@@ -158,7 +158,7 @@
                     },
                     "freebayes": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "git_sha": "d04951ee68e3e8b875ebf5ddb7ba6e05233624c1",
                         "installed_by": ["modules"]
                     },
                     "genomad/download": {
