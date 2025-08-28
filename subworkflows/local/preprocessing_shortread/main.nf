@@ -11,6 +11,10 @@ include { ADAPTERREMOVAL as ADAPTERREMOVAL_SE                 } from '../../../m
 include { CAT_FASTQ                                           } from '../../../modules/nf-core/cat/fastq/main'
 include { SEQTK_MERGEPE                                       } from '../../../modules/nf-core/seqtk/mergepe/main'
 include { BBMAP_BBNORM                                        } from '../../../modules/nf-core/bbmap/bbnorm/main'
+include { HOSTILE_CLEAN as HOSTILE_CLEAN_HOST_SHORTREAD       } from '../../../modules/nf-core/hostile/clean/main'
+include { HOSTILE_CLEAN as HOSTILE_CLEAN_PHIX_SHORTREAD       } from '../../../modules/nf-core/hostile/clean/main'
+include { BOWTIE2_BUILD as BOWTIE2_HOST_BUILD                 } from '../../../modules/nf-core/bowtie2/build/main'
+include { BOWTIE2_BUILD as BOWTIE2_PHIX_BUILD                 } from '../../../modules/nf-core/bowtie2/build/main'
 
 include { BOWTIE2_REMOVAL_BUILD as BOWTIE2_HOST_REMOVAL_BUILD } from '../../../modules/local/bowtie2_removal_build/main'
 include { BOWTIE2_REMOVAL_ALIGN as BOWTIE2_HOST_REMOVAL_ALIGN } from '../../../modules/local/bowtie2_removal_align/main'
@@ -19,11 +23,11 @@ include { BOWTIE2_REMOVAL_ALIGN as BOWTIE2_PHIX_REMOVAL_ALIGN } from '../../../m
 
 workflow SHORTREAD_PREPROCESSING {
     take:
-    ch_raw_short_reads   // [ [meta] , fastq1, fastq2] (mandatory)
-    ch_host_fasta        // [fasta] (optional)
-    ch_host_genome_index // fasta (optional)
-    ch_phix_db_file      // [fasta] (optional)
-    val_skip_qc          // [boolean]
+    ch_raw_short_reads    // [[meta] , fastq1, fastq2] (mandatory)
+    val_host_fasta        // [fasta] (optional)
+    val_host_genome_index // fasta (optional)
+    val_phix_db_file      // [fasta] (optional)
+    val_skip_qc           // [boolean]
 
     main:
     ch_versions = Channel.empty()
@@ -84,62 +88,70 @@ workflow SHORTREAD_PREPROCESSING {
 
     if (params.host_fasta || params.host_genome) {
         if (params.host_fasta_bowtie2index) {
-            ch_host_bowtie2index = file(params.host_fasta_bowtie2index, checkIfExists: true)
+            ch_host_bowtie2index = val_host_genome_index
         }
         else {
-            ch_host_fasta_for_build = ch_host_fasta
+            ch_host_fasta_for_build = val_host_fasta
                 .combine(ch_short_reads_prepped)
-                .map { host_fasta, _meta, _reads ->
-                    host_fasta
+                .map { host_fasta, meta, _reads ->
+                    [meta, host_fasta]
                 }
                 .first()
+
             // makes sure to only use the host fasta if the short read channel is not empty
-            BOWTIE2_HOST_REMOVAL_BUILD(
-                ch_host_fasta_for_build
-            )
-            ch_versions = ch_versions.mix(BOWTIE2_HOST_REMOVAL_BUILD.out.versions)
+            BOWTIE2_HOST_BUILD(ch_host_fasta_for_build)
+            ch_versions = ch_versions.mix(BOWTIE2_HOST_BUILD.out.versions)
 
-            ch_host_bowtie2index = BOWTIE2_HOST_REMOVAL_BUILD.out.index
+            ch_host_bowtie2index = BOWTIE2_HOST_BUILD.out.index.map { _meta, index -> index }
         }
-    }
-    else if (params.host_genome) {
-        ch_host_bowtie2index = ch_host_genome_index
-    }
 
-    if (params.host_fasta || params.host_genome) {
-        BOWTIE2_HOST_REMOVAL_ALIGN(
+        // add reference basename for hostile
+        ch_host_hostile_reference = ch_host_bowtie2index.map { index_dir ->
+            def index_file = file(index_dir).listFiles().find { it.name.endsWith('.bt2') }
+            def index_name = index_file.name - ~/.(rev.)?(\d+).bt2/
+
+            [index_name, index_dir]
+        }
+
+        HOSTILE_CLEAN_HOST_SHORTREAD(
             ch_short_reads_prepped,
-            ch_host_bowtie2index,
+            ch_host_hostile_reference,
         )
-        ch_versions = ch_versions.mix(BOWTIE2_HOST_REMOVAL_ALIGN.out.versions)
+        ch_versions = ch_versions.mix(HOSTILE_CLEAN_HOST_SHORTREAD.out.versions)
 
-        ch_short_reads_hostremoved = BOWTIE2_HOST_REMOVAL_ALIGN.out.reads
-        ch_multiqc_files = ch_multiqc_files.mix(BOWTIE2_HOST_REMOVAL_ALIGN.out.log)
+        ch_short_reads_hostremoved = HOSTILE_CLEAN_HOST_SHORTREAD.out.fastq
+        ch_multiqc_files = ch_multiqc_files.mix(HOSTILE_CLEAN_HOST_SHORTREAD.out.json)
     }
     else {
         ch_short_reads_hostremoved = ch_short_reads_prepped
     }
 
     if (!params.keep_phix && !val_skip_qc) {
-        ch_phix_fasta_for_build = ch_phix_db_file
+        ch_phix_fasta_for_build = val_phix_db_file
             .combine(ch_short_reads_prepped)
-            .map { host_fasta, _meta, _reads ->
-                host_fasta
+            .map { host_fasta, meta, _reads ->
+                [meta, host_fasta]
             }
             .first()
-        BOWTIE2_PHIX_REMOVAL_BUILD(
-            ch_phix_fasta_for_build
-        )
-        ch_versions = ch_versions.mix(BOWTIE2_PHIX_REMOVAL_BUILD.out.versions)
 
-        BOWTIE2_PHIX_REMOVAL_ALIGN(
+        BOWTIE2_PHIX_BUILD(ch_phix_fasta_for_build)
+        ch_versions = ch_versions.mix(BOWTIE2_PHIX_BUILD.out.versions)
+
+        ch_phix_hostile_reference = BOWTIE2_PHIX_BUILD.out.index.map { _meta, index_dir ->
+            def index_file = file(index_dir).listFiles().find { it.name.endsWith('.bt2') }
+            def index_name = index_file.name - ~/.(rev.)?(\d+).bt2/
+
+            [index_name, index_dir]
+        }
+
+        HOSTILE_CLEAN_PHIX_SHORTREAD(
             ch_short_reads_hostremoved,
-            BOWTIE2_PHIX_REMOVAL_BUILD.out.index,
+            ch_phix_hostile_reference,
         )
-        ch_versions = ch_versions.mix(BOWTIE2_PHIX_REMOVAL_ALIGN.out.versions)
+        ch_versions = ch_versions.mix(HOSTILE_CLEAN_PHIX_SHORTREAD.out.versions)
 
-        ch_short_reads_phixremoved = BOWTIE2_PHIX_REMOVAL_ALIGN.out.reads
-        ch_multiqc_files = ch_multiqc_files.mix(BOWTIE2_PHIX_REMOVAL_ALIGN.out.log)
+        ch_short_reads_phixremoved = HOSTILE_CLEAN_PHIX_SHORTREAD.out.fastq
+        ch_multiqc_files = ch_multiqc_files.mix(HOSTILE_CLEAN_PHIX_SHORTREAD.out.json)
     }
     else {
         ch_short_reads_phixremoved = ch_short_reads_hostremoved
