@@ -1,9 +1,9 @@
 nextflow_pipeline {
 
-    name "Test pipeline"
+    name "Test pipeline with test_hybrid profile"
     script "../main.nf"
     tag "pipeline"
-    tag "test"
+    tag "test_hybrid"
     profile "test_hybrid"
 
     test("-profile hybrid") {
