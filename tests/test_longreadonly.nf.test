@@ -1,9 +1,9 @@
 nextflow_pipeline {
 
-    name "Test pipeline"
+    name "Test pipeline with test_longreadonly profile"
     script "../main.nf"
     tag "pipeline"
-    tag "test"
+    tag "test_longreadonly"
     profile "test_longreadonly"
 
     test("-profile longreadonly") {
