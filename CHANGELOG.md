@@ -34,24 +34,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#847](https://github.com/nf-core/mag/pull/847) - Allow the BBNorm process to use only 0.8 of the memory allocated to the task to stop if from oversubscribing memory (reported by and fix by @erikrikarddaniel)
 - [#850](https://github.com/nf-core/mag/pull/850) - Fixed some modules of the GDTBTk subworkflow not being represented in version lists (fix by @jfy133)
 - [#852](https://github.com/nf-core/mag/pull/852) - Fixed version reporting by ensure all modules are represented in final version.yml for MultiQC (by @jfy133)
+- [#854](https://github.com/nf-core/mag/pull/854) - Update porechop/abi to a patched version to prevent duplicated read names (reported by @palec87, fix by @jfy133)
 
 ### `Dependencies`
 
-| Tool       | Previous version | New version |
-| ---------- | ---------------- | ----------- |
-| BUSCO      | 5.8.3            | 6.0.0       |
-| CAT        | 5.2.3            | 6.0.1       |
-| centrifuge | 1.0.4.1          | 1.0.4.2     |
-| nanolyse   | 1.41.6           | 1.44.1      |
-| flye       |                  | 2.9.5       |
-| metabat2   | 2.15             | 2.17        |
-| metamdbg   |                  | 1.0         |
-| minimap2   |                  | 2.29        |
-| mmseqs2    | 14.7e284         | 17.b804f    |
-| samtools   |                  | 1.21        |
-| nf-core    | 3.2.0            | 3.3.2       |
-| pydamage   | 0.7.0            | 1.0.0       |
-| seqtk      | 1.3              | 1.4         |
+| Tool         | Previous version | New version |
+| ------------ | ---------------- | ----------- |
+| BUSCO        | 5.8.3            | 6.0.0       |
+| CAT          | 5.2.3            | 6.0.1       |
+| centrifuge   | 1.0.4.1          | 1.0.4.2     |
+| nanolyse     | 1.41.6           | 1.44.1      |
+| flye         |                  | 2.9.5       |
+| metabat2     | 2.15             | 2.17        |
+| metamdbg     |                  | 1.0         |
+| minimap2     |                  | 2.29        |
+| mmseqs2      | 14.7e284         | 17.b804f    |
+| samtools     |                  | 1.21        |
+| nf-core      | 3.2.0            | 3.3.2       |
+| pydamage     | 0.7.0            | 1.0.0       |
+| seqtk        | 1.3              | 1.4         |
+| porechop_abi | 0.5.0            | 0.5.0post1  |
 
 ### `Deprecated`
 
