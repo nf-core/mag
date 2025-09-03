@@ -1,7 +1,7 @@
 {
     "-profile assembly_input": {
         "content": [
-            214,
+            317,
             {
                 "ADJUST_MAXBIN2_EXT": {
                     "coreutils": null
@@ -85,6 +85,9 @@
                 "METABAT2_METABAT2": {
                     "metabat2": 2.17
                 },
+                "METAEUK_EASYPREDICT": {
+                    "metaeuk": "6.a5d39d9"
+                },
                 "RENAME_POSTDASTOOL": {
                     "coreutils": "8.30-3ubuntu2"
                 },
@@ -108,7 +111,7 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-09-03T06:52:42.287981767"
+        "timestamp": "2025-09-03T07:32:22.014907915"
     },
     "multiqc": {
         "content": [
@@ -145,13 +148,13 @@
                 "multiqc_busco.yaml:md5,38eb19ae047a7be58b2af7f325a9704f",
                 "multiqc_citations.yaml:md5,4aaa7714bb3dba1dd50f383c2ae4f4bb",
                 "multiqc_general_stats.yaml:md5,229a87a550a6d00b7496a1200ff53da1",
-                "multiqc_software_versions.yaml:md5,2390fc7ddc52a918cdccd410bbbd8f48"
+                "multiqc_software_versions.yaml:md5,71fae3c74bf25391b1373dca90be8c20"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-09-03T06:52:42.310171139"
+        "timestamp": "2025-09-03T07:32:22.060385119"
     }
 }
