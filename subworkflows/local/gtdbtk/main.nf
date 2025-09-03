@@ -15,6 +15,8 @@ workflow GTDBTK {
     val_gtdb_mash     // value: path
 
     main:
+    ch_versions = Channel.empty()
+
     // Collect bin quality metrics
     qc_columns = [
         busco: ['Input_file', 'Complete', 'Duplicated'],
@@ -27,7 +29,7 @@ workflow GTDBTK {
         .map { row -> qc_columns[params.binqc_tool].collect { col -> row[col] } }
         .filter { row -> row[1] != '' }
         .map { row ->
-            row = [row[0]] + row[1..2].collect { value -> Double.parseDouble("${value}") }
+            row = [row[0]] + row[1..2].collect { value -> "${value}".toDouble() }
             // CheckM / CheckM2 removes the .fa extension from the bin name
             if (params.binqc_tool in ['checkm', 'checkm2']) {
                 row[0] = row[0] + '.fa'
@@ -51,6 +53,7 @@ workflow GTDBTK {
     if (val_gtdb.extension == 'gz') {
         // Expects to be tar.gz!
         ch_db_for_gtdbtk = GTDBTK_DB_PREPARATION(val_gtdb).db
+        ch_versions = ch_versions.mix(GTDBTK_DB_PREPARATION.out.versions)
     }
     else if (val_gtdb.isDirectory()) {
         ch_db_for_gtdbtk = [val_gtdb.simpleName, val_gtdb]
@@ -72,6 +75,7 @@ workflow GTDBTK {
         params.gtdbtk_pplacer_useram ? false : true,
         val_gtdb_mash,
     )
+    ch_versions = ch_versions.mix(GTDBTK_CLASSIFYWF.out.versions)
 
     GTDBTK_SUMMARY(
         ch_filtered_bins.discarded.map { it[1] }.collect().ifEmpty([]),
@@ -79,9 +83,10 @@ workflow GTDBTK {
         [],
         [],
     )
+    ch_versions = ch_versions.mix(GTDBTK_SUMMARY.out.versions)
 
     emit:
     summary       = GTDBTK_SUMMARY.out.summary
     multiqc_files = GTDBTK_SUMMARY.out.summary
-    versions      = GTDBTK_CLASSIFYWF.out.versions
+    versions      = ch_versions
 }

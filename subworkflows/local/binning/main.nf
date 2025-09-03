@@ -17,7 +17,7 @@ include { SPLIT_FASTA                                                           
 
 workflow BINNING {
     take:
-    ch_assemblies       // channel: [ val(meta), path(assembly), path(bams), path(bais) ]
+    ch_assemblies    // channel: [ val(meta), path(assembly), path(bams), path(bais) ]
     val_bin_min_size
     val_bin_max_size
 
@@ -37,7 +37,10 @@ workflow BINNING {
 
     // Process each through appropriate module
     METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_LONGREAD(ch_summarizedepth_input.longread)
+    ch_versions = ch_versions.mix(METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_LONGREAD.out.versions)
+
     METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_SHORTREAD(ch_summarizedepth_input.shortread)
+    ch_versions = ch_versions.mix(METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_SHORTREAD.out.versions)
 
     // Merge the outputs
     ch_combined_depths = METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_LONGREAD.out.depth.mix(METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_SHORTREAD.out.depth)
@@ -45,9 +48,6 @@ workflow BINNING {
         def meta_new = meta + [binner: 'MetaBAT2']
         [meta_new, depths]
     }
-
-    ch_versions = ch_versions.mix(METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_LONGREAD.out.versions.first())
-    ch_versions = ch_versions.mix(METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_SHORTREAD.out.versions.first())
 
     // combine depths back with assemblies
     ch_metabat2_input = ch_assemblies
@@ -63,11 +63,12 @@ workflow BINNING {
     // convert metabat2 depth files to maxbin2
     if (!params.skip_maxbin2) {
         CONVERT_DEPTHS(ch_metabat2_input)
+        ch_versions = ch_versions.mix(CONVERT_DEPTHS.out.versions)
+
         ch_maxbin2_input = CONVERT_DEPTHS.out.output.map { meta, assembly, reads, depth ->
             def meta_new = meta + [binner: 'MaxBin2']
             [meta_new, assembly, reads, depth]
         }
-        ch_versions = ch_versions.mix(CONVERT_DEPTHS.out.versions.first())
     }
 
     // main bins for decompressing for MAG_DEPTHS
@@ -79,17 +80,21 @@ workflow BINNING {
     // run binning
     if (!params.skip_metabat2) {
         METABAT2_METABAT2(ch_metabat2_input)
+        ch_versions = ch_versions.mix(METABAT2_METABAT2.out.versions)
+
         // before decompressing first have to separate and re-group due to limitation of GUNZIP module
         ch_bins_for_seqkit = ch_bins_for_seqkit.mix(METABAT2_METABAT2.out.fasta.transpose())
         ch_binning_results_gzipped_final = ch_binning_results_gzipped_final.mix(METABAT2_METABAT2.out.fasta)
-        ch_versions = ch_versions.mix(METABAT2_METABAT2.out.versions.first())
     }
     if (!params.skip_maxbin2) {
         MAXBIN2(ch_maxbin2_input)
+        ch_versions = ch_versions.mix(MAXBIN2.out.versions)
+
         ADJUST_MAXBIN2_EXT(MAXBIN2.out.binned_fastas)
+        ch_versions = ch_versions.mix(ADJUST_MAXBIN2_EXT.out.versions)
+
         ch_bins_for_seqkit = ch_bins_for_seqkit.mix(ADJUST_MAXBIN2_EXT.out.renamed_bins.transpose())
         ch_binning_results_gzipped_final = ch_binning_results_gzipped_final.mix(ADJUST_MAXBIN2_EXT.out.renamed_bins)
-        ch_versions = ch_versions.mix(MAXBIN2.out.versions)
     }
     if (!params.skip_concoct) {
 
@@ -104,9 +109,10 @@ workflow BINNING {
             }
 
         FASTA_BINNING_CONCOCT(ch_concoct_input.bins, ch_concoct_input.bams)
+        ch_versions = ch_versions.mix(FASTA_BINNING_CONCOCT.out.versions)
+
         ch_bins_for_seqkit = ch_bins_for_seqkit.mix(FASTA_BINNING_CONCOCT.out.bins.transpose())
         ch_binning_results_gzipped_final = ch_binning_results_gzipped_final.mix(FASTA_BINNING_CONCOCT.out.bins)
-        ch_versions = ch_versions.mix(FASTA_BINNING_CONCOCT.out.versions)
     }
 
     // decide which unbinned fasta files to further filter, depending on which binners selected
@@ -133,6 +139,7 @@ workflow BINNING {
 
     // extract max length of all entries in each bin, to allow filtering out of too small bins
     SEQKIT_STATS(ch_bins_for_seqkitstats)
+    ch_versions = ch_versions.mix(SEQKIT_STATS.out.versions)
 
     //
     ch_seqkitstats_results = SEQKIT_STATS.out.stats
@@ -161,20 +168,21 @@ workflow BINNING {
 
     // remove too-short contigs from unbinned contigs
     SPLIT_FASTA(ch_input_splitfasta)
+    ch_versions = ch_versions.mix(SPLIT_FASTA.out.versions)
 
     // large unbinned contigs from SPLIT_FASTA for decompressing for MAG_DEPTHS,
     // first have to separate and re-group due to limitation of GUNZIP module
     ch_split_fasta_results_transposed = SPLIT_FASTA.out.unbinned.transpose()
-    ch_versions = ch_versions.mix(SPLIT_FASTA.out.versions)
 
     GUNZIP_BINS(ch_final_bins_for_gunzip)
+    ch_versions = ch_versions.mix(GUNZIP_BINS.out.versions)
+
     ch_binning_results_gunzipped = GUNZIP_BINS.out.gunzip.groupTuple(by: 0)
 
     GUNZIP_UNBINS(ch_split_fasta_results_transposed)
-    ch_splitfasta_results_gunzipped = GUNZIP_UNBINS.out.gunzip.groupTuple(by: 0)
+    ch_versions = ch_versions.mix(GUNZIP_UNBINS.out.versions)
 
-    ch_versions = ch_versions.mix(GUNZIP_BINS.out.versions.first())
-    ch_versions = ch_versions.mix(GUNZIP_UNBINS.out.versions.first())
+    ch_splitfasta_results_gunzipped = GUNZIP_UNBINS.out.gunzip.groupTuple(by: 0)
 
     emit:
     bins           = ch_binning_results_gunzipped
