@@ -11,7 +11,7 @@ process SUMMARISEPYDAMAGE {
     tuple val(meta), path(csv)
 
     output:
-    tuple val(meta), path("*.csv"), emit: summary_csv
+    tuple val(meta), path("*.tsv"), emit: summary_tsv
     path "versions.yml", emit: versions
 
     when:
@@ -24,7 +24,7 @@ process SUMMARISEPYDAMAGE {
     summarise_pydamage.py \\
         ${args} \\
         -i ${csv} \\
-        -o ${prefix}_pydamage_summarised.csv \\
+        -o ${prefix}_pydamage_summarised.tsv \\
         -n ${meta.id}
 
     cat <<-END_VERSIONS > versions.yml

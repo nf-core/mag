@@ -24,7 +24,7 @@ def parse_args(args=None):
         "--output",
         required=False,
         metavar="FILE",
-        help="Path to output CSV file with all statistic values summarised with as a median value. If not supplied, default output is input with _summarised appended to the file name.",
+        help="Path to output TSV file with all statistic values summarised with as a median value. If not supplied, default output is input with _summarised appended to the file name.",
     )
     parser.add_argument(
         "-n",
@@ -76,14 +76,14 @@ def main(args=None):
         print("[summarise_pydamage.py] FINALISING: saving file")
 
     if args.output is not None:
-        if os.path.splitext(args.output)[1] != ".csv":
-            outfile = os.path.abspath(args.output + ".csv")
+        if os.path.splitext(args.output)[1] != ".tsv":
+            outfile = os.path.abspath(args.output + ".tsv")
         else:
             outfile = os.path.abspath(args.output)
     else:
-        outfile = os.path.splitext(args.input)[0] + "_summarised.csv"
+        outfile = os.path.splitext(args.input)[0] + "_summarised.tsv"
 
-    pydamage_summarised.to_csv(outfile, sep=",")
+    pydamage_summarised.to_csv(outfile, sep="\t")
 
 
 if __name__ == "__main__":

@@ -217,7 +217,9 @@ def main(args=None):
         )
 
     if args.summarisepydamage_summary:
-        summarisepydamage_results = pd.read_csv(args.summarisepydamage_summary, sep=",")
+        summarisepydamage_results = pd.read_csv(
+            args.summarisepydamage_summary, sep="\t"
+        )
         if not bins.equals(
             summarisepydamage_results["id"].sort_values().reset_index(drop=True)
         ):
