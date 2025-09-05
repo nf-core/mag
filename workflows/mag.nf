@@ -120,8 +120,8 @@ workflow MAG {
     // Get mmseqs db for MetaEuk if requested
     if (!params.skip_metaeuk && params.metaeuk_mmseqs_db) {
         MMSEQS_DATABASES(params.metaeuk_mmseqs_db)
-        ch_metaeuk_db = MMSEQS_DATABASES.out.database
         ch_versions = ch_versions.mix(MMSEQS_DATABASES.out.versions)
+        ch_metaeuk_db = MMSEQS_DATABASES.out.database
     }
 
     /*
@@ -138,7 +138,6 @@ workflow MAG {
             ch_phix_db_file,
             params.skip_shortread_qc,
         )
-
         ch_versions = ch_versions.mix(SHORTREAD_PREPROCESSING.out.versions)
         ch_multiqc_files = ch_multiqc_files.mix(SHORTREAD_PREPROCESSING.out.multiqc_files.collect { it[1] }.ifEmpty([]))
         ch_short_reads = SHORTREAD_PREPROCESSING.out.short_reads
@@ -164,7 +163,6 @@ workflow MAG {
         ch_host_fasta,
         params.skip_longread_qc,
     )
-
     ch_versions = ch_versions.mix(LONGREAD_PREPROCESSING.out.versions)
     ch_multiqc_files = ch_multiqc_files.mix(LONGREAD_PREPROCESSING.out.multiqc_files.collect { it[1] }.ifEmpty([]))
     ch_long_reads = LONGREAD_PREPROCESSING.out.long_reads
@@ -205,7 +203,7 @@ workflow MAG {
 
     if (!params.skip_quast) {
         QUAST(ch_assemblies)
-        ch_versions = ch_versions.mix(QUAST.out.versions.first())
+        ch_versions = ch_versions.mix(QUAST.out.versions)
     }
 
     /*
@@ -219,7 +217,7 @@ workflow MAG {
             ch_assemblies,
             'gff',
         )
-        ch_versions = ch_versions.mix(PRODIGAL.out.versions.first())
+        ch_versions = ch_versions.mix(PRODIGAL.out.versions)
     }
 
     /*
@@ -296,9 +294,10 @@ workflow MAG {
             }
 
             DOMAIN_CLASSIFICATION(ch_assemblies_for_domainclassification, BINNING.out.bins, BINNING.out.unbinned)
+            ch_versions = ch_versions.mix(DOMAIN_CLASSIFICATION.out.versions)
+
             ch_binning_results_bins = DOMAIN_CLASSIFICATION.out.classified_bins
             ch_binning_results_unbins = DOMAIN_CLASSIFICATION.out.classified_unbins
-            ch_versions = ch_versions.mix(DOMAIN_CLASSIFICATION.out.versions)
         }
         else {
             ch_binning_results_bins = BINNING.out.bins.map { meta, bins ->
@@ -339,10 +338,10 @@ workflow MAG {
             }
 
             BINNING_REFINEMENT(ch_contigs_for_binrefinement, ch_prokarya_bins_dastool)
+            ch_versions = ch_versions.mix(BINNING_REFINEMENT.out.versions)
 
             ch_refined_bins = BINNING_REFINEMENT.out.refined_bins
             ch_refined_unbins = BINNING_REFINEMENT.out.refined_unbins
-            ch_versions = ch_versions.mix(BINNING_REFINEMENT.out.versions)
 
             if (params.postbinning_input == 'raw_bins_only') {
                 ch_input_for_postbinning_bins = ch_binning_results_bins
@@ -376,8 +375,9 @@ workflow MAG {
             .groupTuple(by: 0)
 
         DEPTHS(ch_input_for_postbinning, BINNING.out.metabat2depths, ch_reads_for_depths)
-        ch_input_for_binsummary = DEPTHS.out.depths_summary
         ch_versions = ch_versions.mix(DEPTHS.out.versions)
+
+        ch_input_for_binsummary = DEPTHS.out.depths_summary
 
         /*
         * Bin QC subworkflows: for checking bin completeness with either BUSCO, CHECKM, CHECKM2, and/or GUNC
@@ -386,9 +386,8 @@ workflow MAG {
         ch_bin_qc_summary = Channel.empty()
         if (!params.skip_binqc) {
             BIN_QC(ch_input_for_postbinning)
-
-            ch_bin_qc_summary = BIN_QC.out.qc_summary
             ch_versions = ch_versions.mix(BIN_QC.out.versions)
+            ch_bin_qc_summary = BIN_QC.out.qc_summary
         }
 
         ch_quast_bins_summary = Channel.empty()
@@ -401,11 +400,13 @@ workflow MAG {
                 }
 
             QUAST_BINS(ch_input_for_quast_bins)
-            ch_versions = ch_versions.mix(QUAST_BINS.out.versions.first())
+            ch_versions = ch_versions.mix(QUAST_BINS.out.versions)
             ch_quast_bin_summary = QUAST_BINS.out.quast_bin_summaries.collectFile(keepHeader: true) { meta, summary ->
                 ["${meta.id}.tsv", summary]
             }
             QUAST_BINS_SUMMARY(ch_quast_bin_summary.collect())
+            ch_versions = ch_versions.mix(QUAST_BINS_SUMMARY.out.versions)
+
             ch_quast_bins_summary = QUAST_BINS_SUMMARY.out.summary
         }
 
@@ -418,9 +419,9 @@ workflow MAG {
                 ch_input_for_postbinning_bins,
                 ch_input_for_postbinning_unbins,
             )
+            ch_versions = ch_versions.mix(CATPACK.out.versions)
 
             ch_catpack_summary = CATPACK.out.summary
-            ch_versions = ch_versions.mix(CATPACK.out.versions)
         }
 
         /*
@@ -458,6 +459,7 @@ workflow MAG {
                 ch_catpack_summary.ifEmpty([]),
                 params.binqc_tool,
             )
+            ch_versions = ch_versions.mix(BIN_SUMMARY.out.versions)
         }
 
         /*
@@ -480,7 +482,7 @@ workflow MAG {
                 [],
                 [],
             )
-            ch_versions = ch_versions.mix(PROKKA.out.versions.first())
+            ch_versions = ch_versions.mix(PROKKA.out.versions)
         }
 
         if (!params.skip_metaeuk && (params.metaeuk_db || params.metaeuk_mmseqs_db)) {

@@ -1,12 +1,12 @@
 nextflow_pipeline {
 
-    name "Test pipeline with test_longreadonly profile"
+    name "Test pipeline with test_assembly_input profile"
     script "../main.nf"
     tag "pipeline"
-    tag "test_longreadonly"
-    profile "test_longreadonly"
+    tag "test_assembly_input"
+    profile "test_assembly_input"
 
-    test("-profile longreadonly") {
+    test("-profile assembly_input") {
 
         when {
             params {
