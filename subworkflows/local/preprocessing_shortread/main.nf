@@ -40,8 +40,9 @@ workflow SHORTREAD_PREPROCESSING {
             FASTP(
                 ch_raw_short_reads,
                 [],
+                false,
                 params.fastp_save_trimmed_fail,
-                [],
+                false,
             )
             ch_versions = ch_versions.mix(FASTP.out.versions)
             ch_short_reads_prepped = FASTP.out.reads

@@ -1,5 +1,5 @@
 include { BCFTOOLS_CONSENSUS                    } from '../../../modules/nf-core/bcftools/consensus/main'
-include { BCFTOOLS_INDEX as BCFTOOLS_INDEX_PRE ; BCFTOOLS_INDEX as BCFTOOLS_INDEX_POST } from '../../../modules/nf-core/bcftools/index/main'
+include { BCFTOOLS_INDEX                        } from '../../../modules/nf-core/bcftools/index/main'
 include { BCFTOOLS_VIEW                         } from '../../../modules/nf-core/bcftools/view/main'
 include { FREEBAYES                             } from '../../../modules/nf-core/freebayes/main'
 include { PYDAMAGE_ANALYZE                      } from '../../../modules/nf-core/pydamage/analyze/main'
@@ -39,27 +39,25 @@ workflow ANCIENT_DNA_ASSEMBLY_VALIDATION {
             .join(FAIDX.out.fai)
             .multiMap { meta, contigs, bam, bai, fai ->
                 reads: [meta, bam, bai, [], [], []]
-                fasta: [contigs]
-                fai: [fai]
+                fasta: [meta, contigs]
+                fai: [meta, fai]
             }
         FREEBAYES(
             freebayes_input.reads,
             freebayes_input.fasta,
             freebayes_input.fai,
-            [],
-            [],
-            [],
+            [[], []],
+            [[], []],
+            [[], []],
         )
         ch_versions = ch_versions.mix(FREEBAYES.out.versions)
 
-        BCFTOOLS_INDEX_PRE(FREEBAYES.out.vcf)
-        ch_versions = ch_versions.mix(BCFTOOLS_INDEX_PRE.out.versions)
-        BCFTOOLS_VIEW(FREEBAYES.out.vcf.join(BCFTOOLS_INDEX_PRE.out.tbi), [], [], [])
+        BCFTOOLS_INDEX(FREEBAYES.out.vcf)
+        ch_versions = ch_versions.mix(BCFTOOLS_INDEX.out.versions)
+        BCFTOOLS_VIEW(FREEBAYES.out.vcf.join(BCFTOOLS_INDEX.out.tbi), [], [], [])
         ch_versions = ch_versions.mix(BCFTOOLS_VIEW.out.versions)
-        BCFTOOLS_INDEX_POST(BCFTOOLS_VIEW.out.vcf)
-        ch_versions = ch_versions.mix(BCFTOOLS_INDEX_POST.out.versions)
         BCFTOOLS_CONSENSUS(
-            BCFTOOLS_VIEW.out.vcf.join(BCFTOOLS_INDEX_POST.out.tbi).join(ch_input.map { item -> [item[0], item[1]] })
+            BCFTOOLS_VIEW.out.vcf.join(BCFTOOLS_VIEW.out.tbi).join(ch_input.map { item -> [item[0], item[1], []] })
         )
         ch_versions = ch_versions.mix(BCFTOOLS_CONSENSUS.out.versions)
 
