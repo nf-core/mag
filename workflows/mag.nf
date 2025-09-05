@@ -455,14 +455,23 @@ workflow MAG {
         }
 
         if (params.ancient_dna) {
-            // TODO Need to group together to merge into single table (all sampels in one ) then drop meta
+            // TODO Need to group together !!PER BIN!! to merge into single table (all sampels in one ) then drop meta
+
+            /*
+            1. Take summraised results
+            2.  
+            
+            */
             ch_summarisepydamage = ANCIENT_DNA_ASSEMBLY_VALIDATION.out.pydamage_summarised_results
+                .map { meta, csv ->
+                    csv
+                }
+                .collectFile(name: 'pydamage_summary.csv', keepHeader: true)
+                .dump(tag: 'pydamage')
         }
         else {
             ch_summarisepydamage = Channel.empty()
         }
-
-
 
         if ((!params.skip_binqc) || !params.skip_quast || !params.skip_gtdbtk) {
             BIN_SUMMARY(
@@ -602,21 +611,4 @@ workflow MAG {
     emit:
     multiqc_report = MULTIQC.out.report.toList() // channel: /path/to/multiqc_report.html
     versions       = ch_versions // channel: [ path(versions.yml) ]
-}
-
-// Constructs the header string and then the strings of each row, and
-def channelToSamplesheet(ch_list_for_samplesheet, path, format) {
-    def format_sep = ["csv": ",", "tsv": "\t", "txt": "\t"][format]
-
-    def ch_header = ch_list_for_samplesheet
-
-    ch_header
-        .first()
-        .map { it.keySet().join(format_sep) }
-        .concat(ch_list_for_samplesheet.map { it.values().join(format_sep) })
-        .collectFile(
-            name: "${path}.${format}",
-            newLine: true,
-            sort: false,
-        )
 }

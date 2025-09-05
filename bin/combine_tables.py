@@ -30,7 +30,7 @@ def parse_args(args=None):
     )
     parser.add_argument("-a", "--cat_summary", metavar="FILE", help="CAT table file.")
     parser.add_argument(
-        "-a",
+        "-p",
         "--summarisepydamage_summary",
         metavar="FILE",
         help="summarisepydamage table file.",
@@ -217,9 +217,7 @@ def main(args=None):
         )
 
     if args.summarisepydamage_summary:
-        summarisepydamage_results = pd.read_csv(
-            args.summarisepydamage_summary, sep="\t"
-        )
+        summarisepydamage_results = pd.read_csv(args.summarisepydamage_summary, sep=",")
         if not bins.equals(
             summarisepydamage_results["id"].sort_values().reset_index(drop=True)
         ):
