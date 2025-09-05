@@ -23,7 +23,7 @@ process BIN_SUMMARY {
     def quast_summary = quast_sum.sort().size() > 0 ? "--quast_summary ${quast_sum}" : ""
     def gtdbtk_summary = gtdbtk_sum.sort().size() > 0 ? "--gtdbtk_summary ${gtdbtk_sum}" : ""
     def cat_summary = cat_sum.sort().size() > 0 ? "--cat_summary ${cat_sum}" : ""
-    def summarisepydamage_summary = summarisepydamage_sum.sort().size() > 0 ? "--summarisepydamage_summary ${pydamage_sum}" : ""
+    def summarisepydamage_summary = summarisepydamage_sum.sort().size() > 0 ? "--summarisepydamage_summary ${summarisepydamage_sum}" : ""
     """
     combine_tables.py \
         --depths_summary ${bin_depths} \
