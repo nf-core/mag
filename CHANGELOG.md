@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#718](https://github.com/nf-core/mag/pull/718) - Added host removal for long reads using minimap2 as aligner (added by @muabnezor)
 - [#827](https://github.com/nf-core/mag/pull/827) - Added nf-test CI testing for all test profiles (added by @jfy133)
 - [#829](https://github.com/nf-core/mag/pull/829) - Add `--skip_shortread_qc` and `--skip_longread_qc` params for skipping certain default preprocessing steps (added by @erikrikarddaniel)
+- [#846](https://github.com/nf-core/mag/pull/846) - Improve documentation of `group` samplesheet column (added by @vinisalazar)
 
 ### `Changed`
 
@@ -20,28 +21,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#799](https://github.com/nf-core/mag/pull/799) - Upgraded to latest version of CAT_pack modules (requested by @maxibor, added by @dialvarezs)
 - [#811](https://github.com/nf-core/mag/pull/811) - Update util modules, and remove aria2 module to replace with native Nextflow downloading of CheckM database (by @dialvarezs)
 - [#816](https://github.com/nf-core/mag/pull/816) - Removed all leftover references to conda 'defaults' channel (by @jfy133)
-- [#823](https://github.com/nf-core/mag/pull/823) - Updated to nf-core 3.3.1 `TEMPLATE` (by @jfy133)
+- [#823](https://github.com/nf-core/mag/pull/823) - Updated to nf-core 3.3.1`TEMPLATE` (by @jfy133 )
+- [#827](https://github.com/nf-core/mag/pull/827) - Updated to nf-core 3.3.2`TEMPLATE` (by @dialvarezs)
+- [#841](https://github.com/nf-core/mag/pull/841) - MultiQC config updated to support CheckM, CheckM2, and GTDB-Tk (by @harper357)
+- [#844](https://github.com/nf-core/mag/pull/843) - Change loading mechanism of internal PhiX/Lambda databases to improve Dev UX when schema building (by @jfy133)
+- [#851](https://github.com/nf-core/mag/pull/851) - Improve structure of local modules and subworkflows (by @dialvarezs)
+- [#853](https://github.com/nf-core/mag/pull/853) - Update nf-core modules and subworkflows (by @dialvarezs)
 
 ### `Fixed`
 
+- [#843](https://github.com/nf-core/mag/pull/843) - Fixed issue with large format Bowtie2 index files not being emitted from index module (reported by Nick Eckersley, fix by @jfy133)
+- [#847](https://github.com/nf-core/mag/pull/847) - Allow the BBNorm process to use only 0.8 of the memory allocated to the task to stop if from oversubscribing memory (reported by and fix by @erikrikarddaniel)
+- [#850](https://github.com/nf-core/mag/pull/850) - Fixed some modules of the GDTBTk subworkflow not being represented in version lists (fix by @jfy133)
+- [#852](https://github.com/nf-core/mag/pull/852) - Fixed version reporting by ensure all modules are represented in final version.yml for MultiQC (by @jfy133)
+- [#854](https://github.com/nf-core/mag/pull/854) - Update porechop/abi to a patched version to prevent duplicated read names (reported by @palec87, fix by @jfy133)
+
 ### `Dependencies`
 
-| Tool       | Previous version | New version |
-| ---------- | ---------------- | ----------- |
-| CAT        | 5.2.3            | 6.0.1       |
-| centrifuge | 1.0.4.1          | 1.0.4.2     |
-| nanolyse   | 1.41.6           | 1.44.1      |
-| flye       |                  | 2.9.5       |
-| metamdbg   |                  | 1.0         |
-| minimap2   |                  | 2.28        |
-| samtools   |                  | 1.21        |
-| nf-core    | 3.2.0            | 3.3.1       |
-| pydamage   | 0.7.0            | 1.0.0       |
+| Tool         | Previous version | New version |
+| ------------ | ---------------- | ----------- |
+| BUSCO        | 5.8.3            | 6.0.0       |
+| CAT          | 5.2.3            | 6.0.1       |
+| centrifuge   | 1.0.4.1          | 1.0.4.2     |
+| nanolyse     | 1.41.6           | 1.44.1      |
+| flye         |                  | 2.9.5       |
+| metabat2     | 2.15             | 2.17        |
+| metamdbg     |                  | 1.0         |
+| minimap2     |                  | 2.29        |
+| mmseqs2      | 14.7e284         | 17.b804f    |
+| samtools     |                  | 1.21        |
+| nf-core      | 3.2.0            | 3.3.2       |
+| pydamage     | 0.7.0            | 1.0.0       |
+| seqtk        | 1.3              | 1.4         |
+| porechop_abi | 0.5.0            | 0.5.0post1  |
 
 ### `Deprecated`
 
-[#799](https://github.comf/nf-core/mag/pull/799) - Removed `--cat_official_taxonomy` in favour of `--cat_allow_unofficial_lineages` to control CAT's use of unofficial lineages (added by @dialvarezs)
-[#825](https://github.com/nf-core/mag/pull/825) - Removed `--centrifuge_db`, `--kraken2_db`, `--krona_db` and `--skip_krona` parameters following the removal of taxonomic profiling functionality. See nf-core/taxprofiler for replacement (added by @dialvarezs).
+- [#799](https://github.comf/nf-core/mag/pull/799) - Removed `--cat_official_taxonomy` in favour of `--cat_allow_unofficial_lineages` to control CAT's use of unofficial lineages (added by @dialvarezs)
+- [#825](https://github.com/nf-core/mag/pull/825) - Removed `--centrifuge_db`, `--kraken2_db`, `--krona_db` and `--skip_krona` parameters following the removal of taxonomic profiling functionality. See nf-core/taxprofiler for replacement (added by @dialvarezs)
+- [#851](https://github.com/nf-core/mag/pull/851) - Remove `POOL_READ_*` local modules in favor of nf-core cat/fastq (by @dialvarezs)
 
 ## v4.0.0 - [2025-05-22]
 

@@ -18,7 +18,7 @@ nextflow_pipeline {
 
             // Output directory: multiqc
             def stable_name_multiqc = getAllFilesFromDir("$outputDir/multiqc"            , relative: true, includeDir: false )
-            def stable_path_multiqc = getAllFilesFromDir("$outputDir/multiqc"            , ignore: ['**/*.{yaml,pdf,log,svg}', '**/general_stats_table.png', 'multiqc_report.html', '**/multiqc.log', '**/multiqc.log', '**/multiqc_data.json'])
+            def stable_path_multiqc = getAllFilesFromDir("$outputDir/multiqc"            , ignore: ['**/*.{yaml,pdf,log,svg}', '**/general_stats_table.png', 'multiqc_report.html', '**/multiqc.log', '**/multiqc_data.json', '**/*-multiqc.parquet'])
             // Output directory: QC_shortreads
             def stable_name_qcshortreads = getAllFilesFromDir("$outputDir/QC_shortreads" , relative: true, includeDir: false )
             def stable_path_qcshortreads= getAllFilesFromDir("$outputDir/QC_shortreads"  , ignore: ['**/*.{svg,png}','**/*_fastqc.html'])

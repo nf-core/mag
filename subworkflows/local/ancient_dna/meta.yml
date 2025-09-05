@@ -1,0 +1,80 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "ancient_dna_assembly_validation"
+description: Ancient DNA analysis workflow for metagenomic samples
+keywords:
+  - ancient DNA
+  - aDNA
+  - metagenomics
+  - authentication
+  - damage patterns
+components:
+  - bcftools/consensus
+  - bcftools/view
+  - freebayes
+  - pydamage/analyze
+  - pydamage/filter
+  - samtools/faidx
+input:
+  - ch_input:
+      description: Assembled contigs with alignment data
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - contigs:
+            type: file
+            description: Assembled contigs in FASTA format
+            pattern: "*.{fasta,fa}"
+        - bam:
+            type: file
+            description: BAM alignment files
+            pattern: "*.bam"
+        - bam_index:
+            type: file
+            description: BAM index files
+            pattern: "*.bai"
+output:
+  - contigs_recalled:
+      description: Damage-corrected contigs
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - fasta:
+            type: file
+            description: Corrected contigs in FASTA format
+            pattern: "*.{fasta,fa}"
+  - pydamage_results:
+      description: PyDamage analysis results
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - csv:
+            type: file
+            description: Damage pattern analysis in CSV format
+            pattern: "*.csv"
+  - pydamage_filtered_results:
+      description: Filtered PyDamage results
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - csv:
+            type: file
+            description: Filtered damage pattern results in CSV format
+            pattern: "*.csv"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@maxibor"
+  - "@@alexhbnr"
+  - "@jfy133"
+maintainers:
+  - "@jfy133"
+  - "@prototaxites"
+  - "@dialvarezs"
+  - "@d4straub"
+  - "@muabnezor"

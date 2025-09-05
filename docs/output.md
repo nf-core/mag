@@ -823,6 +823,9 @@ Summary tool-specific plots and tables of following tools are currently displaye
 - BUSCO
 - QUAST
 - PROKKA
+- BUSCO
+- CheckM
+- CheckM2
 
 ### Pipeline information
 

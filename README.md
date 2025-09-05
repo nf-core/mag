@@ -5,13 +5,13 @@
   </picture>
 </h1>
 
-[![GitHub Actions CI Status](https://github.com/nf-core/mag/actions/workflows/ci.yml/badge.svg)](https://github.com/nf-core/mag/actions/workflows/ci.yml)
+[![GitHub Actions CI Status](https://github.com/nf-core/mag/actions/workflows/nf-test.yml/badge.svg)](https://github.com/nf-core/mag/actions/workflows/nf-test.yml)
 [![GitHub Actions Linting Status](https://github.com/nf-core/mag/actions/workflows/linting.yml/badge.svg)](https://github.com/nf-core/mag/actions/workflows/linting.yml)[![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/mag/results)[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.3589527-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.3589527)
 [![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)
 [![Cite Publication](https://img.shields.io/badge/Cite%20Us!-Cite%20Publication-orange)](https://doi.org/10.1093/nargab/lqac007)
 
 [![Nextflow](https://img.shields.io/badge/version-%E2%89%A525.04.2-green?style=flat&logo=nextflow&logoColor=white&color=%230DC09D&link=https%3A%2F%2Fnextflow.io)](https://www.nextflow.io/)
-[![nf-core template version](https://img.shields.io/badge/nf--core_template-3.3.1-green?style=flat&logo=nfcore&logoColor=white&color=%2324B064&link=https%3A%2F%2Fnf-co.re)](https://github.com/nf-core/tools/releases/tag/3.3.1)
+[![nf-core template version](https://img.shields.io/badge/nf--core_template-3.3.2-green?style=flat&logo=nfcore&logoColor=white&color=%2324B064&link=https%3A%2F%2Fnf-co.re)](https://github.com/nf-core/tools/releases/tag/3.3.2)
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
@@ -98,6 +98,8 @@ Other code contributors include:
 - [Adam Rosenbaum](https://github.com/muabnezor)
 - [Diego Alvarez](https://github.com/dialvarezs)
 - [Nikolaos Vergoulidis](https://github.com/IceGreb)
+- [Greg Fedewa](https://github.com/harper357)
+- [Vini Salazar](https://github.com/vinisalazar)
 
 Long read processing was inspired by [caspargross/HybridAssembly](https://github.com/caspargross/HybridAssembly) written by Caspar Gross [@caspargross](https://github.com/caspargross)
 

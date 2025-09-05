@@ -97,8 +97,7 @@ workflow PIPELINE_INITIALISATION {
         ch_samplesheet
             .map { meta, _sr1, _sr2, _lr -> meta.sr_platform }
             .unique()
-            .collect()
-            .map {
+            .collect {
                 if (it.size() > 1) {
                     error("[nf-core/mag] ERROR: Multiple short read sequencing platforms found in samplesheet. Use same platform for all samples when running with binning_map_mode 'all'.")
                 }
@@ -106,8 +105,7 @@ workflow PIPELINE_INITIALISATION {
         ch_samplesheet
             .map { meta, _sr1, _sr2, _lr -> meta.lr_platform }
             .unique()
-            .collect()
-            .map {
+            .collect {
                 if (it.size() > 1) {
                     error("[nf-core/mag] ERROR: Multiple long read sequencing platforms found in samplesheet. Use same platform for all samples when running with binning_map_mode 'all'.")
                 }
@@ -138,7 +136,7 @@ workflow PIPELINE_INITIALISATION {
     ch_raw_long_reads
         .map { meta, lr -> [ meta.id, lr ] }
         .join(ch_raw_long_reads.map {meta, sr1 -> [meta.id, sr1] }, by: 0, remainder: true)
-        .map { id, lr, sr1 ->
+        .map { _id, lr, sr1 ->
             if (lr && sr1) {
                 hybrid = true
             }
