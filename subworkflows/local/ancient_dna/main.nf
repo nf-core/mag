@@ -5,6 +5,7 @@ include { FREEBAYES                             } from '../../../modules/nf-core
 include { PYDAMAGE_ANALYZE                      } from '../../../modules/nf-core/pydamage/analyze/main'
 include { PYDAMAGE_FILTER                       } from '../../../modules/nf-core/pydamage/filter/main'
 include { SAMTOOLS_FAIDX as FAIDX               } from '../../../modules/nf-core/samtools/faidx/main'
+include { SUMMARISEPYDAMAGE                     } from '../../../modules/local/summarisepydamage/main'
 
 workflow ANCIENT_DNA_ASSEMBLY_VALIDATION {
     take:
@@ -26,6 +27,9 @@ workflow ANCIENT_DNA_ASSEMBLY_VALIDATION {
 
     PYDAMAGE_FILTER(PYDAMAGE_ANALYZE.out.csv)
     ch_versions = ch_versions.mix(PYDAMAGE_FILTER.out.versions)
+
+    SUMMARISEPYDAMAGE(PYDAMAGE_FILTER.out.csv)
+    ch_versions = ch_versions.mix(SUMMARISEPYDAMAGE.out.versions)
 
     if (params.skip_ancient_damagecorrection) {
         ch_corrected_contigs = Channel.empty()
@@ -67,8 +71,9 @@ workflow ANCIENT_DNA_ASSEMBLY_VALIDATION {
     }
 
     emit:
-    contigs_recalled          = ch_corrected_contigs // channel: [ val(meta), path(fasta) ]
-    pydamage_results          = PYDAMAGE_ANALYZE.out.csv // channel: [ val(meta), path(csv) ]
-    pydamage_filtered_results = PYDAMAGE_FILTER.out.csv // channel: [ val(meta), path(csv) ]
-    versions                  = ch_versions // channel: [ versions.yml ]
+    contigs_recalled            = ch_corrected_contigs // channel: [ val(meta), path(fasta) ]
+    pydamage_results            = PYDAMAGE_ANALYZE.out.csv // channel: [ val(meta), path(csv) ]
+    pydamage_filtered_results   = PYDAMAGE_FILTER.out.csv // channel: [ val(meta), path(csv) ]
+    pydamage_summarised_results = SUMMARISEPYDAMAGE.out.summary_csv // channel: [ val(meta), path(csv) ]
+    versions                    = ch_versions // channel: [ versions.yml ]
 }
