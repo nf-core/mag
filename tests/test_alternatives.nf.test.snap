@@ -43,7 +43,7 @@
                     "csvtk": "0.31.0"
                 },
                 "DASTOOL_FASTATOCONTIG2BIN_TIARA": {
-                    "dastool": "1.1.6"
+                    "dastool": "1.1.7"
                 },
                 "FASTQC_RAW": {
                     "fastqc": "0.12.1"
@@ -348,7 +348,7 @@
                 "multiqc_fastqc.yaml:md5,f50da8bfd062b9399911ba19b34831db",
                 "multiqc_fastqc_fastqc-1.yaml:md5,4c2c5a5e7b370b0668c1360b7927d0a8",
                 "multiqc_general_stats.yaml:md5,8b8cbb9d6fe349084e3d2fe2ffdecda8",
-                "multiqc_software_versions.yaml:md5,13a35a24875040df0018b0da426bcb65",
+                "multiqc_software_versions.yaml:md5,292b425d3bac850a8143c13f41581f6d",
                 "multiqc_trimmomatic.yaml:md5,d4aaff3725c28801ae0577d97c2f9b30",
                 "trimmomatic_plot.yaml:md5,9557cd587ace0a93912179cb0deafe3b"
             ]
