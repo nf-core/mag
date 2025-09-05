@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#844](https://github.com/nf-core/mag/pull/843) - Change loading mechanism of internal PhiX/Lambda databases to improve Dev UX when schema building (by @jfy133)
 - [#851](https://github.com/nf-core/mag/pull/851) - Improve structure of local modules and subworkflows (by @dialvarezs)
 - [#853](https://github.com/nf-core/mag/pull/853) - Update nf-core modules and subworkflows (by @dialvarezs)
+- [#856](https://github.com/nf-core/mag/pull/856) - Update more nf-core modules (by @dialvarezs)
 
 ### `Fixed`
 
@@ -40,11 +41,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Tool         | Previous version | New version |
 | ------------ | ---------------- | ----------- |
+| bcftools     | 1.17             | 1.21        |
 | BUSCO        | 5.8.3            | 6.0.0       |
 | CAT          | 5.2.3            | 6.0.1       |
 | centrifuge   | 1.0.4.1          | 1.0.4.2     |
+| dastool      | 1.1.6            | 1.1.7       |
 | nanolyse     | 1.41.6           | 1.44.1      |
+| fastp        | 0.23.4           | 0.24.0      |
 | flye         |                  | 2.9.5       |
+| Freebayes    | 1.3.6            | 1.3.10      |
+| geNomad      | 1.5.2            | 1.11.0      |
+| GTDB-Tk      | 2.4.0            | 2.4.1       |
 | metabat2     | 2.15             | 2.17        |
 | metamdbg     |                  | 1.0         |
 | minimap2     |                  | 2.29        |
