@@ -71,6 +71,7 @@ def main(args=None):
         )
 
     pydamage_summarised = pydamage_raw.drop("reference", axis=1).groupby("id").median()
+    pydamage_summarised = pydamage_summarised.add_prefix("median_")
 
     if args.verbose:
         print("[summarise_pydamage.py] FINALISING: saving file")
