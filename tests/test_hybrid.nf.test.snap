@@ -379,7 +379,7 @@
                 "multiqc_prokka.yaml:md5,f7ee4045a273845b501ba15e5fd4d38f",
                 "multiqc_quast.yaml:md5,e5940a0ce6af05da51fe94bc6d7d3901",
                 "multiqc_quast_quast-1.yaml:md5,4fcb2008af9fc15990854d76e6a72ada",
-                "multiqc_software_versions.yaml:md5,ccc9ac4f675220c21dd117c55c92aeb2",
+                "multiqc_software_versions.yaml:md5,60f40217532e70761e9b2ea2c601aef3",
                 "porechop.yaml:md5,828d96e2822bb4b4108ab706c00c4450",
                 "prokka_plot.yaml:md5,229d29dafbf6bde37d8f245dfb535b2e",
                 "quast_num_contigs.yaml:md5,241f678b1df1c1dd0dd58246a073d7dc",
@@ -388,8 +388,8 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2025-09-05T10:57:49.901831766"
+        "timestamp": "2025-09-12T09:08:45.630675675"
     }
 }
