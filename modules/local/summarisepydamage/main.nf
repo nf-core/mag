@@ -38,7 +38,7 @@ process SUMMARISEPYDAMAGE {
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
     echo ${args}
-    
+
     touch ${prefix}_pydamage_summarised.csv
 
     cat <<-END_VERSIONS > versions.yml

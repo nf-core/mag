@@ -60,7 +60,7 @@ workflow PYDAMAGE_BINS {
             [meta_new, file]
         }
 
-    // Generate the per bin-summary 
+    // Generate the per bin-summary
     SUMMARISEPYDAMAGE(ch_pydamage_to_bins)
     ch_versions = ch_versions.mix(SUMMARISEPYDAMAGE.out.versions)
 
