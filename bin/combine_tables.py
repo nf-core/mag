@@ -220,6 +220,9 @@ def main(args=None):
         summarisepydamage_results = pd.read_csv(
             args.summarisepydamage_summary, sep="\t"
         )
+        summarisepydamage_results["id"] = (summarisepydamage_results["id"]).replace(
+            "_pydamagebins", ""
+        )
         if not bins.equals(
             summarisepydamage_results["id"].sort_values().reset_index(drop=True)
         ):

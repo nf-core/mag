@@ -24,7 +24,7 @@ process SUMMARISEPYDAMAGE {
     summarise_pydamage.py \\
         ${args} \\
         -i ${csv} \\
-        -o ${prefix}_pydamage_summarised.tsv \\
+        -o ${prefix}_pydamagebins_summarised.tsv \\
         -n ${meta.id}
 
     cat <<-END_VERSIONS > versions.yml

@@ -13,8 +13,13 @@ workflow PYDAMAGE_BINS {
     ch_versions = Channel.empty()
 
     // Get sample ID for each contig (record header)
-    ch_contig_bin_assignments = ch_input_for_postbinning
-        .transpose()
+    ch_contig_bin_assignments = ch_input_for_postbinning.transpose()
+
+    // Get meta only version of input bins for later re-binding
+    ch_input_for_bins_metaonly = ch_contig_bin_assignments.map { meta, binfile -> [[bin_id: binfile.name], meta] }
+
+    // Extract contig ID per bin
+    ch_contig_bin_assignments_meta = ch_contig_bin_assignments
         .map { meta, binfile -> [meta + [bin_id: binfile.name], binfile] }
         .splitFasta(record: [header: true])
         .map { meta, record -> [[id: meta.id, contig_id: record.header], [bin_id: meta.bin_id]] }
@@ -24,48 +29,65 @@ workflow PYDAMAGE_BINS {
         .splitCsv(header: true)
         .map { meta, pydamage_stats -> [[id: meta.id, contig_id: pydamage_stats.reference], meta, pydamage_stats] }
 
-    //Merge sample ID to pydamage results so we can group by contig AND node name for 
-    ch_reordered_pydamage_stats = ch_contig_bin_assignments
+    //Merge sample ID to pydamage results so we can group by contig AND node name
+    ch_reordered_pydamage_stats = ch_contig_bin_assignments_meta
         .join(ch_pydamage_filtered_results)
         .map { _coremeta, _bin_meta, _full_meta, pydamage_stats -> [_bin_meta, pydamage_stats] }
         .groupTuple(by: 0)
-        .dump(tag: 'grouped')
-        .multiMap { meta, data ->
-            bin_id: meta.bin_id
-            contents: data
+
+    // Convert contents of the reordered contigs to a CSV file, and re-attach meta based on bin_id (i.e., from bin file name)
+    ch_pydamage_to_bins = ch_reordered_pydamage_stats
+        .map { bin_id, data ->
+            // Process your data to create CSV content
+            def header = data[0].keySet().join(',')
+            def rows = data.collect { it.values().join(',') }.join('\n')
+            def content = header + '\n' + rows
+            [bin_id, content]
+        }
+        .collectFile(
+            [storeDir: "${params.outdir}/GenomeBinning/QC/pydamage/analyze_bins/"]
+        ) { meta, content ->
+            ["${meta.bin_id}_pydamagebins.csv", content]
+        }
+        .map { file ->
+            def meta = [:]
+            meta.bin_id = file.getName() - '_pydamagebins.csv'
+            [meta, file]
+        }
+        .join(ch_input_for_bins_metaonly)
+        .map { bin_id, file, meta ->
+            def meta_new = meta + bin_id
+            [meta_new, file]
         }
 
-    // TODO: somehow extract bin_id as a string not DataBroardcast thing
-    // TODO: check the resulting file HAS reorganised the contigs as expected (per bin)
-    ch_pydamage_to_bins = channelToTable(ch_reordered_pydamage_stats.contents, "${params.outdir}/Ancient_DNA/pydamage/bin_summary/${ch_reordered_pydamage_stats.bin_id[0].toString()}", 'csv')
+    // Generate the per bin-summary 
+    SUMMARISEPYDAMAGE(ch_pydamage_to_bins)
+    ch_versions = ch_versions.mix(SUMMARISEPYDAMAGE.out.versions)
 
-    // TODO: do a dummy test to see if you can pass the collectFile as an object to e.g. a process
-    // SUMMARISEPYDAMAGE([[id: 'test'], ch_pydamage_to_bins])
-    ch_versions = ch_versions.mix(Channel.empty())
-
-    emit:
-    tsv      = Channel.empty() // SUMMARISEPYDAMAGE.out.summary_tsv
-    versions = ch_versions
-}
-
-
-// Constructs the header string and then the strings of each row, and
-def channelToTable(ch_list_for_samplesheet, path, format) {
-    def format_sep = ["csv": ",", "tsv": "\t", "txt": "\t"][format]
-
-    def ch_header = ch_list_for_samplesheet
-
-    def final_file = ch_header
-        .first()
-        .view()
-        .map { it[0].keySet().join(format_sep) }
-        .concat(ch_list_for_samplesheet.map { it[0].values().join(format_sep) })
-        .view()
+    // Stick per bin-summary into a single summary CSV
+    ch_aggregate_summaries = SUMMARISEPYDAMAGE.out.summary_tsv
+        .map { _meta, file -> [file] }
+        .splitCsv(header: true, sep: '\t')
+        .map { content ->
+            content[0].id = content[0].id - '_pydamagebins'
+            [[id: 'all'], content.flatten()]
+        }
+        .groupTuple()
+        .map { _meta, contents ->
+            // Get keys of first row to act as header
+            def header = contents[0][0].keySet().join('\t')
+            // Get values of remaining rows for cells
+            def rows = contents.collect { it[0].values().join('\t') }.join('\n')
+            header + '\n' + rows
+        }
         .collectFile(
-            name: "${path}.${format}",
+            name: "pydamage_bin_summary.tsv",
             newLine: true,
             sort: false,
+            storeDir: "${params.outdir}/GenomeBinning/QC/",
         )
 
-    return final_file
+    emit:
+    tsv      = ch_aggregate_summaries
+    versions = ch_versions
 }
