@@ -2,18 +2,20 @@
  * LONGREAD_PREPROCESSING: Preprocessing and QC for long reads
  */
 
-include { NANOPLOT as NANOPLOT_RAW         } from '../../../modules/nf-core/nanoplot/main'
-include { NANOPLOT as NANOPLOT_FILTERED    } from '../../../modules/nf-core/nanoplot/main'
-include { NANOLYSE                         } from '../../../modules/nf-core/nanolyse/main'
-include { PORECHOP_PORECHOP                } from '../../../modules/nf-core/porechop/porechop/main'
-include { PORECHOP_ABI                     } from '../../../modules/nf-core/porechop/abi/main'
-include { FILTLONG                         } from '../../../modules/nf-core/filtlong'
-include { CHOPPER                          } from '../../../modules/nf-core/chopper'
-include { NANOQ                            } from '../../../modules/nf-core/nanoq'
-include { CAT_FASTQ as CAT_FASTQ_LONGREADS } from '../../../modules/nf-core/cat/fastq/main'
+include { NANOPLOT as NANOPLOT_RAW                     } from '../../../modules/nf-core/nanoplot/main'
+include { NANOPLOT as NANOPLOT_FILTERED                } from '../../../modules/nf-core/nanoplot/main'
+include { NANOLYSE                                     } from '../../../modules/nf-core/nanolyse/main'
+include { PORECHOP_PORECHOP                            } from '../../../modules/nf-core/porechop/porechop/main'
+include { PORECHOP_ABI                                 } from '../../../modules/nf-core/porechop/abi/main'
+include { FILTLONG                                     } from '../../../modules/nf-core/filtlong'
+include { CHOPPER                                      } from '../../../modules/nf-core/chopper'
+include { NANOQ                                        } from '../../../modules/nf-core/nanoq'
+include { CAT_FASTQ as CAT_FASTQ_LONGREADS             } from '../../../modules/nf-core/cat/fastq/main'
+include { MINIMAP2_INDEX                               } from '../../../modules/nf-core/minimap2/index/main'
+include { HOSTILE_CLEAN as HOSTILE_CLEAN_HOST_LONGREAD } from '../../../modules/nf-core/hostile/clean/main'
 
 // include other subworkflows here
-include { LONGREAD_HOSTREMOVAL             } from '../hostremoval_longread/main'
+include { LONGREAD_HOSTREMOVAL                         } from '../hostremoval_longread/main'
 
 workflow LONGREAD_PREPROCESSING {
     take:
@@ -104,13 +106,17 @@ workflow LONGREAD_PREPROCESSING {
 
         // host removal long reads
         if (params.host_fasta || params.host_genome) {
-            LONGREAD_HOSTREMOVAL(
+            MINIMAP2_INDEX([[:], ch_host_fasta])
+            ch_versions = ch_versions.mix(MINIMAP2_INDEX.out.versions)
+
+            HOSTILE_CLEAN_HOST_LONGREAD(
                 ch_long_reads,
-                ch_host_fasta,
+                MINIMAP2_INDEX.out.index.map { _meta, index -> ['.', index] },
             )
-            ch_versions = ch_versions.mix(LONGREAD_HOSTREMOVAL.out.versions)
-            ch_multiqc_files = ch_multiqc_files.mix(LONGREAD_HOSTREMOVAL.out.multiqc_files)
-            ch_long_reads = LONGREAD_HOSTREMOVAL.out.reads
+
+            ch_versions = ch_versions.mix(HOSTILE_CLEAN_HOST_LONGREAD.out.versions)
+            ch_multiqc_files = ch_multiqc_files.mix(HOSTILE_CLEAN_HOST_LONGREAD.out.json)
+            ch_long_reads = HOSTILE_CLEAN_HOST_LONGREAD.out.fastq
         }
 
         /**

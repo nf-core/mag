@@ -2,24 +2,20 @@
  * SHORTREAD_PREPROCESSING: Preprocessing and QC for short reads
  */
 
-include { FASTQC as FASTQC_RAW                                } from '../../../modules/nf-core/fastqc/main'
-include { FASTQC as FASTQC_TRIMMED                            } from '../../../modules/nf-core/fastqc/main'
-include { FASTP                                               } from '../../../modules/nf-core/fastp/main'
-include { TRIMMOMATIC                                         } from '../../../modules/nf-core/trimmomatic/main'
-include { ADAPTERREMOVAL as ADAPTERREMOVAL_PE                 } from '../../../modules/nf-core/adapterremoval/main'
-include { ADAPTERREMOVAL as ADAPTERREMOVAL_SE                 } from '../../../modules/nf-core/adapterremoval/main'
-include { CAT_FASTQ                                           } from '../../../modules/nf-core/cat/fastq/main'
-include { SEQTK_MERGEPE                                       } from '../../../modules/nf-core/seqtk/mergepe/main'
-include { BBMAP_BBNORM                                        } from '../../../modules/nf-core/bbmap/bbnorm/main'
-include { HOSTILE_CLEAN as HOSTILE_CLEAN_HOST_SHORTREAD       } from '../../../modules/nf-core/hostile/clean/main'
-include { HOSTILE_CLEAN as HOSTILE_CLEAN_PHIX_SHORTREAD       } from '../../../modules/nf-core/hostile/clean/main'
-include { BOWTIE2_BUILD as BOWTIE2_HOST_BUILD                 } from '../../../modules/nf-core/bowtie2/build/main'
-include { BOWTIE2_BUILD as BOWTIE2_PHIX_BUILD                 } from '../../../modules/nf-core/bowtie2/build/main'
+include { FASTQC as FASTQC_RAW                          } from '../../../modules/nf-core/fastqc/main'
+include { FASTQC as FASTQC_TRIMMED                      } from '../../../modules/nf-core/fastqc/main'
+include { FASTP                                         } from '../../../modules/nf-core/fastp/main'
+include { TRIMMOMATIC                                   } from '../../../modules/nf-core/trimmomatic/main'
+include { ADAPTERREMOVAL as ADAPTERREMOVAL_PE           } from '../../../modules/nf-core/adapterremoval/main'
+include { ADAPTERREMOVAL as ADAPTERREMOVAL_SE           } from '../../../modules/nf-core/adapterremoval/main'
+include { CAT_FASTQ                                     } from '../../../modules/nf-core/cat/fastq/main'
+include { SEQTK_MERGEPE                                 } from '../../../modules/nf-core/seqtk/mergepe/main'
+include { BBMAP_BBNORM                                  } from '../../../modules/nf-core/bbmap/bbnorm/main'
+include { HOSTILE_CLEAN as HOSTILE_CLEAN_HOST_SHORTREAD } from '../../../modules/nf-core/hostile/clean/main'
+include { HOSTILE_CLEAN as HOSTILE_CLEAN_PHIX_SHORTREAD } from '../../../modules/nf-core/hostile/clean/main'
+include { BOWTIE2_BUILD as BOWTIE2_HOST_BUILD           } from '../../../modules/nf-core/bowtie2/build/main'
+include { BOWTIE2_BUILD as BOWTIE2_PHIX_BUILD           } from '../../../modules/nf-core/bowtie2/build/main'
 
-include { BOWTIE2_REMOVAL_BUILD as BOWTIE2_HOST_REMOVAL_BUILD } from '../../../modules/local/bowtie2_removal_build/main'
-include { BOWTIE2_REMOVAL_ALIGN as BOWTIE2_HOST_REMOVAL_ALIGN } from '../../../modules/local/bowtie2_removal_align/main'
-include { BOWTIE2_REMOVAL_BUILD as BOWTIE2_PHIX_REMOVAL_BUILD } from '../../../modules/local/bowtie2_removal_build/main'
-include { BOWTIE2_REMOVAL_ALIGN as BOWTIE2_PHIX_REMOVAL_ALIGN } from '../../../modules/local/bowtie2_removal_align/main'
 
 workflow SHORTREAD_PREPROCESSING {
     take:
