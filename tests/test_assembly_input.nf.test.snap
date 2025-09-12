@@ -1,7 +1,7 @@
 {
     "-profile assembly_input": {
         "content": [
-            317,
+            318,
             {
                 "ADJUST_MAXBIN2_EXT": {
                     "coreutils": null
@@ -46,16 +46,16 @@
                     "bioawk": 20110810
                 },
                 "DASTOOL_DASTOOL": {
-                    "dastool": "1.1.6"
+                    "dastool": "1.1.7"
                 },
                 "DASTOOL_FASTATOCONTIG2BIN_CONCOCT": {
-                    "dastool": "1.1.6"
+                    "dastool": "1.1.7"
                 },
                 "DASTOOL_FASTATOCONTIG2BIN_MAXBIN2": {
-                    "dastool": "1.1.6"
+                    "dastool": "1.1.7"
                 },
                 "DASTOOL_FASTATOCONTIG2BIN_METABAT2": {
-                    "dastool": "1.1.6"
+                    "dastool": "1.1.7"
                 },
                 "GUNZIP_ASSEMBLYINPUT": {
                     "gunzip": 1.13
@@ -88,6 +88,9 @@
                 "METAEUK_EASYPREDICT": {
                     "metaeuk": "6.a5d39d9"
                 },
+                "MMSEQS_DATABASES": {
+                    "mmseqs": "17.b804f"
+                },
                 "RENAME_POSTDASTOOL": {
                     "coreutils": "8.30-3ubuntu2"
                 },
@@ -109,9 +112,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2025-09-03T07:32:22.014907915"
+        "timestamp": "2025-09-12T08:21:28.459816867"
     },
     "multiqc": {
         "content": [
@@ -148,13 +151,13 @@
                 "multiqc_busco.yaml:md5,38eb19ae047a7be58b2af7f325a9704f",
                 "multiqc_citations.yaml:md5,4aaa7714bb3dba1dd50f383c2ae4f4bb",
                 "multiqc_general_stats.yaml:md5,229a87a550a6d00b7496a1200ff53da1",
-                "multiqc_software_versions.yaml:md5,71fae3c74bf25391b1373dca90be8c20"
+                "multiqc_software_versions.yaml:md5,8168071d4ee650f41a0236f65f13766a"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2025-09-03T07:32:22.060385119"
+        "timestamp": "2025-09-12T08:21:28.478134351"
     }
 }
