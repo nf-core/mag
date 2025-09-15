@@ -947,8 +947,7 @@
                 },
                 "bigmag": {
                     "type": "boolean",
-                    "description": "Make the file bin_summary.tsv suitable for the application BIgMAG",
-                    "help_text": "If specified, BUSCO, ChecKM2 and GUNC will be executed simultaneously."
+                    "description": "Make the file bin_summary.tsv suitable for the application BIgMAG."
                 }
             }
         },
