@@ -27,7 +27,7 @@ process ADJUST_MAXBIN2_EXT {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        coreutils: \$(apt-cache policy coreutils | sed '2!d; s/.* //'
+        coreutils: \$(apt-cache policy coreutils | sed '2!d; s/.* //')
     END_VERSIONS
     """
 }
