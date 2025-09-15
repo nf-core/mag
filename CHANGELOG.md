@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
-- [#000](https://github.com/nf-core/mag/pull/000) - Added `--bigmag` to execute the bigmag workflow that generates the file to be used as input for [BIgMAG](https://github.com/jeffe107/BIgMAG)
+- [##860](https://github.com/nf-core/mag/pull/860) - Added `--bigmag` to execute the bigmag workflow that generates the file to be used as input for [BIgMAG](https://github.com/jeffe107/BIgMAG)
 
 ## v4.0.0 - [2025-05-22]
 
