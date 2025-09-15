@@ -480,3 +480,7 @@ process {
 
 Where we update the `image-src` and as above supply the same `/<path>/<to>/<empty_dir>/` path to `--gtdb_db`.
 :::
+
+## BIgMAG compatibility
+
+With the parameter `--bigmag` a subworkflow will be triggered to generate one and unique file that contains the ouput from all of the bin-quality tools and that can be used as input for the application [BIgMAG](https://github.com/jeffe107/BIgMAG).
