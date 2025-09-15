@@ -23,6 +23,7 @@ include { DOMAIN_CLASSIFICATION                                 } from '../subwo
 include { DEPTHS                                                } from '../subworkflows/local/depths'
 include { LONGREAD_PREPROCESSING                                } from '../subworkflows/local/longread_preprocessing'
 include { SHORTREAD_PREPROCESSING                               } from '../subworkflows/local/shortread_preprocessing'
+include { BIGMAG                                                } from '../subworkflows/local/bigmag.nf'
 
 //
 // MODULE: Installed directly from nf-core/modules
@@ -712,6 +713,15 @@ workflow MAG {
                 ch_cat_global_summary.ifEmpty([]),
                 params.binqc_tool,
             )
+        }
+
+        if (params.bigmag && !params.skip_binqc) {
+            BIGMAG(ch_input_for_postbinning,
+                   BIN_SUMMARY.out.summary,
+                   params.binqc_tool
+                   )
+            ch_bigmag_summary = BIGMAG.out.bigmag_summary
+            ch_versions = ch_versions.mix(BIGMAG.out.versions)
         }
 
         /*

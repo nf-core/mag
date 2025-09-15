@@ -944,6 +944,11 @@
                     "type": "boolean",
                     "description": "Save the used GUNC reference files downloaded when not using --gunc_db parameter.",
                     "help_text": "If specified, the corresponding DIAMOND file downloaded from the GUNC server will be stored in your output directory alongside your GUNC results."
+                },
+                "bigmag": {
+                    "type": "boolean",
+                    "description": "Make the file bin_summary.tsv suitable for the application BIgMAG",
+                    "help_text": "If specified, BUSCO, ChecKM2 and GUNC will be executed simultaneously."
                 }
             }
         },
