@@ -748,6 +748,15 @@ In cases where eukaryotic genomes are recovered in binning, [MetaEuk](https://gi
 
 </details>
 
+## Summary file to be used as input for BIgMAG
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `GenomeBinning/BIgMAG/bigmag_summary.tsv`: Summary of bin sequencing depths together with GUNC, QUAST, GTDB-Tk, BUSCO and CheckM or CheckM2 results. This file is suitable to be used as input for the dashboard BIgMAG. It is generated through a subworkflow that takes the file `bin_summary.tsv` as input, and it executes CheckM2 if BUSCO is the selected quality control tool or BUSCO if CheckM or CheckM2 was specified by the user as the main tool. By default the subworkflow will execute GUNC.
+
+</details>
+
 ## Ancient DNA
 
 Optional, only running when parameter `-profile ancient_dna` is specified.

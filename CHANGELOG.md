@@ -3,6 +3,12 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v4.0.1 - [2025-09-15]
+
+### `Added`
+
+- [#000](https://github.com/nf-core/mag/pull/000) - Added `--bigmag` to execute the bigmag workflow that generates the file to be used as input for [BIgMAG](https://github.com/jeffe107/BIgMAG)
+
 ## v4.0.0 - [2025-05-22]
 
 ### `Added`
