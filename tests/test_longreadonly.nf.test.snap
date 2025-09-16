@@ -4,7 +4,7 @@
             57,
             {
                 "ADJUST_MAXBIN2_EXT": {
-                    "coreutils": null
+                    "coreutils": "8.30-3ubuntu2"
                 },
                 "BIN_SUMMARY": {
                     "python": "3.10.6",
@@ -122,9 +122,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2025-08-26T12:26:26.74211758"
+        "timestamp": "2025-09-16T17:30:19.280871935"
     },
     "multiqc": {
         "content": [
@@ -176,7 +176,7 @@
                 "multiqc_prokka.yaml:md5,7e95c90a1cbc1b4ec18f20d19a0fcdb0",
                 "multiqc_quast.yaml:md5,6fddbac3730cf16c754c48d96da0d7aa",
                 "multiqc_quast_quast-1.yaml:md5,86d00d8a06816fdf6871936dacaa91aa",
-                "multiqc_software_versions.yaml:md5,6c6a0b90b4d3ffe4cae4b5b8bd80607f",
+                "multiqc_software_versions.yaml:md5,20ad01ac98a3ccbbad2b58aba7a79618",
                 "porechop.yaml:md5,828d96e2822bb4b4108ab706c00c4450",
                 "prokka_plot.yaml:md5,a02a88ab798c94e8f3eab6bd38b0a2d0",
                 "quast_num_contigs.yaml:md5,710d04c92ddfbfaa827d5592f7adac07",
@@ -187,6 +187,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.7"
         },
-        "timestamp": "2025-09-13T12:17:19.313619893"
+        "timestamp": "2025-09-16T17:30:19.321260403"
     }
 }
