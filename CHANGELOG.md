@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#827](https://github.com/nf-core/mag/pull/827) - Added nf-test CI testing for all test profiles (added by @jfy133)
 - [#829](https://github.com/nf-core/mag/pull/829) - Add `--skip_shortread_qc` and `--skip_longread_qc` params for skipping certain default preprocessing steps (added by @erikrikarddaniel)
 - [#846](https://github.com/nf-core/mag/pull/846) - Improve documentation of `group` samplesheet column (added by @vinisalazar)
-- [#855](https://github.com/nf-core/mag/pull/855) - Add nf-tests for test_longreadonly, test_longreadonly_alternatives, test_hybrid and test_assembly_input (added by @dialvarezs)
+- [#855](https://github.com/nf-core/mag/pull/855) - Add basic nf-tests for test_longreadonly, test_longreadonly_alternatives, test_hybrid and test_assembly_input (added by @dialvarezs)
 
 ### `Changed`
 
