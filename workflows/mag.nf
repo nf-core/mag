@@ -25,7 +25,7 @@ include { LONGREAD_PREPROCESSING          } from '../subworkflows/local/preproce
 include { SHORTREAD_PREPROCESSING         } from '../subworkflows/local/preprocessing_shortread/main'
 include { ASSEMBLY                        } from '../subworkflows/local/assembly/main'
 include { CATPACK                         } from '../subworkflows/local/catpack/main'
-
+include { BIGMAG                          } from '../subworkflows/local/bigmag/main'
 //
 // MODULE: Installed directly from nf-core/modules
 //
@@ -460,6 +460,13 @@ workflow MAG {
                 params.binqc_tool,
             )
             ch_versions = ch_versions.mix(BIN_SUMMARY.out.versions)
+        }
+        if (params.bigmag && !params.skip_binqc) {
+            BIGMAG(ch_input_for_postbinning,
+                   BIN_SUMMARY.out.summary,
+                   )
+            ch_bigmag_summary = BIGMAG.out.bigmag_summary
+            ch_versions = ch_versions.mix(BIGMAG.out.versions)
         }
 
         /*
