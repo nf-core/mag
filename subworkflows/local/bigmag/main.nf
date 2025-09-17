@@ -68,6 +68,7 @@ workflow BIGMAG {
         // If directory, assumes sub structure of `params.busco_db/lineages/<taxa>_odb(10|12)`
         if (ch_busco_db && ch_busco_db.extension in ['gz', 'tgz']) {
             BUSCO_UNTAR([[id: ch_busco_db.getSimpleName()], ch_busco_db])
+            ch_versions = ch_versions.mix(BUSCO_UNTAR.out.versions)
             ch_busco_db = BUSCO_UNTAR.out.untar.map { it[1] }
         }
         else if (ch_busco_db && ch_busco_db.isDirectory()) {
