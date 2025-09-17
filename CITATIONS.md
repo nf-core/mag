@@ -84,7 +84,7 @@
 
 - [MAGFlow/BIgMAG](https://doi.org/10.12688/f1000research.152290.2)
 
-  > Yepes-García, J., Falquet, L. (2024). Metagenome quality metrics and taxonomical annotation visualization through the integration of MAGFlow and BIgMAG. F1000Research 13:640. doi.org/10.12688/f1000research.152290.2  
+  > Yepes-García, J., Falquet, L. (2024). Metagenome quality metrics and taxonomical annotation visualization through the integration of MAGFlow and BIgMAG. F1000Research 13:640. doi.org/10.12688/f1000research.152290.2
 
 - [MaxBin2](https://doi.org/10.1093/bioinformatics/btv638)
 

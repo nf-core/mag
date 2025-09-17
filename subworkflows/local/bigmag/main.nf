@@ -135,7 +135,7 @@ workflow BIGMAG {
     CONCAT_BIGMAG (ch_alt_summary, 'tsv', 'tsv')
     ch_missing_summary = CONCAT_BIGMAG.out.csv.map { _meta, summary -> summary }
     ch_versions = ch_versions.mix(CONCAT_BIGMAG.out.versions)
-    
+
     BIGMAG_SUMMARY(summary, ch_gunc_summary, ch_missing_summary, params.binqc_tool)
     ch_versions = ch_versions.mix(BIGMAG_SUMMARY.out.versions)
 

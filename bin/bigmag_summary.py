@@ -46,7 +46,7 @@ def main(args=None):
         df_summary.at[i,"bin"] = name
         df_summary = df_summary.sort_values(by='bin')
         df_summary["bin"] = df_summary["bin"].astype(str)
-    
+
     df_gunc = pd.read_csv(args.gunc_summary, sep='\t')
     df_gunc["genome"] = df_gunc["genome"].astype(str)
     df_gunc = df_gunc.sort_values(by='genome')
@@ -72,9 +72,9 @@ def main(args=None):
     df_list = [df_gunc, df_alt]
     for i in range(len(df_list)):
         df_summary = pd.merge(df_summary, df_list[i], left_on='bin', right_on=column_names[i], how='left')
-    
+
     df_summary.rename(columns={'bin': 'Bin'}, inplace=True)
-    
+
     columns_to_remove = ['Name', "genome", 'Input_file', 'Assembly', 'Bin Id']
     for column in df_summary.columns:
         if column in columns_to_remove:
@@ -93,4 +93,3 @@ def main(args=None):
 
 if __name__ == "__main__":
     sys.exit(main())
-
