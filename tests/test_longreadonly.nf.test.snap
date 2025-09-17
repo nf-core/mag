@@ -172,20 +172,20 @@
                 "busco_plot_bacteria_odb10.yaml:md5,d99b10ec097d9b2c5965d36323321b58",
                 "multiqc_busco.yaml:md5,be65620d47ba52aeda873e8299c113e0",
                 "multiqc_citations.yaml:md5,a2dc8129fc0a35448c4453633202ae29",
-                "multiqc_general_stats.yaml:md5,0bfc3a14b483cbcc7619ec2002842bb8",
-                "multiqc_prokka.yaml:md5,224631d5ec9fb12935a5693f1967fb09",
-                "multiqc_quast.yaml:md5,f026e2047b4ec3d837bf7596a4d6d667",
-                "multiqc_quast_quast-1.yaml:md5,4276ff6c13eb880f4bb5d7e2c228da88",
+                "multiqc_general_stats.yaml:md5,9258de9516316f92f0b046a399ca4005",
+                "multiqc_prokka.yaml:md5,7e95c90a1cbc1b4ec18f20d19a0fcdb0",
+                "multiqc_quast.yaml:md5,6fddbac3730cf16c754c48d96da0d7aa",
+                "multiqc_quast_quast-1.yaml:md5,86d00d8a06816fdf6871936dacaa91aa",
                 "porechop.yaml:md5,828d96e2822bb4b4108ab706c00c4450",
-                "prokka_plot.yaml:md5,28344c4cff3ffa2d1187f11d957b1425",
+                "prokka_plot.yaml:md5,a02a88ab798c94e8f3eab6bd38b0a2d0",
                 "quast_num_contigs.yaml:md5,710d04c92ddfbfaa827d5592f7adac07",
-                "quast_table.yaml:md5,34946b4793f31634789bb9c558ac56bb"
+                "quast_table.yaml:md5,84e252e0ea771a746a28d584571cd8eb"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "25.04.7"
         },
-        "timestamp": "2025-09-17T11:46:14.713486685"
+        "timestamp": "2025-09-17T16:07:12.118723953"
     }
 }
