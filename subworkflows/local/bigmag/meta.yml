@@ -12,8 +12,8 @@ components:
   - busco/busco
   - checkm2/databasedownload
   - checkm2/predict
-  - concat_bigmag
-  - bigmag_summary
+  - concat/bigmag
+  - bigmag/summary
   - gunc/downloaddb
   - gunc/run
   - untar
