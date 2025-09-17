@@ -16,6 +16,7 @@ process BIGMAG_SUMMARY {
     path "versions.yml"   , emit: versions
 
     script:
+    def args = task.ext.args   ?: ''
     def summary  = summary.sort().size() > 0 ? "--summary ${summary}" : ""
     def gunc_summary  = gunc_sum.sort().size() > 0 ? "--gunc_summary ${gunc_sum}" : ""
     def alt_summary = alt_sum.sort().size() > 0 ? "--alt_summary ${alt_sum}" : ""
