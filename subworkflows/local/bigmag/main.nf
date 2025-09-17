@@ -96,7 +96,11 @@ workflow BIGMAG {
         ch_alt_summary = CHECKM2_PREDICT.out.checkm2_tsv
             .map { _meta, summary -> [[id: 'checkm2'], summary] }
             .groupTuple()
-        ch_versions = ch_versions.mix(CHECKM2_PREDICT.out.versions.first())
+        ch_versions = ch_versions.mix(CHECKM2_PREDICT.out.versions)
+        ch_multiqc_files = ch_multiqc_files.mix(
+            CHECKM2_PREDICT.out.checkm2_tsv.map { it[1] }.flatten()
+        )
+
     }
 
  if (params.run_gunc) {
