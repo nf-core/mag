@@ -15,6 +15,9 @@ process BIGMAG_SUMMARY {
     path "bigmag_summary.tsv", emit: bigmag_summary
     path "versions.yml"   , emit: versions
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     def args = task.ext.args   ?: ''
     def summary  = summary.sort().size() > 0 ? "--summary ${summary}" : ""
