@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+## Originally written by Jeferyd Yepes and released under the MIT license.
+## See git repository (https://github.com/nf-core/mag) for full license text.
+
 import pandas as pd
 import re
 import argparse
