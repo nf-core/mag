@@ -22,6 +22,7 @@ process BIGMAG_SUMMARY {
     def alt_summary = alt_sum.sort().size() > 0 ? "--alt_summary ${alt_sum}" : ""
     """
     bigmag_summary.py \
+        ${args} \
         ${summary} \
         ${gunc_summary} \
         ${alt_summary} \
