@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
-- [#861](https://github.com/nf-core/mag/pull/861) - Added `--bigmag` to execute the bigmag workflow that generates the file to be used as input for [BIgMAG](https://github.com/jeffe107/BIgMAG)
+- [#861](https://github.com/nf-core/mag/pull/861) - Added `--generate_bigmag_file` to execute the bigmag workflow that generates the file to be used as input for [BIgMAG](https://github.com/jeffe107/BIgMAG) (added by @jeffe107)
 - [#718](https://github.com/nf-core/mag/pull/718) - Add support for independent long-read metagenomic assembly (requested by @ljmesi and many others, added by @muabnezor)
 - [#718](https://github.com/nf-core/mag/pull/718) - Added metaMDBG and (meta)Flye as long read assemblers (added by @muabnezor)
 - [#718](https://github.com/nf-core/mag/pull/718) - Added host removal for long reads using minimap2 as aligner (added by @muabnezor)
