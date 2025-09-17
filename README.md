@@ -25,8 +25,11 @@
 
 **nf-core/mag** is a bioinformatics best-practise analysis pipeline for assembly, binning and annotation of metagenomes.
 
-<p align="center">
-    <img src="docs/images/mag_workflow.png" alt="nf-core/mag workflow overview" width="90%">
+<p>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/images/mag_metromap_dark.png">
+    <img alt="nf-core/mag metromap diagram" src="docs/images/mag_metromap_light.png">
+  </picture>
 </p>
 
 ## Pipeline summary
