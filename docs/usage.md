@@ -534,4 +534,4 @@ If you require taxonomic profiling of raw reads, we recommend using [nf-core/tax
 
 ## BIgMAG compatibility
 
-With the parameter `--bigmag` a subworkflow will be triggered to generate one and unique file that contains the ouput from all of the bin-quality tools and that can be used as input for the application [BIgMAG](https://github.com/jeffe107/BIgMAG).
+With the parameter `--generate_bigmag_file` a subworkflow will be triggered to generate one and unique file that contains the ouput from all of the bin-quality tools. The file `bigmag_summary.tsv`located at `GenomeBinning/BIgMAG` in the output directory can be used directly for the application [BIgMAG](https://github.com/jeffe107/BIgMAG), after the proper installation in their local environment. This is the only file they need to run the BIgMAG dashboard.
