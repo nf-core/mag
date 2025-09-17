@@ -1,11 +1,11 @@
 lint:
   files_unchanged:
-  - lib/NfcoreTemplate.groovy
-  - .github/PULL_REQUEST_TEMPLATE.md
+    - lib/NfcoreTemplate.groovy
+    - .github/PULL_REQUEST_TEMPLATE.md
   nextflow_config:
-  - config_defaults:
-    - params.phix_reference
-    - params.lambda_reference
+    - config_defaults:
+        - params.phix_reference
+        - params.lambda_reference
 nf_core_version: 3.3.2
 repository_type: pipeline
 template:
