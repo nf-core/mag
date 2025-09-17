@@ -461,7 +461,7 @@ workflow MAG {
             )
             ch_versions = ch_versions.mix(BIN_SUMMARY.out.versions)
         }
-        if (params.bigmag && !params.skip_binqc) {
+        if (params.generate_bigmag_file && !params.skip_binqc) {
             BIGMAG(ch_input_for_postbinning,
                    BIN_SUMMARY.out.summary,
                    )
