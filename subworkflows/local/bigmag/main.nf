@@ -39,6 +39,7 @@ workflow BIGMAG {
     }
     else if (params.binqc_tool == 'busco') {
         CHECKM2_DATABASEDOWNLOAD(params.checkm2_db_version)
+        ch_versions = ch_versions.mix(CHECKM2_DATABASEDOWNLOAD.out.versions)
         ch_checkm2_db = CHECKM2_DATABASEDOWNLOAD.out.database
     }
     else {
