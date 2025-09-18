@@ -337,7 +337,7 @@
                 "multiqc/multiqc_report.html"
             ],
             [
-                "bowtie2_pe_plot.yaml:md5,0fe66a243762ab2d927e6147f1b3b137",
+                "bowtie2_pe_plot.yaml:md5,114c4e63e4189a0169641a7d960ae952",
                 "busco_plot_bacteria_odb10.yaml:md5,43b59baae27770570256c2a31e74d254",
                 "fastp-insert-size-plot.yaml:md5,000f3d43ff24066e3be550f80acff89f",
                 "fastp-seq-content-gc-plot_Read_1_After_filtering.yaml:md5,5d99f530e0e1c93e5d54c0eb9b86cd60",
@@ -372,7 +372,7 @@
                 "fastqc_sequence_length_distribution_plot.yaml:md5,765a15b429f92f428bb8cd7e01ca6f3f",
                 "gtdbtk-first-table.yaml:md5,21060ffc35127f11216a84d6e705e25d",
                 "multiqc_bowtie2.yaml:md5,dbe34bb5e06f65c3cf7af116f1d54a10",
-                "multiqc_bowtie2_bowtie2-2.yaml:md5,39a077806502473588f28bda1d3b9355",
+                "multiqc_bowtie2_bowtie2-2.yaml:md5,b60f4adf7e78bec1bf16046ce5ea3b7d",
                 "multiqc_busco.yaml:md5,1af79f05dd67bd79225666ceac0261a8",
                 "multiqc_citations.yaml:md5,f943df75040e829a06eee01614853a68",
                 "multiqc_fastp.yaml:md5,c2ef27841c4a27e4e2f199d8b6894dca",
@@ -392,6 +392,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.7"
         },
-        "timestamp": "2025-09-17T16:04:00.204274485"
+        "timestamp": "2025-09-17T21:46:01.505865654"
     }
 }
