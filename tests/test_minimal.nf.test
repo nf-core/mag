@@ -17,8 +17,12 @@ nextflow_pipeline {
         then {
 
             // Output directory: multiqc
-            def stable_name_multiqc = getAllFilesFromDir("$outputDir/multiqc"            , relative: true, includeDir: false )
-            def stable_path_multiqc = getAllFilesFromDir("$outputDir/multiqc"            , ignore: ['**/*.{yaml,pdf,log,svg}', '**/general_stats_table.png', 'multiqc_report.html', '**/multiqc.log', '**/multiqc_data.json', '**/*-multiqc.parquet'])
+            def stable_name_multiqc = getAllFilesFromDir(
+                params.outdir, include: ['multiqc/**'], relative: true, includeDir: false
+            )
+            def stable_path_multiqc = getAllFilesFromDir(
+                params.outdir, include: ['multiqc/**'], ignoreFile: 'tests/.nftignore'
+            )
             // Output directory: QC_shortreads
             def stable_name_qcshortreads = getAllFilesFromDir("$outputDir/QC_shortreads" , relative: true, includeDir: false )
             def stable_path_qcshortreads= getAllFilesFromDir("$outputDir/QC_shortreads"  , ignore: ['**/*.{svg,png}','**/*_fastqc.html'])
@@ -31,7 +35,7 @@ nextflow_pipeline {
                     // pipeline versions.yml file for multiqc from which Nextflow version is removed because we test pipelines on multiple Nextflow versions
                     removeNextflowVersion("$outputDir/pipeline_info/nf_core_mag_software_mqc_versions.yml"),
                 ).match() },
-                { assert snapshot( stable_name_multiqc,       stable_path_multiqc       ).match('multiqc') },
+                { assert snapshot(stable_name_multiqc, stable_path_multiqc).match('multiqc') },
                 { assert snapshot( stable_name_qcshortreads,  stable_path_qcshortreads  ).match('QC_shortreads') },
             )
         }
