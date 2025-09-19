@@ -24,7 +24,7 @@ If long reads are provided (`long_reads`), the `long_reads_platform` column is r
 
 These platform fields are important for downstream alignment and assembly tools.
 
-A nf-core/mag input samplesheet file can contain the following columns:
+An nf-core/mag input samplesheet file can contain the following columns:
 
 `sample,group,short_reads_1,short_reads_2,long_reads,short_reads_platform,long_reads_platform`
 
