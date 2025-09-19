@@ -4,7 +4,7 @@
 process BOWTIE2_REMOVAL_ALIGN {
     tag "$meta.id"
 
-    conda "bioconda::bowtie2=2.4.2"
+    conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/bowtie2:2.4.2--py38h1c8e9b9_1' :
         'biocontainers/bowtie2:2.4.2--py38h1c8e9b9_1' }"
