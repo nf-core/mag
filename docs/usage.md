@@ -84,7 +84,7 @@ These are usually referred to as "individual" or "single" assembly and binning, 
 In the former, samples are processed independently.
 In the latter, samples are processed together.
 A common strategy is to assemble each sample individually (single assembly) and then pool all of the contigs together and map the reads against them (co-binning).
-This is usually chosen because since assembly is a computationally intensive process, it is very costly to assemble all samples together.
+This is usually chosen since assembly is a computationally intensive process, it is very costly to assemble all samples together.
 For binning, however, resources aren't as limiting, and binning algorithms can leverage the fact that there are multiple samples from which to draw information, which can improve the quality of output bins.
 
 nf-core/mag, by default, follows this approach: the group information from the input sample sheet in is only used to compute co-abundances for the binning step (co-binning), but not for group-wise co-assembly (thus single assembly).
