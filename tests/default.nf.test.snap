@@ -61,7 +61,7 @@
                     "fastqc": "0.12.1"
                 },
                 "GTDBTK_CLASSIFYWF": {
-                    "gtdbtk": "2.4.1",
+                    "gtdbtk": "2.5.2",
                     "gtdb_db": "r226"
                 },
                 "GTDBTK_DB_PREPARATION": {
