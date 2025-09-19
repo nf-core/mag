@@ -24,7 +24,7 @@ If long reads are provided (`long_reads`), the `long_reads_platform` column is r
 
 These platform fields are important for downstream alignment and assembly tools.
 
-At a minimum CSV file should contain the following columns:
+A nf-core/mag input samplesheet file can contain the following columns:
 
 `sample,group,short_reads_1,short_reads_2,long_reads,short_reads_platform,long_reads_platform`
 
@@ -45,11 +45,11 @@ sample1,0,data/sample1.fastq.gz,,,ILLUMINA
 sample2,0,data/sample2.fastq.gz,,,ILLUMINA
 ```
 
-or to additionally to perform run merging of two runs of sample1:
+or to additionally perform run merging of two runs from sample1:
 
 ```csv title="samplesheet_mix_mergeruns.csv"
 sample,run,group,short_reads_1,short_reads_2,long_reads,short_reads_platform,long_reads_platform
-sample1,1,0,data/sample1_R1.fastq.gz,data/sample1_R2.fastq.gz,data/sample1.fastq.gz,ILLUMINA,OXFORD_NANOPORE
+sample1,1,0,dwata/sample1_R1.fastq.gz,data/sample1_R2.fastq.gz,data/sample1.fastq.gz,ILLUMINA,OXFORD_NANOPORE
 sample1,2,0,data/sample1_R1.fastq.gz,data/sample1_R2.fastq.gz,data/sample1.fastq.gz,ILLUMINA,OXFORD_NANOPORE
 sample2,0,0,data/sample2_R1.fastq.gz,data/sample2_R2.fastq.gz,data/sample2.fastq.gz,ILLUMINA,OXFORD_NANOPORE
 sample3,1,0,data/sample3_R1.fastq.gz,data/sample3_R2.fastq.gz,,ILLUMINA,OXFORD_NANOPORE
