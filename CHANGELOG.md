@@ -48,6 +48,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | centrifuge   | 1.0.4.1          | 1.0.4.2     |
 | nanolyse     | 1.41.6           | 1.44.1      |
 | flye         |                  | 2.9.5       |
+| Freebayes    | 1.3.6            | 1.3.10      |
+| geNomad      | 1.5.2            | 1.11.0      |
+| GTDB-Tk      | 2.4.0            | 2.5.2       |
 | metabat2     | 2.15             | 2.17        |
 | metamdbg     |                  | 1.0         |
 | minimap2     |                  | 2.29        |
