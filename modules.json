@@ -98,27 +98,27 @@
                     },
                     "concoct/concoct": {
                         "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "git_sha": "ff39793aeff17b7ccb107424215898710b4aa424",
                         "installed_by": ["fasta_binning_concoct"]
                     },
                     "concoct/concoctcoveragetable": {
                         "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "git_sha": "ff39793aeff17b7ccb107424215898710b4aa424",
                         "installed_by": ["fasta_binning_concoct"]
                     },
                     "concoct/cutupfasta": {
                         "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "git_sha": "ff39793aeff17b7ccb107424215898710b4aa424",
                         "installed_by": ["fasta_binning_concoct"]
                     },
                     "concoct/extractfastabins": {
                         "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "git_sha": "ff39793aeff17b7ccb107424215898710b4aa424",
                         "installed_by": ["fasta_binning_concoct"]
                     },
                     "concoct/mergecutupclustering": {
                         "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "git_sha": "ff39793aeff17b7ccb107424215898710b4aa424",
                         "installed_by": ["fasta_binning_concoct"]
                     },
                     "csvtk/concat": {
@@ -343,7 +343,7 @@
                 "nf-core": {
                     "fasta_binning_concoct": {
                         "branch": "master",
-                        "git_sha": "c60c14b285b89bdd0607e371417dadb80385ad6e",
+                        "git_sha": "ff39793aeff17b7ccb107424215898710b4aa424",
                         "installed_by": ["subworkflows"]
                     },
                     "utils_nextflow_pipeline": {
