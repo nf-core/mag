@@ -72,10 +72,10 @@
                     "nanolyse": "1.2.0"
                 },
                 "NANOPLOT_FILTERED": {
-                    "nanoplot": "1.44.1"
+                    "nanoplot": "1.46.1"
                 },
                 "NANOPLOT_RAW": {
-                    "nanoplot": "1.44.1"
+                    "nanoplot": "1.46.1"
                 },
                 "PORECHOP_ABI": {
                     "porechop_abi": "0.5.0"
