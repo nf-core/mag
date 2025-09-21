@@ -60,6 +60,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | pydamage     | 0.7.0            | 1.0.0       |
 | seqtk        | 1.3              | 1.4         |
 | porechop_abi | 0.5.0            | 0.5.0post1  |
+| NanoPlot     | 1.44.1           | 1.46.1      |
 
 ### `Deprecated`
 
