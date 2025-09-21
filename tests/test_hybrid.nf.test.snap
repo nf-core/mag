@@ -88,10 +88,10 @@
                     "minimap2": "2.29-r1283"
                 },
                 "NANOPLOT_FILTERED": {
-                    "nanoplot": "1.44.1"
+                    "nanoplot": "1.46.1"
                 },
                 "NANOPLOT_RAW": {
-                    "nanoplot": "1.44.1"
+                    "nanoplot": "1.46.1"
                 },
                 "POOL_LONG_READS": {
                     "cat": 9.5
