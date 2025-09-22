@@ -4,7 +4,7 @@
             193,
             {
                 "ADJUST_MAXBIN2_EXT": {
-                    "coreutils": "8.30-3ubuntu2"
+                    "coreutils": "9.4.3"
                 },
                 "BIN_SUMMARY": {
                     "python": "3.10.6",
@@ -92,10 +92,10 @@
                     "mmseqs": "17.b804f"
                 },
                 "RENAME_POSTDASTOOL": {
-                    "coreutils": "8.30-3ubuntu2"
+                    "coreutils": "9.4.3"
                 },
                 "RENAME_PREDASTOOL": {
-                    "coreutils": "8.30-3ubuntu2"
+                    "coreutils": "9.4.3"
                 },
                 "SEQKIT_STATS": {
                     "seqkit": "2.9.0"
@@ -114,7 +114,7 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.7"
         },
-        "timestamp": "2025-09-17T11:10:20.245021815"
+        "timestamp": "2025-09-21T21:09:48.262952969"
     },
     "multiqc": {
         "content": [

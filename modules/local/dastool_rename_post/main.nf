@@ -4,8 +4,8 @@ process RENAME_POSTDASTOOL {
 
     conda "${moduleDir}/environment.yml"
     container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
-        ? 'https://depot.galaxyproject.org/singularity/ubuntu:20.04'
-        : 'nf-core/ubuntu:20.04'}"
+        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/c2/c262fc09eca59edb5a724080eeceb00fb06396f510aefb229c2d2c6897e63975/data'
+        : 'community.wave.seqera.io/library/coreutils:9.5--ae99c88a9b28c264'}"
 
     input:
     tuple val(meta), path(bins)
@@ -16,6 +16,7 @@ process RENAME_POSTDASTOOL {
     path "versions.yml", emit: versions
 
     script:
+    def VERSION = '9.4.3'
     """
     if [[ -f unbinned.fa ]]; then
         mv unbinned.fa ${meta.assembler}-DASToolUnbinned-${meta.id}.fa
@@ -23,7 +24,7 @@ process RENAME_POSTDASTOOL {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        coreutils: \$(apt-cache policy coreutils | sed '2!d; s/.* //')
+        coreutils: ${VERSION}
     END_VERSIONS
     """
 }

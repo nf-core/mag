@@ -7,7 +7,7 @@
                     "adapterremoval": "2.3.2"
                 },
                 "ADJUST_MAXBIN2_EXT": {
-                    "coreutils": "8.30-3ubuntu2"
+                    "coreutils": "9.4.3"
                 },
                 "BCFTOOLS_CONSENSUS": {
                     "bcftools": 1.21
@@ -176,7 +176,7 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.7"
         },
-        "timestamp": "2025-09-17T10:56:02.369876591"
+        "timestamp": "2025-09-21T21:42:26.784685213"
     },
     "multiqc": {
         "content": [
