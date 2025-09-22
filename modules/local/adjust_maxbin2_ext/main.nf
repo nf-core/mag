@@ -15,8 +15,6 @@ process ADJUST_MAXBIN2_EXT {
     path "versions.yml", emit: versions
 
     script:
-    def VERSION = '9.4.3'
-    // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
     """
     if [ -n "${bins}" ]
     then
@@ -29,7 +27,7 @@ process ADJUST_MAXBIN2_EXT {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        coreutils: ${VERSION}
+        coreutils: \$(echo \$(mv --version 2>&1) | sed 's/^.*(GNU coreutils) //; s/ Copyright.*\$//')
     END_VERSIONS
     """
 }
