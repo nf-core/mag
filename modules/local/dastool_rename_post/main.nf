@@ -4,8 +4,8 @@ process RENAME_POSTDASTOOL {
 
     conda "${moduleDir}/environment.yml"
     container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
-        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/c2/c262fc09eca59edb5a724080eeceb00fb06396f510aefb229c2d2c6897e63975/data'
-        : 'community.wave.seqera.io/library/coreutils:9.5--ae99c88a9b28c264'}"
+        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/52/52ccce28d2ab928ab862e25aae26314d69c8e38bd41ca9431c67ef05221348aa/data'
+        : 'community.wave.seqera.io/library/coreutils_grep_gzip_lbzip2_pruned:838ba80435a629f8'}"
 
     input:
     tuple val(meta), path(bins)
@@ -16,7 +16,6 @@ process RENAME_POSTDASTOOL {
     path "versions.yml", emit: versions
 
     script:
-    def VERSION = '9.4.3'
     """
     if [[ -f unbinned.fa ]]; then
         mv unbinned.fa ${meta.assembler}-DASToolUnbinned-${meta.id}.fa
@@ -24,7 +23,7 @@ process RENAME_POSTDASTOOL {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        coreutils: ${VERSION}
+        coreutils: \$(echo \$(mv --version 2>&1) | sed 's/^.*(GNU coreutils) //; s/ Copyright.*\$//')
     END_VERSIONS
     """
 }
