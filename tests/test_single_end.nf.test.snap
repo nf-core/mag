@@ -7,7 +7,7 @@
                     "adapterremoval": "2.3.2"
                 },
                 "ADJUST_MAXBIN2_EXT": {
-                    "coreutils": "9.4.3"
+                    "coreutils": "9.5"
                 },
                 "BCFTOOLS_CONSENSUS": {
                     "bcftools": 1.21
