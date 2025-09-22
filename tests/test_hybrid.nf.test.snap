@@ -4,7 +4,7 @@
             51,
             {
                 "ADJUST_MAXBIN2_EXT": {
-                    "coreutils": "9.5"
+                    "coreutils": 9.5
                 },
                 "BIN_SUMMARY": {
                     "python": "3.10.6",
