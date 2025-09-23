@@ -21,7 +21,7 @@ nextflow_pipeline {
                 params.outdir, include: ['multiqc/**'], relative: true, includeDir: false
             )
             def stable_path_multiqc = getAllFilesFromDir(
-                params.outdir, include: ['multiqc/**'], ignoreFile: 'tests/.nftignore'
+                params.outdir, include: ['multiqc/**'], ignore: ['multiqc/**.yaml'],ignoreFile: 'tests/.nftignore'
             )
 
             assert workflow.success
