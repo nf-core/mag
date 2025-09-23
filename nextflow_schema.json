@@ -527,12 +527,6 @@
                     "default": "https://data.gtdb.ecogenomic.org/releases/release220/220.0/auxillary_files/gtdbtk_package/full_package/gtdbtk_r220_data.tar.gz",
                     "format": "path"
                 },
-                "gtdb_mash": {
-                    "type": "string",
-                    "description": "Specify the location of a GTDBTK mash database. If missing, GTDB-Tk will skip the ani_screening step",
-                    "format": "path",
-                    "exists": true
-                },
                 "gtdbtk_min_completeness": {
                     "type": "number",
                     "default": 50,
