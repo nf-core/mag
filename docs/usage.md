@@ -10,7 +10,7 @@ The input data can be passed to nf-core/mag in two possible ways, either using t
 
 ### Samplesheet input file
 
-You can specify a CSV samplesheet input file that contains the paths to your FASTQ files and additional metadata. Furthermore when a `run` column is present, the pipeline will also run perform run- or lane-wise concatenation, for cases where you may have a sample or library sequenced with the same sequencing configuration across multiple runs. The optional run merging happens after short read QC (adapter clipping, host/PhiX removal etc.), and prior to normalisation, taxonomic profiling, and assembly.
+You can specify a CSV samplesheet input file that contains the paths to your FASTQ files and additional metadata. Furthermore when a `run` column is present, the pipeline will also perform run- or lane-wise concatenation, for cases where you may have a sample or library sequenced with the same sequencing configuration across multiple runs. The optional run merging happens after short read QC (adapter clipping, host/PhiX removal etc.), and prior to normalisation, taxonomic profiling, and assembly.
 
 If short reads are provided (`short_reads_1`), the `short_reads_platform` column is required. Valid options include:
 
@@ -69,7 +69,7 @@ In this case only long-read only assemblies will be able to be executed (e.g. Fl
 
 Please note the following requirements:
 
-- a minimum 5 of comma-separated columns
+- a minimum of 5 comma-separated columns
 - Valid file extension: `.csv`
 - Must contain the header `sample,group,short_reads_1,short_reads_2,long_reads` (where `run` can be optionally added)
 - Run IDs must be unique within a multi-run sample. A sample with multiple runs will be automatically concatenated.
@@ -258,7 +258,7 @@ To further assist in reproducibility, you can use share and reuse [parameter fil
 > If you wish to share such profile (such as upload as supplementary material for academic publications), make sure to NOT include cluster specific paths to files, nor institutional specific profiles.
 
 Additionally, to enable also reproducible results from the individual assembly tools this pipeline provides extra parameters. SPAdes is designed to be deterministic for a given number of threads. To generate reproducible results set the number of cpus with `--spades_fix_cpus` or `--spadeshybrid_fix_cpus`. This will overwrite the number of cpus specified in the `base.config` file and additionally ensure that it is not increased in case of retries for individual samples. MEGAHIT only generates reproducible results when run single-threaded.
-You can fix this by using the prameter `--megahit_fix_cpu_1`. In both cases, do not specify the number of cpus for these processes in additional custom config files, this would result in an error.
+You can fix this by using the parameter `--megahit_fix_cpu_1`. In both cases, do not specify the number of cpus for these processes in additional custom config files, this would result in an error.
 
 MetaBAT2 is run by default with a fixed seed within this pipeline, thus producing reproducible results.
 
@@ -329,7 +329,7 @@ To change the resource requests, please see the [max resources](https://nf-co.re
 
 ### Custom Containers
 
-In some cases, you may wish to change the container or conda environment used by a pipeline steps for a particular tool. By default, nf-core pipelines use containers and software from the [biocontainers](https://biocontainers.pro/) or [bioconda](https://bioconda.github.io/) projects. However, in some cases the pipeline specified version maybe out of date.
+In some cases, you may wish to change the container or conda environment used by a pipeline steps for a particular tool. By default, nf-core pipelines use containers and software from the [biocontainers](https://biocontainers.pro/) or [bioconda](https://bioconda.github.io/) projects. However, in some cases the pipeline specified version may be out of date.
 
 To use a different container from the default container or conda environment specified in a pipeline, please see the [updating tool versions](https://nf-co.re/docs/usage/configuration#updating-tool-versions) section of the nf-core website.
 
@@ -405,7 +405,7 @@ Some HPC setups also allow you to run nextflow within a cluster job submitted yo
 ## Nextflow memory requirements
 
 In some cases, the Nextflow Java virtual machines can start to request a large amount of memory.
-We recommend adding the following line to your environment to limit this (typically in `~/.bashrc` or `~./bash_profile`):
+We recommend adding the following line to your environment to limit this (typically in `~/.bashrc` or `~/.bash_profile`):
 
 ```bash
 NXF_OPTS='-Xms1g -Xmx4g'
