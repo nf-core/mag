@@ -571,6 +571,10 @@
                 "gtdbtk_use_full_tree": {
                     "type": "boolean",
                     "description": "Specify to have GTDBTk to use the full bacterial tree rather than the split tree (requires more memory!)"
+                },
+                "gtdbtk_skip_fastaniscreen": {
+                    "type": "boolean",
+                    "description": "Specify to skip ANI screening for faster genome classification using skani"
                 }
             }
         },
