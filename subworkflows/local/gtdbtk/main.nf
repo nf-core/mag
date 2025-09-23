@@ -12,6 +12,7 @@ workflow GTDBTK {
     ch_bins           // channel: [ val(meta), [bins] ]
     ch_bin_qc_summary // channel: path
     val_gtdb          // value: path
+    val_gtdb_mash     // value: path
 
     main:
     ch_versions = Channel.empty()
@@ -72,6 +73,7 @@ workflow GTDBTK {
         ch_filtered_bins.passed.groupTuple(),
         ch_db_for_gtdbtk,
         params.gtdbtk_pplacer_useram ? false : true,
+        val_gtdb_mash,
     )
     ch_versions = ch_versions.mix(GTDBTK_CLASSIFYWF.out.versions)
 

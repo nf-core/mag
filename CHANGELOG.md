@@ -68,7 +68,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#825](https://github.com/nf-core/mag/pull/825) - Removed `--centrifuge_db`, `--kraken2_db`, `--krona_db` and `--skip_krona` parameters following the removal of taxonomic profiling functionality. See nf-core/taxprofiler for replacement (added by @dialvarezs)
 - [#851](https://github.com/nf-core/mag/pull/851) - Remove `POOL_READ_*` local modules in favor of nf-core cat/fastq (by @dialvarezs)
 - [#855](https://github.com/nf-core/mag/pull/855) - Remove test_adapterremoval, test_ancient_dna, test_bbnorm, test_busco_auto, test_host_rm, test_hybrid_host_rm, test_binrefinement, test_concoct and test_longread profiles (added by @dialvarezs)
-- [#864](https://github.com/nf-core/mag/pull/864) - Remove `--gtdb_mash` due to dropping of support by GTDBTk itself (by @prototaxites and @jfy133)
 
 ## v4.0.0 - [2025-05-22]
 

@@ -104,6 +104,7 @@ workflow MAG {
 
     if (gtdb) {
         gtdb = file("${gtdb}", checkIfExists: true)
+        gtdb_mash = params.gtdb_mash ? file("${params.gtdb_mash}", checkIfExists: true) : []
     }
     else {
         gtdb = []
@@ -439,6 +440,7 @@ workflow MAG {
                     ch_gtdb_bins,
                     ch_bin_qc_summary,
                     gtdb,
+                    gtdb_mash,
                 )
                 ch_versions = ch_versions.mix(GTDBTK.out.versions)
                 ch_gtdbtk_summary = GTDBTK.out.summary

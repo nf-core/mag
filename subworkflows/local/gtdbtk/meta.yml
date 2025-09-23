@@ -30,6 +30,9 @@ input:
   - val_gtdb:
       type: val
       description: Path to GTDB-Tk reference database
+  - val_gtdb_mash:
+      type: val
+      description: Path to GTDB-Tk MASH database for species assignment
 output:
   - summary:
       description: Summary of taxonomic classifications
