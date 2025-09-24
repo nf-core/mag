@@ -574,7 +574,7 @@
                 },
                 "gtdbtk_skip_aniscreen": {
                     "type": "boolean",
-                    "description": "Specify to skip ANI screening for faster genome classification using skani"
+                    "description": "Specify to disable fast classification of genomes by ANI using skani in GTDB-Tk."
                 }
             }
         },
