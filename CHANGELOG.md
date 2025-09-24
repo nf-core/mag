@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#829](https://github.com/nf-core/mag/pull/829) - Add `--skip_shortread_qc` and `--skip_longread_qc` params for skipping certain default preprocessing steps (added by @erikrikarddaniel)
 - [#846](https://github.com/nf-core/mag/pull/846) - Improve documentation of `group` samplesheet column (added by @vinisalazar)
 - [#855](https://github.com/nf-core/mag/pull/855) - Add basic nf-tests for test_longreadonly, test_longreadonly_alternatives, test_hybrid and test_assembly_input (added by @dialvarezs)
+- [#864](https://github.com/nf-core/mag/pull/864) - Add `--gtdbtk_skip_aniscreen` to disable fast classification of genomes by ANI using skani in GTDB-Tk (by @jfy133 and @prototaxites).
 
 ### `Changed`
 
