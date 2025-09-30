@@ -32,10 +32,6 @@
 
   > von Meijenfeldt, F. B., Arkhipova, K., Cambuy, D. D., Coutinho, F. H., & Dutilh, B. E. (2019). Robust taxonomic classification of uncharted microbial sequences and bins with CAT and BAT. Genome biology, 20(1), 1-14. doi: 10.1186/s13059-019-1817-x.
 
-- [Centrifuge](https://doi.org/10.1101/gr.210641.116)
-
-  > Kim, D., Song, L., Breitwieser, F. P., & Salzberg, S. L. (2016). Centrifuge: rapid and sensitive classification of metagenomic sequences. Genome research, 26(12), 1721-1729. doi: 10.1101/gr.210641.116.
-
 - [CheckM](https://doi.org/10.1101/gr.186072.114)
 
   > Parks, D. H., Imelfort, M., Skennerton, C. T., Hugenholtz, P., & Tyson, G. W. (2015). CheckM: assessing the quality of microbial genomes recovered from isolates, single cells, and metagenomes. Genome Research, 25(7), 1043–1055. doi: 10.1101/gr.186072.114
@@ -66,6 +62,10 @@
 
 - [Filtlong](https://github.com/rrwick/Filtlong)
 
+- [Flye](https://www.nature.com/articles/s41592-020-00971-x)
+
+  > Kolmogorov, M., Bickhart, D.M., Behsaz, B. et al. metaFlye: scalable long-read metagenome assembly using repeat graphs. Nat Methods 17, 1103–1110 (2020). doi: 10.1038/s41592-020-00971-x
+
 - [Freebayes](https://arxiv.org/abs/1207.3907)
 
   > Garrison E, Marth G. Haplotype-based variant detection from short-read sequencing. arXiv preprint arXiv:1207.3907 [q-bio.GN] 2012
@@ -82,14 +82,6 @@
 
   > Orakov, A., Fullam, A., Coelho, A. P., Khedkar, S., Szklarczyk, D., Mende, D. R., Schmidt, T. S. B., and Bork, P.. 2021. “GUNC: Detection of Chimerism and Contamination in Prokaryotic Genomes.” Genome Biology 22 (1): 178. doi: 10.1186/s13059-021-02393-0.
 
-- [Kraken2](https://doi.org/10.1186/s13059-019-1891-0)
-
-  > Wood, D et al., 2019. Improved metagenomic analysis with Kraken 2. Genome Biology volume 20, Article number: 257. doi: 10.1186/s13059-019-1891-0.
-
-- [Krona](https://doi.org/10.1186/1471-2105-12-385)
-
-  > Ondov, B. D., Bergman, N. H., & Phillippy, A. M. (2011). Interactive metagenomic visualization in a Web browser. BMC bioinformatics, 12(1), 1-10. doi: 10.1186/1471-2105-12-385.
-
 - [MaxBin2](https://doi.org/10.1093/bioinformatics/btv638)
 
   > Yu-Wei, W., Simmons, B. A. & Singer, S. W. (2015) MaxBin 2.0: An Automated Binning Algorithm to Recover Genomes from Multiple Metagenomic Datasets. Bioinformatics 32 (4): 605–7. doi: 10.1093/bioinformatics/btv638.
@@ -105,6 +97,14 @@
 - [MetaEuk](https://doi.org/10.1186/s40168-020-00808-x)
 
   > Levy Karin, E., Mirdita, M. & Söding, J. MetaEuk—sensitive, high-throughput gene discovery, and annotation for large-scale eukaryotic metagenomics. Microbiome 8, 48 (2020). 10.1186/s40168-020-00808-x
+
+- [metaMDBG](https://doi.org/10.1038/s41587-023-01983-6)
+
+  > Benoit, G., Raguideau, S., James, R. et al. High-quality metagenome assembly from long accurate reads with metaMDBG. Nat Biotechnol 42, 1378–1383 (2024). doi:10.1038/s41587-023-01983-6
+
+- [minimap2](https://doi.org/10.1093/bioinformatics/bty191)
+
+  > Li, H. (2018). Minimap2: pairwise alignment for nucleotide sequences. Bioinformatics , 34(18), 3094–3100. doi: 10.1093/bioinformatics/bty191
 
 - [MMseqs2](https://www.nature.com/articles/nbt.3988)
 

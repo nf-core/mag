@@ -10,51 +10,87 @@ The input data can be passed to nf-core/mag in two possible ways, either using t
 
 ### Samplesheet input file
 
-You can specify a CSV samplesheet input file that contains the paths to your FASTQ files and additional metadata. Furthermore when a `run` column is present, the pipeline will also run perform run- or lane-wise concatenation, for cases where you may have a sample or library sequenced with the same sequencing configuration across multiple runs. The optional run merging happens after short read QC (adapter clipping, host/PhiX removal etc.), and prior to normalisation, taxonomic profiling, and assembly.
+You can specify a CSV samplesheet input file that contains the paths to your FASTQ files and additional metadata. Furthermore when a `run` column is present, the pipeline will also perform run- or lane-wise concatenation, for cases where you may have a sample or library sequenced with the same sequencing configuration across multiple runs. The optional run merging happens after short read QC (adapter clipping, host/PhiX removal etc.), and prior to normalisation, taxonomic profiling, and assembly.
 
-At a minimum CSV file should contain the following columns:
+If short reads are provided (`short_reads_1`), the `short_reads_platform` column is required. Valid options include:
 
-`sample,group,short_reads_1,short_reads_2,long_reads`
+- `ILLUMINA`, `BGISEQ`, `LS454`, `ION_TORRENT`, `DNBSEQ`, `ELEMENT`, `ULTIMA`, `VELA_DIAGNOSTICS`, `GENAPSYS`, `GENEMIND`, `TAPESTRI`.
 
-The path to `long_reads` and `short_reads_2` is optional. Valid examples could look like the following:
+If long reads are provided (`long_reads`), the `long_reads_platform` column is required. Valid options include:
 
-```csv title="samplesheet.csv"
-sample,group,short_reads_1,short_reads_2,long_reads
-sample1,0,data/sample1_R1.fastq.gz,data/sample1_R2.fastq.gz,data/sample1.fastq.gz
-sample2,0,data/sample2_R1.fastq.gz,data/sample2_R2.fastq.gz,data/sample2.fastq.gz
-sample3,1,data/sample3_R1.fastq.gz,data/sample3_R2.fastq.gz,
+- `OXFORD_NANOPORE`: Oxford Nanopore Technologies (ONT) reads, which may have higher error rates compared to newer technologies.
+- `OXFORD_NANOPORE_HQ`: High-quality ONT reads, typically with an error rate of less than 5%, achievable with the latest ONT chemistries and sequencing platforms. This option should generally be used unless working with older data.
+- `PACBIO_SMRT`: Pacific Biosciences Single Molecule Real-Time (SMRT) sequencing reads.
+
+These platform fields are important for downstream alignment and assembly tools.
+
+An nf-core/mag input samplesheet file can contain the following columns:
+
+`sample,group,short_reads_1,short_reads_2,long_reads,short_reads_platform,long_reads_platform`
+
+In cases of short-read only data run, the path to `long_reads` and `short_reads_2` is optional. Valid examples could look like the following:
+
+```csv title="samplesheet_mix.csv"
+sample,group,short_reads_1,short_reads_2,long_reads,short_reads_platform,long_reads_platform
+sample1,0,data/sample1_R1.fastq.gz,data/sample1_R2.fastq.gz,data/sample1.fastq.gz,ILLUMINA,OXFORD_NANOPORE
+sample2,0,data/sample2_R1.fastq.gz,data/sample2_R2.fastq.gz,data/sample2.fastq.gz,ILLUMINA,OXFORD_NANOPORE
+sample3,1,data/sample3_R1.fastq.gz,data/sample3_R2.fastq.gz,,ILLUMINA,
 ```
 
 or
 
-```csv title="samplesheet.csv"
-sample,group,short_reads_1,short_reads_2,long_reads
-sample1,0,data/sample1.fastq.gz,,
-sample2,0,data/sample2.fastq.gz,,
+```csv title="samplesheet_shortreadonly.csv"
+sample,group,short_reads_1,short_reads_2,long_reads,short_reads_platform
+sample1,0,data/sample1.fastq.gz,,,ILLUMINA
+sample2,0,data/sample2.fastq.gz,,,ILLUMINA
 ```
 
-or to additionally to perform run merging of two runs of sample1:
+or to additionally perform run merging of two runs from sample1:
 
-```csv title="samplesheet.csv"
-sample,run,group,short_reads_1,short_reads_2,long_reads
-sample1,1,0,data/sample1_R1.fastq.gz,data/sample1_R2.fastq.gz,data/sample1.fastq.gz
-sample1,2,0,data/sample1_R1.fastq.gz,data/sample1_R2.fastq.gz,data/sample1.fastq.gz
-sample2,0,0,data/sample2_R1.fastq.gz,data/sample2_R2.fastq.gz,data/sample2.fastq.gz
-sample3,1,0,data/sample3_R1.fastq.gz,data/sample3_R2.fastq.gz,
+```csv title="samplesheet_mix_mergeruns.csv"
+sample,run,group,short_reads_1,short_reads_2,long_reads,short_reads_platform,long_reads_platform
+sample1,1,0,data/sample1_lane2_R1.fastq.gz,data/sample1_lane2_R2.fastq.gz,data/sample1.fastq.gz,ILLUMINA,OXFORD_NANOPORE
+sample1,2,0,data/sample1_R1.fastq.gz,data/sample1_R2.fastq.gz,data/sample1.fastq.gz,ILLUMINA,OXFORD_NANOPORE
+sample2,0,0,data/sample2_R1.fastq.gz,data/sample2_R2.fastq.gz,data/sample2.fastq.gz,ILLUMINA,OXFORD_NANOPORE
+sample3,1,0,data/sample3_R1.fastq.gz,data/sample3_R2.fastq.gz,,ILLUMINA,OXFORD_NANOPORE
 ```
+
+If only long read data is available, the columns `short_reads_1` and `short_reads_2` can be left out:
+
+```csv title="samplesheet_longreadonly.csv"
+sample,run,group,long_reads,long_reads_platform
+sample1,1,0,data/sample1.fastq.gz,OXFORD_NANOPORE
+sample1,2,0,data/sample1.fastq.gz,OXFORD_NANOPORE
+sample2,0,0,data/sample2.fastq.gz,OXFORD_NANOPORE
+sample3,1,0,data/sample3.fastq.gz,OXFORD_NANOPORE
+```
+
+In this case only long-read only assemblies will be able to be executed (e.g. Flye or MetaMDBG).
 
 Please note the following requirements:
 
-- a minimum 5 of comma-separated columns
+- a minimum of 5 comma-separated columns
 - Valid file extension: `.csv`
 - Must contain the header `sample,group,short_reads_1,short_reads_2,long_reads` (where `run` can be optionally added)
 - Run IDs must be unique within a multi-run sample. A sample with multiple runs will be automatically concatenated.
 - FastQ files must be compressed (`.fastq.gz`, `.fq.gz`)
-- `long_reads` can only be provided in combination with paired-end short read data
-- Within one samplesheet either only single-end or only paired-end reads can be specified
+- Within one samplesheet either only single-end or only paired-end short reads can be specified
 - If single-end reads are specified, the command line parameter `--single_end` must be specified as well
 
-Again, by default, the group information is only used to compute co-abundances for the binning step, but not for group-wise co-assembly (see the parameter docs for [`--coassemble_group`](https://nf-co.re/mag/parameters#coassemble_group) and [`--binning_map_mode`](https://nf-co.re/mag/parameters#binning_map_mode) for more information about how this group information can be used).
+### The `group` column
+
+In metagenomics, there are different strategies to deal with the _assembly_ and _binning_ of multiple samples.
+These are usually referred to as "individual" or "single" assembly and binning, versus "co-" or "pooled" assembly and binning.
+In the former, samples are processed independently.
+In the latter, samples are processed together.
+A common strategy is to assemble each sample individually (single assembly) and then pool all of the contigs together and map the reads against them (co-binning).
+This is usually chosen since assembly is a computationally intensive process, it is very costly to assemble all samples together.
+For binning, however, resources aren't as limiting, and binning algorithms can leverage the fact that there are multiple samples from which to draw information, which can improve the quality of output bins.
+
+nf-core/mag, by default, follows this approach: the group information from the input sample sheet in is only used to compute co-abundances for the binning step (co-binning), but not for group-wise co-assembly (thus single assembly).
+That means that if you define one group for all of your samples, they will be assembled individually, and then binned in a pooled fashion, with samples being mapped to all contigs of all other samples.
+
+If you'd like to also _assemble_ your samples in a pooled fashion (co-assembly), see the parameter docs for [`--coassemble_group`](https://nf-co.re/mag/parameters#coassemble_group) and [`--binning_map_mode`](https://nf-co.re/mag/parameters#binning_map_mode).
 
 ### Supplying pre-computed assemblies
 
@@ -67,10 +103,10 @@ The assembly CSV file should contain the following columns:
 Where `id` is the ID of the assembly, group is the assembly/binning group (see samplesheet information section for more details), `assembler` is the assembler used to produce the assembly (one of `MEGAHIT`, `SPAdes`, or `SPAdesHybrid`), and `fasta` is the path to the assembly fasta file. Input fasta files can be compressed or uncompressed, but compressed assemblies will be automatically uncompressed for use within the pipeline. The exact information required for each supplied assembly depends on whether the assemblies provided are single assemblies or group-wise co-assemblies. For the following example `--input` CSV:
 
 ```csv title="samplesheet.csv"
-sample,group,short_reads_1,short_reads_2,long_reads
-sample1,0,data/sample1_R1.fastq.gz,data/sample1_R2.fastq.gz,
-sample2,0,data/sample2_R1.fastq.gz,data/sample2_R2.fastq.gz,
-sample3,1,data/sample3_R1.fastq.gz,data/sample3_R2.fastq.gz,
+sample,group,short_reads_1,short_reads_2,long_reads,short_reads_platform
+sample1,0,data/sample1_R1.fastq.gz,data/sample1_R2.fastq.gz,,ILLUMINA
+sample2,0,data/sample2_R1.fastq.gz,data/sample2_R2.fastq.gz,,ILLUMINA
+sample3,1,data/sample3_R1.fastq.gz,data/sample3_R2.fastq.gz,,ILLUMINA
 ```
 
 If the assemblies are single assemblies, then the `id` and `group` columns should match those supplied in the `-input` read CSV files for each read set:
@@ -127,21 +163,28 @@ The lineage directory (e.g., `bacteria_odb12`) should contain files such as `dat
 Then, you must provide `--busco_db <your_db>/` and `--busco_db_lineage <downloaded_lineage>` to the pipeline.
 You can also pass to `--busco_db` a URL pointing to a lineage tarball, or the tarball itself if stored locally.
 
-> [! WARNING]
+> [!WARNING]
 > When any kind of parameter is provided to `--busco_db`, BUSCO will run in offline mode.
 > If the lineage specified via `--busco_db_lineage` is not found locally, or if you attempt automatic lineage selection without having a complete lineage dataset pre-downloaded, BUSCO will fail.
 
 ### CAT
 
-> [! WARNING]
-> This database is very large at ~180 GB!
+> [!WARNING]
+> The default database (CAT_nr) is very large at ~200 GB!
 > This can take a long time, so we strongly recommend downloading and unzipping prior the pipeline run.
 
-This database can be downloaded from the [CAT developers' website](https://tbb.bio.uu.nl/bastiaan/CAT_prepare/), which is based in the Netherlands (and could be slow for other regions of the world).
+This database can be downloaded from the [CAT developers' website](https://tbb.bio.uu.nl/tina/CAT_pack_prepare/), which is based in the Netherlands (and could be slow for other regions of the world).
+
+> [!NOTE]
+> By default, the pipeline will use the `NCBI nr` database.
+
+Enabling the `--cat_db_generate` option will create a new database using the latest version of the NCBI nr database.
+This requires a large download (over 200 GB) and several hours of subsequent processing.
+If you enable the `--save_cat_db` option, the database will be saved in the `Taxonomy/CAT/db` directory and can be reused in future runs by specifying its path with `--cat_db`.
 
 ### GTDB
 
-> [! WARNING]
+> [!WARNING]
 > This database is very large at ~110 GB!
 > This can take a long time, so we strongly recommend downloading and unzipping prior the pipeline run.
 
@@ -215,7 +258,7 @@ To further assist in reproducibility, you can use share and reuse [parameter fil
 > If you wish to share such profile (such as upload as supplementary material for academic publications), make sure to NOT include cluster specific paths to files, nor institutional specific profiles.
 
 Additionally, to enable also reproducible results from the individual assembly tools this pipeline provides extra parameters. SPAdes is designed to be deterministic for a given number of threads. To generate reproducible results set the number of cpus with `--spades_fix_cpus` or `--spadeshybrid_fix_cpus`. This will overwrite the number of cpus specified in the `base.config` file and additionally ensure that it is not increased in case of retries for individual samples. MEGAHIT only generates reproducible results when run single-threaded.
-You can fix this by using the prameter `--megahit_fix_cpu_1`. In both cases, do not specify the number of cpus for these processes in additional custom config files, this would result in an error.
+You can fix this by using the parameter `--megahit_fix_cpu_1`. In both cases, do not specify the number of cpus for these processes in additional custom config files, this would result in an error.
 
 MetaBAT2 is run by default with a fixed seed within this pipeline, thus producing reproducible results.
 
@@ -224,8 +267,6 @@ Therefore, we strongly recommend downloading the required lineage datasets in ad
 To ensure reproducibility when using auto-lineage mode, download `all` lineages (see [Databases](#databases)) and provide the download path to `--busco_db`. This will enable offline mode and produce consistent results across runs.
 
 For the taxonomic bin classification with [CAT](https://github.com/dutilh/CAT), when running the pipeline with `--cat_db_generate` the parameter `--save_cat_db` can be used to also save the generated database to allow reproducibility in future runs. Note that when specifying a pre-built database with `--cat_db`, currently the database can not be saved.
-
-When it comes to visualizing taxonomic data using [Krona](https://github.com/marbl/Krona), you have the option to provide a taxonomy file, such as `taxonomy.tab`, using the `--krona_db` parameter. If you don't supply a taxonomy file, Krona is designed to automatically download the required taxonomy data for visualization.
 
 The taxonomic classification of bins with GTDB-Tk is not guaranteed to be reproducible, since the placement of bins in the reference tree is non-deterministic. However, the authors of the GTDB-Tk article examined the reproducibility on a set of 100 genomes across 50 trials and did not observe any difference (see [https://doi.org/10.1093/bioinformatics/btz848](https://doi.org/10.1093/bioinformatics/btz848)).
 
@@ -288,7 +329,7 @@ To change the resource requests, please see the [max resources](https://nf-co.re
 
 ### Custom Containers
 
-In some cases, you may wish to change the container or conda environment used by a pipeline steps for a particular tool. By default, nf-core pipelines use containers and software from the [biocontainers](https://biocontainers.pro/) or [bioconda](https://bioconda.github.io/) projects. However, in some cases the pipeline specified version maybe out of date.
+In some cases, you may wish to change the container or conda environment used by a pipeline steps for a particular tool. By default, nf-core pipelines use containers and software from the [biocontainers](https://biocontainers.pro/) or [bioconda](https://bioconda.github.io/) projects. However, in some cases the pipeline specified version may be out of date.
 
 To use a different container from the default container or conda environment specified in a pipeline, please see the [updating tool versions](https://nf-co.re/docs/usage/configuration#updating-tool-versions) section of the nf-core website.
 
@@ -364,7 +405,7 @@ Some HPC setups also allow you to run nextflow within a cluster job submitted yo
 ## Nextflow memory requirements
 
 In some cases, the Nextflow Java virtual machines can start to request a large amount of memory.
-We recommend adding the following line to your environment to limit this (typically in `~/.bashrc` or `~./bash_profile`):
+We recommend adding the following line to your environment to limit this (typically in `~/.bashrc` or `~/.bash_profile`):
 
 ```bash
 NXF_OPTS='-Xms1g -Xmx4g'
@@ -480,3 +521,13 @@ process {
 
 Where we update the `image-src` and as above supply the same `/<path>/<to>/<empty_dir>/` path to `--gtdb_db`.
 :::
+
+## A note on taxonomic profiling
+
+Generating a taxonomic profile of raw sequencing reads prior to assembly can be highly informative, especially when you are not entirely sure what is in your metagenomic samples.
+This can help you identify potential contamination or better understand the taxonomic composition of your samples before proceeding with assembly and binning.
+
+Up until version 4.0.0, this pipeline offered raw read taxonomic profiling using [Centrifuge](https://github.com/centrifugal/centrifuge) and [Kraken2](https://github.com/DerrickWood/kraken2).
+This feature was removed in version 5.0.0 to strengthen the pipeline's focus on metagenome assembly and binning.
+
+If you require taxonomic profiling of raw reads, we recommend using [nf-core/taxprofiler](https://nf-co.re/taxprofiler/), which is specifically designed for taxonomic profiling of raw reads and supports a wide range of tools for this purpose.

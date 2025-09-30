@@ -1,6 +1,5 @@
 Changes in component 'nf-core/untar'
 'modules/nf-core/untar/environment.yml' is unchanged
-'modules/nf-core/untar/meta.yml' is unchanged
 Changes in 'untar/main.nf':
 --- modules/nf-core/untar/main.nf
 +++ modules/nf-core/untar/main.nf
@@ -42,7 +41,7 @@ Changes in 'untar/main.nf':
              ${args} \\
              ${archive} \\
 
-'modules/nf-core/untar/tests/tags.yml' is unchanged
-'modules/nf-core/untar/tests/main.nf.test.snap' is unchanged
+'modules/nf-core/untar/meta.yml' is unchanged
 'modules/nf-core/untar/tests/main.nf.test' is unchanged
+'modules/nf-core/untar/tests/main.nf.test.snap' is unchanged
 ************************************************************

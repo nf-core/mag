@@ -1,0 +1,89 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "longread_preprocessing"
+description: Quality control and preprocessing of long-read sequencing data
+keywords:
+  - preprocessing
+  - quality control
+  - long reads
+  - nanopore
+  - pacbio
+  - trimming
+components:
+  - nanoplot
+  - nanolyse
+  - porechop/porechop
+  - porechop/abi
+  - filtlong
+  - chopper
+  - nanoq
+  - cat/fastq
+  - longread_hostremoval
+input:
+  - ch_raw_long_reads:
+      description: Raw long-read sequencing data
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - fastq:
+            type: file
+            description: Raw long-read FASTQ files
+            pattern: "*.{fastq,fq}.gz"
+  - ch_short_reads:
+      description: Short-read data for hybrid filtering
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - fastq1:
+            type: file
+            description: First pair of short-read FASTQ files
+            pattern: "*.{fastq,fq}.gz"
+        - fastq2:
+            type: file
+            description: Second pair of short-read FASTQ files
+            pattern: "*.{fastq,fq}.gz"
+  - ch_lambda_db:
+      type: file
+      description: Lambda DNA reference for spike-in removal (optional)
+      pattern: "*.{fasta,fa}"
+  - ch_host_fasta:
+      type: file
+      description: Host genome reference for contamination removal (optional)
+      pattern: "*.{fasta,fa}"
+  - val_skip_qc:
+      type: val
+      description: Boolean flag to skip quality control steps
+output:
+  - long_reads:
+      description: Quality-controlled and preprocessed long reads
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - fastq:
+            type: file
+            description: Preprocessed long-read FASTQ files
+            pattern: "*.{fastq,fq}.gz"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+  - multiqc_files:
+      description: MultiQC files for statistics
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - "*":
+            type: file
+            description: MultiQC report files
+            pattern: "*"
+authors:
+  - "@muabnezor"
+maintainers:
+  - "@jfy133"
+  - "@prototaxites"
+  - "@dialvarezs"
+  - "@d4straub"
+  - "@muabnezor"

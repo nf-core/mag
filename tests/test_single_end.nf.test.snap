@@ -1,0 +1,374 @@
+{
+    "-profile test_single_end": {
+        "content": [
+            155,
+            {
+                "ADAPTERREMOVAL_SE": {
+                    "adapterremoval": "2.3.2"
+                },
+                "ADJUST_MAXBIN2_EXT": {
+                    "coreutils": 9.5
+                },
+                "BCFTOOLS_CONSENSUS": {
+                    "bcftools": 1.21
+                },
+                "BCFTOOLS_INDEX": {
+                    "bcftools": 1.21
+                },
+                "BCFTOOLS_VIEW": {
+                    "bcftools": 1.21
+                },
+                "BIN_SUMMARY": {
+                    "python": "3.10.6",
+                    "pandas": "1.4.3"
+                },
+                "BOWTIE2_ASSEMBLY_ALIGN": {
+                    "bowtie2": "2.4.2",
+                    "samtools": 1.11,
+                    "pigz": "2.3.4"
+                },
+                "BOWTIE2_ASSEMBLY_BUILD": {
+                    "bowtie2": "2.4.2"
+                },
+                "BOWTIE2_HOST_REMOVAL_ALIGN": {
+                    "bowtie2": "2.4.2"
+                },
+                "BOWTIE2_HOST_REMOVAL_BUILD": {
+                    "bowtie2": "2.4.2"
+                },
+                "BOWTIE2_PHIX_REMOVAL_ALIGN": {
+                    "bowtie2": "2.4.2"
+                },
+                "BOWTIE2_PHIX_REMOVAL_BUILD": {
+                    "bowtie2": "2.4.2"
+                },
+                "CATPACK_ADDNAMES_BINS": {
+                    "catpack": 6.0
+                },
+                "CATPACK_BINS": {
+                    "catpack": 6.0
+                },
+                "CATPACK_SUMMARISE_BINS": {
+                    "catpack": 6.0
+                },
+                "CAT_DB_UNTAR": {
+                    "untar": 1.34
+                },
+                "CHECKM_LINEAGEWF": {
+                    "checkm": "1.2.3"
+                },
+                "CHECKM_QA": {
+                    "checkm": "1.2.3"
+                },
+                "CHECKM_UNTAR": {
+                    "untar": 1.34
+                },
+                "CONCAT_BINQC_TSV": {
+                    "csvtk": "0.31.0"
+                },
+                "CONCOCT_CONCOCT": {
+                    "concoct": "1.1.0"
+                },
+                "CONCOCT_CONCOCTCOVERAGETABLE": {
+                    "concoct": "1.1.0"
+                },
+                "CONCOCT_CUTUPFASTA": {
+                    "concoct": "1.1.0"
+                },
+                "CONCOCT_EXTRACTFASTABINS": {
+                    "concoct": "1.1.0"
+                },
+                "CONCOCT_MERGECUTUPCLUSTERING": {
+                    "concoct": "1.1.0"
+                },
+                "CONVERT_DEPTHS": {
+                    "bioawk": 20110810
+                },
+                "FAIDX": {
+                    "samtools": 1.21
+                },
+                "FASTQC_RAW": {
+                    "fastqc": "0.12.1"
+                },
+                "FASTQC_TRIMMED": {
+                    "fastqc": "0.12.1"
+                },
+                "FREEBAYES": {
+                    "freebayes": "1.3.10"
+                },
+                "GENOMAD_DOWNLOAD": {
+                    "genomad": "1.11.0"
+                },
+                "GENOMAD_ENDTOEND": {
+                    "genomad": "1.11.0"
+                },
+                "GTDBTK_DB_PREPARATION": {
+                    "tar": 1.34
+                },
+                "GTDBTK_SUMMARY": {
+                    "python": "3.10.6",
+                    "pandas": "1.4.3"
+                },
+                "GUNZIP_BINS": {
+                    "gunzip": 1.13
+                },
+                "GUNZIP_SHORTREAD_ASSEMBLIES": {
+                    "gunzip": 1.13
+                },
+                "MAG_DEPTHS": {
+                    "python": "3.6.7",
+                    "pandas": "1.1.5"
+                },
+                "MAG_DEPTHS_SUMMARY": {
+                    "python": "3.10.6",
+                    "pandas": "1.4.3"
+                },
+                "MAXBIN2": {
+                    "maxbin2": "2.2.7"
+                },
+                "MEGAHIT": {
+                    "megahit": "1.2.9"
+                },
+                "METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_SHORTREAD": {
+                    "metabat2": 2.15
+                },
+                "METABAT2_METABAT2": {
+                    "metabat2": 2.17
+                },
+                "PRODIGAL": {
+                    "prodigal": "2.6.3",
+                    "pigz": 2.6
+                },
+                "PROKKA": {
+                    "prokka": "1.14.6"
+                },
+                "PYDAMAGE_ANALYZE": {
+                    "pydamage": 1.0
+                },
+                "PYDAMAGE_FILTER": {
+                    "pydamage": 1.0
+                },
+                "QUAST": {
+                    "python": "3.7.6",
+                    "metaquast": "5.0.2"
+                },
+                "QUAST_BINS": {
+                    "python": "3.7.6",
+                    "metaquast": "5.0.2"
+                },
+                "QUAST_BINS_SUMMARY": {
+                    "cp": 9.5
+                },
+                "SEQKIT_STATS": {
+                    "seqkit": "2.9.0"
+                },
+                "SPLIT_FASTA": {
+                    "python": "3.6.7",
+                    "biopython": "1.7.4",
+                    "pandas": "1.1.5"
+                },
+                "Workflow": {
+                    "nf-core/mag": "v5.0.0"
+                }
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.7"
+        },
+        "timestamp": "2025-09-23T05:27:59.482377509"
+    },
+    "multiqc": {
+        "content": [
+            [
+                "multiqc/multiqc_data/BETA-multiqc.parquet",
+                "multiqc/multiqc_data/ar_length_count_plot_All.yaml",
+                "multiqc/multiqc_data/ar_length_count_plot_Discarded.yaml",
+                "multiqc/multiqc_data/ar_length_count_plot_Mate1.yaml",
+                "multiqc/multiqc_data/ar_retained_plot.yaml",
+                "multiqc/multiqc_data/bowtie2_se_plot.yaml",
+                "multiqc/multiqc_data/checkm-first-table.yaml",
+                "multiqc/multiqc_data/fastqc-1-status-check-heatmap.yaml",
+                "multiqc/multiqc_data/fastqc-1_per_base_n_content_plot.yaml",
+                "multiqc/multiqc_data/fastqc-1_per_base_sequence_quality_plot.yaml",
+                "multiqc/multiqc_data/fastqc-1_per_sequence_gc_content_plot_Counts.yaml",
+                "multiqc/multiqc_data/fastqc-1_per_sequence_gc_content_plot_Percentages.yaml",
+                "multiqc/multiqc_data/fastqc-1_per_sequence_quality_scores_plot.yaml",
+                "multiqc/multiqc_data/fastqc-1_sequence_counts_plot.yaml",
+                "multiqc/multiqc_data/fastqc-1_sequence_duplication_levels_plot.yaml",
+                "multiqc/multiqc_data/fastqc-status-check-heatmap.yaml",
+                "multiqc/multiqc_data/fastqc_per_base_n_content_plot.yaml",
+                "multiqc/multiqc_data/fastqc_per_base_sequence_quality_plot.yaml",
+                "multiqc/multiqc_data/fastqc_per_sequence_gc_content_plot_Counts.yaml",
+                "multiqc/multiqc_data/fastqc_per_sequence_gc_content_plot_Percentages.yaml",
+                "multiqc/multiqc_data/fastqc_per_sequence_quality_scores_plot.yaml",
+                "multiqc/multiqc_data/fastqc_sequence_counts_plot.yaml",
+                "multiqc/multiqc_data/fastqc_sequence_duplication_levels_plot.yaml",
+                "multiqc/multiqc_data/fastqc_sequence_length_distribution_plot.yaml",
+                "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc_adapter_removal.yaml",
+                "multiqc/multiqc_data/multiqc_bowtie2.yaml",
+                "multiqc/multiqc_data/multiqc_bowtie2_bowtie2-1.yaml",
+                "multiqc/multiqc_data/multiqc_bowtie2_bowtie2-2.yaml",
+                "multiqc/multiqc_data/multiqc_checkm.yaml",
+                "multiqc/multiqc_data/multiqc_citations.yaml",
+                "multiqc/multiqc_data/multiqc_data.json",
+                "multiqc/multiqc_data/multiqc_fastqc.yaml",
+                "multiqc/multiqc_data/multiqc_fastqc_fastqc-1.yaml",
+                "multiqc/multiqc_data/multiqc_general_stats.yaml",
+                "multiqc/multiqc_data/multiqc_gtdbtk.yaml",
+                "multiqc/multiqc_data/multiqc_prokka.yaml",
+                "multiqc/multiqc_data/multiqc_quast.yaml",
+                "multiqc/multiqc_data/multiqc_quast_quast-1.yaml",
+                "multiqc/multiqc_data/multiqc_software_versions.yaml",
+                "multiqc/multiqc_data/multiqc_sources.yaml",
+                "multiqc/multiqc_data/prokka_plot.yaml",
+                "multiqc/multiqc_data/quast_num_contigs.yaml",
+                "multiqc/multiqc_data/quast_table.yaml",
+                "multiqc/multiqc_plots/pdf/ar_length_count_plot_All.pdf",
+                "multiqc/multiqc_plots/pdf/ar_length_count_plot_Discarded.pdf",
+                "multiqc/multiqc_plots/pdf/ar_length_count_plot_Mate1.pdf",
+                "multiqc/multiqc_plots/pdf/ar_retained_plot-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/ar_retained_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/bowtie2_se_plot-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/bowtie2_se_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/checkm-first-table.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc-1-status-check-heatmap.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc-1_per_base_n_content_plot.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc-1_per_base_sequence_quality_plot.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc-1_per_sequence_gc_content_plot_Counts.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc-1_per_sequence_gc_content_plot_Percentages.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc-1_per_sequence_quality_scores_plot.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc-1_sequence_counts_plot-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc-1_sequence_counts_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc-1_sequence_duplication_levels_plot.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc-status-check-heatmap.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc_per_base_n_content_plot.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc_per_base_sequence_quality_plot.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc_per_sequence_gc_content_plot_Counts.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc_per_sequence_gc_content_plot_Percentages.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc_per_sequence_quality_scores_plot.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc_sequence_counts_plot-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc_sequence_counts_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc_sequence_duplication_levels_plot.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc_sequence_length_distribution_plot.pdf",
+                "multiqc/multiqc_plots/pdf/prokka_plot-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/prokka_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/quast_num_contigs-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/quast_num_contigs-pct.pdf",
+                "multiqc/multiqc_plots/pdf/quast_table.pdf",
+                "multiqc/multiqc_plots/png/ar_length_count_plot_All.png",
+                "multiqc/multiqc_plots/png/ar_length_count_plot_Discarded.png",
+                "multiqc/multiqc_plots/png/ar_length_count_plot_Mate1.png",
+                "multiqc/multiqc_plots/png/ar_retained_plot-cnt.png",
+                "multiqc/multiqc_plots/png/ar_retained_plot-pct.png",
+                "multiqc/multiqc_plots/png/bowtie2_se_plot-cnt.png",
+                "multiqc/multiqc_plots/png/bowtie2_se_plot-pct.png",
+                "multiqc/multiqc_plots/png/checkm-first-table.png",
+                "multiqc/multiqc_plots/png/fastqc-1-status-check-heatmap.png",
+                "multiqc/multiqc_plots/png/fastqc-1_per_base_n_content_plot.png",
+                "multiqc/multiqc_plots/png/fastqc-1_per_base_sequence_quality_plot.png",
+                "multiqc/multiqc_plots/png/fastqc-1_per_sequence_gc_content_plot_Counts.png",
+                "multiqc/multiqc_plots/png/fastqc-1_per_sequence_gc_content_plot_Percentages.png",
+                "multiqc/multiqc_plots/png/fastqc-1_per_sequence_quality_scores_plot.png",
+                "multiqc/multiqc_plots/png/fastqc-1_sequence_counts_plot-cnt.png",
+                "multiqc/multiqc_plots/png/fastqc-1_sequence_counts_plot-pct.png",
+                "multiqc/multiqc_plots/png/fastqc-1_sequence_duplication_levels_plot.png",
+                "multiqc/multiqc_plots/png/fastqc-status-check-heatmap.png",
+                "multiqc/multiqc_plots/png/fastqc_per_base_n_content_plot.png",
+                "multiqc/multiqc_plots/png/fastqc_per_base_sequence_quality_plot.png",
+                "multiqc/multiqc_plots/png/fastqc_per_sequence_gc_content_plot_Counts.png",
+                "multiqc/multiqc_plots/png/fastqc_per_sequence_gc_content_plot_Percentages.png",
+                "multiqc/multiqc_plots/png/fastqc_per_sequence_quality_scores_plot.png",
+                "multiqc/multiqc_plots/png/fastqc_sequence_counts_plot-cnt.png",
+                "multiqc/multiqc_plots/png/fastqc_sequence_counts_plot-pct.png",
+                "multiqc/multiqc_plots/png/fastqc_sequence_duplication_levels_plot.png",
+                "multiqc/multiqc_plots/png/fastqc_sequence_length_distribution_plot.png",
+                "multiqc/multiqc_plots/png/prokka_plot-cnt.png",
+                "multiqc/multiqc_plots/png/prokka_plot-pct.png",
+                "multiqc/multiqc_plots/png/quast_num_contigs-cnt.png",
+                "multiqc/multiqc_plots/png/quast_num_contigs-pct.png",
+                "multiqc/multiqc_plots/png/quast_table.png",
+                "multiqc/multiqc_plots/svg/ar_length_count_plot_All.svg",
+                "multiqc/multiqc_plots/svg/ar_length_count_plot_Discarded.svg",
+                "multiqc/multiqc_plots/svg/ar_length_count_plot_Mate1.svg",
+                "multiqc/multiqc_plots/svg/ar_retained_plot-cnt.svg",
+                "multiqc/multiqc_plots/svg/ar_retained_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/bowtie2_se_plot-cnt.svg",
+                "multiqc/multiqc_plots/svg/bowtie2_se_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/checkm-first-table.svg",
+                "multiqc/multiqc_plots/svg/fastqc-1-status-check-heatmap.svg",
+                "multiqc/multiqc_plots/svg/fastqc-1_per_base_n_content_plot.svg",
+                "multiqc/multiqc_plots/svg/fastqc-1_per_base_sequence_quality_plot.svg",
+                "multiqc/multiqc_plots/svg/fastqc-1_per_sequence_gc_content_plot_Counts.svg",
+                "multiqc/multiqc_plots/svg/fastqc-1_per_sequence_gc_content_plot_Percentages.svg",
+                "multiqc/multiqc_plots/svg/fastqc-1_per_sequence_quality_scores_plot.svg",
+                "multiqc/multiqc_plots/svg/fastqc-1_sequence_counts_plot-cnt.svg",
+                "multiqc/multiqc_plots/svg/fastqc-1_sequence_counts_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/fastqc-1_sequence_duplication_levels_plot.svg",
+                "multiqc/multiqc_plots/svg/fastqc-status-check-heatmap.svg",
+                "multiqc/multiqc_plots/svg/fastqc_per_base_n_content_plot.svg",
+                "multiqc/multiqc_plots/svg/fastqc_per_base_sequence_quality_plot.svg",
+                "multiqc/multiqc_plots/svg/fastqc_per_sequence_gc_content_plot_Counts.svg",
+                "multiqc/multiqc_plots/svg/fastqc_per_sequence_gc_content_plot_Percentages.svg",
+                "multiqc/multiqc_plots/svg/fastqc_per_sequence_quality_scores_plot.svg",
+                "multiqc/multiqc_plots/svg/fastqc_sequence_counts_plot-cnt.svg",
+                "multiqc/multiqc_plots/svg/fastqc_sequence_counts_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/fastqc_sequence_duplication_levels_plot.svg",
+                "multiqc/multiqc_plots/svg/fastqc_sequence_length_distribution_plot.svg",
+                "multiqc/multiqc_plots/svg/prokka_plot-cnt.svg",
+                "multiqc/multiqc_plots/svg/prokka_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/quast_num_contigs-cnt.svg",
+                "multiqc/multiqc_plots/svg/quast_num_contigs-pct.svg",
+                "multiqc/multiqc_plots/svg/quast_table.svg",
+                "multiqc/multiqc_report.html"
+            ],
+            [
+                "ar_length_count_plot_All.yaml:md5,9737bb84caccba069930640aef9a22ac",
+                "ar_length_count_plot_Discarded.yaml:md5,70100ac904238c3c5013ede5d25e1389",
+                "ar_length_count_plot_Mate1.yaml:md5,9737bb84caccba069930640aef9a22ac",
+                "ar_retained_plot.yaml:md5,8dde263d7e320026adecda2e2275cf30",
+                "bowtie2_se_plot.yaml:md5,b817d6df333c1a7cef4425abfdf60516",
+                "checkm-first-table.yaml:md5,3297128814b3465c69b728208de733fe",
+                "fastqc-1-status-check-heatmap.yaml:md5,9c2b76a7b237bbc833da8c096a3b7ad4",
+                "fastqc-1_per_base_n_content_plot.yaml:md5,44d97ce0b7822c77c862a99367bfe2b0",
+                "fastqc-1_per_base_sequence_quality_plot.yaml:md5,296ef56d5ee5657e19e8002ed08b0684",
+                "fastqc-1_per_sequence_gc_content_plot_Counts.yaml:md5,8df64ea3c37717ca31a393972448ddce",
+                "fastqc-1_per_sequence_gc_content_plot_Percentages.yaml:md5,67a6e91164ca97b85e49bc2fef6e3367",
+                "fastqc-1_per_sequence_quality_scores_plot.yaml:md5,187f24a30fd01fb88cd51d371dad5edd",
+                "fastqc-1_sequence_counts_plot.yaml:md5,a697f3861fede36f2949c9903db48540",
+                "fastqc-1_sequence_duplication_levels_plot.yaml:md5,973aa3381162a09a872316fee81ac180",
+                "fastqc-status-check-heatmap.yaml:md5,7454f1d8ddad2176839dd6652b94f6c5",
+                "fastqc_per_base_n_content_plot.yaml:md5,c73d15d3d761977bfb5ee14ce5df0535",
+                "fastqc_per_base_sequence_quality_plot.yaml:md5,0cac31583a948f9d93aee11abe85d71f",
+                "fastqc_per_sequence_gc_content_plot_Counts.yaml:md5,c70cf074efa78e1114c6a66b55985ad4",
+                "fastqc_per_sequence_gc_content_plot_Percentages.yaml:md5,9a24ec805dc7601b5be8875c6b7be17b",
+                "fastqc_per_sequence_quality_scores_plot.yaml:md5,aa787e6804ec658135f32d08faf8788f",
+                "fastqc_sequence_counts_plot.yaml:md5,f742336e560c390f4179dc1c6d766585",
+                "fastqc_sequence_duplication_levels_plot.yaml:md5,021f19d3e73d7ced5e8a34ae47572a2c",
+                "fastqc_sequence_length_distribution_plot.yaml:md5,46c0f815252383784f39befd66f37a38",
+                "multiqc_adapter_removal.yaml:md5,a1af2581288dffacad44a69744f6d93b",
+                "multiqc_bowtie2.yaml:md5,b4e58a2943b5009634fa5da76214073d",
+                "multiqc_bowtie2_bowtie2-1.yaml:md5,b4e58a2943b5009634fa5da76214073d",
+                "multiqc_bowtie2_bowtie2-2.yaml:md5,4ddb60c83954ec1ab3fd40f71021484e",
+                "multiqc_checkm.yaml:md5,b7b03fcc2f7d849f47350557c3129bb8",
+                "multiqc_citations.yaml:md5,332da3731e12b7a0d205f47685ddd53e",
+                "multiqc_fastqc.yaml:md5,2bbd80f21c5c264249bc935eada2ff41",
+                "multiqc_fastqc_fastqc-1.yaml:md5,b21efcd71ad261049a5aeaa238492f92",
+                "multiqc_general_stats.yaml:md5,aa9a3dff8300c0ee14ee37f4f84352a5",
+                "multiqc_gtdbtk.yaml:md5,9a643dd7f0ba582ac2b95858b4ef0937",
+                "multiqc_prokka.yaml:md5,e55c687925d611b869e4c4b27c71470c",
+                "multiqc_quast.yaml:md5,b7dae5bb61679ff9d5a3ede9898e5cfa",
+                "multiqc_quast_quast-1.yaml:md5,0b8fe8ee8f69277c0471dfe621c27b03",
+                "prokka_plot.yaml:md5,46ee43779b1bd14047906512e762b504",
+                "quast_num_contigs.yaml:md5,f1d88b421a291d98f096908d7a4e203a",
+                "quast_table.yaml:md5,55ee8b4825b107d592cfeb16928f3487"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.7"
+        },
+        "timestamp": "2025-09-17T10:56:02.40715903"
+    }
+}
