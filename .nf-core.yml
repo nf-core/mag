@@ -17,4 +17,4 @@ template:
   name: mag
   org: nf-core
   outdir: .
-  version: 5.0.0
+  version: 5.1.0dev
