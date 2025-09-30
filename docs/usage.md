@@ -420,12 +420,14 @@ nf-core/mag integrates an additional subworkflow to validate ancient DNA _de nov
 ## A note on coverage estimation
 
 In order to run the binning tools included in the pipeline, MAG must first align reads back to the assemblies, and estimate the coverage of each contig.
-During the coverage estimation step, these alignments are by default filtered to retain alignments that have a percentage identity of 97% (i.e., of
-the base pairs that match between the read and the contig, 97% are identical). This value is a good default for short read Illumina data, however for
-certain long read technologies, the error rates in the reads can be much higher. For example, older Oxford Nanopore chemistries can have error rates approaching
-15% - 20%. If you are having trouble with the coverage estimation steps (for example, the output depths for each bin are all at or near zero), it may be worth
-manually adjusting this parameter, if it is appropriate for your data. You can do this by adjusting the `longread_percentidentity` and `shortread_percentidentity`
-parameters for long reads and short reads, respectively - for older ONT data, you may wish to look at values of around 85% to improve coverage estimation.
+
+During the coverage estimation step, these alignments are by default filtered to retain alignments that have a percentage identity of 97% (i.e., of the base pairs that match between the read and the contig, 97% are identical). This value is a good default for short read Illumina data, however for certain long read technologies, the error rates in the reads can be much higher.
+For example, older Oxford Nanopore chemistries can have error rates approaching
+15% - 20%.
+
+If you are having trouble with the coverage estimation steps (for example, the output depths for each bin are all at or near zero), it may be worth manually adjusting this parameter, if it is appropriate for your data.
+You can do this by adjusting the `--longread_percentidentity` and `--shortread_percentidentity` parameters for long reads and short reads, respectively.
+For older ONT data, you may wish to look at values of around 85% to improve coverage estimation.
 
 ## A note on bin refinement
 
