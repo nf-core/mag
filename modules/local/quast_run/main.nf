@@ -1,7 +1,7 @@
 process QUAST {
     tag "${meta.assembler}-${meta.id}"
 
-    conda "bioconda::quast=5.0.2"
+    conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/quast:5.0.2--py37pl526hb5aa323_2' :
         'biocontainers/quast:5.0.2--py37pl526hb5aa323_2' }"

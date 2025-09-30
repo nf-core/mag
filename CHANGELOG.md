@@ -3,7 +3,21 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 4.1.0dev - [unreleased]
+## 5.1.0dev - [unreleased]
+
+### `Added`
+
+- [#873](https://github.com/nf-core/mag/pull/873) - Document usage of `longread_percentidentity` and `shortread_percentidentity` and set the value of `longread_percentidentity` in the `test_full` profile to 85 (by @prototaxites)
+
+### `Changed`
+
+### `Fixed`
+
+### `Dependencies`
+
+### `Deprecated`
+
+## 5.0.0 - [2025-09-30]
 
 ### `Added`
 
@@ -13,6 +27,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#827](https://github.com/nf-core/mag/pull/827) - Added nf-test CI testing for all test profiles (added by @jfy133)
 - [#829](https://github.com/nf-core/mag/pull/829) - Add `--skip_shortread_qc` and `--skip_longread_qc` params for skipping certain default preprocessing steps (added by @erikrikarddaniel)
 - [#846](https://github.com/nf-core/mag/pull/846) - Improve documentation of `group` samplesheet column (added by @vinisalazar)
+- [#855](https://github.com/nf-core/mag/pull/855) - Add basic nf-tests for test_longreadonly, test_longreadonly_alternatives, test_hybrid and test_assembly_input (added by @dialvarezs)
+- [#864](https://github.com/nf-core/mag/pull/864) - Add `--gtdbtk_skip_aniscreen` to disable fast classification of genomes by ANI using skani in GTDB-Tk (by @jfy133 and @prototaxites).
 
 ### `Changed`
 
@@ -37,6 +53,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#852](https://github.com/nf-core/mag/pull/852) - Fixed version reporting by ensure all modules are represented in final version.yml for MultiQC (by @jfy133)
 - [#854](https://github.com/nf-core/mag/pull/854) - Update porechop/abi to a patched version to prevent duplicated read names (reported by @palec87, fix by @jfy133)
 - [#858](https://github.com/nf-core/mag/pull/858) - Fix a single parameter validation failure reporting errors for all parameters by updated nf-schema to 2.5.1 (reported by @Pranjal-Bioinfo, fix by @nvnieuwk and @jfy133)
+- [#864](https://github.com/nf-core/mag/pull/864) - Fix missing multi-threading of MetaEuk easypredict (reported by @OlivierCoen, fix by @prototaxites).
 
 ### `Dependencies`
 
@@ -52,7 +69,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | flye         |                  | 2.9.5       |
 | Freebayes    | 1.3.6            | 1.3.10      |
 | geNomad      | 1.5.2            | 1.11.0      |
-| GTDB-Tk      | 2.4.0            | 2.4.1       |
+| GTDB-Tk      | 2.4.0            | 2.5.2       |
 | metabat2     | 2.15             | 2.17        |
 | metamdbg     |                  | 1.0         |
 | minimap2     |                  | 2.29        |
@@ -62,12 +79,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | pydamage     | 0.7.0            | 1.0.0       |
 | seqtk        | 1.3              | 1.4         |
 | porechop_abi | 0.5.0            | 0.5.0post1  |
+| NanoPlot     | 1.44.1           | 1.46.1      |
 
 ### `Deprecated`
 
 - [#799](https://github.comf/nf-core/mag/pull/799) - Removed `--cat_official_taxonomy` in favour of `--cat_allow_unofficial_lineages` to control CAT's use of unofficial lineages (added by @dialvarezs)
 - [#825](https://github.com/nf-core/mag/pull/825) - Removed `--centrifuge_db`, `--kraken2_db`, `--krona_db` and `--skip_krona` parameters following the removal of taxonomic profiling functionality. See nf-core/taxprofiler for replacement (added by @dialvarezs)
 - [#851](https://github.com/nf-core/mag/pull/851) - Remove `POOL_READ_*` local modules in favor of nf-core cat/fastq (by @dialvarezs)
+- [#855](https://github.com/nf-core/mag/pull/855) - Remove test_adapterremoval, test_ancient_dna, test_bbnorm, test_busco_auto, test_host_rm, test_hybrid_host_rm, test_binrefinement, test_concoct and test_longread profiles (added by @dialvarezs)
+- [#864](https://github.com/nf-core/mag/pull/864) - Remove `--gtdb_mash` due to dropping of support by GTDBTk itself (by @prototaxites and @jfy133)
 
 ## v4.0.0 - [2025-05-22]
 

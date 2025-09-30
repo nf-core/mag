@@ -1,7 +1,7 @@
 process CONVERT_DEPTHS {
     tag "${meta.id}"
 
-    conda "bioconda::bioawk=1.0"
+    conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/bioawk:1.0--hed695b0_5' :
         'biocontainers/bioawk:1.0--hed695b0_5' }"

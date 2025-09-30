@@ -24,11 +24,11 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 - [MultiQC](#multiqc) - aggregate report, describing results of the whole pipeline
 - [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
 
-Note that when specifying the parameter `--coassemble_group`, for the corresponding output filenames/directories of the assembly or downsteam processes the group ID, or more precisely the term `group-[group_id]`, will be used instead of the sample ID.
+Note that when specifying the parameter `--coassemble_group`, for the corresponding output filenames/directories of the assembly or downstream processes the group ID, or more precisely the term `group-[group_id]`, will be used instead of the sample ID.
 
 ## Quality control
 
-These steps trim away the adapter sequences present in input reads, trims away bad quality bases and sicard reads that are too short.
+These steps trim away the adapter sequences present in input reads, trims away bad quality bases and discard reads that are too short.
 It also removes host contaminants and sequencing controls, such as PhiX or the Lambda phage.
 FastQC is run for visualising the general quality metrics of the sequencing runs before and after trimming.
 
@@ -434,7 +434,7 @@ Files in these two folders contain all contigs of an assembly.
   - `bins/[assembler]-[binner]-[sample/group].*.fa.gz`: Genome bins retrieved from input assembly
   - `stats/[assembler]-[binner]-[sample/group].csv`: Table indicating which contig goes with which cluster bin.
   - `stats/[assembler]-[binner]-[sample/group]*_gt1000.csv`: Various intermediate PCA statistics used for clustering.
-  - `stats/[assembler]-[binner]-[sample/group]_*.tsv`: Coverage statistics of each sub-contig cut up by CONOCOCT prior in an intermediate step prior to binning. Likely not useful in most cases.
+  - `stats/[assembler]-[binner]-[sample/group]_*.tsv`: Coverage statistics of each sub-contig cut up by CONCOCT prior in an intermediate step prior to binning. Likely not useful in most cases.
   - `stats/[assembler]-[binner]-[sample/group].log.txt`: CONCOCT execution log file.
   - `stats/[assembler]-[binner]-[sample/group]_*.args`: List of arguments used in CONCOCT execution.
   - </details>
@@ -583,7 +583,7 @@ By default, nf-core/mag runs CheckM with the `check_lineage` workflow that place
 <summary>Output files</summary>
 
 - `GenomeBinning/QC/CheckM/`
-  - `[assembler]-[binner]-[domain]-[refinement]-[sample/group]_qa.txt`: Detailed statistics about bins informing completeness and contamamination scores (output of `checkm qa`). This should normally be your main file to use to evaluate your results.
+  - `[assembler]-[binner]-[domain]-[refinement]-[sample/group]_qa.txt`: Detailed statistics about bins informing completeness and contamination scores (output of `checkm qa`). This should normally be your main file to use to evaluate your results.
   - `[assembler]-[binner]-[domain]-[refinement]-[sample/group]_wf.tsv`: Overall summary file for completeness and contamination (output of `checkm lineage_wf`).
   - `[assembler]-[binner]-[domain]-[refinement]-[sample/group]/`: Intermediate files for CheckM results, including CheckM generated annotations, log, lineage markers etc.
 - `GenomeBinning/QC/`

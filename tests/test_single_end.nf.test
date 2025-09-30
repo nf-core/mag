@@ -1,6 +1,6 @@
 nextflow_pipeline {
 
-    name "Test pipeline"
+    name "Test pipeline with test_single_end profile"
     script "../main.nf"
     tag "pipeline"
     tag "test_single_end"
@@ -15,6 +15,13 @@ nextflow_pipeline {
         }
 
         then {
+            // Output directory: multiqc
+            def stable_name_multiqc = getAllFilesFromDir(
+                params.outdir, include: ['multiqc/**'], relative: true, includeDir: false
+            )
+            def stable_path_multiqc = getAllFilesFromDir(
+                params.outdir, include: ['multiqc/**'], ignoreFile: 'tests/.nftignore'
+            )
             // // stable_name: All files + folders in ${params.outdir}/ with a stable name
             // def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
             // // stable_path: All files in ${params.outdir}/ with stable content
@@ -30,7 +37,9 @@ nextflow_pipeline {
                     // stable_name,
                     // // All files with stable contents
                     // stable_path
-                ).match() }
+                ).match() },
+                { assert snapshot(stable_name_multiqc, stable_path_multiqc).match('multiqc') },
+
             )
         }
     }

@@ -10,7 +10,7 @@ The input data can be passed to nf-core/mag in two possible ways, either using t
 
 ### Samplesheet input file
 
-You can specify a CSV samplesheet input file that contains the paths to your FASTQ files and additional metadata. Furthermore when a `run` column is present, the pipeline will also run perform run- or lane-wise concatenation, for cases where you may have a sample or library sequenced with the same sequencing configuration across multiple runs. The optional run merging happens after short read QC (adapter clipping, host/PhiX removal etc.), and prior to normalisation, taxonomic profiling, and assembly.
+You can specify a CSV samplesheet input file that contains the paths to your FASTQ files and additional metadata. Furthermore when a `run` column is present, the pipeline will also perform run- or lane-wise concatenation, for cases where you may have a sample or library sequenced with the same sequencing configuration across multiple runs. The optional run merging happens after short read QC (adapter clipping, host/PhiX removal etc.), and prior to normalisation, taxonomic profiling, and assembly.
 
 If short reads are provided (`short_reads_1`), the `short_reads_platform` column is required. Valid options include:
 
@@ -24,7 +24,7 @@ If long reads are provided (`long_reads`), the `long_reads_platform` column is r
 
 These platform fields are important for downstream alignment and assembly tools.
 
-At a minimum CSV file should contain the following columns:
+An nf-core/mag input samplesheet file can contain the following columns:
 
 `sample,group,short_reads_1,short_reads_2,long_reads,short_reads_platform,long_reads_platform`
 
@@ -45,11 +45,11 @@ sample1,0,data/sample1.fastq.gz,,,ILLUMINA
 sample2,0,data/sample2.fastq.gz,,,ILLUMINA
 ```
 
-or to additionally to perform run merging of two runs of sample1:
+or to additionally perform run merging of two runs from sample1:
 
 ```csv title="samplesheet_mix_mergeruns.csv"
 sample,run,group,short_reads_1,short_reads_2,long_reads,short_reads_platform,long_reads_platform
-sample1,1,0,data/sample1_R1.fastq.gz,data/sample1_R2.fastq.gz,data/sample1.fastq.gz,ILLUMINA,OXFORD_NANOPORE
+sample1,1,0,data/sample1_lane2_R1.fastq.gz,data/sample1_lane2_R2.fastq.gz,data/sample1.fastq.gz,ILLUMINA,OXFORD_NANOPORE
 sample1,2,0,data/sample1_R1.fastq.gz,data/sample1_R2.fastq.gz,data/sample1.fastq.gz,ILLUMINA,OXFORD_NANOPORE
 sample2,0,0,data/sample2_R1.fastq.gz,data/sample2_R2.fastq.gz,data/sample2.fastq.gz,ILLUMINA,OXFORD_NANOPORE
 sample3,1,0,data/sample3_R1.fastq.gz,data/sample3_R2.fastq.gz,,ILLUMINA,OXFORD_NANOPORE
@@ -69,7 +69,7 @@ In this case only long-read only assemblies will be able to be executed (e.g. Fl
 
 Please note the following requirements:
 
-- a minimum 5 of comma-separated columns
+- a minimum of 5 comma-separated columns
 - Valid file extension: `.csv`
 - Must contain the header `sample,group,short_reads_1,short_reads_2,long_reads` (where `run` can be optionally added)
 - Run IDs must be unique within a multi-run sample. A sample with multiple runs will be automatically concatenated.
@@ -84,7 +84,7 @@ These are usually referred to as "individual" or "single" assembly and binning, 
 In the former, samples are processed independently.
 In the latter, samples are processed together.
 A common strategy is to assemble each sample individually (single assembly) and then pool all of the contigs together and map the reads against them (co-binning).
-This is usually chosen because since assembly is a computationally intensive process, it is very costly to assemble all samples together.
+This is usually chosen since assembly is a computationally intensive process, it is very costly to assemble all samples together.
 For binning, however, resources aren't as limiting, and binning algorithms can leverage the fact that there are multiple samples from which to draw information, which can improve the quality of output bins.
 
 nf-core/mag, by default, follows this approach: the group information from the input sample sheet in is only used to compute co-abundances for the binning step (co-binning), but not for group-wise co-assembly (thus single assembly).
@@ -258,7 +258,7 @@ To further assist in reproducibility, you can use share and reuse [parameter fil
 > If you wish to share such profile (such as upload as supplementary material for academic publications), make sure to NOT include cluster specific paths to files, nor institutional specific profiles.
 
 Additionally, to enable also reproducible results from the individual assembly tools this pipeline provides extra parameters. SPAdes is designed to be deterministic for a given number of threads. To generate reproducible results set the number of cpus with `--spades_fix_cpus` or `--spadeshybrid_fix_cpus`. This will overwrite the number of cpus specified in the `base.config` file and additionally ensure that it is not increased in case of retries for individual samples. MEGAHIT only generates reproducible results when run single-threaded.
-You can fix this by using the prameter `--megahit_fix_cpu_1`. In both cases, do not specify the number of cpus for these processes in additional custom config files, this would result in an error.
+You can fix this by using the parameter `--megahit_fix_cpu_1`. In both cases, do not specify the number of cpus for these processes in additional custom config files, this would result in an error.
 
 MetaBAT2 is run by default with a fixed seed within this pipeline, thus producing reproducible results.
 
@@ -329,7 +329,7 @@ To change the resource requests, please see the [max resources](https://nf-co.re
 
 ### Custom Containers
 
-In some cases, you may wish to change the container or conda environment used by a pipeline steps for a particular tool. By default, nf-core pipelines use containers and software from the [biocontainers](https://biocontainers.pro/) or [bioconda](https://bioconda.github.io/) projects. However, in some cases the pipeline specified version maybe out of date.
+In some cases, you may wish to change the container or conda environment used by a pipeline steps for a particular tool. By default, nf-core pipelines use containers and software from the [biocontainers](https://biocontainers.pro/) or [bioconda](https://bioconda.github.io/) projects. However, in some cases the pipeline specified version may be out of date.
 
 To use a different container from the default container or conda environment specified in a pipeline, please see the [updating tool versions](https://nf-co.re/docs/usage/configuration#updating-tool-versions) section of the nf-core website.
 
@@ -405,7 +405,7 @@ Some HPC setups also allow you to run nextflow within a cluster job submitted yo
 ## Nextflow memory requirements
 
 In some cases, the Nextflow Java virtual machines can start to request a large amount of memory.
-We recommend adding the following line to your environment to limit this (typically in `~/.bashrc` or `~./bash_profile`):
+We recommend adding the following line to your environment to limit this (typically in `~/.bashrc` or `~/.bash_profile`):
 
 ```bash
 NXF_OPTS='-Xms1g -Xmx4g'
@@ -416,6 +416,18 @@ NXF_OPTS='-Xms1g -Xmx4g'
 nf-core/mag integrates an additional subworkflow to validate ancient DNA _de novo_ assembly:
 
 [Characteristic patterns of ancient DNA (aDNA) damage](<(https://doi.org/10.1073/pnas.0704665104)>), namely DNA fragmentation and cytosine deamination (observed as C-to-T transitions) are typically used to authenticate aDNA sequences. By identifying assembled contigs carrying typical aDNA damages using [PyDamage](https://github.com/maxibor/pydamage), nf-core/mag can report and distinguish ancient contigs from contigs carrying no aDNA damage. Furthermore, to mitigate the effect of aDNA damage on contig sequence assembly, [freebayes](https://github.com/freebayes/freebayes) in combination with [BCFtools](https://github.com/samtools/bcftools) are used to (re)call the variants from the reads aligned to the contigs, and (re)generate contig consensus sequences.
+
+## A note on coverage estimation
+
+In order to run the binning tools included in the pipeline, MAG must first align reads back to the assemblies, and estimate the coverage of each contig.
+
+During the coverage estimation step, these alignments are by default filtered to retain alignments that have a percentage identity of 97% (i.e., of the base pairs that match between the read and the contig, 97% are identical). This value is a good default for short read Illumina data, however for certain long read technologies, the error rates in the reads can be much higher.
+For example, older Oxford Nanopore chemistries can have error rates approaching
+15% - 20%.
+
+If you are having trouble with the coverage estimation steps (for example, the output depths for each bin are all at or near zero), it may be worth manually adjusting this parameter, if it is appropriate for your data.
+You can do this by adjusting the `--longread_percentidentity` and `--shortread_percentidentity` parameters for long reads and short reads, respectively.
+For older ONT data, you may wish to look at values of around 85% to improve coverage estimation.
 
 ## A note on bin refinement
 

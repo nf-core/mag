@@ -1,6 +1,6 @@
 nextflow_pipeline {
 
-    name "Test nf-core/mag"
+    name "Test pipeline with test_alternatives profile"
     script "../main.nf"
     tag "pipeline"
     tag "test_alternatives"
