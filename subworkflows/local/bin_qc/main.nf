@@ -80,7 +80,6 @@ workflow BIN_QC {
      * Run QC tools
     ================================
      */
-     // TODO update
     if (params.enable_busco) {
         /*
          * BUSCO
@@ -110,7 +109,6 @@ workflow BIN_QC {
             BUSCO_BUSCO.out.short_summaries_txt.map { it[1] }.flatten()
         )
     }
-     // TODO update
     if (params.enable_checkm) {
         /*
          * CheckM
@@ -144,7 +142,6 @@ workflow BIN_QC {
             CHECKM_QA.out.output.map { it[1] }.flatten()
         )
     }
-     // TODO update
     if (params.enable_checkm2) {
         /*
          * CheckM2
@@ -204,7 +201,6 @@ workflow BIN_QC {
         }
     }
     // Combine QC summaries (same process for all tools)
-    // TODO add ifs for each tool here
     if (params.enable_busco) {
         CONCAT_BUSCO_TSV(ch_busco_summaries, 'tsv', 'tsv')
         ch_versions = ch_versions.mix(CONCAT_BUSCO_TSV.out.versions)
@@ -224,7 +220,6 @@ workflow BIN_QC {
     
 
     emit:
-     // TODO update to emit all tools or empty 
     qc_summaries    = ch_qc_summaries
     multiqc_files = ch_multiqc_files
     versions      = ch_versions
