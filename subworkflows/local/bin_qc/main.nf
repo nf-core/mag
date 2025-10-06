@@ -44,7 +44,7 @@ workflow BIN_QC {
     if (params.checkm_db) {
         ch_checkm_db = file(params.checkm_db, checkIfExists: true)
     }
-    else if (params.binqc_tool == 'checkm' || "checkm" in binqc_tool_extras) {
+    else if (params.enable_checkm) {
         ch_checkm_db = [[id: 'checkm_db'], file(params.checkm_download_url, checkIfExists: true)]
 
         CHECKM_UNTAR(ch_checkm_db)
@@ -111,7 +111,7 @@ workflow BIN_QC {
         )
     }
      // TODO update
-    if (params.binqc_tool == "checkm" || "checkm" in binqc_tool_extras) {
+    if (params.enable_checkm) {
         /*
          * CheckM
          */
@@ -137,7 +137,7 @@ workflow BIN_QC {
         CHECKM_QA(ch_checkmqa_input, [])
         ch_versions = ch_versions.mix(CHECKM_QA.out.versions)
 
-        ch_qc_summaries = CHECKM_QA.out.output
+        ch_checkm_summaries = CHECKM_QA.out.output
             .map { _meta, summary -> [[id: 'checkm'], summary] }
             .groupTuple()
         ch_multiqc_files = ch_multiqc_files.mix(
@@ -204,14 +204,18 @@ workflow BIN_QC {
         }
     }
     // Combine QC summaries (same process for all tools)
-    CONCAT_BINQC_TSV(ch_qc_summaries, 'tsv', 'tsv')
-    ch_versions = ch_versions.mix(CONCAT_BINQC_TSV.out.versions)
+    // TODO add ifs for each tool here
+    if (params.enable_checkm) {
+        CONCAT_CHECKM_TSV(ch_checkm_summaries, 'tsv', 'tsv')
+        ch_versions = ch_versions.mix(CONCAT_CHECKM_TSV.out.versions)
+        ch_qc_summaries = ch_qc_summaries.mix(CONCAT_CHECKM_TSV.out.csv.map{ _meta, summary -> summary })
+    }
 
-    ch_qc_summary = CONCAT_BINQC_TSV.out.csv.map { _meta, summary -> summary }
+    
 
     emit:
      // TODO update to emit all tools or empty 
-    qc_summary    = ch_qc_summary
+    qc_summaries    = ch_qc_summaries
     multiqc_files = ch_multiqc_files
     versions      = ch_versions
 }
