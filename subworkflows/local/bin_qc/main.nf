@@ -22,11 +22,10 @@ workflow BIN_QC {
     ch_bins // [ [ meta] , fasta ], input bins (mandatory)
 
     main:
-    ch_qc_summary = []
+    ch_qc_summaries = []
     ch_input_bins_for_qc = ch_bins.transpose()
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
-    binqc_tool_extras = params.binqc_tool_extras ? params.binqc_tool_extras.split(',') : []
 
 
     /*
