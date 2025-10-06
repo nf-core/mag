@@ -81,7 +81,7 @@ workflow BIN_QC {
     ================================
      */
      // TODO update
-    if (params.binqc_tool == "busco" || "busco" in binqc_tool_extras) {
+    if (params.enable_busco) {
         /*
          * BUSCO
          */
@@ -103,7 +103,7 @@ workflow BIN_QC {
         BUSCO_BUSCO(ch_bins, 'genome', params.busco_db_lineage, ch_busco_db, [], params.busco_clean)
         ch_versions = ch_versions.mix(BUSCO_BUSCO.out.versions)
 
-        ch_qc_summaries = BUSCO_BUSCO.out.batch_summary
+        ch_busco_summaries = BUSCO_BUSCO.out.batch_summary
             .map { _meta, summary -> [[id: 'busco'], summary] }
             .groupTuple()
         ch_multiqc_files = ch_multiqc_files.mix(
@@ -205,6 +205,11 @@ workflow BIN_QC {
     }
     // Combine QC summaries (same process for all tools)
     // TODO add ifs for each tool here
+    if (params.enable_busco) {
+        CONCAT_BUSCO_TSV(ch_busco_summaries, 'tsv', 'tsv')
+        ch_versions = ch_versions.mix(CONCAT_BUSCO_TSV.out.versions)
+        ch_qc_summaries = ch_qc_summaries.mix(CONCAT_BUSCO_TSV.out.csv.map{ _meta, summary -> summary })
+    }
     if (params.enable_checkm) {
         CONCAT_CHECKM_TSV(ch_checkm_summaries, 'tsv', 'tsv')
         ch_versions = ch_versions.mix(CONCAT_CHECKM_TSV.out.versions)
