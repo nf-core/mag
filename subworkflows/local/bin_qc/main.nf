@@ -59,7 +59,7 @@ workflow BIN_QC {
     if (params.checkm2_db) {
         ch_checkm2_db = [[:], file(params.checkm2_db, checkIfExists: true)]
     }
-    else if (params.binqc_tool == 'checkm2' || "checkm2" in binqc_tool_extras) {
+    else if (params.enable_checkm2) {
         CHECKM2_DATABASEDOWNLOAD(params.checkm2_db_version)
         ch_versions = ch_versions.mix(CHECKM2_DATABASEDOWNLOAD.out.versions)
         ch_checkm2_db = CHECKM2_DATABASEDOWNLOAD.out.database
@@ -145,14 +145,14 @@ workflow BIN_QC {
         )
     }
      // TODO update
-    if (params.binqc_tool == "checkm2" || "checkm2" in binqc_tool_extras) {
+    if (params.enable_checkm2) {
         /*
          * CheckM2
          */
         CHECKM2_PREDICT(ch_input_bins_for_qc.groupTuple(), ch_checkm2_db)
         ch_versions = ch_versions.mix(CHECKM2_PREDICT.out.versions)
 
-        ch_qc_summaries = CHECKM2_PREDICT.out.checkm2_tsv
+        ch_checkm2_summaries = CHECKM2_PREDICT.out.checkm2_tsv
             .map { _meta, summary -> [[id: 'checkm2'], summary] }
             .groupTuple()
         ch_multiqc_files = ch_multiqc_files.mix(
@@ -209,6 +209,11 @@ workflow BIN_QC {
         CONCAT_CHECKM_TSV(ch_checkm_summaries, 'tsv', 'tsv')
         ch_versions = ch_versions.mix(CONCAT_CHECKM_TSV.out.versions)
         ch_qc_summaries = ch_qc_summaries.mix(CONCAT_CHECKM_TSV.out.csv.map{ _meta, summary -> summary })
+    }
+    if (params.enable_checkm2) {
+        CONCAT_CHECKM2_TSV(ch_checkm2_summaries, 'tsv', 'tsv')
+        ch_versions = ch_versions.mix(CONCAT_CHECKM2_TSV.out.versions)
+        ch_qc_summaries = ch_qc_summaries.mix(CONCAT_CHECKM2_TSV.out.csv.map{ _meta, summary -> summary })
     }
 
     
