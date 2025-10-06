@@ -187,7 +187,7 @@ workflow BIN_QC {
                 keepHeader: true,
                 storeDir: "${params.outdir}/GenomeBinning/QC/",
             )
-        if (params.binqc_tool == 'checkm' || "checkm" in binqc_tool_extras) {
+        if (params.enable_checkm) {
             ch_input_to_mergecheckm = GUNC_RUN.out.maxcss_level_tsv.combine(CHECKM_QA.out.output, by: 0)
 
             GUNC_MERGECHECKM(ch_input_to_mergecheckm)
