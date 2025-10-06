@@ -386,6 +386,7 @@ workflow MAG {
         if (!params.skip_binqc) {
             BIN_QC(ch_input_for_postbinning)
             ch_versions = ch_versions.mix(BIN_QC.out.versions)
+             // TODO update
             ch_bin_qc_summary = BIN_QC.out.qc_summary
         }
 
@@ -437,6 +438,7 @@ workflow MAG {
 
                 GTDBTK(
                     ch_gtdb_bins,
+                     // TODO update
                     ch_bin_qc_summary,
                     gtdb,
                 )
@@ -447,7 +449,7 @@ workflow MAG {
         else {
             ch_gtdbtk_summary = Channel.empty()
         }
-
+         // TODO update
         if ((!params.skip_binqc) || !params.skip_quast || !params.skip_gtdbtk) {
             BIN_SUMMARY(
                 ch_input_for_binsummary,
@@ -564,7 +566,7 @@ workflow MAG {
     if (!params.skip_binning && !params.skip_prokka) {
         ch_multiqc_files = ch_multiqc_files.mix(PROKKA.out.txt.collect { it[1] }.ifEmpty([]))
     }
-
+     // TODO update to get all QC files
     if (!params.skip_binning && !params.skip_binqc) {
         ch_multiqc_files = ch_multiqc_files.mix(BIN_QC.out.multiqc_files.collect().ifEmpty([]))
     }

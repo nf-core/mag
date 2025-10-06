@@ -8,6 +8,7 @@ include { GTDBTK_DB_PREPARATION } from '../../../modules/local/gtdbtk_db_prepara
 include { GTDBTK_SUMMARY        } from '../../../modules/local/gtdbtk_summary/main'
 
 workflow GTDBTK {
+    // TODO update to take the different bin summaries?
     take:
     ch_bins           // channel: [ val(meta), [bins] ]
     ch_bin_qc_summary // channel: path
@@ -35,7 +36,7 @@ workflow GTDBTK {
             }
             row
         }
-
+    // TODO if ch_{}_tsv is not empty, filter it, then union of all
     // Filter bins based on collected metrics: completeness, contamination
     ch_filtered_bins = ch_bins
         .transpose()

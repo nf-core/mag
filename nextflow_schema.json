@@ -859,6 +859,7 @@
                     "type": "boolean",
                     "description": "Disable bin QC with BUSCO, CheckM or CheckM2."
                 },
+                // TODO update this to new 'enable_{tool}'
                 "binqc_tool": {
                     "type": "string",
                     "default": "busco",

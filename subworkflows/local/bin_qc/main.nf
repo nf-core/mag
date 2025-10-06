@@ -7,6 +7,7 @@ include { CHECKM2_DATABASEDOWNLOAD         } from '../../../modules/nf-core/chec
 include { CHECKM_QA                        } from '../../../modules/nf-core/checkm/qa/main'
 include { CHECKM_LINEAGEWF                 } from '../../../modules/nf-core/checkm/lineagewf/main'
 include { CHECKM2_PREDICT                  } from '../../../modules/nf-core/checkm2/predict/main'
+// TODO reimport for each tool
 include { CSVTK_CONCAT as CONCAT_BINQC_TSV } from '../../../modules/nf-core/csvtk/concat/main'
 include { GUNC_DOWNLOADDB                  } from '../../../modules/nf-core/gunc/downloaddb/main'
 include { GUNC_RUN                         } from '../../../modules/nf-core/gunc/run/main'
@@ -79,6 +80,7 @@ workflow BIN_QC {
      * Run QC tools
     ================================
      */
+     // TODO update
     if (params.binqc_tool == "busco" || "busco" in binqc_tool_extras) {
         /*
          * BUSCO
@@ -108,6 +110,7 @@ workflow BIN_QC {
             BUSCO_BUSCO.out.short_summaries_txt.map { it[1] }.flatten()
         )
     }
+     // TODO update
     if (params.binqc_tool == "checkm" || "checkm" in binqc_tool_extras) {
         /*
          * CheckM
@@ -141,6 +144,7 @@ workflow BIN_QC {
             CHECKM_QA.out.output.map { it[1] }.flatten()
         )
     }
+     // TODO update
     if (params.binqc_tool == "checkm2" || "checkm2" in binqc_tool_extras) {
         /*
          * CheckM2
@@ -206,6 +210,7 @@ workflow BIN_QC {
     ch_qc_summary = CONCAT_BINQC_TSV.out.csv.map { _meta, summary -> summary }
 
     emit:
+     // TODO update to emit all tools or empty 
     qc_summary    = ch_qc_summary
     multiqc_files = ch_multiqc_files
     versions      = ch_versions

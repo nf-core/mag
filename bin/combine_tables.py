@@ -19,6 +19,7 @@ def parse_args(args=None):
         metavar="FILE",
         help="Bin depths summary file.",
     )
+    # TODO update for multiple binQC tools
     parser.add_argument("-b", "--binqc_summary", metavar="FILE", help="BUSCO summary file.")
     parser.add_argument("-q", "--quast_summary", metavar="FILE", help="QUAST BINS summary file.")
     parser.add_argument("-g", "--gtdbtk_summary", metavar="FILE", help="GTDB-Tk summary file.")
@@ -108,7 +109,7 @@ def main(args=None):
     results = pd.read_csv(args.depths_summary, sep="\t")
     results.columns = ["Depth " + str(col) if col != "bin" else col for col in results.columns]
     bins = results["bin"].sort_values().reset_index(drop=True)
-
+    # TODO update for multiple binQC tools
     if args.binqc_summary and args.binqc_tool == "busco":
         busco_results = pd.read_csv(args.binqc_summary, sep="\t")
         busco_bins = set(busco_results["Input_file"])
@@ -120,7 +121,7 @@ def main(args=None):
         results = pd.merge(
             results, busco_results, left_on="bin", right_on="Input_file", how="outer"
         )  # assuming depths for all bins are given
-
+    # TODO update for multiple binQC tools
     if args.binqc_summary and args.binqc_tool == "checkm":
         use_columns = [
             "Bin Id",
@@ -149,7 +150,7 @@ def main(args=None):
             results, checkm_results, left_on="bin", right_on="Bin Id", how="outer"
         )  # assuming depths for all bins are given
         results["Bin Id"] = results["Bin Id"].str.removesuffix(".fa")
-
+    # TODO update for multiple binQC tools
     if args.binqc_summary and args.binqc_tool == "checkm2":
         use_columns = [
             "Name",

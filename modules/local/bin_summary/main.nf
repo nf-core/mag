@@ -22,6 +22,7 @@ process BIN_SUMMARY {
     def quast_summary  = quast_sum.sort().size() > 0 ? "--quast_summary ${quast_sum}" : ""
     def gtdbtk_summary = gtdbtk_sum.sort().size() > 0 ? "--gtdbtk_summary ${gtdbtk_sum}" : ""
     def cat_summary    = cat_sum.sort().size() > 0 ? "--cat_summary ${cat_sum}" : ""
+    // TODO update --binqc_tool to support multiple tools
     """
     combine_tables.py \
         --depths_summary ${bin_depths} \
