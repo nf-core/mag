@@ -386,8 +386,8 @@ workflow MAG {
         if (!params.skip_binqc) {
             BIN_QC(ch_input_for_postbinning)
             ch_versions = ch_versions.mix(BIN_QC.out.versions)
-             // TODO update
-            ch_bin_qc_summary = BIN_QC.out.qc_summary
+             // TODO update, probably needed to update. Just remember this is now a list
+            ch_bin_qc_summary = BIN_QC.out.qc_summaries
         }
 
         ch_quast_bins_summary = Channel.empty()
