@@ -20,13 +20,23 @@ def parse_args(args=None):
         help="Bin depths summary file.",
     )
     # TODO update for multiple binQC tools
-    parser.add_argument("-b", "--binqc_summary", metavar="FILE", help="BUSCO summary file.")
-    parser.add_argument("-q", "--quast_summary", metavar="FILE", help="QUAST BINS summary file.")
-    parser.add_argument("-g", "--gtdbtk_summary", metavar="FILE", help="GTDB-Tk summary file.")
-    parser.add_argument("-a", "--cat_summary", metavar="FILE", help="CAT table file.")
+    parser.add_argument("-b", "--binqc_summary", metavar="FILE", help="Summary files.")
     parser.add_argument(
-        "-t", "--binqc_tool", help="Bin QC tool used", choices=["busco", "checkm", "checkm2"]
+        "-q", "--quast_summary", metavar="FILE", help="QUAST BINS summary file."
     )
+    parser.add_argument(
+        "-g", "--gtdbtk_summary", metavar="FILE", help="GTDB-Tk summary file."
+    )
+    parser.add_argument(
+        "-u", "--busco_summary", metavar="FILE", help="BUSCO summary file."
+    )
+    parser.add_argument(
+        "-c", "--checkm_summary", metavar="FILE", help="CheckM summary file."
+    )
+    parser.add_argument(
+        "-e", "--checkm2_summary", metavar="FILE", help="CheckM2 summary file."
+    )
+    parser.add_argument("-a", "--cat_summary", metavar="FILE", help="CAT table file.")
 
     parser.add_argument(
         "-o",
@@ -77,7 +87,9 @@ def parse_cat_table(cat_table):
     )
     # merge all rank columns into a single column
     df["CAT_rank"] = (
-        df.filter(regex="rank_\d+").apply(lambda x: ";".join(x.dropna()), axis=1).str.lstrip()
+        df.filter(regex="rank_\d+")
+        .apply(lambda x: ";".join(x.dropna()), axis=1)
+        .str.lstrip()
     )
     # remove rank_* columns
     df.drop(df.filter(regex="rank_\d+").columns, axis=1, inplace=True)
@@ -88,11 +100,7 @@ def parse_cat_table(cat_table):
 def main(args=None):
     args = parse_args(args)
 
-    if (
-        not args.binqc_summary
-        and not args.quast_summary
-        and not args.gtdbtk_summary
-    ):
+    if not args.binqc_summary and not args.quast_summary and not args.gtdbtk_summary:
         sys.exit(
             "No summary specified! "
             "Please specify at least BUSCO, CheckM, CheckM2 or QUAST summary."
@@ -107,7 +115,9 @@ def main(args=None):
 
     # handle bin depths
     results = pd.read_csv(args.depths_summary, sep="\t")
-    results.columns = ["Depth " + str(col) if col != "bin" else col for col in results.columns]
+    results.columns = [
+        "Depth " + str(col) if col != "bin" else col for col in results.columns
+    ]
     bins = results["bin"].sort_values().reset_index(drop=True)
     # TODO update for multiple binQC tools
     if args.binqc_summary and args.binqc_tool == "busco":
@@ -115,7 +125,9 @@ def main(args=None):
         busco_bins = set(busco_results["Input_file"])
 
         if set(bins) != busco_bins and len(busco_bins.intersection(set(bins))) > 0:
-            warnings.warn("Bins in BUSCO summary do not match bins in bin depths summary")
+            warnings.warn(
+                "Bins in BUSCO summary do not match bins in bin depths summary"
+            )
         elif len(busco_bins.intersection(set(bins))) == 0:
             sys.exit("Bins in BUSCO summary do not match bins in bin depths summary!")
         results = pd.merge(
@@ -172,7 +184,9 @@ def main(args=None):
 
     if args.quast_summary:
         quast_results = pd.read_csv(args.quast_summary, sep="\t")
-        if not bins.equals(quast_results["Assembly"].sort_values().reset_index(drop=True)):
+        if not bins.equals(
+            quast_results["Assembly"].sort_values().reset_index(drop=True)
+        ):
             sys.exit("Bins in QUAST summary do not match bins in bin depths summary!")
         results = pd.merge(
             results, quast_results, left_on="bin", right_on="Assembly", how="outer"

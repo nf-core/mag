@@ -386,8 +386,11 @@ workflow MAG {
         if (!params.skip_binqc) {
             BIN_QC(ch_input_for_postbinning)
             ch_versions = ch_versions.mix(BIN_QC.out.versions)
-             // TODO update, probably needed to update. Just remember this is now a list
+            // TODO update, probably needed to update. Just remember this is now a list
             ch_bin_qc_summary = BIN_QC.out.qc_summaries
+            ch_busco_summary = BIN_QC.out.busco_summary
+            ch_checkm_summary = BIN_QC.out.checkm_summary
+            ch_checkm2_summary = BIN_QC.out.checkm2_summary
         }
 
         ch_quast_bins_summary = Channel.empty()
@@ -438,7 +441,6 @@ workflow MAG {
 
                 GTDBTK(
                     ch_gtdb_bins,
-                     // TODO update
                     ch_bin_qc_summary,
                     gtdb,
                 )
@@ -449,15 +451,16 @@ workflow MAG {
         else {
             ch_gtdbtk_summary = Channel.empty()
         }
-         // TODO update
+        // TODO update
         if ((!params.skip_binqc) || !params.skip_quast || !params.skip_gtdbtk) {
             BIN_SUMMARY(
                 ch_input_for_binsummary,
-                ch_bin_qc_summary.ifEmpty([]),
                 ch_quast_bins_summary.ifEmpty([]),
                 ch_gtdbtk_summary.ifEmpty([]),
                 ch_catpack_summary.ifEmpty([]),
-                params.binqc_tool,
+                ch_busco_summary.ifEmpty([]),
+                ch_checkm_summary.ifEmpty([]),
+                ch_checkm2_summary.ifEmpty([]),
             )
             ch_versions = ch_versions.mix(BIN_SUMMARY.out.versions)
         }
@@ -566,7 +569,7 @@ workflow MAG {
     if (!params.skip_binning && !params.skip_prokka) {
         ch_multiqc_files = ch_multiqc_files.mix(PROKKA.out.txt.collect { it[1] }.ifEmpty([]))
     }
-     // TODO update to get all QC files
+    // TODO update to get all QC files
     if (!params.skip_binning && !params.skip_binqc) {
         ch_multiqc_files = ch_multiqc_files.mix(BIN_QC.out.multiqc_files.collect().ifEmpty([]))
     }

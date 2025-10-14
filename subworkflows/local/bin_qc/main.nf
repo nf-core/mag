@@ -22,11 +22,10 @@ workflow BIN_QC {
     ch_bins // [ [ meta] , fasta ], input bins (mandatory)
 
     main:
-    ch_qc_summaries = []
+    ch_qc_summaries = Channel.empty()
     ch_input_bins_for_qc = ch_bins.transpose()
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
-
 
     /*
     ================================
@@ -218,7 +217,10 @@ workflow BIN_QC {
     }
 
     emit:
-    qc_summaries  = ch_qc_summaries
-    multiqc_files = ch_multiqc_files
-    versions      = ch_versions
+    qc_summaries    = ch_qc_summaries
+    busco_summary   = CONCAT_BUSCO_TSV.out.csv.map { it[1] }
+    checkm_summary  = CONCAT_CHECKM_TSV.out.csv.map { it[1] }
+    checkm2_summary = CONCAT_CHECKM2_TSV.out.csv.map { it[1] }
+    multiqc_files   = ch_multiqc_files
+    versions        = ch_versions
 }
