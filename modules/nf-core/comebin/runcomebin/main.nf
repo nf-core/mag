@@ -43,6 +43,8 @@ process COMEBIN_RUNCOMEBIN {
 
     find ${prefix}/comebin_res_bins/*.fa -exec gzip {} \\;
 
+    for filename in ${prefix}/comebin_res_bins/*.fa.gz; do mv "\${filename}" "${prefix}/comebin_res_bins/${prefix}.\$(basename \${filename})"; done; # avoid file name collisions
+
     ${cleanup}
 
     cat <<-END_VERSIONS > versions.yml
