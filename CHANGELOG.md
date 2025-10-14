@@ -8,14 +8,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Added`
 
 - [#873](https://github.com/nf-core/mag/pull/873) - Document usage of `longread_percentidentity` and `shortread_percentidentity` and set the value of `longread_percentidentity` in the `test_full` profile to 85 (by @prototaxites)
+- [#842](https://github.com/nf-core/mag/pull/842) - Add support for running multiple binQC tools in one run using dedicated `--run_busco`, `--run_checkm`, and `--run_checkm2` parameters (by @harper357, with contributions from @dialvarezs, @prototaxites and @jfy133)
 
 ### `Changed`
+
+- [#842](https://github.com/nf-core/mag/pull/842) - Change `bin_summary.tsv` to include columns from all available bin QC summary files that are executed in a given run, including BUSCO, CheckM and CheckM2 (by @harper357, with contributions from @dialvarezs, @prototaxites and @jfy133)
 
 ### `Fixed`
 
 ### `Dependencies`
 
 ### `Deprecated`
+
+- [#842](https://github.com/nf-core/mag/pull/842) - Remove `--binqc_tool` (by @harper357, with contributions from @dialvarezs, @prototaxites and @jfy133)
 
 ## 5.0.0 - [2025-09-30]
 
