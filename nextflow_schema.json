@@ -859,15 +859,15 @@
                     "type": "boolean",
                     "description": "Disable bin QC with BUSCO, CheckM or CheckM2."
                 },
-                "enable_busco": {
+                "run_busco": {
                     "type": "boolean",
                     "description": "Enable running BUSCO during bin QC."
                 },
-                "enable_checkm": {
+                "run_checkm": {
                     "type": "boolean",
                     "description": "Enable running CheckM during bin QC."
                 },
-                "enable_checkm2": {
+                "run_checkm2": {
                     "type": "boolean",
                     "description": "Enable running CheckM2 during bin QC."
                 },

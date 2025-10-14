@@ -2,19 +2,19 @@
  * BUSCO/CheckM/CheckM2/GUNC: Quantitative measures for the assessment of genome assembly
  */
 
-include { BUSCO_BUSCO                      } from '../../../modules/nf-core/busco/busco/main'
-include { CHECKM2_DATABASEDOWNLOAD         } from '../../../modules/nf-core/checkm2/databasedownload/main'
-include { CHECKM_QA                        } from '../../../modules/nf-core/checkm/qa/main'
-include { CHECKM_LINEAGEWF                 } from '../../../modules/nf-core/checkm/lineagewf/main'
-include { CHECKM2_PREDICT                  } from '../../../modules/nf-core/checkm2/predict/main'
-include { CSVTK_CONCAT as CONCAT_BUSCO_TSV } from '../../../modules/nf-core/csvtk/concat/main'
-include { CSVTK_CONCAT as CONCAT_CHECKM_TSV } from '../../../modules/nf-core/csvtk/concat/main'
+include { BUSCO_BUSCO                        } from '../../../modules/nf-core/busco/busco/main'
+include { CHECKM2_DATABASEDOWNLOAD           } from '../../../modules/nf-core/checkm2/databasedownload/main'
+include { CHECKM_QA                          } from '../../../modules/nf-core/checkm/qa/main'
+include { CHECKM_LINEAGEWF                   } from '../../../modules/nf-core/checkm/lineagewf/main'
+include { CHECKM2_PREDICT                    } from '../../../modules/nf-core/checkm2/predict/main'
+include { CSVTK_CONCAT as CONCAT_BUSCO_TSV   } from '../../../modules/nf-core/csvtk/concat/main'
+include { CSVTK_CONCAT as CONCAT_CHECKM_TSV  } from '../../../modules/nf-core/csvtk/concat/main'
 include { CSVTK_CONCAT as CONCAT_CHECKM2_TSV } from '../../../modules/nf-core/csvtk/concat/main'
-include { GUNC_DOWNLOADDB                  } from '../../../modules/nf-core/gunc/downloaddb/main'
-include { GUNC_RUN                         } from '../../../modules/nf-core/gunc/run/main'
-include { GUNC_MERGECHECKM                 } from '../../../modules/nf-core/gunc/mergecheckm/main'
-include { UNTAR as BUSCO_UNTAR             } from '../../../modules/nf-core/untar/main'
-include { UNTAR as CHECKM_UNTAR            } from '../../../modules/nf-core/untar/main'
+include { GUNC_DOWNLOADDB                    } from '../../../modules/nf-core/gunc/downloaddb/main'
+include { GUNC_RUN                           } from '../../../modules/nf-core/gunc/run/main'
+include { GUNC_MERGECHECKM                   } from '../../../modules/nf-core/gunc/mergecheckm/main'
+include { UNTAR as BUSCO_UNTAR               } from '../../../modules/nf-core/untar/main'
+include { UNTAR as CHECKM_UNTAR              } from '../../../modules/nf-core/untar/main'
 
 
 workflow BIN_QC {
@@ -44,7 +44,7 @@ workflow BIN_QC {
     if (params.checkm_db) {
         ch_checkm_db = file(params.checkm_db, checkIfExists: true)
     }
-    else if (params.enable_checkm) {
+    else if (params.run_checkm) {
         ch_checkm_db = [[id: 'checkm_db'], file(params.checkm_download_url, checkIfExists: true)]
 
         CHECKM_UNTAR(ch_checkm_db)
@@ -59,7 +59,7 @@ workflow BIN_QC {
     if (params.checkm2_db) {
         ch_checkm2_db = [[:], file(params.checkm2_db, checkIfExists: true)]
     }
-    else if (params.enable_checkm2) {
+    else if (params.run_checkm2) {
         CHECKM2_DATABASEDOWNLOAD(params.checkm2_db_version)
         ch_versions = ch_versions.mix(CHECKM2_DATABASEDOWNLOAD.out.versions)
         ch_checkm2_db = CHECKM2_DATABASEDOWNLOAD.out.database
@@ -80,7 +80,7 @@ workflow BIN_QC {
      * Run QC tools
     ================================
      */
-    if (params.enable_busco) {
+    if (params.run_busco) {
         /*
          * BUSCO
          */
@@ -109,7 +109,7 @@ workflow BIN_QC {
             BUSCO_BUSCO.out.short_summaries_txt.map { it[1] }.flatten()
         )
     }
-    if (params.enable_checkm) {
+    if (params.run_checkm) {
         /*
          * CheckM
          */
@@ -142,7 +142,7 @@ workflow BIN_QC {
             CHECKM_QA.out.output.map { it[1] }.flatten()
         )
     }
-    if (params.enable_checkm2) {
+    if (params.run_checkm2) {
         /*
          * CheckM2
          */
@@ -184,7 +184,7 @@ workflow BIN_QC {
                 keepHeader: true,
                 storeDir: "${params.outdir}/GenomeBinning/QC/",
             )
-        if (params.enable_checkm) {
+        if (params.run_checkm) {
             ch_input_to_mergecheckm = GUNC_RUN.out.maxcss_level_tsv.combine(CHECKM_QA.out.output, by: 0)
 
             GUNC_MERGECHECKM(ch_input_to_mergecheckm)
@@ -201,26 +201,24 @@ workflow BIN_QC {
         }
     }
     // Combine QC summaries (same process for all tools)
-    if (params.enable_busco) {
+    if (params.run_busco) {
         CONCAT_BUSCO_TSV(ch_busco_summaries, 'tsv', 'tsv')
         ch_versions = ch_versions.mix(CONCAT_BUSCO_TSV.out.versions)
-        ch_qc_summaries = ch_qc_summaries.mix(CONCAT_BUSCO_TSV.out.csv.map{ _meta, summary -> summary })
+        ch_qc_summaries = ch_qc_summaries.mix(CONCAT_BUSCO_TSV.out.csv.map { _meta, summary -> summary })
     }
-    if (params.enable_checkm) {
+    if (params.run_checkm) {
         CONCAT_CHECKM_TSV(ch_checkm_summaries, 'tsv', 'tsv')
         ch_versions = ch_versions.mix(CONCAT_CHECKM_TSV.out.versions)
-        ch_qc_summaries = ch_qc_summaries.mix(CONCAT_CHECKM_TSV.out.csv.map{ _meta, summary -> summary })
+        ch_qc_summaries = ch_qc_summaries.mix(CONCAT_CHECKM_TSV.out.csv.map { _meta, summary -> summary })
     }
-    if (params.enable_checkm2) {
+    if (params.run_checkm2) {
         CONCAT_CHECKM2_TSV(ch_checkm2_summaries, 'tsv', 'tsv')
         ch_versions = ch_versions.mix(CONCAT_CHECKM2_TSV.out.versions)
-        ch_qc_summaries = ch_qc_summaries.mix(CONCAT_CHECKM2_TSV.out.csv.map{ _meta, summary -> summary })
+        ch_qc_summaries = ch_qc_summaries.mix(CONCAT_CHECKM2_TSV.out.csv.map { _meta, summary -> summary })
     }
 
-    
-
     emit:
-    qc_summaries    = ch_qc_summaries
+    qc_summaries  = ch_qc_summaries
     multiqc_files = ch_multiqc_files
     versions      = ch_versions
 }
