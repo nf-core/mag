@@ -19,8 +19,6 @@ def parse_args(args=None):
         metavar="FILE",
         help="Bin depths summary file.",
     )
-    # TODO update for multiple binQC tools
-    parser.add_argument("-b", "--binqc_summary", metavar="FILE", help="Summary files.")
     parser.add_argument(
         "-q", "--quast_summary", metavar="FILE", help="QUAST BINS summary file."
     )
@@ -85,13 +83,13 @@ def parse_cat_table(cat_table):
         header=None,
         skiprows=1,
     )
-    # merge all rank columns into a single column
+    ## merge all rank columns into a single column
     df["CAT_rank"] = (
         df.filter(regex="rank_\d+")
         .apply(lambda x: ";".join(x.dropna()), axis=1)
         .str.lstrip()
     )
-    # remove rank_* columns
+    ## remove rank_* columns
     df.drop(df.filter(regex="rank_\d+").columns, axis=1, inplace=True)
 
     return df
@@ -100,28 +98,45 @@ def parse_cat_table(cat_table):
 def main(args=None):
     args = parse_args(args)
 
-    if not args.binqc_summary and not args.quast_summary and not args.gtdbtk_summary:
+    ## INPUT VALIDATION
+
+    if (
+        not args.busco_summary
+        and not args.checkm_summary
+        and not args.checkm2_summary
+        and not args.quast_summary
+        and not args.gtdbtk_summary
+    ):
         sys.exit(
             "No summary specified! "
-            "Please specify at least BUSCO, CheckM, CheckM2 or QUAST summary."
+            "Please specify at least one of BUSCO, CheckM, CheckM2 or QUAST summary."
         )
 
-    # GTDB-Tk can only be run in combination with BUSCO, CheckM or CheckM2
-    if args.gtdbtk_summary and not args.binqc_summary:
+    ## GTDB-Tk can only be run in combination with BUSCO, CheckM or CheckM2
+    if (
+        args.gtdbtk_summary
+        and not args.busco_summary
+        and not args.checkm_summary
+        and not args.checkm2_summary
+    ):
         sys.exit(
             "Invalid parameter combination: "
-            "GTDB-TK summary specified, but no BUSCO, CheckM or CheckM2 summary!"
+            "GTDB-TK summary specified, but no BUSCO, CheckM or CheckM2 summary provided!"
         )
 
-    # handle bin depths
+    ## BIN DEPTH PROCESSING
+
+    ## handle bin depths, and extract root bin names
     results = pd.read_csv(args.depths_summary, sep="\t")
     results.columns = [
         "Depth " + str(col) if col != "bin" else col for col in results.columns
     ]
     bins = results["bin"].sort_values().reset_index(drop=True)
-    # TODO update for multiple binQC tools
-    if args.binqc_summary and args.binqc_tool == "busco":
-        busco_results = pd.read_csv(args.binqc_summary, sep="\t")
+
+    ## BUSCO PROCESSING
+
+    if args.busco_summary:
+        busco_results = pd.read_csv(args.busco_summary, sep="\t")
         busco_bins = set(busco_results["Input_file"])
 
         if set(bins) != busco_bins and len(busco_bins.intersection(set(bins))) > 0:
@@ -133,8 +148,10 @@ def main(args=None):
         results = pd.merge(
             results, busco_results, left_on="bin", right_on="Input_file", how="outer"
         )  # assuming depths for all bins are given
-    # TODO update for multiple binQC tools
-    if args.binqc_summary and args.binqc_tool == "checkm":
+
+    ## CHECKM PROCESSING
+
+    if args.checkm_summary:
         use_columns = [
             "Bin Id",
             "Marker lineage",
@@ -154,7 +171,7 @@ def main(args=None):
             "4",
             "5+",
         ]
-        checkm_results = pd.read_csv(args.binqc_summary, usecols=use_columns, sep="\t")
+        checkm_results = pd.read_csv(args.checkm_summary, usecols=use_columns, sep="\t")
         checkm_results["Bin Id"] = checkm_results["Bin Id"] + ".fa"
         if not set(checkm_results["Bin Id"]).issubset(set(bins)):
             sys.exit("Bins in CheckM summary do not match bins in bin depths summary!")
@@ -162,8 +179,10 @@ def main(args=None):
             results, checkm_results, left_on="bin", right_on="Bin Id", how="outer"
         )  # assuming depths for all bins are given
         results["Bin Id"] = results["Bin Id"].str.removesuffix(".fa")
-    # TODO update for multiple binQC tools
-    if args.binqc_summary and args.binqc_tool == "checkm2":
+
+    ## CHECKM PROCESSING
+
+    if args.checkm2_summary:
         use_columns = [
             "Name",
             "Completeness",
@@ -173,7 +192,9 @@ def main(args=None):
             "Translation_Table_Used",
             "Total_Coding_Sequences",
         ]
-        checkm2_results = pd.read_csv(args.binqc_summary, usecols=use_columns, sep="\t")
+        checkm2_results = pd.read_csv(
+            args.checkm2_summary, usecols=use_columns, sep="\t"
+        )
         checkm2_results["Name"] = checkm2_results["Name"] + ".fa"
         if not set(checkm2_results["Name"]).issubset(set(bins)):
             sys.exit("Bins in CheckM2 summary do not match bins in bin depths summary!")
@@ -181,6 +202,8 @@ def main(args=None):
             results, checkm2_results, left_on="bin", right_on="Name", how="outer"
         )  # assuming depths for all bins are given
         results["Name"] = results["Name"].str.removesuffix(".fa")
+
+    ## QUAST PROCESSING
 
     if args.quast_summary:
         quast_results = pd.read_csv(args.quast_summary, sep="\t")
@@ -192,6 +215,8 @@ def main(args=None):
             results, quast_results, left_on="bin", right_on="Assembly", how="outer"
         )  # assuming depths for all bins are given
 
+    ## GTDBTK PROCESSING
+
     if args.gtdbtk_summary:
         gtdbtk_results = pd.read_csv(args.gtdbtk_summary, sep="\t")
         if len(set(gtdbtk_results["user_genome"].to_list()).difference(set(bins))) > 0:
@@ -199,6 +224,8 @@ def main(args=None):
         results = pd.merge(
             results, gtdbtk_results, left_on="bin", right_on="user_genome", how="outer"
         )  # assuming depths for all bins are given
+
+    ## CAT_PACK PROCESSING
 
     if args.cat_summary:
         cat_results = parse_cat_table(args.cat_summary)
