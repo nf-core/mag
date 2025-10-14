@@ -776,9 +776,16 @@ In cases where eukaryotic genomes are recovered in binning, [MetaEuk](https://gi
 <details markdown="1">
 <summary>Output files</summary>
 
-- `GenomeBinning/bin_summary.tsv`: Summary of bin sequencing depths together with BUSCO, CheckM, QUAST and GTDB-Tk results, if at least one of the later was generated. This will also include refined bins if `--refine_bins_dastool` binning refinement is performed. Note that in contrast to the other tools, for CheckM the bin name given in the column "Bin Id" does not contain the ".fa" extension.
+- `GenomeBinning/bin_summary.tsv`: Summary of bin sequencing depths together with BUSCO, CheckM, CheckM2, QUAST, CAT and GTDB-Tk results.
 
 </details>
+
+This `bin_summary.tsv` is the primary output file from nf-core/mag, giving the most comprehensive overview of the quality and taxonomic classification of all bins produced by the pipeline.
+
+This will also include rows for refined bins if `--refine_bins_dastool` binning refinement is performed.
+Note that in contrast to the other tools, for CheckM the bin name given in the column "Bin Id" does not contain the ".fa" extension.
+
+All columns other than the primary `bin` key column, and the `Depth <sample name>` columns, will include a suffix specifying from which bin QC tool the column is derived from to distinguish identically named columns from different tools.
 
 ## Ancient DNA
 

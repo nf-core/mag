@@ -91,6 +91,7 @@ def parse_cat_table(cat_table):
     )
     ## remove rank_* columns
     df.drop(df.filter(regex="rank_\d+").columns, axis=1, inplace=True)
+    df = df.add_suffix("_catpack")
 
     return df
 
@@ -145,8 +146,13 @@ def main(args=None):
             )
         elif len(busco_bins.intersection(set(bins))) == 0:
             sys.exit("Bins in BUSCO summary do not match bins in bin depths summary!")
+        busco_results = busco_results.add_suffix("_busco")
         results = pd.merge(
-            results, busco_results, left_on="bin", right_on="Input_file", how="outer"
+            results,
+            busco_results,
+            left_on="bin",
+            right_on="Input_file_busco",
+            how="outer",
         )  # assuming depths for all bins are given
 
     ## CHECKM PROCESSING
@@ -175,12 +181,17 @@ def main(args=None):
         checkm_results["Bin Id"] = checkm_results["Bin Id"] + ".fa"
         if not set(checkm_results["Bin Id"]).issubset(set(bins)):
             sys.exit("Bins in CheckM summary do not match bins in bin depths summary!")
+        checkm_results = checkm_results.add_suffix("_checkm")
         results = pd.merge(
-            results, checkm_results, left_on="bin", right_on="Bin Id", how="outer"
+            results,
+            checkm_results,
+            left_on="bin",
+            right_on="Bin Id_checkm",
+            how="outer",
         )  # assuming depths for all bins are given
-        results["Bin Id"] = results["Bin Id"].str.removesuffix(".fa")
+        results["Bin Id_checkm"] = results["Bin Id_checkm"].str.removesuffix(".fa")
 
-    ## CHECKM PROCESSING
+    ## CHECKM2 PROCESSING
 
     if args.checkm2_summary:
         use_columns = [
@@ -198,10 +209,15 @@ def main(args=None):
         checkm2_results["Name"] = checkm2_results["Name"] + ".fa"
         if not set(checkm2_results["Name"]).issubset(set(bins)):
             sys.exit("Bins in CheckM2 summary do not match bins in bin depths summary!")
+        checkm2_results = checkm2_results.add_suffix("_checkm2")
         results = pd.merge(
-            results, checkm2_results, left_on="bin", right_on="Name", how="outer"
+            results,
+            checkm2_results,
+            left_on="bin",
+            right_on="Name_checkm2",
+            how="outer",
         )  # assuming depths for all bins are given
-        results["Name"] = results["Name"].str.removesuffix(".fa")
+        results["Name"] = results["Name_checkm2"].str.removesuffix(".fa")
 
     ## QUAST PROCESSING
 
@@ -211,8 +227,13 @@ def main(args=None):
             quast_results["Assembly"].sort_values().reset_index(drop=True)
         ):
             sys.exit("Bins in QUAST summary do not match bins in bin depths summary!")
+        quast_results = quast_results.add_suffix("_quast")
         results = pd.merge(
-            results, quast_results, left_on="bin", right_on="Assembly", how="outer"
+            results,
+            quast_results,
+            left_on="bin",
+            right_on="Assembly_quast",
+            how="outer",
         )  # assuming depths for all bins are given
 
     ## GTDBTK PROCESSING
@@ -221,21 +242,26 @@ def main(args=None):
         gtdbtk_results = pd.read_csv(args.gtdbtk_summary, sep="\t")
         if len(set(gtdbtk_results["user_genome"].to_list()).difference(set(bins))) > 0:
             sys.exit("Bins in GTDB-Tk summary do not match bins in bin depths summary!")
+        quast_results = quast_results.add_suffix("_gtdbtk")
         results = pd.merge(
-            results, gtdbtk_results, left_on="bin", right_on="user_genome", how="outer"
+            results,
+            gtdbtk_results,
+            left_on="bin",
+            right_on="user_genome_gtdbtk",
+            how="outer",
         )  # assuming depths for all bins are given
 
     ## CAT_PACK PROCESSING
 
     if args.cat_summary:
         cat_results = parse_cat_table(args.cat_summary)
-        if len(set(cat_results["bin"].to_list()).difference(set(bins))) > 0:
+        if len(set(cat_results["bin_catpack"].to_list()).difference(set(bins))) > 0:
             sys.exit("Bins in CAT summary do not match bins in bin depths summary!")
         results = pd.merge(
             results,
-            cat_results[["bin", "CAT_rank"]],
+            cat_results[["bin_catpack", "CAT_rank_catpack"]],
             left_on="bin",
-            right_on="bin",
+            right_on="bin_catpack",
             how="outer",
         )
 
