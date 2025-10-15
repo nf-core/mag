@@ -242,7 +242,7 @@ def main(args=None):
         gtdbtk_results = pd.read_csv(args.gtdbtk_summary, sep="\t")
         if len(set(gtdbtk_results["user_genome"].to_list()).difference(set(bins))) > 0:
             sys.exit("Bins in GTDB-Tk summary do not match bins in bin depths summary!")
-        quast_results = quast_results.add_suffix("_gtdbtk")
+        gtdbtk_results = gtdbtk_results.add_suffix("_gtdbtk")
         results = pd.merge(
             results,
             gtdbtk_results,
