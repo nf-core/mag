@@ -12,11 +12,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
+- [#878](https://github.com/nf-core/mag/pull/878) - Refine test_full config with optimised resource usage for AWS release megatests (by @jfy133)
 - [#842](https://github.com/nf-core/mag/pull/842) - Change `bin_summary.tsv` format for improved clarity and more comprehensiveness (by @harper357, with contributions from @dialvarezs, @prototaxites and @jfy133)
   - Now will include columns from all bin QC tools executed in a given run (i.e., all/any of BUSCO, CheckM and CheckM2)
   - Adds suffixes to all columns (`_<toolname>`) to distinguish which column comes from which tool
 
 ### `Fixed`
+
+- [#878](https://github.com/nf-core/mag/pull/878) - Fix METASPADES process not receiving the correct number of cpus from the fix CPUs parameter (by @jfy133)
 
 ### `Dependencies`
 
