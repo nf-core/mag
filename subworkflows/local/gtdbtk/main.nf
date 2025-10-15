@@ -8,7 +8,6 @@ include { GTDBTK_DB_PREPARATION } from '../../../modules/local/gtdbtk_db_prepara
 include { GTDBTK_SUMMARY        } from '../../../modules/local/gtdbtk_summary/main'
 
 workflow GTDBTK {
-    // TODO update to take the different bin summaries?
     take:
     ch_bins           // channel: [ val(meta), [bins] ]
     ch_bin_qc_summary // channel: path
@@ -19,35 +18,46 @@ workflow GTDBTK {
 
     // Collect bin quality metrics
     qc_columns = [
-        busco: ['Input_file', 'Complete', 'Duplicated'],
-        checkm: ['Bin Id', 'Completeness', 'Contamination'],
-        checkm2: ['Name', 'Completeness', 'Contamination'],
+        busco: ['bin_qc_tool', 'Input_file', 'Complete', 'Duplicated'],
+        checkm: ['bin_qc_tool', 'Bin Id', 'Completeness', 'Contamination'],
+        checkm2: ['bin_qc_tool', 'Name', 'Completeness', 'Contamination'],
     ]
 
+    // 1. Take the pre-split CSV, and select just the relevant columns
+    // 2. Reorder columns to: bin name, tool, completeness, contamination/duplication
+    // 3. Convert completeness/contamination to double for consistency
+    //4. add .fa back to bin name if missing
     ch_bin_metrics = ch_bin_qc_summary
-        .splitCsv(header: true, sep: '\t')
-        .map { row -> qc_columns[params.binqc_tool].collect { col -> row[col] } }
-        .filter { row -> row[1] != '' }
+        .map { row -> qc_columns[row.bin_qc_tool].collect { col -> row[col] } }
         .map { row ->
-            row = [row[0]] + row[1..2].collect { value -> "${value}".toDouble() }
+            // Initial order
+            // row[0] = bin_qc_tool
+            // row[1] = bin name
+            // row[2] = completeness
+            // row[3] = contamination (Checkm*)/duplication (busco)
+            row = [row[1], row[0]] + row[2..3].collect { value -> "${value}".toDouble() }
             // CheckM / CheckM2 removes the .fa extension from the bin name
-            if (params.binqc_tool in ['checkm', 'checkm2']) {
-                row[0] = row[0] + '.fa'
+            if (row[1] in ['checkm', 'checkm2']) {
+                row[1] = row[1] + '.fa'
             }
             row
         }
+
     // TODO if ch_{}_tsv is not empty, filter it, then union of all
     // Filter bins based on collected metrics: completeness, contamination
+    // 1. Generate key name from bin file name
+    // 2. Join with metrics (but drop bin_name)
+    // 3. Filter based on completeness/contamination
     ch_filtered_bins = ch_bins
         .transpose()
         .map { meta, bin -> [bin.getName(), bin, meta] }
         .join(ch_bin_metrics, failOnDuplicate: true)
-        .map { _bin_name, bin, meta, completeness, contamination -> [meta, bin, completeness, contamination] }
-        .branch {
-            passed: (it[2] != -1 && it[2] >= params.gtdbtk_min_completeness && it[3] != -1 && it[3] <= params.gtdbtk_max_contamination)
-            return [it[0], it[1]]
-            discarded: (it[2] == -1 || it[2] < params.gtdbtk_min_completeness || it[3] == -1 || it[3] > params.gtdbtk_max_contamination)
-            return [it[0], it[1]]
+        .map { _bin_name, bin, meta, _bin_qc_tool, completeness, contamination -> [meta, bin, completeness, contamination] }
+        .branch { meta, bin, completeness, contamination ->
+            passed: (completeness != -1 && completeness >= params.gtdbtk_min_completeness && contamination != -1 && contamination <= params.gtdbtk_max_contamination)
+            return [meta, bin]
+            discarded: (completeness == -1 || completeness < params.gtdbtk_min_completeness || contamination == -1 || contamination > params.gtdbtk_max_contamination)
+            return [meta, bin]
         }
 
     if (val_gtdb.extension == 'gz') {
@@ -68,9 +78,9 @@ workflow GTDBTK {
         .count()
         .map { it == 0 ? log.warn("No contigs passed GTDB-TK min. completeness filters. GTDB-TK summary will execute but results will be empty!") : "" }
 
-
+    // We set unique to remove duplicate bins when the same bin has passed the filter of two different QC tools
     GTDBTK_CLASSIFYWF(
-        ch_filtered_bins.passed.groupTuple(),
+        ch_filtered_bins.passed.unique().groupTuple(),
         ch_db_for_gtdbtk,
         params.gtdbtk_pplacer_useram ? false : true,
     )

@@ -208,19 +208,19 @@ workflow BIN_QC {
         CONCAT_BUSCO_TSV(ch_busco_summaries, 'tsv', 'tsv')
         ch_versions = ch_versions.mix(CONCAT_BUSCO_TSV.out.versions)
         ch_busco_final_summaries = ch_busco_final_summaries.mix(CONCAT_BUSCO_TSV.out.csv.map { it[1] })
-        ch_qc_summaries = ch_qc_summaries.mix(CONCAT_BUSCO_TSV.out.csv.map { _meta, summary -> summary })
+        ch_qc_summaries = ch_qc_summaries.mix(CONCAT_BUSCO_TSV.out.csv.splitCsv(header: true, sep: '\t').map { _meta, summary -> [bin_qc_tool: 'busco'] + summary })
     }
     if (params.run_checkm) {
         CONCAT_CHECKM_TSV(ch_checkm_summaries, 'tsv', 'tsv')
         ch_versions = ch_versions.mix(CONCAT_CHECKM_TSV.out.versions)
         ch_checkm_final_summaries = ch_checkm_final_summaries.mix(CONCAT_CHECKM_TSV.out.csv.map { it[1] })
-        ch_qc_summaries = ch_qc_summaries.mix(CONCAT_CHECKM_TSV.out.csv.map { _meta, summary -> summary })
+        ch_qc_summaries = ch_qc_summaries.mix(CONCAT_CHECKM_TSV.out.csv.splitCsv(header: true, sep: '\t').map { _meta, summary -> [bin_qc_tool: 'checkm'] + summary })
     }
     if (params.run_checkm2) {
         CONCAT_CHECKM2_TSV(ch_checkm2_summaries, 'tsv', 'tsv')
         ch_versions = ch_versions.mix(CONCAT_CHECKM2_TSV.out.versions)
         ch_checkm2_final_summaries = ch_checkm2_final_summaries.mix(CONCAT_CHECKM2_TSV.out.csv.map { it[1] })
-        ch_qc_summaries = ch_qc_summaries.mix(CONCAT_CHECKM2_TSV.out.csv.map { _meta, summary -> summary })
+        ch_qc_summaries = ch_qc_summaries.mix(CONCAT_CHECKM2_TSV.out.csv.splitCsv(header: true, sep: '\t').map { _meta, summary -> [bin_qc_tool: 'checkm2'] + summary })
     }
 
     emit:
