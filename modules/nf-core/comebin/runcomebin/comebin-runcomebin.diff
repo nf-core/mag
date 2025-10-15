@@ -1,0 +1,36 @@
+Changes in component 'nf-core/comebin/runcomebin'
+'modules/nf-core/comebin/runcomebin/meta.yml' is unchanged
+Changes in 'comebin/runcomebin/main.nf':
+--- modules/nf-core/comebin/runcomebin/main.nf
++++ modules/nf-core/comebin/runcomebin/main.nf
+@@ -1,6 +1,7 @@
+ process COMEBIN_RUNCOMEBIN {
+     tag "${meta.id}"
+     label 'process_high'
++    label 'process_gpu'
+ 
+     conda "${moduleDir}/environment.yml"
+     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+@@ -30,6 +31,8 @@
+     """
+     ${decompress_contigs}
+ 
++    cp ${clean_assembly} . # ISSUE: temporary files will be generated in the directory of the assembly file, following links, copying prevents that
++
+     run_comebin.sh \\
+         -t ${task.cpus} \\
+         -a ${clean_assembly} \\
+@@ -40,6 +43,8 @@
+     mv comebin_res ${prefix}
+ 
+     find ${prefix}/comebin_res_bins/*.fa -exec gzip {} \\;
++
++    for filename in ${prefix}/comebin_res_bins/*.fa.gz; do mv "\${filename}" "${prefix}/comebin_res_bins/${prefix}.\$(basename \${filename})"; done; # avoid file name collisions
+ 
+     ${cleanup}
+ 
+
+'modules/nf-core/comebin/runcomebin/environment.yml' is unchanged
+'modules/nf-core/comebin/runcomebin/tests/main.nf.test' is unchanged
+'modules/nf-core/comebin/runcomebin/tests/main.nf.test.snap' is unchanged
+************************************************************
