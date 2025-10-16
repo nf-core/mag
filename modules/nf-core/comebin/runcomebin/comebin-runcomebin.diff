@@ -3,32 +3,36 @@ Changes in component 'nf-core/comebin/runcomebin'
 Changes in 'comebin/runcomebin/main.nf':
 --- modules/nf-core/comebin/runcomebin/main.nf
 +++ modules/nf-core/comebin/runcomebin/main.nf
-@@ -1,6 +1,7 @@
- process COMEBIN_RUNCOMEBIN {
-     tag "${meta.id}"
-     label 'process_high'
-+    label 'process_gpu'
- 
-     conda "${moduleDir}/environment.yml"
-     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-@@ -30,6 +31,8 @@
+@@ -25,14 +25,14 @@
+     def args               = task.ext.args ?: ''
+     prefix                 = task.ext.prefix ?: "${meta.id}"
+     def clean_assembly     = assembly.toString() - ~/\.gz$/
+-    def decompress_contigs = assembly.toString() == clean_assembly ? "" : "gunzip -q -f $assembly"
+-    def cleanup            = decompress_contigs ? "rm ${clean_assembly}" : ""
++    // ISSUE: temporary files will be generated in the directory of the assembly file, following links, copying prevents that
++    def setup_contigs      = assembly.toString() == clean_assembly ? "cat ${assembly} > local_assembly.fasta" : "zcat ${assembly} > local_assembly.fasta"
      """
-     ${decompress_contigs}
+-    ${decompress_contigs}
++    ${setup_contigs}
  
-+    cp ${clean_assembly} . # ISSUE: temporary files will be generated in the directory of the assembly file, following links, copying prevents that
-+
      run_comebin.sh \\
          -t ${task.cpus} \\
-         -a ${clean_assembly} \\
-@@ -40,6 +43,8 @@
-     mv comebin_res ${prefix}
+-        -a ${clean_assembly} \\
++        -a local_assembly.fasta \\
+         -p bam/ \\
+         -o . \\
+         $args
+@@ -41,7 +41,9 @@
  
      find ${prefix}/comebin_res_bins/*.fa -exec gzip {} \\;
-+
+ 
+-    ${cleanup}
 +    for filename in ${prefix}/comebin_res_bins/*.fa.gz; do mv "\${filename}" "${prefix}/comebin_res_bins/${prefix}.\$(basename \${filename})"; done; # avoid file name collisions
++
++    rm local_assembly.fasta
  
-     ${cleanup}
- 
+     cat <<-END_VERSIONS > versions.yml
+     "${task.process}":
 
 'modules/nf-core/comebin/runcomebin/environment.yml' is unchanged
 'modules/nf-core/comebin/runcomebin/tests/main.nf.test' is unchanged
