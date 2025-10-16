@@ -29,10 +29,10 @@ process METABINNER {
     f="${fasta}"
     outname=\${f%.*}
     wd=\$(pwd)
-    
+
     # create coverage profile in Metabinner format
     zcat \${wd}/${depth} | awk '{if (\$2>${args}) print \$0 }' | cut -f -1,4- > coverage_profile.tsv
-    
+
     # create composition profile (contigs > ${args} p (default 1000), k = 4)
     python \${metabinner_path}/scripts/gen_kmer.py ${fasta} ${args} 4
 
