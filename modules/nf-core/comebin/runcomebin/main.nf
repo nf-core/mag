@@ -1,7 +1,6 @@
 process COMEBIN_RUNCOMEBIN {
     tag "${meta.id}"
     label 'process_high'
-    label 'process_gpu'
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -26,16 +25,14 @@ process COMEBIN_RUNCOMEBIN {
     def args               = task.ext.args ?: ''
     prefix                 = task.ext.prefix ?: "${meta.id}"
     def clean_assembly     = assembly.toString() - ~/\.gz$/
-    def decompress_contigs = assembly.toString() == clean_assembly ? "" : "gunzip -q -f $assembly"
-    def cleanup            = decompress_contigs ? "rm ${clean_assembly}" : ""
+    // ISSUE: temporary files will be generated in the directory of the assembly file, following links, copying prevents that
+    def setup_contigs      = assembly.toString() == clean_assembly ? "cat ${assembly} > local_assembly.fasta" : "zcat ${assembly} > local_assembly.fasta"
     """
-    ${decompress_contigs}
-
-    cp ${clean_assembly} . # ISSUE: temporary files will be generated in the directory of the assembly file, following links, copying prevents that
+    ${setup_contigs}
 
     run_comebin.sh \\
         -t ${task.cpus} \\
-        -a ${clean_assembly} \\
+        -a local_assembly.fasta \\
         -p bam/ \\
         -o . \\
         $args
@@ -46,7 +43,7 @@ process COMEBIN_RUNCOMEBIN {
 
     for filename in ${prefix}/comebin_res_bins/*.fa.gz; do mv "\${filename}" "${prefix}/comebin_res_bins/${prefix}.\$(basename \${filename})"; done; # avoid file name collisions
 
-    ${cleanup}
+    rm local_assembly.fasta
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
