@@ -7,6 +7,7 @@ include { METABAT2_METABAT2                                                     
 include { METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS as METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_SHORTREAD } from '../../../modules/nf-core/metabat2/jgisummarizebamcontigdepths/main'
 include { METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS as METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_LONGREAD  } from '../../../modules/nf-core/metabat2/jgisummarizebamcontigdepths/main'
 include { MAXBIN2                                                                                } from '../../../modules/nf-core/maxbin2/main'
+include { METABINNER                                                                             } from '../../../modules/local/metabinner'
 include { GUNZIP as GUNZIP_BINS                                                                  } from '../../../modules/nf-core/gunzip/main'
 include { GUNZIP as GUNZIP_UNBINS                                                                } from '../../../modules/nf-core/gunzip/main'
 include { SEQKIT_STATS                                                                           } from '../../../modules/nf-core/seqkit/stats/main'
@@ -113,6 +114,21 @@ workflow BINNING {
 
         ch_bins_for_seqkit = ch_bins_for_seqkit.mix(FASTA_BINNING_CONCOCT.out.bins.transpose())
         ch_binning_results_gzipped_final = ch_binning_results_gzipped_final.mix(FASTA_BINNING_CONCOCT.out.bins)
+    }
+
+    // MetaBinner
+    if (!params.skip_metabinner) {
+        METABINNER(
+            ch_metabat2_input
+                .map { meta, assembly, depths ->
+                    def meta_new = meta + [binner: 'MetaBinner']
+                    [meta_new, assembly, depths]
+                }
+        )
+        ch_versions = ch_versions.mix(METABINNER.out.versions)
+
+        ch_bins_for_seqkit = ch_bins_for_seqkit.mix( METABINNER.out.bins.transpose() )
+        ch_binning_results_gzipped_final = ch_binning_results_gzipped_final.mix( METABINNER.out.bins )
     }
 
     // decide which unbinned fasta files to further filter, depending on which binners selected
