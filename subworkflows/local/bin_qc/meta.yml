@@ -1,0 +1,66 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "bin_qc"
+description: Quality assessment of metagenomic bins using BUSCO, CheckM, CheckM2, and GUNC
+keywords:
+  - quality control
+  - bins
+  - metagenomics
+  - busco
+  - checkm
+  - checkm2
+  - gunc
+components:
+  - busco/busco
+  - checkm2/databasedownload
+  - checkm/qa
+  - checkm/lineagewf
+  - checkm2/predict
+  - csvtk/concat
+  - gunc/downloaddb
+  - gunc/run
+  - gunc/mergecheckm
+  - untar
+input:
+  - ch_bins:
+      description: Metagenomic bins in FASTA format
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - fasta:
+            type: file
+            description: Metagenomic bins in FASTA format
+            pattern: "*.{fasta,fa}"
+output:
+  - qc_summary:
+      description: Combined quality assessment summary
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - tsv:
+            type: file
+            description: Quality assessment summary in TSV format
+            pattern: "*.tsv"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+  - multiqc_files:
+      description: MultiQC files for quality control statistics
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - "*":
+            type: file
+            description: MultiQC report files
+            pattern: "*"
+authors:
+  - "@dialvarezs"
+maintainers:
+  - "@jfy133"
+  - "@prototaxites"
+  - "@dialvarezs"
+  - "@d4straub"
+  - "@muabnezor"
