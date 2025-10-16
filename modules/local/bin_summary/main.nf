@@ -11,17 +11,19 @@ process BIN_SUMMARY {
     path quast_sum
     path gtdbtk_sum
     path cat_sum
-    val  binqc_tool
+    path summarisepydamage_sum
+    val binqc_tool
 
     output:
     path "bin_summary.tsv", emit: summary
-    path "versions.yml"   , emit: versions
+    path "versions.yml", emit: versions
 
     script:
-    def binqc_summary  = binqc_sum.sort().size() > 0 ? "--binqc_summary ${binqc_sum}" : ""
-    def quast_summary  = quast_sum.sort().size() > 0 ? "--quast_summary ${quast_sum}" : ""
+    def binqc_summary = binqc_sum.sort().size() > 0 ? "--binqc_summary ${binqc_sum}" : ""
+    def quast_summary = quast_sum.sort().size() > 0 ? "--quast_summary ${quast_sum}" : ""
     def gtdbtk_summary = gtdbtk_sum.sort().size() > 0 ? "--gtdbtk_summary ${gtdbtk_sum}" : ""
-    def cat_summary    = cat_sum.sort().size() > 0 ? "--cat_summary ${cat_sum}" : ""
+    def cat_summary = cat_sum.sort().size() > 0 ? "--cat_summary ${cat_sum}" : ""
+    def summarisepydamage_summary = summarisepydamage_sum.sort().size() > 0 ? "--summarisepydamage_summary ${summarisepydamage_sum}" : ""
     """
     combine_tables.py \
         --depths_summary ${bin_depths} \
@@ -29,6 +31,7 @@ process BIN_SUMMARY {
         ${quast_summary} \
         ${gtdbtk_summary} \
         ${cat_summary} \
+        ${summarisepydamage_summary} \
         --binqc_tool ${binqc_tool} \
         --out bin_summary.tsv
 

@@ -19,12 +19,27 @@ def parse_args(args=None):
         metavar="FILE",
         help="Bin depths summary file.",
     )
-    parser.add_argument("-b", "--binqc_summary", metavar="FILE", help="BUSCO summary file.")
-    parser.add_argument("-q", "--quast_summary", metavar="FILE", help="QUAST BINS summary file.")
-    parser.add_argument("-g", "--gtdbtk_summary", metavar="FILE", help="GTDB-Tk summary file.")
+    parser.add_argument(
+        "-b", "--binqc_summary", metavar="FILE", help="BUSCO summary file."
+    )
+    parser.add_argument(
+        "-q", "--quast_summary", metavar="FILE", help="QUAST BINS summary file."
+    )
+    parser.add_argument(
+        "-g", "--gtdbtk_summary", metavar="FILE", help="GTDB-Tk summary file."
+    )
     parser.add_argument("-a", "--cat_summary", metavar="FILE", help="CAT table file.")
     parser.add_argument(
-        "-t", "--binqc_tool", help="Bin QC tool used", choices=["busco", "checkm", "checkm2"]
+        "-p",
+        "--summarisepydamage_summary",
+        metavar="FILE",
+        help="summarisepydamage table file.",
+    )
+    parser.add_argument(
+        "-t",
+        "--binqc_tool",
+        help="Bin QC tool used",
+        choices=["busco", "checkm", "checkm2"],
     )
 
     parser.add_argument(
@@ -76,7 +91,9 @@ def parse_cat_table(cat_table):
     )
     # merge all rank columns into a single column
     df["CAT_rank"] = (
-        df.filter(regex="rank_\d+").apply(lambda x: ";".join(x.dropna()), axis=1).str.lstrip()
+        df.filter(regex="rank_\d+")
+        .apply(lambda x: ";".join(x.dropna()), axis=1)
+        .str.lstrip()
     )
     # remove rank_* columns
     df.drop(df.filter(regex="rank_\d+").columns, axis=1, inplace=True)
@@ -87,11 +104,7 @@ def parse_cat_table(cat_table):
 def main(args=None):
     args = parse_args(args)
 
-    if (
-        not args.binqc_summary
-        and not args.quast_summary
-        and not args.gtdbtk_summary
-    ):
+    if not args.binqc_summary and not args.quast_summary and not args.gtdbtk_summary:
         sys.exit(
             "No summary specified! "
             "Please specify at least BUSCO, CheckM, CheckM2 or QUAST summary."
@@ -106,7 +119,9 @@ def main(args=None):
 
     # handle bin depths
     results = pd.read_csv(args.depths_summary, sep="\t")
-    results.columns = ["Depth " + str(col) if col != "bin" else col for col in results.columns]
+    results.columns = [
+        "Depth " + str(col) if col != "bin" else col for col in results.columns
+    ]
     bins = results["bin"].sort_values().reset_index(drop=True)
 
     if args.binqc_summary and args.binqc_tool == "busco":
@@ -114,7 +129,9 @@ def main(args=None):
         busco_bins = set(busco_results["Input_file"])
 
         if set(bins) != busco_bins and len(busco_bins.intersection(set(bins))) > 0:
-            warnings.warn("Bins in BUSCO summary do not match bins in bin depths summary")
+            warnings.warn(
+                "Bins in BUSCO summary do not match bins in bin depths summary"
+            )
         elif len(busco_bins.intersection(set(bins))) == 0:
             sys.exit("Bins in BUSCO summary do not match bins in bin depths summary!")
         results = pd.merge(
@@ -171,7 +188,9 @@ def main(args=None):
 
     if args.quast_summary:
         quast_results = pd.read_csv(args.quast_summary, sep="\t")
-        if not bins.equals(quast_results["Assembly"].sort_values().reset_index(drop=True)):
+        if not bins.equals(
+            quast_results["Assembly"].sort_values().reset_index(drop=True)
+        ):
             sys.exit("Bins in QUAST summary do not match bins in bin depths summary!")
         results = pd.merge(
             results, quast_results, left_on="bin", right_on="Assembly", how="outer"
@@ -196,6 +215,27 @@ def main(args=None):
             right_on="bin",
             how="outer",
         )
+
+    if args.summarisepydamage_summary:
+        summarisepydamage_results = pd.read_csv(
+            args.summarisepydamage_summary, sep="\t"
+        )
+        summarisepydamage_results["id"] = (summarisepydamage_results["id"]).replace(
+            "_pydamagebins", ""
+        )
+        if not bins.equals(
+            summarisepydamage_results["id"].sort_values().reset_index(drop=True)
+        ):
+            sys.exit(
+                "Bins in summarisepydamage summary do not match bins in bin depths summary!"
+            )
+        results = pd.merge(
+            results,
+            summarisepydamage_results,
+            left_on="bin",
+            right_on="id",
+            how="outer",
+        )  # assuming depths for all bins are given
 
     results.to_csv(args.out, sep="\t")
 

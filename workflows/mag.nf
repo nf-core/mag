@@ -42,6 +42,7 @@ include { QUAST                           } from '../modules/local/quast_run/mai
 include { QUAST_BINS                      } from '../modules/local/quast_bins/main'
 include { QUAST_BINS_SUMMARY              } from '../modules/local/quast_bins_summary/main'
 include { BIN_SUMMARY                     } from '../modules/local/bin_summary/main'
+include { PYDAMAGE_BINS                   } from '../subworkflows/local/PYDAMAGE_BINS/main'
 
 workflow MAG {
     take:
@@ -373,6 +374,10 @@ workflow MAG {
             )
             .groupTuple(by: 0)
 
+        /*
+        * Generate additional post-binning statistics for Bin QC
+        */
+
         DEPTHS(ch_input_for_postbinning, BINNING.out.metabat2depths, ch_reads_for_depths)
         ch_versions = ch_versions.mix(DEPTHS.out.versions)
 
@@ -448,6 +453,14 @@ workflow MAG {
             ch_gtdbtk_summary = Channel.empty()
         }
 
+        if (params.ancient_dna) {
+            PYDAMAGE_BINS(ANCIENT_DNA_ASSEMBLY_VALIDATION.out.pydamage_results, ch_input_for_postbinning)
+            ch_summarisepydamage = PYDAMAGE_BINS.out.tsv
+        }
+        else {
+            ch_summarisepydamage = Channel.empty()
+        }
+
         if ((!params.skip_binqc) || !params.skip_quast || !params.skip_gtdbtk) {
             BIN_SUMMARY(
                 ch_input_for_binsummary,
@@ -455,6 +468,7 @@ workflow MAG {
                 ch_quast_bins_summary.ifEmpty([]),
                 ch_gtdbtk_summary.ifEmpty([]),
                 ch_catpack_summary.ifEmpty([]),
+                ch_summarisepydamage.ifEmpty([]),
                 params.binqc_tool,
             )
             ch_versions = ch_versions.mix(BIN_SUMMARY.out.versions)

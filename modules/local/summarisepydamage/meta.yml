@@ -1,0 +1,54 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: "summarisepydamage"
+description: write your description here
+keywords:
+  - sort
+  - example
+  - genomics
+tools:
+  - "summarisepydamage":
+      description: "Processing script for summarising damage parameter estimation for ancient DNA by pyDamage."
+      homepage: "https://nf-co.re/mag"
+      documentation: "https://nf-co.re/mag"
+      tool_dev_url: "https://nf-co.re/mag"
+      licence: ["GPL v3-or-later"]
+
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. `[ id:'sample1' ]`
+    - csv:
+        type: file
+        description: Output CSV table from pyDamage analyze or pydamage filter
+        pattern: "*.csv"
+        ontologies:
+          - edam: "http://edamontology.org/format_3752" # CSV
+
+output:
+  bam:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'sample1' ]`
+      - "*.csv":
+          type: file
+          description: Summarised CSV calculating median values across all contigs
+          pattern: "*.csv"
+          ontologies:
+            - edam: "http://edamontology.org/format_3752" # CSV
+
+  versions:
+    - "versions.yml":
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: "http://edamontology.org/format_3750" # YAML
+
+authors:
+  - "@jfy133"
+maintainers:
+  - "@jfy133"

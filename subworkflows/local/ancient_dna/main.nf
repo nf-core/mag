@@ -1,10 +1,10 @@
-include { BCFTOOLS_CONSENSUS                    } from '../../../modules/nf-core/bcftools/consensus/main'
-include { BCFTOOLS_INDEX                        } from '../../../modules/nf-core/bcftools/index/main'
-include { BCFTOOLS_VIEW                         } from '../../../modules/nf-core/bcftools/view/main'
-include { FREEBAYES                             } from '../../../modules/nf-core/freebayes/main'
-include { PYDAMAGE_ANALYZE                      } from '../../../modules/nf-core/pydamage/analyze/main'
-include { PYDAMAGE_FILTER                       } from '../../../modules/nf-core/pydamage/filter/main'
-include { SAMTOOLS_FAIDX as FAIDX               } from '../../../modules/nf-core/samtools/faidx/main'
+include { BCFTOOLS_CONSENSUS      } from '../../../modules/nf-core/bcftools/consensus/main'
+include { BCFTOOLS_INDEX          } from '../../../modules/nf-core/bcftools/index/main'
+include { BCFTOOLS_VIEW           } from '../../../modules/nf-core/bcftools/view/main'
+include { FREEBAYES               } from '../../../modules/nf-core/freebayes/main'
+include { PYDAMAGE_ANALYZE        } from '../../../modules/nf-core/pydamage/analyze/main'
+include { PYDAMAGE_FILTER         } from '../../../modules/nf-core/pydamage/filter/main'
+include { SAMTOOLS_FAIDX as FAIDX } from '../../../modules/nf-core/samtools/faidx/main'
 
 workflow ANCIENT_DNA_ASSEMBLY_VALIDATION {
     take:
