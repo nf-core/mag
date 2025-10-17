@@ -44,11 +44,11 @@ process METABINNER {
         -o \${wd}/${prefix} \\
         -d \${wd}/coverage_profile.tsv \\
         -k \${wd}/\${outname}_kmer_4_f${args}.csv \\
-        -t $task.cpus \\
+        -t ${task.cpus} \\
         -p \${metabinner_path}
 
     mv ${prefix}/metabinner_res/metabinner_result.tsv ${prefix}.tsv
-    python ${projectDir}/bin/create_metabinner_bins.py ${prefix}.tsv ${fasta} \${wd}/metabinner_bins ${prefix}
+    python create_metabinner_bins.py ${prefix}.tsv ${fasta} \${wd}/metabinner_bins ${prefix}
 
     gzip -cn ${prefix} > ${prefix}.tsv.gz
 
