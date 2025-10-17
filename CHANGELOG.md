@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Fixed`
 
 - [#878](https://github.com/nf-core/mag/pull/878) - Fix METASPADES process not receiving the correct number of cpus from the fix CPUs parameter (by @jfy133)
+- [#XXX](https://github.com/nf-core/mag/pull/XXX) - Fix typo in long-read assembly mode selection (reported by @feixiang1209, fix by @jfy133)
 
 ### `Dependencies`
 
