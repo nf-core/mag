@@ -28,20 +28,26 @@ workflow GTDBTK {
     // 3. Convert completeness/contamination to double for consistency
     //4. add .fa back to bin name if missing
     ch_bin_metrics = ch_bin_qc_summary
+        .dump(tag: 'ch_bin_qc_summary')
         .map { row -> qc_columns[row.bin_qc_tool].collect { col -> row[col] } }
+        .dump(tag: 'post collect')
         .map { row ->
             // Initial order
             // row[0] = bin_qc_tool
             // row[1] = bin name
             // row[2] = completeness
             // row[3] = contamination (Checkm*)/duplication (busco)
-            row = [row[1], row[0]] + row[2..3].collect { value -> "${value}".toDouble() }
+            // TODO ***BUG*** THIS DOESNT WORK FOR SINGLE END CONFIG/CONCOCT .... WHY!?
+            def row_reordered = [row[1], row[0]] + row[2..3].collect { value -> "${value}".toDouble() }
+            println(row_reordered)
             // CheckM / CheckM2 removes the .fa extension from the bin name
-            if (row[1] in ['checkm', 'checkm2']) {
-                row[1] = row[1] + '.fa'
+            if (row_reordered[1] in ['checkm', 'checkm2']) {
+                println('appending')
+                row_reordered[1] = row_reordered[1] + '.fa'
             }
-            row
+            row_reordered
         }
+        .dump(tag: 'row')
 
     // TODO if ch_{}_tsv is not empty, filter it, then union of all
     // Filter bins based on collected metrics: completeness, contamination
@@ -87,7 +93,7 @@ workflow GTDBTK {
     ch_versions = ch_versions.mix(GTDBTK_CLASSIFYWF.out.versions)
 
     GTDBTK_SUMMARY(
-        ch_filtered_bins.discarded.map { it[1] }.collect().ifEmpty([]),
+        ch_filtered_bins.discarded.dump(tag: 'discarded').map { it[1] }.collect().ifEmpty([]),
         GTDBTK_CLASSIFYWF.out.summary.map { it[1] }.collect().ifEmpty([]),
         [],
         [],
