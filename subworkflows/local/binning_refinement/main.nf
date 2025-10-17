@@ -5,6 +5,7 @@
 include { DASTOOL_FASTATOCONTIG2BIN as DASTOOL_FASTATOCONTIG2BIN_METABAT2 } from '../../../modules/nf-core/dastool/fastatocontig2bin/main.nf'
 include { DASTOOL_FASTATOCONTIG2BIN as DASTOOL_FASTATOCONTIG2BIN_MAXBIN2  } from '../../../modules/nf-core/dastool/fastatocontig2bin/main.nf'
 include { DASTOOL_FASTATOCONTIG2BIN as DASTOOL_FASTATOCONTIG2BIN_CONCOCT  } from '../../../modules/nf-core/dastool/fastatocontig2bin/main.nf'
+include { DASTOOL_FASTATOCONTIG2BIN as DASTOOL_FASTATOCONTIG2BIN_COMEBIN  } from '../../../modules/nf-core/dastool/fastatocontig2bin/main.nf'
 include { DASTOOL_DASTOOL                                                 } from '../../../modules/nf-core/dastool/dastool/main.nf'
 
 include { RENAME_PREDASTOOL                                               } from '../../../modules/local/dastool_rename_pre/main'
@@ -39,6 +40,7 @@ workflow BINNING_REFINEMENT {
         metabat2: it[0]['binner'] == 'MetaBAT2'
         maxbin2: it[0]['binner'] == 'MaxBin2'
         concoct: it[0]['binner'] == 'CONCOCT'
+        comebin: it[0]['binner'] == 'COMEBin'
     }
     ch_versions = ch_versions.mix(RENAME_PREDASTOOL.out.versions)
 
@@ -54,12 +56,16 @@ workflow BINNING_REFINEMENT {
     DASTOOL_FASTATOCONTIG2BIN_CONCOCT(ch_bins_for_fastatocontig2bin.concoct, "fa")
     ch_versions = ch_versions.mix(DASTOOL_FASTATOCONTIG2BIN_CONCOCT.out.versions)
 
+    DASTOOL_FASTATOCONTIG2BIN_COMEBIN(ch_bins_for_fastatocontig2bin.comebin, "fa")
+    ch_versions = ch_versions.mix(DASTOOL_FASTATOCONTIG2BIN_COMEBIN.out.versions)
+
     // Run DASTOOL
     ch_fastatocontig2bin_for_dastool = Channel.empty()
     ch_fastatocontig2bin_for_dastool = ch_fastatocontig2bin_for_dastool
         .mix(DASTOOL_FASTATOCONTIG2BIN_METABAT2.out.fastatocontig2bin)
         .mix(DASTOOL_FASTATOCONTIG2BIN_MAXBIN2.out.fastatocontig2bin)
         .mix(DASTOOL_FASTATOCONTIG2BIN_CONCOCT.out.fastatocontig2bin)
+        .mix(DASTOOL_FASTATOCONTIG2BIN_COMEBIN.out.fastatocontig2bin)
         .map { meta, fastatocontig2bin ->
             def meta_new = meta - meta.subMap('binner')
             [meta_new, fastatocontig2bin]
