@@ -761,6 +761,10 @@
                     "type": "boolean",
                     "description": "Skip CONCOCT Binning"
                 },
+                "skip_comebin": {
+                    "type": "boolean",
+                    "description": "Skip COMEBin Binning"
+                },
                 "skip_metabinner": {
                     "type": "boolean",
                     "description": "Skip MetaBinner Binning"
