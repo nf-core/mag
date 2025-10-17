@@ -1,0 +1,109 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "binning"
+description: Performs metagenomic binning using MetaBAT2, MaxBin2, CONCOCT, and COMEBin
+keywords:
+  - binning
+  - metagenomics
+  - metabat2
+  - maxbin2
+  - concoct
+  - COMEBin
+components:
+  - fasta/binning/concoct
+  - metabat2/metabat2
+  - metabat2/jgisummarizebamcontigdepths
+  - maxbin2
+  - comebin/runcomebin
+  - gunzip
+  - seqkit/stats
+  - convert/depths
+  - adjust/maxbin2/ext
+  - split/fasta
+input:
+  - ch_assemblies:
+      description: Assembled contigs with corresponding BAM files and indices
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - assembly:
+            type: file
+            description: Assembled contigs in FASTA format
+            pattern: "*.fasta"
+        - bams:
+            type: file
+            description: BAM alignment files
+            pattern: "*.bam"
+        - bais:
+            type: file
+            description: BAM index files
+            pattern: "*.bai"
+  - val_bin_min_size:
+      type: val
+      description: Minimum bin size threshold for filtering
+  - val_bin_max_size:
+      type: val
+      description: Maximum bin size threshold for filtering
+output:
+  - bins:
+      description: Uncompressed FASTA files with binned sequences
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - fasta:
+            type: file
+            description: Binned sequences in FASTA format
+            pattern: "*.fasta"
+  - bins_gz:
+      description: Compressed FASTA files with binned sequences
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - fasta:
+            type: file
+            description: Binned sequences in compressed FASTA format
+            pattern: "*.fasta.gz"
+  - unbinned:
+      description: Uncompressed FASTA files with unbinned sequences
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - fasta:
+            type: file
+            description: Unbinned sequences in FASTA format
+            pattern: "*.fasta"
+  - unbinned_gz:
+      description: Compressed FASTA files with unbinned sequences
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - fasta:
+            type: file
+            description: Unbinned sequences in compressed FASTA format
+            pattern: "*.fasta.gz"
+  - metabat2depths:
+      description: Coverage depth files from MetaBAT2
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - txt:
+            type: file
+            description: Coverage depth information
+            pattern: "*.txt"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@jfy133"
+maintainers:
+  - "@jfy133"
+  - "@prototaxites"
+  - "@dialvarezs"
+  - "@d4straub"
+  - "@muabnezor"
