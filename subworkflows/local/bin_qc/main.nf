@@ -26,6 +26,10 @@ workflow BIN_QC {
     ch_input_bins_for_qc = ch_bins.transpose()
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
+    ch_busco_final_summaries = Channel.empty()
+    ch_checkm_final_summaries = Channel.empty()
+    ch_checkm2_final_summaries = Channel.empty()
+
 
     /*
     ================================
@@ -107,6 +111,11 @@ workflow BIN_QC {
         ch_multiqc_files = ch_multiqc_files.mix(
             BUSCO_BUSCO.out.short_summaries_txt.map { it[1] }.flatten()
         )
+
+        CONCAT_BUSCO_TSV(ch_busco_summaries, 'tsv', 'tsv')
+        ch_versions = ch_versions.mix(CONCAT_BUSCO_TSV.out.versions)
+        ch_busco_final_summaries = ch_busco_final_summaries.mix(CONCAT_BUSCO_TSV.out.csv.map { it[1] })
+        ch_qc_summaries = ch_qc_summaries.mix(CONCAT_BUSCO_TSV.out.csv.splitCsv(header: true, sep: '\t').map { _meta, summary -> [bin_qc_tool: 'busco'] + summary })
     }
     if (params.run_checkm) {
         /*
@@ -140,6 +149,11 @@ workflow BIN_QC {
         ch_multiqc_files = ch_multiqc_files.mix(
             CHECKM_QA.out.output.map { it[1] }.flatten()
         )
+
+        CONCAT_CHECKM_TSV(ch_checkm_summaries, 'tsv', 'tsv')
+        ch_versions = ch_versions.mix(CONCAT_CHECKM_TSV.out.versions)
+        ch_checkm_final_summaries = ch_checkm_final_summaries.mix(CONCAT_CHECKM_TSV.out.csv.map { it[1] })
+        ch_qc_summaries = ch_qc_summaries.mix(CONCAT_CHECKM_TSV.out.csv.splitCsv(header: true, sep: '\t').map { _meta, summary -> [bin_qc_tool: 'checkm'] + summary })
     }
     if (params.run_checkm2) {
         /*
@@ -154,6 +168,11 @@ workflow BIN_QC {
         ch_multiqc_files = ch_multiqc_files.mix(
             CHECKM2_PREDICT.out.checkm2_tsv.map { it[1] }.flatten()
         )
+
+        CONCAT_CHECKM2_TSV(ch_checkm2_summaries, 'tsv', 'tsv')
+        ch_versions = ch_versions.mix(CONCAT_CHECKM2_TSV.out.versions)
+        ch_checkm2_final_summaries = ch_checkm2_final_summaries.mix(CONCAT_CHECKM2_TSV.out.csv.map { it[1] })
+        ch_qc_summaries = ch_qc_summaries.mix(CONCAT_CHECKM2_TSV.out.csv.splitCsv(header: true, sep: '\t').map { _meta, summary -> [bin_qc_tool: 'checkm2'] + summary })
     }
 
     if (params.run_gunc) {
@@ -198,29 +217,6 @@ workflow BIN_QC {
                     storeDir: "${params.outdir}/GenomeBinning/QC/",
                 )
         }
-    }
-    // Combine QC summaries (same process for all tools)
-    ch_busco_final_summaries = Channel.empty()
-    ch_checkm_final_summaries = Channel.empty()
-    ch_checkm2_final_summaries = Channel.empty()
-
-    if (params.run_busco) {
-        CONCAT_BUSCO_TSV(ch_busco_summaries, 'tsv', 'tsv')
-        ch_versions = ch_versions.mix(CONCAT_BUSCO_TSV.out.versions)
-        ch_busco_final_summaries = ch_busco_final_summaries.mix(CONCAT_BUSCO_TSV.out.csv.map { it[1] })
-        ch_qc_summaries = ch_qc_summaries.mix(CONCAT_BUSCO_TSV.out.csv.splitCsv(header: true, sep: '\t').map { _meta, summary -> [bin_qc_tool: 'busco'] + summary })
-    }
-    if (params.run_checkm) {
-        CONCAT_CHECKM_TSV(ch_checkm_summaries, 'tsv', 'tsv')
-        ch_versions = ch_versions.mix(CONCAT_CHECKM_TSV.out.versions)
-        ch_checkm_final_summaries = ch_checkm_final_summaries.mix(CONCAT_CHECKM_TSV.out.csv.map { it[1] })
-        ch_qc_summaries = ch_qc_summaries.mix(CONCAT_CHECKM_TSV.out.csv.splitCsv(header: true, sep: '\t').map { _meta, summary -> [bin_qc_tool: 'checkm'] + summary })
-    }
-    if (params.run_checkm2) {
-        CONCAT_CHECKM2_TSV(ch_checkm2_summaries, 'tsv', 'tsv')
-        ch_versions = ch_versions.mix(CONCAT_CHECKM2_TSV.out.versions)
-        ch_checkm2_final_summaries = ch_checkm2_final_summaries.mix(CONCAT_CHECKM2_TSV.out.csv.map { it[1] })
-        ch_qc_summaries = ch_qc_summaries.mix(CONCAT_CHECKM2_TSV.out.csv.splitCsv(header: true, sep: '\t').map { _meta, summary -> [bin_qc_tool: 'checkm2'] + summary })
     }
 
     emit:
