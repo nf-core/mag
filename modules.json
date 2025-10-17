@@ -96,6 +96,11 @@
                         "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
+                    "comebin/runcomebin": {
+                        "branch": "master",
+                        "git_sha": "6890e2209d0eb6c69dee5fcb5baf1108dbdfa523",
+                        "installed_by": ["modules"]
+                    },
                     "concoct/concoct": {
                         "branch": "master",
                         "git_sha": "ff39793aeff17b7ccb107424215898710b4aa424",

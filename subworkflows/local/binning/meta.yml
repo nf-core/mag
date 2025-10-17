@@ -1,17 +1,19 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
 name: "binning"
-description: Performs metagenomic binning using MetaBAT2, MaxBin2, and CONCOCT
+description: Performs metagenomic binning using MetaBAT2, MaxBin2, CONCOCT, and COMEBin
 keywords:
   - binning
   - metagenomics
   - metabat2
   - maxbin2
   - concoct
+  - COMEBin
 components:
   - fasta/binning/concoct
   - metabat2/metabat2
   - metabat2/jgisummarizebamcontigdepths
   - maxbin2
+  - comebin/runcomebin
   - gunzip
   - seqkit/stats
   - convert/depths
