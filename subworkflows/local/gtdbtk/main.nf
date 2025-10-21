@@ -40,9 +40,8 @@ workflow GTDBTK {
             if (row_reordered[1] in ['checkm', 'checkm2']) {
                 row_reordered[0] = row_reordered[0] + '.fa'
             }
-            row_reordered
+            return row_reordered
         }
-        .dump(tag: 'row')
 
     // TODO if ch_{}_tsv is not empty, filter it, then union of all
     // Filter bins based on collected metrics: completeness, contamination
@@ -52,12 +51,14 @@ workflow GTDBTK {
     ch_filtered_bins = ch_bins
         .transpose()
         .map { meta, bin -> [bin.getName(), bin, meta] }
-        .join(ch_bin_metrics, failOnDuplicate: true)
-        .map { _bin_name, bin, meta, _bin_qc_tool, completeness, contamination -> [meta, bin, completeness, contamination] }
-        .branch { meta, bin, completeness, contamination ->
-            passed: (completeness != -1 && completeness >= params.gtdbtk_min_completeness && contamination != -1 && contamination <= params.gtdbtk_max_contamination)
+        .join(ch_bin_metrics)
+        .map { bin_name, bin, meta, _bin_qc_tool, completeness, contamination -> [bin_name, meta, bin, completeness, contamination] }
+        .groupTuple(by: 0)
+        .dump(tag: 'group_tuple')
+        .branch { _bin_name, meta, bin, completeness, contamination ->
+            passed: (completeness.any { it != -1 } && completeness.any { it >= params.gtdbtk_min_completeness } && contamination.any { it != -1 } && contamination.any { it <= params.gtdbtk_max_contamination })
             return [meta, bin]
-            discarded: (completeness == -1 || completeness < params.gtdbtk_min_completeness || contamination == -1 || contamination > params.gtdbtk_max_contamination)
+            discarded: (completeness.any { it != -1 } && completeness.any { it < params.gtdbtk_min_completeness } && contamination.any { it != -1 } && contamination.any { it > params.gtdbtk_max_contamination })
             return [meta, bin]
         }
 
@@ -81,14 +82,14 @@ workflow GTDBTK {
 
     // We set unique to remove duplicate bins when the same bin has passed the filter of two different QC tools
     GTDBTK_CLASSIFYWF(
-        ch_filtered_bins.passed.unique().groupTuple(),
+        ch_filtered_bins.passed.groupTuple().dump(tag: 'passed'),
         ch_db_for_gtdbtk,
         params.gtdbtk_pplacer_useram ? false : true,
     )
     ch_versions = ch_versions.mix(GTDBTK_CLASSIFYWF.out.versions)
 
     GTDBTK_SUMMARY(
-        ch_filtered_bins.discarded.dump(tag: 'discarded').map { it[1] }.collect().ifEmpty([]),
+        ch_filtered_bins.discarded.map { it[1] }.collect().dump(tag: 'discarded').ifEmpty([]),
         GTDBTK_CLASSIFYWF.out.summary.map { it[1] }.collect().ifEmpty([]),
         [],
         [],
