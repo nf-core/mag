@@ -154,7 +154,7 @@ workflow BINNING {
         .subscribe { stats ->
             def n_bins = stats.size()
             def n_filtered_bins = stats.findAll { it.bin_total_length >= val_bin_min_size && (val_bin_max_size ? it.bin_total_length <= val_bin_max_size : true) }.size()
-            if (n_bins > 0 && n_filtered_bins == 0 } {
+            if (n_bins > 0 && n_filtered_bins == 0) {
                 error("[nf-core/mag] ERROR: no bins passed the bin size filter specified between --bin_min_size ${val_bin_min_size} and --bin_max_size ${val_bin_max_size}. Please adjust parameters.")
             }
         }
