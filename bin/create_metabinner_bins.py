@@ -32,6 +32,6 @@ with open(fasta) as handle:
         elif record.id not in Metabinner_bins:
             f = prefix + ".unbinned.fa"
         else:
-            f = prefix + Metabinner_bins[record.id] + ".fa"
+            f = prefix + "." + Metabinner_bins[record.id] + ".fa"
         with open(os.path.join(path, f), 'a') as out:
             SeqIO.write(record, out, "fasta")
