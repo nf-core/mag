@@ -157,7 +157,7 @@ workflow BINNING {
         .collect().ifEmpty([])
         .subscribe { stats ->
             def n_bins = stats.size()
-            def n_filtered_bins = stats.findAll { 
+            def n_filtered_bins = stats.findAll {
                 it >= val_bin_min_size && (val_bin_max_size ? it <= val_bin_max_size : true)
             }.size()
             if (n_bins > 0 && n_filtered_bins == 0) {
