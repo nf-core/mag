@@ -48,7 +48,7 @@ process METABINNER {
         -p \${metabinner_path}
 
     mv ${prefix}/metabinner_res/metabinner_result.tsv ${prefix}.tsv
-    python create_metabinner_bins.py ${prefix}.tsv ${fasta} \${wd}/metabinner_bins ${prefix}
+    create_metabinner_bins.py ${prefix}.tsv ${fasta} ./metabinner_bins ${prefix}
 
     gzip -cn ${prefix} > ${prefix}.tsv.gz
 
@@ -59,6 +59,7 @@ process METABINNER {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         MetaBinner: 1.4.4-0
+        python: \$(python --version 2>&1 | sed 's/Python //g')
     END_VERSIONS
     """
 }
