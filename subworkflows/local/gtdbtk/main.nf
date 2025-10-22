@@ -43,24 +43,24 @@ workflow GTDBTK {
             return row_reordered
         }
 
-    // TODO if ch_{}_tsv is not empty, filter it, then union of all
     // Filter bins based on collected metrics: completeness, contamination
     // 1. Generate key name from bin file name
     // 2. Join with metrics (but drop bin_name)
-    // 3. Filter based on completeness/contamination
+    // 3. Group all metrics files per bin (in case multiple QC tools were used)
+    // 3. Branch based on completeness/contamination
     ch_filtered_bins = ch_bins
         .transpose()
         .map { meta, bin -> [bin.getName(), bin, meta] }
         .join(ch_bin_metrics)
         .map { bin_name, bin, meta, _bin_qc_tool, completeness, contamination -> [bin_name, meta, bin, completeness, contamination] }
         .groupTuple(by: 0)
-        .dump(tag: 'group_tuple')
         .branch { _bin_name, meta, bin, completeness, contamination ->
             passed: (completeness.any { it != -1 } && completeness.any { it >= params.gtdbtk_min_completeness } && contamination.any { it != -1 } && contamination.any { it <= params.gtdbtk_max_contamination })
-            return [meta, bin]
-            discarded: (completeness.any { it != -1 } && completeness.any { it < params.gtdbtk_min_completeness } && contamination.any { it != -1 } && contamination.any { it > params.gtdbtk_max_contamination })
-            return [meta, bin]
+            return [meta[0], bin[0]]
+            discarded: true
+            return [meta[0], bin[0]]
         }
+    // Note we have to call `meta[0], bin[0]` because of the groupTuple above
 
     if (val_gtdb.extension == 'gz') {
         // Expects to be tar.gz!
@@ -74,23 +74,22 @@ workflow GTDBTK {
         error("Unsupported object given to --gtdb, database must be supplied as either a directory or a .tar.gz file!")
     }
 
+    // We set unique to remove duplicate bins when the same bin has passed the filter of two different QC tools
+    GTDBTK_CLASSIFYWF(
+        ch_filtered_bins.passed.groupTuple(),
+        ch_db_for_gtdbtk,
+        params.gtdbtk_pplacer_useram ? false : true,
+    )
+    ch_versions = ch_versions.mix(GTDBTK_CLASSIFYWF.out.versions)
 
     // Print warning why GTDB-TK summary empty if passed channel gets no files
     ch_filtered_bins.passed
         .count()
         .map { it == 0 ? log.warn("No contigs passed GTDB-TK min. completeness filters. GTDB-TK summary will execute but results will be empty!") : "" }
 
-    // We set unique to remove duplicate bins when the same bin has passed the filter of two different QC tools
-    GTDBTK_CLASSIFYWF(
-        ch_filtered_bins.passed.groupTuple().dump(tag: 'passed'),
-        ch_db_for_gtdbtk,
-        params.gtdbtk_pplacer_useram ? false : true,
-    )
-    ch_versions = ch_versions.mix(GTDBTK_CLASSIFYWF.out.versions)
-
     GTDBTK_SUMMARY(
-        ch_filtered_bins.discarded.map { it[1] }.collect().dump(tag: 'discarded').ifEmpty([]),
-        GTDBTK_CLASSIFYWF.out.summary.map { it[1] }.collect().ifEmpty([]),
+        ch_filtered_bins.discarded.map { it[1] }.collect().ifEmpty([]),
+        GTDBTK_CLASSIFYWF.out.summary.map { it[1] }.collect().ifEmpty { ([]) },
         [],
         [],
     )
