@@ -150,7 +150,7 @@ workflow BINNING {
 
     ch_seqkitstats_results
         .map { meta, stats -> stats }
-        .collect()
+        .collect().ifEmpty([])
         .subscribe { stats ->
             def n_bins = stats.size()
             def n_filtered_bins = stats.findAll { it.bin_total_length >= val_bin_min_size && (val_bin_max_size ? it.bin_total_length <= val_bin_max_size : true) }.size()
