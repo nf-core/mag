@@ -27,7 +27,6 @@ process METABINNER {
     def min_contig_size = task.ext.min_contig_size ?: "1000"
     """
     metabinner_path=\$(dirname \$(which run_metabinner.sh))
-    f="${fasta}"
 
     # create coverage profile in Metabinner format
     zcat ${depth} | awk '{if (\$2>${min_contig_size}) print \$0 }' | cut -f -1,4- > coverage_profile.tsv
@@ -40,6 +39,7 @@ process METABINNER {
 
     # requires absolute paths
     wd=\$(pwd)
+    f="${fasta}"
     outname=\${f%.*}
     bash run_metabinner.sh \\
         -a \${wd}/\${outname}_${min_contig_size}.fa \\

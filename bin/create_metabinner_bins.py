@@ -22,7 +22,7 @@ with open(binning, 'r') as b:
         Metabinner_bins[contig] = bin
 
 for outf in set(Metabinner_bins.values()):
-    name = prefix + outf + ".fa"
+    name = prefix + "." + outf + ".fa"
     open(os.path.join(path, name), 'w')
 
 with open(fasta) as handle:
