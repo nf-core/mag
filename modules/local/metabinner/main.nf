@@ -18,7 +18,7 @@ process METABINNER {
     tuple val(meta), path("metabinner_bins/*.fa.gz")  , emit: bins
     tuple val(meta), path("*.log.gz")                 , emit: log
     tuple val(meta), path("coverage_profile.tsv")     , emit: coverage_profile
-    tuple val(meta), path("*kmer_4_f1000.csv")        , emit: composition_profile
+    tuple val(meta), path("*.csv.gz")                 , emit: composition_profile
     path "versions.yml"                               , emit: versions
 
     script:
@@ -52,7 +52,8 @@ process METABINNER {
 
     # collect & zip membership & log files
     gzip -cn ${prefix}/metabinner_res/metabinner_result.tsv > ${prefix}.tsv.gz
-    gzip -cn ${prefix}/metabinner_res/result.log > ${prefix}.log.gz
+    gzip -cn ${prefix}/metabinner_res/result.log > ${prefix}.metabinner.log.gz
+    gzip -cn \${outname}_kmer_4_f${min_contig_size}.csv > ${prefix}_kmer_4_f${min_contig_size}.csv.gz
 
     # collect & zip bins & un-binned fractions
     create_metabinner_bins.py \\
