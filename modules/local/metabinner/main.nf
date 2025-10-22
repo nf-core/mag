@@ -15,7 +15,7 @@ process METABINNER {
     tuple val(meta), path("*.lowDepth.fa.gz")         , optional:true , emit: lowdepth
     tuple val(meta), path("*.unbinned.fa.gz")         , emit: unbinned
     tuple val(meta), path("*.tsv.gz")                 , emit: membership
-    tuple val(meta), path("metabinner_bins/*.fa.gz")  , emit: bins
+    tuple val(meta), path("bins/*.fa.gz")             , emit: bins
     tuple val(meta), path("*.log.gz")                 , emit: log
     tuple val(meta), path("coverage_profile.tsv")     , emit: coverage_profile
     tuple val(meta), path("*.csv.gz")                 , emit: composition_profile
@@ -59,13 +59,13 @@ process METABINNER {
     create_metabinner_bins.py \\
         ${prefix}/metabinner_res/metabinner_result.tsv \\
         ${fasta} \\
-        ./metabinner_bins \\
+        ./bins \\
         ${prefix} \\
         ${min_contig_size}
-    find ./metabinner_bins/ -name "*.fa" -type f | xargs -t -n 1 bgzip -@ ${task.cpus}
+    find ./bins/ -name "*.fa" -type f | xargs -t -n 1 bgzip -@ ${task.cpus}
 
     # collect & zip non-binned fractions
-    find ./metabinner_bins/ -name "*[lowDepth,tooShort,unbinned].fa.gz" -type f -exec mv {} . \\;
+    find ./bins/ -name "*[lowDepth,tooShort,unbinned].fa.gz" -type f -exec mv {} . \\;
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
