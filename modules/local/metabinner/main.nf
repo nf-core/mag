@@ -11,49 +11,59 @@ process METABINNER {
     tuple val(meta), path(fasta), path(depth)
 
     output:
-    tuple val(meta), path("*.tooShort.fa.gz")         , optional:true , emit: tooshort
+    tuple val(meta), path("*.tooShort.fa.gz")         , emit: tooshort
     tuple val(meta), path("*.lowDepth.fa.gz")         , optional:true , emit: lowdepth
-    tuple val(meta), path("*.unbinned.fa.gz")         , optional:true , emit: unbinned
-    tuple val(meta), path("*.tsv.gz")                 , optional:true , emit: membership
-    tuple val(meta), path("MetaBinner_bins/*.fa.gz")  , optional:true , emit: bins
-    tuple val(meta), path("*.log.gz")                 , optional:true , emit: log
-    tuple val(meta), path("coverage_profile.tsv")     , optional:true , emit: coverage_profile
-    tuple val(meta), path("*kmer_4_f1000.csv")        , optional:true , emit: composition_profile
+    tuple val(meta), path("*.unbinned.fa.gz")         , emit: unbinned
+    tuple val(meta), path("*.tsv.gz")                 , emit: membership
+    tuple val(meta), path("metabinner_bins/*.fa.gz")  , emit: bins
+    tuple val(meta), path("*.log.gz")                 , emit: log
+    tuple val(meta), path("coverage_profile.tsv")     , emit: coverage_profile
+    tuple val(meta), path("*kmer_4_f1000.csv")        , emit: composition_profile
     path "versions.yml"                               , emit: versions
 
     script:
     def args   = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
+    def min_contig_size = task.ext.min_contig_size ?: "1000"
     """
     metabinner_path=\$(dirname \$(which run_metabinner.sh))
     f="${fasta}"
-    outname=\${f%.*}
-    wd=\$(pwd)
 
     # create coverage profile in Metabinner format
-    zcat \${wd}/${depth} | awk '{if (\$2>${args}) print \$0 }' | cut -f -1,4- > coverage_profile.tsv
+    zcat ${depth} | awk '{if (\$2>${min_contig_size}) print \$0 }' | cut -f -1,4- > coverage_profile.tsv
 
-    # create composition profile (contigs > ${args} p (default 1000), k = 4)
-    python \${metabinner_path}/scripts/gen_kmer.py ${fasta} ${args} 4
+    # create composition profile (contigs > ${min_contig_size} p (default 1000), k = 4)
+    python \${metabinner_path}/scripts/gen_kmer.py ${fasta} ${min_contig_size} 4
 
-    # filter contigs < ${args} bp from fasta (default 1000)
-    python \${metabinner_path}/scripts/Filter_tooshort.py ${fasta} ${args}
+    # filter contigs < ${min_contig_size} bp from fasta (default 1000)
+    python \${metabinner_path}/scripts/Filter_tooshort.py ${fasta} ${min_contig_size}
 
+    # requires absolute paths
+    wd=\$(pwd)
+    outname=\${f%.*}
     bash run_metabinner.sh \\
-        -a \${wd}/\${outname}_${args}.fa \\
+        -a \${wd}/\${outname}_${min_contig_size}.fa \\
         -o \${wd}/${prefix} \\
         -d \${wd}/coverage_profile.tsv \\
-        -k \${wd}/\${outname}_kmer_4_f${args}.csv \\
+        -k \${wd}/\${outname}_kmer_4_f${min_contig_size}.csv \\
         -t ${task.cpus} \\
-        -p \${metabinner_path}
+        -p \${metabinner_path} \\
+        ${args}
 
-    mv ${prefix}/metabinner_res/metabinner_result.tsv ${prefix}.tsv
-    create_metabinner_bins.py ${prefix}.tsv ${fasta} ./metabinner_bins ${prefix}
+    # collect & zip membership & log files
+    gzip -cn ${prefix}/metabinner_res/metabinner_result.tsv > ${prefix}.tsv.gz
+    gzip -cn ${prefix}/metabinner_res/result.log > ${prefix}.log.gz
 
-    gzip -cn ${prefix} > ${prefix}.tsv.gz
-
-    mv \${outname}_${args}.fa \${outname}.tooShort.fa
+    # collect & zip bins & un-binned fractions
+    create_metabinner_bins.py \\
+        ${prefix}/metabinner_res/metabinner_result.tsv \\
+        ${fasta} \\
+        ./metabinner_bins \\
+        ${prefix} \\
+        ${min_contig_size}
     find ./metabinner_bins/ -name "*.fa" -type f | xargs -t -n 1 bgzip -@ ${task.cpus}
+
+    # collect & zip non-binned fractions
     find ./metabinner_bins/ -name "*[lowDepth,tooShort,unbinned].fa.gz" -type f -exec mv {} . \\;
 
     cat <<-END_VERSIONS > versions.yml
