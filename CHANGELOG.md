@@ -13,12 +13,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Changed`
 
 - [#878](https://github.com/nf-core/mag/pull/878) - Refine test_full config with optimised resource usage for AWS release megatests (by @jfy133)
+- [#880](https://github.com/nf-core/mag/pull/880) - Updated to nf-core 3.4.1 `TEMPLATE` (by @jfy133)
 
 ### `Fixed`
 
 - [#878](https://github.com/nf-core/mag/pull/878) - Fix METASPADES process not receiving the correct number of cpus from the fix CPUs parameter (by @jfy133)
 
 ### `Dependencies`
+
+| Tool         | Previous version | New version |
+| ------------ | ---------------- | ----------- |
+| nf-core      | 3.3.2            | 3.4.1       |
 
 ### `Deprecated`
 
