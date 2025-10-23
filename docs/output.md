@@ -205,6 +205,10 @@ Trimmed (short) reads are assembled with both megahit and SPAdes. Hybrid assembl
     - `MEGAHIT-[sample].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the sample that the metagenome was assembled from, only present if `--coassemble_group` is not set.
     - `MEGAHIT-[sample/group]-[sampleToMap].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the respective sample ("sampleToMap").
     - `MEGAHIT-[sample].[bam/bai]`: Optionally saved BAM file of the Bowtie2 mapping of reads against the assembly.
+  - `ALE/[sample/group]/`: Directory containing Assembly Likelihood Estimator (ALE) results
+    - `[sample].ale.txt`: ALE score file containing per-contig likelihood estimates
+    - `[sample].summary.tsv`: Summary statistics of ALE scores and assembly quality
+    - `[sample].log`: Log file produced by ALE during processing
 
 </details>
 

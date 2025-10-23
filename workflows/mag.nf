@@ -34,6 +34,7 @@ include { PRODIGAL                        } from '../modules/nf-core/prodigal/ma
 include { PROKKA                          } from '../modules/nf-core/prokka/main'
 include { MMSEQS_DATABASES                } from '../modules/nf-core/mmseqs/databases/main'
 include { METAEUK_EASYPREDICT             } from '../modules/nf-core/metaeuk/easypredict/main'
+include { ALE                             } from '../modules/nf-core/ale/main'
 
 //
 // MODULE: Local to the pipeline
@@ -198,6 +199,22 @@ workflow MAG {
         ch_assemblies = ch_assemblies.mix(ch_assemblies_split.ungzip, GUNZIP_ASSEMBLYINPUT.out.gunzip)
         ch_shortread_assemblies = ch_assemblies.filter { it[0].assembler.toUpperCase() in ['SPADES', 'SPADESHYBRID', 'MEGAHIT'] }
         ch_longread_assemblies = ch_assemblies.filter { it[0].assembler.toUpperCase() in ['FLYE', 'METAMDBG'] }
+    
+        if(!params.skip_ale) {
+            // Create the pair list of read-assembl for ale 
+            ch_assembly_mapping_pairs = ch_short_reads
+                .join(ch_shortread_assemblies)
+                .map { reads_tuple, assembly_tuple ->
+                def meta = reads_tuple[0]
+                def reads = reads_tuple[1]
+                def assembly_meta = assembly_tuple[0]
+                def assembly_file = assembly_tuple[1]
+                [[meta: meta, assembler: assembly_meta.assembler], reads, assembly_file]
+            }
+
+            ALE(ch_assembly_mapping_pairs)
+            ch_versions = ch_versions.mix(ALE.out.versions)
+        }
     }
 
     if (!params.skip_quast) {
