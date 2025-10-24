@@ -99,7 +99,7 @@ Other code contributors include:
 - [Gregory Sprenger](https://github.com/gregorysprenger)
 - [Jim Downie](https://github.com/prototaxites)
 - [Phil Palmer](https://github.com/PhilPalmer)
-- [@willros](https://github.com/willros)
+- [William Rosenbaum](https://github.com/willros)
 - [Adam Rosenbaum](https://github.com/muabnezor)
 - [Diego Alvarez](https://github.com/dialvarezs)
 - [Nikolaos Vergoulidis](https://github.com/IceGreb)
