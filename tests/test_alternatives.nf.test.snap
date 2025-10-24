@@ -97,7 +97,7 @@
                     "trimmomatic": 0.39
                 },
                 "Workflow": {
-                    "nf-core/mag": "v5.0.0"
+                    "nf-core/mag": "v5.1.0dev"
                 },
                 "r-base": "4.1.3",
                 "r-tidyverse": "1.3.1"
@@ -214,7 +214,6 @@
     "multiqc": {
         "content": [
             [
-                "multiqc/multiqc_data/BETA-multiqc.parquet",
                 "multiqc/multiqc_data/bowtie2_pe_plot.yaml",
                 "multiqc/multiqc_data/checkm2-first-table.yaml",
                 "multiqc/multiqc_data/fastqc-1-status-check-heatmap.yaml",
@@ -234,7 +233,9 @@
                 "multiqc/multiqc_data/fastqc_sequence_counts_plot.yaml",
                 "multiqc/multiqc_data/fastqc_sequence_duplication_levels_plot.yaml",
                 "multiqc/multiqc_data/fastqc_sequence_length_distribution_plot.yaml",
+                "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc.parquet",
                 "multiqc/multiqc_data/multiqc_bowtie2.yaml",
                 "multiqc/multiqc_data/multiqc_bowtie2_bowtie2-2.yaml",
                 "multiqc/multiqc_data/multiqc_checkm2.yaml",
@@ -323,7 +324,7 @@
             ],
             [
                 "bowtie2_pe_plot.yaml:md5,17542811418a01c5c4497e77626bad91",
-                "checkm2-first-table.yaml:md5,d1141b2bc74b8929807dcd93ece8143d",
+                "checkm2-first-table.yaml:md5,d138b272a46411d66b643a7cdabf4511",
                 "fastqc-1-status-check-heatmap.yaml:md5,30f0c0bbefd3e9c549116c8b7cc2ac25",
                 "fastqc-1_per_base_n_content_plot.yaml:md5,f43001053b544ba5585040c18859a098",
                 "fastqc-1_per_base_sequence_quality_plot.yaml:md5,48276488936fd9c2e52b53a58dae0ffb",
@@ -347,7 +348,7 @@
                 "multiqc_citations.yaml:md5,dcac7876946630b831fad3d816e8050f",
                 "multiqc_fastqc.yaml:md5,f50da8bfd062b9399911ba19b34831db",
                 "multiqc_fastqc_fastqc-1.yaml:md5,4c2c5a5e7b370b0668c1360b7927d0a8",
-                "multiqc_general_stats.yaml:md5,8b8cbb9d6fe349084e3d2fe2ffdecda8",
+                "multiqc_general_stats.yaml:md5,bea5cdd6ba2c414c4e6d2b5137b56e1c",
                 "multiqc_trimmomatic.yaml:md5,d4aaff3725c28801ae0577d97c2f9b30",
                 "trimmomatic_plot.yaml:md5,9557cd587ace0a93912179cb0deafe3b"
             ]
@@ -356,6 +357,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.7"
         },
-        "timestamp": "2025-09-17T11:03:46.82778828"
+        "timestamp": "2025-10-17T15:30:21.553622586"
     }
 }

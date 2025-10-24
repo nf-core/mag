@@ -3,6 +3,31 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v5.1.0dev - [date]
+
+### `Added`
+
+- [#873](https://github.com/nf-core/mag/pull/873) - Document usage of `longread_percentidentity` and `shortread_percentidentity` and set the value of `longread_percentidentity` in the `test_full` profile to 85 (by @prototaxites)
+- [#875](https://github.com/nf-core/mag/pull/875) - Add binner COMEBin (by @d4straub)
+
+### `Changed`
+
+- [#878](https://github.com/nf-core/mag/pull/878) - Refine test_full config with optimised resource usage for AWS release megatests (by @jfy133)
+- [#880](https://github.com/nf-core/mag/pull/880) - Updated to nf-core 3.4.1 `TEMPLATE` (by @jfy133)
+
+### `Fixed`
+
+- [#878](https://github.com/nf-core/mag/pull/878) - Fix METASPADES process not receiving the correct number of cpus from the fix CPUs parameter (by @jfy133)
+- [#885](https://github.com/nf-core/mag/pull/885) - Fix typo in long-read assembly mode selection (reported by @feixiang1209, fix by @jfy133)
+
+### `Dependencies`
+
+| Tool    | Previous version | New version |
+| ------- | ---------------- | ----------- |
+| nf-core | 3.3.2            | 3.4.1       |
+
+### `Deprecated`
+
 ## 5.0.0 - [2025-09-30]
 
 ### `Added`

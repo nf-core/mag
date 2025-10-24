@@ -230,6 +230,18 @@
                     "fa_icon": "far calendar",
                     "description": "Suffix to add to the trace report filename. Default is the date and time in the format yyyy-MM-dd_HH-mm-ss.",
                     "hidden": true
+                },
+                "help": {
+                    "type": ["boolean", "string"],
+                    "description": "Display the help message."
+                },
+                "help_full": {
+                    "type": "boolean",
+                    "description": "Display the full detailed help message."
+                },
+                "show_hidden": {
+                    "type": "boolean",
+                    "description": "Display hidden parameters in the help message (only works when --help or --help_full are provided)."
                 }
             }
         },
@@ -761,6 +773,10 @@
                     "type": "boolean",
                     "description": "Skip CONCOCT Binning"
                 },
+                "skip_comebin": {
+                    "type": "boolean",
+                    "description": "Skip COMEBin Binning"
+                },
                 "min_contig_size": {
                     "type": "integer",
                     "default": 1500,
@@ -912,7 +928,7 @@
                 },
                 "checkm2_db": {
                     "type": "string",
-                    "description": "Path to local file of an already downloaded and uncompressed CheckM2 database (.dmnd file).",
+                    "description": "Path to local file of an already downloaded and uncompressed CheckM2 database file (.dmnd file).",
                     "help_text": "The pipeline can also download this for you if not specified, and you can save the resulting directory into your output directory by specifying `--save_checkm2_data`. You should move this file to somewhere else on your machine (and supply back to the pipeline in future runs again with `--checkm2_db`).",
                     "format": "file-path",
                     "exists": true

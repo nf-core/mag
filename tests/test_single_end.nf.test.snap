@@ -168,7 +168,7 @@
                     "pandas": "1.1.5"
                 },
                 "Workflow": {
-                    "nf-core/mag": "v5.0.0"
+                    "nf-core/mag": "v5.1.0dev"
                 }
             }
         ],
@@ -181,7 +181,6 @@
     "multiqc": {
         "content": [
             [
-                "multiqc/multiqc_data/BETA-multiqc.parquet",
                 "multiqc/multiqc_data/ar_length_count_plot_All.yaml",
                 "multiqc/multiqc_data/ar_length_count_plot_Discarded.yaml",
                 "multiqc/multiqc_data/ar_length_count_plot_Mate1.yaml",
@@ -205,7 +204,9 @@
                 "multiqc/multiqc_data/fastqc_sequence_counts_plot.yaml",
                 "multiqc/multiqc_data/fastqc_sequence_duplication_levels_plot.yaml",
                 "multiqc/multiqc_data/fastqc_sequence_length_distribution_plot.yaml",
+                "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc.parquet",
                 "multiqc/multiqc_data/multiqc_adapter_removal.yaml",
                 "multiqc/multiqc_data/multiqc_bowtie2.yaml",
                 "multiqc/multiqc_data/multiqc_bowtie2_bowtie2-1.yaml",
@@ -355,7 +356,7 @@
                 "multiqc_citations.yaml:md5,332da3731e12b7a0d205f47685ddd53e",
                 "multiqc_fastqc.yaml:md5,2bbd80f21c5c264249bc935eada2ff41",
                 "multiqc_fastqc_fastqc-1.yaml:md5,b21efcd71ad261049a5aeaa238492f92",
-                "multiqc_general_stats.yaml:md5,aa9a3dff8300c0ee14ee37f4f84352a5",
+                "multiqc_general_stats.yaml:md5,a213a1d81a57108d4bfadd0fcff5d95f",
                 "multiqc_gtdbtk.yaml:md5,9a643dd7f0ba582ac2b95858b4ef0937",
                 "multiqc_prokka.yaml:md5,e55c687925d611b869e4c4b27c71470c",
                 "multiqc_quast.yaml:md5,b7dae5bb61679ff9d5a3ede9898e5cfa",
@@ -369,6 +370,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.7"
         },
-        "timestamp": "2025-09-17T10:56:02.40715903"
+        "timestamp": "2025-10-17T16:09:15.539140006"
     }
 }
