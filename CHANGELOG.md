@@ -65,6 +65,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#854](https://github.com/nf-core/mag/pull/854) - Update porechop/abi to a patched version to prevent duplicated read names (reported by @palec87, fix by @jfy133)
 - [#858](https://github.com/nf-core/mag/pull/858) - Fix a single parameter validation failure reporting errors for all parameters by updated nf-schema to 2.5.1 (reported by @Pranjal-Bioinfo, fix by @nvnieuwk and @jfy133)
 - [#864](https://github.com/nf-core/mag/pull/864) - Fix missing multi-threading of MetaEuk easypredict (reported by @OlivierCoen, fix by @prototaxites).
+- [#888](https://github.com/nf-core/mag/pull/888) - Only error if all bins are size filtered if bins have actually been generated (reported by @hkaspersen, fix by @prototaxites)
 
 ### `Dependencies`
 
