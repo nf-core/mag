@@ -480,7 +480,7 @@ Note that COMEBin does not output what it considers 'unbinned' contigs, therefor
 
 </details>
 
-All the files and contigs in these folders will be assessed by QUAST and BUSCO, if the parameter `--postbinning_input` is not set to `refined_bins_only`.
+All the files and contigs in these folders will be assessed by QUAST and binning QC tools, if the parameter `--postbinning_input` is not set to `refined_bins_only`.
 
 ### DAS Tool
 
