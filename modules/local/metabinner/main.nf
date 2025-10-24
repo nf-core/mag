@@ -25,6 +25,7 @@ process METABINNER {
     def args   = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     def min_contig_size = task.ext.min_contig_size ?: "1000"
+    def VERSION = '1.4.4-0' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
     """
     metabinner_path=\$(dirname \$(which run_metabinner.sh))
 
@@ -69,7 +70,7 @@ process METABINNER {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        MetaBinner: 1.4.4-0
+        MetaBinner: $VERSION
         python: \$(python --version 2>&1 | sed 's/Python //g')
     END_VERSIONS
     """
