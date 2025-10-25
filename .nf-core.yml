@@ -9,12 +9,11 @@ lint:
 nf_core_version: 3.4.1
 repository_type: pipeline
 template:
-  author: "Hadrien Gourlé, Daniel Straub, Sabrina Krakau, James A. Fellows Yates,
-    Maxime Borry"
+  author: "Hadrien Gourlé, Daniel Straub, Sabrina Krakau, James A. Fellows Yates, Maxime Borry"
   description: Assembly, binning and annotation of metagenomes
   force: false
   is_nfcore: true
   name: mag
   org: nf-core
   outdir: .
-  version: 5.1.0dev
+  version: 5.1.0
