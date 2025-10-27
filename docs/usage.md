@@ -543,3 +543,7 @@ Up until version 4.0.0, this pipeline offered raw read taxonomic profiling using
 This feature was removed in version 5.0.0 to strengthen the pipeline's focus on metagenome assembly and binning.
 
 If you require taxonomic profiling of raw reads, we recommend using [nf-core/taxprofiler](https://nf-co.re/taxprofiler/), which is specifically designed for taxonomic profiling of raw reads and supports a wide range of tools for this purpose.
+
+## BIgMAG compatibility
+
+With the parameter `--generate_bigmag_file` a subworkflow will be triggered to generate one and unique file that contains the ouput from all of the bin-quality tools. The file `bigmag_summary.tsv`located at `GenomeBinning/BIgMAG` in the output directory can be used directly for the application [BIgMAG](https://github.com/jeffe107/BIgMAG), after the proper installation in their local environment. This is the only file they need to run the BIgMAG dashboard.
