@@ -474,7 +474,7 @@ Note that COMEBin does not output what it considers 'unbinned' contigs, therefor
 - `GenomeBinning/MetaBinner/`
   - `bins/[assembler]-[binner]-[sample/group].*.fa.gz`: Genome bins retrieved from input assembly.
   - `discarded/[assembler]-[binner]-[sample/group].tooShort.fa.gz`: Contigs that were not considered for binning because of length.
-  - `unbinned/[assembler]-[binner]-[sample/group].tooShort.fa.gz`: Contigs that were not binned despite having suitable length.
+  - `unbinned/[assembler]-[binner]-[sample/group].unbinned.fa.gz`: Contigs that were not binned despite having suitable length.
   - `stats/[assembler]-[binner]-[sample/group].metabinner.log.gz`: Log file.
   - `stats/[assembler]-[binner]-[sample/group].tsv.gz`: TSV mapping the contigs to output clusters.
 

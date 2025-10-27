@@ -2,13 +2,13 @@
  * Binning with MetaBAT2 and MaxBin2
  */
 include { FASTA_BINNING_CONCOCT                                                                  } from '../../../subworkflows/nf-core/fasta_binning_concoct/main'
+include { BINNING_METABINNER                                                                     } from '../../../subworkflows/local/binning_metabinner/main'
 
 include { METABAT2_METABAT2                                                                      } from '../../../modules/nf-core/metabat2/metabat2/main'
 include { METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS as METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_SHORTREAD } from '../../../modules/nf-core/metabat2/jgisummarizebamcontigdepths/main'
 include { METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS as METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_LONGREAD  } from '../../../modules/nf-core/metabat2/jgisummarizebamcontigdepths/main'
 include { MAXBIN2                                                                                } from '../../../modules/nf-core/maxbin2/main'
 include { COMEBIN_RUNCOMEBIN                                                                     } from '../../../modules/nf-core/comebin/runcomebin/main'
-include { METABINNER                                                                             } from '../../../modules/local/metabinner'
 
 include { GUNZIP as GUNZIP_BINS                                                                  } from '../../../modules/nf-core/gunzip/main'
 include { GUNZIP as GUNZIP_UNBINS                                                                } from '../../../modules/nf-core/gunzip/main'
@@ -142,18 +142,18 @@ workflow BINNING {
 
     // MetaBinner
     if (!params.skip_metabinner) {
-        METABINNER(
+        BINNING_METABINNER(
             ch_metabat2_input
                 .map { meta, assembly, depths ->
                     def meta_new = meta + [binner: 'MetaBinner']
                     [meta_new, assembly, depths]
                 }
         )
-        ch_versions = ch_versions.mix(METABINNER.out.versions)
+        ch_versions = ch_versions.mix(BINNING_METABINNER.out.versions)
 
-        ch_bins_for_seqkit = ch_bins_for_seqkit.mix( METABINNER.out.bins.transpose() )
-        ch_binning_results_gzipped_final = ch_binning_results_gzipped_final.mix( METABINNER.out.bins )
-        ch_input_splitfasta = ch_input_splitfasta.mix(METABINNER.out.unbinned)
+        ch_bins_for_seqkit = ch_bins_for_seqkit.mix( BINNING_METABINNER.out.bins.transpose() )
+        ch_binning_results_gzipped_final = ch_binning_results_gzipped_final.mix( BINNING_METABINNER.out.bins )
+        ch_input_splitfasta = ch_input_splitfasta.mix(BINNING_METABINNER.out.unbinned)
     }
 
     // group bins into per-sample process and not flood clusters with thousands of seqkit jobs
