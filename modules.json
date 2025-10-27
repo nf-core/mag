@@ -96,6 +96,11 @@
                         "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
+                    "comebin/runcomebin": {
+                        "branch": "master",
+                        "git_sha": "6890e2209d0eb6c69dee5fcb5baf1108dbdfa523",
+                        "installed_by": ["modules"]
+                    },
                     "concoct/concoct": {
                         "branch": "master",
                         "git_sha": "ff39793aeff17b7ccb107424215898710b4aa424",
@@ -173,7 +178,7 @@
                     },
                     "gtdbtk/classifywf": {
                         "branch": "master",
-                        "git_sha": "5b08bd1efd531f6bc1727d059648a4f1fbafdce0",
+                        "git_sha": "5e433c4659a72e3e4aaf9d7275147d1a944165ee",
                         "installed_by": ["modules"]
                     },
                     "gunc/downloaddb": {
@@ -243,7 +248,7 @@
                     },
                     "multiqc": {
                         "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "git_sha": "e10b76ca0c66213581bec2833e30d31f239dec0b",
                         "installed_by": ["modules"]
                     },
                     "nanolyse": {
@@ -358,7 +363,7 @@
                     },
                     "utils_nfschema_plugin": {
                         "branch": "master",
-                        "git_sha": "dcd088f483cede0c3df4034d405126f05a764cc7",
+                        "git_sha": "4b406a74dc0449c0401ed87d5bfff4252fd277fd",
                         "installed_by": ["subworkflows"]
                     }
                 }

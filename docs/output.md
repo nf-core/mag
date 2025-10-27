@@ -443,6 +443,25 @@ All the files and contigs in these folders will be assessed by QUAST and BUSCO, 
 
 Note that CONCOCT does not output what it considers 'unbinned' contigs, therefore no 'discarded' contigs are produced here. You may still need to do your own manual curation of the resulting bins.
 
+### COMEBin
+
+[COMEBin](https://github.com/ziyewang/COMEBin) allows effective binning of metagenomic contigs using COntrastive Multi-viEw representation learning.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `GenomeBinning/COMEBin/`
+  - `bins/[assembler]-[binner]-[sample/group]/comebin_res_bins/[assembler]-[binner]-[sample/group].*.fa.gz`: Genome bins retrieved from input assembly.
+  - `stats/[assembler]-[binner]-[sample/group]/comebin.log`: COMEBin log file.
+  - `stats/[assembler]-[binner]-[sample/group]/comebin_res.tsv`: TSV mapping the output clusters to contigs.
+  - `stats/[assembler]-[binner]-[sample/group]/covembeddings.tsv`: TSV describing the embeddings of the contigs.
+  - `stats/[assembler]-[binner]-[sample/group]/embeddings.tsv`: TSV describing the embeddings of the contigs.
+  - </details>
+
+All the files and contigs in these folders will be assessed by QUAST and BUSCO, if the parameter `--postbinning_input` is not set to `refined_bins_only`.
+
+Note that COMEBin does not output what it considers 'unbinned' contigs, therefore no 'discarded' contigs are produced here. You may still need to do your own manual curation of the resulting bins.
+
 ### DAS Tool
 
 [DAS Tool](https://github.com/cmks/DAS_Tool) is an automated binning refinement method that integrates the results of a flexible number of binning algorithms to calculate an optimized, non-redundant set of bins from a single assembly. nf-core/mag uses this tool to attempt to further improve bins based on combining the MetaBAT2 and MaxBin2 binning output, assuming sufficient quality is met for those bins.

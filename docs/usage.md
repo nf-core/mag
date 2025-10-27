@@ -303,7 +303,7 @@ If `-profile` is not specified, the pipeline will run locally and expect all sof
 - `shifter`
   - A generic configuration profile to be used with [Shifter](https://nersc.gitlab.io/development/shifter/how-to-use/)
 - `charliecloud`
-  - A generic configuration profile to be used with [Charliecloud](https://hpc.github.io/charliecloud/)
+  - A generic configuration profile to be used with [Charliecloud](https://charliecloud.io/)
 - `apptainer`
   - A generic configuration profile to be used with [Apptainer](https://apptainer.org/)
 - `wave`
@@ -416,6 +416,18 @@ NXF_OPTS='-Xms1g -Xmx4g'
 nf-core/mag integrates an additional subworkflow to validate ancient DNA _de novo_ assembly:
 
 [Characteristic patterns of ancient DNA (aDNA) damage](<(https://doi.org/10.1073/pnas.0704665104)>), namely DNA fragmentation and cytosine deamination (observed as C-to-T transitions) are typically used to authenticate aDNA sequences. By identifying assembled contigs carrying typical aDNA damages using [PyDamage](https://github.com/maxibor/pydamage), nf-core/mag can report and distinguish ancient contigs from contigs carrying no aDNA damage. Furthermore, to mitigate the effect of aDNA damage on contig sequence assembly, [freebayes](https://github.com/freebayes/freebayes) in combination with [BCFtools](https://github.com/samtools/bcftools) are used to (re)call the variants from the reads aligned to the contigs, and (re)generate contig consensus sequences.
+
+## A note on coverage estimation
+
+In order to run the binning tools included in the pipeline, MAG must first align reads back to the assemblies, and estimate the coverage of each contig.
+
+During the coverage estimation step, these alignments are by default filtered to retain alignments that have a percentage identity of 97% (i.e., of the base pairs that match between the read and the contig, 97% are identical). This value is a good default for short read Illumina data, however for certain long read technologies, the error rates in the reads can be much higher.
+For example, older Oxford Nanopore chemistries can have error rates approaching
+15% - 20%.
+
+If you are having trouble with the coverage estimation steps (for example, the output depths for each bin are all at or near zero), it may be worth manually adjusting this parameter, if it is appropriate for your data.
+You can do this by adjusting the `--longread_percentidentity` and `--shortread_percentidentity` parameters for long reads and short reads, respectively.
+For older ONT data, you may wish to look at values of around 85% to improve coverage estimation.
 
 ## A note on bin refinement
 
