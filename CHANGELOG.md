@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
+- [#896](https://github.com/nf-core/mag/pull/896) - Remove obsolete execution command from README (by @dialvarezs)
+
 ### `Dependencies`
 
 | Tool | Previous version | New version |
