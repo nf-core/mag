@@ -33,6 +33,9 @@ nextflow_pipeline {
             def concoct_logs = getAllFilesFromDir(
                 params.outdir, include: ['GenomeBinning/CONCOCT/stats/*_log.txt']
             )
+            def busco_logs = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/QC/BUSCO/*/*-busco.log']
+            )
 
 
             // Output directory: multiqc
@@ -61,6 +64,10 @@ nextflow_pipeline {
                 },
                 { assert concoct_logs.collect {
                         log -> log.readLines().last().contains('CONCOCT Finished')
+                    }.every()
+                },
+                { assert busco_logs.collect {
+                        log -> log.readLines().any { it.contains('BUSCO analysis done.') }
                     }.every()
                 },
             )
