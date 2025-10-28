@@ -49,8 +49,8 @@ or to additionally perform run merging of two runs from sample1:
 
 ```csv title="samplesheet_mix_mergeruns.csv"
 sample,run,group,short_reads_1,short_reads_2,long_reads,short_reads_platform,long_reads_platform
-sample1,1,0,data/sample1_lane2_R1.fastq.gz,data/sample1_lane2_R2.fastq.gz,data/sample1.fastq.gz,ILLUMINA,OXFORD_NANOPORE
-sample1,2,0,data/sample1_R1.fastq.gz,data/sample1_R2.fastq.gz,data/sample1.fastq.gz,ILLUMINA,OXFORD_NANOPORE
+sample1,1,0,data/sample1_R1.fastq.gz,data/sample1_R2.fastq.gz,data/sample1.fastq.gz,ILLUMINA,OXFORD_NANOPORE
+sample1,2,0,data/sample1_lane2_R1.fastq.gz,data/sample1_lane2_R2.fastq.gz,data/sample1.fastq.gz,ILLUMINA,OXFORD_NANOPORE
 sample2,0,0,data/sample2_R1.fastq.gz,data/sample2_R2.fastq.gz,data/sample2.fastq.gz,ILLUMINA,OXFORD_NANOPORE
 sample3,1,0,data/sample3_R1.fastq.gz,data/sample3_R2.fastq.gz,,ILLUMINA,OXFORD_NANOPORE
 ```
@@ -59,8 +59,8 @@ If only long read data is available, the columns `short_reads_1` and `short_read
 
 ```csv title="samplesheet_longreadonly.csv"
 sample,run,group,long_reads,long_reads_platform
-sample1,1,0,data/sample1.fastq.gz,OXFORD_NANOPORE
-sample1,2,0,data/sample1.fastq.gz,OXFORD_NANOPORE
+sample1,1,0,data/sample1A.fastq.gz,OXFORD_NANOPORE
+sample1,2,0,data/sample1B.fastq.gz,OXFORD_NANOPORE
 sample2,0,0,data/sample2.fastq.gz,OXFORD_NANOPORE
 sample3,1,0,data/sample3.fastq.gz,OXFORD_NANOPORE
 ```
