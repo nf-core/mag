@@ -7,15 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
+- [#881](https://github.com/nf-core/mag/pull/881) - Add binner MetaBinner (by @d4straub, insprired by @HeshamAlmessady & @AlphaSquad)
+
 ### `Changed`
 
 ### `Fixed`
 
 ### `Dependencies`
 
-| Tool | Previous version | New version |
-| ---- | ---------------- | ----------- |
-|      |                  |             |
+| Tool       | Previous version | New version |
+| ---------- | ---------------- | ----------- |
+| MetaBinner |                  | 1.4.4-0     |
 
 ### `Deprecated`
 
