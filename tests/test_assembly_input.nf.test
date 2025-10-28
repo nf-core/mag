@@ -36,6 +36,9 @@ nextflow_pipeline {
             def busco_logs = getAllFilesFromDir(
                 params.outdir, include: ['GenomeBinning/QC/BUSCO/*/*-busco.log']
             )
+            def dastool_logs = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/DASTool/*.log']
+            )
 
 
             // Output directory: multiqc
@@ -68,6 +71,10 @@ nextflow_pipeline {
                 },
                 { assert busco_logs.collect {
                         log -> log.readLines().any { it.contains('BUSCO analysis done.') }
+                    }.every()
+                },
+                { assert dastool_logs.collect {
+                        log -> log.readLines().last().contains("Writing bins")
                     }.every()
                 },
             )
