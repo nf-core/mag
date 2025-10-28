@@ -2,18 +2,18 @@
     "checkm2_diamond_results": {
         "content": [
             [
-                806
+                803
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2025-08-21T06:18:59.114965285"
+        "timestamp": "2025-10-28T17:29:26.218830464"
     },
     "-profile test_alternatives": {
         "content": [
-            41,
+            33,
             {
                 "BIN_SUMMARY": {
                     "python": "3.10.6",
@@ -79,6 +79,9 @@
                 "METABAT2_METABAT2": {
                     "metabat2": 2.17
                 },
+                "POOL_SHORT_READS": {
+                    "cat": 9.5
+                },
                 "SEQKIT_STATS": {
                     "seqkit": "2.9.0"
                 },
@@ -107,7 +110,7 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.7"
         },
-        "timestamp": "2025-09-17T11:03:46.699234025"
+        "timestamp": "2025-10-28T17:29:25.765680529"
     },
     "qc": {
         "content": [
@@ -139,77 +142,64 @@
     "assembly": {
         "content": [
             [
-                "Assembly/MEGAHIT/MEGAHIT-test_minigut.contigs.fa.gz",
-                "Assembly/MEGAHIT/MEGAHIT-test_minigut.log",
-                "Assembly/MEGAHIT/MEGAHIT-test_minigut_sample2.contigs.fa.gz",
-                "Assembly/MEGAHIT/MEGAHIT-test_minigut_sample2.log",
-                "Assembly/MEGAHIT/QC/test_minigut/MEGAHIT-test_minigut-test_minigut_sample2.bowtie2.log",
-                "Assembly/MEGAHIT/QC/test_minigut/MEGAHIT-test_minigut.bowtie2.log",
-                "Assembly/MEGAHIT/QC/test_minigut_sample2/MEGAHIT-test_minigut_sample2-test_minigut.bowtie2.log",
-                "Assembly/MEGAHIT/QC/test_minigut_sample2/MEGAHIT-test_minigut_sample2.bowtie2.log"
+                "Assembly/MEGAHIT/MEGAHIT-group-0.contigs.fa.gz",
+                "Assembly/MEGAHIT/MEGAHIT-group-0.log",
+                "Assembly/MEGAHIT/QC/group-0/MEGAHIT-group-0-test_minigut.bowtie2.log",
+                "Assembly/MEGAHIT/QC/group-0/MEGAHIT-group-0-test_minigut_sample2.bowtie2.log"
             ],
             [
-                "MEGAHIT-test_minigut.contigs.fa.gz:md5,281287b2e105d82cc9d2900c7f624769",
-                "MEGAHIT-test_minigut_sample2.contigs.fa.gz:md5,e88019689caed5802fe5596d94a38df8"
+                "MEGAHIT-group-0.contigs.fa.gz:md5,4b1c9360be95e596b87194b12a5db645"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2025-08-21T06:18:58.837281134"
+        "timestamp": "2025-10-28T17:29:25.851427343"
     },
     "binning": {
         "content": [
             [
-                "GenomeBinning/MetaBAT2/bins/MEGAHIT-MetaBAT2-test_minigut.1.fa.gz",
-                "GenomeBinning/MetaBAT2/bins/MEGAHIT-MetaBAT2-test_minigut.2.fa.gz",
-                "GenomeBinning/MetaBAT2/discarded/MEGAHIT-MetaBAT2-test_minigut.lowDepth.fa.gz",
-                "GenomeBinning/MetaBAT2/discarded/MEGAHIT-MetaBAT2-test_minigut.tooShort.fa.gz",
-                "GenomeBinning/MetaBAT2/discarded/MEGAHIT-MetaBAT2-test_minigut_sample2.lowDepth.fa.gz",
-                "GenomeBinning/MetaBAT2/discarded/MEGAHIT-MetaBAT2-test_minigut_sample2.tooShort.fa.gz",
-                "GenomeBinning/MetaBAT2/unbinned/discarded/MEGAHIT-MetaBAT2-test_minigut.unbinned.pooled.fa.gz",
-                "GenomeBinning/MetaBAT2/unbinned/discarded/MEGAHIT-MetaBAT2-test_minigut.unbinned.remaining.fa.gz",
-                "GenomeBinning/MetaBAT2/unbinned/discarded/MEGAHIT-MetaBAT2-test_minigut_sample2.unbinned.pooled.fa.gz",
-                "GenomeBinning/MetaBAT2/unbinned/discarded/MEGAHIT-MetaBAT2-test_minigut_sample2.unbinned.remaining.fa.gz",
-                "GenomeBinning/QC/CheckM2/MEGAHIT-MetaBAT2-prokarya-unrefined-test_minigut/checkm2.log",
-                "GenomeBinning/QC/CheckM2/MEGAHIT-MetaBAT2-prokarya-unrefined-test_minigut/diamond_output/DIAMOND_RESULTS.tsv",
-                "GenomeBinning/QC/CheckM2/MEGAHIT-MetaBAT2-prokarya-unrefined-test_minigut/protein_files/MEGAHIT-MetaBAT2-test_minigut.1.faa",
-                "GenomeBinning/QC/CheckM2/MEGAHIT-MetaBAT2-prokarya-unrefined-test_minigut/protein_files/MEGAHIT-MetaBAT2-test_minigut.2.faa",
-                "GenomeBinning/QC/CheckM2/MEGAHIT-MetaBAT2-prokarya-unrefined-test_minigut/quality_report.tsv",
-                "GenomeBinning/QC/CheckM2/MEGAHIT-MetaBAT2-prokarya-unrefined-test_minigut_checkm2_report.tsv",
+                "GenomeBinning/MetaBAT2/bins/MEGAHIT-MetaBAT2-group-0.1.fa.gz",
+                "GenomeBinning/MetaBAT2/bins/MEGAHIT-MetaBAT2-group-0.2.fa.gz",
+                "GenomeBinning/MetaBAT2/discarded/MEGAHIT-MetaBAT2-group-0.lowDepth.fa.gz",
+                "GenomeBinning/MetaBAT2/discarded/MEGAHIT-MetaBAT2-group-0.tooShort.fa.gz",
+                "GenomeBinning/MetaBAT2/unbinned/discarded/MEGAHIT-MetaBAT2-group-0.unbinned.pooled.fa.gz",
+                "GenomeBinning/MetaBAT2/unbinned/discarded/MEGAHIT-MetaBAT2-group-0.unbinned.remaining.fa.gz",
+                "GenomeBinning/QC/CheckM2/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/checkm2.log",
+                "GenomeBinning/QC/CheckM2/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/diamond_output/DIAMOND_RESULTS.tsv",
+                "GenomeBinning/QC/CheckM2/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/protein_files/MEGAHIT-MetaBAT2-group-0.1.faa",
+                "GenomeBinning/QC/CheckM2/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/protein_files/MEGAHIT-MetaBAT2-group-0.2.faa",
+                "GenomeBinning/QC/CheckM2/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/quality_report.tsv",
+                "GenomeBinning/QC/CheckM2/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0_checkm2_report.tsv",
                 "GenomeBinning/QC/checkm2_summary.tsv",
                 "GenomeBinning/Tiara/tiara_summary.tsv",
                 "GenomeBinning/bin_summary.tsv",
-                "GenomeBinning/depths/bins/MEGAHIT-MetaBAT2-test_minigut-binDepths.heatmap.png",
+                "GenomeBinning/depths/bins/MEGAHIT-MetaBAT2-group-0-binDepths.heatmap.png",
                 "GenomeBinning/depths/bins/bin_depths_summary.tsv",
-                "GenomeBinning/depths/contigs/MEGAHIT-test_minigut-depth.txt.gz",
-                "GenomeBinning/depths/contigs/MEGAHIT-test_minigut_sample2-depth.txt.gz"
+                "GenomeBinning/depths/contigs/MEGAHIT-group-0-depth.txt.gz"
             ],
             [
-                "MEGAHIT-MetaBAT2-test_minigut.1.fa.gz:md5,44b77f8e1a059011e45896cb80dbf361",
-                "MEGAHIT-MetaBAT2-test_minigut.2.fa.gz:md5,10fb6fc82494beda78e6b1c6c2d4d8d2",
-                "MEGAHIT-MetaBAT2-test_minigut.lowDepth.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "MEGAHIT-MetaBAT2-test_minigut.tooShort.fa.gz:md5,4b65a9dd07c9b4bcdc828c104a7df36d",
-                "MEGAHIT-MetaBAT2-test_minigut_sample2.lowDepth.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "MEGAHIT-MetaBAT2-test_minigut_sample2.tooShort.fa.gz:md5,f9479e7fb34586a2892cd7bc323d414a",
-                "MEGAHIT-MetaBAT2-test_minigut.unbinned.remaining.fa.gz:md5,7ac001a38113812061f8ef5c94e3f579",
-                "MEGAHIT-MetaBAT2-test_minigut_sample2.unbinned.remaining.fa.gz:md5,e1a969d6e292e10a81ef4236907984a9",
-                "MEGAHIT-MetaBAT2-test_minigut.1.faa:md5,ba436cbba64ce111f228da1e2daac642",
-                "MEGAHIT-MetaBAT2-test_minigut.2.faa:md5,577adc1aa1ebd51fed46f726ad90d9b3",
-                "quality_report.tsv:md5,9365828b072487af69333ecb35353255",
-                "MEGAHIT-MetaBAT2-prokarya-unrefined-test_minigut_checkm2_report.tsv:md5,9365828b072487af69333ecb35353255",
-                "checkm2_summary.tsv:md5,9365828b072487af69333ecb35353255",
-                "tiara_summary.tsv:md5,6f97d6016921205c7913e54850b52dad",
-                "bin_summary.tsv:md5,8901f5aee83fa37cfce832d60b51687e",
-                "bin_depths_summary.tsv:md5,ef8b1a8aad59ad4f56515d0fb7045a6d"
+                "MEGAHIT-MetaBAT2-group-0.1.fa.gz:md5,03980cd3f96ecbd947bec62aee97d507",
+                "MEGAHIT-MetaBAT2-group-0.2.fa.gz:md5,a5479825817e5ebe4735bbcd428345eb",
+                "MEGAHIT-MetaBAT2-group-0.lowDepth.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "MEGAHIT-MetaBAT2-group-0.tooShort.fa.gz:md5,90667cb1a77c0bc39e7e8441bfdf2305",
+                "MEGAHIT-MetaBAT2-group-0.unbinned.remaining.fa.gz:md5,e694b456ad5d1b3bc1b7af499090d0e6",
+                "MEGAHIT-MetaBAT2-group-0.1.faa:md5,70451fa3e39837f5d25b8116e5d03500",
+                "MEGAHIT-MetaBAT2-group-0.2.faa:md5,903b0e2ed9a0ff98c1c9af09b16ae527",
+                "quality_report.tsv:md5,ec01903b7f8a7203856a35a7bd2d4c34",
+                "MEGAHIT-MetaBAT2-prokarya-unrefined-group-0_checkm2_report.tsv:md5,ec01903b7f8a7203856a35a7bd2d4c34",
+                "checkm2_summary.tsv:md5,ec01903b7f8a7203856a35a7bd2d4c34",
+                "tiara_summary.tsv:md5,4cbfb0fd90ba48dc33d75d10c1eddb17",
+                "bin_summary.tsv:md5,43962424f22c75cd0c4d7b1d84b49374",
+                "bin_depths_summary.tsv:md5,a73f2fc180a2c52038c88fbbfa6a95c3"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2025-08-21T06:18:58.895769923"
+        "timestamp": "2025-10-28T17:29:25.959292325"
     },
     "multiqc": {
         "content": [
@@ -323,8 +313,8 @@
                 "multiqc/multiqc_report.html"
             ],
             [
-                "bowtie2_pe_plot.yaml:md5,17542811418a01c5c4497e77626bad91",
-                "checkm2-first-table.yaml:md5,d138b272a46411d66b643a7cdabf4511",
+                "bowtie2_pe_plot.yaml:md5,9fa09c02794c68558cc04fb9568cc8c4",
+                "checkm2-first-table.yaml:md5,0efa2d81e6b4dea3218aa0fbc12d853e",
                 "fastqc-1-status-check-heatmap.yaml:md5,30f0c0bbefd3e9c549116c8b7cc2ac25",
                 "fastqc-1_per_base_n_content_plot.yaml:md5,f43001053b544ba5585040c18859a098",
                 "fastqc-1_per_base_sequence_quality_plot.yaml:md5,48276488936fd9c2e52b53a58dae0ffb",
@@ -343,12 +333,12 @@
                 "fastqc_sequence_duplication_levels_plot.yaml:md5,73719c3f3fa610204a42cd7155d73db1",
                 "fastqc_sequence_length_distribution_plot.yaml:md5,78c762e20322ee4d63f869961186c15c",
                 "multiqc_bowtie2.yaml:md5,6607915ea98168dbcad83cda2ec464dc",
-                "multiqc_bowtie2_bowtie2-2.yaml:md5,294c48fecbf1bdc5030550552a32497d",
-                "multiqc_checkm2.yaml:md5,9b48d1b569bae456409527610b56a2a0",
+                "multiqc_bowtie2_bowtie2-2.yaml:md5,2a389e80ea3e2afb772fe4cd2779d0b2",
+                "multiqc_checkm2.yaml:md5,8f23880e10a57ad0df6434e2f479c85b",
                 "multiqc_citations.yaml:md5,dcac7876946630b831fad3d816e8050f",
                 "multiqc_fastqc.yaml:md5,f50da8bfd062b9399911ba19b34831db",
                 "multiqc_fastqc_fastqc-1.yaml:md5,4c2c5a5e7b370b0668c1360b7927d0a8",
-                "multiqc_general_stats.yaml:md5,bea5cdd6ba2c414c4e6d2b5137b56e1c",
+                "multiqc_general_stats.yaml:md5,c2deb169392d5f3b4191018bfb947d74",
                 "multiqc_trimmomatic.yaml:md5,d4aaff3725c28801ae0577d97c2f9b30",
                 "trimmomatic_plot.yaml:md5,9557cd587ace0a93912179cb0deafe3b"
             ]
@@ -357,6 +347,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.7"
         },
-        "timestamp": "2025-10-17T15:30:21.553622586"
+        "timestamp": "2025-10-28T17:29:26.067205334"
     }
 }
