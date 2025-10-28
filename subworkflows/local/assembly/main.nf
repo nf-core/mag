@@ -46,7 +46,7 @@ workflow ASSEMBLY {
             }
 
         // We have to merge reads together to match tuple structure of POOL_SHORT_READS/
-        // This MUST be in a interleaved structure (s1_r1, s1_r2, s2_r1, s2_r2, ...) 
+        // This MUST be in a interleaved structure (s1_r1, s1_r2, s2_r1, s2_r2, ...)
         // So we merge the two list of R1 and R2s, and sort them to ensure correct order above
         ch_short_reads_grouped_for_pooling = ch_short_reads_grouped.map { meta, reads1, reads2 -> [meta, [reads1 + reads2].flatten().sort()] }
 

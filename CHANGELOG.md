@@ -3,7 +3,26 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v5.1.0dev - [date]
+## v5.2.0dev - [date]
+
+### `Added`
+
+### `Changed`
+
+### `Fixed`
+
+- [#896](https://github.com/nf-core/mag/pull/896) - Remove obsolete execution command from README (by @dialvarezs)
+- [#893](https://github.com/nf-core/mag/pull/893) - Fix R1 being mistakenly provided to POOL_SHORT_READS instead of R2 for paired end data (reported by @maartenciers, fix by @jfy133)
+
+### `Dependencies`
+
+| Tool | Previous version | New version |
+| ---- | ---------------- | ----------- |
+|      |                  |             |
+
+### `Deprecated`
+
+## v5.1.0 - 2025-10-27
 
 ### `Added`
 
@@ -19,13 +38,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#878](https://github.com/nf-core/mag/pull/878) - Fix METASPADES process not receiving the correct number of cpus from the fix CPUs parameter (by @jfy133)
 - [#885](https://github.com/nf-core/mag/pull/885) - Fix typo in long-read assembly mode selection (reported by @feixiang1209, fix by @jfy133)
-- [#893](https://github.com/nf-core/mag/pull/893) - Fix R1 being mistakenly provided to POOL_SHORT_READS instead of R2 for paired end data (reported by @maartenciers, fix by @jfy133)
+- [#888](https://github.com/nf-core/mag/pull/888) - Only error if all bins are size filtered if bins have actually been generated (reported by @hkaspersen, fix by @prototaxites)
 
 ### `Dependencies`
 
 | Tool    | Previous version | New version |
 | ------- | ---------------- | ----------- |
 | nf-core | 3.3.2            | 3.4.1       |
+| COMEBin |                  | 1.0.4       |
 
 ### `Deprecated`
 
@@ -66,7 +86,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#854](https://github.com/nf-core/mag/pull/854) - Update porechop/abi to a patched version to prevent duplicated read names (reported by @palec87, fix by @jfy133)
 - [#858](https://github.com/nf-core/mag/pull/858) - Fix a single parameter validation failure reporting errors for all parameters by updated nf-schema to 2.5.1 (reported by @Pranjal-Bioinfo, fix by @nvnieuwk and @jfy133)
 - [#864](https://github.com/nf-core/mag/pull/864) - Fix missing multi-threading of MetaEuk easypredict (reported by @OlivierCoen, fix by @prototaxites).
-- [#888](https://github.com/nf-core/mag/pull/888) - Only error if all bins are size filtered if bins have actually been generated (reported by @hkaspersen, fix by @prototaxites)
 
 ### `Dependencies`
 
