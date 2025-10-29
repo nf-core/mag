@@ -103,7 +103,7 @@
                     "trimmomatic": 0.39
                 },
                 "Workflow": {
-                    "nf-core/mag": "v5.1.0dev"
+                    "nf-core/mag": "v5.2.0dev"
                 },
                 "r-base": "4.1.3",
                 "r-tidyverse": "1.3.1"
@@ -266,7 +266,6 @@
     "multiqc": {
         "content": [
             [
-                "multiqc/multiqc_data/BETA-multiqc.parquet",
                 "multiqc/multiqc_data/bowtie2_pe_plot.yaml",
                 "multiqc/multiqc_data/busco_plot_bacteria_odb12.yaml",
                 "multiqc/multiqc_data/checkm2-first-table.yaml",
@@ -287,7 +286,9 @@
                 "multiqc/multiqc_data/fastqc_sequence_counts_plot.yaml",
                 "multiqc/multiqc_data/fastqc_sequence_duplication_levels_plot.yaml",
                 "multiqc/multiqc_data/fastqc_sequence_length_distribution_plot.yaml",
+                "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc.parquet",
                 "multiqc/multiqc_data/multiqc_bowtie2.yaml",
                 "multiqc/multiqc_data/multiqc_bowtie2_bowtie2-2.yaml",
                 "multiqc/multiqc_data/multiqc_busco.yaml",
@@ -409,7 +410,7 @@
                 "multiqc_citations.yaml:md5,50440bb766620557f852bbd53357a098",
                 "multiqc_fastqc.yaml:md5,f50da8bfd062b9399911ba19b34831db",
                 "multiqc_fastqc_fastqc-1.yaml:md5,4c2c5a5e7b370b0668c1360b7927d0a8",
-                "multiqc_general_stats.yaml:md5,8b8cbb9d6fe349084e3d2fe2ffdecda8",
+                "multiqc_general_stats.yaml:md5,bea5cdd6ba2c414c4e6d2b5137b56e1c",
                 "multiqc_trimmomatic.yaml:md5,d4aaff3725c28801ae0577d97c2f9b30",
                 "trimmomatic_plot.yaml:md5,9557cd587ace0a93912179cb0deafe3b"
             ]
@@ -418,6 +419,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.7"
         },
-        "timestamp": "2025-10-17T16:58:55.2144964"
+        "timestamp": "2025-10-17T15:30:21.553622586"
     }
 }

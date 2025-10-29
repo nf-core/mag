@@ -169,6 +169,27 @@ workflow BINNING {
             [[filename: row.file], [bin_total_length: row.sum_len.toInteger()]]
         }
 
+    //
+    // Logic: Gather all the bin lengths, then check if the number of bins after length
+    //        filtering is 0. Error if so, but only if we had bins to begin with.
+    //
+    ch_seqkitstats_results
+        .map { meta, stats -> stats.bin_total_length }
+        .collect().ifEmpty([])
+        .subscribe { stats ->
+            def n_bins = stats.size()
+            def n_filtered_bins = stats.findAll {
+                it >= val_bin_min_size && (val_bin_max_size ? it <= val_bin_max_size : true)
+            }.size()
+            if (n_bins > 0 && n_filtered_bins == 0) {
+                error(
+                    "[nf-core/mag] ERROR: no bins passed the bin size filter specified between " +
+                    "--bin_min_size ${val_bin_min_size} and " +
+                    "--bin_max_size ${val_bin_max_size}. Please adjust parameters."
+                )
+            }
+        }
+
     ch_final_bins_for_gunzip = ch_bins_for_seqkit
         .map { meta, bin ->
             [[filename: bin.name], meta, bin]
@@ -179,9 +200,6 @@ workflow BINNING {
         }
         .filter { meta, _bin ->
             meta.bin_total_length >= val_bin_min_size && (val_bin_max_size ? meta.bin_total_length <= val_bin_max_size : true)
-        }
-        .ifEmpty {
-            error("[nf-core/mag] ERROR: no bins passed the bin size filter specified between --bin_min_size ${val_bin_min_size} and --bin_max_size ${val_bin_max_size}. Please adjust parameters.")
         }
         .map { meta, bin ->
             [meta.minus([bin_total_length: meta.bin_total_length]), bin]

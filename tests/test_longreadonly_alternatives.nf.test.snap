@@ -79,7 +79,7 @@
                     "pandas": "1.1.5"
                 },
                 "Workflow": {
-                    "nf-core/mag": "v5.1.0dev"
+                    "nf-core/mag": "v5.2.0dev"
                 }
             }
         ],
@@ -92,9 +92,10 @@
     "multiqc": {
         "content": [
             [
-                "multiqc/multiqc_data/BETA-multiqc.parquet",
                 "multiqc/multiqc_data/busco_plot_bacteria_odb10.yaml",
+                "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc.parquet",
                 "multiqc/multiqc_data/multiqc_busco.yaml",
                 "multiqc/multiqc_data/multiqc_citations.yaml",
                 "multiqc/multiqc_data/multiqc_data.json",
@@ -114,7 +115,7 @@
                 "busco_plot_bacteria_odb10.yaml:md5,61ea14a5ac60fa3b48ee832af75effff",
                 "multiqc_busco.yaml:md5,0a1896fc18fdea30852125167730c8c5",
                 "multiqc_citations.yaml:md5,cd0615b89829a041bc2a33cdb69b585b",
-                "multiqc_general_stats.yaml:md5,f5594b277c894e24b538c4ef9e468e3d",
+                "multiqc_general_stats.yaml:md5,fbf8803248aa40052113485a7bfbb8d0",
                 "porechop.yaml:md5,828d96e2822bb4b4108ab706c00c4450"
             ]
         ],
@@ -122,6 +123,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.7"
         },
-        "timestamp": "2025-09-17T11:26:00.0376308"
+        "timestamp": "2025-10-17T15:56:17.268973009"
     }
 }
