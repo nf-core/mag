@@ -44,7 +44,7 @@
                 "CAT_FASTQ": {
                     "cat": 9.5
                 },
-                "CONCAT_BINQC_TSV": {
+                "CONCAT_BUSCO_TSV": {
                     "csvtk": "0.31.0"
                 },
                 "CONVERT_DEPTHS": {

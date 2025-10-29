@@ -875,11 +875,17 @@
                     "type": "boolean",
                     "description": "Disable bin QC with BUSCO, CheckM or CheckM2."
                 },
-                "binqc_tool": {
-                    "type": "string",
-                    "default": "busco",
-                    "description": "Specify which tool for bin quality-control validation to use.",
-                    "enum": ["busco", "checkm", "checkm2"]
+                "run_busco": {
+                    "type": "boolean",
+                    "description": "Enable running BUSCO during bin QC."
+                },
+                "run_checkm": {
+                    "type": "boolean",
+                    "description": "Enable running CheckM during bin QC."
+                },
+                "run_checkm2": {
+                    "type": "boolean",
+                    "description": "Enable running CheckM2 during bin QC."
                 },
                 "busco_db": {
                     "type": "string",

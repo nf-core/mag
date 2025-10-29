@@ -7,13 +7,13 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2025-08-21T06:18:59.114965285"
+        "timestamp": "2025-10-17T16:58:57.428040987"
     },
     "-profile test_alternatives": {
         "content": [
-            41,
+            43,
             {
                 "BIN_SUMMARY": {
                     "python": "3.10.6",
@@ -33,13 +33,19 @@
                 "BOWTIE2_PHIX_REMOVAL_BUILD": {
                     "bowtie2": "2.4.2"
                 },
+                "BUSCO_BUSCO": {
+                    "busco": "6.0.0"
+                },
                 "CHECKM2_DATABASEDOWNLOAD": {
                     "aria2": "1.37.0"
                 },
                 "CHECKM2_PREDICT": {
                     "checkm2": "1.1.0"
                 },
-                "CONCAT_BINQC_TSV": {
+                "CONCAT_BUSCO_TSV": {
+                    "csvtk": "0.31.0"
+                },
+                "CONCAT_CHECKM2_TSV": {
                     "csvtk": "0.31.0"
                 },
                 "DASTOOL_FASTATOCONTIG2BIN_TIARA": {
@@ -107,7 +113,7 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.7"
         },
-        "timestamp": "2025-09-17T11:03:46.699234025"
+        "timestamp": "2025-10-17T16:58:42.262727541"
     },
     "qc": {
         "content": [
@@ -172,12 +178,51 @@
                 "GenomeBinning/MetaBAT2/unbinned/discarded/MEGAHIT-MetaBAT2-test_minigut.unbinned.remaining.fa.gz",
                 "GenomeBinning/MetaBAT2/unbinned/discarded/MEGAHIT-MetaBAT2-test_minigut_sample2.unbinned.pooled.fa.gz",
                 "GenomeBinning/MetaBAT2/unbinned/discarded/MEGAHIT-MetaBAT2-test_minigut_sample2.unbinned.remaining.fa.gz",
+                "GenomeBinning/QC/BUSCO/test_minigut/short_summary.specific.bacteria_odb12.MEGAHIT-MetaBAT2-test_minigut.1.fa.json",
+                "GenomeBinning/QC/BUSCO/test_minigut/short_summary.specific.bacteria_odb12.MEGAHIT-MetaBAT2-test_minigut.1.fa.txt",
+                "GenomeBinning/QC/BUSCO/test_minigut/short_summary.specific.bacteria_odb12.MEGAHIT-MetaBAT2-test_minigut.2.fa.json",
+                "GenomeBinning/QC/BUSCO/test_minigut/short_summary.specific.bacteria_odb12.MEGAHIT-MetaBAT2-test_minigut.2.fa.txt",
+                "GenomeBinning/QC/BUSCO/test_minigut/test_minigut-auto-busco.batch_summary.txt",
+                "GenomeBinning/QC/BUSCO/test_minigut/test_minigut-auto-busco.log",
+                "GenomeBinning/QC/BUSCO/test_minigut/test_minigut-auto-busco/MEGAHIT-MetaBAT2-test_minigut.1.fa/logs/bbtools_err.log",
+                "GenomeBinning/QC/BUSCO/test_minigut/test_minigut-auto-busco/MEGAHIT-MetaBAT2-test_minigut.1.fa/logs/bbtools_out.log",
+                "GenomeBinning/QC/BUSCO/test_minigut/test_minigut-auto-busco/MEGAHIT-MetaBAT2-test_minigut.1.fa/logs/hmmsearch_err.log",
+                "GenomeBinning/QC/BUSCO/test_minigut/test_minigut-auto-busco/MEGAHIT-MetaBAT2-test_minigut.1.fa/logs/hmmsearch_out.log",
+                "GenomeBinning/QC/BUSCO/test_minigut/test_minigut-auto-busco/MEGAHIT-MetaBAT2-test_minigut.1.fa/logs/miniprot_align_eukaryota_odb12_err.log",
+                "GenomeBinning/QC/BUSCO/test_minigut/test_minigut-auto-busco/MEGAHIT-MetaBAT2-test_minigut.1.fa/logs/miniprot_align_eukaryota_odb12_out.log",
+                "GenomeBinning/QC/BUSCO/test_minigut/test_minigut-auto-busco/MEGAHIT-MetaBAT2-test_minigut.1.fa/logs/miniprot_index_err.log",
+                "GenomeBinning/QC/BUSCO/test_minigut/test_minigut-auto-busco/MEGAHIT-MetaBAT2-test_minigut.1.fa/logs/miniprot_index_out.log",
+                "GenomeBinning/QC/BUSCO/test_minigut/test_minigut-auto-busco/MEGAHIT-MetaBAT2-test_minigut.1.fa/logs/prodigal_err.log",
+                "GenomeBinning/QC/BUSCO/test_minigut/test_minigut-auto-busco/MEGAHIT-MetaBAT2-test_minigut.1.fa/logs/prodigal_out.log",
+                "GenomeBinning/QC/BUSCO/test_minigut/test_minigut-auto-busco/MEGAHIT-MetaBAT2-test_minigut.1.fa/logs/sepp_err.log",
+                "GenomeBinning/QC/BUSCO/test_minigut/test_minigut-auto-busco/MEGAHIT-MetaBAT2-test_minigut.1.fa/logs/sepp_out.log",
+                "GenomeBinning/QC/BUSCO/test_minigut/test_minigut-auto-busco/MEGAHIT-MetaBAT2-test_minigut.1.fa/prodigal_output/.checkpoint",
+                "GenomeBinning/QC/BUSCO/test_minigut/test_minigut-auto-busco/MEGAHIT-MetaBAT2-test_minigut.1.fa/prodigal_output/predicted_genes/predicted.faa",
+                "GenomeBinning/QC/BUSCO/test_minigut/test_minigut-auto-busco/MEGAHIT-MetaBAT2-test_minigut.1.fa/prodigal_output/predicted_genes/predicted.fna",
+                "GenomeBinning/QC/BUSCO/test_minigut/test_minigut-auto-busco/MEGAHIT-MetaBAT2-test_minigut.1.fa/tmp/refseq_db.faa",
+                "GenomeBinning/QC/BUSCO/test_minigut/test_minigut-auto-busco/MEGAHIT-MetaBAT2-test_minigut.2.fa/logs/bbtools_err.log",
+                "GenomeBinning/QC/BUSCO/test_minigut/test_minigut-auto-busco/MEGAHIT-MetaBAT2-test_minigut.2.fa/logs/bbtools_out.log",
+                "GenomeBinning/QC/BUSCO/test_minigut/test_minigut-auto-busco/MEGAHIT-MetaBAT2-test_minigut.2.fa/logs/hmmsearch_err.log",
+                "GenomeBinning/QC/BUSCO/test_minigut/test_minigut-auto-busco/MEGAHIT-MetaBAT2-test_minigut.2.fa/logs/hmmsearch_out.log",
+                "GenomeBinning/QC/BUSCO/test_minigut/test_minigut-auto-busco/MEGAHIT-MetaBAT2-test_minigut.2.fa/logs/miniprot_align_eukaryota_odb12_err.log",
+                "GenomeBinning/QC/BUSCO/test_minigut/test_minigut-auto-busco/MEGAHIT-MetaBAT2-test_minigut.2.fa/logs/miniprot_align_eukaryota_odb12_out.log",
+                "GenomeBinning/QC/BUSCO/test_minigut/test_minigut-auto-busco/MEGAHIT-MetaBAT2-test_minigut.2.fa/logs/miniprot_index_err.log",
+                "GenomeBinning/QC/BUSCO/test_minigut/test_minigut-auto-busco/MEGAHIT-MetaBAT2-test_minigut.2.fa/logs/miniprot_index_out.log",
+                "GenomeBinning/QC/BUSCO/test_minigut/test_minigut-auto-busco/MEGAHIT-MetaBAT2-test_minigut.2.fa/logs/prodigal_err.log",
+                "GenomeBinning/QC/BUSCO/test_minigut/test_minigut-auto-busco/MEGAHIT-MetaBAT2-test_minigut.2.fa/logs/prodigal_out.log",
+                "GenomeBinning/QC/BUSCO/test_minigut/test_minigut-auto-busco/MEGAHIT-MetaBAT2-test_minigut.2.fa/logs/sepp_err.log",
+                "GenomeBinning/QC/BUSCO/test_minigut/test_minigut-auto-busco/MEGAHIT-MetaBAT2-test_minigut.2.fa/logs/sepp_out.log",
+                "GenomeBinning/QC/BUSCO/test_minigut/test_minigut-auto-busco/MEGAHIT-MetaBAT2-test_minigut.2.fa/prodigal_output/.checkpoint",
+                "GenomeBinning/QC/BUSCO/test_minigut/test_minigut-auto-busco/MEGAHIT-MetaBAT2-test_minigut.2.fa/prodigal_output/predicted_genes/predicted.faa",
+                "GenomeBinning/QC/BUSCO/test_minigut/test_minigut-auto-busco/MEGAHIT-MetaBAT2-test_minigut.2.fa/prodigal_output/predicted_genes/predicted.fna",
+                "GenomeBinning/QC/BUSCO/test_minigut/test_minigut-auto-busco/MEGAHIT-MetaBAT2-test_minigut.2.fa/tmp/refseq_db.faa",
                 "GenomeBinning/QC/CheckM2/MEGAHIT-MetaBAT2-prokarya-unrefined-test_minigut/checkm2.log",
                 "GenomeBinning/QC/CheckM2/MEGAHIT-MetaBAT2-prokarya-unrefined-test_minigut/diamond_output/DIAMOND_RESULTS.tsv",
                 "GenomeBinning/QC/CheckM2/MEGAHIT-MetaBAT2-prokarya-unrefined-test_minigut/protein_files/MEGAHIT-MetaBAT2-test_minigut.1.faa",
                 "GenomeBinning/QC/CheckM2/MEGAHIT-MetaBAT2-prokarya-unrefined-test_minigut/protein_files/MEGAHIT-MetaBAT2-test_minigut.2.faa",
                 "GenomeBinning/QC/CheckM2/MEGAHIT-MetaBAT2-prokarya-unrefined-test_minigut/quality_report.tsv",
                 "GenomeBinning/QC/CheckM2/MEGAHIT-MetaBAT2-prokarya-unrefined-test_minigut_checkm2_report.tsv",
+                "GenomeBinning/QC/busco_summary.tsv",
                 "GenomeBinning/QC/checkm2_summary.tsv",
                 "GenomeBinning/Tiara/tiara_summary.tsv",
                 "GenomeBinning/bin_summary.tsv",
@@ -195,26 +240,34 @@
                 "MEGAHIT-MetaBAT2-test_minigut_sample2.tooShort.fa.gz:md5,f9479e7fb34586a2892cd7bc323d414a",
                 "MEGAHIT-MetaBAT2-test_minigut.unbinned.remaining.fa.gz:md5,7ac001a38113812061f8ef5c94e3f579",
                 "MEGAHIT-MetaBAT2-test_minigut_sample2.unbinned.remaining.fa.gz:md5,e1a969d6e292e10a81ef4236907984a9",
+                "predicted.faa:md5,8e0d0014fb0a1e56fa8b8f47e20f2bcf",
+                "predicted.fna:md5,e4dc769d029b05cfe724cfa5ef214f10",
+                "refseq_db.faa:md5,0d53f0a1964cc202e99f4851839273a3",
+                "predicted.faa:md5,5e5160a0e0af28ccccd6459e887269ee",
+                "predicted.fna:md5,df236064ad2e0c699c029a89a6267bcf",
+                "refseq_db.faa:md5,0d53f0a1964cc202e99f4851839273a3",
                 "MEGAHIT-MetaBAT2-test_minigut.1.faa:md5,ba436cbba64ce111f228da1e2daac642",
                 "MEGAHIT-MetaBAT2-test_minigut.2.faa:md5,577adc1aa1ebd51fed46f726ad90d9b3",
                 "quality_report.tsv:md5,9365828b072487af69333ecb35353255",
                 "MEGAHIT-MetaBAT2-prokarya-unrefined-test_minigut_checkm2_report.tsv:md5,9365828b072487af69333ecb35353255",
+                "busco_summary.tsv:md5,f2108b2ad319f7bdbe1d42c185e34e43",
                 "checkm2_summary.tsv:md5,9365828b072487af69333ecb35353255",
                 "tiara_summary.tsv:md5,6f97d6016921205c7913e54850b52dad",
-                "bin_summary.tsv:md5,8901f5aee83fa37cfce832d60b51687e",
+                "bin_summary.tsv:md5,8078356283a4cbadabc1cd7d23b395b4",
                 "bin_depths_summary.tsv:md5,ef8b1a8aad59ad4f56515d0fb7045a6d"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2025-08-21T06:18:58.895769923"
+        "timestamp": "2025-10-17T20:01:10.414931492"
     },
     "multiqc": {
         "content": [
             [
                 "multiqc/multiqc_data/bowtie2_pe_plot.yaml",
+                "multiqc/multiqc_data/busco_plot_bacteria_odb12.yaml",
                 "multiqc/multiqc_data/checkm2-first-table.yaml",
                 "multiqc/multiqc_data/fastqc-1-status-check-heatmap.yaml",
                 "multiqc/multiqc_data/fastqc-1_per_base_n_content_plot.yaml",
@@ -238,6 +291,7 @@
                 "multiqc/multiqc_data/multiqc.parquet",
                 "multiqc/multiqc_data/multiqc_bowtie2.yaml",
                 "multiqc/multiqc_data/multiqc_bowtie2_bowtie2-2.yaml",
+                "multiqc/multiqc_data/multiqc_busco.yaml",
                 "multiqc/multiqc_data/multiqc_checkm2.yaml",
                 "multiqc/multiqc_data/multiqc_citations.yaml",
                 "multiqc/multiqc_data/multiqc_data.json",
@@ -250,6 +304,8 @@
                 "multiqc/multiqc_data/trimmomatic_plot.yaml",
                 "multiqc/multiqc_plots/pdf/bowtie2_pe_plot-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/bowtie2_pe_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/busco_plot_bacteria_odb12-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/busco_plot_bacteria_odb12-pct.pdf",
                 "multiqc/multiqc_plots/pdf/checkm2-first-table.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc-1-status-check-heatmap.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc-1_per_base_n_content_plot.pdf",
@@ -274,6 +330,8 @@
                 "multiqc/multiqc_plots/pdf/trimmomatic_plot-pct.pdf",
                 "multiqc/multiqc_plots/png/bowtie2_pe_plot-cnt.png",
                 "multiqc/multiqc_plots/png/bowtie2_pe_plot-pct.png",
+                "multiqc/multiqc_plots/png/busco_plot_bacteria_odb12-cnt.png",
+                "multiqc/multiqc_plots/png/busco_plot_bacteria_odb12-pct.png",
                 "multiqc/multiqc_plots/png/checkm2-first-table.png",
                 "multiqc/multiqc_plots/png/fastqc-1-status-check-heatmap.png",
                 "multiqc/multiqc_plots/png/fastqc-1_per_base_n_content_plot.png",
@@ -298,6 +356,8 @@
                 "multiqc/multiqc_plots/png/trimmomatic_plot-pct.png",
                 "multiqc/multiqc_plots/svg/bowtie2_pe_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/bowtie2_pe_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/busco_plot_bacteria_odb12-cnt.svg",
+                "multiqc/multiqc_plots/svg/busco_plot_bacteria_odb12-pct.svg",
                 "multiqc/multiqc_plots/svg/checkm2-first-table.svg",
                 "multiqc/multiqc_plots/svg/fastqc-1-status-check-heatmap.svg",
                 "multiqc/multiqc_plots/svg/fastqc-1_per_base_n_content_plot.svg",
@@ -324,7 +384,8 @@
             ],
             [
                 "bowtie2_pe_plot.yaml:md5,17542811418a01c5c4497e77626bad91",
-                "checkm2-first-table.yaml:md5,d138b272a46411d66b643a7cdabf4511",
+                "busco_plot_bacteria_odb12.yaml:md5,ced22c5419b162fcdf74fd7d1c24957c",
+                "checkm2-first-table.yaml:md5,d1141b2bc74b8929807dcd93ece8143d",
                 "fastqc-1-status-check-heatmap.yaml:md5,30f0c0bbefd3e9c549116c8b7cc2ac25",
                 "fastqc-1_per_base_n_content_plot.yaml:md5,f43001053b544ba5585040c18859a098",
                 "fastqc-1_per_base_sequence_quality_plot.yaml:md5,48276488936fd9c2e52b53a58dae0ffb",
@@ -344,8 +405,9 @@
                 "fastqc_sequence_length_distribution_plot.yaml:md5,78c762e20322ee4d63f869961186c15c",
                 "multiqc_bowtie2.yaml:md5,6607915ea98168dbcad83cda2ec464dc",
                 "multiqc_bowtie2_bowtie2-2.yaml:md5,294c48fecbf1bdc5030550552a32497d",
+                "multiqc_busco.yaml:md5,d5cf765007a8a9398763d24d90abc12a",
                 "multiqc_checkm2.yaml:md5,9b48d1b569bae456409527610b56a2a0",
-                "multiqc_citations.yaml:md5,dcac7876946630b831fad3d816e8050f",
+                "multiqc_citations.yaml:md5,50440bb766620557f852bbd53357a098",
                 "multiqc_fastqc.yaml:md5,f50da8bfd062b9399911ba19b34831db",
                 "multiqc_fastqc_fastqc-1.yaml:md5,4c2c5a5e7b370b0668c1360b7927d0a8",
                 "multiqc_general_stats.yaml:md5,bea5cdd6ba2c414c4e6d2b5137b56e1c",

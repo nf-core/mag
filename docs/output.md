@@ -621,6 +621,16 @@ If the parameter `--save_checkm_reference` is set, additionally the used the Che
 
 </details>
 
+Besides the reference files or output files created by CheckM, the following summary files will be generated:
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `GenomeBinning/QC/`
+  - `checkm_summary.tsv`: A summary table of the CheckM results.
+
+</details>
+
 #### CheckM2
 
 [CheckM2](https://github.com/chklovski/CheckM2) is a tool for assessing the quality of metagenome-derived genomes. It uses a machine learning approach to predict the completeness and contamination of a genome regardless of its taxonomic lineage.
@@ -643,6 +653,16 @@ If the parameter `--save_checkm2_data` is set, the CheckM2 reference datasets wi
 
 - `GenomeBinning/QC/CheckM2/`
   - `checkm2_downloads/CheckM2_database/*.dmnd`: Diamond database used by CheckM2.
+
+</details>
+
+Besides the reference files or output files created by CheckM, the following summary files will be generated:
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `GenomeBinning/QC/`
+  - `checkm2_summary.tsv`: A summary table of the CheckM2 results.
 
 </details>
 
@@ -775,9 +795,16 @@ In cases where eukaryotic genomes are recovered in binning, [MetaEuk](https://gi
 <details markdown="1">
 <summary>Output files</summary>
 
-- `GenomeBinning/bin_summary.tsv`: Summary of bin sequencing depths together with BUSCO, CheckM, QUAST and GTDB-Tk results, if at least one of the later was generated. This will also include refined bins if `--refine_bins_dastool` binning refinement is performed. Note that in contrast to the other tools, for CheckM the bin name given in the column "Bin Id" does not contain the ".fa" extension.
+- `GenomeBinning/bin_summary.tsv`: Summary of bin sequencing depths together with BUSCO, CheckM, CheckM2, QUAST, CAT and GTDB-Tk results.
 
 </details>
+
+This `bin_summary.tsv` is the primary output file from nf-core/mag, giving the most comprehensive overview of the quality and taxonomic classification of all bins produced by the pipeline.
+
+This will also include rows for refined bins if `--refine_bins_dastool` binning refinement is performed.
+Note that in contrast to the other tools, for CheckM the bin name given in the column "Bin Id" does not contain the ".fa" extension.
+
+All columns other than the primary `bin` key column, and the `Depth <sample name>` columns, will include a suffix specifying from which bin QC tool the column is derived from to distinguish identically named columns from different tools.
 
 ## Ancient DNA
 
