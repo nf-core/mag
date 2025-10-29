@@ -85,7 +85,12 @@ workflow GTDBTK {
     // Print warning why GTDB-TK summary empty if passed channel gets no files
     ch_filtered_bins.passed
         .count()
-        .map { it == 0 ? log.warn("No contigs passed GTDB-TK min. completeness filters. GTDB-TK summary will execute but results will be empty!") : "" }
+        .combine(ch_filtered_bins.discarded.count())
+        .subscribe { passed, failed ->
+            if((passed + failed) > 0 && passed == 0) {
+                log.warn("No contigs passed GTDB-TK min. completeness filters. GTDB-TK summary will execute but results will be empty!")
+            }
+        }
 
     GTDBTK_SUMMARY(
         ch_filtered_bins.discarded.map { it[1] }.collect().ifEmpty([]),
