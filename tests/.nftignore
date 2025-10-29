@@ -15,13 +15,12 @@ Assembly/MEGAHIT/*.log
 Assembly/MEGAHIT/QC/*/*.bowtie2.log
 GenomeBinning/CONCOCT/stats/*_log.txt
 GenomeBinning/CONCOCT/stats/*.tsv
+GenomeBinning/CONCOCT/stats/*_{original,PCA_components,PCA_transformed}_data_gt1000.csv
 GenomeBinning/depths/**/*-depth.txt.gz
 GenomeBinning/depths/bins/*.png
 GenomeBinning/DASTool/*.log
 GenomeBinning/MetaBAT2/unbinned/discarded/*.unbinned.pooled.fa.gz
-GenomeBinning/QC/BUSCO/**/busco_sequences/**/*
-GenomeBinning/QC/BUSCO/**/prodigal_output/*
-GenomeBinning/QC/BUSCO/**/hmmsearch_out.log
+GenomeBinning/QC/BUSCO/**/{logs,prodigal_output,busco_sequences}/**
 GenomeBinning/QC/BUSCO/**/short_summary*.{txt,json}
 GenomeBinning/QC/BUSCO/*/*-busco.log
 GenomeBinning/QC/CheckM2/**/DIAMOND_RESULTS.tsv

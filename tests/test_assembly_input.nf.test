@@ -25,7 +25,11 @@ nextflow_pipeline {
 
             // Output directory: GenomeBinning
             def stable_name_binning = getAllFilesFromDir(
-                params.outdir, include: ['GenomeBinning/**'], relative: true, includeDir: false
+                params.outdir,
+                include: ['GenomeBinning/**'],
+                ignore: ['GenomeBinning/QC/BUSCO/**/{logs,prodigal_output,busco_sequences}/**'],
+                relative: true,
+                includeDir: false
             )
             def stable_path_binning = getAllFilesFromDir(
                 params.outdir, include: ['GenomeBinning/**'], ignoreFile: 'tests/.nftignore'
