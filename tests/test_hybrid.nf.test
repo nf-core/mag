@@ -16,12 +16,39 @@ nextflow_pipeline {
 
         then {
 
-            // Output directory: multiqc
-            def stable_name_multiqc = getAllFilesFromDir(
+            // Output directory: all
+            def stable_names = getAllFilesFromDir(
                 params.outdir, include: ['multiqc/**'], relative: true, includeDir: false
             )
-            def stable_path_multiqc = getAllFilesFromDir(
+
+            // Stable contents: Annotation
+            def stable_contents_annotation = getAllFilesFromDir(
+                params.outdir, include: ['Annotation/**'], ignoreFile: 'tests/.nftignore'
+            )
+
+            // Stable contents: Assembly
+            def stable_contents_assembly = getAllFilesFromDir(
+                params.outdir, include: ['Assembly/**'], ignoreFile: 'tests/.nftignore'
+            )
+
+            // Stable contents: GenomeBinning
+            def stable_contents_genomebinning = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/**'], ignoreFile: 'tests/.nftignore'
+            )
+
+            // Stable contents: MultiQC
+            def stable_contents_multiqc = getAllFilesFromDir(
                 params.outdir, include: ['multiqc/**'], ignoreFile: 'tests/.nftignore'
+            )
+
+            // Stable contents: QC Long Reads
+            def stable_contents_qclongreads = getAllFilesFromDir(
+                params.outdir, include: ['QC_longreads/**'], ignoreFile: 'tests/.nftignore'
+            )
+
+            // Stable contents: QC Short Reads
+            def stable_contents_qcshortreads = getAllFilesFromDir(
+                params.outdir, include: ['QC_shortreads/**'], ignoreFile: 'tests/.nftignore'
             )
 
             assert workflow.success
@@ -31,8 +58,14 @@ nextflow_pipeline {
                     workflow.trace.succeeded().size(),
                     // pipeline versions.yml file for multiqc from which Nextflow version is removed because we test pipelines on multiple Nextflow versions
                     removeNextflowVersion("$outputDir/pipeline_info/nf_core_mag_software_mqc_versions.yml"),
-                ).match() },
-                { assert snapshot(stable_name_multiqc, stable_path_multiqc).match('multiqc') },
+                    stable_names,
+                ).match('all') },
+                { assert snapshot(stable_contents_annotation).match('Annotation') },
+                { assert snapshot(stable_contents_assembly).match('Assembly') },
+                { assert snapshot(stable_contents_genomebinning).match('GenomeBinning') },
+                { assert snapshot(stable_contents_multiqc).match('multiqc') },
+                { assert snapshot(stable_contents_qclongreads).match('QC_longreads') },
+                { assert snapshot(stable_contents_qcshortreads).match('QC_shortreads') },
             )
         }
     }
