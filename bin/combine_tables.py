@@ -196,7 +196,7 @@ def main(args=None):
             right_on="bin",
             how="outer",
         )
-    
+
     results = results.sort_values("bin")
 
     results.to_csv(args.out, sep="\t", index=False)
