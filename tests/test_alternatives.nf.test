@@ -61,7 +61,7 @@ nextflow_pipeline {
                 params.outdir, include: ['GenomeBinning/MetaBAT2/bins/*.fa.gz']
             )
             def metabat2_unbins = getAllFilesFromDir(
-                params.outdir, include: ['GenomeBinning/MetaBAT2/{discarded,unbinned}/*.fa.gz']
+                params.outdir, include: ['GenomeBinning/MetaBAT2/{discarded,unbinned/*}/*.fa.gz']
             )
 
             // Output dir: multiqc

@@ -103,7 +103,7 @@ workflow BIN_QC {
 
         ch_qc_summaries = BUSCO_BUSCO.out.batch_summary
             .map { _meta, summary -> [[id: 'busco'], summary] }
-            .groupTuple(sort: 'deep')
+            .groupTuple()
         ch_multiqc_files = ch_multiqc_files.mix(
             BUSCO_BUSCO.out.short_summaries_txt.map { it[1] }.flatten()
         )
@@ -136,7 +136,7 @@ workflow BIN_QC {
 
         ch_qc_summaries = CHECKM_QA.out.output
             .map { _meta, summary -> [[id: 'checkm'], summary] }
-            .groupTuple(sort: 'deep')
+            .groupTuple()
         ch_multiqc_files = ch_multiqc_files.mix(
             CHECKM_QA.out.output.map { it[1] }.flatten()
         )
@@ -150,7 +150,7 @@ workflow BIN_QC {
 
         ch_qc_summaries = CHECKM2_PREDICT.out.checkm2_tsv
             .map { _meta, summary -> [[id: 'checkm2'], summary] }
-            .groupTuple(sort: 'deep')
+            .groupTuple()
         ch_multiqc_files = ch_multiqc_files.mix(
             CHECKM2_PREDICT.out.checkm2_tsv.map { it[1] }.flatten()
         )

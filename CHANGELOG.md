@@ -7,11 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
+- [#905](https://github.com/nf-core/mag/pull/905) - Add nf-test snapshot for `test_assembly_input` profile (by @dialvarezs)
+
 ### `Changed`
 
 ### `Fixed`
 
 - [#896](https://github.com/nf-core/mag/pull/896) - Remove obsolete execution command from README (by @dialvarezs)
+- [#905](https://github.com/nf-core/mag/pull/905) - Fix publishing of BUSCO files (by @dialvarezs)
 
 ### `Dependencies`
 

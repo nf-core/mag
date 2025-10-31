@@ -58,13 +58,13 @@ nextflow_pipeline {
                 params.outdir, include: ['GenomeBinning/MaxBin2/bins/*.fa.gz']
             )
             def maxbin2_unbins = getAllFilesFromDir(
-                params.outdir, include: ['GenomeBinning/MaxBin2/{discarded,unbinned}/*.fa.gz']
+                params.outdir, include: ['GenomeBinning/MaxBin2/{discarded,unbinned/*}/*.fa.gz']
             )
             def metabat2_bins = getAllFilesFromDir(
                 params.outdir, include: ['GenomeBinning/MetaBAT2/bins/*.fa.gz']
             )
             def metabat2_unbins = getAllFilesFromDir(
-                params.outdir, include: ['GenomeBinning/MetaBAT2/{discarded,unbinned}/*.fa.gz']
+                params.outdir, include: ['GenomeBinning/MetaBAT2/{discarded,unbinned/*}/*.fa.gz']
             )
             def dastool_bins = getAllFilesFromDir(
                 params.outdir, include: ['GenomeBinning/DASTool/bins/*.fa']
