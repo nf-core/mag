@@ -538,17 +538,14 @@
                 "MEGAHIT-MetaBAT2-test_minigut_sample2.unbinned.remaining.fa.gz:md5,26500281c2553df9ba913417f325bea1",
                 "SPAdes-MetaBAT2-test_minigut.unbinned.remaining.fa.gz:md5,b7d946b4e8fb2263d1e26ce46bd5ee63",
                 "SPAdes-MetaBAT2-test_minigut_sample2.unbinned.remaining.fa.gz:md5,df1dd296842bcf4e9420485a5dad8191",
-                "test_minigut-bacteria_odb10-busco.batch_summary.txt:md5,3af4a8384acf7ca847fe93b1e272581a",
                 "full_table.tsv:md5,599081c38cfceb1124999cc391a13140",
                 "missing_busco_list.tsv:md5,da2d1bf8d167eecc9ddc6adac9cd5d3d",
                 "full_table.tsv:md5,9c87b7683b335d8fc94617c7f5d195c2",
                 "missing_busco_list.tsv:md5,a51ce34d52c4635fefe5cf044feec954",
-                "test_minigut-bacteria_odb10-busco.batch_summary.txt:md5,8d67ae872671abd60f56878c35e49247",
                 "full_table.tsv:md5,eff59a289564e1553d13099f8d16309e",
                 "missing_busco_list.tsv:md5,c6807925eff74c7de1c1a38d88069b08",
                 "full_table.tsv:md5,877e4dad881ca7079c8b6118b59a34d4",
                 "missing_busco_list.tsv:md5,c7ee1e582e010aab60a566da7fe304de",
-                "busco_summary.tsv:md5,555f0d167bb2ac6e54b9aaa5a9eed7f8",
                 "bin_summary.tsv:md5,26621d2d20d68f52615e11685d673fbb",
                 "bin_depths_summary.tsv:md5,7153f759db72abb02e2ee3c2ab1b5e56"
             ]
@@ -557,7 +554,7 @@
             "nf-test": "0.9.2",
             "nextflow": "25.10.0"
         },
-        "timestamp": "2025-10-30T11:49:06.451610919"
+        "timestamp": "2025-10-31T14:49:17.680142281"
     },
     "multiqc": {
         "content": [
