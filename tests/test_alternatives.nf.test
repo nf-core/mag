@@ -87,10 +87,12 @@ nextflow_pipeline {
                         checkm2_diamond_results.collect { results -> results.text.readLines().size() },
                     ).match('checkm2_diamond_results')
                 },
+
                 // FASTA checks
                 { assert megahit_contigs.collect { contigs -> path("${contigs}").fasta.size() > 0 }.every() },
                 { assert metabat2_bins.collect { contigs -> path("${contigs}").fasta.size() > 0 }.every() },
                 { assert metabat2_unbins.collect { contigs -> path("${contigs}").fasta.size() >= 0 }.every() },
+
                 // Log checks
                 { assert remove_phix_logs.collect {
                         log -> log.readLines().last() ==~ /[0-9.]+% overall alignment rate/
