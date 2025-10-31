@@ -51,6 +51,27 @@ nextflow_pipeline {
             def dastool_logs = getAllFilesFromDir(
                 params.outdir, include: ['GenomeBinning/DASTool/*.log']
             )
+            def concoct_bins = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/CONCOCT/bins/*.fa.gz']
+            )
+            def maxbin2_bins = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/MaxBin2/bins/*.fa.gz']
+            )
+            def maxbin2_unbins = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/MaxBin2/{discarded,unbinned}/*.fa.gz']
+            )
+            def metabat2_bins = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/MetaBAT2/bins/*.fa.gz']
+            )
+            def metabat2_unbins = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/MetaBAT2/{discarded,unbinned}/*.fa.gz']
+            )
+            def dastool_bins = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/DASTool/bins/*.fa']
+            )
+            def dastool_unbins = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/DASTool/unbinned/*.fa']
+            )
 
             // Output directory: multiqc
             def stable_name_multiqc = getAllFilesFromDir(
@@ -72,6 +93,15 @@ nextflow_pipeline {
                 { assert snapshot(stable_name_annotation, stable_path_annotation).match('annotation') },
                 { assert snapshot(stable_name_binning,  stable_path_binning ).match('binning') },
                 { assert snapshot(stable_name_multiqc, stable_path_multiqc).match('multiqc') },
+
+                // FASTA checks
+                { assert concoct_bins.collect { file -> path("${file}").fasta.size() > 0 }.every() },
+                { assert maxbin2_bins.collect { file -> path("${file}").fasta.size() > 0 }.every() },
+                { assert maxbin2_unbins.collect { file -> path("${file}").fasta.size() >= 0 }.every() },
+                { assert metabat2_bins.collect { file -> path("${file}").fasta.size() > 0 }.every() },
+                { assert metabat2_unbins.collect { file -> path("${file}").fasta.size() >= 0 }.every() },
+                { assert dastool_bins.collect { file -> path("${file}").fasta.size() > 0 }.every() },
+                { assert dastool_unbins.collect { file -> path("${file}").fasta.size() >= 0 }.every() },
 
                 // Log checks
                 { assert bowtie2_logs.collect {
