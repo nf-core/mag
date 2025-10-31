@@ -201,15 +201,15 @@
                 "MEGAHIT-MetaBAT2-prokarya-unrefined-test_minigut_checkm2_report.tsv:md5,9365828b072487af69333ecb35353255",
                 "checkm2_summary.tsv:md5,9365828b072487af69333ecb35353255",
                 "tiara_summary.tsv:md5,6f97d6016921205c7913e54850b52dad",
-                "bin_summary.tsv:md5,8901f5aee83fa37cfce832d60b51687e",
+                "bin_summary.tsv:md5,b92dfcce736f47258e3225088b10b6d2",
                 "bin_depths_summary.tsv:md5,ef8b1a8aad59ad4f56515d0fb7045a6d"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nextflow": "25.10.0"
         },
-        "timestamp": "2025-08-21T06:18:58.895769923"
+        "timestamp": "2025-10-31T15:16:32.868418004"
     },
     "multiqc": {
         "content": [

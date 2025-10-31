@@ -197,7 +197,9 @@ def main(args=None):
             how="outer",
         )
 
-    results.to_csv(args.out, sep="\t")
+    results = results.sort_values("bin")
+
+    results.to_csv(args.out, sep="\t", index=False)
 
 
 if __name__ == "__main__":
