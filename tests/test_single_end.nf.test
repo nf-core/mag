@@ -15,6 +15,25 @@ nextflow_pipeline {
         }
 
         then {
+            // Output dir: QC_shortreads
+            def stable_name_qc = getAllFilesFromDir(
+                params.outdir, include: ['QC_shortreads/**'], relative: true, includeDir: false
+            )
+            def stable_path_qc = getAllFilesFromDir(
+                params.outdir, include: ['QC_shortreads/**'], ignoreFile: 'tests/.nftignore'
+            )
+
+            // Output dir: Assembly
+            def stable_name_assembly = getAllFilesFromDir(
+                params.outdir, include: ['Assembly/**'], relative: true, includeDir: false
+            )
+            def stable_path_assembly = getAllFilesFromDir(
+                params.outdir, include: ['Assembly/**'], ignoreFile: 'tests/.nftignore'
+            )
+            def quast_logs = getAllFilesFromDir(
+                params.outdir, include: ['Assembly/MEGAHIT/QC/*/QUAST/quast.log']
+            )
+
             // Output directory: multiqc
             def stable_name_multiqc = getAllFilesFromDir(
                 params.outdir, include: ['multiqc/**'], relative: true, includeDir: false
@@ -22,24 +41,22 @@ nextflow_pipeline {
             def stable_path_multiqc = getAllFilesFromDir(
                 params.outdir, include: ['multiqc/**'], ignoreFile: 'tests/.nftignore'
             )
-            // // stable_name: All files + folders in ${params.outdir}/ with a stable name
-            // def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            // // stable_path: All files in ${params.outdir}/ with stable content
-            // def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
-            assertAll(
-                { assert workflow.success},
-                { assert snapshot(
-                    // Number of successful tasks
-                    workflow.trace.succeeded().size(),
-                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we test pipelines on multiple Nextflow versions
-                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_mag_software_mqc_versions.yml"),
-                    // // All stable path name, with a relative path
-                    // stable_name,
-                    // // All files with stable contents
-                    // stable_path
-                ).match() },
-                { assert snapshot(stable_name_multiqc, stable_path_multiqc).match('multiqc') },
 
+            assert workflow.success
+            assertAll(
+                { assert snapshot(
+                    workflow.trace.succeeded().size(),
+                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_mag_software_mqc_versions.yml"),
+                ).match() },
+                { assert snapshot(stable_name_qc,       stable_path_qc      ).match('qc') },
+                { assert snapshot(stable_name_assembly, stable_path_assembly).match('assembly') },
+                { assert snapshot(stable_name_multiqc, stable_path_multiqc  ).match('multiqc') },
+
+                // Log checks
+                { assert quast_logs.collect {
+                        log -> log.readLines().any { it.contains('Finished:') }
+                    }.every()
+                },
             )
         }
     }

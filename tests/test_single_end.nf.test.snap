@@ -1,4 +1,108 @@
 {
+    "qc": {
+        "content": [
+            [
+                "QC_shortreads/adapterremoval/test_minigut/test_minigut_run0_ar2.settings",
+                "QC_shortreads/adapterremoval/test_minigut_sample2/test_minigut_sample2_run0_ar2.settings",
+                "QC_shortreads/fastqc/test_minigut_run0_raw_fastqc.html",
+                "QC_shortreads/fastqc/test_minigut_run0_trimmed_fastqc.html",
+                "QC_shortreads/fastqc/test_minigut_sample2_run0_raw_fastqc.html",
+                "QC_shortreads/fastqc/test_minigut_sample2_run0_trimmed_fastqc.html",
+                "QC_shortreads/remove_host/test_minigut_run0_host_removed.bowtie2.log",
+                "QC_shortreads/remove_host/test_minigut_sample2_run0_host_removed.bowtie2.log",
+                "QC_shortreads/remove_phix/test_minigut_run0_phix_removed.bowtie2.log",
+                "QC_shortreads/remove_phix/test_minigut_sample2_run0_phix_removed.bowtie2.log"
+            ],
+            [
+                "test_minigut_run0_ar2.settings:md5,f8173799aaa7d6022400e8153a30b800",
+                "test_minigut_sample2_run0_ar2.settings:md5,14500d89575945c2975ccf0431a9dd83",
+                "test_minigut_run0_host_removed.bowtie2.log:md5,e92972f277d907289dbdeba402690e6e",
+                "test_minigut_sample2_run0_host_removed.bowtie2.log:md5,ce114382b98cd86beeea13aeeeee2bbd"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-10-31T16:59:40.124449354"
+    },
+    "assembly": {
+        "content": [
+            [
+                "Assembly/MEGAHIT/MEGAHIT-test_minigut.contigs.fa.gz",
+                "Assembly/MEGAHIT/MEGAHIT-test_minigut.log",
+                "Assembly/MEGAHIT/MEGAHIT-test_minigut_sample2.contigs.fa.gz",
+                "Assembly/MEGAHIT/MEGAHIT-test_minigut_sample2.log",
+                "Assembly/MEGAHIT/QC/test_minigut/MEGAHIT-test_minigut.bowtie2.log",
+                "Assembly/MEGAHIT/QC/test_minigut/QUAST/basic_stats/GC_content_plot.pdf",
+                "Assembly/MEGAHIT/QC/test_minigut/QUAST/basic_stats/MEGAHIT-test_minigut_GC_content_plot.pdf",
+                "Assembly/MEGAHIT/QC/test_minigut/QUAST/basic_stats/Nx_plot.pdf",
+                "Assembly/MEGAHIT/QC/test_minigut/QUAST/basic_stats/cumulative_plot.pdf",
+                "Assembly/MEGAHIT/QC/test_minigut/QUAST/icarus.html",
+                "Assembly/MEGAHIT/QC/test_minigut/QUAST/icarus_viewers/contig_size_viewer.html",
+                "Assembly/MEGAHIT/QC/test_minigut/QUAST/metaquast.log",
+                "Assembly/MEGAHIT/QC/test_minigut/QUAST/predicted_genes/MEGAHIT-test_minigut.rna.gff",
+                "Assembly/MEGAHIT/QC/test_minigut/QUAST/predicted_genes/barrnap.log",
+                "Assembly/MEGAHIT/QC/test_minigut/QUAST/quast.log",
+                "Assembly/MEGAHIT/QC/test_minigut/QUAST/report.html",
+                "Assembly/MEGAHIT/QC/test_minigut/QUAST/report.pdf",
+                "Assembly/MEGAHIT/QC/test_minigut/QUAST/report.tex",
+                "Assembly/MEGAHIT/QC/test_minigut/QUAST/report.tsv",
+                "Assembly/MEGAHIT/QC/test_minigut/QUAST/report.txt",
+                "Assembly/MEGAHIT/QC/test_minigut/QUAST/report_rawassemblies.tsv",
+                "Assembly/MEGAHIT/QC/test_minigut/QUAST/transposed_report.tex",
+                "Assembly/MEGAHIT/QC/test_minigut/QUAST/transposed_report.tsv",
+                "Assembly/MEGAHIT/QC/test_minigut/QUAST/transposed_report.txt",
+                "Assembly/MEGAHIT/QC/test_minigut_sample2/MEGAHIT-test_minigut_sample2.bowtie2.log",
+                "Assembly/MEGAHIT/QC/test_minigut_sample2/QUAST/basic_stats/GC_content_plot.pdf",
+                "Assembly/MEGAHIT/QC/test_minigut_sample2/QUAST/basic_stats/MEGAHIT-test_minigut_sample2_GC_content_plot.pdf",
+                "Assembly/MEGAHIT/QC/test_minigut_sample2/QUAST/basic_stats/Nx_plot.pdf",
+                "Assembly/MEGAHIT/QC/test_minigut_sample2/QUAST/basic_stats/cumulative_plot.pdf",
+                "Assembly/MEGAHIT/QC/test_minigut_sample2/QUAST/icarus.html",
+                "Assembly/MEGAHIT/QC/test_minigut_sample2/QUAST/icarus_viewers/contig_size_viewer.html",
+                "Assembly/MEGAHIT/QC/test_minigut_sample2/QUAST/metaquast.log",
+                "Assembly/MEGAHIT/QC/test_minigut_sample2/QUAST/predicted_genes/MEGAHIT-test_minigut_sample2.rna.gff",
+                "Assembly/MEGAHIT/QC/test_minigut_sample2/QUAST/predicted_genes/barrnap.log",
+                "Assembly/MEGAHIT/QC/test_minigut_sample2/QUAST/quast.log",
+                "Assembly/MEGAHIT/QC/test_minigut_sample2/QUAST/report.html",
+                "Assembly/MEGAHIT/QC/test_minigut_sample2/QUAST/report.pdf",
+                "Assembly/MEGAHIT/QC/test_minigut_sample2/QUAST/report.tex",
+                "Assembly/MEGAHIT/QC/test_minigut_sample2/QUAST/report.tsv",
+                "Assembly/MEGAHIT/QC/test_minigut_sample2/QUAST/report.txt",
+                "Assembly/MEGAHIT/QC/test_minigut_sample2/QUAST/report_rawassemblies.tsv",
+                "Assembly/MEGAHIT/QC/test_minigut_sample2/QUAST/transposed_report.tex",
+                "Assembly/MEGAHIT/QC/test_minigut_sample2/QUAST/transposed_report.tsv",
+                "Assembly/MEGAHIT/QC/test_minigut_sample2/QUAST/transposed_report.txt"
+            ],
+            [
+                "MEGAHIT-test_minigut.contigs.fa.gz:md5,3a04593d030eea4bda21d1db4d1f7251",
+                "MEGAHIT-test_minigut_sample2.contigs.fa.gz:md5,e679c5d2f77f4e4b8a3c74a47625a509",
+                "MEGAHIT-test_minigut.rna.gff:md5,601e12e5b3d3d1efdaa27abdf7724460",
+                "barrnap.log:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "report.tex:md5,bf78597cef3a1321bc22f6b0fd1ee3cb",
+                "report.tsv:md5,176a93fe70c520253e4f537624571e73",
+                "report.txt:md5,47bcc1f1b82a712114720b31d6dff4f2",
+                "report_rawassemblies.tsv:md5,176a93fe70c520253e4f537624571e73",
+                "transposed_report.tex:md5,945e1d3ee9aaf147fd6491819c5b718e",
+                "transposed_report.tsv:md5,b8fc3a3fa1f35ddc253ca4fee590b711",
+                "transposed_report.txt:md5,fd173586fa93f25d988b2773bbe4df55",
+                "MEGAHIT-test_minigut_sample2.rna.gff:md5,5fad704315c29d8c2b85b928e38a6ccc",
+                "barrnap.log:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "report.tex:md5,1ff25f834d4a3da73cb6877d7043b113",
+                "report.tsv:md5,3a6a5dd51110b50e0fe59c5bf6ec3d19",
+                "report.txt:md5,d086dc1e69a2538fa6df7f6f28f390c5",
+                "report_rawassemblies.tsv:md5,3a6a5dd51110b50e0fe59c5bf6ec3d19",
+                "transposed_report.tex:md5,75737026d6315b72d00098506ee068cc",
+                "transposed_report.tsv:md5,e0a6dd9aa9c76216d1a479cbe66a15d7",
+                "transposed_report.txt:md5,dbba99eba513c647e640d1794278f657"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-10-31T18:33:35.063483182"
+    },
     "-profile test_single_end": {
         "content": [
             155,
