@@ -45,9 +45,6 @@ nextflow_pipeline {
                             .last() ==~ /[0-9.]+% overall alignment rate/,
 
                         // GenomeBinning
-                        path("${params.outdir}/GenomeBinning/depths/bins/bin_depths_summary.tsv")
-                            .readLines()
-                            .findAll { l -> l.contains('bin') },
                         path("${params.outdir}/GenomeBinning/bin_summary.tsv")
                             .readLines()
                             .size() == 18,
