@@ -199,22 +199,6 @@ workflow MAG {
         ch_assemblies = ch_assemblies.mix(ch_assemblies_split.ungzip, GUNZIP_ASSEMBLYINPUT.out.gunzip)
         ch_shortread_assemblies = ch_assemblies.filter { it[0].assembler.toUpperCase() in ['SPADES', 'SPADESHYBRID', 'MEGAHIT'] }
         ch_longread_assemblies = ch_assemblies.filter { it[0].assembler.toUpperCase() in ['FLYE', 'METAMDBG'] }
-    
-        if(!params.skip_ale) {
-            // Create the pair list of read-assembl for ale 
-            ch_assembly_mapping_pairs = ch_short_reads
-                .join(ch_shortread_assemblies)
-                .map { reads_tuple, assembly_tuple ->
-                def meta = reads_tuple[0]
-                def reads = reads_tuple[1]
-                def assembly_meta = assembly_tuple[0]
-                def assembly_file = assembly_tuple[1]
-                [[meta: meta, assembler: assembly_meta.assembler], reads, assembly_file]
-            }
-
-            ALE(ch_assembly_mapping_pairs)
-            ch_versions = ch_versions.mix(ALE.out.versions)
-        }
     }
 
     if (!params.skip_quast) {
@@ -513,6 +497,50 @@ workflow MAG {
 
             METAEUK_EASYPREDICT(ch_bins_for_metaeuk, ch_metaeuk_db)
             ch_versions = ch_versions.mix(METAEUK_EASYPREDICT.out.versions)
+        }
+    }
+
+    /*
+    ================================================================================
+                                    ALE Analysis
+    ================================================================================
+    */
+
+    if(!params.skip_ale) {
+        if ( !params.skip_binning || params.ancient_dna) {
+            ch_shortread_assemblies_for_ale = ch_assemblies.filter { meta, assembly ->
+                meta.assembler?.toUpperCase() in ['SPADES', 'SPADESHYBRID', 'MEGAHIT']
+            }
+    
+            ch_ale_input = BINNING_PREPARATION.out.grouped_mappings
+                .join(ch_shortread_assemblies_for_ale, by: 0)
+                .map { meta, contigs, bam, bai, assembly ->
+                    def actual_bam = bam instanceof List ? bam[0] : bam
+                    [meta, assembly, actual_bam]
+                }
+            
+            ch_ale_input.view { "ALE input: Sample ${it[0].id}, Assembly: ${it[1].name}, BAM: ${it[2].name}" }
+            
+
+            ALE(ch_ale_input)
+            ch_versions = ch_versions.mix(ALE.out.versions.ifEmpty([])) 
+        }
+        else {
+            log.warn """
+            ALE (Assembly Likelihood Estimator) Warning
+            
+            ALE is enabled (--skip_ale false) but cannot run because:
+            - Binning is disabled (--skip_binning true)
+            - Ancient DNA mode is not enabled (--ancient_dna false)
+            
+            To run ALE, choose one of the following options:
+            
+            1. Enable binning: --skip_binning false
+            2. Enable ancient DNA: --ancient_dna true  
+            3. Disable ALE: --skip_ale true
+            
+            ALE evaluates assembly quality through read mapping analysis.
+            """.stripIndent()
         }
     }
 

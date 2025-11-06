@@ -205,10 +205,7 @@ Trimmed (short) reads are assembled with both megahit and SPAdes. Hybrid assembl
     - `MEGAHIT-[sample].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the sample that the metagenome was assembled from, only present if `--coassemble_group` is not set.
     - `MEGAHIT-[sample/group]-[sampleToMap].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the respective sample ("sampleToMap").
     - `MEGAHIT-[sample].[bam/bai]`: Optionally saved BAM file of the Bowtie2 mapping of reads against the assembly.
-  - `ALE/[sample/group]/`: Directory containing Assembly Likelihood Estimator (ALE) results
-    - `[sample].ale.txt`: ALE score file containing per-contig likelihood estimates
-    - `[sample].summary.tsv`: Summary statistics of ALE scores and assembly quality
-    - `[sample].log`: Log file produced by ALE during processing
+
 
 </details>
 
@@ -301,6 +298,20 @@ SPAdesHybrid is a part of the [SPAdes](http://cab.spbu.ru/software/spades/) soft
   - `basic_stats/Nx_plot.pdf`: Plot of Nx values as x varies from 0 to 100%.
   - `predicted_genes/[assembler]-[sample/group].rna.gff`: Contig positions for rRNA genes in gff version 3 format
   - `predicted_genes/barrnap.log`: Barrnap log file (ribosomal RNA predictor)
+
+</details>
+
+### Assembly Quality Control with ALE
+
+[ALE (Assembly Likelihood Estimator)](https://github.com/sc932/ALE) evaluates assembly quality by computing the likelihood of the sequencing reads given an assembly. ALE provides per-contig quality scores and identifies potentially problematic regions in the assembly by analyzing read mapping patterns and insert size distributions.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `Assembly/[assembler]/QC/[sample/group]/ALE/`
+  - `[sample].ale.txt`: Per-contig ALE scores and quality metrics, including likelihood estimates for each contig
+  - `[sample].summary.tsv`: Summary statistics of assembly quality assessment with overall ALE scores and metrics
+  - `[sample].log`: ALE processing log file containing diagnostic information and runtime details
 
 </details>
 
