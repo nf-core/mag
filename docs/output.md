@@ -437,7 +437,8 @@ Files in these two folders contain all contigs of an assembly.
   - `stats/[assembler]-[binner]-[sample/group]_*.tsv`: Coverage statistics of each sub-contig cut up by CONCOCT prior in an intermediate step prior to binning. Likely not useful in most cases.
   - `stats/[assembler]-[binner]-[sample/group].log.txt`: CONCOCT execution log file.
   - `stats/[assembler]-[binner]-[sample/group]_*.args`: List of arguments used in CONCOCT execution.
-  - </details>
+
+</details>
 
 All the files and contigs in these folders will be assessed by QUAST and BUSCO, if the parameter `--postbinning_input` is not set to `refined_bins_only`.
 
@@ -456,11 +457,30 @@ Note that CONCOCT does not output what it considers 'unbinned' contigs, therefor
   - `stats/[assembler]-[binner]-[sample/group]/comebin_res.tsv`: TSV mapping the output clusters to contigs.
   - `stats/[assembler]-[binner]-[sample/group]/covembeddings.tsv`: TSV describing the embeddings of the contigs.
   - `stats/[assembler]-[binner]-[sample/group]/embeddings.tsv`: TSV describing the embeddings of the contigs.
-  - </details>
+
+</details>
 
 All the files and contigs in these folders will be assessed by QUAST and BUSCO, if the parameter `--postbinning_input` is not set to `refined_bins_only`.
 
 Note that COMEBin does not output what it considers 'unbinned' contigs, therefore no 'discarded' contigs are produced here. You may still need to do your own manual curation of the resulting bins.
+
+### MetaBinner
+
+[MetaBinner](https://github.com/ziyewang/MetaBinner) is described as a high-performance and stand-alone ensemble binning method to recover individual genomes from complex microbial communities.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `GenomeBinning/MetaBinner/`
+  - `bins/[assembler]-[binner]-[sample/group].*.fa.gz`: Genome bins retrieved from input assembly.
+  - `discarded/[assembler]-[binner]-[sample/group].tooShort.fa.gz`: Contigs that were not considered for binning because of length.
+  - `unbinned/[assembler]-[binner]-[sample/group].unbinned.fa.gz`: Contigs that were not binned despite having suitable length.
+  - `stats/[assembler]-[binner]-[sample/group].metabinner.log.gz`: Log file.
+  - `stats/[assembler]-[binner]-[sample/group].tsv.gz`: TSV mapping the contigs to output clusters.
+
+</details>
+
+All the files and contigs in these folders will be assessed by QUAST and binning QC tools, if the parameter `--postbinning_input` is not set to `refined_bins_only`.
 
 ### DAS Tool
 
@@ -556,7 +576,7 @@ If a lineage dataset is specified already with `--busco_db`, only results for th
 <details markdown="1">
 <summary>Output files</summary>
 
-- `GenomeBinning/QC/BUSCO/[sample/group]/`
+- `GenomeBinning/QC/BUSCO/[assembler]-[binner]-[sample/group]/`
   - `[sample/group]-[lineage]-busco.batch_summary.txt`: Summary table of the BUSCO results for the bins in the sample.
   - `short_summary.generic.[lineage].[assembler]-[bin].{txt,json}`: A detailed BUSCO summary for each bin, available in both plain text and JSON format.
   - `[sample/group]-[lineage]-busco.log`: Log file of the BUSCO run.
@@ -621,6 +641,16 @@ If the parameter `--save_checkm_reference` is set, additionally the used the Che
 
 </details>
 
+Besides the reference files or output files created by CheckM, the following summary files will be generated:
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `GenomeBinning/QC/`
+  - `checkm_summary.tsv`: A summary table of the CheckM results.
+
+</details>
+
 #### CheckM2
 
 [CheckM2](https://github.com/chklovski/CheckM2) is a tool for assessing the quality of metagenome-derived genomes. It uses a machine learning approach to predict the completeness and contamination of a genome regardless of its taxonomic lineage.
@@ -643,6 +673,16 @@ If the parameter `--save_checkm2_data` is set, the CheckM2 reference datasets wi
 
 - `GenomeBinning/QC/CheckM2/`
   - `checkm2_downloads/CheckM2_database/*.dmnd`: Diamond database used by CheckM2.
+
+</details>
+
+Besides the reference files or output files created by CheckM, the following summary files will be generated:
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `GenomeBinning/QC/`
+  - `checkm2_summary.tsv`: A summary table of the CheckM2 results.
 
 </details>
 
@@ -775,9 +815,16 @@ In cases where eukaryotic genomes are recovered in binning, [MetaEuk](https://gi
 <details markdown="1">
 <summary>Output files</summary>
 
-- `GenomeBinning/bin_summary.tsv`: Summary of bin sequencing depths together with BUSCO, CheckM, QUAST and GTDB-Tk results, if at least one of the later was generated. This will also include refined bins if `--refine_bins_dastool` binning refinement is performed. Note that in contrast to the other tools, for CheckM the bin name given in the column "Bin Id" does not contain the ".fa" extension.
+- `GenomeBinning/bin_summary.tsv`: Summary of bin sequencing depths together with BUSCO, CheckM, CheckM2, QUAST, CAT and GTDB-Tk results.
 
 </details>
+
+This `bin_summary.tsv` is the primary output file from nf-core/mag, giving the most comprehensive overview of the quality and taxonomic classification of all bins produced by the pipeline.
+
+This will also include rows for refined bins if `--refine_bins_dastool` binning refinement is performed.
+Note that in contrast to the other tools, for CheckM the bin name given in the column "Bin Id" does not contain the ".fa" extension.
+
+All columns other than the primary `bin` key column, and the `Depth <sample name>` columns, will include a suffix specifying from which bin QC tool the column is derived from to distinguish identically named columns from different tools.
 
 ## Ancient DNA
 

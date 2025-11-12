@@ -2,6 +2,7 @@
  * Binning with MetaBAT2 and MaxBin2
  */
 include { FASTA_BINNING_CONCOCT                                                                  } from '../../../subworkflows/nf-core/fasta_binning_concoct/main'
+include { BINNING_METABINNER                                                                     } from '../../../subworkflows/local/binning_metabinner/main'
 
 include { METABAT2_METABAT2                                                                      } from '../../../modules/nf-core/metabat2/metabat2/main'
 include { METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS as METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_SHORTREAD } from '../../../modules/nf-core/metabat2/jgisummarizebamcontigdepths/main'
@@ -26,6 +27,7 @@ workflow BINNING {
     main:
 
     ch_versions = Channel.empty()
+    ch_input_splitfasta = Channel.empty()
 
     // generate coverage depths for each contig and branch by assembler type
     ch_summarizedepth_input = ch_assemblies
@@ -87,6 +89,7 @@ workflow BINNING {
         // before decompressing first have to separate and re-group due to limitation of GUNZIP module
         ch_bins_for_seqkit = ch_bins_for_seqkit.mix(METABAT2_METABAT2.out.fasta.transpose())
         ch_binning_results_gzipped_final = ch_binning_results_gzipped_final.mix(METABAT2_METABAT2.out.fasta)
+        ch_input_splitfasta = ch_input_splitfasta.mix(METABAT2_METABAT2.out.unbinned)
     }
 
     // MaxBin2
@@ -99,6 +102,7 @@ workflow BINNING {
 
         ch_bins_for_seqkit = ch_bins_for_seqkit.mix(ADJUST_MAXBIN2_EXT.out.renamed_bins.transpose())
         ch_binning_results_gzipped_final = ch_binning_results_gzipped_final.mix(ADJUST_MAXBIN2_EXT.out.renamed_bins)
+        ch_input_splitfasta = ch_input_splitfasta.mix(MAXBIN2.out.unbinned_fasta)
     }
 
     // CONCOCT
@@ -136,19 +140,20 @@ workflow BINNING {
         ch_binning_results_gzipped_final = ch_binning_results_gzipped_final.mix(COMEBIN_RUNCOMEBIN.out.bins)
     }
 
-    // decide which unbinned fasta files to further filter, depending on which binners selected
-    // NOTE: CONCOCT does not produce 'unbins' itself, therefore not included here.
-    if (!params.skip_metabat2 && params.skip_maxbin2) {
-        ch_input_splitfasta = METABAT2_METABAT2.out.unbinned
-    }
-    else if (params.skip_metabat2 && !params.skip_maxbin2) {
-        ch_input_splitfasta = MAXBIN2.out.unbinned_fasta
-    }
-    else if (params.skip_metabat2 && params.skip_maxbin2) {
-        ch_input_splitfasta = Channel.empty()
-    }
-    else {
-        ch_input_splitfasta = METABAT2_METABAT2.out.unbinned.mix(MAXBIN2.out.unbinned_fasta)
+    // MetaBinner
+    if (!params.skip_metabinner) {
+        BINNING_METABINNER(
+            ch_metabat2_input
+                .map { meta, assembly, depths ->
+                    def meta_new = meta + [binner: 'MetaBinner']
+                    [meta_new, assembly, depths]
+                }
+        )
+        ch_versions = ch_versions.mix(BINNING_METABINNER.out.versions)
+
+        ch_bins_for_seqkit = ch_bins_for_seqkit.mix( BINNING_METABINNER.out.bins.transpose() )
+        ch_binning_results_gzipped_final = ch_binning_results_gzipped_final.mix( BINNING_METABINNER.out.bins )
+        ch_input_splitfasta = ch_input_splitfasta.mix(BINNING_METABINNER.out.unbinned)
     }
 
     // group bins into per-sample process and not flood clusters with thousands of seqkit jobs

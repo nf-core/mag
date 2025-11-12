@@ -41,15 +41,15 @@
                     "fastqc": "0.12.1"
                 },
                 "Workflow": {
-                    "nf-core/mag": "v5.2.0dev"
+                    "nf-core/mag": "v5.3.0dev"
                 }
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.7"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
         },
-        "timestamp": "2025-09-17T10:02:47.345606232"
+        "timestamp": "2025-11-07T11:44:39.568035358"
     },
     "multiqc": {
         "content": [

@@ -7,15 +7,15 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { UTILS_NFSCHEMA_PLUGIN     } from '../../nf-core/utils_nfschema_plugin'
-include { paramsSummaryMap          } from 'plugin/nf-schema'
-include { samplesheetToList         } from 'plugin/nf-schema'
-include { paramsHelp                } from 'plugin/nf-schema'
-include { completionEmail           } from '../../nf-core/utils_nfcore_pipeline'
-include { completionSummary         } from '../../nf-core/utils_nfcore_pipeline'
-include { imNotification            } from '../../nf-core/utils_nfcore_pipeline'
-include { UTILS_NFCORE_PIPELINE     } from '../../nf-core/utils_nfcore_pipeline'
-include { UTILS_NEXTFLOW_PIPELINE   } from '../../nf-core/utils_nextflow_pipeline'
+include { UTILS_NFSCHEMA_PLUGIN   } from '../../nf-core/utils_nfschema_plugin'
+include { paramsSummaryMap        } from 'plugin/nf-schema'
+include { samplesheetToList       } from 'plugin/nf-schema'
+include { paramsHelp              } from 'plugin/nf-schema'
+include { completionEmail         } from '../../nf-core/utils_nfcore_pipeline'
+include { completionSummary       } from '../../nf-core/utils_nfcore_pipeline'
+include { imNotification          } from '../../nf-core/utils_nfcore_pipeline'
+include { UTILS_NFCORE_PIPELINE   } from '../../nf-core/utils_nfcore_pipeline'
+include { UTILS_NEXTFLOW_PIPELINE } from '../../nf-core/utils_nextflow_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -62,7 +62,7 @@ workflow PIPELINE_INITIALISATION {
 \033[0;35m  nf-core/mag ${workflow.manifest.version}\033[0m
 -\033[2m----------------------------------------------------\033[0m-
 """
-    after_text = """${workflow.manifest.doi ? "\n* The pipeline\n" : ""}${workflow.manifest.doi.tokenize(",").collect { "    https://doi.org/${it.trim().replace('https://doi.org/','')}"}.join("\n")}${workflow.manifest.doi ? "\n" : ""}
+    after_text = """${workflow.manifest.doi ? "\n* The pipeline\n" : ""}${workflow.manifest.doi.tokenize(",").collect { "    https://doi.org/${it.trim().replace('https://doi.org/', '')}" }.join("\n")}${workflow.manifest.doi ? "\n" : ""}
 * The nf-core framework
     https://doi.org/10.1038/s41587-020-0439-x
 
@@ -71,7 +71,7 @@ workflow PIPELINE_INITIALISATION {
 """
     command = "nextflow run ${workflow.manifest.name} -profile <docker/singularity/.../institute> --input samplesheet.csv --outdir <OUTDIR>"
 
-    UTILS_NFSCHEMA_PLUGIN (
+    UTILS_NFSCHEMA_PLUGIN(
         workflow,
         validate_params,
         null,
@@ -80,7 +80,7 @@ workflow PIPELINE_INITIALISATION {
         show_hidden,
         before_text,
         after_text,
-        command
+        command,
     )
 
     //
@@ -106,7 +106,7 @@ workflow PIPELINE_INITIALISATION {
 
     // if coassemble_group or binning_map_mode is set to not 'own', check if all samples in a group have the same platform
     ch_samplesheet
-        .map { meta, _sr1, _sr2, _lr -> [ meta.group, meta.sr_platform, meta.lr_platform ] }
+        .map { meta, _sr1, _sr2, _lr -> [meta.group, meta.sr_platform, meta.lr_platform] }
         .groupTuple(by: 0)
         .map { group, sr_platform, lr_platform ->
             def sr_platforms = sr_platform.unique()
@@ -126,17 +126,19 @@ workflow PIPELINE_INITIALISATION {
         ch_samplesheet
             .map { meta, _sr1, _sr2, _lr -> meta.sr_platform }
             .unique()
-            .collect {
-                if (it.size() > 1) {
-                    error("[nf-core/mag] ERROR: Multiple short read sequencing platforms found in samplesheet. Use same platform for all samples when running with binning_map_mode 'all'.")
+            .toList()
+            .map { platforms ->
+                if (platforms.size() > 1) {
+                    error("[nf-core/mag] ERROR: Multiple short read sequencing platforms (${platforms.join(", ")}) found in samplesheet. Use same platform for all samples when running with binning_map_mode 'all'.")
                 }
             }
         ch_samplesheet
             .map { meta, _sr1, _sr2, _lr -> meta.lr_platform }
             .unique()
-            .collect {
-                if (it.size() > 1) {
-                    error("[nf-core/mag] ERROR: Multiple long read sequencing platforms found in samplesheet. Use same platform for all samples when running with binning_map_mode 'all'.")
+            .toList()
+            .map { platforms ->
+                if (platforms.size() > 1) {
+                    error("[nf-core/mag] ERROR: Multiple long read sequencing platforms (${platforms.join(", ")}) found in samplesheet. Use same platform for all samples when running with binning_map_mode 'all'.")
                 }
             }
     }
@@ -163,8 +165,8 @@ workflow PIPELINE_INITIALISATION {
     // Check already if long reads are provided, for later parameter validation
     def hybrid = false
     ch_raw_long_reads
-        .map { meta, lr -> [ meta.id, lr ] }
-        .join(ch_raw_long_reads.map {meta, sr1 -> [meta.id, sr1] }, by: 0, remainder: true)
+        .map { meta, lr -> [meta.id, lr] }
+        .join(ch_raw_long_reads.map { meta, sr1 -> [meta.id, sr1] }, by: 0, remainder: true)
         .map { _id, lr, sr1 ->
             if (lr && sr1) {
                 hybrid = true
@@ -317,7 +319,7 @@ def validateInputParameters(hybrid) {
     if (params.host_fasta && params.host_genome) {
         error('[nf-core/mag] ERROR: Both host fasta reference and iGenomes genome are specified to remove host contamination! Invalid combination, please specify either --host_fasta or --host_genome.')
     }
-    if (hybrid && (params.host_fasta || params.host_genome) && params.longread_filtering_tool == "filtlong" && params.longreads_length_weight > 0 ) {
+    if (hybrid && (params.host_fasta || params.host_genome) && params.longread_filtering_tool == "filtlong" && params.longreads_length_weight > 0) {
         log.warn("[nf-core/mag]: The parameter --longreads_length_weight is ${params.longreads_length_weight}, causing the read length being more important for long read filtering than the read quality. Set --longreads_length_weight to 1 in order to assign equal weights.")
     }
     if (params.host_genome) {
@@ -354,18 +356,11 @@ def validateInputParameters(hybrid) {
         error("[nf-core/mag] ERROR: The parameter '--postbinning_input ${params.postbinning_input}' for downstream steps can only be specified if bin refinement is activated with --refine_bins_dastool! Check input.")
     }
 
-    if (params.skip_binqc && params.binqc_tool == 'checkm') {
-        error("[nf-core/mag] ERROR: Both --skip_binqc and --binqc_tool 'checkm' are specified! Invalid combination, please specify either --skip_binqc or --binqc_tool.")
+    if (params.skip_binqc && (params.run_busco || params.run_checkm || params.run_checkm2)) {
+        error("[nf-core/mag] ERROR: Both --skip_binqc and --run_<bin_qc_tool_name> are specified! Invalid combination, please specify either --skip_binqc or --run_<bin_qc_tool_name>.")
     }
 
-    // Check if BUSCO parameters combinations are valid
-    if (params.skip_binqc) {
-        if (params.busco_db) {
-            error("[nf-core/mag] ERROR: Both --skip_binqc and --busco_db are specified! Invalid combination, please specify either --skip_binqc or --binqc_tool 'busco' with --busco_db.")
-        }
-    }
-
-    if (!params.skip_binqc && params.binqc_tool == 'busco') {
+    if (!params.skip_binqc && params.run_busco) {
         if (params.busco_db && !params.busco_db_lineage) {
             log.warn('[nf-core/mag]: WARNING: You have supplied a database to --busco_db - BUSCO will run in offline mode. Please note that BUSCO may fail if you have an incomplete database and are running with --busco_db_lineage auto!')
         }

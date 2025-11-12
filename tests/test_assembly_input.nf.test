@@ -10,11 +10,70 @@ nextflow_pipeline {
 
         when {
             params {
-                outdir = "$outputDir"
+                outdir = "${outputDir}"
             }
         }
 
         then {
+            // Output dir: Assembly
+            def stable_name_assembly = getAllFilesFromDir(
+                params.outdir, include: ['Assembly/**'], relative: true, includeDir: false
+            )
+            def bowtie2_logs = getAllFilesFromDir(
+                params.outdir, include: ['Assembly/{SPAdes,MEGAHIT}/QC/*/*.bowtie2.log']
+            )
+
+            // Output dir: Annotation
+            def stable_name_annotation = getAllFilesFromDir(
+                params.outdir, include: ['Annotation/**'], relative: true, includeDir: false
+            )
+            def stable_path_annotation = getAllFilesFromDir(
+                params.outdir, include: ['Annotation/**'], ignoreFile: 'tests/.nftignore'
+            )
+
+            // Output directory: GenomeBinning
+            def stable_name_binning = getAllFilesFromDir(
+                params.outdir,
+                include: ['GenomeBinning/**'],
+                ignore: ['GenomeBinning/QC/BUSCO/**/{logs,prodigal_output,busco_sequences}/**'],
+                relative: true,
+                includeDir: false
+            )
+            def stable_path_binning = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/**'], ignoreFile: 'tests/.nftignore'
+            )
+            def concoct_logs = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/CONCOCT/stats/*_log.txt']
+            )
+            def busco_logs = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/QC/BUSCO/*/*-busco.log']
+            )
+            def dastool_logs = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/DASTool/*.log']
+            )
+            def concoct_bins = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/CONCOCT/bins/*.fa.gz']
+            )
+            def maxbin2_bins = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/MaxBin2/bins/*.fa.gz']
+            )
+            def maxbin2_unbins = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/MaxBin2/{discarded,unbinned/*}/*.fa.gz']
+            )
+            def metabat2_bins = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/MetaBAT2/bins/*.fa.gz']
+            )
+            def metabat2_unbins = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/MetaBAT2/{discarded,unbinned/*}/*.fa.gz']
+            )
+            def dastool_bins = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/DASTool/bins/*.fa']
+            )
+            def dastool_unbins = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/DASTool/unbinned/*.fa']
+            )
+            def busco_summary = "${params.outdir}/GenomeBinning/QC/busco_summary.tsv"
+            def bin_summary = "${params.outdir}/GenomeBinning/bin_summary.tsv"
 
             // Output directory: multiqc
             def stable_name_multiqc = getAllFilesFromDir(
@@ -27,12 +86,49 @@ nextflow_pipeline {
             assert workflow.success
             assertAll(
                 { assert snapshot(
-                    // Number of successful tasks
                     workflow.trace.succeeded().size(),
-                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we test pipelines on multiple Nextflow versions
-                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_mag_software_mqc_versions.yml"),
+                    removeNextflowVersion("${outputDir}/pipeline_info/nf_core_mag_software_mqc_versions.yml"),
                 ).match() },
+                { assert snapshot(stable_name_assembly).match('assembly') },
+                { assert snapshot(stable_name_annotation, stable_path_annotation).match('annotation') },
+                { assert snapshot(stable_name_binning,  stable_path_binning ).match('binning') },
                 { assert snapshot(stable_name_multiqc, stable_path_multiqc).match('multiqc') },
+
+                // FASTA checks
+                { assert concoct_bins.collect { file -> path("${file}").fasta.size() > 0 }.every() },
+                { assert maxbin2_bins.collect { file -> path("${file}").fasta.size() > 0 }.every() },
+                { assert maxbin2_unbins.collect { file -> path("${file}").fasta.size() >= 0 }.every() },
+                { assert metabat2_bins.collect { file -> path("${file}").fasta.size() > 0 }.every() },
+                { assert metabat2_unbins.collect { file -> path("${file}").fasta.size() >= 0 }.every() },
+                { assert dastool_bins.collect { file -> path("${file}").fasta.size() > 0 }.every() },
+                { assert dastool_unbins.collect { file -> path("${file}").fasta.size() >= 0 }.every() },
+
+                // CSV checks
+                { assert path(bin_summary).csv(sep: "\t").rowCount > 0 },
+                { assert path(bin_summary).csv(sep: "\t").rowCount == dastool_bins.size() },
+                { assert path(busco_summary).csv(sep: "\t").rowCount > 0 },
+                { assert snapshot(
+                    path(bin_summary).csv(sep: "\t").rowCount,
+                    path(busco_summary).csv(sep: "\t").rowCount,
+                ).match("csv-rows") },
+
+                // Log checks
+                { assert bowtie2_logs.collect {
+                        log -> log.readLines().last() ==~ /[0-9.]+% overall alignment rate/
+                    }.every()
+                },
+                { assert concoct_logs.collect {
+                        log -> log.readLines().last().contains('CONCOCT Finished')
+                    }.every()
+                },
+                { assert busco_logs.collect {
+                        log -> log.readLines().any { it.contains('BUSCO analysis done.') }
+                    }.every()
+                },
+                { assert dastool_logs.collect {
+                        log -> log.readLines().last().contains("Writing bins")
+                    }.every()
+                },
             )
         }
     }

@@ -7,13 +7,13 @@
                     "coreutils": 9.5
                 },
                 "BIN_SUMMARY": {
-                    "python": "3.10.6",
-                    "pandas": "1.4.3"
+                    "pandas": "1.4.3",
+                    "python": "3.10.6"
                 },
                 "BOWTIE2_ASSEMBLY_ALIGN": {
                     "bowtie2": "2.4.2",
-                    "samtools": 1.11,
-                    "pigz": "2.3.4"
+                    "pigz": "2.3.4",
+                    "samtools": 1.11
                 },
                 "BOWTIE2_ASSEMBLY_BUILD": {
                     "bowtie2": "2.4.2"
@@ -39,7 +39,7 @@
                 "CHOPPER": {
                     "chopper": "0.8.0"
                 },
-                "CONCAT_BINQC_TSV": {
+                "CONCAT_BUSCO_TSV": {
                     "csvtk": "0.31.0"
                 },
                 "CONVERT_DEPTHS": {
@@ -61,12 +61,12 @@
                     "gunzip": 1.13
                 },
                 "MAG_DEPTHS": {
-                    "python": "3.6.7",
-                    "pandas": "1.1.5"
+                    "pandas": "1.1.5",
+                    "python": "3.6.7"
                 },
                 "MAG_DEPTHS_SUMMARY": {
-                    "python": "3.10.6",
-                    "pandas": "1.4.3"
+                    "pandas": "1.4.3",
+                    "python": "3.10.6"
                 },
                 "MAXBIN2": {
                     "maxbin2": "2.2.7"
@@ -100,19 +100,19 @@
                     "porechop": "0.2.4"
                 },
                 "PRODIGAL": {
-                    "prodigal": "2.6.3",
-                    "pigz": 2.6
+                    "pigz": 2.6,
+                    "prodigal": "2.6.3"
                 },
                 "PROKKA": {
                     "prokka": "1.14.6"
                 },
                 "QUAST": {
-                    "python": "3.7.6",
-                    "metaquast": "5.0.2"
+                    "metaquast": "5.0.2",
+                    "python": "3.7.6"
                 },
                 "QUAST_BINS": {
-                    "python": "3.7.6",
-                    "metaquast": "5.0.2"
+                    "metaquast": "5.0.2",
+                    "python": "3.7.6"
                 },
                 "QUAST_BINS_SUMMARY": {
                     "cp": 9.5
@@ -130,20 +130,20 @@
                     "seqkit": "2.9.0"
                 },
                 "SPLIT_FASTA": {
-                    "python": "3.6.7",
                     "biopython": "1.7.4",
-                    "pandas": "1.1.5"
+                    "pandas": "1.1.5",
+                    "python": "3.6.7"
                 },
                 "Workflow": {
-                    "nf-core/mag": "v5.2.0dev"
+                    "nf-core/mag": "v5.3.0dev"
                 }
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.7"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
         },
-        "timestamp": "2025-09-23T06:14:22.244054866"
+        "timestamp": "2025-11-11T08:18:55.788425589"
     },
     "multiqc": {
         "content": [

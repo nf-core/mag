@@ -777,6 +777,17 @@
                     "type": "boolean",
                     "description": "Skip COMEBin Binning"
                 },
+                "skip_metabinner": {
+                    "type": "boolean",
+                    "description": "Skip MetaBinner Binning"
+                },
+                "bin_metabinner_scale": {
+                    "type": "string",
+                    "default": "large",
+                    "enum": ["small", "large", "huge"],
+                    "description": "Dataset scale for MetaBinner",
+                    "help_text": "Dataset scale; eg. small,large,huge (default:large); Users can choose `huge` to run MetaBinner on huge datasets with lower memory requirements."
+                },
                 "min_contig_size": {
                     "type": "integer",
                     "default": 1500,
@@ -875,11 +886,17 @@
                     "type": "boolean",
                     "description": "Disable bin QC with BUSCO, CheckM or CheckM2."
                 },
-                "binqc_tool": {
-                    "type": "string",
-                    "default": "busco",
-                    "description": "Specify which tool for bin quality-control validation to use.",
-                    "enum": ["busco", "checkm", "checkm2"]
+                "run_busco": {
+                    "type": "boolean",
+                    "description": "Enable running BUSCO during bin QC."
+                },
+                "run_checkm": {
+                    "type": "boolean",
+                    "description": "Enable running CheckM during bin QC."
+                },
+                "run_checkm2": {
+                    "type": "boolean",
+                    "description": "Enable running CheckM2 during bin QC."
                 },
                 "busco_db": {
                     "type": "string",

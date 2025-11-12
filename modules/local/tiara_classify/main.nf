@@ -42,6 +42,7 @@ process TIARA_CLASSIFY {
     done < bin2classification.tsv
 
     cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
         r-base: \$(R --version | head -n 1 | grep -Eo '[0-9.]+ ')
         r-tidyverse: \$(cat tidyverse_version.txt)
     END_VERSIONS

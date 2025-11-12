@@ -35,11 +35,6 @@
 
 ## Pipeline summary
 
-## Usage
-
-> [!NOTE]
-> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.
-
 By default, the pipeline currently performs the following: it supports both short and long reads, quality trims the reads and adapters with [fastp](https://github.com/OpenGene/fastp), [AdapterRemoval](https://github.com/MikkelSchubert/adapterremoval), or [trimmomatic](https://github.com/usadellab/Trimmomatic) and [Porechop](https://github.com/rrwick/Porechop), and performs basic QC with [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/), and merges multiple sequencing runs.
 
 The pipeline then:
@@ -47,7 +42,7 @@ The pipeline then:
 - performs assembly using [MEGAHIT](https://github.com/voutcn/megahit) and [SPAdes](http://cab.spbu.ru/software/spades/), and checks their quality using [Quast](http://quast.sourceforge.net/quast)
 - (optionally) performs ancient DNA assembly validation using [PyDamage](https://github.com/maxibor/pydamage) and contig consensus sequence recalling with [Freebayes](https://github.com/freebayes/freebayes) and [BCFtools](http://samtools.github.io/bcftools/bcftools.html)
 - predicts protein-coding genes for the assemblies using [Prodigal](https://github.com/hyattpd/Prodigal), and bins with [Prokka](https://github.com/tseemann/prokka) and optionally [MetaEuk](https://www.google.com/search?channel=fs&client=ubuntu-sn&q=MetaEuk)
-- performs metagenome binning using [MetaBAT2](https://bitbucket.org/berkeleylab/metabat/src/master/), [MaxBin2](https://sourceforge.net/projects/maxbin2/), [CONCOCT](https://github.com/BinPro/CONCOCT), and/or [COMEBin](https://github.com/ziyewang/COMEBin)
+- performs metagenome binning using [MetaBAT2](https://bitbucket.org/berkeleylab/metabat/src/master/), [MaxBin2](https://sourceforge.net/projects/maxbin2/), [CONCOCT](https://github.com/BinPro/CONCOCT), [COMEBin](https://github.com/ziyewang/COMEBin), and/or [MetaBinner](https://github.com/ziyewang/MetaBinner)
 - checks the quality of the genome bins using [Busco](https://busco.ezlab.org/), [CheckM](https://ecogenomics.github.io/CheckM/), or [CheckM2](https://github.com/chklovski/CheckM2) and optionally [GUNC](https://grp-bork.embl-community.io/gunc/)
 - Performs ancient DNA validation and repair with [pyDamage](https://github.com/maxibor/pydamage) and [freebayes](https://github.com/freebayes/freebayes)
 - optionally refines bins with [DAS Tool](https://github.com/cmks/DAS_Tool)
@@ -101,6 +96,7 @@ Other code contributors include:
 - [Nikolaos Vergoulidis](https://github.com/IceGreb)
 - [Greg Fedewa](https://github.com/harper357)
 - [Vini Salazar](https://github.com/vinisalazar)
+- [Alex Caswell](https://github.com/AlexHoratio)
 
 Long read processing was inspired by [caspargross/HybridAssembly](https://github.com/caspargross/HybridAssembly) written by Caspar Gross [@caspargross](https://github.com/caspargross)
 

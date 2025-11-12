@@ -7,29 +7,33 @@ process BIN_SUMMARY {
 
     input:
     path bin_depths
-    path binqc_sum
     path quast_sum
     path gtdbtk_sum
     path cat_sum
-    val  binqc_tool
+    path busco_sum
+    path checkm_sum
+    path checkm2_sum
 
     output:
     path "bin_summary.tsv", emit: summary
-    path "versions.yml"   , emit: versions
+    path "versions.yml", emit: versions
 
     script:
-    def binqc_summary  = binqc_sum.sort().size() > 0 ? "--binqc_summary ${binqc_sum}" : ""
-    def quast_summary  = quast_sum.sort().size() > 0 ? "--quast_summary ${quast_sum}" : ""
+    def quast_summary = quast_sum.sort().size() > 0 ? "--quast_summary ${quast_sum}" : ""
     def gtdbtk_summary = gtdbtk_sum.sort().size() > 0 ? "--gtdbtk_summary ${gtdbtk_sum}" : ""
-    def cat_summary    = cat_sum.sort().size() > 0 ? "--cat_summary ${cat_sum}" : ""
+    def cat_summary = cat_sum.sort().size() > 0 ? "--cat_summary ${cat_sum}" : ""
+    def busco_summary = busco_sum.sort().size() > 0 ? "--busco_summary ${busco_sum}" : ""
+    def checkm_summary = checkm_sum.sort().size() > 0 ? "--checkm_summary ${checkm_sum}" : ""
+    def checkm2_summary = checkm2_sum.sort().size() > 0 ? "--checkm2_summary ${checkm2_sum}" : ""
     """
     combine_tables.py \
         --depths_summary ${bin_depths} \
-        ${binqc_summary} \
         ${quast_summary} \
         ${gtdbtk_summary} \
         ${cat_summary} \
-        --binqc_tool ${binqc_tool} \
+        ${busco_summary} \
+        ${checkm_summary} \
+        ${checkm2_summary} \
         --out bin_summary.tsv
 
     cat <<-END_VERSIONS > versions.yml
