@@ -4,10 +4,7 @@ Assembly/MEGAHIT/QC/*/*.bowtie2.log
 Assembly/MEGAHIT/QC/*/QUAST/*.{pdf,html,log}
 Assembly/MEGAHIT/QC/*/QUAST/**/*.{pdf,html}
 GenomeBinning/CONCOCT/stats/*_{original,PCA_components,PCA_transformed}_data_gt1000.csv
-GenomeBinning/CONCOCT/stats/*_{original,PCA_components,PCA_transformed}_data_gt1000.csv
 GenomeBinning/CONCOCT/stats/*_log.txt
-GenomeBinning/CONCOCT/stats/*_log.txt
-GenomeBinning/CONCOCT/stats/*.tsv
 GenomeBinning/CONCOCT/stats/*.tsv
 GenomeBinning/DASTool/*.log
 GenomeBinning/depths/**/*-depth.txt.gz
