@@ -1,4 +1,6 @@
 .DS_Store
+Annotation/Prokka/**/*.tmp.*
+Annotation/Prokka/**/*.{log,err}
 Assembly/MEGAHIT/*.log
 Assembly/MEGAHIT/QC/*/*.bowtie2.log
 Assembly/MEGAHIT/QC/*/QUAST/*.{pdf,html,log}

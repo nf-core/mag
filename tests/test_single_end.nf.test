@@ -66,6 +66,24 @@ nextflow_pipeline {
             def checkm_summary = "${params.outdir}/GenomeBinning/QC/checkm_summary.tsv"
             def quast_bin_summary = "${params.outdir}/GenomeBinning/QC/quast_bin_summary.tsv"
 
+            // Output dir: Annotation
+            def stable_name_annotation = getAllFilesFromDir(
+                params.outdir,
+                include: ['Annotation/**'],
+                ignore: ['Annotation/Prokka/**/*.tmp.*'],
+                relative: true,
+                includeDir: false
+            )
+            def stable_path_annotation = getAllFilesFromDir(
+                params.outdir, include: ['Annotation/**'], ignoreFile: 'tests/.nftignore'
+            )
+            def prokka_sequences = getAllFilesFromDir(
+                params.outdir, include: ['Annotation/Prokka/**/*.{fna.faa}']
+            )
+            def prokka_logs = getAllFilesFromDir(
+                params.outdir, include: ['Annotation/Prokka/**/*.log']
+            )
+
             // Output directory: multiqc
             def stable_name_multiqc = getAllFilesFromDir(
                 params.outdir, include: ['multiqc/**'], relative: true, includeDir: false
@@ -80,10 +98,11 @@ nextflow_pipeline {
                     workflow.trace.succeeded().size(),
                     removeNextflowVersion("$outputDir/pipeline_info/nf_core_mag_software_mqc_versions.yml"),
                 ).match() },
-                { assert snapshot(stable_name_qc,       stable_path_qc      ).match('qc') },
-                { assert snapshot(stable_name_assembly, stable_path_assembly).match('assembly') },
-                { assert snapshot(stable_name_binning,  stable_path_binning ).match('binning') },
-                { assert snapshot(stable_name_multiqc,  stable_path_multiqc ).match('multiqc') },
+                { assert snapshot(stable_name_qc,         stable_path_qc        ).match('qc') },
+                { assert snapshot(stable_name_annotation, stable_path_annotation).match('annotation') },
+                { assert snapshot(stable_name_assembly,   stable_path_assembly  ).match('assembly') },
+                { assert snapshot(stable_name_binning,    stable_path_binning   ).match('binning') },
+                { assert snapshot(stable_name_multiqc,    stable_path_multiqc   ).match('multiqc') },
 
                 // FASTA checks
                 { assert concoct_bins.collect { file -> path("${file}").fasta.size() > 0 }.every() },
@@ -91,6 +110,7 @@ nextflow_pipeline {
                 { assert maxbin2_unbins.collect { file -> path("${file}").fasta.size() >= 0 }.every() },
                 { assert metabat2_bins.collect { file -> path("${file}").fasta.size() > 0 }.every() },
                 { assert metabat2_unbins.collect { file -> path("${file}").fasta.size() >= 0 }.every() },
+                { assert prokka_sequences.collect { file -> path("${file}").fasta.size() >= 0 }.every() },
 
                 // CSV checks
                 { assert path(bin_summary).csv(sep: "\t").rowCount > 0 },
@@ -114,6 +134,10 @@ nextflow_pipeline {
                 },
                 { assert checkm_logs.collect {
                         log -> log.readLines().any { it.contains('QA information written to:') }
+                    }.every()
+                },
+                { assert prokka_logs.collect {
+                        log -> log.readLines().any { it.contains('Annotation finished successfully.') }
                     }.every()
                 },
             )
