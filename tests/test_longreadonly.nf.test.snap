@@ -19,6 +19,9 @@
                 "CONCAT_BUSCO_TSV": {
                     "csvtk": "0.31.0"
                 },
+                "CONCAT_QUAST_SUMMARY": {
+                    "csvtk": "0.31.0"
+                },
                 "CONVERT_DEPTHS": {
                     "bioawk": 20110810
                 },
@@ -95,9 +98,6 @@
                     "metaquast": "5.0.2",
                     "python": "3.7.6"
                 },
-                "QUAST_BINS_SUMMARY": {
-                    "cp": 9.5
-                },
                 "SAMTOOLS_HOSTREMOVED_INDEX": {
                     "samtools": 1.21
                 },
@@ -124,7 +124,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
         },
-        "timestamp": "2025-11-11T08:20:21.595480513"
+        "timestamp": "2025-11-14T18:58:38.803961362"
     },
     "multiqc": {
         "content": [
