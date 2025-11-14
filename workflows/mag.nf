@@ -3,49 +3,49 @@
     IMPORT MODULES / SUBWORKFLOWS / FUNCTIONS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-include { MULTIQC                         } from '../modules/nf-core/multiqc/main'
-include { paramsSummaryMap                } from 'plugin/nf-schema'
-include { paramsSummaryMultiqc            } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { softwareVersionsToYAML          } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { methodsDescriptionText          } from '../subworkflows/local/utils_nfcore_mag_pipeline'
+include { MULTIQC                              } from '../modules/nf-core/multiqc/main'
+include { paramsSummaryMap                     } from 'plugin/nf-schema'
+include { paramsSummaryMultiqc                 } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { softwareVersionsToYAML               } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { methodsDescriptionText               } from '../subworkflows/local/utils_nfcore_mag_pipeline'
 
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { BINNING_PREPARATION             } from '../subworkflows/local/binning_preparation/main'
-include { BINNING                         } from '../subworkflows/local/binning/main'
-include { BIN_QC                          } from '../subworkflows/local/bin_qc/main'
-include { BINNING_REFINEMENT              } from '../subworkflows/local/binning_refinement/main'
-include { VIRUS_IDENTIFICATION            } from '../subworkflows/local/virus_identification/main'
-include { GTDBTK                          } from '../subworkflows/local/gtdbtk/main'
-include { ANCIENT_DNA_ASSEMBLY_VALIDATION } from '../subworkflows/local/ancient_dna/main'
-include { DOMAIN_CLASSIFICATION           } from '../subworkflows/local/domain_classification/main'
-include { DEPTHS                          } from '../subworkflows/local/depths/main'
-include { LONGREAD_PREPROCESSING          } from '../subworkflows/local/preprocessing_longread/main'
-include { SHORTREAD_PREPROCESSING         } from '../subworkflows/local/preprocessing_shortread/main'
-include { ASSEMBLY                        } from '../subworkflows/local/assembly/main'
-include { CATPACK                         } from '../subworkflows/local/catpack/main'
+include { BINNING_PREPARATION                  } from '../subworkflows/local/binning_preparation/main'
+include { BINNING                              } from '../subworkflows/local/binning/main'
+include { BIN_QC                               } from '../subworkflows/local/bin_qc/main'
+include { BINNING_REFINEMENT                   } from '../subworkflows/local/binning_refinement/main'
+include { VIRUS_IDENTIFICATION                 } from '../subworkflows/local/virus_identification/main'
+include { GTDBTK                               } from '../subworkflows/local/gtdbtk/main'
+include { ANCIENT_DNA_ASSEMBLY_VALIDATION      } from '../subworkflows/local/ancient_dna/main'
+include { DOMAIN_CLASSIFICATION                } from '../subworkflows/local/domain_classification/main'
+include { DEPTHS                               } from '../subworkflows/local/depths/main'
+include { LONGREAD_PREPROCESSING               } from '../subworkflows/local/preprocessing_longread/main'
+include { SHORTREAD_PREPROCESSING              } from '../subworkflows/local/preprocessing_shortread/main'
+include { ASSEMBLY                             } from '../subworkflows/local/assembly/main'
+include { CATPACK                              } from '../subworkflows/local/catpack/main'
 
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { GUNZIP as GUNZIP_ASSEMBLYINPUT  } from '../modules/nf-core/gunzip'
-include { PRODIGAL                        } from '../modules/nf-core/prodigal/main'
-include { PROKKA                          } from '../modules/nf-core/prokka/main'
-include { MMSEQS_DATABASES                } from '../modules/nf-core/mmseqs/databases/main'
-include { METAEUK_EASYPREDICT             } from '../modules/nf-core/metaeuk/easypredict/main'
+include { GUNZIP as GUNZIP_ASSEMBLYINPUT       } from '../modules/nf-core/gunzip'
+include { PRODIGAL                             } from '../modules/nf-core/prodigal/main'
+include { PROKKA                               } from '../modules/nf-core/prokka/main'
+include { MMSEQS_DATABASES                     } from '../modules/nf-core/mmseqs/databases/main'
+include { METAEUK_EASYPREDICT                  } from '../modules/nf-core/metaeuk/easypredict/main'
 
 //
 // MODULE: Local to the pipeline
 //
-include { QUAST                           } from '../modules/local/quast_run/main'
-include { QUAST_BINS                      } from '../modules/local/quast_bins/main'
-include { QUAST_BINS_SUMMARY              } from '../modules/local/quast_bins_summary/main'
-include { BIN_SUMMARY                     } from '../modules/local/bin_summary/main'
+include { CSVTK_CONCAT as CONCAT_QUAST_SUMMARY } from '../modules/nf-core/csvtk/concat/main'
+include { QUAST                                } from '../modules/local/quast_run/main'
+include { QUAST_BINS                           } from '../modules/local/quast_bins/main'
+include { BIN_SUMMARY                          } from '../modules/local/bin_summary/main'
 
 workflow MAG {
     take:
-    ch_raw_short_reads  // channel: samplesheet read in from --input
+    ch_raw_short_reads // channel: samplesheet read in from --input
     ch_raw_long_reads
     ch_input_assemblies
 
@@ -397,19 +397,20 @@ workflow MAG {
             ch_input_for_quast_bins = ch_input_for_postbinning
                 .groupTuple()
                 .map { meta, bins ->
-                    def new_bins = bins.flatten()
-                    [meta, new_bins]
+                    [meta, bins.flatten().sort { a, b -> a.getBaseName() <=> b.getBaseName() }]
                 }
 
             QUAST_BINS(ch_input_for_quast_bins)
             ch_versions = ch_versions.mix(QUAST_BINS.out.versions)
-            ch_quast_bin_summary = QUAST_BINS.out.quast_bin_summaries.collectFile(keepHeader: true) { meta, summary ->
-                ["${meta.id}.tsv", summary]
-            }
-            QUAST_BINS_SUMMARY(ch_quast_bin_summary.collect())
-            ch_versions = ch_versions.mix(QUAST_BINS_SUMMARY.out.versions)
 
-            ch_quast_bins_summary = QUAST_BINS_SUMMARY.out.summary
+            ch_quast_bin_summaries = QUAST_BINS.out.quast_bin_summaries
+                .collect { _meta, summary -> summary }
+                .map { summaries -> [[id: 'quast_bin_summary'], summaries.sort { a, b -> a.getBaseName() <=> b.getBaseName() }] }
+
+            CONCAT_QUAST_SUMMARY(ch_quast_bin_summaries, 'tsv', 'tsv')
+            ch_versions = ch_versions.mix(CONCAT_QUAST_SUMMARY.out.versions)
+
+            ch_quast_bins_summary = CONCAT_QUAST_SUMMARY.out.csv.map { _meta, summary -> summary }
         }
 
         /*
