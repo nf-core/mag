@@ -620,7 +620,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
         },
-        "timestamp": "2025-11-14T20:04:25.600328977"
+        "timestamp": "2025-11-14T21:15:52.474832769"
     },
     "qc": {
         "content": [
@@ -644,10 +644,10 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.2",
+            "nf-test": "0.9.3",
             "nextflow": "25.10.0"
         },
-        "timestamp": "2025-10-31T16:59:40.124449354"
+        "timestamp": "2025-11-14T21:15:52.468158396"
     },
     "assembly": {
         "content": [
@@ -724,7 +724,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
         },
-        "timestamp": "2025-11-14T19:24:17.395505351"
+        "timestamp": "2025-11-14T21:15:52.629282786"
     },
     "binning": {
         "content": [
@@ -1791,7 +1791,84 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
         },
-        "timestamp": "2025-11-14T18:10:20.553721443"
+        "timestamp": "2025-11-14T21:15:52.782652223"
+    },
+    "taxonomy": {
+        "content": [
+            [
+                "Taxonomy/CAT/MEGAHIT/CONCOCT/test_minigut/bins/MEGAHIT-CONCOCT-test_minigut-bins.ORF2LCA.txt",
+                "Taxonomy/CAT/MEGAHIT/CONCOCT/test_minigut/bins/MEGAHIT-CONCOCT-test_minigut-bins.bin2classification.txt",
+                "Taxonomy/CAT/MEGAHIT/CONCOCT/test_minigut/bins/MEGAHIT-CONCOCT-test_minigut-bins.concatenated.alignment.diamond",
+                "Taxonomy/CAT/MEGAHIT/CONCOCT/test_minigut/bins/MEGAHIT-CONCOCT-test_minigut-bins.concatenated.predicted_proteins.faa",
+                "Taxonomy/CAT/MEGAHIT/CONCOCT/test_minigut/bins/MEGAHIT-CONCOCT-test_minigut-bins.concatenated.predicted_proteins.gff",
+                "Taxonomy/CAT/MEGAHIT/CONCOCT/test_minigut/bins/MEGAHIT-CONCOCT-test_minigut-bins.log",
+                "Taxonomy/CAT/MEGAHIT/CONCOCT/test_minigut/bins/MEGAHIT-CONCOCT-test_minigut-bins_bin2classification.names.txt",
+                "Taxonomy/CAT/MEGAHIT/CONCOCT/test_minigut/bins/MEGAHIT-CONCOCT-test_minigut-bins_summary.txt",
+                "Taxonomy/CAT/MEGAHIT/CONCOCT/test_minigut_sample2/bins/MEGAHIT-CONCOCT-test_minigut_sample2-bins.ORF2LCA.txt",
+                "Taxonomy/CAT/MEGAHIT/CONCOCT/test_minigut_sample2/bins/MEGAHIT-CONCOCT-test_minigut_sample2-bins.bin2classification.txt",
+                "Taxonomy/CAT/MEGAHIT/CONCOCT/test_minigut_sample2/bins/MEGAHIT-CONCOCT-test_minigut_sample2-bins.concatenated.alignment.diamond",
+                "Taxonomy/CAT/MEGAHIT/CONCOCT/test_minigut_sample2/bins/MEGAHIT-CONCOCT-test_minigut_sample2-bins.concatenated.predicted_proteins.faa",
+                "Taxonomy/CAT/MEGAHIT/CONCOCT/test_minigut_sample2/bins/MEGAHIT-CONCOCT-test_minigut_sample2-bins.concatenated.predicted_proteins.gff",
+                "Taxonomy/CAT/MEGAHIT/CONCOCT/test_minigut_sample2/bins/MEGAHIT-CONCOCT-test_minigut_sample2-bins.log",
+                "Taxonomy/CAT/MEGAHIT/CONCOCT/test_minigut_sample2/bins/MEGAHIT-CONCOCT-test_minigut_sample2-bins_bin2classification.names.txt",
+                "Taxonomy/CAT/MEGAHIT/CONCOCT/test_minigut_sample2/bins/MEGAHIT-CONCOCT-test_minigut_sample2-bins_summary.txt",
+                "Taxonomy/CAT/MEGAHIT/MaxBin2/test_minigut/bins/MEGAHIT-MaxBin2-test_minigut-bins.ORF2LCA.txt",
+                "Taxonomy/CAT/MEGAHIT/MaxBin2/test_minigut/bins/MEGAHIT-MaxBin2-test_minigut-bins.bin2classification.txt",
+                "Taxonomy/CAT/MEGAHIT/MaxBin2/test_minigut/bins/MEGAHIT-MaxBin2-test_minigut-bins.concatenated.alignment.diamond",
+                "Taxonomy/CAT/MEGAHIT/MaxBin2/test_minigut/bins/MEGAHIT-MaxBin2-test_minigut-bins.concatenated.predicted_proteins.faa",
+                "Taxonomy/CAT/MEGAHIT/MaxBin2/test_minigut/bins/MEGAHIT-MaxBin2-test_minigut-bins.concatenated.predicted_proteins.gff",
+                "Taxonomy/CAT/MEGAHIT/MaxBin2/test_minigut/bins/MEGAHIT-MaxBin2-test_minigut-bins.log",
+                "Taxonomy/CAT/MEGAHIT/MaxBin2/test_minigut/bins/MEGAHIT-MaxBin2-test_minigut-bins_bin2classification.names.txt",
+                "Taxonomy/CAT/MEGAHIT/MaxBin2/test_minigut/bins/MEGAHIT-MaxBin2-test_minigut-bins_summary.txt",
+                "Taxonomy/CAT/MEGAHIT/MetaBAT2/test_minigut/bins/MEGAHIT-MetaBAT2-test_minigut-bins.ORF2LCA.txt",
+                "Taxonomy/CAT/MEGAHIT/MetaBAT2/test_minigut/bins/MEGAHIT-MetaBAT2-test_minigut-bins.bin2classification.txt",
+                "Taxonomy/CAT/MEGAHIT/MetaBAT2/test_minigut/bins/MEGAHIT-MetaBAT2-test_minigut-bins.concatenated.alignment.diamond",
+                "Taxonomy/CAT/MEGAHIT/MetaBAT2/test_minigut/bins/MEGAHIT-MetaBAT2-test_minigut-bins.concatenated.predicted_proteins.faa",
+                "Taxonomy/CAT/MEGAHIT/MetaBAT2/test_minigut/bins/MEGAHIT-MetaBAT2-test_minigut-bins.concatenated.predicted_proteins.gff",
+                "Taxonomy/CAT/MEGAHIT/MetaBAT2/test_minigut/bins/MEGAHIT-MetaBAT2-test_minigut-bins.log",
+                "Taxonomy/CAT/MEGAHIT/MetaBAT2/test_minigut/bins/MEGAHIT-MetaBAT2-test_minigut-bins_bin2classification.names.txt",
+                "Taxonomy/CAT/MEGAHIT/MetaBAT2/test_minigut/bins/MEGAHIT-MetaBAT2-test_minigut-bins_summary.txt",
+                "Taxonomy/CAT/bat_summary.tsv",
+                "Taxonomy/GTDB-Tk/gtdbtk_summary.tsv"
+            ],
+            [
+                "MEGAHIT-CONCOCT-test_minigut-bins.ORF2LCA.txt:md5,f98beecca6672780a8d1e41dd346e739",
+                "MEGAHIT-CONCOCT-test_minigut-bins.bin2classification.txt:md5,7000412ba55c96e5a271583126ce9d72",
+                "MEGAHIT-CONCOCT-test_minigut-bins.concatenated.alignment.diamond:md5,a9478f97236792a591f88ca9389f3458",
+                "MEGAHIT-CONCOCT-test_minigut-bins.concatenated.predicted_proteins.faa:md5,3c7b68f8055512930188caa0785acea7",
+                "MEGAHIT-CONCOCT-test_minigut-bins.concatenated.predicted_proteins.gff:md5,45cc3c27a496092b7540917cbd6656e3",
+                "MEGAHIT-CONCOCT-test_minigut-bins_bin2classification.names.txt:md5,c263ccdf44ee8f72894af13adbdf6b12",
+                "MEGAHIT-CONCOCT-test_minigut-bins_summary.txt:md5,9b888cb8d0838eadb18d9075bd38868e",
+                "MEGAHIT-CONCOCT-test_minigut_sample2-bins.ORF2LCA.txt:md5,ebbc5cf8fa7ebc225f005211d89f6087",
+                "MEGAHIT-CONCOCT-test_minigut_sample2-bins.bin2classification.txt:md5,e32156f65d0c22f643ec78ded72fd5ca",
+                "MEGAHIT-CONCOCT-test_minigut_sample2-bins.concatenated.alignment.diamond:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "MEGAHIT-CONCOCT-test_minigut_sample2-bins.concatenated.predicted_proteins.faa:md5,5e5bce880525cd5e04fd0efef8f1752a",
+                "MEGAHIT-CONCOCT-test_minigut_sample2-bins.concatenated.predicted_proteins.gff:md5,33499f2a954e9f28cfb23439530517ae",
+                "MEGAHIT-CONCOCT-test_minigut_sample2-bins_bin2classification.names.txt:md5,43d5ecd14bfafbcf53fc9bfb57d16133",
+                "MEGAHIT-CONCOCT-test_minigut_sample2-bins_summary.txt:md5,56f145de741dd3c7fad7db4df9289837",
+                "MEGAHIT-MaxBin2-test_minigut-bins.ORF2LCA.txt:md5,33457fbe8daf15b1140269377f062d38",
+                "MEGAHIT-MaxBin2-test_minigut-bins.bin2classification.txt:md5,f59f81433f61bf170c77c6f279cc92c8",
+                "MEGAHIT-MaxBin2-test_minigut-bins.concatenated.alignment.diamond:md5,436cdc2e50372ad244074fbff66b9810",
+                "MEGAHIT-MaxBin2-test_minigut-bins.concatenated.predicted_proteins.faa:md5,62861319b9801981138a779c575389b0",
+                "MEGAHIT-MaxBin2-test_minigut-bins.concatenated.predicted_proteins.gff:md5,bed3d0fe1d0b0c235155cf43355a3bdb",
+                "MEGAHIT-MaxBin2-test_minigut-bins_bin2classification.names.txt:md5,425250932b387591ba3988ab9dcb14d3",
+                "MEGAHIT-MaxBin2-test_minigut-bins_summary.txt:md5,1666dbfcbf757029cc0e5b0bba712e00",
+                "MEGAHIT-MetaBAT2-test_minigut-bins.ORF2LCA.txt:md5,d190aa0bd0eeb736316c2c53a7ad057b",
+                "MEGAHIT-MetaBAT2-test_minigut-bins.bin2classification.txt:md5,42e06c83fc6f5dc30d7e1873549f619b",
+                "MEGAHIT-MetaBAT2-test_minigut-bins.concatenated.alignment.diamond:md5,c483f334e43fe6239dbd7b9d17438558",
+                "MEGAHIT-MetaBAT2-test_minigut-bins.concatenated.predicted_proteins.faa:md5,f561b734898447039c2d4c9051a891bd",
+                "MEGAHIT-MetaBAT2-test_minigut-bins.concatenated.predicted_proteins.gff:md5,458de47bf5b0e9937dc2cf4283917f3a",
+                "MEGAHIT-MetaBAT2-test_minigut-bins_bin2classification.names.txt:md5,ce1b6bae00995e88d70722462d9fcedb",
+                "MEGAHIT-MetaBAT2-test_minigut-bins_summary.txt:md5,c2986e27b93008b06709a59bb298e3ea",
+                "bat_summary.tsv:md5,ab01c0858ee334804fb97180d1ba321e",
+                "gtdbtk_summary.tsv:md5,af05337c99159421caf2348dcae802e7"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-11-14T21:15:53.000167717"
     },
     "-profile test_single_end": {
         "content": [
@@ -1974,19 +2051,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
         },
-        "timestamp": "2025-11-14T17:45:13.751328038"
-    },
-    "csv-rows": {
-        "content": [
-            27,
-            26,
-            27
-        ],
-        "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.0"
-        },
-        "timestamp": "2025-11-14T18:26:45.581234703"
+        "timestamp": "2025-11-14T21:15:52.456686769"
     },
     "multiqc": {
         "content": [
@@ -2182,9 +2247,23 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.7"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
         },
-        "timestamp": "2025-11-03T09:55:56.923848787"
+        "timestamp": "2025-11-14T21:15:53.220128933"
+    },
+    "summary-rows": {
+        "content": [
+            27,
+            26,
+            27,
+            27,
+            26
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-11-14T21:15:53.66986401"
     }
 }
