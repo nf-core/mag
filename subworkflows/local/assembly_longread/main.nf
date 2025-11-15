@@ -20,7 +20,7 @@ workflow LONGREAD_ASSEMBLY {
             if (meta.lr_platform == "OXFORD_NANOPORE") {
                 fly_mode = "--nano-raw"
             }
-            else if (meta.lr_platform == "NANOPORE_HQ") {
+            else if (meta.lr_platform == "OXFORD_NANOPORE_HQ") {
                 fly_mode = "--nano-hq"
             }
             else if (meta.lr_platform == "PACBIO_HIFI") {
@@ -56,7 +56,7 @@ workflow LONGREAD_ASSEMBLY {
             if (meta.lr_platform == "OXFORD_NANOPORE") {
                 metamdbg_mode = "ont"
             }
-            else if (meta.lr_platform == "NANOPORE_HQ") {
+            else if (meta.lr_platform == "OXFORD_NANOPORE_HQ") {
                 metamdbg_mode = "ont"
             }
             else if (meta.lr_platform == "PACBIO_HIFI") {
