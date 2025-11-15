@@ -1793,6 +1793,67 @@
         },
         "timestamp": "2025-11-14T21:15:52.782652223"
     },
+    "viral": {
+        "content": [
+            [
+                "VirusIdentification/geNomad/test_minigut/MEGAHIT-test_minigut.contigs_aggregated_classification/MEGAHIT-test_minigut.contigs_aggregated_classification.tsv",
+                "VirusIdentification/geNomad/test_minigut/MEGAHIT-test_minigut.contigs_annotate/MEGAHIT-test_minigut.contigs_taxonomy.tsv",
+                "VirusIdentification/geNomad/test_minigut/MEGAHIT-test_minigut.contigs_find_proviruses/MEGAHIT-test_minigut.contigs_provirus.tsv",
+                "VirusIdentification/geNomad/test_minigut/MEGAHIT-test_minigut.contigs_marker_classification/MEGAHIT-test_minigut.contigs_marker_classification.tsv",
+                "VirusIdentification/geNomad/test_minigut/MEGAHIT-test_minigut.contigs_summary/MEGAHIT-test_minigut.contigs_plasmid.fna.gz",
+                "VirusIdentification/geNomad/test_minigut/MEGAHIT-test_minigut.contigs_summary/MEGAHIT-test_minigut.contigs_plasmid_genes.tsv",
+                "VirusIdentification/geNomad/test_minigut/MEGAHIT-test_minigut.contigs_summary/MEGAHIT-test_minigut.contigs_plasmid_proteins.faa.gz",
+                "VirusIdentification/geNomad/test_minigut/MEGAHIT-test_minigut.contigs_summary/MEGAHIT-test_minigut.contigs_plasmid_summary.tsv",
+                "VirusIdentification/geNomad/test_minigut/MEGAHIT-test_minigut.contigs_summary/MEGAHIT-test_minigut.contigs_virus.fna.gz",
+                "VirusIdentification/geNomad/test_minigut/MEGAHIT-test_minigut.contigs_summary/MEGAHIT-test_minigut.contigs_virus_genes.tsv",
+                "VirusIdentification/geNomad/test_minigut/MEGAHIT-test_minigut.contigs_summary/MEGAHIT-test_minigut.contigs_virus_proteins.faa.gz",
+                "VirusIdentification/geNomad/test_minigut/MEGAHIT-test_minigut.contigs_summary/MEGAHIT-test_minigut.contigs_virus_summary.tsv",
+                "VirusIdentification/geNomad/test_minigut_sample2/MEGAHIT-test_minigut_sample2.contigs_aggregated_classification/MEGAHIT-test_minigut_sample2.contigs_aggregated_classification.tsv",
+                "VirusIdentification/geNomad/test_minigut_sample2/MEGAHIT-test_minigut_sample2.contigs_annotate/MEGAHIT-test_minigut_sample2.contigs_taxonomy.tsv",
+                "VirusIdentification/geNomad/test_minigut_sample2/MEGAHIT-test_minigut_sample2.contigs_find_proviruses/MEGAHIT-test_minigut_sample2.contigs_provirus.tsv",
+                "VirusIdentification/geNomad/test_minigut_sample2/MEGAHIT-test_minigut_sample2.contigs_marker_classification/MEGAHIT-test_minigut_sample2.contigs_marker_classification.tsv",
+                "VirusIdentification/geNomad/test_minigut_sample2/MEGAHIT-test_minigut_sample2.contigs_summary/MEGAHIT-test_minigut_sample2.contigs_plasmid.fna.gz",
+                "VirusIdentification/geNomad/test_minigut_sample2/MEGAHIT-test_minigut_sample2.contigs_summary/MEGAHIT-test_minigut_sample2.contigs_plasmid_genes.tsv",
+                "VirusIdentification/geNomad/test_minigut_sample2/MEGAHIT-test_minigut_sample2.contigs_summary/MEGAHIT-test_minigut_sample2.contigs_plasmid_proteins.faa.gz",
+                "VirusIdentification/geNomad/test_minigut_sample2/MEGAHIT-test_minigut_sample2.contigs_summary/MEGAHIT-test_minigut_sample2.contigs_plasmid_summary.tsv",
+                "VirusIdentification/geNomad/test_minigut_sample2/MEGAHIT-test_minigut_sample2.contigs_summary/MEGAHIT-test_minigut_sample2.contigs_virus.fna.gz",
+                "VirusIdentification/geNomad/test_minigut_sample2/MEGAHIT-test_minigut_sample2.contigs_summary/MEGAHIT-test_minigut_sample2.contigs_virus_genes.tsv",
+                "VirusIdentification/geNomad/test_minigut_sample2/MEGAHIT-test_minigut_sample2.contigs_summary/MEGAHIT-test_minigut_sample2.contigs_virus_proteins.faa.gz",
+                "VirusIdentification/geNomad/test_minigut_sample2/MEGAHIT-test_minigut_sample2.contigs_summary/MEGAHIT-test_minigut_sample2.contigs_virus_summary.tsv"
+            ],
+            [
+                "MEGAHIT-test_minigut.contigs_aggregated_classification.tsv:md5,4acab3bff6f77e3be48f4bb405a56e9e",
+                "MEGAHIT-test_minigut.contigs_taxonomy.tsv:md5,3b1fc1e7fb2457859b1c5ca82ef5ddac",
+                "MEGAHIT-test_minigut.contigs_provirus.tsv:md5,93a6bca59b0bf7f57c0b9b60d2e57082",
+                "MEGAHIT-test_minigut.contigs_marker_classification.tsv:md5,49625280a666cd6cb61d6a2166a0627d",
+                "MEGAHIT-test_minigut.contigs_plasmid.fna.gz:md5,3a80a30dee715b6b6b8db5c54573074c",
+                "MEGAHIT-test_minigut.contigs_plasmid_genes.tsv:md5,14d5fcbb1745eedb3d416256e747ed0e",
+                "MEGAHIT-test_minigut.contigs_plasmid_proteins.faa.gz:md5,8c289a7f53e1785e071cef39915582f2",
+                "MEGAHIT-test_minigut.contigs_plasmid_summary.tsv:md5,dfe1b71b447172f96186113ff3ec71e4",
+                "MEGAHIT-test_minigut.contigs_virus.fna.gz:md5,c8d42683f5e62c3e44eb5d2d8fb7b84f",
+                "MEGAHIT-test_minigut.contigs_virus_genes.tsv:md5,51c2dc60b3a1834c0811552af3f205b2",
+                "MEGAHIT-test_minigut.contigs_virus_proteins.faa.gz:md5,2e14bd6ae9e2043a3b6f407c425e13e1",
+                "MEGAHIT-test_minigut.contigs_virus_summary.tsv:md5,d22f74f27a69c252c173c987c0339c5d",
+                "MEGAHIT-test_minigut_sample2.contigs_aggregated_classification.tsv:md5,8051046ded3da49a381ac315ce1053f9",
+                "MEGAHIT-test_minigut_sample2.contigs_taxonomy.tsv:md5,5c9174470b250dfbe1e0d7d2da143617",
+                "MEGAHIT-test_minigut_sample2.contigs_provirus.tsv:md5,93a6bca59b0bf7f57c0b9b60d2e57082",
+                "MEGAHIT-test_minigut_sample2.contigs_marker_classification.tsv:md5,0fb58b89eea2ac71ca4cc2d960e1f42c",
+                "MEGAHIT-test_minigut_sample2.contigs_plasmid.fna.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "MEGAHIT-test_minigut_sample2.contigs_plasmid_genes.tsv:md5,55818cae5a57381b77778076e99605e6",
+                "MEGAHIT-test_minigut_sample2.contigs_plasmid_proteins.faa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "MEGAHIT-test_minigut_sample2.contigs_plasmid_summary.tsv:md5,8c4ddaa8a90da779c11537be0fddb799",
+                "MEGAHIT-test_minigut_sample2.contigs_virus.fna.gz:md5,fd99ba7b3d7b4e247444abe3173d0a61",
+                "MEGAHIT-test_minigut_sample2.contigs_virus_genes.tsv:md5,69d9fb20e1b3595da1d136edc42c2776",
+                "MEGAHIT-test_minigut_sample2.contigs_virus_proteins.faa.gz:md5,79089b17750dec52668b2f0fdf7d638b",
+                "MEGAHIT-test_minigut_sample2.contigs_virus_summary.tsv:md5,2d9c0006336752f4a41253e6570119a1"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-11-14T21:24:50.945905422"
+    },
     "taxonomy": {
         "content": [
             [

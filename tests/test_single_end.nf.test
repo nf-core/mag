@@ -97,6 +97,14 @@ nextflow_pipeline {
             def bat_summary = path("${params.outdir}/Taxonomy/CAT/bat_summary.tsv")
             def gtdbtk_summary = path("${params.outdir}/Taxonomy/GTDB-Tk/gtdbtk_summary.tsv")
 
+            // Output dir: VirusIdentification
+            def stable_name_viral = getAllFilesFromDir(
+                params.outdir, include: ['VirusIdentification/**'], relative: true, includeDir: false
+            )
+            def stable_path_viral = getAllFilesFromDir(
+                params.outdir, include: ['VirusIdentification/**'], ignoreFile: 'tests/.nftignore'
+            )
+
             // Output directory: multiqc
             def stable_name_multiqc = getAllFilesFromDir(
                 params.outdir, include: ['multiqc/**'], relative: true, includeDir: false
@@ -116,6 +124,7 @@ nextflow_pipeline {
                 { assert snapshot(stable_name_assembly,   stable_path_assembly  ).match('assembly') },
                 { assert snapshot(stable_name_binning,    stable_path_binning   ).match('binning') },
                 { assert snapshot(stable_name_taxonomy,   stable_path_taxonomy  ).match('taxonomy') },
+                { assert snapshot(stable_name_viral,      stable_path_viral     ).match('viral') },
                 { assert snapshot(stable_name_multiqc,    stable_path_multiqc   ).match('multiqc') },
 
                 // FASTA checks
