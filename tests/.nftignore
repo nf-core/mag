@@ -1,6 +1,8 @@
 .DS_Store
+Ancient_DNA/pydamage/analyze/*/*.csv
+Ancient_DNA/variant_calling/filtered/*.filtered.vcf.gz
+Annotation/Prokka/**/*.{log,err,gbk,sqn}
 Annotation/Prokka/**/*.tmp.*
-Annotation/Prokka/**/*.{log,err}
 Assembly/MEGAHIT/*.log
 Assembly/MEGAHIT/QC/*/*.bowtie2.log
 Assembly/MEGAHIT/QC/*/QUAST/*.{pdf,html,log}
@@ -27,7 +29,6 @@ GenomeBinning/QC/CheckM2/**/DIAMOND_RESULTS.tsv
 GenomeBinning/QC/CheckM2/*/checkm2.log
 GenomeBinning/QC/QUAST/*/*.{pdf,html,log}
 GenomeBinning/QC/QUAST/*/**/*.{pdf,html}
-Taxonomy/CAT/**/*.log
 multiqc/multiqc_data/fastqc_top_overrepresented_sequences_table.txt
 multiqc/multiqc_data/llms-full.txt
 multiqc/multiqc_data/multiqc_data.json
@@ -42,3 +43,4 @@ multiqc/multiqc_report.html
 pipeline_info/*.{html,json,txt,yml}
 QC_shortreads/fastqc/*_fastqc.{html,zip}
 QC_shortreads/remove_phix/*.log
+Taxonomy/CAT/**/*.log
