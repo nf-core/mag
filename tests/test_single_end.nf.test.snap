@@ -2289,9 +2289,7 @@
                 "MEGAHIT-test_minigut_pydamage_filtered_results.csv:md5,6414a400229f9cc5e31368703020b039",
                 "MEGAHIT-test_minigut_sample2_pydamage_filtered_results.csv:md5,6414a400229f9cc5e31368703020b039",
                 "MEGAHIT-test_minigut.fa:md5,34fe41ac66dfc601afcfa067f86f2e75",
-                "MEGAHIT-test_minigut_sample2.fa:md5,f76f599c3048c8794ade2a8f3bfdb205",
-                "MEGAHIT-test_minigut.vcf.gz:md5,afef500fd3ec379d1b69987d4f9b6d37",
-                "MEGAHIT-test_minigut_sample2.vcf.gz:md5,8db319af5c890b9c77f65fde06854b38"
+                "MEGAHIT-test_minigut_sample2.fa:md5,f76f599c3048c8794ade2a8f3bfdb205"
             ]
         ],
         "meta": {

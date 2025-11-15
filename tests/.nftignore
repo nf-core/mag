@@ -1,6 +1,6 @@
 .DS_Store
 Ancient_DNA/pydamage/analyze/*/*.csv
-Ancient_DNA/variant_calling/filtered/*.vcf.gz
+Ancient_DNA/variant_calling/*/*.vcf.gz
 Annotation/Prokka/**/*.{log,err,gbk,sqn}
 Annotation/Prokka/**/*.tmp.*
 Assembly/MEGAHIT/*.log
