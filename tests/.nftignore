@@ -1,6 +1,6 @@
 .DS_Store
 Ancient_DNA/pydamage/analyze/*/*.csv
-Ancient_DNA/variant_calling/filtered/*.filtered.vcf.gz
+Ancient_DNA/variant_calling/filtered/*.vcf.gz
 Annotation/Prokka/**/*.{log,err,gbk,sqn}
 Annotation/Prokka/**/*.tmp.*
 Assembly/MEGAHIT/*.log
@@ -44,3 +44,4 @@ pipeline_info/*.{html,json,txt,yml}
 QC_shortreads/fastqc/*_fastqc.{html,zip}
 QC_shortreads/remove_phix/*.log
 Taxonomy/CAT/**/*.log
+VirusIdentification/geNomad/**/*_aggregated_classification.tsv

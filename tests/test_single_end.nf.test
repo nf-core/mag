@@ -115,6 +115,9 @@ nextflow_pipeline {
             def stable_path_viral = getAllFilesFromDir(
                 params.outdir, include: ['VirusIdentification/**'], ignoreFile: 'tests/.nftignore'
             )
+            def genomad_results = getAllFilesFromDir(
+                params.outdir, include: ['VirusIdentification/geNomad/**/*_aggregated_classification.tsv']
+            )
 
             // Output directory: multiqc
             def stable_name_multiqc = getAllFilesFromDir(
@@ -186,7 +189,11 @@ nextflow_pipeline {
 
                 // Other checks
                 { assert pydamage_results.collect {
-                        csv -> csv.csv(sep: ',').rowCount > 0
+                        file -> path("${file}").csv(sep: ',').rowCount > 0
+                    }.every()
+                },
+                { assert genomad_results.collect {
+                        file -> path("${file}").csv(sep: '\t').rowCount > 0
                     }.every()
                 },
             )

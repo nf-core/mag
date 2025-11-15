@@ -1768,7 +1768,6 @@
                 "VirusIdentification/geNomad/test_minigut_sample2/MEGAHIT-test_minigut_sample2.contigs_summary/MEGAHIT-test_minigut_sample2.contigs_virus_summary.tsv"
             ],
             [
-                "MEGAHIT-test_minigut.contigs_aggregated_classification.tsv:md5,4acab3bff6f77e3be48f4bb405a56e9e",
                 "MEGAHIT-test_minigut.contigs_taxonomy.tsv:md5,3b1fc1e7fb2457859b1c5ca82ef5ddac",
                 "MEGAHIT-test_minigut.contigs_provirus.tsv:md5,93a6bca59b0bf7f57c0b9b60d2e57082",
                 "MEGAHIT-test_minigut.contigs_marker_classification.tsv:md5,49625280a666cd6cb61d6a2166a0627d",
@@ -1780,7 +1779,6 @@
                 "MEGAHIT-test_minigut.contigs_virus_genes.tsv:md5,51c2dc60b3a1834c0811552af3f205b2",
                 "MEGAHIT-test_minigut.contigs_virus_proteins.faa.gz:md5,2e14bd6ae9e2043a3b6f407c425e13e1",
                 "MEGAHIT-test_minigut.contigs_virus_summary.tsv:md5,d22f74f27a69c252c173c987c0339c5d",
-                "MEGAHIT-test_minigut_sample2.contigs_aggregated_classification.tsv:md5,8051046ded3da49a381ac315ce1053f9",
                 "MEGAHIT-test_minigut_sample2.contigs_taxonomy.tsv:md5,5c9174470b250dfbe1e0d7d2da143617",
                 "MEGAHIT-test_minigut_sample2.contigs_provirus.tsv:md5,93a6bca59b0bf7f57c0b9b60d2e57082",
                 "MEGAHIT-test_minigut_sample2.contigs_marker_classification.tsv:md5,0fb58b89eea2ac71ca4cc2d960e1f42c",
@@ -1798,7 +1796,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
         },
-        "timestamp": "2025-11-14T21:24:50.945905422"
+        "timestamp": "2025-11-14T23:17:18.54920095"
     },
     "taxonomy": {
         "content": [
