@@ -303,14 +303,15 @@ SPAdesHybrid is a part of the [SPAdes](http://cab.spbu.ru/software/spades/) soft
 
 ### Assembly Quality Control with ALE
 
-[ALE (Assembly Likelihood Estimator)](https://github.com/sc932/ALE) evaluates assembly quality by computing the likelihood of the sequencing reads given an assembly. ALE provides per-contig quality scores and identifies potentially problematic regions in the assembly by analyzing read mapping patterns and insert size distributions.
+[ALE (Assembly Likelihood Estimator)](https://github.com/sc932/ALE) is a probabilistic framework that evaluates assembly quality by computing the likelihood of the sequencing reads given an assembly. ALE provides per-contig quality scores and identifies potentially problematic regions in assemblies by analyzing read mapping patterns and insert size distributions. It is particularly useful for comparing assemblies and identifying misassemblies or low-confidence regions.
+
+ALE is run on short-read assemblies (SPAdes, SPAdes hybrid, and MEGAHIT) when binning or ancient DNA analysis is enabled.
 
 <details markdown="1">
 <summary>Output files</summary>
 
 - `Assembly/[assembler]/QC/[sample/group]/ALE/`
-  - `[sample].ale.txt`: Per-contig ALE scores and quality metrics, including likelihood estimates for each contig
-  - `[sample].summary.tsv`: Summary statistics of assembly quality assessment with overall ALE scores and metrics
+  - `[sample]_ALEoutput.txt`: Per-contig ALE scores and quality metrics, including likelihood estimates for each contig
   - `[sample].log`: ALE processing log file containing diagnostic information and runtime details
 
 </details>

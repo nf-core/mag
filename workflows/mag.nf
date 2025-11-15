@@ -517,17 +517,14 @@ workflow MAG {
                 .map { meta, contigs, bam, bai, assembly ->
                     def actual_bam = bam instanceof List ? bam[0] : bam
                     [meta, assembly, actual_bam]
-                }
-            
-            ch_ale_input.view { "ALE input: Sample ${it[0].id}, Assembly: ${it[1].name}, BAM: ${it[2].name}" }
-            
+                } 
 
             ALE(ch_ale_input)
             ch_versions = ch_versions.mix(ALE.out.versions.ifEmpty([])) 
         }
         else {
             log.warn """
-            ALE (Assembly Likelihood Estimator) Warning
+            [nf-core/mag] ALE (Assembly Likelihood Estimator) Warnings
             
             ALE is enabled (--skip_ale false) but cannot run because:
             - Binning is disabled (--skip_binning true)
