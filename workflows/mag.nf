@@ -514,31 +514,31 @@ workflow MAG {
             ch_shortread_assemblies_for_ale = ch_assemblies.filter { meta, assembly ->
                 meta.assembler?.toUpperCase() in ['SPADES', 'SPADESHYBRID', 'MEGAHIT']
             }
-    
+
             ch_ale_input = BINNING_PREPARATION.out.grouped_mappings
                 .join(ch_shortread_assemblies_for_ale, by: 0)
                 .map { meta, contigs, bam, bai, assembly ->
                     def actual_bam = bam instanceof List ? bam[0] : bam
                     [meta, assembly, actual_bam]
-                } 
+                }
 
             ALE(ch_ale_input)
-            ch_versions = ch_versions.mix(ALE.out.versions.ifEmpty([])) 
+            ch_versions = ch_versions.mix(ALE.out.versions.ifEmpty([]))
         }
         else {
             log.warn """
             [nf-core/mag] ALE (Assembly Likelihood Estimator) Warnings
-            
+
             ALE is enabled (--skip_ale false) but cannot run because:
             - Binning is disabled (--skip_binning true)
             - Ancient DNA mode is not enabled (--ancient_dna false)
-            
+
             To run ALE, choose one of the following options:
-            
+
             1. Enable binning: --skip_binning false
-            2. Enable ancient DNA: --ancient_dna true  
+            2. Enable ancient DNA: --ancient_dna true
             3. Disable ALE: --skip_ale true
-            
+
             ALE evaluates assembly quality through read mapping analysis.
             """.stripIndent()
         }

@@ -206,7 +206,6 @@ Trimmed (short) reads are assembled with both megahit and SPAdes. Hybrid assembl
     - `MEGAHIT-[sample/group]-[sampleToMap].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the respective sample ("sampleToMap").
     - `MEGAHIT-[sample].[bam/bai]`: Optionally saved BAM file of the Bowtie2 mapping of reads against the assembly.
 
-
 </details>
 
 ### SPAdes
