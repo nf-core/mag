@@ -37,7 +37,7 @@ workflow PIPELINE_INITIALISATION {
 
     main:
 
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
 
     //
     // Print version and exit if required and dump pipeline parameters to JSON file
@@ -62,7 +62,7 @@ workflow PIPELINE_INITIALISATION {
 \033[0;35m  nf-core/mag ${workflow.manifest.version}\033[0m
 -\033[2m----------------------------------------------------\033[0m-
 """
-    after_text = """${workflow.manifest.doi ? "\n* The pipeline\n" : ""}${workflow.manifest.doi.tokenize(",").collect { "    https://doi.org/${it.trim().replace('https://doi.org/', '')}" }.join("\n")}${workflow.manifest.doi ? "\n" : ""}
+    after_text = """${workflow.manifest.doi ? "\n* The pipeline\n" : ""}${workflow.manifest.doi.tokenize(",").collect { doi -> "    https://doi.org/${doi.trim().replace('https://doi.org/', '')}" }.join("\n")}${workflow.manifest.doi ? "\n" : ""}
 * The nf-core framework
     https://doi.org/10.1038/s41587-020-0439-x
 
@@ -99,9 +99,9 @@ workflow PIPELINE_INITIALISATION {
     //
 
     // Validate FASTQ input
-    ch_samplesheet = Channel.fromList(samplesheetToList(input, "${projectDir}/assets/schema_input.json"))
-        .map {
-            validateInputSamplesheet(it[0], it[1], it[2], it[3])
+    ch_samplesheet = channel.fromList(samplesheetToList(input, "${projectDir}/assets/schema_input.json"))
+        .map { meta, sr1, sr2, lr ->
+            validateInputSamplesheet(meta, sr1, sr2, lr)
         }
 
     // if coassemble_group or binning_map_mode is set to not 'own', check if all samples in a group have the same platform
@@ -182,7 +182,9 @@ workflow PIPELINE_INITIALISATION {
 
     // Validate PRE-ASSEMBLED CONTIG input when supplied
     if (params.assembly_input) {
-        ch_input_assemblies = Channel.fromList(samplesheetToList(params.assembly_input, "${projectDir}/assets/schema_assembly_input.json"))
+        ch_input_assemblies = channel.fromList(
+            samplesheetToList(params.assembly_input, "${projectDir}/assets/schema_assembly_input.json")
+        )
     }
 
     // Prepare ASSEMBLY input channel
@@ -192,7 +194,7 @@ workflow PIPELINE_INITIALISATION {
         }
     }
     else {
-        ch_input_assemblies = Channel.empty()
+        ch_input_assemblies = channel.empty()
     }
 
     // Cross validation of input assembly and read IDs: ensure groups are all represented between reads and assemblies
@@ -365,7 +367,7 @@ def validateInputParameters(hybrid) {
             log.warn('[nf-core/mag]: WARNING: You have supplied a database to --busco_db - BUSCO will run in offline mode. Please note that BUSCO may fail if you have an incomplete database and are running with --busco_db_lineage auto!')
         }
 
-        if (params.busco_db && file(params.busco_db).isDirectory() && !file(params.busco_db).listFiles().any { it.toString().contains('lineages') }) {
+        if (params.busco_db && file(params.busco_db).isDirectory() && !file(params.busco_db).listFiles().any { file -> file.toString().contains('lineages') }) {
             error("[nf-core/mag] ERROR: Directory supplied to `--busco_db` must contain a `lineages/` subdirectory that itself contains one or more BUSCO lineage files! Check: --busco_db ${params.busco_db}")
         }
     }

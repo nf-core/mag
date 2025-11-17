@@ -6,7 +6,7 @@ include { METABINNER_BINS           } from '../../../modules/local/metabinner_bi
 workflow BINNING_METABINNER {
 
     take:
-    ch_input // channel (mandatory): [ val(meta), path(fasta), path(depth) ] (fasta: raw contigs from assembly)
+    ch_input // [val(meta), path(fasta), path(depth)] (mandatory)
 
     main:
     ch_versions = channel.empty()
@@ -14,7 +14,7 @@ workflow BINNING_METABINNER {
     // produce k-mer composition table
     METABINNER_KMER(
         ch_input
-            .map { meta, assembly, depths ->
+            .map { meta, assembly, _depths ->
                 [meta, assembly]
             },
         params.min_contig_size
@@ -24,7 +24,7 @@ workflow BINNING_METABINNER {
     // extract contigs over length threshold
     METABINNER_TOOSHORT(
         ch_input
-            .map { meta, assembly, depths ->
+            .map { meta, assembly, _depths ->
                 [meta, assembly]
             },
         params.min_contig_size
@@ -35,13 +35,13 @@ workflow BINNING_METABINNER {
     ch_metabinner_input =
         METABINNER_TOOSHORT.out.sizefiltered
         .join(METABINNER_KMER.out.composition_profile)
-        .join(ch_input.map { meta, assembly, depths -> [meta, depths] } )
+        .join(ch_input.map { meta, _assembly, depths -> [meta, depths] } )
     METABINNER_METABINNER(ch_metabinner_input, params.min_contig_size)
     ch_versions = ch_versions.mix(METABINNER_METABINNER.out.versions)
 
     // extract bin sequences
     METABINNER_BINS(
-        ch_input.map { meta, assembly, depths -> [meta, assembly] }
+        ch_input.map { meta, assembly, _depths -> [meta, assembly] }
             .join(METABINNER_METABINNER.out.membership),
         params.min_contig_size
     )

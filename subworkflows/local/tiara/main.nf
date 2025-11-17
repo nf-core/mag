@@ -6,12 +6,12 @@ include { TIARA_CLASSIFY                                               } from '.
 
 workflow TIARA {
     take:
-    ch_assemblies // tuple val(meta), path(assembly)
-    ch_in_bins    // tuple val(meta), path( [ bins ] )
-    ch_in_unbins  // tuple val(meta), path( [ unbins ] )
+    ch_assemblies // [val(meta), path(fasta)]
+    ch_in_bins    // [val(meta), path(fasta)]
+    ch_in_unbins  // [val(meta), path(fasta)]
 
     main:
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
 
     ch_bins = ch_in_bins.map { meta, bin_list ->
         def meta_new = meta + [bin: 'bins']

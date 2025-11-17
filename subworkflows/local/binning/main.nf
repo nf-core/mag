@@ -20,22 +20,22 @@ include { SPLIT_FASTA                                                           
 
 workflow BINNING {
     take:
-    ch_assemblies    // channel: [ val(meta), path(assembly), path(bams), path(bais) ]
-    val_bin_min_size
-    val_bin_max_size
+    ch_assemblies    // [val(meta), path(assembly), path(bams), path(bais)]
+    val_bin_min_size // val(int)
+    val_bin_max_size // val(int)
 
     main:
 
-    ch_versions = Channel.empty()
-    ch_input_splitfasta = Channel.empty()
+    ch_versions = channel.empty()
+    ch_input_splitfasta = channel.empty()
 
     // generate coverage depths for each contig and branch by assembler type
     ch_summarizedepth_input = ch_assemblies
         .map { meta, _assembly, bams, bais ->
             [meta, bams, bais]
         }
-        .branch {
-            longread: it[0].assembler in ['FLYE', 'METAMDBG']
+        .branch { meta, _bams, _bais ->
+            longread: meta.assembler in ['FLYE', 'METAMDBG']
             shortread: true
         }
 
@@ -47,7 +47,9 @@ workflow BINNING {
     ch_versions = ch_versions.mix(METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_SHORTREAD.out.versions)
 
     // Merge the outputs
-    ch_combined_depths = METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_LONGREAD.out.depth.mix(METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_SHORTREAD.out.depth)
+    ch_combined_depths = METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_LONGREAD.out.depth.mix(
+        METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_SHORTREAD.out.depth
+    )
     ch_metabat_depths = ch_combined_depths.map { meta, depths ->
         def meta_new = meta + [binner: 'MetaBAT2']
         [meta_new, depths]
@@ -76,10 +78,10 @@ workflow BINNING {
     }
 
     // main bins for decompressing for MAG_DEPTHS
-    ch_bins_for_seqkit = Channel.empty()
+    ch_bins_for_seqkit = channel.empty()
 
     // final gzipped bins
-    ch_binning_results_gzipped_final = Channel.empty()
+    ch_binning_results_gzipped_final = channel.empty()
 
     // MetaBAT2
     if (!params.skip_metabat2) {
@@ -128,7 +130,7 @@ workflow BINNING {
     // COMEBin
     if (!params.skip_comebin) {
         ch_comebin_input = ch_assemblies
-            .map { meta, assembly, bams, bais ->
+            .map { meta, assembly, bams, _bais ->
                 def meta_new = meta + [binner: 'COMEBin']
                 [meta_new, assembly, bams]
             }
@@ -179,12 +181,12 @@ workflow BINNING {
     //        filtering is 0. Error if so, but only if we had bins to begin with.
     //
     ch_seqkitstats_results
-        .map { meta, stats -> stats.bin_total_length }
+        .map { _meta, stats -> stats.bin_total_length }
         .collect().ifEmpty([])
         .subscribe { stats ->
             def n_bins = stats.size()
-            def n_filtered_bins = stats.findAll {
-                it >= val_bin_min_size && (val_bin_max_size ? it <= val_bin_max_size : true)
+            def n_filtered_bins = stats.findAll { bin_size ->
+                bin_size >= val_bin_min_size && (val_bin_max_size ? bin_size <= val_bin_max_size : true)
             }.size()
             if (n_bins > 0 && n_filtered_bins == 0) {
                 error(

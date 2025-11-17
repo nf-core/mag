@@ -8,10 +8,10 @@ include { SAMTOOLS_FAIDX as FAIDX               } from '../../../modules/nf-core
 
 workflow ANCIENT_DNA_ASSEMBLY_VALIDATION {
     take:
-    ch_input //channel: [val(meta), path(contigs), path(bam), path(bam_index)]
+    ch_input // [val(meta), path(contigs), path(bam), path(bam_index)]
 
     main:
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
 
     PYDAMAGE_ANALYZE(
         ch_input.map { meta, _contigs, bam, bai ->
@@ -28,7 +28,7 @@ workflow ANCIENT_DNA_ASSEMBLY_VALIDATION {
     ch_versions = ch_versions.mix(PYDAMAGE_FILTER.out.versions)
 
     if (params.skip_ancient_damagecorrection) {
-        ch_corrected_contigs = Channel.empty()
+        ch_corrected_contigs = channel.empty()
     }
 
     if (!params.skip_ancient_damagecorrection) {

@@ -19,16 +19,16 @@ include { UNTAR as CHECKM_UNTAR              } from '../../../modules/nf-core/un
 
 workflow BIN_QC {
     take:
-    ch_bins // [ [ meta] , fasta ], input bins (mandatory)
+    ch_bins // [val(meta), path(fasta)], input bins (mandatory)
 
     main:
-    ch_qc_summaries = Channel.empty()
+    ch_qc_summaries = channel.empty()
     ch_input_bins_for_qc = ch_bins.transpose()
-    ch_versions = Channel.empty()
-    ch_multiqc_files = Channel.empty()
-    ch_busco_final_summaries = Channel.empty()
-    ch_checkm_final_summaries = Channel.empty()
-    ch_checkm2_final_summaries = Channel.empty()
+    ch_versions = channel.empty()
+    ch_multiqc_files = channel.empty()
+    ch_busco_final_summaries = channel.empty()
+    ch_checkm_final_summaries = channel.empty()
+    ch_checkm2_final_summaries = channel.empty()
 
 
     /*
@@ -53,7 +53,7 @@ workflow BIN_QC {
         CHECKM_UNTAR(ch_checkm_db)
         ch_versions = ch_versions.mix(CHECKM_UNTAR.out.versions)
 
-        ch_checkm_db = CHECKM_UNTAR.out.untar.map { it[1] }
+        ch_checkm_db = CHECKM_UNTAR.out.untar.map { _meta, db -> db }
     }
     else {
         ch_checkm_db = []
@@ -75,7 +75,7 @@ workflow BIN_QC {
         ch_gunc_db = file(params.gunc_db, checkIfExists: true)
     }
     else {
-        ch_gunc_db = Channel.empty()
+        ch_gunc_db = channel.empty()
     }
 
     /*
@@ -93,7 +93,7 @@ workflow BIN_QC {
         if (ch_busco_db && ch_busco_db.extension in ['gz', 'tgz']) {
             BUSCO_UNTAR([[id: ch_busco_db.getSimpleName()], ch_busco_db])
             ch_versions = ch_versions.mix(BUSCO_UNTAR.out.versions)
-            ch_busco_db = BUSCO_UNTAR.out.untar.map { it[1] }
+            ch_busco_db = BUSCO_UNTAR.out.untar.map { _meta, db -> db }
         }
         else if (ch_busco_db && ch_busco_db.isDirectory()) {
             ch_busco_db = ch_busco_db
@@ -109,13 +109,19 @@ workflow BIN_QC {
             .map { _meta, summary -> [[id: 'busco'], summary] }
             .groupTuple()
         ch_multiqc_files = ch_multiqc_files.mix(
-            BUSCO_BUSCO.out.short_summaries_txt.map { it[1] }.flatten()
+            BUSCO_BUSCO.out.short_summaries_txt.map { _meta, summary -> summary }.flatten()
         )
 
         CONCAT_BUSCO_TSV(ch_busco_summaries, 'tsv', 'tsv')
         ch_versions = ch_versions.mix(CONCAT_BUSCO_TSV.out.versions)
-        ch_busco_final_summaries = ch_busco_final_summaries.mix(CONCAT_BUSCO_TSV.out.csv.map { it[1] })
-        ch_qc_summaries = ch_qc_summaries.mix(CONCAT_BUSCO_TSV.out.csv.splitCsv(header: true, sep: '\t').map { _meta, summary -> [bin_qc_tool: 'busco'] + summary })
+        ch_busco_final_summaries = ch_busco_final_summaries.mix(
+            CONCAT_BUSCO_TSV.out.csv.map { _meta, csv -> csv }
+        )
+        ch_qc_summaries = ch_qc_summaries.mix(
+            CONCAT_BUSCO_TSV.out.csv
+            .splitCsv(header: true, sep: '\t')
+            .map { _meta, summary -> [bin_qc_tool: 'busco'] + summary }
+        )
     }
     if (params.run_checkm) {
         /*
@@ -153,13 +159,19 @@ workflow BIN_QC {
                 [meta, summaries.sort { a, b -> a.getBaseName() <=> b.getBaseName() }]
             }
         ch_multiqc_files = ch_multiqc_files.mix(
-            CHECKM_QA.out.output.map { it[1] }.flatten()
+            CHECKM_QA.out.output.map { _meta, summary -> summary }.flatten()
         )
 
         CONCAT_CHECKM_TSV(ch_checkm_summaries, 'tsv', 'tsv')
         ch_versions = ch_versions.mix(CONCAT_CHECKM_TSV.out.versions)
-        ch_checkm_final_summaries = ch_checkm_final_summaries.mix(CONCAT_CHECKM_TSV.out.csv.map { it[1] })
-        ch_qc_summaries = ch_qc_summaries.mix(CONCAT_CHECKM_TSV.out.csv.splitCsv(header: true, sep: '\t').map { _meta, summary -> [bin_qc_tool: 'checkm'] + summary })
+        ch_checkm_final_summaries = ch_checkm_final_summaries.mix(
+            CONCAT_CHECKM_TSV.out.csv.map { _meta, csv -> csv }
+        )
+        ch_qc_summaries = ch_qc_summaries.mix(
+            CONCAT_CHECKM_TSV.out.csv
+            .splitCsv(header: true, sep: '\t')
+            .map { _meta, summary -> [bin_qc_tool: 'checkm'] + summary }
+        )
     }
     if (params.run_checkm2) {
         /*
@@ -172,13 +184,19 @@ workflow BIN_QC {
             .map { _meta, summary -> [[id: 'checkm2'], summary] }
             .groupTuple()
         ch_multiqc_files = ch_multiqc_files.mix(
-            CHECKM2_PREDICT.out.checkm2_tsv.map { it[1] }.flatten()
+            CHECKM2_PREDICT.out.checkm2_tsv.map { _meta, summary -> summary }.flatten()
         )
 
         CONCAT_CHECKM2_TSV(ch_checkm2_summaries, 'tsv', 'tsv')
         ch_versions = ch_versions.mix(CONCAT_CHECKM2_TSV.out.versions)
-        ch_checkm2_final_summaries = ch_checkm2_final_summaries.mix(CONCAT_CHECKM2_TSV.out.csv.map { it[1] })
-        ch_qc_summaries = ch_qc_summaries.mix(CONCAT_CHECKM2_TSV.out.csv.splitCsv(header: true, sep: '\t').map { _meta, summary -> [bin_qc_tool: 'checkm2'] + summary })
+        ch_checkm2_final_summaries = ch_checkm2_final_summaries.mix(
+            CONCAT_CHECKM2_TSV.out.csv.map { _meta, csv -> csv }
+        )
+        ch_qc_summaries = ch_qc_summaries.mix(
+            CONCAT_CHECKM2_TSV.out.csv
+            .splitCsv(header: true, sep: '\t')
+            .map { _meta, summary -> [bin_qc_tool: 'checkm2'] + summary }
+        )
     }
 
     if (params.run_gunc) {

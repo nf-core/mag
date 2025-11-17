@@ -23,11 +23,6 @@ parser <- add_option(parser, c("-j", "--join_prokaryotes"),
                     default = TRUE,
                     metavar = "logical",
                     help = "Use an general prokaryote classification instead of separating Archaea and Bacteria.")
-parser <- add_option(parser, c("-a", "--assembler"),
-                    action = "store",
-                    type = "character",
-                    metavar = "character",
-                    help = "Assembler used to assemble the contigs. 'MEGAHIT' or 'SPAdes' only.")
 parser <- add_option(parser, c("-o", "--output_prefix"),
                     action = "store",
                     type = "character",
@@ -42,12 +37,6 @@ if(is.null(args$classification_file)) {
 if(is.null(args$contig_to_bin)) {
     stop("Contig to bin file not provided.")
 }
-if(is.null(args$assembler)) {
-    stop("Assembler not provided.")
-}
-if(!(args$assembler %in% c("MEGAHIT", "SPAdes"))) {
-    stop("Invalid assembler provided.")
-}
 
 find_classification <- function(probabilities, join_prokaryotes = TRUE) {
     if(join_prokaryotes) {
@@ -58,14 +47,13 @@ find_classification <- function(probabilities, join_prokaryotes = TRUE) {
     return(classifications[which.max(probabilities)])
 }
 
-classify_bins <- function(tiara, contig2bin, join_prokaryotes, assembler){
-    ## MEGAHIT produces contigs with spaces in the name
+classify_bins <- function(tiara, contig2bin, join_prokaryotes){
+    ## Some assemblers produce contigs with spaces in the name
     ## Depending on the binner, everything after the first space is sometimes dropped
     ## Make sure that we drop everything after a possible space before doing anything else to allow merging
-    if(assembler == "MEGAHIT"){
-        tiara$sequence_id <- word(tiara$sequence_id)
-        contig2bin$sequence_id <- word(contig2bin$sequence_id)
-    }
+    tiara$sequence_id <- word(tiara$sequence_id)
+    contig2bin$sequence_id <- word(contig2bin$sequence_id)
+
     if(join_prokaryotes) {
         n_classifications <- 4
     } else {
@@ -140,10 +128,11 @@ classify_bins <- function(tiara, contig2bin, join_prokaryotes, assembler){
 classifications <- read_tsv(args$classification_file, na = c("NA", "n/a"))
 contig_to_bin <- read_tsv(args$contig_to_bin, col_names = c("sequence_id", "BinID"))
 
-results <- classify_bins(tiara = classifications,
-                        contig2bin = contig_to_bin,
-                        join_prokaryotes = args$join_prokaryotes,
-                        assembler = args$assembler)
+results <- classify_bins(
+  tiara = classifications,
+  contig2bin = contig_to_bin,
+  join_prokaryotes = args$join_prokaryotes
+)
 
 ## Keep just the classifications so we can loop over more easily
 results_basic <- select(results, BinID, classification)

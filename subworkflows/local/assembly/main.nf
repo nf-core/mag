@@ -11,12 +11,12 @@ include { GUNZIP as GUNZIP_LONGREAD_ASSEMBLIES  } from '../../../modules/nf-core
 
 workflow ASSEMBLY {
     take:
-    ch_short_reads // [ [meta] , fastq1, fastq2] (mandatory)
-    ch_long_reads  // [ [meta] , fastq] (mandatory)
+    ch_short_reads // [val(meta), path(fastq1), path(fastq2)] (mandatory)
+    ch_long_reads  // [val(meta), path(fastq)]                (mandatory)
 
     main:
 
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
 
     /*
     ================================================================================
@@ -32,18 +32,27 @@ workflow ASSEMBLY {
             .groupTuple(by: 0)
             .map { group, metas, reads ->
                 def assemble_as_single = params.single_end || (params.bbnorm && params.coassemble_group)
-                def meta = [:]
-                meta.id = "group-${group}"
-                meta.group = group
-                meta.single_end = assemble_as_single
-                meta.sr_platform = metas.sr_platform[0]
+                def meta = [
+                    id: "group-${group}",
+                    group: group,
+                    single_end: assemble_as_single,
+                    sr_platform: metas.sr_platform[0]
+                ]
                 if (assemble_as_single) {
-                    [meta, reads.collect { it }, []]
+                    [meta, reads.sort { files -> files[0].getName() }, []]
                 }
                 else {
-                    [meta, reads.collect { it[0] }, reads.collect { it[1] }]
+                    [meta] + reads.sort { files -> files[0].getName() }.transpose()
                 }
             }
+
+        // We have to merge reads together to match tuple structure of POOL_SHORT_READS/
+        // This MUST be in a interleaved structure (s1_r1, s1_r2, s2_r1, s2_r2, ...)
+        // So we zip the lists of R1s and R2s, consistent order is ensured by the existing structure
+        ch_short_reads_grouped_for_pooling = ch_short_reads_grouped.map { meta, reads1, reads2 ->
+            [meta, [reads1, reads2].transpose().flatten()]
+        }
+
         // long reads
         // group and set group as new id
         ch_long_reads_grouped = ch_long_reads
@@ -54,26 +63,31 @@ workflow ASSEMBLY {
                 meta.id = "group-${group}"
                 meta.group = group
                 meta.lr_platform = metas.lr_platform[0]
-                [meta, reads.collect { it }]
+                [meta, reads]
             }
     }
     else {
-        ch_short_reads_grouped = ch_short_reads
-            .filter { it[0].single_end }
-            .map { meta, reads -> [meta, [reads], []] }
-            .mix(
-                ch_short_reads.filter { !it[0].single_end }.map { meta, reads -> [meta, [reads[0]], [reads[1]]] }
-            )
+        ch_short_reads_grouped = ch_short_reads.map { meta, reads ->
+            if (meta.single_end) {
+                [meta, [reads], []]
+            }
+            else {
+                [meta, [reads[0]], [reads[1]]]
+            }
+        }
+
         ch_long_reads_grouped = ch_long_reads
     }
 
     if (!params.skip_spades || !params.skip_spadeshybrid) {
         if (params.coassemble_group) {
             if (params.bbnorm) {
-                ch_short_reads_spades = ch_short_reads_grouped.map { [it[0], it[1]] }
+                // When doing co-assembly and using bbnorm, all sample reads get pooled in a single file
+                // That's why we can drop R2 here (it's empty)
+                ch_short_reads_spades = ch_short_reads_grouped.map { meta, r1, _r2 -> [meta, r1] }
             }
             else {
-                POOL_SHORT_READS(ch_short_reads_grouped)
+                POOL_SHORT_READS(ch_short_reads_grouped_for_pooling)
                 ch_versions = ch_versions.mix(POOL_SHORT_READS.out.versions)
                 ch_short_reads_spades = POOL_SHORT_READS.out.reads
             }
@@ -86,8 +100,8 @@ workflow ASSEMBLY {
 
             ch_long_reads_grouped_for_pool = ch_long_reads_grouped
                 .map { meta, reads -> [meta.id, meta, reads] }
-                .combine(ch_short_reads_grouped.map { meta, _reads1, _reads2 -> [meta.id, meta] }, by: 0)
-                .map { [it[1], it[2]] }
+                .combine(ch_short_reads_grouped.map { meta, _reads1, _reads2 -> [meta.id] }, by: 0)
+                .map { _id, lr_meta, lr_reads -> [lr_meta, lr_reads] }
             //make sure no long reads are pooled for spades if there are no short reads
 
             POOL_LONG_READS(ch_long_reads_grouped_for_pool)
@@ -95,12 +109,12 @@ workflow ASSEMBLY {
             ch_long_reads_spades = POOL_LONG_READS.out.reads
         }
         else {
-            ch_long_reads_spades = Channel.empty()
+            ch_long_reads_spades = channel.empty()
         }
     }
     else {
-        ch_short_reads_spades = Channel.empty()
-        ch_long_reads_spades = Channel.empty()
+        ch_short_reads_spades = channel.empty()
+        ch_long_reads_spades = channel.empty()
     }
 
     /*
@@ -109,8 +123,8 @@ workflow ASSEMBLY {
     ================================================================================
     */
 
-    ch_shortread_assembled_contigs = Channel.empty()
-    ch_longread_assembled_contigs = Channel.empty()
+    ch_shortread_assembled_contigs = channel.empty()
+    ch_longread_assembled_contigs = channel.empty()
 
     // SHORTREAD ASSEMBLY
     SHORTREAD_ASSEMBLY(

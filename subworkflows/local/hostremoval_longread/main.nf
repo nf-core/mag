@@ -12,14 +12,14 @@ include { SAMTOOLS_UNMAPPED as SAMTOOLS_HOSTREMOVED_UNMAPPED } from '../../../mo
 
 workflow LONGREAD_HOSTREMOVAL {
     take:
-    ch_reads      // [ [ meta ], [ reads ] ]
+    ch_reads      // [val(meta), path(fastq)]
     val_reference // path
 
     main:
-    ch_versions = Channel.empty()
-    ch_multiqc_files = Channel.empty()
+    ch_versions = channel.empty()
+    ch_multiqc_files = channel.empty()
 
-    ch_host_reference = val_reference.map { [[:], it] }
+    ch_host_reference = val_reference.map { ref -> [[:], ref] }
     ch_host_fasta_for_build = ch_host_reference
         .combine(ch_reads)
         .map { host_meta, host_fasta, _meta, _reads ->

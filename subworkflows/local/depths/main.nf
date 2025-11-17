@@ -20,12 +20,12 @@ def getRowNo(filename) {
 
 workflow DEPTHS {
     take:
-    ch_bins_unbins // channel: val(meta), [ path(bins) ]
-    ch_depths      // channel: val(meta), path(depths)
-    ch_reads       // channel: val(meta), path(reads)
+    ch_bins_unbins // [val(meta), path(fasta)]
+    ch_depths      // [val(meta), path(depth)]
+    ch_reads       // [val(meta), path(fastq)]
 
     main:
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
 
     // Compute bin depths for different samples (according to `binning_map_mode`)
     // Create a new meta combine key first, but copy meta so that
@@ -52,7 +52,9 @@ workflow DEPTHS {
 
     // Plot bin depths heatmap for each assembly and mapped samples (according to `binning_map_mode`)
     // create file containing group information for all samples
-    ch_sample_groups = ch_reads.collectFile(name: 'sample_groups.tsv') { meta, _sample_reads -> meta.id + '\t' + meta.group + '\n' }
+    ch_sample_groups = ch_reads.collectFile(name: 'sample_groups.tsv') { meta, _sample_reads ->
+        meta.id + '\t' + meta.group + '\n'
+    }
 
     // Filter MAG depth files: use only those for plotting that contain depths for > 2 samples
     // as well as > 2 bins
