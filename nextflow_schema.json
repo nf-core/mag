@@ -631,7 +631,7 @@
                 },
                 "skip_ale": {
                     "type": "boolean",
-                    "descrition": "Skip ALE"
+                    "description": "Skip ALE"
                 },
                 "skip_quast": {
                     "type": "boolean",
