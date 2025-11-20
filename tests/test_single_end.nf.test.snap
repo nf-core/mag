@@ -2250,5 +2250,46 @@
             "nextflow": "25.10.0"
         },
         "timestamp": "2025-11-20T08:08:25.158079231"
+    },
+    "ancient": {
+        "content": [
+            [
+                "Ancient_DNA/pydamage/analyze/MEGAHIT-test_minigut/MEGAHIT-test_minigut_pydamage_results.csv",
+                "Ancient_DNA/pydamage/analyze/MEGAHIT-test_minigut_sample2/MEGAHIT-test_minigut_sample2_pydamage_results.csv",
+                "Ancient_DNA/pydamage/filter/MEGAHIT-test_minigut/MEGAHIT-test_minigut_pydamage_filtered_results.csv",
+                "Ancient_DNA/pydamage/filter/MEGAHIT-test_minigut_sample2/MEGAHIT-test_minigut_sample2_pydamage_filtered_results.csv",
+                "Ancient_DNA/variant_calling/consensus/MEGAHIT-test_minigut.fa",
+                "Ancient_DNA/variant_calling/consensus/MEGAHIT-test_minigut_sample2.fa",
+                "Ancient_DNA/variant_calling/filtered/MEGAHIT-test_minigut.filtered.vcf.gz",
+                "Ancient_DNA/variant_calling/filtered/MEGAHIT-test_minigut_sample2.filtered.vcf.gz",
+                "Ancient_DNA/variant_calling/freebayes/MEGAHIT-test_minigut.vcf.gz",
+                "Ancient_DNA/variant_calling/freebayes/MEGAHIT-test_minigut_sample2.vcf.gz"
+            ],
+            [
+                "MEGAHIT-test_minigut_pydamage_filtered_results.csv:md5,6414a400229f9cc5e31368703020b039",
+                "MEGAHIT-test_minigut_sample2_pydamage_filtered_results.csv:md5,6414a400229f9cc5e31368703020b039",
+                "MEGAHIT-test_minigut.fa:md5,34fe41ac66dfc601afcfa067f86f2e75",
+                "MEGAHIT-test_minigut_sample2.fa:md5,f76f599c3048c8794ade2a8f3bfdb205"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-11-20T09:32:54.923289645"
+    },
+    "summary-rows": {
+        "content": [
+            27,
+            26,
+            27,
+            27,
+            26
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-11-20T09:32:55.357874836"
     }
 }
