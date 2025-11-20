@@ -6,7 +6,7 @@ lint:
     - config_defaults:
         - params.phix_reference
         - params.lambda_reference
-nf_core_version: 3.4.1
+nf_core_version: 3.5.1
 repository_type: pipeline
 template:
   author: "Hadrien Gourlé, Daniel Straub, Sabrina Krakau, James A. Fellows Yates, Maxime Borry"

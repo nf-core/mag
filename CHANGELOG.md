@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Changed`
 
 - [#932](https://github.com/nf-core/mag/pull/932) - Replaced usages of deprecated `Channel()` with `channel()` and fix other LSP warnings (by @dialvarezs)
+- [#937](https://github.com/nf-core/mag/pull/937) - Updated to nf-core 3.5.1 `TEMPLATE` (by @dialvarezs)
 
 ### `Fixed`
 
@@ -25,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Tool     | Previous version | New version |
 | -------- | ---------------- | ----------- |
+| nf-core  |                  | 3.5.1       |
 | SemiBin2 |                  | 2.2.0       |
 
 ### `Deprecated`
