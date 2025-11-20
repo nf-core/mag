@@ -125,9 +125,6 @@
                     "metaquast": "5.0.2",
                     "python": "3.7.6"
                 },
-                "QUAST_BINS_SUMMARY": {
-                    "cp": 9.5
-                },
                 "SEMIBIN_SINGLEEASYBIN": {
                     "SemiBin": "2.2.0"
                 },
@@ -148,7 +145,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
         },
-        "timestamp": "2025-11-17T17:14:48.05359714"
+        "timestamp": "2025-11-20T05:52:48.274585188"
     },
     "multiqc": {
         "content": [
