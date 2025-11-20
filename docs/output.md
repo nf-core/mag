@@ -482,6 +482,23 @@ Note that COMEBin does not output what it considers 'unbinned' contigs, therefor
 
 All the files and contigs in these folders will be assessed by QUAST and binning QC tools, if the parameter `--postbinning_input` is not set to `refined_bins_only`.
 
+### SemiBin2
+
+[SemiBin2](https://github.com/BigDataBiology/SemiBin) is a deep siamese neural network with preset environments (single samples) or self-supervised (multiple samples).
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `GenomeBinning/SemiBin2/`
+  - `bins/[assembler]-[binner]-[sample/group]_._*.fa.gz`: Genome bins retrieved from input assembly.
+  - `log/[assembler]-[binner]-[sample/group].SemiBinRun.log`: Log file.
+
+</details>
+
+All the files and contigs in these folders will be assessed by QUAST and binning QC tools, if the parameter `--postbinning_input` is not set to `refined_bins_only`.
+
+Note that SemiBin2 does not output what it considers 'unbinned' contigs, therefore no 'discarded' contigs are produced here. You may still need to do your own manual curation of the resulting bins.
+
 ### DAS Tool
 
 [DAS Tool](https://github.com/cmks/DAS_Tool) is an automated binning refinement method that integrates the results of a flexible number of binning algorithms to calculate an optimized, non-redundant set of bins from a single assembly. nf-core/mag uses this tool to attempt to further improve bins based on combining the MetaBAT2 and MaxBin2 binning output, assuming sufficient quality is met for those bins.

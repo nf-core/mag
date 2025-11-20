@@ -788,6 +788,36 @@
                     "description": "Dataset scale for MetaBinner",
                     "help_text": "Dataset scale; eg. small,large,huge (default:large); Users can choose `huge` to run MetaBinner on huge datasets with lower memory requirements."
                 },
+                "skip_semibin": {
+                    "type": "boolean",
+                    "description": "Skip SemiBin2 Binning"
+                },
+                "semibin_rng_seed": {
+                    "type": "integer",
+                    "default": 1,
+                    "description": "RNG seed for SemiBin2.",
+                    "help_text": "SemiBin2 is run by default with a fixed seed within this pipeline, thus producing reproducible results. You can set it also to any other positive integer to ensure reproducibility. Set the parameter to 0 to use a random seed."
+                },
+                "semibin_environment": {
+                    "type": "string",
+                    "default": "global",
+                    "enum": [
+                        "human_gut",
+                        "dog_gut",
+                        "ocean",
+                        "soil",
+                        "cat_gut",
+                        "human_oral",
+                        "mouse_gut",
+                        "pig_gut",
+                        "built_environment",
+                        "wastewater",
+                        "chicken_caecum",
+                        "global"
+                    ],
+                    "description": "Pre-trained model for SemiBin2 for single sample assemblies",
+                    "help_text": "SemiBin2 can use a pre-trained model when working with an assembly of a single sample (i.e. without `--coassemble_group` and with `--binning_map_mode own`). The model will be ignored when several samples are used for one assembly. Choose a model that fits your environment best. Default is `global`, a generic model."
+                },
                 "min_contig_size": {
                     "type": "integer",
                     "default": 1500,

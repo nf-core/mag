@@ -9,6 +9,7 @@ include { METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS as METABAT2_JGISUMMARIZEBAMCONTIG
 include { METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS as METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_LONGREAD  } from '../../../modules/nf-core/metabat2/jgisummarizebamcontigdepths/main'
 include { MAXBIN2                                                                                } from '../../../modules/nf-core/maxbin2/main'
 include { COMEBIN_RUNCOMEBIN                                                                     } from '../../../modules/nf-core/comebin/runcomebin/main'
+include { SEMIBIN_SINGLEEASYBIN                                                                  } from '../../../modules/nf-core/semibin/singleeasybin/main'
 
 include { GUNZIP as GUNZIP_BINS                                                                  } from '../../../modules/nf-core/gunzip/main'
 include { GUNZIP as GUNZIP_UNBINS                                                                } from '../../../modules/nf-core/gunzip/main'
@@ -156,6 +157,30 @@ workflow BINNING {
         ch_bins_for_seqkit = ch_bins_for_seqkit.mix( BINNING_METABINNER.out.bins.transpose() )
         ch_binning_results_gzipped_final = ch_binning_results_gzipped_final.mix( BINNING_METABINNER.out.bins )
         ch_input_splitfasta = ch_input_splitfasta.mix(BINNING_METABINNER.out.unbinned)
+    }
+
+    // SemiBin2
+    if (!params.skip_semibin) {
+        ch_semibin_input = ch_assemblies
+            .map { meta, assembly, bams, bais ->
+                def meta_new = meta + [binner: 'SemiBin2']  + [sample_count: bams.size()]
+                [meta_new, assembly, bams]
+            }
+
+        SEMIBIN_SINGLEEASYBIN(
+            ch_semibin_input
+        )
+        ch_versions = ch_versions.mix(SEMIBIN_SINGLEEASYBIN.out.versions)
+
+        // must remove the additional metadata because "workflow DEPTHS" channel combination is sensitive to any additional fields!
+        ch_semibin_bins = SEMIBIN_SINGLEEASYBIN.out.output_fasta
+            .map { meta, bins ->
+                def meta_new = meta - meta.subMap('sample_count')
+                [meta_new, bins]
+            }
+
+        ch_bins_for_seqkit = ch_bins_for_seqkit.mix( ch_semibin_bins.transpose() )
+        ch_binning_results_gzipped_final = ch_binning_results_gzipped_final.mix( ch_semibin_bins )
     }
 
     // group bins into per-sample process and not flood clusters with thousands of seqkit jobs

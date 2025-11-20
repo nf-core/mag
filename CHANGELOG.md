@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#905](https://github.com/nf-core/mag/pull/905) - Add nf-test snapshot for `test_assembly_input` profile (by @dialvarezs)
 - [#908](https://github.com/nf-core/mag/pull/908) - Add nf-test snapshot for `test_single_end` profile (by @dialvarezs)
+- [#930](https://github.com/nf-core/mag/pull/930) - Add binner SemiBin2 (by @d4straub)
 
 ### `Changed`
 
@@ -23,9 +24,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Dependencies`
 
-| Tool | Previous version | New version |
-| ---- | ---------------- | ----------- |
-|      |                  |             |
+| Tool     | Previous version | New version |
+| -------- | ---------------- | ----------- |
+| SemiBin2 |                  | 2.2.0       |
 
 ### `Deprecated`
 

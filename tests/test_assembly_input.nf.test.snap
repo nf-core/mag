@@ -65,7 +65,7 @@
     },
     "-profile assembly_input": {
         "content": [
-            193,
+            203,
             {
                 "ADJUST_MAXBIN2_EXT": {
                     "coreutils": 9.5
@@ -160,6 +160,9 @@
                 },
                 "RENAME_PREDASTOOL": {
                     "coreutils": 9.5
+                },
+                "SEMIBIN_SINGLEEASYBIN": {
+                    "SemiBin": "2.2.0"
                 },
                 "SEQKIT_STATS": {
                     "seqkit": "2.9.0"
@@ -383,6 +386,14 @@
                 "GenomeBinning/QC/BUSCO/SPAdes-DASTool-test_minigut/test_minigut-bacteria_odb10-busco/SPAdes-MaxBin2Refined-test_minigut.001_sub.fa/run_bacteria_odb10/short_summary.json",
                 "GenomeBinning/QC/BUSCO/SPAdes-DASTool-test_minigut/test_minigut-bacteria_odb10-busco/SPAdes-MaxBin2Refined-test_minigut.001_sub.fa/run_bacteria_odb10/short_summary.txt",
                 "GenomeBinning/QC/busco_summary.tsv",
+                "GenomeBinning/SemiBin2/bins/MEGAHIT-SemiBin2-test_minigut_0.fa.gz",
+                "GenomeBinning/SemiBin2/bins/MEGAHIT-SemiBin2-test_minigut_1.fa.gz",
+                "GenomeBinning/SemiBin2/bins/SPAdes-SemiBin2-test_minigut_0.fa.gz",
+                "GenomeBinning/SemiBin2/bins/SPAdes-SemiBin2-test_minigut_1.fa.gz",
+                "GenomeBinning/SemiBin2/log/MEGAHIT-SemiBin2-test_minigut.SemiBinRun.log",
+                "GenomeBinning/SemiBin2/log/MEGAHIT-SemiBin2-test_minigut_sample2.SemiBinRun.log",
+                "GenomeBinning/SemiBin2/log/SPAdes-SemiBin2-test_minigut.SemiBinRun.log",
+                "GenomeBinning/SemiBin2/log/SPAdes-SemiBin2-test_minigut_sample2.SemiBinRun.log",
                 "GenomeBinning/bin_summary.tsv",
                 "GenomeBinning/depths/bins/MEGAHIT-DASTool-test_minigut-binDepths.heatmap.png",
                 "GenomeBinning/depths/bins/SPAdes-DASTool-test_minigut-binDepths.heatmap.png",
@@ -546,6 +557,10 @@
                 "missing_busco_list.tsv:md5,c6807925eff74c7de1c1a38d88069b08",
                 "full_table.tsv:md5,877e4dad881ca7079c8b6118b59a34d4",
                 "missing_busco_list.tsv:md5,c7ee1e582e010aab60a566da7fe304de",
+                "MEGAHIT-SemiBin2-test_minigut_0.fa.gz:md5,3688b9460d9a4a1e4ea912721f226b5d",
+                "MEGAHIT-SemiBin2-test_minigut_1.fa.gz:md5,12381d7733271d3e28c39f7ad1ca4e74",
+                "SPAdes-SemiBin2-test_minigut_0.fa.gz:md5,daf60d669f93aecce24c715d863388a9",
+                "SPAdes-SemiBin2-test_minigut_1.fa.gz:md5,19ce02b104d195bf57130398e7b2dd2e",
                 "bin_summary.tsv:md5,60111a58bb0167ec1367f1e7463b7026",
                 "bin_depths_summary.tsv:md5,7153f759db72abb02e2ee3c2ab1b5e56"
             ]

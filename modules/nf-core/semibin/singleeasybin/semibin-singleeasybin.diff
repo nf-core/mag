@@ -1,0 +1,50 @@
+Changes in component 'nf-core/semibin/singleeasybin'
+'modules/nf-core/semibin/singleeasybin/meta.yml' is unchanged
+Changes in 'semibin/singleeasybin/main.nf':
+--- modules/nf-core/semibin/singleeasybin/main.nf
++++ modules/nf-core/semibin/singleeasybin/main.nf
+@@ -14,7 +14,8 @@
+     tuple val(meta), path("${prefix}/*.csv")              , emit: csv
+     tuple val(meta), path("${prefix}/*.h5")               , emit: model, optional: true
+     tuple val(meta), path("${prefix}/*.tsv")              , emit: tsv
+-    tuple val(meta), path("${prefix}/output_bins/*.fa.gz"), emit: output_fasta
++    tuple val(meta), path("*.log")                        , emit: log
++    tuple val(meta), path("bins/${prefix}*.fa.gz")        , emit: output_fasta, optional: true
+     path "versions.yml", emit: versions
+ 
+     when:
+@@ -31,9 +32,15 @@
+         single_easy_bin \\
+         --input-fasta ${fasta} \\
+         --input-bam ${bam} \\
++        --tag-output ${prefix} \\
+         --output ${prefix} \\
+         -t $task.cpus \\
+         $args2
++
++    # move final bins to "bins" folder
++    mv ./${prefix}/output_bins/ bins/
++    # rename log with prefix
++    mv ./${prefix}/SemiBinRun.log ${prefix}.SemiBinRun.log
+ 
+     cat <<-END_VERSIONS > versions.yml
+     "${task.process}":
+@@ -46,9 +53,9 @@
+     mkdir ${prefix}
+     touch ${prefix}/{contig_bins,recluster_bins_info}.tsv
+     touch ${prefix}/{data,data_split}.csv
+-    mkdir ${prefix}/output_bins
+-    touch ${prefix}/output_bins/SemiBin_{0,1,2,3}.fa
+-    gzip  ${prefix}/output_bins/SemiBin*
++    mkdir bins
++    touch bins/${prefix}_SemiBin_{0,1,2,3}.fa
++    gzip  bins/${prefix}_SemiBin*
+ 
+     cat <<-END_VERSIONS > versions.yml
+     "${task.process}":
+
+'modules/nf-core/semibin/singleeasybin/environment.yml' is unchanged
+'modules/nf-core/semibin/singleeasybin/tests/main.nf.test' is unchanged
+'modules/nf-core/semibin/singleeasybin/tests/main.nf.test.snap' is unchanged
+'modules/nf-core/semibin/singleeasybin/tests/nextflow.config' is unchanged
+************************************************************
