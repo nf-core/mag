@@ -511,19 +511,19 @@ workflow MAG {
 
     if(!params.skip_ale) {
         if ( !params.skip_binning || params.ancient_dna) {
-            ch_shortread_assemblies_for_ale = ch_assemblies.filter { meta, assembly ->
+        ch_shortread_assemblies_for_ale = ch_assemblies.filter { meta, assembly ->
                 meta.assembler?.toUpperCase() in ['SPADES', 'SPADESHYBRID', 'MEGAHIT']
+        }
+
+        ch_ale_input = BINNING_PREPARATION.out.grouped_mappings
+            .join(ch_shortread_assemblies_for_ale, by: 0)
+            .map { meta, contigs, bam, bai, assembly ->
+                def actual_bam = bam instanceof List ? bam[0] : bam
+                [meta, assembly, actual_bam]
             }
 
-            ch_ale_input = BINNING_PREPARATION.out.grouped_mappings
-                .join(ch_shortread_assemblies_for_ale, by: 0)
-                .map { meta, contigs, bam, bai, assembly ->
-                    def actual_bam = bam instanceof List ? bam[0] : bam
-                    [meta, assembly, actual_bam]
-                }
-
-            ALE(ch_ale_input)
-            ch_versions = ch_versions.mix(ALE.out.versions.ifEmpty([]))
+        ALE(ch_ale_input)
+        ch_versions = ch_versions.mix(ALE.out.versions.ifEmpty([]))
         }
         else {
             log.warn """
@@ -537,7 +537,8 @@ workflow MAG {
 
             1. Enable binning: --skip_binning false
             2. Enable ancient DNA: --ancient_dna true
-            3. Disable ALE: --skip_ale true
+            
+            To avoid that warning disable ALE: --skip_ale
 
             ALE evaluates assembly quality through read mapping analysis.
             """.stripIndent()
