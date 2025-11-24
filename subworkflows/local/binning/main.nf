@@ -162,7 +162,7 @@ workflow BINNING {
     // SemiBin2
     if (!params.skip_semibin) {
         ch_semibin_input = ch_assemblies
-            .map { meta, assembly, bams, bais ->
+            .map { meta, assembly, bams, _bais ->
                 def meta_new = meta + [binner: 'SemiBin2']  + [sample_count: bams.size()]
                 [meta_new, assembly, bams]
             }
