@@ -54,7 +54,7 @@
                     "bioawk": 20110810
                 },
                 "FASTP": {
-                    "fastp": "0.24.0"
+                    "fastp": "1.0.1"
                 },
                 "FASTQC_RAW": {
                     "fastqc": "0.12.1"
@@ -145,7 +145,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
         },
-        "timestamp": "2025-11-20T05:52:48.274585188"
+        "timestamp": "2025-11-20T09:51:39.624210872"
     },
     "multiqc": {
         "content": [
@@ -372,7 +372,7 @@
                 "multiqc_bowtie2_bowtie2-2.yaml:md5,b60f4adf7e78bec1bf16046ce5ea3b7d",
                 "multiqc_busco.yaml:md5,8dfe2fb699e8c4aad16a65a30ce42aad",
                 "multiqc_citations.yaml:md5,f943df75040e829a06eee01614853a68",
-                "multiqc_fastp.yaml:md5,c2ef27841c4a27e4e2f199d8b6894dca",
+                "multiqc_fastp.yaml:md5,51ec2abfc64be1bc93c4c3f7298da1e1",
                 "multiqc_fastqc.yaml:md5,c856302b60a6c3c3fd5f273ed1a7c967",
                 "multiqc_fastqc_fastqc-1.yaml:md5,b090818c369a65b9218bae720078035c",
                 "multiqc_general_stats.yaml:md5,eb0e0141f528d72ac61cfc98dd86f538",
@@ -389,6 +389,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
         },
-        "timestamp": "2025-11-20T08:07:34.958568442"
+        "timestamp": "2025-11-20T09:51:39.663302183"
     }
 }

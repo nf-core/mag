@@ -36,8 +36,7 @@ workflow SHORTREAD_PREPROCESSING {
     if (!params.skip_clipping && !val_skip_qc) {
         if (params.clip_tool == 'fastp') {
             FASTP(
-                ch_raw_short_reads,
-                [],
+                ch_raw_short_reads.map { meta, reads -> [meta, reads, []] },
                 false,
                 params.fastp_save_trimmed_fail,
                 false,
