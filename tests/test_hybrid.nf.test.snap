@@ -46,7 +46,7 @@
                     "bioawk": 20110810
                 },
                 "FASTP": {
-                    "fastp": "0.24.0"
+                    "fastp": "1.0.1"
                 },
                 "FASTQC_RAW": {
                     "fastqc": "0.12.1"
@@ -118,10 +118,10 @@
                     "cp": 9.5
                 },
                 "SAMTOOLS_HOSTREMOVED_INDEX": {
-                    "samtools": 1.21
+                    "samtools": "1.22.1"
                 },
                 "SAMTOOLS_HOSTREMOVED_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.22.1"
                 },
                 "SAMTOOLS_HOSTREMOVED_UNMAPPED": {
                     "samtools": 1.21
@@ -146,7 +146,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
         },
-        "timestamp": "2025-11-17T17:34:26.849822259"
+        "timestamp": "2025-11-20T09:51:49.376153454"
     },
     "multiqc": {
         "content": [
@@ -370,7 +370,7 @@
                 "multiqc_bowtie2_bowtie2-2.yaml:md5,b5a185109453a80131d7da2cf4d3f2ec",
                 "multiqc_busco.yaml:md5,df428a34eda0c1a05aac5cd84a040e08",
                 "multiqc_citations.yaml:md5,49f79471c1620b06da08b1acb97a1e56",
-                "multiqc_fastp.yaml:md5,5d2c6eefa228bc0210be0d017eeb8eda",
+                "multiqc_fastp.yaml:md5,29b2500f793b0c444ee7c6535d406b09",
                 "multiqc_fastqc.yaml:md5,0d11a6d30d0d1a430e58d44b57ac6e87",
                 "multiqc_fastqc_fastqc-1.yaml:md5,0b8c8b4edb4f3e70409f30bcdda54397",
                 "multiqc_general_stats.yaml:md5,edb4f404e32d372bd387a90b72575087",
@@ -387,6 +387,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
         },
-        "timestamp": "2025-11-20T08:07:42.657252854"
+        "timestamp": "2025-11-20T09:51:49.410419929"
     }
 }

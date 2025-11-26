@@ -1,5 +1,5 @@
 Changes in component 'nf-core/semibin/singleeasybin'
-'modules/nf-core/semibin/singleeasybin/meta.yml' is unchanged
+'modules/nf-core/semibin/singleeasybin/environment.yml' is unchanged
 Changes in 'semibin/singleeasybin/main.nf':
 --- modules/nf-core/semibin/singleeasybin/main.nf
 +++ modules/nf-core/semibin/singleeasybin/main.nf
@@ -43,8 +43,8 @@ Changes in 'semibin/singleeasybin/main.nf':
      cat <<-END_VERSIONS > versions.yml
      "${task.process}":
 
-'modules/nf-core/semibin/singleeasybin/environment.yml' is unchanged
-'modules/nf-core/semibin/singleeasybin/tests/main.nf.test' is unchanged
+'modules/nf-core/semibin/singleeasybin/meta.yml' is unchanged
 'modules/nf-core/semibin/singleeasybin/tests/main.nf.test.snap' is unchanged
 'modules/nf-core/semibin/singleeasybin/tests/nextflow.config' is unchanged
+'modules/nf-core/semibin/singleeasybin/tests/main.nf.test' is unchanged
 ************************************************************

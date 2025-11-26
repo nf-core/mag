@@ -52,7 +52,7 @@
                     "metabat2": 2.17
                 },
                 "METAMDBG_ASM": {
-                    "metamdbg": 1.1
+                    "metamdbg": 1.2
                 },
                 "MINIMAP2_ASSEMBLY_ALIGN": {
                     "minimap2": "2.29-r1283",
@@ -99,10 +99,10 @@
                     "cp": 9.5
                 },
                 "SAMTOOLS_HOSTREMOVED_INDEX": {
-                    "samtools": 1.21
+                    "samtools": "1.22.1"
                 },
                 "SAMTOOLS_HOSTREMOVED_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.22.1"
                 },
                 "SAMTOOLS_HOSTREMOVED_UNMAPPED": {
                     "samtools": 1.21
@@ -124,7 +124,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
         },
-        "timestamp": "2025-11-11T08:20:21.595480513"
+        "timestamp": "2025-11-20T06:33:01.941048802"
     },
     "multiqc": {
         "content": [

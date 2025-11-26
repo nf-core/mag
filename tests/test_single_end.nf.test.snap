@@ -10,13 +10,13 @@
                     "coreutils": 9.5
                 },
                 "BCFTOOLS_CONSENSUS": {
-                    "bcftools": 1.21
+                    "bcftools": 1.22
                 },
                 "BCFTOOLS_INDEX": {
-                    "bcftools": 1.21
+                    "bcftools": 1.22
                 },
                 "BCFTOOLS_VIEW": {
-                    "bcftools": 1.21
+                    "bcftools": 1.22
                 },
                 "BIN_SUMMARY": {
                     "pandas": "1.4.3",
@@ -85,7 +85,7 @@
                     "bioawk": 20110810
                 },
                 "FAIDX": {
-                    "samtools": 1.21
+                    "samtools": "1.22.1"
                 },
                 "FASTQC_RAW": {
                     "fastqc": "0.12.1"
@@ -97,10 +97,10 @@
                     "freebayes": "1.3.10"
                 },
                 "GENOMAD_DOWNLOAD": {
-                    "genomad": "1.11.1"
+                    "genomad": "1.11.2"
                 },
                 "GENOMAD_ENDTOEND": {
-                    "genomad": "1.11.1"
+                    "genomad": "1.11.2"
                 },
                 "GTDBTK_CLASSIFYWF": {
                     "gtdb_db": "r226",
@@ -180,7 +180,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
         },
-        "timestamp": "2025-11-11T08:18:47.991883035"
+        "timestamp": "2025-11-20T06:33:51.448501694"
     },
     "multiqc": {
         "content": [

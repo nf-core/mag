@@ -20,29 +20,29 @@
                 "Annotation/MetaEuk/SPAdes/SPAdes-MaxBin2Refined-test_minigut.001_sub/SPAdes-MaxBin2Refined-test_minigut.001_sub.headersMap.tsv"
             ],
             [
-                "MEGAHIT-MetaBAT2Refined-test_minigut.1.codon.fas:md5,2673baeaf4a703788ff7f47c8056b2b1",
-                "MEGAHIT-MetaBAT2Refined-test_minigut.1.fas:md5,10982aa90ee5a85c0050cf1d53e85676",
-                "MEGAHIT-MetaBAT2Refined-test_minigut.1.gff:md5,b3f64ebfaed51b37fa59c4147646726d",
-                "MEGAHIT-MetaBAT2Refined-test_minigut.1.headersMap.tsv:md5,fc2ccc456268b54132305922bfa40814",
-                "MEGAHIT-MetaBAT2Refined-test_minigut.2.codon.fas:md5,23a8eaed596fc74f655176bc7d18b02e",
-                "MEGAHIT-MetaBAT2Refined-test_minigut.2.fas:md5,43b5014068f000ffb77e9df8e4f29b20",
-                "MEGAHIT-MetaBAT2Refined-test_minigut.2.gff:md5,e057c465865595a145c503356c732317",
-                "MEGAHIT-MetaBAT2Refined-test_minigut.2.headersMap.tsv:md5,f27230ebd41e05c7973cbfcd17d6e986",
-                "SPAdes-CONCOCTRefined-test_minigut.7.codon.fas:md5,3e95d219a34e3c022cb0ca0c8d5f9572",
-                "SPAdes-CONCOCTRefined-test_minigut.7.fas:md5,2a15f82087773b65b81957350739af31",
-                "SPAdes-CONCOCTRefined-test_minigut.7.gff:md5,86dbe64ad2e66bfbe9a338da829feb8c",
-                "SPAdes-CONCOCTRefined-test_minigut.7.headersMap.tsv:md5,c0b352ac3c18cdf85fa404c83c336bc2",
-                "SPAdes-MaxBin2Refined-test_minigut.001_sub.codon.fas:md5,9232a9a9e40803fdcadf716c5a23d40c",
-                "SPAdes-MaxBin2Refined-test_minigut.001_sub.fas:md5,bd94a0b40407a8b2484e86c26fa74e18",
-                "SPAdes-MaxBin2Refined-test_minigut.001_sub.gff:md5,dfc79ffc6afa9d058b4ee00cb512b51c",
-                "SPAdes-MaxBin2Refined-test_minigut.001_sub.headersMap.tsv:md5,585bcdc995e509c02716c02d63b66233"
+                "MEGAHIT-MetaBAT2Refined-test_minigut.1.codon.fas:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "MEGAHIT-MetaBAT2Refined-test_minigut.1.fas:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "MEGAHIT-MetaBAT2Refined-test_minigut.1.gff:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "MEGAHIT-MetaBAT2Refined-test_minigut.1.headersMap.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "MEGAHIT-MetaBAT2Refined-test_minigut.2.codon.fas:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "MEGAHIT-MetaBAT2Refined-test_minigut.2.fas:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "MEGAHIT-MetaBAT2Refined-test_minigut.2.gff:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "MEGAHIT-MetaBAT2Refined-test_minigut.2.headersMap.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SPAdes-CONCOCTRefined-test_minigut.7.codon.fas:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SPAdes-CONCOCTRefined-test_minigut.7.fas:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SPAdes-CONCOCTRefined-test_minigut.7.gff:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SPAdes-CONCOCTRefined-test_minigut.7.headersMap.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SPAdes-MaxBin2Refined-test_minigut.001_sub.codon.fas:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SPAdes-MaxBin2Refined-test_minigut.001_sub.fas:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SPAdes-MaxBin2Refined-test_minigut.001_sub.gff:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SPAdes-MaxBin2Refined-test_minigut.001_sub.headersMap.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
         },
-        "timestamp": "2025-11-12T03:31:43.389922855"
+        "timestamp": "2025-11-20T10:08:12.587500203"
     },
     "assembly": {
         "content": [
@@ -153,7 +153,7 @@
                     "metaeuk": "6.a5d39d9"
                 },
                 "MMSEQS_DATABASES": {
-                    "mmseqs": "17.b804f"
+                    "mmseqs": "18.8cc5c"
                 },
                 "RENAME_POSTDASTOOL": {
                     "coreutils": 9.5
@@ -181,7 +181,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
         },
-        "timestamp": "2025-11-11T07:13:39.937842635"
+        "timestamp": "2025-11-20T10:08:12.560999603"
     },
     "binning": {
         "content": [
