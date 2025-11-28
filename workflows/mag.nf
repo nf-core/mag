@@ -25,6 +25,7 @@ include { LONGREAD_PREPROCESSING          } from '../subworkflows/local/preproce
 include { SHORTREAD_PREPROCESSING         } from '../subworkflows/local/preprocessing_shortread/main'
 include { ASSEMBLY                        } from '../subworkflows/local/assembly/main'
 include { CATPACK                         } from '../subworkflows/local/catpack/main'
+include { BINNING_PYDAMAGE                } from '../subworkflows/local/binning_pydamage/main'
 
 //
 // MODULE: Installed directly from nf-core/modules
@@ -45,7 +46,7 @@ include { BIN_SUMMARY                     } from '../modules/local/bin_summary/m
 
 workflow MAG {
     take:
-    ch_raw_short_reads  // channel: samplesheet read in from --input
+    ch_raw_short_reads // channel: samplesheet read in from --input
     ch_raw_long_reads
     ch_input_assemblies
 
@@ -276,11 +277,9 @@ workflow MAG {
         // Make sure if running aDNA subworkflow to use the damage-corrected contigs for higher accuracy
         if (params.ancient_dna && !params.skip_ancient_damagecorrection) {
             BINNING(
-                BINNING_PREPARATION.out.grouped_mappings
-                    .join(ANCIENT_DNA_ASSEMBLY_VALIDATION.out.contigs_recalled)
-                    .map { meta, _contigs, bams, bais, corrected_contigs ->
-                        [meta, corrected_contigs, bams, bais]
-                    },
+                BINNING_PREPARATION.out.grouped_mappings.join(ANCIENT_DNA_ASSEMBLY_VALIDATION.out.contigs_recalled).map { meta, _contigs, bams, bais, corrected_contigs ->
+                    [meta, corrected_contigs, bams, bais]
+                },
                 params.bin_min_size,
                 params.bin_max_size,
             )
@@ -462,6 +461,15 @@ workflow MAG {
         else {
             ch_gtdbtk_summary = channel.empty()
         }
+
+        if (params.ancient_dna) {
+            BINNING_PYDAMAGE(ANCIENT_DNA_ASSEMBLY_VALIDATION.out.pydamage_results, ch_input_for_postbinning)
+            ch_summarisepydamage = BINNING_PYDAMAGE.out.tsv
+        }
+        else {
+            ch_summarisepydamage = channel.empty()
+        }
+
         if ((!params.skip_binqc) || !params.skip_quast || !params.skip_gtdbtk) {
             BIN_SUMMARY(
                 ch_input_for_binsummary,
@@ -517,7 +525,8 @@ workflow MAG {
     //
     // Collate and save software versions
     //
-    def topic_versions = Channel.topic("versions")
+    def topic_versions = Channel
+        .topic("versions")
         .distinct()
         .branch { entry ->
             versions_file: entry instanceof Path
@@ -526,9 +535,9 @@ workflow MAG {
 
     def topic_versions_string = topic_versions.versions_tuple
         .map { process, tool, version ->
-            [ process[process.lastIndexOf(':')+1..-1], "  ${tool}: ${version}" ]
+            [process[process.lastIndexOf(':') + 1..-1], "  ${tool}: ${version}"]
         }
-        .groupTuple(by:0)
+        .groupTuple(by: 0)
         .map { process, tool_versions ->
             tool_versions.unique().sort()
             "${process}:\n${tool_versions.join('\n')}"
