@@ -14,29 +14,84 @@ nextflow_pipeline {
         }
 
         then {
-            // Output directory: multiqc
-            def stable_name_multiqc = getAllFilesFromDir(
-                params.outdir, include: ['multiqc/**'], relative: true, includeDir: false
+            def stable_name = getAllFilesFromDir(
+                params.outdir,
+                relative: true,
+                includeDir: true,
+                ignore: ['pipeline_info/*.{html,json,txt}']
             )
-            def stable_path_multiqc = getAllFilesFromDir(
-                params.outdir, include: ['multiqc/**'], ignoreFile: 'tests/.nftignore'
-            )
-            // // stable_name: All files + folders in ${params.outdir}/ with a stable name
-            // def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            // // stable_path: All files in ${params.outdir}/ with stable content
-            // def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
-            assertAll(
-                { assert workflow.success},
-                { assert snapshot(
-                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we test pipelines on multiple Nextflow versions
-                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_mag_software_mqc_versions.yml"),
-                    // // All stable path name, with a relative path
-                    // stable_name,
-                    // // All files with stable contents
-                    // stable_path
-                ).match() },
-                { assert snapshot(stable_name_multiqc, stable_path_multiqc).match('multiqc') },
 
+            def stable_path = getAllFilesFromDir(
+                params.outdir,
+                ignoreFile: 'tests/.nftignore'
+            )
+
+            assertAll(
+                { assert workflow.success },
+                {
+                    assert snapshot(
+                        // Number of successful tasks
+                        workflow.trace.succeeded().size(),
+                        // pipeline versions.yml file for multiqc from which Nextflow version is removed
+                        removeNextflowVersion("${outputDir}/pipeline_info/nf_core_mag_software_mqc_versions.yml"),
+                        // All stable path names (relative)
+                        stable_name,
+                        // All files with stable contents
+                        stable_path,
+
+                        // QC_shortreads
+                        path("${params.outdir}/QC_shortreads/remove_phix/test_minigut_run1_phix_removed.bowtie2.log")
+                            .readLines()
+                            .last() ==~ /[0-9.]+% overall alignment rate/,
+
+                        // GenomeBinning
+                        path("${params.outdir}/GenomeBinning/bin_summary.tsv")
+                            .readLines()
+                            .size() == 18,
+                        path("${params.outdir}/GenomeBinning/MaxBin2/bins/MEGAHIT-MaxBin2-test_minigut.001.fa.gz")
+                            .linesGzip
+                            .size() > 100,
+                        path("${params.outdir}/GenomeBinning/MetaBAT2/bins/MEGAHIT-MetaBAT2-test_minigut.1.fa.gz")
+                            .linesGzip
+                            .size() > 100,
+                        path("${params.outdir}/GenomeBinning/QC/busco_summary.tsv")
+                            .findAll { l -> l.contains('n_markers') },
+                        path("${params.outdir}/GenomeBinning/QC/busco_summary.tsv")
+                            .findAll { l -> l.contains('Assembly') },
+
+                        // Assembly
+                        (path("${params.outdir}/Assembly/MEGAHIT/MEGAHIT-test_minigut.log")
+                            .readLines()
+                            .last() =~ /ALL DONE. Time elapsed: [0-9.]+ seconds/)
+                            .find(),
+                        path("${params.outdir}/Assembly/MEGAHIT/MEGAHIT-test_minigut.contigs.fa.gz")
+                            .linesGzip
+                            .size() > 100,
+                        path("${params.outdir}/Assembly/SPAdes/SPAdes-test_minigut.spades.log")
+                            .readLines()
+                            .findAll { l -> l.contains('SPAdes pipeline finished.') },
+                        path("${params.outdir}/Assembly/SPAdes/SPAdes-test_minigut.contigs.fa.gz")
+                            .linesGzip
+                            .size() > 100,
+                        path("${params.outdir}/Assembly/SPAdes/SPAdes-test_minigut.scaffolds.fa.gz")
+                            .linesGzip
+                            .size() > 100,
+
+                        // Annotation
+                        path("${params.outdir}/Annotation/Prodigal/MEGAHIT/test_minigut/MEGAHIT-test_minigut_prodigal_all.txt.gz")
+                            .linesGzip
+                            .size() > 100,
+                        path("${params.outdir}/Annotation/Prodigal/SPAdes/test_minigut/SPAdes-test_minigut_prodigal_all.txt.gz")
+                            .linesGzip
+                            .size() > 100,
+
+                        // Taxonomy
+                        path("${params.outdir}/Taxonomy/CAT/bat_summary.tsv")
+                            .readLines()
+                            .drop(1)
+                            .any { it.contains('Bacteroides fragilis') }
+                    ).match()
+                }
             )
         }
     }
