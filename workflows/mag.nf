@@ -237,7 +237,7 @@ workflow MAG {
     ================================================================================
     */
 
-    if (!params.skip_binning || params.ancient_dna) {
+    if (!params.skip_binning || params.ancient_dna || !params.skip_ale) {
         BINNING_PREPARATION(
             ch_shortread_assemblies,
             ch_short_reads,
@@ -510,7 +510,6 @@ workflow MAG {
     */
 
     if(!params.skip_ale) {
-        if ( !params.skip_binning || params.ancient_dna) {
         ch_shortread_assemblies_for_ale = ch_assemblies.filter { meta, assembly ->
                 meta.assembler?.toUpperCase() in ['SPADES', 'SPADESHYBRID', 'MEGAHIT']
         }
@@ -524,25 +523,6 @@ workflow MAG {
 
         ALE(ch_ale_input)
         ch_versions = ch_versions.mix(ALE.out.versions.ifEmpty([]))
-        }
-        else {
-            log.warn """
-            [nf-core/mag] ALE (Assembly Likelihood Estimator) Warnings
-
-            ALE is enabled (--skip_ale false) but cannot run because:
-            - Binning is disabled (--skip_binning true)
-            - Ancient DNA mode is not enabled (--ancient_dna false)
-
-            To run ALE, choose one of the following options:
-
-            1. Enable binning: --skip_binning false
-            2. Enable ancient DNA: --ancient_dna true
-            
-            To avoid that warning disable ALE: --skip_ale
-
-            ALE evaluates assembly quality through read mapping analysis.
-            """.stripIndent()
-        }
     }
 
     //
