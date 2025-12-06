@@ -41,7 +41,7 @@
                     "fastqc": "0.12.1"
                 },
                 "Workflow": {
-                    "nf-core/mag": "v5.3.0"
+                    "nf-core/mag": "v5.4.0dev"
                 }
             }
         ],
