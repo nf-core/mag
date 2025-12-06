@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
+- [#931](https://github.com/nf-core/mag/pull/931) - Added ALE (Assembly Likelihood Estimator) for probabilistic assembly quality control (by @PetcuBogdan)
+  - ALE provides per-contig quality scores for short-read assemblies (SPAdes, MEGAHIT)
+  - Runs automatically when binning is enabled (default behavior)
+  - Output: `Assembly/[assembler]/QC/[sample]/ALE/`
+  - Can be disabled with `--skip_ale` parameter
+
 ### `Changed`
 
 ### `Fixed`
@@ -15,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Tool | Previous version | New version |
 | ---- | ---------------- | ----------- |
-|      |                  |             |
+| ale  |                  | 20180904    |
 
 ### `Deprecated`
 
@@ -101,12 +107,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#873](https://github.com/nf-core/mag/pull/873) - Document usage of `longread_percentidentity` and `shortread_percentidentity` and set the value of `longread_percentidentity` in the `test_full` profile to 85 (by @prototaxites)
 - [#875](https://github.com/nf-core/mag/pull/875) - Add binner COMEBin (by @d4straub)
-
-- [#931](https://github.com/nf-core/mag/pull/931) - Added ALE (Assembly Likelihood Estimator) for probabilistic assembly quality control (by @PetcuBogdan)
-  - ALE provides per-contig quality scores for short-read assemblies (SPAdes, MEGAHIT)
-  - Runs automatically when binning is enabled (default behavior)
-  - Output: `Assembly/[assembler]/QC/[sample]/ALE/`
-  - Can be disabled with `--skip_ale` parameter
 
 ### `Changed`
 
