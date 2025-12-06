@@ -10,7 +10,7 @@ nextflow_pipeline {
 
         when {
             params {
-                outdir = "$outputDir"
+                outdir = "${outputDir}"
             }
         }
 
@@ -61,7 +61,7 @@ nextflow_pipeline {
                 params.outdir, include: ['GenomeBinning/MetaBAT2/bins/*.fa.gz']
             )
             def metabat2_unbins = getAllFilesFromDir(
-                params.outdir, include: ['GenomeBinning/MetaBAT2/{discarded,unbinned}/*.fa.gz']
+                params.outdir, include: ['GenomeBinning/MetaBAT2/{discarded,unbinned/*}/*.fa.gz']
             )
 
             // Output dir: multiqc
@@ -72,13 +72,12 @@ nextflow_pipeline {
                 params.outdir, include: ['multiqc/**'], ignoreFile: 'tests/.nftignore'
             )
 
+            assert workflow.success
             assertAll(
-                { assert workflow.success },
                 { assert snapshot(
-                        workflow.trace.succeeded().size(),
-                        removeNextflowVersion("${outputDir}/pipeline_info/nf_core_mag_software_mqc_versions.yml"),
-                    ).match()
-                },
+                    workflow.trace.succeeded().size(),
+                    removeNextflowVersion("${outputDir}/pipeline_info/nf_core_mag_software_mqc_versions.yml"),
+                ).match() },
                 { assert snapshot(stable_name_qc,       stable_path_qc      ).match('qc') },
                 { assert snapshot(stable_name_assembly, stable_path_assembly).match('assembly') },
                 { assert snapshot(stable_name_binning,  stable_path_binning ).match('binning') },
@@ -87,10 +86,12 @@ nextflow_pipeline {
                         checkm2_diamond_results.collect { results -> results.text.readLines().size() },
                     ).match('checkm2_diamond_results')
                 },
+
                 // FASTA checks
                 { assert megahit_contigs.collect { contigs -> path("${contigs}").fasta.size() > 0 }.every() },
                 { assert metabat2_bins.collect { contigs -> path("${contigs}").fasta.size() > 0 }.every() },
                 { assert metabat2_unbins.collect { contigs -> path("${contigs}").fasta.size() >= 0 }.every() },
+
                 // Log checks
                 { assert remove_phix_logs.collect {
                         log -> log.readLines().last() ==~ /[0-9.]+% overall alignment rate/

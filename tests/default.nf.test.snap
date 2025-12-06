@@ -6,13 +6,13 @@
                     "coreutils": 9.5
                 },
                 "BIN_SUMMARY": {
-                    "python": "3.10.6",
-                    "pandas": "1.4.3"
+                    "pandas": "1.4.3",
+                    "python": "3.10.6"
                 },
                 "BOWTIE2_ASSEMBLY_ALIGN": {
                     "bowtie2": "2.4.2",
-                    "samtools": 1.11,
-                    "pigz": "2.3.4"
+                    "pigz": "2.3.4",
+                    "samtools": 1.11
                 },
                 "BOWTIE2_ASSEMBLY_BUILD": {
                     "bowtie2": "2.4.2"
@@ -45,13 +45,13 @@
                     "cat": 9.5
                 },
                 "CONCAT_BUSCO_TSV": {
-                    "csvtk": "0.31.0"
+                    "qsv": "5.1.0"
                 },
                 "CONVERT_DEPTHS": {
                     "bioawk": 20110810
                 },
                 "FASTP": {
-                    "fastp": "0.24.0"
+                    "fastp": "1.0.1"
                 },
                 "FASTQC_RAW": {
                     "fastqc": "0.12.1"
@@ -60,15 +60,15 @@
                     "fastqc": "0.12.1"
                 },
                 "GTDBTK_CLASSIFYWF": {
-                    "gtdbtk": "2.5.2",
-                    "gtdb_db": "r226"
+                    "gtdb_db": "r226",
+                    "gtdbtk": "2.5.2"
                 },
                 "GTDBTK_DB_PREPARATION": {
                     "tar": 1.34
                 },
                 "GTDBTK_SUMMARY": {
-                    "python": "3.10.6",
-                    "pandas": "1.4.3"
+                    "pandas": "1.4.3",
+                    "python": "3.10.6"
                 },
                 "GUNZIP_BINS": {
                     "gunzip": 1.13
@@ -80,17 +80,17 @@
                     "gunzip": 1.13
                 },
                 "MAG_DEPTHS": {
-                    "python": "3.6.7",
-                    "pandas": "1.1.5"
+                    "pandas": "1.1.5",
+                    "python": "3.6.7"
                 },
                 "MAG_DEPTHS_PLOT": {
-                    "python": "3.9.6",
                     "pandas": "1.3.0",
+                    "python": "3.9.6",
                     "seaborn": "0.11.0"
                 },
                 "MAG_DEPTHS_SUMMARY": {
-                    "python": "3.10.6",
-                    "pandas": "1.4.3"
+                    "pandas": "1.4.3",
+                    "python": "3.10.6"
                 },
                 "MAXBIN2": {
                     "maxbin2": "2.2.7"
@@ -108,33 +108,36 @@
                     "spades": "4.1.0"
                 },
                 "PRODIGAL": {
-                    "prodigal": "2.6.3",
-                    "pigz": 2.6
+                    "pigz": 2.6,
+                    "prodigal": "2.6.3"
                 },
                 "PROKKA": {
                     "prokka": "1.14.6"
                 },
                 "QUAST": {
-                    "python": "3.7.6",
-                    "metaquast": "5.0.2"
+                    "metaquast": "5.0.2",
+                    "python": "3.7.6"
                 },
                 "QUAST_BINS": {
-                    "python": "3.7.6",
-                    "metaquast": "5.0.2"
+                    "metaquast": "5.0.2",
+                    "python": "3.7.6"
                 },
                 "QUAST_BINS_SUMMARY": {
                     "cp": 9.5
+                },
+                "SEMIBIN_SINGLEEASYBIN": {
+                    "SemiBin": "2.2.0"
                 },
                 "SEQKIT_STATS": {
                     "seqkit": "2.9.0"
                 },
                 "SPLIT_FASTA": {
-                    "python": "3.6.7",
                     "biopython": "1.7.4",
-                    "pandas": "1.1.5"
+                    "pandas": "1.1.5",
+                    "python": "3.6.7"
                 },
                 "Workflow": {
-                    "nf-core/mag": "v5.2.0"
+                    "nf-core/mag": "v5.3.0"
                 }
             }
         ],
@@ -142,7 +145,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
         },
-        "timestamp": "2025-11-04T07:53:29.134212676"
+        "timestamp": "2025-11-27T11:33:08.036474035"
     },
     "multiqc": {
         "content": [
@@ -338,7 +341,7 @@
             ],
             [
                 "bowtie2_pe_plot.yaml:md5,114c4e63e4189a0169641a7d960ae952",
-                "busco_plot_bacteria_odb10.yaml:md5,43b59baae27770570256c2a31e74d254",
+                "busco_plot_bacteria_odb10.yaml:md5,8ff1b7a8628dbdfb9d176058c07c4263",
                 "fastp-insert-size-plot.yaml:md5,000f3d43ff24066e3be550f80acff89f",
                 "fastp-seq-content-gc-plot_Read_1_After_filtering.yaml:md5,5d99f530e0e1c93e5d54c0eb9b86cd60",
                 "fastp-seq-content-gc-plot_Read_1_Before_filtering.yaml:md5,09b51f06f5bdc798443c674f68f53949",
@@ -370,28 +373,28 @@
                 "fastqc_sequence_counts_plot.yaml:md5,914b960f91309a956e21c178901982bc",
                 "fastqc_sequence_duplication_levels_plot.yaml:md5,f5e10bf8d1fef04701a2f3d111248b73",
                 "fastqc_sequence_length_distribution_plot.yaml:md5,765a15b429f92f428bb8cd7e01ca6f3f",
-                "gtdbtk-first-table.yaml:md5,03b4c0fe32b63adccbf37fc0ed8de065",
+                "gtdbtk-first-table.yaml:md5,08b7e4d446732aa6282caff9f8cfc314",
                 "multiqc_bowtie2.yaml:md5,dbe34bb5e06f65c3cf7af116f1d54a10",
                 "multiqc_bowtie2_bowtie2-2.yaml:md5,b60f4adf7e78bec1bf16046ce5ea3b7d",
-                "multiqc_busco.yaml:md5,1af79f05dd67bd79225666ceac0261a8",
+                "multiqc_busco.yaml:md5,8dfe2fb699e8c4aad16a65a30ce42aad",
                 "multiqc_citations.yaml:md5,f943df75040e829a06eee01614853a68",
-                "multiqc_fastp.yaml:md5,c2ef27841c4a27e4e2f199d8b6894dca",
+                "multiqc_fastp.yaml:md5,51ec2abfc64be1bc93c4c3f7298da1e1",
                 "multiqc_fastqc.yaml:md5,c856302b60a6c3c3fd5f273ed1a7c967",
                 "multiqc_fastqc_fastqc-1.yaml:md5,b090818c369a65b9218bae720078035c",
-                "multiqc_general_stats.yaml:md5,e3cb7bf83b19b574f309f65e8576ba01",
-                "multiqc_gtdbtk.yaml:md5,dd5a04cfa5a10ab8d664b47c6e5c9ada",
-                "multiqc_prokka.yaml:md5,4ae2daa70fd98063a0a694807d3c764d",
+                "multiqc_general_stats.yaml:md5,eb0e0141f528d72ac61cfc98dd86f538",
+                "multiqc_gtdbtk.yaml:md5,3bbdb38502ded227673a4e25c6d7219a",
+                "multiqc_prokka.yaml:md5,7a103b0d4385c2de011fc286cb4c5cc3",
                 "multiqc_quast.yaml:md5,1be7cc2def0a960cbc3c19bdc4504c78",
-                "multiqc_quast_quast-1.yaml:md5,194210784bf73ef2c6fb4d4d3b33bfb8",
-                "prokka_plot.yaml:md5,4e443dce700548d79038106ee1a6145d",
-                "quast_num_contigs.yaml:md5,94c080a4ee09a5416f1d61ca36590fb8",
-                "quast_table.yaml:md5,6212b3494037c1d35c0fcf889668a0a5"
+                "multiqc_quast_quast-1.yaml:md5,2ef7e71adce9f4e864e27565057a6632",
+                "prokka_plot.yaml:md5,f11bcc9f1fd6b19754ada6eb14a1df94",
+                "quast_num_contigs.yaml:md5,d9af764d7d1eeb81aeb91ee8c0fc5144",
+                "quast_table.yaml:md5,2d53029b92bc2e3940ee2ae932fa2c9d"
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.8"
+            "nextflow": "25.10.0"
         },
-        "timestamp": "2025-10-17T09:46:35.893973817"
+        "timestamp": "2025-12-01T14:44:58.067666089"
     }
 }

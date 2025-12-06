@@ -14,11 +14,11 @@ include { UNTAR as CAT_DB_UNTAR                         } from '../../../modules
 
 workflow CATPACK {
     take:
-    ch_bins   // channel: [ val(meta), [bins] ]
-    ch_unbins // channel: [ val(meta), [unbins] ]
+    ch_bins   // [val(meta), path(fasta)]
+    ch_unbins // [val(meta), path(fasta)]
 
     main:
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
 
     /*
     ========================================
@@ -34,7 +34,7 @@ workflow CATPACK {
             ch_cat_db_dir = CAT_DB_UNTAR.out.untar
         }
         else {
-            ch_cat_db_dir = Channel.fromPath(params.cat_db, checkIfExists: true, type: 'dir')
+            ch_cat_db_dir = channel.fromPath(params.cat_db, checkIfExists: true, type: 'dir')
                 .map { dir -> [[id: 'cat_db'], dir] }
                 .first()
         }

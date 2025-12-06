@@ -2,34 +2,34 @@
  * BUSCO/CheckM/CheckM2/GUNC: Quantitative measures for the assessment of genome assembly
  */
 
-include { BUSCO_BUSCO                        } from '../../../modules/nf-core/busco/busco/main'
-include { CHECKM2_DATABASEDOWNLOAD           } from '../../../modules/nf-core/checkm2/databasedownload/main'
-include { CHECKM_QA                          } from '../../../modules/nf-core/checkm/qa/main'
-include { CHECKM_LINEAGEWF                   } from '../../../modules/nf-core/checkm/lineagewf/main'
-include { CHECKM2_PREDICT                    } from '../../../modules/nf-core/checkm2/predict/main'
-include { CSVTK_CONCAT as CONCAT_BUSCO_TSV   } from '../../../modules/nf-core/csvtk/concat/main'
-include { CSVTK_CONCAT as CONCAT_CHECKM_TSV  } from '../../../modules/nf-core/csvtk/concat/main'
-include { CSVTK_CONCAT as CONCAT_CHECKM2_TSV } from '../../../modules/nf-core/csvtk/concat/main'
-include { GUNC_DOWNLOADDB                    } from '../../../modules/nf-core/gunc/downloaddb/main'
-include { GUNC_RUN                           } from '../../../modules/nf-core/gunc/run/main'
-include { GUNC_MERGECHECKM                   } from '../../../modules/nf-core/gunc/mergecheckm/main'
-include { UNTAR as BUSCO_UNTAR               } from '../../../modules/nf-core/untar/main'
-include { UNTAR as CHECKM_UNTAR              } from '../../../modules/nf-core/untar/main'
+include { BUSCO_BUSCO                   } from '../../../modules/nf-core/busco/busco/main'
+include { CHECKM2_DATABASEDOWNLOAD      } from '../../../modules/nf-core/checkm2/databasedownload/main'
+include { CHECKM_QA                     } from '../../../modules/nf-core/checkm/qa/main'
+include { CHECKM_LINEAGEWF              } from '../../../modules/nf-core/checkm/lineagewf/main'
+include { CHECKM2_PREDICT               } from '../../../modules/nf-core/checkm2/predict/main'
+include { QSV_CAT as CONCAT_BUSCO_TSV   } from '../../../modules/nf-core/qsv/cat/main'
+include { QSV_CAT as CONCAT_CHECKM_TSV  } from '../../../modules/nf-core/qsv/cat/main'
+include { QSV_CAT as CONCAT_CHECKM2_TSV } from '../../../modules/nf-core/qsv/cat/main'
+include { GUNC_DOWNLOADDB               } from '../../../modules/nf-core/gunc/downloaddb/main'
+include { GUNC_RUN                      } from '../../../modules/nf-core/gunc/run/main'
+include { GUNC_MERGECHECKM              } from '../../../modules/nf-core/gunc/mergecheckm/main'
+include { UNTAR as BUSCO_UNTAR          } from '../../../modules/nf-core/untar/main'
+include { UNTAR as CHECKM_UNTAR         } from '../../../modules/nf-core/untar/main'
 
 
 workflow BIN_QC {
     take:
-    ch_bins // [ [ meta] , fasta ], input bins (mandatory)
+    ch_bins // [val(meta), path(fasta)], input bins (mandatory)
 
     main:
-    ch_qc_summaries = Channel.empty()
+    ch_qc_summaries = channel.empty()
     ch_input_bins_for_qc = ch_bins.transpose()
-    ch_versions = Channel.empty()
-    ch_multiqc_files = Channel.empty()
-    ch_busco_final_summaries = Channel.empty()
-    ch_checkm_final_summaries = Channel.empty()
-    ch_checkm2_final_summaries = Channel.empty()
-
+    ch_versions = channel.empty()
+    ch_multiqc_files = channel.empty()
+    ch_busco_final_summaries = channel.empty()
+    ch_checkm_final_summaries = channel.empty()
+    ch_checkm2_final_summaries = channel.empty()
+    ch_gunc_summary = channel.empty()
 
     /*
     ================================
@@ -53,7 +53,7 @@ workflow BIN_QC {
         CHECKM_UNTAR(ch_checkm_db)
         ch_versions = ch_versions.mix(CHECKM_UNTAR.out.versions)
 
-        ch_checkm_db = CHECKM_UNTAR.out.untar.map { it[1] }
+        ch_checkm_db = CHECKM_UNTAR.out.untar.map { _meta, db -> db }
     }
     else {
         ch_checkm_db = []
@@ -75,7 +75,7 @@ workflow BIN_QC {
         ch_gunc_db = file(params.gunc_db, checkIfExists: true)
     }
     else {
-        ch_gunc_db = Channel.empty()
+        ch_gunc_db = channel.empty()
     }
 
     /*
@@ -93,7 +93,7 @@ workflow BIN_QC {
         if (ch_busco_db && ch_busco_db.extension in ['gz', 'tgz']) {
             BUSCO_UNTAR([[id: ch_busco_db.getSimpleName()], ch_busco_db])
             ch_versions = ch_versions.mix(BUSCO_UNTAR.out.versions)
-            ch_busco_db = BUSCO_UNTAR.out.untar.map { it[1] }
+            ch_busco_db = BUSCO_UNTAR.out.untar.map { _meta, db -> db }
         }
         else if (ch_busco_db && ch_busco_db.isDirectory()) {
             ch_busco_db = ch_busco_db
@@ -109,13 +109,16 @@ workflow BIN_QC {
             .map { _meta, summary -> [[id: 'busco'], summary] }
             .groupTuple()
         ch_multiqc_files = ch_multiqc_files.mix(
-            BUSCO_BUSCO.out.short_summaries_txt.map { it[1] }.flatten()
+            BUSCO_BUSCO.out.short_summaries_txt.map { _meta, summary -> summary }.flatten()
         )
 
-        CONCAT_BUSCO_TSV(ch_busco_summaries, 'tsv', 'tsv')
-        ch_versions = ch_versions.mix(CONCAT_BUSCO_TSV.out.versions)
-        ch_busco_final_summaries = ch_busco_final_summaries.mix(CONCAT_BUSCO_TSV.out.csv.map { it[1] })
-        ch_qc_summaries = ch_qc_summaries.mix(CONCAT_BUSCO_TSV.out.csv.splitCsv(header: true, sep: '\t').map { _meta, summary -> [bin_qc_tool: 'busco'] + summary })
+        CONCAT_BUSCO_TSV(ch_busco_summaries, 'rowskey', 'tsv', true)
+        ch_busco_final_summaries = ch_busco_final_summaries.mix(
+            CONCAT_BUSCO_TSV.out.csv.map { _meta, csv -> csv }
+        )
+        ch_qc_summaries = ch_qc_summaries.mix(
+            CONCAT_BUSCO_TSV.out.csv.splitCsv(header: true, sep: '\t').map { _meta, summary -> [bin_qc_tool: 'busco'] + summary }
+        )
     }
     if (params.run_checkm) {
         /*
@@ -147,13 +150,16 @@ workflow BIN_QC {
             .map { _meta, summary -> [[id: 'checkm'], summary] }
             .groupTuple()
         ch_multiqc_files = ch_multiqc_files.mix(
-            CHECKM_QA.out.output.map { it[1] }.flatten()
+            CHECKM_QA.out.output.map { _meta, summary -> summary }.flatten()
         )
 
-        CONCAT_CHECKM_TSV(ch_checkm_summaries, 'tsv', 'tsv')
-        ch_versions = ch_versions.mix(CONCAT_CHECKM_TSV.out.versions)
-        ch_checkm_final_summaries = ch_checkm_final_summaries.mix(CONCAT_CHECKM_TSV.out.csv.map { it[1] })
-        ch_qc_summaries = ch_qc_summaries.mix(CONCAT_CHECKM_TSV.out.csv.splitCsv(header: true, sep: '\t').map { _meta, summary -> [bin_qc_tool: 'checkm'] + summary })
+        CONCAT_CHECKM_TSV(ch_checkm_summaries, 'rowskey', 'tsv', true)
+        ch_checkm_final_summaries = ch_checkm_final_summaries.mix(
+            CONCAT_CHECKM_TSV.out.csv.map { _meta, csv -> csv }
+        )
+        ch_qc_summaries = ch_qc_summaries.mix(
+            CONCAT_CHECKM_TSV.out.csv.splitCsv(header: true, sep: '\t').map { _meta, summary -> [bin_qc_tool: 'checkm'] + summary }
+        )
     }
     if (params.run_checkm2) {
         /*
@@ -166,13 +172,16 @@ workflow BIN_QC {
             .map { _meta, summary -> [[id: 'checkm2'], summary] }
             .groupTuple()
         ch_multiqc_files = ch_multiqc_files.mix(
-            CHECKM2_PREDICT.out.checkm2_tsv.map { it[1] }.flatten()
+            CHECKM2_PREDICT.out.checkm2_tsv.map { _meta, summary -> summary }.flatten()
         )
 
-        CONCAT_CHECKM2_TSV(ch_checkm2_summaries, 'tsv', 'tsv')
-        ch_versions = ch_versions.mix(CONCAT_CHECKM2_TSV.out.versions)
-        ch_checkm2_final_summaries = ch_checkm2_final_summaries.mix(CONCAT_CHECKM2_TSV.out.csv.map { it[1] })
-        ch_qc_summaries = ch_qc_summaries.mix(CONCAT_CHECKM2_TSV.out.csv.splitCsv(header: true, sep: '\t').map { _meta, summary -> [bin_qc_tool: 'checkm2'] + summary })
+        CONCAT_CHECKM2_TSV(ch_checkm2_summaries, 'rowskey', 'tsv', false)
+        ch_checkm2_final_summaries = ch_checkm2_final_summaries.mix(
+            CONCAT_CHECKM2_TSV.out.csv.map { _meta, csv -> csv }
+        )
+        ch_qc_summaries = ch_qc_summaries.mix(
+            CONCAT_CHECKM2_TSV.out.csv.splitCsv(header: true, sep: '\t').map { _meta, summary -> [bin_qc_tool: 'checkm2'] + summary }
+        )
     }
 
     if (params.run_gunc) {
@@ -195,7 +204,7 @@ workflow BIN_QC {
         ch_versions.mix(GUNC_RUN.out.versions)
 
         // Make sure to keep directory in sync with modules.conf
-        GUNC_RUN.out.maxcss_level_tsv
+        ch_gunc_summary = GUNC_RUN.out.maxcss_level_tsv
             .map { _meta, gunc_summary -> gunc_summary }
             .collectFile(
                 name: "gunc_summary.tsv",
@@ -224,6 +233,7 @@ workflow BIN_QC {
     busco_summary   = ch_busco_final_summaries
     checkm_summary  = ch_checkm_final_summaries
     checkm2_summary = ch_checkm2_final_summaries
+    gunc_summary    = ch_gunc_summary
     multiqc_files   = ch_multiqc_files
     versions        = ch_versions
 }

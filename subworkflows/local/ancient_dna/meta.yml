@@ -9,6 +9,7 @@ keywords:
   - damage patterns
 components:
   - bcftools/consensus
+  - bcftools/index
   - bcftools/view
   - freebayes
   - pydamage/analyze

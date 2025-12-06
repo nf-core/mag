@@ -1,19 +1,19 @@
 {
     "-profile hybrid": {
         "content": [
-            51,
+            59,
             {
                 "ADJUST_MAXBIN2_EXT": {
                     "coreutils": 9.5
                 },
                 "BIN_SUMMARY": {
-                    "python": "3.10.6",
-                    "pandas": "1.4.3"
+                    "pandas": "1.4.3",
+                    "python": "3.10.6"
                 },
                 "BOWTIE2_ASSEMBLY_ALIGN": {
                     "bowtie2": "2.4.2",
-                    "samtools": 1.11,
-                    "pigz": "2.3.4"
+                    "pigz": "2.3.4",
+                    "samtools": 1.11
                 },
                 "BOWTIE2_ASSEMBLY_BUILD": {
                     "bowtie2": "2.4.2"
@@ -40,13 +40,13 @@
                     "chopper": "0.8.0"
                 },
                 "CONCAT_BUSCO_TSV": {
-                    "csvtk": "0.31.0"
+                    "qsv": "5.1.0"
                 },
                 "CONVERT_DEPTHS": {
                     "bioawk": 20110810
                 },
                 "FASTP": {
-                    "fastp": "0.24.0"
+                    "fastp": "1.0.1"
                 },
                 "FASTQC_RAW": {
                     "fastqc": "0.12.1"
@@ -61,12 +61,12 @@
                     "gunzip": 1.13
                 },
                 "MAG_DEPTHS": {
-                    "python": "3.6.7",
-                    "pandas": "1.1.5"
+                    "pandas": "1.1.5",
+                    "python": "3.6.7"
                 },
                 "MAG_DEPTHS_SUMMARY": {
-                    "python": "3.10.6",
-                    "pandas": "1.4.3"
+                    "pandas": "1.4.3",
+                    "python": "3.10.6"
                 },
                 "MAXBIN2": {
                     "maxbin2": "2.2.7"
@@ -100,42 +100,45 @@
                     "porechop": "0.2.4"
                 },
                 "PRODIGAL": {
-                    "prodigal": "2.6.3",
-                    "pigz": 2.6
+                    "pigz": 2.6,
+                    "prodigal": "2.6.3"
                 },
                 "PROKKA": {
                     "prokka": "1.14.6"
                 },
                 "QUAST": {
-                    "python": "3.7.6",
-                    "metaquast": "5.0.2"
+                    "metaquast": "5.0.2",
+                    "python": "3.7.6"
                 },
                 "QUAST_BINS": {
-                    "python": "3.7.6",
-                    "metaquast": "5.0.2"
+                    "metaquast": "5.0.2",
+                    "python": "3.7.6"
                 },
                 "QUAST_BINS_SUMMARY": {
                     "cp": 9.5
                 },
                 "SAMTOOLS_HOSTREMOVED_INDEX": {
-                    "samtools": 1.21
+                    "samtools": "1.22.1"
                 },
                 "SAMTOOLS_HOSTREMOVED_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.22.1"
                 },
                 "SAMTOOLS_HOSTREMOVED_UNMAPPED": {
                     "samtools": 1.21
+                },
+                "SEMIBIN_SINGLEEASYBIN": {
+                    "SemiBin": "2.2.0"
                 },
                 "SEQKIT_STATS": {
                     "seqkit": "2.9.0"
                 },
                 "SPLIT_FASTA": {
-                    "python": "3.6.7",
                     "biopython": "1.7.4",
-                    "pandas": "1.1.5"
+                    "pandas": "1.1.5",
+                    "python": "3.6.7"
                 },
                 "Workflow": {
-                    "nf-core/mag": "v5.2.0"
+                    "nf-core/mag": "v5.3.0"
                 }
             }
         ],
@@ -143,7 +146,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
         },
-        "timestamp": "2025-11-04T08:43:07.241387365"
+        "timestamp": "2025-11-27T11:33:15.714841944"
     },
     "multiqc": {
         "content": [
@@ -336,7 +339,7 @@
             ],
             [
                 "bowtie2_pe_plot.yaml:md5,331d49d9aa0a0ce1a3a8b407b8a49801",
-                "busco_plot_bacteria_odb10.yaml:md5,891eb4ee4391f6f36c18c5b82a7d2473",
+                "busco_plot_bacteria_odb10.yaml:md5,da10d6a882b6f7a5e6eca94f415aabff",
                 "fastp-insert-size-plot.yaml:md5,55f97b7830c1395c10c06bf3f4431186",
                 "fastp-seq-content-gc-plot_Read_1_After_filtering.yaml:md5,fb178f8c18fde4ad16d79afe333d481b",
                 "fastp-seq-content-gc-plot_Read_1_Before_filtering.yaml:md5,2f3f9726d97d4f22be3f4ad30ee14173",
@@ -371,25 +374,25 @@
                 "multiqc_bowtie2.yaml:md5,d6a4f1f2e6952801eda62c414c1685cb",
                 "multiqc_bowtie2_bowtie2-1.yaml:md5,d6a4f1f2e6952801eda62c414c1685cb",
                 "multiqc_bowtie2_bowtie2-2.yaml:md5,b5a185109453a80131d7da2cf4d3f2ec",
-                "multiqc_busco.yaml:md5,76cda2e3678fbdf6a592da3bb7fcdc37",
+                "multiqc_busco.yaml:md5,df428a34eda0c1a05aac5cd84a040e08",
                 "multiqc_citations.yaml:md5,49f79471c1620b06da08b1acb97a1e56",
-                "multiqc_fastp.yaml:md5,5d2c6eefa228bc0210be0d017eeb8eda",
+                "multiqc_fastp.yaml:md5,29b2500f793b0c444ee7c6535d406b09",
                 "multiqc_fastqc.yaml:md5,0d11a6d30d0d1a430e58d44b57ac6e87",
                 "multiqc_fastqc_fastqc-1.yaml:md5,0b8c8b4edb4f3e70409f30bcdda54397",
-                "multiqc_general_stats.yaml:md5,b973d94a42bdc5d0fb4afa5e04ab6f48",
-                "multiqc_prokka.yaml:md5,f7ee4045a273845b501ba15e5fd4d38f",
+                "multiqc_general_stats.yaml:md5,edb4f404e32d372bd387a90b72575087",
+                "multiqc_prokka.yaml:md5,b994dcc420bd2f85d4e0f91549e08b54",
                 "multiqc_quast.yaml:md5,e5940a0ce6af05da51fe94bc6d7d3901",
-                "multiqc_quast_quast-1.yaml:md5,4fcb2008af9fc15990854d76e6a72ada",
+                "multiqc_quast_quast-1.yaml:md5,b20f16ccd1d9395ecac0ceee2cbe78de",
                 "porechop.yaml:md5,828d96e2822bb4b4108ab706c00c4450",
-                "prokka_plot.yaml:md5,229d29dafbf6bde37d8f245dfb535b2e",
-                "quast_num_contigs.yaml:md5,241f678b1df1c1dd0dd58246a073d7dc",
-                "quast_table.yaml:md5,c1c9b5770b5defb3595b7b46af6a746c"
+                "prokka_plot.yaml:md5,c095a60a9936134ec73e6667a5635bbe",
+                "quast_num_contigs.yaml:md5,ddc54b8fb069f419547237c52e3058f2",
+                "quast_table.yaml:md5,e5720e81c420f07480481ac3c75bb822"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.7"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
         },
-        "timestamp": "2025-10-17T15:41:54.219952596"
+        "timestamp": "2025-12-01T14:45:00.164025293"
     }
 }

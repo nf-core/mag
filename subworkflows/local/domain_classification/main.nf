@@ -6,12 +6,12 @@ include { TIARA } from '../../../subworkflows/local/tiara'
 
 workflow DOMAIN_CLASSIFICATION {
     take:
-    ch_assemblies // tuple val(meta), path(assembly)
-    ch_bins       // tuple val(meta), path( [ bins ] )
-    ch_unbins     // tuple val(meta), path( [ unbins ] )
+    ch_assemblies // [val(meta), path(assembly)]
+    ch_bins       // [val(meta), path(fasta)]
+    ch_unbins     // [val(meta), path(fasta)]
 
     main:
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
 
     if (params.bin_domain_classification_tool == "tiara") {
         TIARA(ch_assemblies, ch_bins, ch_unbins)

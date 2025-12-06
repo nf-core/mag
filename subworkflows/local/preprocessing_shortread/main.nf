@@ -19,27 +19,24 @@ include { BOWTIE2_REMOVAL_ALIGN as BOWTIE2_PHIX_REMOVAL_ALIGN } from '../../../m
 
 workflow SHORTREAD_PREPROCESSING {
     take:
-    ch_raw_short_reads   // [ [meta] , fastq1, fastq2] (mandatory)
-    ch_host_fasta        // [fasta] (optional)
-    ch_host_genome_index // fasta (optional)
-    ch_phix_db_file      // [fasta] (optional)
-    val_skip_qc          // [boolean]
+    ch_raw_short_reads   // [val(meta), [path(fastq1), path(fastq2)]] (mandatory)
+    ch_host_fasta        // [val(meta), path(fasta)]                  (optional)
+    ch_host_genome_index // path(fasta)                               (optional)
+    ch_phix_db_file      // [val(meta), path(fasta)]                  (optional)
+    val_skip_qc          // val(boolean)
 
     main:
-    ch_versions = Channel.empty()
-    ch_multiqc_files = Channel.empty()
+    ch_versions = channel.empty()
+    ch_multiqc_files = channel.empty()
 
-    FASTQC_RAW(
-        ch_raw_short_reads
-    )
+    FASTQC_RAW(ch_raw_short_reads)
     ch_versions = ch_versions.mix(FASTQC_RAW.out.versions)
     ch_multiqc_files = ch_multiqc_files.mix(FASTQC_RAW.out.zip)
 
     if (!params.skip_clipping && !val_skip_qc) {
         if (params.clip_tool == 'fastp') {
             FASTP(
-                ch_raw_short_reads,
-                [],
+                ch_raw_short_reads.map { meta, reads -> [meta, reads, []] },
                 false,
                 params.fastp_save_trimmed_fail,
                 false,
@@ -52,9 +49,9 @@ workflow SHORTREAD_PREPROCESSING {
 
             // due to strange output file scheme in AR2, have to manually separate
             // SE/PE to allow correct pulling of reads after.
-            ch_adapterremoval_in = ch_raw_short_reads.branch {
-                single: it[0]['single_end']
-                paired: !it[0]['single_end']
+            ch_adapterremoval_in = ch_raw_short_reads.branch { meta, _reads ->
+                single: meta.single_end
+                paired: !meta.single_end
             }
 
             ADAPTERREMOVAL_PE(ch_adapterremoval_in.paired, [])
@@ -62,8 +59,11 @@ workflow SHORTREAD_PREPROCESSING {
             ADAPTERREMOVAL_SE(ch_adapterremoval_in.single, [])
             ch_versions = ch_versions.mix(ADAPTERREMOVAL_SE.out.versions)
 
-            ch_short_reads_prepped = Channel.empty()
-            ch_short_reads_prepped = ch_short_reads_prepped.mix(ADAPTERREMOVAL_SE.out.singles_truncated, ADAPTERREMOVAL_PE.out.paired_truncated)
+            ch_short_reads_prepped = channel.empty()
+            ch_short_reads_prepped = ch_short_reads_prepped.mix(
+                ADAPTERREMOVAL_SE.out.singles_truncated,
+                ADAPTERREMOVAL_PE.out.paired_truncated,
+            )
 
             ch_multiqc_files = ch_multiqc_files.mix(ADAPTERREMOVAL_PE.out.settings)
             ch_multiqc_files = ch_multiqc_files.mix(ADAPTERREMOVAL_SE.out.settings)
@@ -73,7 +73,7 @@ workflow SHORTREAD_PREPROCESSING {
             TRIMMOMATIC(ch_raw_short_reads)
             ch_versions = ch_versions.mix(TRIMMOMATIC.out.versions)
 
-            ch_short_reads_prepped = Channel.empty()
+            ch_short_reads_prepped = channel.empty()
             ch_short_reads_prepped = TRIMMOMATIC.out.trimmed_reads
 
             ch_multiqc_files = ch_multiqc_files.mix(TRIMMOMATIC.out.out_log)
@@ -185,7 +185,7 @@ workflow SHORTREAD_PREPROCESSING {
     }
 
     // Combine single run and multi-run-merged data
-    ch_short_reads = Channel.empty()
+    ch_short_reads = channel.empty()
     ch_short_reads = CAT_FASTQ.out.reads.mix(ch_short_reads_catskipped)
 
     if (params.bbnorm) {
@@ -194,13 +194,15 @@ workflow SHORTREAD_PREPROCESSING {
             // for dropping the single_end parameter, but keeps assembly modules as they are, i.e. not
             // accepting a mix of single end and pairs.
             SEQTK_MERGEPE(
-                ch_short_reads.filter { !it[0].single_end }
+                ch_short_reads.filter { meta, _reads -> !meta.single_end }
             )
             ch_versions = ch_versions.mix(SEQTK_MERGEPE.out.versions)
             // Combine the interleaved pairs with any single end libraries. Set the meta.single_end to true (used by the bbnorm module).
             ch_bbnorm = SEQTK_MERGEPE.out.reads
-                .mix(ch_short_reads.filter { it[0].single_end })
-                .map { [[id: "group${it[0].group}", group: it[0].group, single_end: true], it[1]] }
+                .mix(ch_short_reads.filter { meta, _reads -> meta.single_end })
+                .map { meta, reads ->
+                    [[id: "group${meta.group}", group: meta.group, single_end: true], reads]
+                }
                 .groupTuple()
         }
         else {

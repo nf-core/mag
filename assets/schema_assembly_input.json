@@ -19,7 +19,7 @@
             },
             "assembler": {
                 "type": "string",
-                "pattern": "MEGAHIT|SPAdes|SPAdesHybrid",
+                "pattern": "MEGAHIT|SPAdes|SPAdesHybrid|Flye|MetaMDBG",
                 "meta": ["assembler"]
             },
             "fasta": {

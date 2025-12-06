@@ -202,6 +202,7 @@ def main(args=None):
             "Coding_Density",
             "Translation_Table_Used",
             "Total_Coding_Sequences",
+            "Genome_Size"
         ]
         checkm2_results = pd.read_csv(
             args.checkm2_summary, usecols=use_columns, sep="\t"

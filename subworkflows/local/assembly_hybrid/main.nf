@@ -3,13 +3,13 @@ include { SPADES as METASPADESHYBRID } from '../../../modules/nf-core/spades/mai
 
 workflow HYBRID_ASSEMBLY {
     take:
-    ch_short_reads_spades // [ [meta] , fastq1, fastq2] (mandatory)
-    ch_long_reads_spades  // [ [meta] , fastq] (mandatory)
+    ch_short_reads_spades // [val(meta), path(fastq1), path(fastq2)] (mandatory)
+    ch_long_reads_spades  // [val(meta), path(fastq)]                (mandatory)
 
     main:
 
-    ch_versions = Channel.empty()
-    ch_assembled_contigs = Channel.empty()
+    ch_versions = channel.empty()
+    ch_assembled_contigs = channel.empty()
 
     if (!params.single_end && !params.skip_spadeshybrid) {
         ch_short_reads_spades_tmp = ch_short_reads_spades.map { meta, reads -> [meta.id, meta, reads] }

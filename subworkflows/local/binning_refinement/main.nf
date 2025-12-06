@@ -17,11 +17,11 @@ include { RENAME_POSTDASTOOL                                              } from
 
 workflow BINNING_REFINEMENT {
     take:
-    ch_contigs_for_dastool // channel: [ val(meta), path(contigs) ]
-    ch_in_bins             // channel: [ val(meta), path(bins) ]
+    ch_contigs_for_dastool // [val(meta), path(contigs)]
+    ch_in_bins             // [val(meta), path(bins)]
 
     main:
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
 
     // remove domain information, will add it back later
     // everything here is either unclassified or a prokaryote
@@ -36,11 +36,11 @@ workflow BINNING_REFINEMENT {
         }
 
     // prepare bins
-    ch_bins_for_fastatocontig2bin = RENAME_PREDASTOOL(ch_bins).renamed_bins.branch {
-        metabat2: it[0]['binner'] == 'MetaBAT2'
-        maxbin2: it[0]['binner'] == 'MaxBin2'
-        concoct: it[0]['binner'] == 'CONCOCT'
-        comebin: it[0]['binner'] == 'COMEBin'
+    ch_bins_for_fastatocontig2bin = RENAME_PREDASTOOL(ch_bins).renamed_bins.branch { meta, _bin ->
+        metabat2: meta.binner == 'MetaBAT2'
+        maxbin2: meta.binner == 'MaxBin2'
+        concoct: meta.binner == 'CONCOCT'
+        comebin: meta.binner == 'COMEBin'
     }
     ch_versions = ch_versions.mix(RENAME_PREDASTOOL.out.versions)
 
@@ -60,7 +60,7 @@ workflow BINNING_REFINEMENT {
     ch_versions = ch_versions.mix(DASTOOL_FASTATOCONTIG2BIN_COMEBIN.out.versions)
 
     // Run DASTOOL
-    ch_fastatocontig2bin_for_dastool = Channel.empty()
+    ch_fastatocontig2bin_for_dastool = channel.empty()
     ch_fastatocontig2bin_for_dastool = ch_fastatocontig2bin_for_dastool
         .mix(DASTOOL_FASTATOCONTIG2BIN_METABAT2.out.fastatocontig2bin)
         .mix(DASTOOL_FASTATOCONTIG2BIN_MAXBIN2.out.fastatocontig2bin)

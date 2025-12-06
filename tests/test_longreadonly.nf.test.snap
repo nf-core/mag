@@ -7,8 +7,8 @@
                     "coreutils": 9.5
                 },
                 "BIN_SUMMARY": {
-                    "python": "3.10.6",
-                    "pandas": "1.4.3"
+                    "pandas": "1.4.3",
+                    "python": "3.10.6"
                 },
                 "BUSCO_BUSCO": {
                     "busco": "6.0.0"
@@ -17,7 +17,7 @@
                     "untar": 1.34
                 },
                 "CONCAT_BUSCO_TSV": {
-                    "csvtk": "0.31.0"
+                    "qsv": "5.1.0"
                 },
                 "CONVERT_DEPTHS": {
                     "bioawk": 20110810
@@ -35,12 +35,12 @@
                     "gunzip": 1.13
                 },
                 "MAG_DEPTHS": {
-                    "python": "3.6.7",
-                    "pandas": "1.1.5"
+                    "pandas": "1.1.5",
+                    "python": "3.6.7"
                 },
                 "MAG_DEPTHS_SUMMARY": {
-                    "python": "3.10.6",
-                    "pandas": "1.4.3"
+                    "pandas": "1.4.3",
+                    "python": "3.10.6"
                 },
                 "MAXBIN2": {
                     "maxbin2": "2.2.7"
@@ -52,7 +52,7 @@
                     "metabat2": 2.17
                 },
                 "METAMDBG_ASM": {
-                    "metamdbg": 1.1
+                    "metamdbg": 1.2
                 },
                 "MINIMAP2_ASSEMBLY_ALIGN": {
                     "minimap2": "2.29-r1283",
@@ -81,28 +81,28 @@
                     "porechop_abi": "0.5.0"
                 },
                 "PRODIGAL": {
-                    "prodigal": "2.6.3",
-                    "pigz": 2.6
+                    "pigz": 2.6,
+                    "prodigal": "2.6.3"
                 },
                 "PROKKA": {
                     "prokka": "1.14.6"
                 },
                 "QUAST": {
-                    "python": "3.7.6",
-                    "metaquast": "5.0.2"
+                    "metaquast": "5.0.2",
+                    "python": "3.7.6"
                 },
                 "QUAST_BINS": {
-                    "python": "3.7.6",
-                    "metaquast": "5.0.2"
+                    "metaquast": "5.0.2",
+                    "python": "3.7.6"
                 },
                 "QUAST_BINS_SUMMARY": {
                     "cp": 9.5
                 },
                 "SAMTOOLS_HOSTREMOVED_INDEX": {
-                    "samtools": 1.21
+                    "samtools": "1.22.1"
                 },
                 "SAMTOOLS_HOSTREMOVED_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.22.1"
                 },
                 "SAMTOOLS_HOSTREMOVED_UNMAPPED": {
                     "samtools": 1.21
@@ -111,12 +111,12 @@
                     "seqkit": "2.9.0"
                 },
                 "SPLIT_FASTA": {
-                    "python": "3.6.7",
                     "biopython": "1.7.4",
-                    "pandas": "1.1.5"
+                    "pandas": "1.1.5",
+                    "python": "3.6.7"
                 },
                 "Workflow": {
-                    "nf-core/mag": "v5.2.0"
+                    "nf-core/mag": "v5.3.0"
                 }
             }
         ],
@@ -124,7 +124,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
         },
-        "timestamp": "2025-11-04T08:48:59.440835918"
+        "timestamp": "2025-11-27T11:34:46.475733493"
     },
     "multiqc": {
         "content": [

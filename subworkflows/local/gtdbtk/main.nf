@@ -9,12 +9,12 @@ include { GTDBTK_SUMMARY        } from '../../../modules/local/gtdbtk_summary/ma
 
 workflow GTDBTK {
     take:
-    ch_bins           // channel: [ val(meta), [bins] ]
-    ch_bin_qc_summary // channel: path
-    val_gtdb          // value: path
+    ch_bins           // [val(meta), path(fasta)]
+    ch_bin_qc_summary // path
+    val_gtdb          // path
 
     main:
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
 
     // Collect bin quality metrics
     qc_columns = [
@@ -52,13 +52,20 @@ workflow GTDBTK {
         .transpose()
         .map { meta, bin -> [bin.getName(), bin, meta] }
         .join(ch_bin_metrics)
-        .map { bin_name, bin, meta, _bin_qc_tool, completeness, contamination -> [bin_name, meta, bin, completeness, contamination] }
+        .map { bin_name, bin, meta, _bin_qc_tool, completeness, contamination ->
+            [bin_name, meta, bin, completeness, contamination]
+        }
         .groupTuple(by: 0)
         .branch { _bin_name, meta, bin, completeness, contamination ->
-            passed: (completeness.any { it != -1 } && completeness.any { it >= params.gtdbtk_min_completeness } && contamination.any { it != -1 } && contamination.any { it <= params.gtdbtk_max_contamination })
-            return [meta[0], bin[0]]
+            passed: (
+                completeness.any { bin_completeness -> bin_completeness != -1 } &&
+                completeness.any { bin_completeness -> bin_completeness >= params.gtdbtk_min_completeness } &&
+                contamination.any { bin_contamination -> bin_contamination != -1 } &&
+                contamination.any { bin_contamination -> bin_contamination <= params.gtdbtk_max_contamination }
+            )
+                return [meta[0], bin[0]]
             discarded: true
-            return [meta[0], bin[0]]
+                return [meta[0], bin[0]]
         }
     // Note we have to call `meta[0], bin[0]` because of the groupTuple above
 
@@ -92,8 +99,8 @@ workflow GTDBTK {
         }
 
     GTDBTK_SUMMARY(
-        ch_filtered_bins.discarded.map { it[1] }.collect().ifEmpty([]),
-        GTDBTK_CLASSIFYWF.out.summary.map { it[1] }.collect().ifEmpty { ([]) },
+        ch_filtered_bins.discarded.map { _meta, bin -> bin }.collect().ifEmpty([]),
+        GTDBTK_CLASSIFYWF.out.summary.map { _meta, summary -> summary }.collect().ifEmpty { ([]) },
         [],
         [],
     )

@@ -13,10 +13,10 @@ process METABINNER_BINS {
     val val_min_contig_size
 
     output:
-    tuple val(meta), path("*.tooShort.fa.gz")         , emit: tooshort
-    tuple val(meta), path("*.unbinned.fa.gz")         , emit: unbinned
-    tuple val(meta), path("bins/*.fa.gz")             , emit: bins
-    path "versions.yml"                               , emit: versions
+    tuple val(meta), path("*.tooShort.fa.gz"), emit: tooshort, optional: true
+    tuple val(meta), path("*.unbinned.fa.gz"), emit: unbinned, optional: true
+    tuple val(meta), path("bins/*.fa.gz")    , emit: bins
+    path "versions.yml"                      , emit: versions
 
     script:
     def prefix = task.ext.prefix ?: "${meta.id}"
