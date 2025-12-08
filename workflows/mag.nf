@@ -267,6 +267,28 @@ workflow MAG {
         ch_versions = ch_versions.mix(ANCIENT_DNA_ASSEMBLY_VALIDATION.out.versions)
     }
 
+      /*
+    ================================================================================
+                                        ALE 
+    ================================================================================
+    */
+
+    if(!params.skip_ale) {
+        ch_shortread_assemblies_for_ale = ch_assemblies.filter { meta, assembly ->
+                meta.assembler?.toUpperCase() in ['SPADES', 'SPADESHYBRID', 'MEGAHIT']
+        }
+
+        ch_ale_input = BINNING_PREPARATION.out.grouped_mappings
+            .join(ch_shortread_assemblies_for_ale, by: 0)
+            .map { meta, contigs, bam, bai, assembly ->
+                def actual_bam = bam instanceof List ? bam[0] : bam
+                [meta, assembly, actual_bam]
+            }
+
+        ALE(ch_ale_input)
+        ch_versions = ch_versions.mix(ALE.out.versions.ifEmpty([]))
+    }
+
     /*
     ================================================================================
                                     Binning
@@ -521,28 +543,6 @@ workflow MAG {
             METAEUK_EASYPREDICT(ch_bins_for_metaeuk, ch_metaeuk_db)
             ch_versions = ch_versions.mix(METAEUK_EASYPREDICT.out.versions)
         }
-    }
-
-    /*
-    ================================================================================
-                                    ALE Analysis
-    ================================================================================
-    */
-
-    if(!params.skip_ale) {
-        ch_shortread_assemblies_for_ale = ch_assemblies.filter { meta, assembly ->
-                meta.assembler?.toUpperCase() in ['SPADES', 'SPADESHYBRID', 'MEGAHIT']
-        }
-
-        ch_ale_input = BINNING_PREPARATION.out.grouped_mappings
-            .join(ch_shortread_assemblies_for_ale, by: 0)
-            .map { meta, contigs, bam, bai, assembly ->
-                def actual_bam = bam instanceof List ? bam[0] : bam
-                [meta, assembly, actual_bam]
-            }
-
-        ALE(ch_ale_input)
-        ch_versions = ch_versions.mix(ALE.out.versions.ifEmpty([]))
     }
 
     //
