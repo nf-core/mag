@@ -16,23 +16,55 @@ nextflow_pipeline {
 
         then {
 
-            // Output directory: multiqc
+            // MultiQC stable lists (existing)
             def stable_name_multiqc = getAllFilesFromDir(
                 params.outdir, include: ['multiqc/**'], relative: true, includeDir: false
             )
             def stable_path_multiqc = getAllFilesFromDir(
-                params.outdir, include: ['multiqc/**'], ignore: ['multiqc/**.yaml'],ignoreFile: 'tests/.nftignore'
+                params.outdir, include: ['multiqc/**'], ignore: ['multiqc/**.yaml'], ignoreFile: 'tests/.nftignore'
             )
 
-            assert workflow.success
+            // All stable names and paths for snapshot-style checks
+            def stable_name = getAllFilesFromDir(
+                params.outdir,
+                relative: true,
+                includeDir: true,
+                ignore: ['pipeline_info/*.{html,json,txt}']
+            )
+
+            def stable_path = getAllFilesFromDir(
+                params.outdir,
+                ignoreFile: 'tests/.nftignore'
+            )
+
             assertAll(
-                { assert snapshot(
-                    // Number of successful tasks
-                    workflow.trace.succeeded().size(),
-                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we test pipelines on multiple Nextflow versions
-                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_mag_software_mqc_versions.yml"),
-                ).match() },
-                { assert snapshot(stable_name_multiqc, stable_path_multiqc).match('multiqc') },
+                { assert workflow.success },
+                {
+                    assert snapshot(
+                        // Number of successful tasks
+                        workflow.trace.succeeded().size(),
+                        // pipeline versions.yml file for multiqc from which Nextflow version is removed
+                        removeNextflowVersion("${outputDir}/pipeline_info/nf_core_mag_software_mqc_versions.yml"),
+                        // All stable path names (relative)
+                        stable_name,
+                        // All files with stable contents
+                        stable_path,
+
+                        // Assembly: FLYE and METAMDBG outputs
+                        path("${params.outdir}/Assembly/FLYE/FLYE-minigut.assembly.fasta.gz").linesGzip.size() > 100,
+                        path("${params.outdir}/Assembly/FLYE/FLYE-minigut.flye.log").readLines().find { it =~ /finished|FINISHED|DONE|All done|Total time/ },
+                        path("${params.outdir}/Assembly/METAMDBG/METAMDBG-minigut.contigs.fasta.gz").linesGzip.size() > 100,
+
+                        // GenomeBinning: bin_summary + some bins present
+                        path("${params.outdir}/GenomeBinning/bin_summary.tsv").readLines().size() == 5,
+                        path("${params.outdir}/GenomeBinning/MaxBin2/bins/FLYE-MaxBin2-minigut.001.fa.gz").linesGzip.size() > 100,
+
+                        // Annotation: Prodigal outputs
+                        path("${params.outdir}/Annotation/Prodigal/FLYE/minigut/FLYE-minigut_prodigal_all.txt.gz").linesGzip.size() > 100,
+                        path("${params.outdir}/Annotation/Prodigal/METAMDBG/minigut/METAMDBG-minigut_prodigal_all.txt.gz").linesGzip.size() > 100
+                    ).match()
+                },
+                { assert snapshot(stable_name_multiqc, stable_path_multiqc).match('multiqc') }
             )
         }
     }
