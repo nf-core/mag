@@ -9,12 +9,14 @@ keywords:
   - concoct
   - COMEBin
 components:
+  - binning/metabinner
   - fasta/binning/concoct
   - metabat2/metabat2
   - metabat2/jgisummarizebamcontigdepths
   - maxbin2
   - comebin/runcomebin
   - gunzip
+  - semibin/singleeasybin
   - seqkit/stats
   - convert/depths
   - adjust/maxbin2/ext

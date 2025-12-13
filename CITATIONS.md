@@ -94,6 +94,10 @@
 
   > Orakov, A., Fullam, A., Coelho, A. P., Khedkar, S., Szklarczyk, D., Mende, D. R., Schmidt, T. S. B., and Bork, P.. 2021. “GUNC: Detection of Chimerism and Contamination in Prokaryotic Genomes.” Genome Biology 22 (1): 178. doi: 10.1186/s13059-021-02393-0.
 
+- [BIgMAG](https://doi.org/10.12688/f1000research.152290.2)
+
+  > Yepes-García, J., Falquet, L. (2024). Metagenome quality metrics and taxonomical annotation visualization through the integration of MAGFlow and BIgMAG. F1000Research 13:640. doi.org/10.12688/f1000research.152290.2
+
 - [MaxBin2](https://doi.org/10.1093/bioinformatics/btv638)
 
   > Yu-Wei, W., Simmons, B. A. & Singer, S. W. (2015) MaxBin 2.0: An Automated Binning Algorithm to Recover Genomes from Multiple Metagenomic Datasets. Bioinformatics 32 (4): 605–7. doi: 10.1093/bioinformatics/btv638.

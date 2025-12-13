@@ -843,6 +843,17 @@ Note that in contrast to the other tools, for CheckM the bin name given in the c
 
 All columns other than the primary `bin` key column, and the `Depth <sample name>` columns, will include a suffix specifying from which bin QC tool the column is derived from to distinguish identically named columns from different tools.
 
+## Summary file to be used as input for BIgMAG
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `GenomeBinning/BIgMAG/bigmag_summary.tsv`: Summary of bin sequencing depths together with GUNC, QUAST, GTDB-Tk, BUSCO and CheckM2 results.
+
+</details>
+
+The output file in this directory is used as input for the dashboard [BIgMAG](https://github.com/jeffe107/BIgMAG) for visualisation and evaluation of MAG quality.
+
 ## Ancient DNA
 
 Optional, only running when parameter `-profile ancient_dna` is specified.

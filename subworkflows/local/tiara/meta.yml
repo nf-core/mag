@@ -9,10 +9,10 @@ keywords:
   - eukaryote
   - organelle
 components:
-  - csvtk/concat
   - dastool/fastatocontig2bin
   - tiara/tiara
   - tiara/classify
+  - qsv/cat
 input:
   - ch_assemblies:
       description: Assembled contigs

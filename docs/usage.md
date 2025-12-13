@@ -100,13 +100,13 @@ The assembly CSV file should contain the following columns:
 
 `id,group,assembler,fasta`
 
-Where `id` is the ID of the assembly, group is the assembly/binning group (see samplesheet information section for more details), `assembler` is the assembler used to produce the assembly (one of `MEGAHIT`, `SPAdes`, or `SPAdesHybrid`), and `fasta` is the path to the assembly fasta file. Input fasta files can be compressed or uncompressed, but compressed assemblies will be automatically uncompressed for use within the pipeline. The exact information required for each supplied assembly depends on whether the assemblies provided are single assemblies or group-wise co-assemblies. For the following example `--input` CSV:
+Where `id` is the ID of the assembly, group is the assembly/binning group (see samplesheet information section for more details), `assembler` is the assembler used to produce the assembly (one of `MEGAHIT`, `SPAdes`, `SPAdesHybrid`, `Flye` or `MetaMDBG`), and `fasta` is the path to the assembly fasta file. Input fasta files can be compressed or uncompressed, but compressed assemblies will be automatically uncompressed for use within the pipeline. The exact information required for each supplied assembly depends on whether the assemblies provided are single assemblies or group-wise co-assemblies. For the following example `--input` CSV:
 
 ```csv title="samplesheet.csv"
-sample,group,short_reads_1,short_reads_2,long_reads,short_reads_platform
-sample1,0,data/sample1_R1.fastq.gz,data/sample1_R2.fastq.gz,,ILLUMINA
-sample2,0,data/sample2_R1.fastq.gz,data/sample2_R2.fastq.gz,,ILLUMINA
-sample3,1,data/sample3_R1.fastq.gz,data/sample3_R2.fastq.gz,,ILLUMINA
+sample,group,short_reads_1,short_reads_2,short_reads_platform
+sample1,0,data/sample1_R1.fastq.gz,data/sample1_R2.fastq.gz,ILLUMINA
+sample2,0,data/sample2_R1.fastq.gz,data/sample2_R2.fastq.gz,ILLUMINA
+sample3,1,data/sample3_R1.fastq.gz,data/sample3_R2.fastq.gz,ILLUMINA
 ```
 
 If the assemblies are single assemblies, then the `id` and `group` columns should match those supplied in the `-input` read CSV files for each read set:
@@ -543,3 +543,9 @@ Up until version 4.0.0, this pipeline offered raw read taxonomic profiling using
 This feature was removed in version 5.0.0 to strengthen the pipeline's focus on metagenome assembly and binning.
 
 If you require taxonomic profiling of raw reads, we recommend using [nf-core/taxprofiler](https://nf-co.re/taxprofiler/), which is specifically designed for taxonomic profiling of raw reads and supports a wide range of tools for this purpose.
+
+## BIgMAG compatibility
+
+With the parameter `--generate_bigmag_file` a module will be triggered to generate a file that contains the output from all of the bin-quality tools that can be uploaded to the [BIgMAG](https://github.com/jeffe107/BIgMAG) dashboard for visualising and evaluating MAGs.
+Please note that generating this file requires the parameters `--run_busco`, `--run_gunc` and `--run_checkm2`, and GTDBTk should be executed (i.e., not skipped).
+The file `bigmag_summary.tsv` located at `GenomeBinning/BIgMAG` is the only file needed to run the BIgMAG dashboard.

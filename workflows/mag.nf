@@ -3,45 +3,46 @@
     IMPORT MODULES / SUBWORKFLOWS / FUNCTIONS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-include { MULTIQC                              } from '../modules/nf-core/multiqc/main'
-include { paramsSummaryMap                     } from 'plugin/nf-schema'
-include { paramsSummaryMultiqc                 } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { softwareVersionsToYAML               } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { methodsDescriptionText               } from '../subworkflows/local/utils_nfcore_mag_pipeline'
+include { MULTIQC                         } from '../modules/nf-core/multiqc/main'
+include { paramsSummaryMap                } from 'plugin/nf-schema'
+include { paramsSummaryMultiqc            } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { softwareVersionsToYAML          } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { methodsDescriptionText          } from '../subworkflows/local/utils_nfcore_mag_pipeline'
 
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { BINNING_PREPARATION                  } from '../subworkflows/local/binning_preparation/main'
-include { BINNING                              } from '../subworkflows/local/binning/main'
-include { BIN_QC                               } from '../subworkflows/local/bin_qc/main'
-include { BINNING_REFINEMENT                   } from '../subworkflows/local/binning_refinement/main'
-include { VIRUS_IDENTIFICATION                 } from '../subworkflows/local/virus_identification/main'
-include { GTDBTK                               } from '../subworkflows/local/gtdbtk/main'
-include { ANCIENT_DNA_ASSEMBLY_VALIDATION      } from '../subworkflows/local/ancient_dna/main'
-include { DOMAIN_CLASSIFICATION                } from '../subworkflows/local/domain_classification/main'
-include { DEPTHS                               } from '../subworkflows/local/depths/main'
-include { LONGREAD_PREPROCESSING               } from '../subworkflows/local/preprocessing_longread/main'
-include { SHORTREAD_PREPROCESSING              } from '../subworkflows/local/preprocessing_shortread/main'
-include { ASSEMBLY                             } from '../subworkflows/local/assembly/main'
-include { CATPACK                              } from '../subworkflows/local/catpack/main'
+include { BINNING_PREPARATION             } from '../subworkflows/local/binning_preparation/main'
+include { BINNING                         } from '../subworkflows/local/binning/main'
+include { BIN_QC                          } from '../subworkflows/local/bin_qc/main'
+include { BINNING_REFINEMENT              } from '../subworkflows/local/binning_refinement/main'
+include { VIRUS_IDENTIFICATION            } from '../subworkflows/local/virus_identification/main'
+include { GTDBTK                          } from '../subworkflows/local/gtdbtk/main'
+include { ANCIENT_DNA_ASSEMBLY_VALIDATION } from '../subworkflows/local/ancient_dna/main'
+include { DOMAIN_CLASSIFICATION           } from '../subworkflows/local/domain_classification/main'
+include { DEPTHS                          } from '../subworkflows/local/depths/main'
+include { LONGREAD_PREPROCESSING          } from '../subworkflows/local/preprocessing_longread/main'
+include { SHORTREAD_PREPROCESSING         } from '../subworkflows/local/preprocessing_shortread/main'
+include { ASSEMBLY                        } from '../subworkflows/local/assembly/main'
+include { CATPACK                         } from '../subworkflows/local/catpack/main'
 
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { GUNZIP as GUNZIP_ASSEMBLYINPUT       } from '../modules/nf-core/gunzip'
-include { PRODIGAL                             } from '../modules/nf-core/prodigal/main'
-include { PROKKA                               } from '../modules/nf-core/prokka/main'
-include { MMSEQS_DATABASES                     } from '../modules/nf-core/mmseqs/databases/main'
-include { METAEUK_EASYPREDICT                  } from '../modules/nf-core/metaeuk/easypredict/main'
+include { GUNZIP as GUNZIP_ASSEMBLYINPUT  } from '../modules/nf-core/gunzip'
+include { PRODIGAL                        } from '../modules/nf-core/prodigal/main'
+include { PROKKA                          } from '../modules/nf-core/prokka/main'
+include { MMSEQS_DATABASES                } from '../modules/nf-core/mmseqs/databases/main'
+include { METAEUK_EASYPREDICT             } from '../modules/nf-core/metaeuk/easypredict/main'
+include { QSV_CAT as CONCAT_QUAST_SUMMARY } from '../modules/nf-core/qsv/cat/main'
 
 //
 // MODULE: Local to the pipeline
 //
-include { CSVTK_CONCAT as CONCAT_QUAST_SUMMARY } from '../modules/nf-core/csvtk/concat/main'
-include { QUAST                                } from '../modules/local/quast_run/main'
-include { QUAST_BINS                           } from '../modules/local/quast_bins/main'
-include { BIN_SUMMARY                          } from '../modules/local/bin_summary/main'
+include { QUAST                           } from '../modules/local/quast_run/main'
+include { QUAST_BINS                      } from '../modules/local/quast_bins/main'
+include { BIN_SUMMARY                     } from '../modules/local/bin_summary/main'
+include { PREPARE_BIGMAG_SUMMARY          } from '../modules/local/bigmag_summary/main'
 
 workflow MAG {
     take:
@@ -276,11 +277,9 @@ workflow MAG {
         // Make sure if running aDNA subworkflow to use the damage-corrected contigs for higher accuracy
         if (params.ancient_dna && !params.skip_ancient_damagecorrection) {
             BINNING(
-                BINNING_PREPARATION.out.grouped_mappings
-                    .join(ANCIENT_DNA_ASSEMBLY_VALIDATION.out.contigs_recalled)
-                    .map { meta, _contigs, bams, bais, corrected_contigs ->
-                        [meta, corrected_contigs, bams, bais]
-                    },
+                BINNING_PREPARATION.out.grouped_mappings.join(ANCIENT_DNA_ASSEMBLY_VALIDATION.out.contigs_recalled).map { meta, _contigs, bams, bais, corrected_contigs ->
+                    [meta, corrected_contigs, bams, bais]
+                },
                 params.bin_min_size,
                 params.bin_max_size,
             )
@@ -419,7 +418,7 @@ workflow MAG {
                 .collect { _meta, summary -> summary }
                 .map { summaries -> [[id: 'quast_bin_summary'], summaries.sort { a, b -> a.getBaseName() <=> b.getBaseName() }] }
 
-            CONCAT_QUAST_SUMMARY(ch_quast_bin_summaries, 'tsv', 'tsv')
+            CONCAT_QUAST_SUMMARY(ch_quast_bin_summaries, 'rowskey', 'tsv', true)
             ch_versions = ch_versions.mix(CONCAT_QUAST_SUMMARY.out.versions)
 
             ch_quast_bins_summary = CONCAT_QUAST_SUMMARY.out.csv.map { _meta, summary -> summary }
@@ -443,7 +442,7 @@ workflow MAG {
          * GTDB-tk: taxonomic classifications using GTDB reference
          */
 
-        if (!params.skip_gtdbtk) {
+        if (!params.skip_gtdbtk && !params.skip_binqc && (params.run_busco || params.run_checkm || params.run_checkm2)) {
             ch_gtdbtk_summary = channel.empty()
             if (gtdb) {
 
@@ -474,6 +473,13 @@ workflow MAG {
                 ch_checkm2_summary.ifEmpty([]),
             )
             ch_versions = ch_versions.mix(BIN_SUMMARY.out.versions)
+        }
+        if (params.generate_bigmag_file) {
+            PREPARE_BIGMAG_SUMMARY(
+                BIN_SUMMARY.out.summary,
+                BIN_QC.out.gunc_summary,
+            )
+            ch_versions = ch_versions.mix(PREPARE_BIGMAG_SUMMARY.out.versions)
         }
 
         /*
@@ -527,9 +533,9 @@ workflow MAG {
 
     def topic_versions_string = topic_versions.versions_tuple
         .map { process, tool, version ->
-            [ process[process.lastIndexOf(':')+1..-1], "  ${tool}: ${version}" ]
+            [process[process.lastIndexOf(':') + 1..-1], "  ${tool}: ${version}"]
         }
-        .groupTuple(by:0)
+        .groupTuple(by: 0)
         .map { process, tool_versions ->
             tool_versions.unique().sort()
             "${process}:\n${tool_versions.join('\n')}"
@@ -595,15 +601,18 @@ workflow MAG {
         ch_multiqc_files = ch_multiqc_files.mix(BINNING_PREPARATION.out.multiqc_files.collect().ifEmpty([]))
     }
 
-    if (!params.skip_binning && !params.skip_prokka) {
-        ch_multiqc_files = ch_multiqc_files.mix(PROKKA.out.txt.collect { _meta, report -> report }.ifEmpty([]))
-    }
-    if (!params.skip_binning && !params.skip_binqc) {
-        ch_multiqc_files = ch_multiqc_files.mix(BIN_QC.out.multiqc_files.collect().ifEmpty([]))
-    }
+    if (!params.skip_binning) {
+        if (!params.skip_prokka) {
+            ch_multiqc_files = ch_multiqc_files.mix(PROKKA.out.txt.collect { _meta, report -> report }.ifEmpty([]))
+        }
 
-    if (!params.skip_gtdbtk) {
-        ch_multiqc_files = ch_multiqc_files.mix(GTDBTK.out.multiqc_files.collect().ifEmpty([]))
+        if (!params.skip_binqc) {
+            ch_multiqc_files = ch_multiqc_files.mix(BIN_QC.out.multiqc_files.collect().ifEmpty([]))
+        }
+
+        if (!params.skip_gtdbtk) {
+            ch_multiqc_files = ch_multiqc_files.mix(GTDBTK.out.multiqc_files.collect().ifEmpty([]))
+        }
     }
 
     MULTIQC(
