@@ -419,7 +419,6 @@ workflow MAG {
                 .map { summaries -> [[id: 'quast_bin_summary'], summaries.sort { a, b -> a.getBaseName() <=> b.getBaseName() }] }
 
             CONCAT_QUAST_SUMMARY(ch_quast_bin_summaries, 'rowskey', 'tsv', true)
-            ch_versions = ch_versions.mix(CONCAT_QUAST_SUMMARY.out.versions)
 
             ch_quast_bins_summary = CONCAT_QUAST_SUMMARY.out.csv.map { _meta, summary -> summary }
         }
