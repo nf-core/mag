@@ -47,6 +47,9 @@
                 "CONCAT_BUSCO_TSV": {
                     "qsv": "5.1.0"
                 },
+                "CONCAT_QUAST_SUMMARY": {
+                    "qsv": "5.1.0"
+                },
                 "CONVERT_DEPTHS": {
                     "bioawk": 20110810
                 },
@@ -122,9 +125,6 @@
                     "metaquast": "5.0.2",
                     "python": "3.7.6"
                 },
-                "QUAST_BINS_SUMMARY": {
-                    "cp": 9.5
-                },
                 "SEMIBIN_SINGLEEASYBIN": {
                     "SemiBin": "2.2.0"
                 },
@@ -143,9 +143,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.0"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-11-27T11:33:08.036474035"
+        "timestamp": "2025-12-13T01:44:53.561532003"
     },
     "multiqc": {
         "content": [
@@ -393,8 +393,8 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.0"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-01T14:44:58.067666089"
+        "timestamp": "2025-12-13T01:44:53.597349104"
     }
 }
