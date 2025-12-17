@@ -1287,7 +1287,7 @@
                 "icarus.html:md5,8fcd09f71c18216acd674686e2ab271f",
                 "contig_size_viewer.html:md5,5bba65835a15cf6ebe4fc8e920a86d54",
                 "barrnap.log:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "report.html:md5,68167829414c9cdbbd86b2afd9aa0b7a",
+                "report.html:md5,94d29bc12ba320c8f52d58d314070aca",
                 "METAMDBG-minigut.contigs.fasta.gz:md5,320a8f4a1e6e990f98f2b6c79dd630b9",
                 "METAMDBG-minigut.rna.gff:md5,221efe3f72f8f15459acfc0dd9e46f99",
                 "barrnap.log:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -1334,7 +1334,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
         },
-        "timestamp": "2025-12-17T15:21:15.803334278"
+        "timestamp": "2025-12-17T16:36:59.502307575"
     },
     "multiqc": {
         "content": [

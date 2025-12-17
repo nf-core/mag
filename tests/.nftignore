@@ -46,6 +46,7 @@ Assembly/FLYE/QC/minigut/QUAST/basic_stats/*.pdf
 Assembly/FLYE/QC/minigut/QUAST/predicted_genes/*.rna.gff
 Assembly/FLYE/QC/minigut/QUAST/*.{log,thml,pdf,tex,tsv,txt}
 Assembly/METAMDBG/*.log
+Assembly/METAMDBG/QC/minigut/QUAST/report.html
 Assembly/METAMDBG/QC/minigut/QUAST/*.{html,pdf,tex,tsv,txt,log}
 Assembly/METAMDBG/QC/minigut/QUAST/icarus_viewers/*.html
 Assembly/METAMDBG/QC/minigut/QUAST/basic_stats/*.pdf
