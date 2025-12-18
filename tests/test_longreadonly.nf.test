@@ -34,6 +34,7 @@ nextflow_pipeline {
 
             def stable_path = getAllFilesFromDir(
                 params.outdir,
+                ignore: ['multiqc/multiqc_data/multiqc_busco.yaml', 'multiqc/multiqc_data/multiqc_citations.yaml', 'multiqc/multiqc_data/multiqc_general_stats.yaml', 'multiqc/multiqc_data/porechop.yaml'],
                 ignoreFile: 'tests/.nftignore'
             )
 

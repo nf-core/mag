@@ -64,4 +64,3 @@ GenomeBinning/QC/BUSCO/*/test_minigut-bacteria_odb10-busco/*/run_bacteria_odb10/
 QC_longreads/NanoLyse/*.log
 QC_longreads/NanoPlot/minigut/*.html
 multiqc/multiqc_data/*.yaml
-multiqc/*.yaml
