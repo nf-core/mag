@@ -58,7 +58,7 @@ nextflow_pipeline {
                         // GenomeBinning: bin_summary + some bins present
                         path("${params.outdir}/GenomeBinning/bin_summary.tsv").readLines().size() == 5,
                         path("${params.outdir}/GenomeBinning/MaxBin2/bins/FLYE-MaxBin2-minigut.001.fa.gz").linesGzip.size() > 100,
-                        path("${params.outdir}/GenomeBinning/QC/BUSCO").list().any { it.toString().contains("full_table.tsv") },
+                        getAllFilesFromDir("${params.outdir}/GenomeBinning/QC/BUSCO", include: ['**/full_table.tsv']).size() > 0,
 
                         // Annotation: Prodigal outputs
                         path("${params.outdir}/Annotation/Prodigal/FLYE/minigut/FLYE-minigut_prodigal_all.txt.gz").linesGzip.size() > 100,

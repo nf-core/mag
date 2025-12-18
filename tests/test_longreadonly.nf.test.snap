@@ -1267,9 +1267,9 @@
                 "METAMDBG-MaxBin2-minigut.001.ffn:md5,81960780fedc5d4f487bd37343e405bb",
                 "METAMDBG-MaxBin2-minigut.001.fna:md5,9e58a963568963f0232800002a08e820",
                 "METAMDBG-MaxBin2-minigut.001.fsa:md5,702ab5a450285f4811d074e362caa58f",
-                "METAMDBG-MaxBin2-minigut.001.gbk:md5,a96ad3847376dc280753657020114fc9",
+                "METAMDBG-MaxBin2-minigut.001.gbk:md5,10541a49b2beb5f2bb5106878027915b",
                 "METAMDBG-MaxBin2-minigut.001.gff:md5,705b2960cd1c0b1f43bde6feb660a120",
-                "METAMDBG-MaxBin2-minigut.001.sqn:md5,b695522d4ce66ebd885ea15d42d01df1",
+                "METAMDBG-MaxBin2-minigut.001.sqn:md5,b2ef9cce2dc767e8c249bf0fa74f8c20",
                 "METAMDBG-MaxBin2-minigut.001.tbl:md5,329b9cd90d3dc0bf2b9bf8eed06ffaf9",
                 "METAMDBG-MaxBin2-minigut.001.tsv:md5,61eb0c90e5edae50b70272dd6d9c34c6",
                 "METAMDBG-MaxBin2-minigut.001.txt:md5,488da2d1000e3cfc02c23bf61a605464",
@@ -1278,16 +1278,16 @@
                 "METAMDBG-MaxBin2-minigut.002.ffn:md5,c8a975c21102f9a8069ad1430d969763",
                 "METAMDBG-MaxBin2-minigut.002.fna:md5,b843e0c8d484e731ce8045b4ce4cb756",
                 "METAMDBG-MaxBin2-minigut.002.fsa:md5,2bb02c1fe962de41269978a00e220d9e",
-                "METAMDBG-MaxBin2-minigut.002.gbk:md5,b09c9e191e4c77dd96eb8636c63f09e1",
+                "METAMDBG-MaxBin2-minigut.002.gbk:md5,67e4cc8e2691ef78ddcfed5ba89cc25d",
                 "METAMDBG-MaxBin2-minigut.002.gff:md5,dbf5f070f1b186c8f6ae86fccf40637a",
-                "METAMDBG-MaxBin2-minigut.002.sqn:md5,ff56dcc23357f1ac3077a382fdd24ae0",
+                "METAMDBG-MaxBin2-minigut.002.sqn:md5,fffcf5944c024d7fd169df4aa2a8a162",
                 "METAMDBG-MaxBin2-minigut.002.tbl:md5,3e827860b65bf3c233a2c3a7859052a0",
                 "METAMDBG-MaxBin2-minigut.002.tsv:md5,d29f515afc69de80c1d6aebe09dcfc89",
                 "METAMDBG-MaxBin2-minigut.002.txt:md5,bf051de9d4d4daaca52799392b5410cb",
                 "icarus.html:md5,8fcd09f71c18216acd674686e2ab271f",
                 "contig_size_viewer.html:md5,5bba65835a15cf6ebe4fc8e920a86d54",
                 "barrnap.log:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "report.html:md5,94d29bc12ba320c8f52d58d314070aca",
+                "report.html:md5,7de70bf4e2b77a1f27afc1781db98809",
                 "METAMDBG-minigut.contigs.fasta.gz:md5,320a8f4a1e6e990f98f2b6c79dd630b9",
                 "METAMDBG-minigut.rna.gff:md5,221efe3f72f8f15459acfc0dd9e46f99",
                 "barrnap.log:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -1326,7 +1326,7 @@
             false,
             true,
             true,
-            false,
+            true,
             true,
             true
         ],
@@ -1334,7 +1334,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
         },
-        "timestamp": "2025-12-17T16:36:59.502307575"
+        "timestamp": "2025-12-18T10:10:08.490662767"
     },
     "multiqc": {
         "content": [
@@ -1387,6 +1387,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
         },
-        "timestamp": "2025-12-17T14:26:15.03369003"
+        "timestamp": "2025-12-18T10:10:09.992823475"
     }
 }
