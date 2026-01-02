@@ -66,7 +66,7 @@ workflow BINNING_REFINEMENT {
     DASTOOL_FASTATOCONTIG2BIN_METABINNER(ch_bins_for_fastatocontig2bin.metabinner, "fa")
     ch_versions = ch_versions.mix(DASTOOL_FASTATOCONTIG2BIN_METABINNER.out.versions)
 
-    DASTOOL_FASTATOCONTIG2BIN_SEMIBIN2(ch_bins_for_fastatocontig2bin.SEMIBIN2, "fa")
+    DASTOOL_FASTATOCONTIG2BIN_SEMIBIN2(ch_bins_for_fastatocontig2bin.semibin2, "fa")
     ch_versions = ch_versions.mix(DASTOOL_FASTATOCONTIG2BIN_SEMIBIN2.out.versions)
 
     // Run DASTOOL
