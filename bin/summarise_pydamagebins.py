@@ -35,48 +35,83 @@ def parse_args(args=None):
     )
     parser.add_argument("--version", action="version", version="%(prog)s 0.0.1")
     parser.add_argument(
-        "pydamage_reports", nargs="+", help="List of pydamage report files for contigs."
+        "pydamage_reports_input",
+        nargs="+",
+        help="List of pydamage report files for contigs.",
     )
 
     return parser.parse_args(args)
 
 
 def main(args=None):
-    parser = argparse.ArgumentParser(description="summarise_pydamage.py")
+    argparse.ArgumentParser(description="summarise_pydamage.py")
     args = parse_args(args)
-
-    if args.output is not None:
-        if os.path.abspath(args.output) == os.path.abspath(args.input):
-            sys.exit(
-                "[summarise_pydamage.py] ERROR: Input and output files names must be different."
-            )
 
     if args.verbose:
         print(
             "[summarise_pydamagebins.py] PROCESSING: Loading " + args.contig_to_bin_map
         )
 
+    ## Load contig to bin map from Nextflow
     contig_to_bin_map = pd.read_csv(
-        args.contig_to_bin_map, sep="\t", names=["bin_id", "contig_id"]
+        args.contig_to_bin_map,
+        sep="\t",
+        names=["bin_id", "assembly_id", "binner", "reference"],
     )
 
+    ## Clean up contig_to_bin_map
+    # contig_to_bin_map["bin_id"] = contig_to_bin_map["bin_id"].str.replace(
+    #     r"\.?(unbinned|noclass)?(\.|_)[0-9]+\.fa$", "", regex=True
+    # )
+    contig_to_bin_map["assembly_id"] = contig_to_bin_map["assembly_id"].astype(str)
+
+    ## Clean up pydamage reports
     pydamage_reports_dfs = []
-    for f in args.pydamage_reports:
+
+    for report in args.pydamage_reports_input:
         if args.verbose:
-            print("[summarise_pydamagebins.py] PROCESSING: Loading " + f)
-        assembly_id = os.path.basename(f).replace("_pydamage_results.csv", "")
-        pydamage_df = pd.read_csv(f, sep=",")
+            print("[summarise_pydamagebins.py] PROCESSING: Loading " + report)
+        assembly_id = os.path.basename(report).replace("_pydamage_results.csv", "")
+        pydamage_df = pd.read_csv(report, sep=",")
         pydamage_df["assembly_id"] = assembly_id
         pydamage_df.insert(0, "assembly_id", pydamage_df.pop("assembly_id"))
         pydamage_reports_dfs.append(pydamage_df)
 
     pydamage_reports_all = pd.concat(pydamage_reports_dfs)
+    pydamage_reports_all["assembly_id"] = pydamage_reports_all["assembly_id"].astype(
+        str
+    )
 
-    ## tODO:
-    ##    - Split assembly_id intwo two columns
-    ##    - Same for contig_to_bin_map
-    ##    - Merge on contig_id / reference
-    ##    - Summarise
+    ## Merge contig_to_bin_map with pydamage reports
+    if args.verbose:
+        print(
+            "[summarise_pydamagebins.py] MERGING: contig to bin map with pydamage reports"
+        )
+
+    pydamage_contig_to_bin = pd.merge(
+        left=contig_to_bin_map,
+        right=pydamage_reports_all,
+        on=["assembly_id", "reference"],
+    ).sort_values(by=["bin_id", "assembly_id", "binner", "reference"])
+
+    ## Group by bin_id and calculate median
+    ## TODO: POSSIBLY MISSING LOTS OF BINS HERE
+    ## contig_to_bin_map has 22
+    if args.verbose:
+        print("[summarise_pydamagebins.py] GROUPING: by bin and calculating median")
+
+    pydamage_bin_summary = (
+        pydamage_contig_to_bin.groupby(
+            ["bin_id"],
+            as_index=False,
+        )
+        .median(numeric_only=True)
+        .sort_values(by=["bin_id"])
+    )
 
     ## Testing only
-    pydamage_reports_all.to_csv("pydamage_bin_summary.tsv", sep="\t", index=False)
+    pydamage_bin_summary.to_csv("pydamage_bin_summary.tsv", sep="\t", index=False)
+
+
+if __name__ == "__main__":
+    sys.exit(main())

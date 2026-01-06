@@ -16,8 +16,11 @@ workflow BINNING_PYDAMAGE {
     //     /*
 
     ch_collected_pydamage_results = ch_contig_pydamage_results
-        .collect { _meta, pydamage_report -> pydamage_report }
-        .map { pydamage_reports -> pydamage_reports.sort() }
+        .map { _meta, pydamage_report -> pydamage_report }
+        .toSortedList { pydamage_report ->
+            // Sort based on filename only (not full path) as work directory path will be different each run
+            file(pydamage_report).getBaseName()
+        }
 
     ch_bin_contig_names = ch_input_for_postbinning
         .transpose()
@@ -30,12 +33,13 @@ workflow BINNING_PYDAMAGE {
             name: 'contig_to_bin_map.tsv',
             storeDir: params.outdir + '/GenomeBinning/QC',
             newLine: true,
+            sort: true,
         )
-        .dump(tag: 'collected_file')
+    // TODO: sort to ensure consistent order and thus support resume
 
-    SUMMARISE_PYDAMAGEBINS(ch_collected_pydamage_results, ch_bin_contig_names)
+    SUMMARISE_PYDAMAGEBINS(ch_collected_pydamage_results.dump(tag: 'ch_collected_pydamage_results'), ch_bin_contig_names.dump(tag: 'ch_bin_contig_names'))
 
     emit:
-    tsv      = channel.empty()
+    tsv      = SUMMARISE_PYDAMAGEBINS.out.pydamage_bin_summary
     versions = ch_versions
 }

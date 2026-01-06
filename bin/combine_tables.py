@@ -35,6 +35,12 @@ def parse_args(args=None):
         "-e", "--checkm2_summary", metavar="FILE", help="CheckM2 summary file."
     )
     parser.add_argument("-a", "--cat_summary", metavar="FILE", help="CAT table file.")
+    parser.add_argument(
+        "-p",
+        "--pydamagebins_summary",
+        metavar="FILE",
+        help="pyDamage bins summary file from `summarise_pydamagebins.py`.",
+    )
 
     parser.add_argument(
         "-o",
@@ -262,6 +268,22 @@ def main(args=None):
             cat_results[["bin_catpack", "CAT_rank_catpack"]],
             left_on="bin",
             right_on="bin_catpack",
+            how="outer",
+        )
+
+    ## PYDAMAGEBINS PROCESSING
+    if args.pydamagebins_summary:
+        pydamagebins_results = pd.read_csv(args.pydamagebins_summary, sep="\t")
+        if len(set(pydamagebins_results["bin_id"].to_list()).difference(set(bins))) > 0:
+            sys.exit(
+                "Bins in pyDamage bins summary do not match bins in bin depths summary!"
+            )
+        pydamagebins_results = pydamagebins_results.add_suffix("_pydamagebins")
+        results = pd.merge(
+            results,
+            pydamagebins_results,
+            left_on="bin",
+            right_on="bin_id_pydamagebins",
             how="outer",
         )
 
