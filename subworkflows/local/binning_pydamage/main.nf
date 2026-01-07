@@ -13,7 +13,6 @@ workflow BINNING_PYDAMAGE {
     // 3. Local module that reorders/reassigns contigs (save), and also summarises pydamage results per bin via median
     // 4. Emit final tsv and versions
     // 5. Final emitted TSV is then used in mag.nf bind to bin_summary table
-    //     /*
 
     ch_collected_pydamage_results = ch_contig_pydamage_results
         .map { _meta, pydamage_report -> pydamage_report }
@@ -37,7 +36,7 @@ workflow BINNING_PYDAMAGE {
         )
     // TODO: sort to ensure consistent order and thus support resume
 
-    SUMMARISE_PYDAMAGEBINS(ch_collected_pydamage_results.dump(tag: 'ch_collected_pydamage_results'), ch_bin_contig_names.dump(tag: 'ch_bin_contig_names'))
+    SUMMARISE_PYDAMAGEBINS(ch_collected_pydamage_results, ch_bin_contig_names)
 
     emit:
     tsv      = SUMMARISE_PYDAMAGEBINS.out.pydamage_bin_summary

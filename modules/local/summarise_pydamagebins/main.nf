@@ -11,7 +11,8 @@ process SUMMARISE_PYDAMAGEBINS {
     path contig_to_bin_map
 
     output:
-    path "pydamage_bin_summary.tsv", emit: pydamage_bin_summary
+    path "pydamage_bins_summary.tsv", emit: pydamage_bin_summary
+    path "*_pydamage_bin_results.tsv", emit: pydamage_bin_results
     path "versions.yml", emit: versions
 
     when:
@@ -23,7 +24,7 @@ process SUMMARISE_PYDAMAGEBINS {
     summarise_pydamagebins.py \\
         ${args} \\
         --contig_to_bin_map ${contig_to_bin_map} \\
-        --output pydamage_bin_summary.tsv \\
+        --output pydamage_bins_summary.tsv \\
         --verbose \\
         ${pydamage_reports.join(' ')}
 

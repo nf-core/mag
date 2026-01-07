@@ -8,6 +8,7 @@ import os
 import sys
 import argparse
 import pandas as pd
+from pathlib import Path
 
 
 def parse_args(args=None):
@@ -59,10 +60,6 @@ def main(args=None):
         names=["bin_id", "assembly_id", "binner", "reference"],
     )
 
-    ## Clean up contig_to_bin_map
-    # contig_to_bin_map["bin_id"] = contig_to_bin_map["bin_id"].str.replace(
-    #     r"\.?(unbinned|noclass)?(\.|_)[0-9]+\.fa$", "", regex=True
-    # )
     contig_to_bin_map["assembly_id"] = contig_to_bin_map["assembly_id"].astype(str)
 
     ## Clean up pydamage reports
@@ -94,23 +91,24 @@ def main(args=None):
         on=["assembly_id", "reference"],
     ).sort_values(by=["bin_id", "assembly_id", "binner", "reference"])
 
-    ## Group by bin_id and calculate median
-    ## TODO: POSSIBLY MISSING LOTS OF BINS HERE
-    ## contig_to_bin_map has 22
+    ## Group by bin_id, save per-bin collection, and then summarise over median
     if args.verbose:
         print("[summarise_pydamagebins.py] GROUPING: by bin and calculating median")
 
-    pydamage_bin_summary = (
-        pydamage_contig_to_bin.groupby(
-            ["bin_id"],
-            as_index=False,
-        )
-        .median(numeric_only=True)
-        .sort_values(by=["bin_id"])
-    )
+    pydamage_bin_summary = pydamage_contig_to_bin.groupby(["bin_id"], as_index=False)
+
+    for name, group in pydamage_bin_summary:
+        filename = Path(name).stem + "_pydamage_bin_results.tsv"
+        group.to_csv(filename, sep="\t", index=False)
+
+    pydamage_bin_summary_median = pydamage_bin_summary.median(
+        numeric_only=True
+    ).sort_values(by=["bin_id"])
 
     ## Testing only
-    pydamage_bin_summary.to_csv("pydamage_bin_summary.tsv", sep="\t", index=False)
+    pydamage_bin_summary_median.to_csv(
+        "pydamage_bins_summary.tsv", sep="\t", index=False
+    )
 
 
 if __name__ == "__main__":
