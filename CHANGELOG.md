@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
+- [#963](https://github.com/nf-core/mag/pull/963) - Add support for outputting and median summarising pyDamage results at bin level when running in ancient DNA mode (by @jfy133)
+
 ### `Changed`
 
 ### `Fixed`
