@@ -422,7 +422,7 @@ Finally, when binning is activated, the pipeline will also run a custom script t
 The latter median values will be including in the `bin_summary.tsv` results file and particularly useful to quickly assess whether a bin is likely to be ancient or not.
 
 :::warning
-It is highly recommended to run `--ancient_dna` mode with `--binning_map_mode` to `own` for reproduciblilty of the pyDamage results across runs and `-resume` unless you truly need co-binning.
+It is highly recommended to run `--ancient_dna` mode with `--binning_map_mode` to `own` for reproduciblilty of the pyDamage results across runs and `-resume`, unless you _truly_ need co-binning.
 When using mapping modes of `group` or `all`, different BAM files will be possible used for damage estimation on each run or `-resume` and thus may differ.
 :::
 
