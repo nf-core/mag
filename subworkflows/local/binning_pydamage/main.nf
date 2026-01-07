@@ -12,7 +12,7 @@ workflow BINNING_PYDAMAGE {
     // 2. Generate list of contigs per bin
     // 3. Local module that reorders/reassigns contigs (save), and also summarises pydamage results per bin via median
     // 4. Emit final tsv and versions
-    // 5. Final emitted TSV is then used in mag.nf bind to bin_summary table
+    // DOWNSTREAM: Final emitted TSV is then used in `mag.nf` to bind to final `bin_summary.tsv` table
 
     ch_collected_pydamage_results = ch_contig_pydamage_results
         .map { _meta, pydamage_report -> pydamage_report }
