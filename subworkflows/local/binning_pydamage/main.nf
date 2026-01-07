@@ -34,9 +34,9 @@ workflow BINNING_PYDAMAGE {
             newLine: true,
             sort: true,
         )
-    // TODO: sort to ensure consistent order and thus support resume
 
     SUMMARISE_PYDAMAGEBINS(ch_collected_pydamage_results, ch_bin_contig_names)
+    ch_versions = ch_versions.mix(SUMMARISE_PYDAMAGEBINS.out.versions)
 
     emit:
     tsv      = SUMMARISE_PYDAMAGEBINS.out.pydamage_bin_summary

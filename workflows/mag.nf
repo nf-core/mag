@@ -464,6 +464,7 @@ workflow MAG {
 
         if (params.ancient_dna) {
             BINNING_PYDAMAGE(ANCIENT_DNA_ASSEMBLY_VALIDATION.out.pydamage_results, ch_input_for_postbinning)
+            ch_versions = ch_versions.mix(BINNING_PYDAMAGE.out.versions)
             ch_summarisepydamage = BINNING_PYDAMAGE.out.tsv
         }
         else {
