@@ -43,10 +43,13 @@
                     "checkm2": "1.1.0"
                 },
                 "CONCAT_BUSCO_TSV": {
-                    "csvtk": "0.31.0"
+                    "qsv": "5.1.0"
                 },
                 "CONCAT_CHECKM2_TSV": {
-                    "csvtk": "0.31.0"
+                    "qsv": "5.1.0"
+                },
+                "CONCAT_TIARA_TSV": {
+                    "qsv": "5.1.0"
                 },
                 "DASTOOL_FASTATOCONTIG2BIN_TIARA": {
                     "dastool": "1.1.7"
@@ -100,9 +103,6 @@
                     "r-base": "4.1.3",
                     "r-tidyverse": "1.3.1"
                 },
-                "TIARA_SUMMARY": {
-                    "csvtk": "0.31.0"
-                },
                 "TIARA_TIARA": {
                     "tiara": "1.0.3"
                 },
@@ -110,7 +110,7 @@
                     "trimmomatic": 0.39
                 },
                 "Workflow": {
-                    "nf-core/mag": "v5.3.0dev"
+                    "nf-core/mag": "v5.4.0dev"
                 }
             }
         ],
@@ -118,7 +118,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
         },
-        "timestamp": "2025-11-16T01:37:18.25332109"
+        "timestamp": "2025-11-27T11:32:28.488502608"
     },
     "qc": {
         "content": [
@@ -240,7 +240,7 @@
                 "MEGAHIT-MetaBAT2-prokarya-unrefined-group-0_checkm2_report.tsv:md5,ec01903b7f8a7203856a35a7bd2d4c34",
                 "checkm2_summary.tsv:md5,ec01903b7f8a7203856a35a7bd2d4c34",
                 "tiara_summary.tsv:md5,4cbfb0fd90ba48dc33d75d10c1eddb17",
-                "bin_summary.tsv:md5,e6a07c3280c6db0f7822688559afb053",
+                "bin_summary.tsv:md5,cf879345b96d29b5b8584795504b81cf",
                 "bin_depths_summary.tsv:md5,a73f2fc180a2c52038c88fbbfa6a95c3"
             ]
         ],
@@ -248,7 +248,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
         },
-        "timestamp": "2025-11-16T01:37:18.534799185"
+        "timestamp": "2025-11-28T14:15:43.756748108"
     },
     "multiqc": {
         "content": [
@@ -294,6 +294,7 @@
                 "multiqc/multiqc_plots/pdf/busco_plot_bacteria_odb12-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/busco_plot_bacteria_odb12-pct.pdf",
                 "multiqc/multiqc_plots/pdf/checkm2-first-table.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc-1-status-check-heatmap.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc-1_per_base_n_content_plot.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc-1_per_base_sequence_quality_plot.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc-1_per_sequence_gc_content_plot_Counts.pdf",
@@ -302,6 +303,7 @@
                 "multiqc/multiqc_plots/pdf/fastqc-1_sequence_counts_plot-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc-1_sequence_counts_plot-pct.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc-1_sequence_duplication_levels_plot.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc-status-check-heatmap.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc_per_base_n_content_plot.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc_per_base_sequence_quality_plot.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc_per_sequence_gc_content_plot_Counts.pdf",
@@ -318,6 +320,7 @@
                 "multiqc/multiqc_plots/png/busco_plot_bacteria_odb12-cnt.png",
                 "multiqc/multiqc_plots/png/busco_plot_bacteria_odb12-pct.png",
                 "multiqc/multiqc_plots/png/checkm2-first-table.png",
+                "multiqc/multiqc_plots/png/fastqc-1-status-check-heatmap.png",
                 "multiqc/multiqc_plots/png/fastqc-1_per_base_n_content_plot.png",
                 "multiqc/multiqc_plots/png/fastqc-1_per_base_sequence_quality_plot.png",
                 "multiqc/multiqc_plots/png/fastqc-1_per_sequence_gc_content_plot_Counts.png",
@@ -326,6 +329,7 @@
                 "multiqc/multiqc_plots/png/fastqc-1_sequence_counts_plot-cnt.png",
                 "multiqc/multiqc_plots/png/fastqc-1_sequence_counts_plot-pct.png",
                 "multiqc/multiqc_plots/png/fastqc-1_sequence_duplication_levels_plot.png",
+                "multiqc/multiqc_plots/png/fastqc-status-check-heatmap.png",
                 "multiqc/multiqc_plots/png/fastqc_per_base_n_content_plot.png",
                 "multiqc/multiqc_plots/png/fastqc_per_base_sequence_quality_plot.png",
                 "multiqc/multiqc_plots/png/fastqc_per_sequence_gc_content_plot_Counts.png",
@@ -342,6 +346,7 @@
                 "multiqc/multiqc_plots/svg/busco_plot_bacteria_odb12-cnt.svg",
                 "multiqc/multiqc_plots/svg/busco_plot_bacteria_odb12-pct.svg",
                 "multiqc/multiqc_plots/svg/checkm2-first-table.svg",
+                "multiqc/multiqc_plots/svg/fastqc-1-status-check-heatmap.svg",
                 "multiqc/multiqc_plots/svg/fastqc-1_per_base_n_content_plot.svg",
                 "multiqc/multiqc_plots/svg/fastqc-1_per_base_sequence_quality_plot.svg",
                 "multiqc/multiqc_plots/svg/fastqc-1_per_sequence_gc_content_plot_Counts.svg",
@@ -350,6 +355,7 @@
                 "multiqc/multiqc_plots/svg/fastqc-1_sequence_counts_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/fastqc-1_sequence_counts_plot-pct.svg",
                 "multiqc/multiqc_plots/svg/fastqc-1_sequence_duplication_levels_plot.svg",
+                "multiqc/multiqc_plots/svg/fastqc-status-check-heatmap.svg",
                 "multiqc/multiqc_plots/svg/fastqc_per_base_n_content_plot.svg",
                 "multiqc/multiqc_plots/svg/fastqc_per_base_sequence_quality_plot.svg",
                 "multiqc/multiqc_plots/svg/fastqc_per_sequence_gc_content_plot_Counts.svg",
@@ -400,6 +406,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
         },
-        "timestamp": "2025-11-20T08:06:43.772109137"
+        "timestamp": "2025-12-01T14:43:08.256707892"
     }
 }

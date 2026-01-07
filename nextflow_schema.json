@@ -1027,6 +1027,11 @@
                     "type": "boolean",
                     "description": "Save the used GUNC reference files downloaded when not using --gunc_db parameter.",
                     "help_text": "If specified, the corresponding DIAMOND file downloaded from the GUNC server will be stored in your output directory alongside your GUNC results."
+                },
+                "generate_bigmag_file": {
+                    "type": "boolean",
+                    "description": "Make a BIgMAG input file including GUNC results.",
+                    "help_text": "It requires --run_gunc and --run_checkm2 to be executed. BINQC, GTDB-TK, QUAST nor BUSCO can't be skipped."
                 }
             }
         },

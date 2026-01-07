@@ -361,6 +361,9 @@ def validateInputParameters(hybrid) {
     if (params.skip_binqc && (params.run_busco || params.run_checkm || params.run_checkm2)) {
         error("[nf-core/mag] ERROR: Both --skip_binqc and --run_<bin_qc_tool_name> are specified! Invalid combination, please specify either --skip_binqc or --run_<bin_qc_tool_name>.")
     }
+    if (!params.skip_binqc && !params.run_busco && !params.run_checkm && !params.run_checkm2) {
+        log.warn('[nf-core/mag]: --skip_binqc is not specified, but no bin quality assessment tool is set to run! Bin QC will be skipped.')
+    }
 
     if (!params.skip_binqc && params.run_busco) {
         if (params.busco_db && !params.busco_db_lineage) {
@@ -372,8 +375,14 @@ def validateInputParameters(hybrid) {
         }
     }
 
-    if (params.skip_binqc && !params.skip_gtdbtk) {
-        log.warn('[nf-core/mag]: --skip_binqc is specified, but --skip_gtdbtk is explictly set to run! GTDB-tk will be omitted because GTDB-tk bin classification requires bin filtering based on BUSCO or CheckM QC results to avoid GTDB-tk errors.')
+    if (!params.skip_gtdbtk) {
+        if (params.skip_binqc) {
+            log.warn('[nf-core/mag]: --skip_binqc is specified, but --skip_gtdbtk is explictly set to run! GTDB-tk will be omitted because GTDB-tk bin classification requires bin filtering based on BUSCO or CheckM QC results to avoid GTDB-tk errors.')
+        }
+
+        if (!params.run_busco && !params.run_checkm && !params.run_checkm2) {
+            log.warn('[nf-core/mag]: GTDB-tk requires bin quality information from BUSCO, CheckM or CheckM2. Please enable at least one of these tools, otherwise GTDB-tk will be skipped.')
+        }
     }
 
     // Check if CAT parameters are valid
@@ -395,6 +404,11 @@ def validateInputParameters(hybrid) {
     // Check Prokka parameters
     if (params.prokka_with_compliance && !params.prokka_compliance_centre) {
         error('[nf-core/mag] ERROR: Invalid parameter combination: running PROKKA with compliance mode requires a centre name specified with `--prokka_compliance_centre <XYZ>`!')
+    }
+
+    // Check BIgMAG parameters
+    if (params.generate_bigmag_file && (!params.run_gunc || !params.run_checkm2 || !params.run_busco || params.skip_gtdbtk || params.skip_quast || params.skip_binqc)) {
+        error('[nf-core/mag] ERROR: To generate the BIgMAG file you need to include the parameters `--run_checkm2` and `--run_gunc`, and you cannot skip BINQC, GTDB-TK, QUAST nor BUSCO.')
     }
 }
 

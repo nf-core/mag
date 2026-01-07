@@ -1,6 +1,6 @@
 include { TIARA_TIARA                                                  } from '../../../modules/nf-core/tiara/tiara/main'
 include { DASTOOL_FASTATOCONTIG2BIN as DASTOOL_FASTATOCONTIG2BIN_TIARA } from '../../../modules/nf-core/dastool/fastatocontig2bin/main'
-include { CSVTK_CONCAT as TIARA_SUMMARY                                } from '../../../modules/nf-core/csvtk/concat/main'
+include { QSV_CAT as CONCAT_TIARA_TSV                                  } from '../../../modules/nf-core/qsv/cat/main'
 
 include { TIARA_CLASSIFY                                               } from '../../../modules/local/tiara_classify/main'
 
@@ -107,15 +107,14 @@ workflow TIARA {
         }
 
     ch_bin_classifications = TIARA_CLASSIFY.out.bin_classifications
-        .map { _meta, classification ->
-            [classification]
+        .collect { _meta, classification ->
+            classification
         }
-        .collect { classifications ->
-            [[:], classifications]
+        .map { bin_classifications ->
+            [[id: 'tiara'], bin_classifications]
         }
 
-    TIARA_SUMMARY(ch_bin_classifications, 'tsv', 'tsv')
-    ch_versions = ch_versions.mix(TIARA_SUMMARY.out.versions)
+    CONCAT_TIARA_TSV(ch_bin_classifications, 'rowskey', 'tsv', false)
 
     emit:
     classified_bins   = ch_classified_bins

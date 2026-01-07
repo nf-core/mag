@@ -45,7 +45,7 @@
                     "cat": 9.5
                 },
                 "CONCAT_BUSCO_TSV": {
-                    "csvtk": "0.31.0"
+                    "qsv": "5.1.0"
                 },
                 "CONVERT_DEPTHS": {
                     "bioawk": 20110810
@@ -137,7 +137,7 @@
                     "python": "3.6.7"
                 },
                 "Workflow": {
-                    "nf-core/mag": "v5.3.0dev"
+                    "nf-core/mag": "v5.4.0dev"
                 }
             }
         ],
@@ -145,7 +145,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
         },
-        "timestamp": "2025-11-20T09:51:39.624210872"
+        "timestamp": "2025-11-27T11:33:08.036474035"
     },
     "multiqc": {
         "content": [
@@ -224,6 +224,7 @@
                 "multiqc/multiqc_plots/pdf/fastp-seq-quality-plot_Read_2_Before_filtering.pdf",
                 "multiqc/multiqc_plots/pdf/fastp_filtered_reads_plot-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/fastp_filtered_reads_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc-1-status-check-heatmap.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc-1_per_base_n_content_plot.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc-1_per_base_sequence_quality_plot.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc-1_per_sequence_gc_content_plot_Counts.pdf",
@@ -232,6 +233,7 @@
                 "multiqc/multiqc_plots/pdf/fastqc-1_sequence_counts_plot-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc-1_sequence_counts_plot-pct.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc-1_sequence_duplication_levels_plot.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc-status-check-heatmap.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc_per_base_n_content_plot.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc_per_base_sequence_quality_plot.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc_per_sequence_gc_content_plot_Counts.pdf",
@@ -266,6 +268,7 @@
                 "multiqc/multiqc_plots/png/fastp-seq-quality-plot_Read_2_Before_filtering.png",
                 "multiqc/multiqc_plots/png/fastp_filtered_reads_plot-cnt.png",
                 "multiqc/multiqc_plots/png/fastp_filtered_reads_plot-pct.png",
+                "multiqc/multiqc_plots/png/fastqc-1-status-check-heatmap.png",
                 "multiqc/multiqc_plots/png/fastqc-1_per_base_n_content_plot.png",
                 "multiqc/multiqc_plots/png/fastqc-1_per_base_sequence_quality_plot.png",
                 "multiqc/multiqc_plots/png/fastqc-1_per_sequence_gc_content_plot_Counts.png",
@@ -274,6 +277,7 @@
                 "multiqc/multiqc_plots/png/fastqc-1_sequence_counts_plot-cnt.png",
                 "multiqc/multiqc_plots/png/fastqc-1_sequence_counts_plot-pct.png",
                 "multiqc/multiqc_plots/png/fastqc-1_sequence_duplication_levels_plot.png",
+                "multiqc/multiqc_plots/png/fastqc-status-check-heatmap.png",
                 "multiqc/multiqc_plots/png/fastqc_per_base_n_content_plot.png",
                 "multiqc/multiqc_plots/png/fastqc_per_base_sequence_quality_plot.png",
                 "multiqc/multiqc_plots/png/fastqc_per_sequence_gc_content_plot_Counts.png",
@@ -308,6 +312,7 @@
                 "multiqc/multiqc_plots/svg/fastp-seq-quality-plot_Read_2_Before_filtering.svg",
                 "multiqc/multiqc_plots/svg/fastp_filtered_reads_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/fastp_filtered_reads_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/fastqc-1-status-check-heatmap.svg",
                 "multiqc/multiqc_plots/svg/fastqc-1_per_base_n_content_plot.svg",
                 "multiqc/multiqc_plots/svg/fastqc-1_per_base_sequence_quality_plot.svg",
                 "multiqc/multiqc_plots/svg/fastqc-1_per_sequence_gc_content_plot_Counts.svg",
@@ -316,6 +321,7 @@
                 "multiqc/multiqc_plots/svg/fastqc-1_sequence_counts_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/fastqc-1_sequence_counts_plot-pct.svg",
                 "multiqc/multiqc_plots/svg/fastqc-1_sequence_duplication_levels_plot.svg",
+                "multiqc/multiqc_plots/svg/fastqc-status-check-heatmap.svg",
                 "multiqc/multiqc_plots/svg/fastqc_per_base_n_content_plot.svg",
                 "multiqc/multiqc_plots/svg/fastqc_per_base_sequence_quality_plot.svg",
                 "multiqc/multiqc_plots/svg/fastqc_per_sequence_gc_content_plot_Counts.svg",
@@ -389,6 +395,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
         },
-        "timestamp": "2025-11-20T09:51:39.663302183"
+        "timestamp": "2025-12-01T14:44:58.067666089"
     }
 }

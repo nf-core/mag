@@ -126,11 +126,6 @@
                         "git_sha": "e753770db613ce014b3c4bc94f6cba443427b726",
                         "installed_by": ["fasta_binning_concoct"]
                     },
-                    "csvtk/concat": {
-                        "branch": "master",
-                        "git_sha": "e753770db613ce014b3c4bc94f6cba443427b726",
-                        "installed_by": ["modules"]
-                    },
                     "dastool/dastool": {
                         "branch": "master",
                         "git_sha": "e753770db613ce014b3c4bc94f6cba443427b726",
@@ -248,7 +243,7 @@
                     },
                     "multiqc": {
                         "branch": "master",
-                        "git_sha": "82a79183037a403ad1b6714e5dbcff25500efaf6",
+                        "git_sha": "e10b76ca0c66213581bec2833e30d31f239dec0b",
                         "installed_by": ["modules"]
                     },
                     "nanolyse": {
@@ -296,6 +291,11 @@
                         "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
+                    "qsv/cat": {
+                        "branch": "master",
+                        "git_sha": "dff559d4a2dc87fc57a740bfefbf59198d1ad692",
+                        "installed_by": ["modules"]
+                    },
                     "samtools/faidx": {
                         "branch": "master",
                         "git_sha": "e753770db613ce014b3c4bc94f6cba443427b726",
@@ -313,7 +313,7 @@
                     },
                     "semibin/singleeasybin": {
                         "branch": "master",
-                        "git_sha": "e753770db613ce014b3c4bc94f6cba443427b726",
+                        "git_sha": "70e28be74bc73c74f085d6478a0a5e07ee5606c1",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/semibin/singleeasybin/semibin-singleeasybin.diff"
                     },

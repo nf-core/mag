@@ -43,6 +43,7 @@ include { QUAST                           } from '../modules/local/quast_run/mai
 include { QUAST_BINS                      } from '../modules/local/quast_bins/main'
 include { QUAST_BINS_SUMMARY              } from '../modules/local/quast_bins_summary/main'
 include { BIN_SUMMARY                     } from '../modules/local/bin_summary/main'
+include { PREPARE_BIGMAG_SUMMARY          } from '../modules/local/bigmag_summary/main'
 
 workflow MAG {
     take:
@@ -441,7 +442,7 @@ workflow MAG {
          * GTDB-tk: taxonomic classifications using GTDB reference
          */
 
-        if (!params.skip_gtdbtk) {
+        if (!params.skip_gtdbtk && !params.skip_binqc && (params.run_busco || params.run_checkm || params.run_checkm2)) {
             ch_gtdbtk_summary = channel.empty()
             if (gtdb) {
 
@@ -483,6 +484,13 @@ workflow MAG {
                 ch_summarisepydamage.ifEmpty([]),
             )
             ch_versions = ch_versions.mix(BIN_SUMMARY.out.versions)
+        }
+        if (params.generate_bigmag_file) {
+            PREPARE_BIGMAG_SUMMARY(
+                BIN_SUMMARY.out.summary,
+                BIN_QC.out.gunc_summary,
+            )
+            ch_versions = ch_versions.mix(PREPARE_BIGMAG_SUMMARY.out.versions)
         }
 
         /*
@@ -605,15 +613,18 @@ workflow MAG {
         ch_multiqc_files = ch_multiqc_files.mix(BINNING_PREPARATION.out.multiqc_files.collect().ifEmpty([]))
     }
 
-    if (!params.skip_binning && !params.skip_prokka) {
-        ch_multiqc_files = ch_multiqc_files.mix(PROKKA.out.txt.collect { _meta, report -> report }.ifEmpty([]))
-    }
-    if (!params.skip_binning && !params.skip_binqc) {
-        ch_multiqc_files = ch_multiqc_files.mix(BIN_QC.out.multiqc_files.collect().ifEmpty([]))
-    }
+    if (!params.skip_binning) {
+        if (!params.skip_prokka) {
+            ch_multiqc_files = ch_multiqc_files.mix(PROKKA.out.txt.collect { _meta, report -> report }.ifEmpty([]))
+        }
 
-    if (!params.skip_gtdbtk) {
-        ch_multiqc_files = ch_multiqc_files.mix(GTDBTK.out.multiqc_files.collect().ifEmpty([]))
+        if (!params.skip_binqc) {
+            ch_multiqc_files = ch_multiqc_files.mix(BIN_QC.out.multiqc_files.collect().ifEmpty([]))
+        }
+
+        if (!params.skip_gtdbtk) {
+            ch_multiqc_files = ch_multiqc_files.mix(GTDBTK.out.multiqc_files.collect().ifEmpty([]))
+        }
     }
 
     MULTIQC(

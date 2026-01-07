@@ -15,10 +15,10 @@ components:
   - checkm/qa
   - checkm/lineagewf
   - checkm2/predict
-  - csvtk/concat
   - gunc/downloaddb
   - gunc/run
   - gunc/mergecheckm
+  - qsv/cat
   - untar
 input:
   - ch_bins:
