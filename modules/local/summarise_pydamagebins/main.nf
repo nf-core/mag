@@ -39,7 +39,7 @@ process SUMMARISE_PYDAMAGEBINS {
     def args = task.ext.args ?: ''
     """
     echo ${args}
-    touch pydamage_bin_summary.tsv
+    touch pydamage_bins_summary.tsv
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
