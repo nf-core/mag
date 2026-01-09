@@ -390,7 +390,7 @@ workflow MAG {
 
         ch_input_for_binsummary = DEPTHS.out.depths_summary
 
-        /* 
+        /*
             Generate contig2bin map files for all bins
         */
 
