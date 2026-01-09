@@ -518,12 +518,13 @@ DAS Tool will remove contigs from bins that do not pass additional filtering cri
   - `[assembler]-[sample/group].seqlength`: Tab-delimited file describing the length of each contig.
   - `bins/[assembler]-[binner]Refined-[sample/group].*.fa`: Refined bins in fasta format.
   - `unbinned/[assembler]-DASToolUnbinned-[sample/group].*.fa`: Unbinned contigs from bin refinement in fasta format.
+  - `fastatocontig2bin/[assembler]-[binner]Refined-[sample/group].*_contiglist.tsv`: DAS Tool compatible file describing which contig is to which bin going into bin refinement (only if `--refine_bins_dastool_savecontig2bin` is specified).
 
 </details>
 
 By default, only the raw bins (and unbinned contigs) from the actual binning methods, but not from the binning refinement with DAS Tool, will be used for downstream bin quality control, annotation and taxonomic classification. The parameter `--postbinning_input` can be used to change this behaviour.
 
-⚠️ Due to ability to perform downstream QC of both raw and refined bins in parallel (via `--postbinning_input)`, bin names in DAS Tools's `*_allBins.eval` file will include `Refined`. However for this particular file, they _actually_ refer to the 'raw' input bins. The pipeline renames the input files prior to running DASTool to ensure they can be disambiguated from the original bin files in the downstream QC steps.
+⚠️ Due to ability to perform downstream QC of both raw and refined bins in parallel (via `--postbinning_input`), bin names in DAS Tools's `*_allBins.eval` file will include `Refined`. However for this particular file, they _actually_ refer to the 'raw' input bins. The pipeline renames the input files prior to running DASTool to ensure they can be disambiguated from the original bin files in the downstream QC steps.
 
 ### Tiara
 
