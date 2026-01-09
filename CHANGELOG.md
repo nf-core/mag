@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
+- [965](https://github.com/nf-core/mag/pull/965) - Add support for the generation of custom contig to bin map files for all bins and refined bins (by @jfy133, @prototaxites)
+- [965](https://github.com/nf-core/mag/pull/965) - Add support for optional saving of DAS Tool inpout `contig2bin` map files via `--refine_bins_dastool_savecontig2bin`, with now singular generation process (by @jfy133, @prototaxites)
 - [#963](https://github.com/nf-core/mag/pull/963) - Add support for outputting and median summarising pyDamage results at bin level when running in ancient DNA mode (by @jfy133)
 
 ### `Changed`

@@ -65,7 +65,7 @@
     },
     "-profile assembly_input": {
         "content": [
-            203,
+            294,
             {
                 "ADJUST_MAXBIN2_EXT": {
                     "coreutils": 9.5
@@ -112,13 +112,7 @@
                 "DASTOOL_DASTOOL": {
                     "dastool": "1.1.7"
                 },
-                "DASTOOL_FASTATOCONTIG2BIN_CONCOCT": {
-                    "dastool": "1.1.7"
-                },
-                "DASTOOL_FASTATOCONTIG2BIN_MAXBIN2": {
-                    "dastool": "1.1.7"
-                },
-                "DASTOOL_FASTATOCONTIG2BIN_METABAT2": {
+                "DASTOOL_FASTATOCONTIG2BIN": {
                     "dastool": "1.1.7"
                 },
                 "GUNZIP_ASSEMBLYINPUT": {
@@ -178,10 +172,10 @@
             }
         ],
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.0"
+            "nf-test": "0.9.2",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-11-27T11:31:36.634994563"
+        "timestamp": "2026-01-09T14:08:19.594040545"
     },
     "binning": {
         "content": [
@@ -387,7 +381,6 @@
                 "GenomeBinning/QC/BUSCO/SPAdes-DASTool-test_minigut/test_minigut-bacteria_odb10-busco/SPAdes-MaxBin2Refined-test_minigut.001_sub.fa/run_bacteria_odb10/short_summary.txt",
                 "GenomeBinning/QC/busco_summary.tsv",
                 "GenomeBinning/SemiBin2/bins/MEGAHIT-SemiBin2-test_minigut_0.fa.gz",
-                "GenomeBinning/SemiBin2/bins/MEGAHIT-SemiBin2-test_minigut_1.fa.gz",
                 "GenomeBinning/SemiBin2/bins/SPAdes-SemiBin2-test_minigut_0.fa.gz",
                 "GenomeBinning/SemiBin2/bins/SPAdes-SemiBin2-test_minigut_1.fa.gz",
                 "GenomeBinning/SemiBin2/log/MEGAHIT-SemiBin2-test_minigut.SemiBinRun.log",
@@ -395,6 +388,7 @@
                 "GenomeBinning/SemiBin2/log/SPAdes-SemiBin2-test_minigut.SemiBinRun.log",
                 "GenomeBinning/SemiBin2/log/SPAdes-SemiBin2-test_minigut_sample2.SemiBinRun.log",
                 "GenomeBinning/bin_summary.tsv",
+                "GenomeBinning/contig_to_bin/contig_to_bin_map.tsv",
                 "GenomeBinning/depths/bins/MEGAHIT-DASTool-test_minigut-binDepths.heatmap.png",
                 "GenomeBinning/depths/bins/SPAdes-DASTool-test_minigut-binDepths.heatmap.png",
                 "GenomeBinning/depths/bins/bin_depths_summary.tsv",
@@ -506,13 +500,13 @@
                 "SPAdes-CONCOCT-test_minigut_sample2_args.txt:md5,6e7129afbba33b973ac9ecc920659ea9",
                 "SPAdes-CONCOCT-test_minigut_sample2_clustering_gt1000.csv:md5,4bbba6a0ba80b107ef2b13b7089e2156",
                 "MEGAHIT-DASTool-test_minigut.seqlength:md5,f154f9ef4a4c0adb8d8f9ebb8163df93",
-                "MEGAHIT-DASTool-test_minigut_DASTool_contig2bin.tsv:md5,6add6f39f4fd9c31ff9f58df5f28fcdf",
-                "MEGAHIT-DASTool-test_minigut_DASTool_summary.tsv:md5,a900f80e0820a1e9416c2e391b37d06c",
-                "MEGAHIT-DASTool-test_minigut_allBins.eval:md5,b31d82ad1f410e66fd41661ffb4d0604",
+                "MEGAHIT-DASTool-test_minigut_DASTool_contig2bin.tsv:md5,92fc9827aab20d6a0c7f0c5f0debda85",
+                "MEGAHIT-DASTool-test_minigut_DASTool_summary.tsv:md5,33aee7453e0ee3bd84b4d911e0419032",
+                "MEGAHIT-DASTool-test_minigut_allBins.eval:md5,96e8d7a3ffd021f505ce691ddddfd7f9",
                 "SPAdes-DASTool-test_minigut.seqlength:md5,4860a5cb7b0bf2e78e959111b5619006",
-                "SPAdes-DASTool-test_minigut_DASTool_contig2bin.tsv:md5,07c1af95dd0da4c11de390c2f188fe6c",
-                "SPAdes-DASTool-test_minigut_DASTool_summary.tsv:md5,b04bb7c85b2e393bfdaec7d754210a5a",
-                "SPAdes-DASTool-test_minigut_allBins.eval:md5,5bb0af6ad3d3ba960cb8d1242bd3f485",
+                "SPAdes-DASTool-test_minigut_DASTool_contig2bin.tsv:md5,206be8aa4f8de1430053fcc1504cc8e0",
+                "SPAdes-DASTool-test_minigut_DASTool_summary.tsv:md5,29dcb8c0665f0b129f6fd66a83112380",
+                "SPAdes-DASTool-test_minigut_allBins.eval:md5,9f82899dbf9d9901f54c8db7528cb50a",
                 "MEGAHIT-MetaBAT2Refined-test_minigut.1.fa:md5,489a5f7ba3795477e09d2d396fe535c3",
                 "MEGAHIT-MetaBAT2Refined-test_minigut.2.fa:md5,1addf634bca82af85d36621585f93f52",
                 "SPAdes-CONCOCTRefined-test_minigut.7.fa:md5,4be1cc2c06f329e0102cb27b03e30624",
@@ -557,19 +551,19 @@
                 "missing_busco_list.tsv:md5,c6807925eff74c7de1c1a38d88069b08",
                 "full_table.tsv:md5,877e4dad881ca7079c8b6118b59a34d4",
                 "missing_busco_list.tsv:md5,c7ee1e582e010aab60a566da7fe304de",
-                "MEGAHIT-SemiBin2-test_minigut_0.fa.gz:md5,3688b9460d9a4a1e4ea912721f226b5d",
-                "MEGAHIT-SemiBin2-test_minigut_1.fa.gz:md5,12381d7733271d3e28c39f7ad1ca4e74",
+                "MEGAHIT-SemiBin2-test_minigut_0.fa.gz:md5,79b6bf4227c030db36612a1478c91026",
                 "SPAdes-SemiBin2-test_minigut_0.fa.gz:md5,daf60d669f93aecce24c715d863388a9",
                 "SPAdes-SemiBin2-test_minigut_1.fa.gz:md5,19ce02b104d195bf57130398e7b2dd2e",
                 "bin_summary.tsv:md5,60111a58bb0167ec1367f1e7463b7026",
+                "contig_to_bin_map.tsv:md5,4b640b728c3b42bfe65ea4a869708787",
                 "bin_depths_summary.tsv:md5,7153f759db72abb02e2ee3c2ab1b5e56"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.0"
+            "nf-test": "0.9.2",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-11-11T07:13:39.966382867"
+        "timestamp": "2026-01-09T14:08:19.929862224"
     },
     "csv-rows": {
         "content": [
