@@ -555,6 +555,16 @@ For each bin or refined bin the median sequencing depth is computed based on the
 
 </details>
 
+### Contig to bin map
+
+The pipeline also generates a 'contig to bin map to help users explore track where each contig from a given assembly was assigned to which bin.
+
+<details markdown="1">
+<summary>Output files</summary>
+- `GenomeBinning/depths/contig_to_bin/`
+  - `contig_to_bin_map.tsv`: Tab-separated file with columns: assembly ID, contig_id, binner, and bin ID, for all contigs of all bins in the run.
+</details>
+
 ### QC for metagenome assembled genomes with QUAST
 
 [QUAST](http://cab.spbu.ru/software/quast/) is a tool that evaluates genome assemblies by computing various metrics. The QUAST output is in the bin directories shown below. This QUAST output is not shown in the MultiQC report.

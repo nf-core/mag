@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
+- [XXX](https://github.com/nf-core/mag/pull/XXX) - Add support for the generation of contig to bin map files immediately after binning (by @jfy133, @prototaxites)
+
 ### `Changed`
 
 ### `Fixed`
