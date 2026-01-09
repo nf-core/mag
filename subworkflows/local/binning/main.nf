@@ -250,30 +250,11 @@ workflow BINNING {
     ch_versions = ch_versions.mix(GUNZIP_UNBINS.out.versions)
     ch_splitfasta_results_gunzipped = GUNZIP_UNBINS.out.gunzip.groupTuple(by: 0)
 
-    // generate a contig2bin map
-    // separate the contig files, use Nextflow splitFasta to extract header name
-    // and add other metadata from the metamap into a string with a prefixed header
-    // then use collectFile to save this as a tsv file.
-    ch_contig2bin_map = ch_binning_results_gunzipped
-        .transpose()
-        .map { meta, binfile -> [meta + [bin_id: binfile.name], binfile] }
-        .splitFasta(record: [header: true], elem: 1)
-        .map { meta, contig_header ->
-            "assembly_id\tcontig_id\tbinner\tbin_id\n${meta['assembler']}-${meta['id']}\t${contig_header['header']}\t${meta['binner']}\t${meta['bin_id']}\n"
-        }
-        .collectFile(
-            name: 'contig_to_bin_map.tsv',
-            storeDir: params.outdir + '/GenomeBinning/contig_to_bin/',
-            keepHeader: true,
-            sort: true,
-        )
-
     emit:
     bins           = ch_binning_results_gunzipped
     bins_gz        = ch_binning_results_gzipped_final
     unbinned       = ch_splitfasta_results_gunzipped
     unbinned_gz    = SPLIT_FASTA.out.unbinned
     metabat2depths = ch_combined_depths
-    contig2bin_map = ch_contig2bin_map
     versions       = ch_versions
 }

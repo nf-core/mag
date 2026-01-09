@@ -277,9 +277,7 @@ workflow MAG {
         // Make sure if running aDNA subworkflow to use the damage-corrected contigs for higher accuracy
         if (params.ancient_dna && !params.skip_ancient_damagecorrection) {
             BINNING(
-                BINNING_PREPARATION.out.grouped_mappings
-                .join(ANCIENT_DNA_ASSEMBLY_VALIDATION.out.contigs_recalled)
-                .map { meta, _contigs, bams, bais, corrected_contigs ->
+                BINNING_PREPARATION.out.grouped_mappings.join(ANCIENT_DNA_ASSEMBLY_VALIDATION.out.contigs_recalled).map { meta, _contigs, bams, bais, corrected_contigs ->
                     [meta, corrected_contigs, bams, bais]
                 },
                 params.bin_min_size,
@@ -377,8 +375,9 @@ workflow MAG {
             ? ch_input_for_postbinning_bins
             : ch_input_for_postbinning_bins.mix(ch_input_for_postbinning_unbins)
 
-        // Combine short and long reads by meta.id and meta.group for DEPTHS, making sure that
-        // read channel are not empty
+        /* Combine short and long reads by meta.id and meta.group for DEPTHS, making sure that
+         read channel are not empty
+        */
         ch_reads_for_depths = ch_short_reads
             .map { meta, reads -> [[id: meta.id, group: meta.group], [short_reads: reads, long_reads: []]] }
             .mix(
@@ -390,6 +389,28 @@ workflow MAG {
         ch_versions = ch_versions.mix(DEPTHS.out.versions)
 
         ch_input_for_binsummary = DEPTHS.out.depths_summary
+
+        /* 
+            Generate contig2bin map files for all bins
+        */
+
+        // generate a contig2bin map
+        // separate the contig files, use Nextflow splitFasta to extract header name
+        // and add other metadata from the metamap into a string with a prefixed header
+        // then use collectFile to save this as a tsv file.
+        ch_input_for_postbinning
+            .transpose()
+            .map { meta, binfile -> [meta + [bin_id: binfile.name], binfile] }
+            .splitFasta(record: [header: true], elem: 1)
+            .map { meta, contig_header ->
+                "assembly_id\tcontig_id\tbinner\tbin_id\n${meta['assembler']}-${meta['id']}\t${contig_header['header']}\t${meta['binner']}\t${meta['bin_id']}\n"
+            }
+            .collectFile(
+                name: 'contig_to_bin_map.tsv',
+                storeDir: params.outdir + '/GenomeBinning/contig_to_bin/',
+                keepHeader: true,
+                sort: true,
+            )
 
         /*
         * Bin QC subworkflows: for checking bin completeness with either BUSCO, CHECKM, CHECKM2, and/or GUNC
