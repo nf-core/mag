@@ -375,9 +375,8 @@ workflow MAG {
             ? ch_input_for_postbinning_bins
             : ch_input_for_postbinning_bins.mix(ch_input_for_postbinning_unbins)
 
-        /* Combine short and long reads by meta.id and meta.group for DEPTHS, making sure that
-         read channel are not empty
-        */
+        // Combine short and long reads by meta.id and meta.group for DEPTHS, making sure that
+        // read channel are not empty
         ch_reads_for_depths = ch_short_reads
             .map { meta, reads -> [[id: meta.id, group: meta.group], [short_reads: reads, long_reads: []]] }
             .mix(
