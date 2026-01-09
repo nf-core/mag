@@ -558,12 +558,12 @@ For each bin or refined bin the median sequencing depth is computed based on the
 
 ### Contig to bin map
 
-The pipeline also generates a 'contig to bin map' to help users explore track where each contig from a given assembly was assigned to which bin.
+The pipeline also generates a 'contig to bin map' to help users explore track where each contig from a given assembly was assigned to which bin (and refined bin).
 
 <details markdown="1">
 <summary>Output files</summary>
 - `GenomeBinning/contig_to_bin/`
-  - `contig_to_bin_map.tsv`: Tab-separated file with columns: assembly ID, contig_id, binner, and bin ID, for all contigs of all bins in the run.
+  - `contig_to_bin_map.tsv`: Tab-separated file with columns: assembly ID, contig_id, binner, and bin ID, for all contigs of all bins (and refined bins, if activated) in the run.
 </details>
 
 ### QC for metagenome assembled genomes with QUAST
