@@ -398,7 +398,7 @@ workflow MAG {
         // separate the contig files, use Nextflow splitFasta to extract header name
         // and add other metadata from the metamap into a string with a prefixed header
         // then use collectFile to save this as a tsv file.
-        ch_input_for_postbinning
+        ch_allcontig2binmap = ch_input_for_postbinning
             .transpose()
             .map { meta, binfile -> [meta + [bin_id: binfile.name], binfile] }
             .splitFasta(record: [header: true], elem: 1)
@@ -486,7 +486,7 @@ workflow MAG {
         }
 
         if (params.ancient_dna) {
-            BINNING_PYDAMAGE(ANCIENT_DNA_ASSEMBLY_VALIDATION.out.pydamage_results, ch_input_for_postbinning)
+            BINNING_PYDAMAGE(ANCIENT_DNA_ASSEMBLY_VALIDATION.out.pydamage_results, ch_allcontig2binmap)
             ch_versions = ch_versions.mix(BINNING_PYDAMAGE.out.versions)
             ch_summarisepydamage = BINNING_PYDAMAGE.out.tsv
         }
