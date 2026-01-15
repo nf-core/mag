@@ -418,12 +418,14 @@ nf-core/mag integrates an additional subworkflow to validate ancient DNA _de nov
 [Characteristic patterns of ancient DNA (aDNA) damage](<(https://doi.org/10.1073/pnas.0704665104)>), namely DNA fragmentation and cytosine deamination (observed as C-to-T transitions) are typically used to authenticate aDNA sequences.
 By identifying assembled contigs carrying typical aDNA damages using [PyDamage](https://github.com/maxibor/pydamage), nf-core/mag can report and distinguish ancient contigs from contigs carrying no aDNA damage.
 Furthermore, to mitigate the effect of aDNA damage on contig sequence assembly, [freebayes](https://github.com/freebayes/freebayes) in combination with [BCFtools](https://github.com/samtools/bcftools) are used to (re)call the variants from the reads aligned to the contigs, and (re)generate contig consensus sequences.
+
 Finally, when binning is activated, the pipeline will also run a custom script to generate bin-level pyDamage results, by taking per-contig pyDamage results and re-sort them into per-bin results and also making per-bin 'summaries' by averaging each value with a median.
 The latter median values will be including in the `bin_summary.tsv` results file and particularly useful to quickly assess whether a bin is likely to be ancient or not.
 
 :::warning
 It is highly recommended to run `--ancient_dna` mode with `--binning_map_mode` to `own` for reproduciblilty of the pyDamage results across runs and `-resume`, unless you _truly_ need co-binning.
 When using mapping modes of `group` or `all`, different BAM files will be possible used for damage estimation on each run or `-resume` and thus may differ.
+This may result in a different set or none of contigs being evaluated in pyDamage compared to the final bin.
 :::
 
 ## A note on coverage estimation
