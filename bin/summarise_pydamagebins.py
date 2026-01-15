@@ -57,10 +57,17 @@ def main(args=None):
     contig_to_bin_map = pd.read_csv(
         args.contig_to_bin_map,
         sep="\t",
-        names=["bin_id", "assembly_id", "binner", "reference"],
     )
-
+    contig_to_bin_map.rename(columns={"contig_id": "reference"}, inplace=True)
     contig_to_bin_map["assembly_id"] = contig_to_bin_map["assembly_id"].astype(str)
+
+    ## Repair contig names to match
+    ## Some tools remove everything after first space, so pyDamage has truncated headers vs. raw contigs
+    ## We strip this information from the raw contigs to meet at the simplest/lowest common denominator
+    contig_to_bin_map["reference"] = contig_to_bin_map.apply(
+        lambda row: (row["reference"].split(" ")[0]),
+        axis=1,
+    )
 
     ## Clean up pydamage reports
     pydamage_reports_dfs = []
