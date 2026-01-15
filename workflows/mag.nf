@@ -557,7 +557,7 @@ workflow MAG {
     //
     // Collate and save software versions
     //
-    def topic_versions = Channel
+    def topic_versions = channel
         .topic("versions")
         .distinct()
         .branch { entry ->
