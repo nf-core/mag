@@ -843,7 +843,7 @@ In cases where eukaryotic genomes are recovered in binning, [MetaEuk](https://gi
 <details markdown="1">
 <summary>Output files</summary>
 
-- `GenomeBinning/bin_summary.tsv`: Summary of bin sequencing depths together with BUSCO, CheckM, CheckM2, QUAST, CAT and GTDB-Tk results.
+- `GenomeBinning/bin_summary.tsv`: Summary of bin sequencing depths together with any BUSCO, CheckM, CheckM2, QUAST, CAT, GTDB-Tk, pyDamage results, when any activated.
 
 </details>
 
@@ -867,7 +867,7 @@ The output file in this directory is used as input for the dashboard [BIgMAG](ht
 
 ## Ancient DNA
 
-Optional, only running when parameter `-profile ancient_dna` is specified.
+These results files will only exist when the parameter `-profile ancient_dna` is specified.
 
 ### `PyDamage`
 
@@ -875,13 +875,20 @@ Optional, only running when parameter `-profile ancient_dna` is specified.
 
 <details markdown="1">
 <summary>Output files</summary>
-
 - `Ancient_DNA/pydamage/analyze`
   - `[assembler]_[sample/group]/[sample/group]_pydamage_results.csv`: PyDamage raw result tabular file in `.csv` format. Format described here: [pydamage.readthedocs.io/en/0.62/output.html](https://pydamage.readthedocs.io/en/0.62/output.html)
 - `Ancient_DNA/pydamage/filter`
   - `[assembler]_[sample/group]/[sample/group]_/pydamage_results.csv`: PyDamage filtered result tabular file in `.csv` format. Format described here: [pydamage.readthedocs.io/en/0.62/output.html](https://pydamage.readthedocs.io/en/0.62/output.html)
+- `GenomeBinning/QC/
+  - `contig_to_bin_map.tsv`: Mapping file describing which contig of each assembly is assigned to which bin
+  - `pydamage_bins_summary.tsv`: A summary of pyDamage results for each bin, derived from a median average of each pyDamage values across all contigs of a particular each bin
+  - `summarise_pydamagebins/[assembler]-[binner]-[sample/group]_pydamagebin_results.tsv`: A 'raw' `pydamage analyse` results format file but reorded to have the per-contig values grouped together for each given bin
 
 </details>
+
+:::note
+If `--binning_map_mode` is set to `group` or `all`, you may see variations in the output of pyDamage between runs or `-resume`, due to evaluation on different sets of BAM files.
+:::
 
 ### `variant_calling`
 
@@ -899,7 +906,7 @@ Because of aDNA damage, _de novo_ assemblers sometimes struggle to call a correc
 
 </details>
 
-### MultiQC
+## MultiQC
 
 <details markdown="1">
 <summary>Output files</summary>

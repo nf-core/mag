@@ -1,0 +1,52 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "binning_pydamage"
+description: Summarising PyDamage results but at binned contigs level
+keywords:
+  - binning
+  - pydamage
+  - ancient DNA
+  - statistics
+  - damage
+components:
+  - pydamage_summary
+input:
+  - ch_contig_pydamage_results:
+      description: Output TSV files from pydamage summarise
+      structure:
+        - fasta:
+            type: file
+            description: List of pyDamage summarise result TSV files to be resorted to bins
+            pattern: "*.tsv"
+            ontologies:
+              - edam: http://edamontology.org/format_3475 # TSV
+  - ch_input_for_postbinning:
+      description: Binned contigs in FASTA file format
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - fasta:
+            type: file
+            description: Binned contigs in FASTA file format
+            pattern: "*.{fasta,fa}"
+output:
+  - tsv:
+      description: Median summarised pyDamage results at the bin level for adding to `bin_summary.tsv` table
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - assembly:
+            type: file
+            description: Median summarised pyDamage results at the bin level for adding to `bin_summary.tsv` table
+            pattern: "*.tsv"
+            ontologies:
+              - edam: http://edamontology.org/format_3475 # TSV
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@jfy133"
+maintainers:
+  - "@jfy133"

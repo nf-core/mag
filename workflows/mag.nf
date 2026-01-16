@@ -25,6 +25,7 @@ include { LONGREAD_PREPROCESSING          } from '../subworkflows/local/preproce
 include { SHORTREAD_PREPROCESSING         } from '../subworkflows/local/preprocessing_shortread/main'
 include { ASSEMBLY                        } from '../subworkflows/local/assembly/main'
 include { CATPACK                         } from '../subworkflows/local/catpack/main'
+include { BINNING_PYDAMAGE                } from '../subworkflows/local/binning_pydamage/main'
 
 //
 // MODULE: Installed directly from nf-core/modules
@@ -397,7 +398,7 @@ workflow MAG {
         // separate the contig files, use Nextflow splitFasta to extract header name
         // and add other metadata from the metamap into a string with a prefixed header
         // then use collectFile to save this as a tsv file.
-        ch_input_for_postbinning
+        ch_allcontig2binmap = ch_input_for_postbinning
             .transpose()
             .map { meta, binfile -> [meta + [bin_id: binfile.name], binfile] }
             .splitFasta(record: [header: true], elem: 1)
@@ -483,6 +484,16 @@ workflow MAG {
         else {
             ch_gtdbtk_summary = channel.empty()
         }
+
+        if (params.ancient_dna) {
+            BINNING_PYDAMAGE(ANCIENT_DNA_ASSEMBLY_VALIDATION.out.pydamage_results, ch_allcontig2binmap)
+            ch_versions = ch_versions.mix(BINNING_PYDAMAGE.out.versions)
+            ch_summarisepydamage = BINNING_PYDAMAGE.out.tsv
+        }
+        else {
+            ch_summarisepydamage = channel.empty()
+        }
+
         if ((!params.skip_binqc) || !params.skip_quast || !params.skip_gtdbtk) {
             BIN_SUMMARY(
                 ch_input_for_binsummary,
@@ -492,6 +503,7 @@ workflow MAG {
                 ch_busco_summary.ifEmpty([]),
                 ch_checkm_summary.ifEmpty([]),
                 ch_checkm2_summary.ifEmpty([]),
+                ch_summarisepydamage.ifEmpty([]),
             )
             ch_versions = ch_versions.mix(BIN_SUMMARY.out.versions)
         }
@@ -545,7 +557,8 @@ workflow MAG {
     //
     // Collate and save software versions
     //
-    def topic_versions = channel.topic("versions")
+    def topic_versions = channel
+        .topic("versions")
         .distinct()
         .branch { entry ->
             versions_file: entry instanceof Path
