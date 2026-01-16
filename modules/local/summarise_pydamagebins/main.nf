@@ -23,7 +23,7 @@ process SUMMARISE_PYDAMAGEBINS {
     """
     summarise_pydamagebins.py \\
         ${args} \\
-        --contig_to_bin_map ${contig_to_bin_map} \\
+        --contig-to-bin-map ${contig_to_bin_map} \\
         --output pydamage_bins_summary.tsv \\
         --verbose \\
         ${pydamage_reports.join(' ')}

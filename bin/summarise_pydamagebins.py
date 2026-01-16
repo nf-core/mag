@@ -15,7 +15,7 @@ def parse_args(args=None):
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "-c",
-        "--contig_to_bin_map",
+        "--contig-to-bin-map",
         required=True,
         metavar="FILE",
         help="Input file of tab-separated list of <bin_id>\t<contig_id> mappings.",
@@ -64,7 +64,9 @@ def main(args=None):
     ## Repair contig names to match
     ## Some tools remove everything after first space, so pyDamage has truncated headers vs. raw contigs
     ## We strip this information from the raw contigs to meet at the simplest/lowest common denominator
-    contig_to_bin_map["reference"] = contig_to_bin_map["reference"].str.extract("([^ ]+)")
+    contig_to_bin_map["reference"] = contig_to_bin_map["reference"].str.extract(
+        "([^ ]+)"
+    )
 
     ## Clean up pydamage reports
     pydamage_reports_dfs = []
