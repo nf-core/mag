@@ -15,13 +15,11 @@ workflow BINNING_PYDAMAGE {
     // DOWNSTREAM: Final emitted TSV is then used in `mag.nf` to bind to final `bin_summary.tsv` table
 
     ch_collected_pydamage_results = ch_contig_pydamage_results
-        .dump(tag: 'ch_contig_pydamage_results')
         .map { _meta, pydamage_report -> pydamage_report }
         .toSortedList { pydamage_report ->
             // Sort based on filename only (not full path) as work directory path will be different each run
             file(pydamage_report).getBaseName()
         }
-        .dump(tag: 'ch_collected_pydamage_results')
 
     SUMMARISE_PYDAMAGEBINS(ch_collected_pydamage_results, ch_contig2binmap)
     ch_versions = ch_versions.mix(SUMMARISE_PYDAMAGEBINS.out.versions)

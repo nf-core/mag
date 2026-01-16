@@ -28,7 +28,7 @@ input:
         - fasta:
             type: file
             description: Binned contigs in FASTA file format
-            pattern: "*.{fasta,fa}  "
+            pattern: "*.{fasta,fa}"
 output:
   - tsv:
       description: Median summarised pyDamage results at the bin level for adding to `bin_summary.tsv` table
