@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
+- [#962](https://github.com/nf-core/mag/pull/962) - MetaBinner/SemiBin2 are included during bin refinement with DASTool. (by @AlexHoratio)
+
 ### `Dependencies`
 
 | Tool | Previous version | New version |
