@@ -268,22 +268,22 @@ workflow MAG {
         ch_versions = ch_versions.mix(ANCIENT_DNA_ASSEMBLY_VALIDATION.out.versions)
     }
 
-      /*
+    /*
     ================================================================================
                                         ALE
     ================================================================================
     */
 
-    if(!params.skip_ale) {
-        ch_shortread_assemblies_for_ale = ch_assemblies.filter { meta, assembly ->
-                meta.assembler?.toUpperCase() in ['SPADES', 'SPADESHYBRID', 'MEGAHIT']
+    if (!params.skip_ale) {
+        ch_shortread_assemblies_for_ale = ch_assemblies.filter { meta, _assembly ->
+            meta.assembler?.toUpperCase() in ['SPADES', 'SPADESHYBRID', 'MEGAHIT']
         }
 
         ch_ale_input = BINNING_PREPARATION.out.grouped_mappings
             .join(ch_shortread_assemblies_for_ale, by: 0)
-            .map { meta, contigs, bam, bai, assembly ->
-                def actual_bam = bam instanceof List ? bam[0] : bam
-                [meta, assembly, actual_bam]
+            .map { meta, _contigs, bam, _bai, assembly ->
+                def bam_file = bam instanceof List ? bam[0] : bam
+                [meta, assembly, bam_file]
             }
 
         ALE(ch_ale_input)
@@ -580,8 +580,7 @@ workflow MAG {
     //
     // Collate and save software versions
     //
-    def topic_versions = channel
-        .topic("versions")
+    def topic_versions = channel.topic("versions")
         .distinct()
         .branch { entry ->
             versions_file: entry instanceof Path
