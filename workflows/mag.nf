@@ -276,7 +276,7 @@ workflow MAG {
 
     if (!params.skip_ale) {
         ch_shortread_assemblies_for_ale = ch_assemblies.filter { meta, _assembly ->
-            meta.assembler?.toUpperCase() in ['SPADES', 'SPADESHYBRID', 'MEGAHIT']
+            meta.sr_platform != null && meta.sr_platform != []
         }
 
         ch_ale_input = BINNING_PREPARATION.out.grouped_mappings
