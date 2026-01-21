@@ -2,14 +2,11 @@
  * Binning with MetaBAT2 and MaxBin2
  */
 
-include { DASTOOL_FASTATOCONTIG2BIN as DASTOOL_FASTATOCONTIG2BIN_METABAT2 } from '../../../modules/nf-core/dastool/fastatocontig2bin/main.nf'
-include { DASTOOL_FASTATOCONTIG2BIN as DASTOOL_FASTATOCONTIG2BIN_MAXBIN2  } from '../../../modules/nf-core/dastool/fastatocontig2bin/main.nf'
-include { DASTOOL_FASTATOCONTIG2BIN as DASTOOL_FASTATOCONTIG2BIN_CONCOCT  } from '../../../modules/nf-core/dastool/fastatocontig2bin/main.nf'
-include { DASTOOL_FASTATOCONTIG2BIN as DASTOOL_FASTATOCONTIG2BIN_COMEBIN  } from '../../../modules/nf-core/dastool/fastatocontig2bin/main.nf'
-include { DASTOOL_DASTOOL                                                 } from '../../../modules/nf-core/dastool/dastool/main.nf'
+include { DASTOOL_FASTATOCONTIG2BIN as DASTOOL_FASTATOCONTIG2BIN } from '../../../modules/nf-core/dastool/fastatocontig2bin/main.nf'
+include { DASTOOL_DASTOOL                                        } from '../../../modules/nf-core/dastool/dastool/main.nf'
 
-include { RENAME_PREDASTOOL                                               } from '../../../modules/local/dastool_rename_pre/main'
-include { RENAME_POSTDASTOOL                                              } from '../../../modules/local/dastool_rename_post/main'
+include { RENAME_PREDASTOOL                                      } from '../../../modules/local/dastool_rename_pre/main'
+include { RENAME_POSTDASTOOL                                     } from '../../../modules/local/dastool_rename_post/main'
 
 /*
  * Get number of columns in file (first line)
@@ -18,7 +15,7 @@ include { RENAME_POSTDASTOOL                                              } from
 workflow BINNING_REFINEMENT {
     take:
     ch_contigs_for_dastool // [val(meta), path(contigs)]
-    ch_in_bins             // [val(meta), path(bins)]
+    ch_in_bins // [val(meta), path(bins)]
 
     main:
     ch_versions = channel.empty()
@@ -36,36 +33,21 @@ workflow BINNING_REFINEMENT {
         }
 
     // prepare bins
-    ch_bins_for_fastatocontig2bin = RENAME_PREDASTOOL(ch_bins).renamed_bins.branch { meta, _bin ->
-        metabat2: meta.binner == 'MetaBAT2'
-        maxbin2: meta.binner == 'MaxBin2'
-        concoct: meta.binner == 'CONCOCT'
-        comebin: meta.binner == 'COMEBin'
-    }
+    RENAME_PREDASTOOL(ch_bins)
+    ch_bins_for_fastatocontig2bin = RENAME_PREDASTOOL.out.renamed_bins
+        .transpose()
+        .multiMap { meta, bin ->
+            bins: [meta, bin]
+            ext: bin.extension
+        }
     ch_versions = ch_versions.mix(RENAME_PREDASTOOL.out.versions)
 
+    // Generate DAS Tool auxilary files
+    DASTOOL_FASTATOCONTIG2BIN(ch_bins_for_fastatocontig2bin.bins, ch_bins_for_fastatocontig2bin.ext)
+    ch_versions = ch_versions.mix(DASTOOL_FASTATOCONTIG2BIN.out.versions)
 
-    // Generate DASTool auxilary files
-    DASTOOL_FASTATOCONTIG2BIN_METABAT2(ch_bins_for_fastatocontig2bin.metabat2, "fa")
-    ch_versions = ch_versions.mix(DASTOOL_FASTATOCONTIG2BIN_METABAT2.out.versions)
-
-    // MaxBin2 bin extension was changed to 'fa' as well in RENAME_PREDASTOOL
-    DASTOOL_FASTATOCONTIG2BIN_MAXBIN2(ch_bins_for_fastatocontig2bin.maxbin2, "fa")
-    ch_versions = ch_versions.mix(DASTOOL_FASTATOCONTIG2BIN_MAXBIN2.out.versions)
-
-    DASTOOL_FASTATOCONTIG2BIN_CONCOCT(ch_bins_for_fastatocontig2bin.concoct, "fa")
-    ch_versions = ch_versions.mix(DASTOOL_FASTATOCONTIG2BIN_CONCOCT.out.versions)
-
-    DASTOOL_FASTATOCONTIG2BIN_COMEBIN(ch_bins_for_fastatocontig2bin.comebin, "fa")
-    ch_versions = ch_versions.mix(DASTOOL_FASTATOCONTIG2BIN_COMEBIN.out.versions)
-
-    // Run DASTOOL
-    ch_fastatocontig2bin_for_dastool = channel.empty()
-    ch_fastatocontig2bin_for_dastool = ch_fastatocontig2bin_for_dastool
-        .mix(DASTOOL_FASTATOCONTIG2BIN_METABAT2.out.fastatocontig2bin)
-        .mix(DASTOOL_FASTATOCONTIG2BIN_MAXBIN2.out.fastatocontig2bin)
-        .mix(DASTOOL_FASTATOCONTIG2BIN_CONCOCT.out.fastatocontig2bin)
-        .mix(DASTOOL_FASTATOCONTIG2BIN_COMEBIN.out.fastatocontig2bin)
+    // Run DAS Tool
+    ch_fastatocontig2bin_for_dastool = DASTOOL_FASTATOCONTIG2BIN.out.fastatocontig2bin
         .map { meta, fastatocontig2bin ->
             def meta_new = meta - meta.subMap('binner')
             [meta_new, fastatocontig2bin]
@@ -73,19 +55,17 @@ workflow BINNING_REFINEMENT {
         .groupTuple(by: 0)
 
     // Note: do not `failOnMismatch` on join here, in some cases e.g. MAXBIN2 will fail if no bins, so cannot join!
-    // Only want to join for DAS_Tool on bins that 'exist'
-
+    // Only want to join for DAS Tool on bins that 'exist'
     ch_input_for_dastool = ch_contigs_for_dastool
         .join(ch_fastatocontig2bin_for_dastool, by: 0)
         .map { meta, contigs, bins -> [meta, contigs, bins, []] }
 
-
-    // Run DAStool
+    // Run DAS Tool
     DASTOOL_DASTOOL(ch_input_for_dastool, [])
     ch_versions = ch_versions.mix(DASTOOL_DASTOOL.out.versions)
 
     // Prepare bins for downstream analysis (separate from unbins, add 'binner' info and group)
-    // use DASTool as 'binner' info allowing according grouping of refined bin sets,
+    // use DAS Tool as 'binner' info allowing according grouping of refined bin sets,
     // while keeping information about original binning method in filenames and used binnames, e.g. "*-MaxBin2Refined-*.fa"
     // (alternatively one could think of adding, for example, meta.orig_binner, if this would simplify code)
     ch_dastool_bins_newmeta = DASTOOL_DASTOOL.out.bins
