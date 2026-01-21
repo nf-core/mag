@@ -304,7 +304,7 @@ SPAdesHybrid is a part of the [SPAdes](http://cab.spbu.ru/software/spades/) soft
 
 [ALE (Assembly Likelihood Estimator)](https://github.com/sc932/ALE) is a probabilistic framework that evaluates assembly quality by computing the likelihood of the sequencing reads given an assembly. ALE provides per-contig quality scores and identifies potentially problematic regions in assemblies by analyzing read mapping patterns and insert size distributions. It is particularly useful for comparing assemblies and identifying misassemblies or low-confidence regions.
 
-ALE is run on short-read assemblies (SPAdes, SPAdes hybrid, and MEGAHIT) when binning or ancient DNA analysis is enabled.
+ALE can run only on assemblies generated from short reads, like SPAdes and MEGAHIT. Hybrid assembly with SPAdesHybrid uses only the short-read component for ALE scoring.
 
 <details markdown="1">
 <summary>Output files</summary>
