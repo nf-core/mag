@@ -281,9 +281,13 @@ workflow MAG {
 
         ch_ale_input = BINNING_PREPARATION.out.grouped_mappings
             .join(ch_shortread_assemblies_for_ale, by: 0)
-            .map { meta, _contigs, bam, _bai, assembly ->
-                def bam_file = bam instanceof List ? bam[0] : bam
-                [meta, assembly, bam_file]
+            .map { meta, _contigs, bams, _bais, assembly ->
+                // Try to find the BAM where reads came from the same sample as the assembly (co-binning may include multiple BAMs)
+                // If none matches (coassembly), take the first one after sorting for determinism
+                def own_bam = bams.find { bam -> bam.name.endsWith("-${meta.id}.bam") }
+                def bam = own_bam ?: bams.sort()[0]
+
+                [meta, assembly, bam]
             }
 
         ALE(ch_ale_input)
