@@ -21,7 +21,6 @@ run_modules:
   - bowtie2
   - busco
   - quast
-  - ale
   - prokka
   - porechop
   - filtlong
@@ -56,13 +55,6 @@ top_modules:
       info: "Mapping statistics of reads mapped against host genome and subsequently removed."
       path_filters:
         - "*_host_removed.bowtie2.log"
-  - "ale":
-      name: "ALE: Assembly Likelihood Evaluation"
-      info: "Log-likelihood evaluation of assemblies using mapped reads (ALE module)."
-      path_filters:
-        - "*_ALE/*.ale"
-        - "*_ALE/*.txt"
-        - "*_ALE/*.log"
   - "quast":
       name: "QUAST: assembly"
       info: "Assembly statistics of raw assemblies."
