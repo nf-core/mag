@@ -629,6 +629,10 @@
                     "type": "boolean",
                     "description": "Skip MEGAHIT assembly."
                 },
+                "skip_ale": {
+                    "type": "boolean",
+                    "description": "Skip ALE"
+                },
                 "skip_quast": {
                     "type": "boolean",
                     "description": "Skip metaQUAST."

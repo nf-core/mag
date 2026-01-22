@@ -260,6 +260,8 @@ To further assist in reproducibility, you can use share and reuse [parameter fil
 Additionally, to enable also reproducible results from the individual assembly tools this pipeline provides extra parameters. SPAdes is designed to be deterministic for a given number of threads. To generate reproducible results set the number of cpus with `--spades_fix_cpus` or `--spadeshybrid_fix_cpus`. This will overwrite the number of cpus specified in the `base.config` file and additionally ensure that it is not increased in case of retries for individual samples. MEGAHIT only generates reproducible results when run single-threaded.
 You can fix this by using the parameter `--megahit_fix_cpu_1`. In both cases, do not specify the number of cpus for these processes in additional custom config files, this would result in an error.
 
+Assembly quality is assessed using [ALE](https://github.com/sc932/ALE) for short-read assemblies only (MEGAHIT, SPAdes); long-read assemblies are excluded, and hybrid assemblies use only the short-read component for scoring.
+
 MetaBAT2 is run by default with a fixed seed within this pipeline, thus producing reproducible results.
 
 Using the BUSCO auto-lineage mode with an internet connection may lead to non-reproducible results, since the databases are frequently updated and automatic lineage selection depends on the version of the database used when running BUSCO.

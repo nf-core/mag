@@ -35,6 +35,7 @@ include { PRODIGAL                        } from '../modules/nf-core/prodigal/ma
 include { PROKKA                          } from '../modules/nf-core/prokka/main'
 include { MMSEQS_DATABASES                } from '../modules/nf-core/mmseqs/databases/main'
 include { METAEUK_EASYPREDICT             } from '../modules/nf-core/metaeuk/easypredict/main'
+include { ALE                             } from '../modules/nf-core/ale/main'
 
 //
 // MODULE: Local to the pipeline
@@ -246,7 +247,7 @@ workflow MAG {
     ================================================================================
     */
 
-    if (!params.skip_binning || params.ancient_dna) {
+    if (!params.skip_binning || params.ancient_dna || !params.skip_ale) {
         BINNING_PREPARATION(
             ch_shortread_assemblies,
             ch_short_reads,
@@ -265,6 +266,32 @@ workflow MAG {
     if (params.ancient_dna) {
         ANCIENT_DNA_ASSEMBLY_VALIDATION(BINNING_PREPARATION.out.grouped_mappings)
         ch_versions = ch_versions.mix(ANCIENT_DNA_ASSEMBLY_VALIDATION.out.versions)
+    }
+
+    /*
+    ================================================================================
+                                        ALE
+    ================================================================================
+    */
+
+    if (!params.skip_ale) {
+        ch_shortread_assemblies_for_ale = ch_assemblies.filter { meta, _assembly ->
+            meta.sr_platform != null && meta.sr_platform != []
+        }
+
+        ch_ale_input = BINNING_PREPARATION.out.grouped_mappings
+            .join(ch_shortread_assemblies_for_ale, by: 0)
+            .map { meta, _contigs, bams, _bais, assembly ->
+                // Try to find the BAM where reads came from the same sample as the assembly (co-binning may include multiple BAMs)
+                // If none matches (coassembly), take the first one after sorting for determinism
+                def own_bam = bams.find { bam -> bam.name.endsWith("-${meta.id}.bam") }
+                def bam = own_bam ?: bams.sort()[0]
+
+                [meta, assembly, bam]
+            }
+
+        ALE(ch_ale_input)
+        ch_versions = ch_versions.mix(ALE.out.versions.ifEmpty([]))
     }
 
     /*
@@ -557,8 +584,7 @@ workflow MAG {
     //
     // Collate and save software versions
     //
-    def topic_versions = channel
-        .topic("versions")
+    def topic_versions = channel.topic("versions")
         .distinct()
         .branch { entry ->
             versions_file: entry instanceof Path

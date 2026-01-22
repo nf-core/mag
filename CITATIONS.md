@@ -14,6 +14,10 @@
 
   > Schubert, M., Lindgreen, S., and Orlando, L. 2016. "AdapterRemoval v2: Rapid Adapter Trimming, Identification, and Read Merging." BMC Research Notes 9 (February): 88. doi: 10.1186/s13104-016-1900-2
 
+- [ALE](https://github.com/sc932/ALE)
+
+  > Clark, S. C., Egan, R., Frazier, P. I., & Wang, Z. (2013). ALE: a generic assembly likelihood evaluation framework for assessing the accuracy of genome and metagenome assemblies. Bioinformatics, 29(4), 435-443. doi: 10.1093/bioinformatics/bts723
+
 - [BBnorm/BBTools](http://sourceforge.net/projects/bbmap/)
 
 - [BCFtools](https://doi.org/10.1093/gigascience/giab008)
@@ -24,7 +28,7 @@
 
   > Langmead, B. and Salzberg, S. L. 2012 Fast gapped-read alignment with Bowtie 2. Nature methods, 9(4), p. 357–359. doi: 10.1038/nmeth.1923.
 
-- [Busco](https://doi.org/10.1007/978-1-4939-9173-0_14)
+- [BUSCO](https://doi.org/10.1007/978-1-4939-9173-0_14)
 
   > Seppey, M., Manni, M., & Zdobnov, E. M. (2019). BUSCO: assessing genome assembly and annotation completeness. In Gene prediction (pp. 227-245). Humana, New York, NY. doi: 10.1007/978-1-4939-9173-0_14.
 
