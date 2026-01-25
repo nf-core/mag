@@ -369,12 +369,12 @@
                     },
                     "utils_nfcore_pipeline": {
                         "branch": "master",
-                        "git_sha": "271e7fc14eb1320364416d996fb077421f3faed2",
+                        "git_sha": "65f5e638d901a51534c68fd5c1c19e8112fb4df1",
                         "installed_by": ["subworkflows"]
                     },
                     "utils_nfschema_plugin": {
                         "branch": "master",
-                        "git_sha": "e753770db613ce014b3c4bc94f6cba443427b726",
+                        "git_sha": "fdc08b8b1ae74f56686ce21f7ea11ad11990ce57",
                         "installed_by": ["subworkflows"]
                     }
                 }
