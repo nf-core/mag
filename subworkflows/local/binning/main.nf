@@ -87,7 +87,6 @@ workflow BINNING {
     // MetaBAT2
     if (!params.skip_metabat2) {
         METABAT2_METABAT2(ch_metabat2_input)
-        ch_versions = ch_versions.mix(METABAT2_METABAT2.out.versions)
 
         // before decompressing first have to separate and re-group due to limitation of GUNZIP module
         ch_bins_for_seqkit = ch_bins_for_seqkit.mix(METABAT2_METABAT2.out.fasta.transpose())
