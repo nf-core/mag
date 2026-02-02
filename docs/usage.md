@@ -260,6 +260,8 @@ To further assist in reproducibility, you can use share and reuse [parameter fil
 Additionally, to enable also reproducible results from the individual assembly tools this pipeline provides extra parameters. SPAdes is designed to be deterministic for a given number of threads. To generate reproducible results set the number of cpus with `--spades_fix_cpus` or `--spadeshybrid_fix_cpus`. This will overwrite the number of cpus specified in the `base.config` file and additionally ensure that it is not increased in case of retries for individual samples. MEGAHIT only generates reproducible results when run single-threaded.
 You can fix this by using the parameter `--megahit_fix_cpu_1`. In both cases, do not specify the number of cpus for these processes in additional custom config files, this would result in an error.
 
+Assembly quality is assessed using [ALE](https://github.com/sc932/ALE) for short-read assemblies only (MEGAHIT, SPAdes); long-read assemblies are excluded, and hybrid assemblies use only the short-read component for scoring.
+
 MetaBAT2 is run by default with a fixed seed within this pipeline, thus producing reproducible results.
 
 Using the BUSCO auto-lineage mode with an internet connection may lead to non-reproducible results, since the databases are frequently updated and automatic lineage selection depends on the version of the database used when running BUSCO.
@@ -413,9 +415,20 @@ NXF_OPTS='-Xms1g -Xmx4g'
 
 ## A note on the ancient DNA subworkflow
 
-nf-core/mag integrates an additional subworkflow to validate ancient DNA _de novo_ assembly:
+nf-core/mag integrates an additional subworkflow to validate ancient DNA _de novo_ assembly that is activated by the parameter `--ancient_dna`.
 
-[Characteristic patterns of ancient DNA (aDNA) damage](<(https://doi.org/10.1073/pnas.0704665104)>), namely DNA fragmentation and cytosine deamination (observed as C-to-T transitions) are typically used to authenticate aDNA sequences. By identifying assembled contigs carrying typical aDNA damages using [PyDamage](https://github.com/maxibor/pydamage), nf-core/mag can report and distinguish ancient contigs from contigs carrying no aDNA damage. Furthermore, to mitigate the effect of aDNA damage on contig sequence assembly, [freebayes](https://github.com/freebayes/freebayes) in combination with [BCFtools](https://github.com/samtools/bcftools) are used to (re)call the variants from the reads aligned to the contigs, and (re)generate contig consensus sequences.
+[Characteristic patterns of ancient DNA (aDNA) damage](<(https://doi.org/10.1073/pnas.0704665104)>), namely DNA fragmentation and cytosine deamination (observed as C-to-T transitions) are typically used to authenticate aDNA sequences.
+By identifying assembled contigs carrying typical aDNA damages using [PyDamage](https://github.com/maxibor/pydamage), nf-core/mag can report and distinguish ancient contigs from contigs carrying no aDNA damage.
+Furthermore, to mitigate the effect of aDNA damage on contig sequence assembly, [freebayes](https://github.com/freebayes/freebayes) in combination with [BCFtools](https://github.com/samtools/bcftools) are used to (re)call the variants from the reads aligned to the contigs, and (re)generate contig consensus sequences.
+
+Finally, when binning is activated, the pipeline will also run a custom script to generate bin-level pyDamage results, by taking per-contig pyDamage results and re-sort them into per-bin results and also making per-bin 'summaries' by averaging each value with a median.
+The latter median values will be including in the `bin_summary.tsv` results file and particularly useful to quickly assess whether a bin is likely to be ancient or not.
+
+:::warning
+It is highly recommended to run `--ancient_dna` mode with `--binning_map_mode` to `own` for reproduciblilty of the pyDamage results across runs and `-resume`, unless you _truly_ need co-binning.
+When using mapping modes of `group` or `all`, different BAM files will be possible used for damage estimation on each run or `-resume` and thus may differ.
+This may result in a different set or none of contigs being evaluated in pyDamage compared to the final bin.
+:::
 
 ## A note on coverage estimation
 

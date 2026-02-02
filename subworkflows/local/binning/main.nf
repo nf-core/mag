@@ -21,7 +21,7 @@ include { SPLIT_FASTA                                                           
 
 workflow BINNING {
     take:
-    ch_assemblies    // [val(meta), path(assembly), path(bams), path(bais)]
+    ch_assemblies // [val(meta), path(assembly), path(bams), path(bais)]
     val_bin_min_size // val(int)
     val_bin_max_size // val(int)
 
@@ -87,7 +87,6 @@ workflow BINNING {
     // MetaBAT2
     if (!params.skip_metabat2) {
         METABAT2_METABAT2(ch_metabat2_input)
-        ch_versions = ch_versions.mix(METABAT2_METABAT2.out.versions)
 
         // before decompressing first have to separate and re-group due to limitation of GUNZIP module
         ch_bins_for_seqkit = ch_bins_for_seqkit.mix(METABAT2_METABAT2.out.fasta.transpose())
@@ -130,11 +129,10 @@ workflow BINNING {
 
     // COMEBin
     if (!params.skip_comebin) {
-        ch_comebin_input = ch_assemblies
-            .map { meta, assembly, bams, _bais ->
-                def meta_new = meta + [binner: 'COMEBin']
-                [meta_new, assembly, bams]
-            }
+        ch_comebin_input = ch_assemblies.map { meta, assembly, bams, _bais ->
+            def meta_new = meta + [binner: 'COMEBin']
+            [meta_new, assembly, bams]
+        }
 
         COMEBIN_RUNCOMEBIN(ch_comebin_input)
         ch_versions = ch_versions.mix(COMEBIN_RUNCOMEBIN.out.versions)
@@ -146,26 +144,24 @@ workflow BINNING {
     // MetaBinner
     if (!params.skip_metabinner) {
         BINNING_METABINNER(
-            ch_metabat2_input
-                .map { meta, assembly, depths ->
-                    def meta_new = meta + [binner: 'MetaBinner']
-                    [meta_new, assembly, depths]
-                }
+            ch_metabat2_input.map { meta, assembly, depths ->
+                def meta_new = meta + [binner: 'MetaBinner']
+                [meta_new, assembly, depths]
+            }
         )
         ch_versions = ch_versions.mix(BINNING_METABINNER.out.versions)
 
-        ch_bins_for_seqkit = ch_bins_for_seqkit.mix( BINNING_METABINNER.out.bins.transpose() )
-        ch_binning_results_gzipped_final = ch_binning_results_gzipped_final.mix( BINNING_METABINNER.out.bins )
+        ch_bins_for_seqkit = ch_bins_for_seqkit.mix(BINNING_METABINNER.out.bins.transpose())
+        ch_binning_results_gzipped_final = ch_binning_results_gzipped_final.mix(BINNING_METABINNER.out.bins)
         ch_input_splitfasta = ch_input_splitfasta.mix(BINNING_METABINNER.out.unbinned)
     }
 
     // SemiBin2
     if (!params.skip_semibin) {
-        ch_semibin_input = ch_assemblies
-            .map { meta, assembly, bams, _bais ->
-                def meta_new = meta + [binner: 'SemiBin2']  + [sample_count: bams.size()]
-                [meta_new, assembly, bams]
-            }
+        ch_semibin_input = ch_assemblies.map { meta, assembly, bams, _bais ->
+            def meta_new = meta + [binner: 'SemiBin2'] + [sample_count: bams.size()]
+            [meta_new, assembly, bams]
+        }
 
         SEMIBIN_SINGLEEASYBIN(
             ch_semibin_input
@@ -173,14 +169,13 @@ workflow BINNING {
         ch_versions = ch_versions.mix(SEMIBIN_SINGLEEASYBIN.out.versions)
 
         // must remove the additional metadata because "workflow DEPTHS" channel combination is sensitive to any additional fields!
-        ch_semibin_bins = SEMIBIN_SINGLEEASYBIN.out.output_fasta
-            .map { meta, bins ->
-                def meta_new = meta - meta.subMap('sample_count')
-                [meta_new, bins]
-            }
+        ch_semibin_bins = SEMIBIN_SINGLEEASYBIN.out.output_fasta.map { meta, bins ->
+            def meta_new = meta - meta.subMap('sample_count')
+            [meta_new, bins]
+        }
 
-        ch_bins_for_seqkit = ch_bins_for_seqkit.mix( ch_semibin_bins.transpose() )
-        ch_binning_results_gzipped_final = ch_binning_results_gzipped_final.mix( ch_semibin_bins )
+        ch_bins_for_seqkit = ch_bins_for_seqkit.mix(ch_semibin_bins.transpose())
+        ch_binning_results_gzipped_final = ch_binning_results_gzipped_final.mix(ch_semibin_bins)
     }
 
     // group bins into per-sample process and not flood clusters with thousands of seqkit jobs
@@ -207,17 +202,18 @@ workflow BINNING {
     //
     ch_seqkitstats_results
         .map { _meta, stats -> stats.bin_total_length }
-        .collect().ifEmpty([])
+        .collect()
+        .ifEmpty([])
         .subscribe { stats ->
             def n_bins = stats.size()
-            def n_filtered_bins = stats.findAll { bin_size ->
-                bin_size >= val_bin_min_size && (val_bin_max_size ? bin_size <= val_bin_max_size : true)
-            }.size()
+            def n_filtered_bins = stats
+                .findAll { bin_size ->
+                    bin_size >= val_bin_min_size && (val_bin_max_size ? bin_size <= val_bin_max_size : true)
+                }
+                .size()
             if (n_bins > 0 && n_filtered_bins == 0) {
                 error(
-                    "[nf-core/mag] ERROR: no bins passed the bin size filter specified between " +
-                    "--bin_min_size ${val_bin_min_size} and " +
-                    "--bin_max_size ${val_bin_max_size}. Please adjust parameters."
+                    "[nf-core/mag] ERROR: no bins passed the bin size filter specified between " + "--bin_min_size ${val_bin_min_size} and " + "--bin_max_size ${val_bin_max_size}. Please adjust parameters."
                 )
             }
         }
@@ -247,12 +243,10 @@ workflow BINNING {
 
     GUNZIP_BINS(ch_final_bins_for_gunzip)
     ch_versions = ch_versions.mix(GUNZIP_BINS.out.versions)
-
     ch_binning_results_gunzipped = GUNZIP_BINS.out.gunzip.groupTuple(by: 0)
 
     GUNZIP_UNBINS(ch_split_fasta_results_transposed)
     ch_versions = ch_versions.mix(GUNZIP_UNBINS.out.versions)
-
     ch_splitfasta_results_gunzipped = GUNZIP_UNBINS.out.gunzip.groupTuple(by: 0)
 
     emit:

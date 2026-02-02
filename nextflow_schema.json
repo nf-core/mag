@@ -629,6 +629,10 @@
                     "type": "boolean",
                     "description": "Skip MEGAHIT assembly."
                 },
+                "skip_ale": {
+                    "type": "boolean",
+                    "description": "Skip ALE"
+                },
                 "skip_quast": {
                     "type": "boolean",
                     "description": "Skip metaQUAST."
@@ -999,6 +1003,10 @@
                     "default": 0.5,
                     "description": "Specify single-copy gene score threshold for bin refinement.",
                     "help_text": "Score threshold for single-copy gene selection algorithm to keep selecting bins, with a value ranging from 0-1.\n\nFor description of scoring algorithm, see: Sieber, Christian M. K., et al. 2018. Nature Microbiology 3 (7): 836\u201343. https://doi.org/10.1038/s41564-018-0171-1.\n\n> Modifies DAS Tool parameter --score_threshold\n"
+                },
+                "refine_bins_dastool_savecontig2bin": {
+                    "type": "boolean",
+                    "description": "Specify to save contig to bin maps used for bin refinement"
                 },
                 "postbinning_input": {
                     "type": "string",

@@ -300,6 +300,20 @@ SPAdesHybrid is a part of the [SPAdes](http://cab.spbu.ru/software/spades/) soft
 
 </details>
 
+### Assembly Quality Control with ALE
+
+[ALE (Assembly Likelihood Estimator)](https://github.com/sc932/ALE) is a probabilistic framework that evaluates assembly quality by computing the likelihood of the sequencing reads given an assembly. ALE provides per-contig quality scores and identifies potentially problematic regions in assemblies by analyzing read mapping patterns and insert size distributions. It is particularly useful for comparing assemblies and identifying misassemblies or low-confidence regions.
+
+ALE can run only on assemblies generated from short reads, like SPAdes and MEGAHIT. Hybrid assembly with SPAdesHybrid uses only the short reads for ALE scoring.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `Assembly/[assembler]/QC/[sample/group]/ALE/`
+  - `[sample]_ALEoutput.txt`: Per-contig ALE scores and quality metrics, including likelihood estimates for each contig
+
+</details>
+
 ## Gene prediction
 
 Protein-coding genes are predicted for each assembly.
@@ -518,12 +532,13 @@ DAS Tool will remove contigs from bins that do not pass additional filtering cri
   - `[assembler]-[sample/group].seqlength`: Tab-delimited file describing the length of each contig.
   - `bins/[assembler]-[binner]Refined-[sample/group].*.fa`: Refined bins in fasta format.
   - `unbinned/[assembler]-DASToolUnbinned-[sample/group].*.fa`: Unbinned contigs from bin refinement in fasta format.
+  - `fastatocontig2bin/[assembler]-[binner]Refined-[sample/group].*_contiglist.tsv`: DAS Tool compatible file describing which contig is to which bin going into bin refinement (only if `--refine_bins_dastool_savecontig2bin` is specified).
 
 </details>
 
 By default, only the raw bins (and unbinned contigs) from the actual binning methods, but not from the binning refinement with DAS Tool, will be used for downstream bin quality control, annotation and taxonomic classification. The parameter `--postbinning_input` can be used to change this behaviour.
 
-⚠️ Due to ability to perform downstream QC of both raw and refined bins in parallel (via `--postbinning_input)`, bin names in DAS Tools's `*_allBins.eval` file will include `Refined`. However for this particular file, they _actually_ refer to the 'raw' input bins. The pipeline renames the input files prior to running DASTool to ensure they can be disambiguated from the original bin files in the downstream QC steps.
+⚠️ Due to ability to perform downstream QC of both raw and refined bins in parallel (via `--postbinning_input`), bin names in DAS Tools's `*_allBins.eval` file will include `Refined`. However for this particular file, they _actually_ refer to the 'raw' input bins. The pipeline renames the input files prior to running DASTool to ensure they can be disambiguated from the original bin files in the downstream QC steps.
 
 ### Tiara
 
@@ -553,6 +568,16 @@ For each bin or refined bin the median sequencing depth is computed based on the
   - `bin_refined_depths_summary.tsv`: Summary of sequencing depths for refined bins for all samples, if refinement was performed. Depths are available for samples mapped against the corresponding assembly, i.e. according to the mapping strategy specified with `--binning_map_mode`. Only for short reads.
   - `[assembler]-[binner]-[sample/group]-binDepths.heatmap.png`: Clustered heatmap showing bin abundances of the assembly across samples. Bin depths are transformed to centered log-ratios and bins as well as samples are clustered by Euclidean distance. Again, sample depths are available according to the mapping strategy specified with `--binning_map_mode`. If a sample produces only a single bin, a heatmap will not be provided.
 
+</details>
+
+### Contig to bin map
+
+The pipeline also generates a 'contig to bin map' to help users explore track where each contig from a given assembly was assigned to which bin (and refined bin).
+
+<details markdown="1">
+<summary>Output files</summary>
+- `GenomeBinning/contig_to_bin/`
+  - `contig_to_bin_map.tsv`: Tab-separated file with columns: assembly ID, contig_id, binner, and bin ID, for all contigs of all bins (and refined bins, if activated) in the run.
 </details>
 
 ### QC for metagenome assembled genomes with QUAST
@@ -832,7 +857,7 @@ In cases where eukaryotic genomes are recovered in binning, [MetaEuk](https://gi
 <details markdown="1">
 <summary>Output files</summary>
 
-- `GenomeBinning/bin_summary.tsv`: Summary of bin sequencing depths together with BUSCO, CheckM, CheckM2, QUAST, CAT and GTDB-Tk results.
+- `GenomeBinning/bin_summary.tsv`: Summary of bin sequencing depths together with any BUSCO, CheckM, CheckM2, QUAST, CAT, GTDB-Tk, pyDamage results, when any activated.
 
 </details>
 
@@ -856,7 +881,7 @@ The output file in this directory is used as input for the dashboard [BIgMAG](ht
 
 ## Ancient DNA
 
-Optional, only running when parameter `-profile ancient_dna` is specified.
+These results files will only exist when the parameter `-profile ancient_dna` is specified.
 
 ### `PyDamage`
 
@@ -864,13 +889,20 @@ Optional, only running when parameter `-profile ancient_dna` is specified.
 
 <details markdown="1">
 <summary>Output files</summary>
-
 - `Ancient_DNA/pydamage/analyze`
   - `[assembler]_[sample/group]/[sample/group]_pydamage_results.csv`: PyDamage raw result tabular file in `.csv` format. Format described here: [pydamage.readthedocs.io/en/0.62/output.html](https://pydamage.readthedocs.io/en/0.62/output.html)
 - `Ancient_DNA/pydamage/filter`
   - `[assembler]_[sample/group]/[sample/group]_/pydamage_results.csv`: PyDamage filtered result tabular file in `.csv` format. Format described here: [pydamage.readthedocs.io/en/0.62/output.html](https://pydamage.readthedocs.io/en/0.62/output.html)
+- `GenomeBinning/QC/
+  - `contig_to_bin_map.tsv`: Mapping file describing which contig of each assembly is assigned to which bin
+  - `pydamage_bins_summary.tsv`: A summary of pyDamage results for each bin, derived from a median average of each pyDamage values across all contigs of a particular each bin
+  - `summarise_pydamagebins/[assembler]-[binner]-[sample/group]_pydamagebin_results.tsv`: A 'raw' `pydamage analyse` results format file but reorded to have the per-contig values grouped together for each given bin
 
 </details>
+
+:::note
+If `--binning_map_mode` is set to `group` or `all`, you may see variations in the output of pyDamage between runs or `-resume`, due to evaluation on different sets of BAM files.
+:::
 
 ### `variant_calling`
 
@@ -888,7 +920,7 @@ Because of aDNA damage, _de novo_ assemblers sometimes struggle to call a correc
 
 </details>
 
-### MultiQC
+## MultiQC
 
 <details markdown="1">
 <summary>Output files</summary>
