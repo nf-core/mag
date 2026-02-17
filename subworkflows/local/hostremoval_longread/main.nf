@@ -28,10 +28,8 @@ workflow LONGREAD_HOSTREMOVAL {
         .first()
     // makes sure to only use the host fasta if the long read channel is not empty
     ch_minimap2_index = MINIMAP2_HOST_INDEX(ch_host_fasta_for_build).index
-    ch_versions = ch_versions.mix(MINIMAP2_HOST_INDEX.out.versions)
 
     MINIMAP2_HOST_ALIGN(ch_reads, ch_minimap2_index, true, 'bai', false, false)
-    ch_minimap2_mapped = MINIMAP2_HOST_ALIGN.out.bam.map { meta, reads ->
         [meta, reads, []]
     }
     ch_versions = ch_versions.mix(MINIMAP2_HOST_ALIGN.out.versions)
