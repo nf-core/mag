@@ -12,7 +12,7 @@ include { SAMTOOLS_UNMAPPED as SAMTOOLS_HOSTREMOVED_UNMAPPED } from '../../../mo
 
 workflow LONGREAD_HOSTREMOVAL {
     take:
-    ch_reads      // [val(meta), path(fastq)]
+    ch_reads // [val(meta), path(fastq)]
     val_reference // path
 
     main:
@@ -30,9 +30,9 @@ workflow LONGREAD_HOSTREMOVAL {
     ch_minimap2_index = MINIMAP2_HOST_INDEX(ch_host_fasta_for_build).index
 
     MINIMAP2_HOST_ALIGN(ch_reads, ch_minimap2_index, true, 'bai', false, false)
+    ch_minimap2_mapped = MINIMAP2_HOST_ALIGN.out.bam.map { meta, reads ->
         [meta, reads, []]
     }
-    ch_versions = ch_versions.mix(MINIMAP2_HOST_ALIGN.out.versions)
 
     // Generate unmapped reads FASTQ for downstream taxprofiling
     SAMTOOLS_HOSTREMOVED_UNMAPPED(ch_minimap2_mapped)
