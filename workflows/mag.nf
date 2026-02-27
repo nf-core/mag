@@ -291,7 +291,7 @@ workflow MAG {
             }
 
         ALE(ch_ale_input)
-        ch_versions = ch_versions.mix(ALE.out.versions.ifEmpty([]))
+        ch_versions = ch_versions.mix(ALE.out.versions)
     }
 
     /*
