@@ -137,7 +137,7 @@
                     "python": "3.6.7"
                 },
                 "Workflow": {
-                    "nf-core/mag": "v5.4.0"
+                    "nf-core/mag": "v5.5.0dev"
                 }
             }
         ],
