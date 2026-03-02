@@ -543,7 +543,7 @@
                     "type": "number",
                     "default": 50,
                     "description": "Min. bin completeness (in %) required to apply GTDB-tk classification.",
-                    "help_text": "Completeness assessed with any of the bin QC tools (BUSCO, CheckM, CheckM2). The maximum completeness value across all available QC tools is used for filtering. Must be greater than 0 (min. 0.01) to avoid GTDB-tk errors. If too low, GTDB-tk classification results can be impaired due to not enough marker genes!",
+                    "help_text": "Completeness assessed with any of the bin QC tools (BUSCO, CheckM, CheckM2). A bin passes if at least one QC tool reports completeness at or above the threshold. Must be greater than 0 (min. 0.01) to avoid GTDB-tk errors. If too low, GTDB-tk classification results can be impaired due to not enough marker genes!",
                     "minimum": 0.01,
                     "maximum": 100
                 },
@@ -551,7 +551,7 @@
                     "type": "number",
                     "default": 10,
                     "description": "Max. bin contamination (in %) allowed to apply GTDB-tk classification.",
-                    "help_text": "Contamination assessed with any of the bin QC tools (BUSCO, CheckM, CheckM2). The minimum contamination value across all available QC tools is used for filtering. If too high, GTDB-tk classification results can be impaired due to contamination!",
+                    "help_text": "Contamination assessed with any of the bin QC tools (BUSCO, CheckM, CheckM2). A bin passes if at least one QC tool reports contamination at or below the threshold. If too high, GTDB-tk classification results can be impaired due to contamination!",
                     "minimum": 0,
                     "maximum": 100
                 },
