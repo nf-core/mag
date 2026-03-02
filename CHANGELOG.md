@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
+- [#984](https://github.com/nf-core/mag/pull/984) - Fix docs regarding usage of Bin QC tool scores when filtering bins for post-processing (by @dialvarezs, @claude)
+
 ### `Dependencies`
 
 | Tool | Previous version | New version |
