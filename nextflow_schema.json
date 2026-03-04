@@ -578,7 +578,7 @@
                 "gtdbtk_pplacer_useram": {
                     "type": "boolean",
                     "description": "Speed up pplacer step of GTDB-Tk by loading to memory.",
-                    "help_text": "Will be faster than writing to disk (default setting), however at the expense of much larger memory (RAM) requirements for GDTBTK/CLASSIFY."
+                    "help_text": "Will be faster than writing to disk (default setting), however at the expense of much larger memory (RAM) requirements for GTDBTK/CLASSIFY."
                 },
                 "gtdbtk_use_full_tree": {
                     "type": "boolean",
@@ -608,7 +608,7 @@
                 "spades_downstreaminput": {
                     "type": "string",
                     "description": "Specify whether to use contigs or scaffolds assembled by SPAdes",
-                    "help_text": "Be default the SPAdes documentation recommends using scaffolds rather than contigs, as these are longer as they combine multiple contigs. However there is an increased risk of misassemblies or chimeras. Use this flag to specify to just use contigs for downstream processes such as binning.",
+                    "help_text": "By default the SPAdes documentation recommends using scaffolds rather than contigs, as these are longer as they combine multiple contigs. However there is an increased risk of misassemblies or chimeras. Use this flag to specify to just use contigs for downstream processes such as binning.",
                     "enum": ["scaffolds", "contigs"],
                     "default": "scaffolds"
                 },
@@ -832,13 +832,13 @@
                     "type": "integer",
                     "default": 1000000,
                     "description": "Minimal length of contigs that are not part of any bin but treated as individual genome.",
-                    "help_text": "Contigs that do not fulfill the thresholds of `--min_length_unbinned_contigs` and `--max_unbinned_contigs` are pooled for downstream analysis and reporting, except contigs that also do not fullfill `--min_contig_size` are not considered further."
+                    "help_text": "Contigs that do not fulfill the thresholds of `--min_length_unbinned_contigs` and `--max_unbinned_contigs` are pooled for downstream analysis and reporting, except contigs that also do not fulfill `--min_contig_size` are not considered further."
                 },
                 "max_unbinned_contigs": {
                     "type": "integer",
                     "default": 100,
                     "description": "Maximal number of contigs that are not part of any bin but treated as individual genome.",
-                    "help_text": "Contigs that do not fulfill the thresholds of `--min_length_unbinned_contigs` and `--max_unbinned_contigs` are pooled for downstream analysis and reporting, except contigs that also do not fullfill `--min_contig_size` are not considered further."
+                    "help_text": "Contigs that do not fulfill the thresholds of `--min_length_unbinned_contigs` and `--max_unbinned_contigs` are pooled for downstream analysis and reporting, except contigs that also do not fulfill `--min_contig_size` are not considered further."
                 },
                 "bin_min_size": {
                     "type": "integer",
@@ -942,7 +942,7 @@
                 "busco_db_lineage": {
                     "type": "string",
                     "description": "Name of the BUSCO *_odb10 or *_odb12 lineage to check against. Additionally supports 'auto', 'auto_prok' and 'auto_euk' for automatic lineage selection mode.",
-                    "help_text": "Typically used in combination with `--busco_db`, corresponding to the lineage files supplied within the `--busco_db` file or directroy.\n\nIf supplying without a `--busco_db`, will require an internet connection to work!",
+                    "help_text": "Typically used in combination with `--busco_db`, corresponding to the lineage files supplied within the `--busco_db` file or directory.\n\nIf supplying without a `--busco_db`, will require an internet connection to work!",
                     "pattern": "(.*_odb(10|12))|auto(_prok|_euk)?$",
                     "default": "auto"
                 },
@@ -1051,7 +1051,7 @@
             "properties": {
                 "ancient_dna": {
                     "type": "boolean",
-                    "description": "Turn on/off the ancient DNA subworfklow"
+                    "description": "Turn on/off the ancient DNA subworkflow"
                 },
                 "pydamage_accuracy": {
                     "type": "number",

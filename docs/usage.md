@@ -87,7 +87,7 @@ A common strategy is to assemble each sample individually (single assembly) and 
 This is usually chosen since assembly is a computationally intensive process, it is very costly to assemble all samples together.
 For binning, however, resources aren't as limiting, and binning algorithms can leverage the fact that there are multiple samples from which to draw information, which can improve the quality of output bins.
 
-nf-core/mag, by default, follows this approach: the group information from the input sample sheet in is only used to compute co-abundances for the binning step (co-binning), but not for group-wise co-assembly (thus single assembly).
+nf-core/mag, by default, follows this approach: the group information from the input sample sheet is only used to compute co-abundances for the binning step (co-binning), but not for group-wise co-assembly (thus single assembly).
 That means that if you define one group for all of your samples, they will be assembled individually, and then binned in a pooled fashion, with samples being mapped to all contigs of all other samples.
 
 If you'd like to also _assemble_ your samples in a pooled fashion (co-assembly), see the parameter docs for [`--coassemble_group`](https://nf-co.re/mag/parameters#coassemble_group) and [`--binning_map_mode`](https://nf-co.re/mag/parameters#binning_map_mode).
@@ -131,7 +131,7 @@ group-1,1,MEGAHIT,MEGAHIT-group-1.contigs.fa.gz
 group-1,1,SPAdes,SPAdes-group-1.contigs.fasta.gz
 ```
 
-When supplying pre-computed assemblies, reads **must** also be provided in the CSV input format to `--input`, and should be the reads used to build the assemblies, i.e., adapter-removed, run-merged etc.. Preprocessing steps will not be ran on raw reads when pre-computed assemblies are supplied. As long reads are only used for assembly, any long read fastq files listed in the reads CSV are ignored.
+When supplying pre-computed assemblies, reads **must** also be provided in the CSV input format to `--input`, and should be the reads used to build the assemblies, i.e., adapter-removed, run-merged etc. Preprocessing steps will not be run on raw reads when pre-computed assemblies are supplied. As long reads are only used for assembly, any long read fastq files listed in the reads CSV are ignored.
 
 ### Databases
 
@@ -268,7 +268,7 @@ Using the BUSCO auto-lineage mode with an internet connection may lead to non-re
 Therefore, we strongly recommend downloading the required lineage datasets in advance and specifying the lineage to check against.
 To ensure reproducibility when using auto-lineage mode, download `all` lineages (see [Databases](#databases)) and provide the download path to `--busco_db`. This will enable offline mode and produce consistent results across runs.
 
-For the taxonomic bin classification with [CAT](https://github.com/dutilh/CAT), when running the pipeline with `--cat_db_generate` the parameter `--save_cat_db` can be used to also save the generated database to allow reproducibility in future runs. Note that when specifying a pre-built database with `--cat_db`, currently the database can not be saved.
+For the taxonomic bin classification with [CAT](https://github.com/dutilh/CAT), when running the pipeline with `--cat_db_generate` the parameter `--save_cat_db` can be used to also save the generated database to allow reproducibility in future runs. Note that when specifying a pre-built database with `--cat_db`, currently the database cannot be saved.
 
 The taxonomic classification of bins with GTDB-Tk is not guaranteed to be reproducible, since the placement of bins in the reference tree is non-deterministic. However, the authors of the GTDB-Tk article examined the reproducibility on a set of 100 genomes across 50 trials and did not observe any difference (see [https://doi.org/10.1093/bioinformatics/btz848](https://doi.org/10.1093/bioinformatics/btz848)).
 
@@ -424,11 +424,11 @@ By identifying assembled contigs carrying typical aDNA damages using [PyDamage](
 Furthermore, to mitigate the effect of aDNA damage on contig sequence assembly, [freebayes](https://github.com/freebayes/freebayes) in combination with [BCFtools](https://github.com/samtools/bcftools) are used to (re)call the variants from the reads aligned to the contigs, and (re)generate contig consensus sequences.
 
 Finally, when binning is activated, the pipeline will also run a custom script to generate bin-level pyDamage results, by taking per-contig pyDamage results and re-sort them into per-bin results and also making per-bin 'summaries' by averaging each value with a median.
-The latter median values will be including in the `bin_summary.tsv` results file and particularly useful to quickly assess whether a bin is likely to be ancient or not.
+The latter median values will be included in the `bin_summary.tsv` results file and particularly useful to quickly assess whether a bin is likely to be ancient or not.
 
 :::warning
-It is highly recommended to run `--ancient_dna` mode with `--binning_map_mode` to `own` for reproduciblilty of the pyDamage results across runs and `-resume`, unless you _truly_ need co-binning.
-When using mapping modes of `group` or `all`, different BAM files will be possible used for damage estimation on each run or `-resume` and thus may differ.
+It is highly recommended to run `--ancient_dna` mode with `--binning_map_mode` set to `own` for reproducibility of the pyDamage results across runs and `-resume`, unless you _truly_ need co-binning.
+When using mapping modes of `group` or `all`, different BAM files may be used for damage estimation on each run or `-resume` and thus may differ.
 This may result in a different set or none of contigs being evaluated in pyDamage compared to the final bin.
 :::
 
