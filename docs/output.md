@@ -11,7 +11,6 @@ The directories listed below will be created in the results directory after the 
 The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
 
 - [Quality control](#quality-control) of input reads - trimming and contaminant removal
-- [Taxonomic classification of trimmed reads](#taxonomic-classification-of-trimmed-reads)
 - [Digital sequencing normalisation](#digital-normalization-with-BBnorm)
 - [Assembly](#assembly) of trimmed reads
 - [Protein-coding gene prediction](#gene-prediction) of assemblies
