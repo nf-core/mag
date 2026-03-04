@@ -5,7 +5,7 @@ include { SPADES as METASPADES } from '../../../modules/nf-core/spades/main'
 workflow SHORTREAD_ASSEMBLY {
     take:
     ch_short_reads_grouped // [val(meta), path(fastq1), path(fastq2)] (mandatory)
-    ch_short_reads_spades  // [val(meta), path(fastq1)]               (mandatory)
+    ch_short_reads_spades // [val(meta), path(fastq1)]               (mandatory)
 
     main:
     ch_versions = channel.empty()
@@ -13,7 +13,7 @@ workflow SHORTREAD_ASSEMBLY {
 
     if (!params.single_end && !params.skip_spades) {
         METASPADES(ch_short_reads_spades.map { meta, reads -> [meta, reads, [], []] }, [], [])
-        ch_spades_assemblies = METASPADES.out.scaffolds.map { meta, assembly ->
+        ch_spades_assemblies = (params.spades_downstreaminput == 'contigs' ? METASPADES.out.contigs : METASPADES.out.scaffolds).map { meta, assembly ->
             def meta_new = meta + [assembler: 'SPAdes']
             [meta_new, assembly]
         }
