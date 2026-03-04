@@ -889,9 +889,9 @@ These results files will only exist when the parameter `-profile ancient_dna` is
 <details markdown="1">
 <summary>Output files</summary>
 - `Ancient_DNA/pydamage/analyze`
-  - `[assembler]_[sample/group]/[sample/group]_pydamage_results.csv`: PyDamage raw result tabular file in `.csv` format. Format described here: [pydamage.readthedocs.io/en/0.62/output.html](https://pydamage.readthedocs.io/en/0.62/output.html)
+  - `[assembler]-[sample/group]/[assembler]-[sample/group]_pydamage_results.csv`: PyDamage raw result tabular file in `.csv` format. Format described here: [pydamage.readthedocs.io/en/0.62/output.html](https://pydamage.readthedocs.io/en/0.62/output.html)
 - `Ancient_DNA/pydamage/filter`
-  - `[assembler]_[sample/group]/[sample/group]_/pydamage_results.csv`: PyDamage filtered result tabular file in `.csv` format. Format described here: [pydamage.readthedocs.io/en/0.62/output.html](https://pydamage.readthedocs.io/en/0.62/output.html)
+  - `[assembler]-[sample/group]/[assembler]-[sample/group]_pydamage_filtered_results.csv`: PyDamage filtered result tabular file in `.csv` format. Format described here: [pydamage.readthedocs.io/en/0.62/output.html](https://pydamage.readthedocs.io/en/0.62/output.html)
 - `GenomeBinning/QC/
   - `contig_to_bin_map.tsv`: Mapping file describing which contig of each assembly is assigned to which bin
   - `pydamage_bins_summary.tsv`: A summary of pyDamage results for each bin, derived from a median average of each pyDamage values across all contigs of a particular each bin
@@ -910,12 +910,12 @@ Because of aDNA damage, _de novo_ assemblers sometimes struggle to call a correc
 <details markdown="1">
 <summary>Output files</summary>
 
-- `variant_calling/consensus`
-  - `[assembler]_[sample/group].fa`: contigs sequence with re-called consensus from read-to-contig alignment
-- `variant_calling/unfiltered`
-  - `[assembler]_[sample/group].vcf.gz`: raw variant calls of the reads aligned back to the contigs.
-- `variant_calling/filtered`
-  - `[assembler]_[sample/group].filtered.vcf.gz`: quality filtered variant calls of the reads aligned back to the contigs.
+- `Ancient_DNA/variant_calling/consensus`
+  - `[assembler]-[sample/group].fa`: contigs sequence with re-called consensus from read-to-contig alignment
+- `Ancient_DNA/variant_calling/freebayes`
+  - `[assembler]-[sample/group].vcf.gz`: raw variant calls of the reads aligned back to the contigs.
+- `Ancient_DNA/variant_calling/filtered`
+  - `[assembler]-[sample/group].filtered.vcf.gz`: quality filtered variant calls of the reads aligned back to the contigs.
 
 </details>
 
