@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#974](https://github.com/nf-core/mag/pull/974) - Re-add accidently removed functionality for using metaSPAdes contigs downstream rather than scaffolds (reported by @Pranjal-Bioinfo, fix by @jfy133)
 - [#984](https://github.com/nf-core/mag/pull/984) - Fix docs regarding usage of Bin QC tool scores when filtering bins for post-processing (by @dialvarezs, @claude)
+- [#987](https://github.com/nf-core/mag/pull/987) - Fix docs several documentation issues (by @dialvarezs)
 
 ### `Dependencies`
 
