@@ -20,7 +20,7 @@
                     "schema": "assets/schema_input.json",
                     "pattern": "^\\S+\\.csv$",
                     "description": "CSV samplesheet file containing information about the samples in the experiment.",
-                    "help_text": "Use this to specify the location of your input FastQ files and their associated metadata. You can also use the CSV file to assign different groups or to include long reads for hybrid assembly with metaSPAdes. The CSV file must have at least two columns (sample, short_reads1) and with a maximum CSV sheet having the headers: sample,run,group,short_reads_1,short_reads_2,long_reads. See [usage docs](https://nf-co.re/mag/usage#input-specifications).",
+                    "help_text": "Use this to specify the location of your input FastQ files and associated metadata. Required columns are `sample` and `group`, and each row must provide at least one of `short_reads_1` or `long_reads`. If `short_reads_1` is supplied, `short_reads_platform` is required; if `long_reads` is supplied, `long_reads_platform` is required. Optional columns include `run` and `short_reads_2`. See [usage docs](https://nf-co.re/mag/usage#input-specifications).",
                     "fa_icon": "fas fa-file-csv"
                 },
                 "single_end": {
@@ -1012,7 +1012,7 @@
                     "type": "string",
                     "default": "raw_bins_only",
                     "description": "Specify which binning output is sent for downstream annotation, taxonomic classification, bin quality control etc.",
-                    "help_text": "`raw_bins_only`: only bins (and unbinned contigs) from the binners.\n`refined_bins_only`:  only bins (and unbinned contigs) from the bin refinement step .\n\n ~~`both`: bins and unbinned contigs from both the binning and bin refinement steps.~~ `both` option is disabled in v2.4 due a bug that will be fixed in a later release.",
+                    "help_text": "`raw_bins_only`: only bins (and unbinned contigs) from the binners.\n`refined_bins_only`: only bins (and unbinned contigs) from the bin refinement step.\n`both`: bins and unbinned contigs from both the binning and bin refinement steps.",
                     "enum": ["raw_bins_only", "refined_bins_only", "both"]
                 },
                 "run_gunc": {
