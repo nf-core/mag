@@ -672,7 +672,7 @@ By default, nf-core/mag runs CheckM with the `check_lineage` workflow that place
 
 </details>
 
-If the parameter `--save_checkm_reference` is set, additionally the used the CheckM reference datasets are stored in the output directory.
+If the parameter `--save_checkm_data` is set, additionally the used the CheckM reference datasets are stored in the output directory.
 
 <details markdown="1">
 <summary>Output files</summary>
