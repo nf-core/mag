@@ -746,7 +746,7 @@ Besides the reference files or output files created by CheckM, the following sum
 
 </details>
 
-GUNC will be run if specified with `--run_gunc` as a standalone, unless CheckM is also activated via `--qc_tool 'checkm'`, in which case GUNC output will be merged with the CheckM output using `gunc merge_checkm`.
+GUNC will be run if specified with `--run_gunc` as a standalone, unless CheckM is also activated via `--run_checkm`, in which case GUNC output will be merged with the CheckM output using `gunc merge_checkm`.
 
 If `--gunc_save_db` is specified, the output directory will also contain the requested database (progenomes, or GTDB) in DIAMOND format.
 
