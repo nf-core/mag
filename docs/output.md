@@ -906,7 +906,7 @@ If `--binning_map_mode` is set to `group` or `all`, you may see variations in th
 
 ### `variant_calling`
 
-Because of aDNA damage, _de novo_ assemblers sometimes struggle to call a correct consensus on the contig sequence. To avoid this situation, the consensus is optionally re-called with a variant calling software using the reads aligned back to the contigs when `--run_ancient_damagecorrection` is supplied.
+Because of aDNA damage, _de novo_ assemblers sometimes struggle to call a correct consensus on the contig sequence. To avoid this situation, the consensus is optionally re-called with a variant calling software using the reads aligned back to the contigs when `--ancient_dna` is supplied and `--skip_ancient_damagecorrection` is not specified.
 
 <details markdown="1">
 <summary>Output files</summary>
