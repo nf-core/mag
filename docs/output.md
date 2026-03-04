@@ -550,7 +550,7 @@ Tiara is a contig classifier that identifies the domain (prokarya, eukarya) of c
 - `Taxonomy/Tiara/`
   - `[assembler]-[sample/group].tiara.txt` - Tiara output classifications (with probabilities) for all contigs within the specified sample/group assembly
   - `log_[assembler]-[sample/group].txt` - log file detailing the parameters used by the Tiara model for contig classification.
-- `GenomeBinning/tiara_summary.tsv` - Summary of Tiara domain classification for all bins.
+- `GenomeBinning/Tiara/tiara_summary.tsv` - Summary of Tiara domain classification for all bins.
 
 </details>
 
@@ -896,7 +896,7 @@ These results files will only exist when the parameter `-profile ancient_dna` is
 - `GenomeBinning/QC/
   - `contig_to_bin_map.tsv`: Mapping file describing which contig of each assembly is assigned to which bin
   - `pydamage_bins_summary.tsv`: A summary of pyDamage results for each bin, derived from a median average of each pyDamage values across all contigs of a particular each bin
-  - `summarise_pydamagebins/[assembler]-[binner]-[sample/group]_pydamagebin_results.tsv`: A 'raw' `pydamage analyse` results format file but reorded to have the per-contig values grouped together for each given bin
+  - `summarise_pydamagebins/[assembler]-[binner]-[sample/group]_pydamage_bin_results.tsv`: A 'raw' `pydamage analyse` results format file but reorded to have the per-contig values grouped together for each given bin
 
 </details>
 
