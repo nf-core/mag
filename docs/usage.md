@@ -188,8 +188,8 @@ If you enable the `--save_cat_db` option, the database will be saved in the `Tax
 > This database is very large at ~110 GB!
 > This can take a long time, so we strongly recommend downloading and unzipping prior the pipeline run.
 
-This database can be downloaded from the [GTDB developers' website](default: https://data.gtdb.ecogenomic.org/releases/release220/220.0/auxillary_files/gtdbtk_package/full_package/), which is based in Australia (and could be slow for other regions of the world).
-The developers also offer a 'split' archive of 10GB files that can be downloaded more stably from [here](https://data.gtdb.ecogenomic.org/releases/release220/220.0/auxillary_files/gtdbtk_package/split_package/) and subsequently (manually) combined after.
+This database can be downloaded from the GTDB developers' website. The current pipeline default points to [the GTDB-Tk r226 full package](https://data.gtdb.aau.ecogenomic.org/releases/release226/226.0/auxillary_files/gtdbtk_package/full_package/gtdbtk_r226_data.tar.gz), which is hosted in Australia (and could be slow for other regions of the world).
+The developers also offer a split archive of 10 GB files that can be downloaded more stably from [the split package directory](https://data.gtdb.aau.ecogenomic.org/releases/release226/226.0/auxillary_files/gtdbtk_package/split_package/) and subsequently (manually) combined after.
 More documentation can be seen [here](https://ecogenomics.github.io/GTDBTk/installing/index.html#gtdb-tk-reference-data).
 
 ## Running the pipeline
@@ -481,25 +481,25 @@ This feature is only available with container engines `apptainer` and `singulari
 To generate your SquashFS image:
 
 1. Install [squashfs-tools](https://github.com/plougher/squashfs-tools), if it is not already on your system
-2. Download the GTDB archive either via the full [`.tar.gz` archive](https://data.ace.uq.edu.au/public/gtdb/data/releases/release220/220.0/auxillary_files/gtdbtk_package/full_package/) or the [split database](https://data.ace.uq.edu.au/public/gtdb/data/releases/release220/220.0/auxillary_files/gtdbtk_package/split_package) version.
+2. Download the GTDB archive either via the full [`.tar.gz` archive](https://data.gtdb.aau.ecogenomic.org/releases/release226/226.0/auxillary_files/gtdbtk_package/full_package/) or the [split database](https://data.gtdb.aau.ecogenomic.org/releases/release226/226.0/auxillary_files/gtdbtk_package/split_package) version.
 3. Convert to a SquashFS image
 
 - Full package (compressed):
 
   ```bash
-  gzip -cd gtdbtk_r220_data.tar.gz | mksquashfs - gtdbtk_r220.squashfs -tar
+  gzip -cd gtdbtk_r226_data.tar.gz | mksquashfs - gtdbtk_r226.squashfs -tar
   ```
 
 - Full package (uncompressed)
 
   ```bash
-  mksquashfs /path/to/database gtdbtk_r220.squashfs
+  mksquashfs /path/to/database gtdbtk_r226.squashfs
   ```
 
 - Split package (compressed)
 
   ```bash
-  cat gtdbtk_r220_data.tar.gz.part_* | gzip -cd - | mksquashfs - gtdbtk_r220.squashfs -tar
+  cat gtdbtk_r226_data.tar.gz.part_* | gzip -cd - | mksquashfs - gtdbtk_r226.squashfs -tar
   ```
 
 To use the image in the pipeline:
@@ -510,7 +510,7 @@ To use the image in the pipeline:
    ```nextflow
    process {
        withName: GTDBTK_CLASSIFYWF {
-               containerOptions = "-B /<path>/<to>/gtdbtk_r220.squashfs:${params.gtdb_db}:image-src=/"
+               containerOptions = "-B /<path>/<to>/gtdbtk_r226.squashfs:${params.gtdb_db}:image-src=/"
        }
    }
    ```
@@ -522,7 +522,7 @@ To use the image in the pipeline:
    ```
 
 :::warning
-Make sure to update the paths where indicated, and the GTDB release version if using a more recent one than r220!
+Make sure to update the paths where indicated, and the GTDB release version if using a different one than r226.
 :::
 
 :::note
@@ -531,7 +531,7 @@ If you have issues with this, you may need to specify a different `image-src=` s
 You can determine this with:
 
 ```bash
-unsquashfs -l -max-depth 1 -d'' gtdbtk_r220.squashfs
+unsquashfs -l -max-depth 1 -d'' gtdbtk_r226.squashfs
 ```
 
 And use the resulting output in `image-src=`
@@ -539,7 +539,7 @@ And use the resulting output in `image-src=`
 ```nextflow
 process {
     withName: GTDBTK_CLASSIFYWF {
-            containerOptions = "-B /<path>/<to>/gtdbtk_r220.squashfs:${params.gtdb_db}:image-src=/<output_from_unsquashfs_ls>"
+            containerOptions = "-B /<path>/<to>/gtdbtk_r226.squashfs:${params.gtdb_db}:image-src=/<output_from_unsquashfs_ls>"
     }
 }
 ```
