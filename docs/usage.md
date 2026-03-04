@@ -325,7 +325,7 @@ Specify the path to a specific config file (this is a core Nextflow command). Se
 
 ### Resource requests
 
-Whilst the default requirements set within the pipeline will hopefully work for most people and with most input data, you may find that you want to customise the compute resources that the pipeline requests. Each step in the pipeline has a default set of requirements for number of CPUs, memory and time. For most of the pipeline steps, if the job exits with any of the error codes specified [here](https://github.com/nf-core/rnaseq/blob/4c27ef5610c87db00c3c5a3eed10b1d161abf575/conf/base.config#L18) it will automatically be resubmitted with higher resources request (2 x original, then 3 x original). If it still fails after the third attempt then the pipeline execution is stopped.
+Whilst the default requirements set within the pipeline will hopefully work for most people and with most input data, you may find that you want to customise the compute resources that the pipeline requests. Each step in the pipeline has a default set of requirements for number of CPUs, memory and time. For most of the pipeline steps, if the job exits with one of the retryable error codes configured in `conf/base.config`, it will automatically be resubmitted with higher resources request (2 x original, then 3 x original). If it still fails after the third attempt then the pipeline execution is stopped.
 
 To change the resource requests, please see the [max resources](https://nf-co.re/docs/usage/configuration#max-resources) and [tuning workflow resources](https://nf-co.re/docs/usage/configuration#tuning-workflow-resources) section of the nf-core website.
 
@@ -343,24 +343,26 @@ To learn how to provide additional arguments to a particular tool of the pipelin
 
 Note, do not change number of CPUs with custom config files for the processes `spades`, `spadeshybrid` or `megahit` when specifying the parameters `--spades_fix_cpus`, `--spadeshybrid_fix_cpus` and `--megahit_fix_cpu_1` respectively.
 
-> **NB:** We specify the full process name i.e. `NFCORE_RNASEQ:RNASEQ:ALIGN_STAR:STAR_ALIGN` in the config file because this takes priority over the short name (`STAR_ALIGN`) and allows existing configuration using the full process name to be correctly overridden.
+> **NB:** We specify the full process name (for example `NFCORE_MAG:MAG:ASSEMBLY:SHORTREAD_ASSEMBLY:METASPADES`) in the config file because this takes priority over the short name (`METASPADES`) and allows existing configuration using the full process name to be correctly overridden.
 >
 > If you get a warning suggesting that the process selector isn't recognised check that the process name has been specified correctly.
 
 ### Updating containers (advanced users)
 
-The [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) implementation of this pipeline uses one container per process which makes it much easier to maintain and update software dependencies. If for some reason you need to use a different version of a particular tool with the pipeline then you just need to identify the `process` name and override the Nextflow `container` definition for that process using the `withName` declaration. For example, in the [nf-core/viralrecon](https://nf-co.re/viralrecon) pipeline a tool called [Pangolin](https://github.com/cov-lineages/pangolin) has been used during the COVID-19 pandemic to assign lineages to SARS-CoV-2 genome sequenced samples. Given that the lineage assignments change quite frequently it doesn't make sense to re-release the nf-core/viralrecon everytime a new version of Pangolin has been released. However, you can override the default container used by the pipeline by creating a custom config file and passing it as a command-line argument via `-c custom.config`.
+The [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) implementation of this pipeline uses one container per process which makes it much easier to maintain and update software dependencies. If for some reason you need to use a different version of a particular tool with the pipeline then you just need to identify the `process` name and override the Nextflow `container` definition for that process using the `withName` declaration.
 
-1. Check the default version used by the pipeline in the module file for [Pangolin](https://github.com/nf-core/viralrecon/blob/a85d5969f9025409e3618d6c280ef15ce417df65/modules/nf-core/software/pangolin/main.nf#L14-L19)
-2. Find the latest version of the Biocontainer available on [Quay.io](https://quay.io/repository/biocontainers/pangolin?tag=latest&tab=tags)
-3. Create the custom config accordingly:
+For example, to override the container used by the `METASPADES` process in `nf-core/mag`:
+
+1. Check the default process definition in the module file (for example [`modules/nf-core/spades/main.nf`](https://github.com/nf-core/mag/blob/dev/modules/nf-core/spades/main.nf)).
+2. Choose the replacement container or conda package version you want to use.
+3. Create a custom config and pass it with `-c custom.config`:
 
 - For Docker:
 
   ```nextflow
   process {
-      withName: PANGOLIN {
-          container = 'quay.io/biocontainers/pangolin:3.0.5--pyhdfd78af_0'
+      withName: METASPADES {
+          container = 'quay.io/biocontainers/spades:<tag>'
       }
   }
   ```
@@ -369,8 +371,8 @@ The [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) implementatio
 
   ```nextflow
   process {
-      withName: PANGOLIN {
-          container = 'https://depot.galaxyproject.org/singularity/pangolin:3.0.5--pyhdfd78af_0'
+      withName: METASPADES {
+          container = 'https://depot.galaxyproject.org/singularity/spades:<tag>'
       }
   }
   ```
@@ -379,13 +381,13 @@ The [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) implementatio
 
   ```nextflow
   process {
-      withName: PANGOLIN {
-          conda = 'bioconda::pangolin=3.0.5'
+      withName: METASPADES {
+          conda = 'bioconda::spades=<version>'
       }
   }
   ```
 
-> **NB:** If you wish to periodically update individual tool-specific results (e.g. Pangolin) generated by the pipeline then you must ensure to keep the `work/` directory otherwise the `-resume` ability of the pipeline will be compromised and it will restart from scratch.
+> **NB:** If you wish to periodically update individual tool-specific results generated by the pipeline, you must ensure to keep the `work/` directory, otherwise the `-resume` ability of the pipeline will be compromised and it will restart from scratch.
 
 ### nf-core/configs
 
