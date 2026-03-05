@@ -1,0 +1,62 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "catpack"
+description: CAT/BAT taxonomic classification and gene prediction for metagenomic bins
+keywords:
+  - taxonomy
+  - classification
+  - gene prediction
+  - metagenomics
+  - CAT
+  - BAT
+components:
+  - catpack/addnames
+  - catpack/bins
+  - catpack/contigs
+  - catpack/download
+  - catpack/prepare
+  - catpack/summarise
+  - untar
+input:
+  - ch_bins:
+      description: Metagenomic bins
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - bins:
+            type: file
+            description: Metagenomic bins in FASTA format
+            pattern: "*.{fasta,fa}"
+  - ch_unbins:
+      description: Unbinned contigs
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - unbins:
+            type: file
+            description: Unbinned contigs in FASTA format
+            pattern: "*.{fasta,fa}"
+output:
+  - summary:
+      description: CAT/BAT bin summary file
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - tsv:
+            type: file
+            description: Taxonomic classification summary
+            pattern: "*.tsv"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@dialvarezs"
+maintainers:
+  - "@jfy133"
+  - "@prototaxites"
+  - "@dialvarezs"
+  - "@d4straub"
+  - "@muabnezor"

@@ -24,11 +24,11 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 - [MultiQC](#multiqc) - aggregate report, describing results of the whole pipeline
 - [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
 
-Note that when specifying the parameter `--coassemble_group`, for the corresponding output filenames/directories of the assembly or downsteam processes the group ID, or more precisely the term `group-[group_id]`, will be used instead of the sample ID.
+Note that when specifying the parameter `--coassemble_group`, for the corresponding output filenames/directories of the assembly or downstream processes the group ID, or more precisely the term `group-[group_id]`, will be used instead of the sample ID.
 
 ## Quality control
 
-These steps trim away the adapter sequences present in input reads, trims away bad quality bases and sicard reads that are too short.
+These steps trim away the adapter sequences present in input reads, trims away bad quality bases and discard reads that are too short.
 It also removes host contaminants and sequencing controls, such as PhiX or the Lambda phage.
 FastQC is run for visualising the general quality metrics of the sequencing runs before and after trimming.
 
@@ -300,6 +300,20 @@ SPAdesHybrid is a part of the [SPAdes](http://cab.spbu.ru/software/spades/) soft
 
 </details>
 
+### Assembly Quality Control with ALE
+
+[ALE (Assembly Likelihood Estimator)](https://github.com/sc932/ALE) is a probabilistic framework that evaluates assembly quality by computing the likelihood of the sequencing reads given an assembly. ALE provides per-contig quality scores and identifies potentially problematic regions in assemblies by analyzing read mapping patterns and insert size distributions. It is particularly useful for comparing assemblies and identifying misassemblies or low-confidence regions.
+
+ALE can run only on assemblies generated from short reads, like SPAdes and MEGAHIT. Hybrid assembly with SPAdesHybrid uses only the short reads for ALE scoring.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `Assembly/[assembler]/QC/[sample/group]/ALE/`
+  - `[sample]_ALEoutput.txt`: Per-contig ALE scores and quality metrics, including likelihood estimates for each contig
+
+</details>
+
 ## Gene prediction
 
 Protein-coding genes are predicted for each assembly.
@@ -434,14 +448,70 @@ Files in these two folders contain all contigs of an assembly.
   - `bins/[assembler]-[binner]-[sample/group].*.fa.gz`: Genome bins retrieved from input assembly
   - `stats/[assembler]-[binner]-[sample/group].csv`: Table indicating which contig goes with which cluster bin.
   - `stats/[assembler]-[binner]-[sample/group]*_gt1000.csv`: Various intermediate PCA statistics used for clustering.
-  - `stats/[assembler]-[binner]-[sample/group]_*.tsv`: Coverage statistics of each sub-contig cut up by CONOCOCT prior in an intermediate step prior to binning. Likely not useful in most cases.
+  - `stats/[assembler]-[binner]-[sample/group]_*.tsv`: Coverage statistics of each sub-contig cut up by CONCOCT prior in an intermediate step prior to binning. Likely not useful in most cases.
   - `stats/[assembler]-[binner]-[sample/group].log.txt`: CONCOCT execution log file.
   - `stats/[assembler]-[binner]-[sample/group]_*.args`: List of arguments used in CONCOCT execution.
-  - </details>
+
+</details>
 
 All the files and contigs in these folders will be assessed by QUAST and BUSCO, if the parameter `--postbinning_input` is not set to `refined_bins_only`.
 
 Note that CONCOCT does not output what it considers 'unbinned' contigs, therefore no 'discarded' contigs are produced here. You may still need to do your own manual curation of the resulting bins.
+
+### COMEBin
+
+[COMEBin](https://github.com/ziyewang/COMEBin) allows effective binning of metagenomic contigs using COntrastive Multi-viEw representation learning.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `GenomeBinning/COMEBin/`
+  - `bins/[assembler]-[binner]-[sample/group]/comebin_res_bins/[assembler]-[binner]-[sample/group].*.fa.gz`: Genome bins retrieved from input assembly.
+  - `stats/[assembler]-[binner]-[sample/group]/comebin.log`: COMEBin log file.
+  - `stats/[assembler]-[binner]-[sample/group]/comebin_res.tsv`: TSV mapping the output clusters to contigs.
+  - `stats/[assembler]-[binner]-[sample/group]/covembeddings.tsv`: TSV describing the embeddings of the contigs.
+  - `stats/[assembler]-[binner]-[sample/group]/embeddings.tsv`: TSV describing the embeddings of the contigs.
+
+</details>
+
+All the files and contigs in these folders will be assessed by QUAST and BUSCO, if the parameter `--postbinning_input` is not set to `refined_bins_only`.
+
+Note that COMEBin does not output what it considers 'unbinned' contigs, therefore no 'discarded' contigs are produced here. You may still need to do your own manual curation of the resulting bins.
+
+### MetaBinner
+
+[MetaBinner](https://github.com/ziyewang/MetaBinner) is described as a high-performance and stand-alone ensemble binning method to recover individual genomes from complex microbial communities.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `GenomeBinning/MetaBinner/`
+  - `bins/[assembler]-[binner]-[sample/group].*.fa.gz`: Genome bins retrieved from input assembly.
+  - `discarded/[assembler]-[binner]-[sample/group].tooShort.fa.gz`: Contigs that were not considered for binning because of length.
+  - `unbinned/[assembler]-[binner]-[sample/group].unbinned.fa.gz`: Contigs that were not binned despite having suitable length.
+  - `stats/[assembler]-[binner]-[sample/group].metabinner.log.gz`: Log file.
+  - `stats/[assembler]-[binner]-[sample/group].tsv.gz`: TSV mapping the contigs to output clusters.
+
+</details>
+
+All the files and contigs in these folders will be assessed by QUAST and binning QC tools, if the parameter `--postbinning_input` is not set to `refined_bins_only`.
+
+### SemiBin2
+
+[SemiBin2](https://github.com/BigDataBiology/SemiBin) is a deep siamese neural network with preset environments (single samples) or self-supervised (multiple samples).
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `GenomeBinning/SemiBin2/`
+  - `bins/[assembler]-[binner]-[sample/group]_._*.fa.gz`: Genome bins retrieved from input assembly.
+  - `log/[assembler]-[binner]-[sample/group].SemiBinRun.log`: Log file.
+
+</details>
+
+All the files and contigs in these folders will be assessed by QUAST and binning QC tools, if the parameter `--postbinning_input` is not set to `refined_bins_only`.
+
+Note that SemiBin2 does not output what it considers 'unbinned' contigs, therefore no 'discarded' contigs are produced here. You may still need to do your own manual curation of the resulting bins.
 
 ### DAS Tool
 
@@ -462,12 +532,13 @@ DAS Tool will remove contigs from bins that do not pass additional filtering cri
   - `[assembler]-[sample/group].seqlength`: Tab-delimited file describing the length of each contig.
   - `bins/[assembler]-[binner]Refined-[sample/group].*.fa`: Refined bins in fasta format.
   - `unbinned/[assembler]-DASToolUnbinned-[sample/group].*.fa`: Unbinned contigs from bin refinement in fasta format.
+  - `fastatocontig2bin/[assembler]-[binner]Refined-[sample/group].*_contiglist.tsv`: DAS Tool compatible file describing which contig is to which bin going into bin refinement (only if `--refine_bins_dastool_savecontig2bin` is specified).
 
 </details>
 
 By default, only the raw bins (and unbinned contigs) from the actual binning methods, but not from the binning refinement with DAS Tool, will be used for downstream bin quality control, annotation and taxonomic classification. The parameter `--postbinning_input` can be used to change this behaviour.
 
-⚠️ Due to ability to perform downstream QC of both raw and refined bins in parallel (via `--postbinning_input)`, bin names in DAS Tools's `*_allBins.eval` file will include `Refined`. However for this particular file, they _actually_ refer to the 'raw' input bins. The pipeline renames the input files prior to running DASTool to ensure they can be disambiguated from the original bin files in the downstream QC steps.
+⚠️ Due to ability to perform downstream QC of both raw and refined bins in parallel (via `--postbinning_input`), bin names in DAS Tools's `*_allBins.eval` file will include `Refined`. However for this particular file, they _actually_ refer to the 'raw' input bins. The pipeline renames the input files prior to running DASTool to ensure they can be disambiguated from the original bin files in the downstream QC steps.
 
 ### Tiara
 
@@ -497,6 +568,16 @@ For each bin or refined bin the median sequencing depth is computed based on the
   - `bin_refined_depths_summary.tsv`: Summary of sequencing depths for refined bins for all samples, if refinement was performed. Depths are available for samples mapped against the corresponding assembly, i.e. according to the mapping strategy specified with `--binning_map_mode`. Only for short reads.
   - `[assembler]-[binner]-[sample/group]-binDepths.heatmap.png`: Clustered heatmap showing bin abundances of the assembly across samples. Bin depths are transformed to centered log-ratios and bins as well as samples are clustered by Euclidean distance. Again, sample depths are available according to the mapping strategy specified with `--binning_map_mode`. If a sample produces only a single bin, a heatmap will not be provided.
 
+</details>
+
+### Contig to bin map
+
+The pipeline also generates a 'contig to bin map' to help users explore track where each contig from a given assembly was assigned to which bin (and refined bin).
+
+<details markdown="1">
+<summary>Output files</summary>
+- `GenomeBinning/contig_to_bin/`
+  - `contig_to_bin_map.tsv`: Tab-separated file with columns: assembly ID, contig_id, binner, and bin ID, for all contigs of all bins (and refined bins, if activated) in the run.
 </details>
 
 ### QC for metagenome assembled genomes with QUAST
@@ -537,7 +618,7 @@ If a lineage dataset is specified already with `--busco_db`, only results for th
 <details markdown="1">
 <summary>Output files</summary>
 
-- `GenomeBinning/QC/BUSCO/[sample/group]/`
+- `GenomeBinning/QC/BUSCO/[assembler]-[binner]-[sample/group]/`
   - `[sample/group]-[lineage]-busco.batch_summary.txt`: Summary table of the BUSCO results for the bins in the sample.
   - `short_summary.generic.[lineage].[assembler]-[bin].{txt,json}`: A detailed BUSCO summary for each bin, available in both plain text and JSON format.
   - `[sample/group]-[lineage]-busco.log`: Log file of the BUSCO run.
@@ -583,7 +664,7 @@ By default, nf-core/mag runs CheckM with the `check_lineage` workflow that place
 <summary>Output files</summary>
 
 - `GenomeBinning/QC/CheckM/`
-  - `[assembler]-[binner]-[domain]-[refinement]-[sample/group]_qa.txt`: Detailed statistics about bins informing completeness and contamamination scores (output of `checkm qa`). This should normally be your main file to use to evaluate your results.
+  - `[assembler]-[binner]-[domain]-[refinement]-[sample/group]_qa.txt`: Detailed statistics about bins informing completeness and contamination scores (output of `checkm qa`). This should normally be your main file to use to evaluate your results.
   - `[assembler]-[binner]-[domain]-[refinement]-[sample/group]_wf.tsv`: Overall summary file for completeness and contamination (output of `checkm lineage_wf`).
   - `[assembler]-[binner]-[domain]-[refinement]-[sample/group]/`: Intermediate files for CheckM results, including CheckM generated annotations, log, lineage markers etc.
 - `GenomeBinning/QC/`
@@ -599,6 +680,16 @@ If the parameter `--save_checkm_reference` is set, additionally the used the Che
 - `GenomeBinning/QC/CheckM/`
   - `checkm_downloads/`: All CheckM reference files downloaded from the CheckM FTP server, when not supplied by the user.
     - `checkm_data_2015_01_16/*`: a range of directories and files required for CheckM to run.
+
+</details>
+
+Besides the reference files or output files created by CheckM, the following summary files will be generated:
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `GenomeBinning/QC/`
+  - `checkm_summary.tsv`: A summary table of the CheckM results.
 
 </details>
 
@@ -624,6 +715,16 @@ If the parameter `--save_checkm2_data` is set, the CheckM2 reference datasets wi
 
 - `GenomeBinning/QC/CheckM2/`
   - `checkm2_downloads/CheckM2_database/*.dmnd`: Diamond database used by CheckM2.
+
+</details>
+
+Besides the reference files or output files created by CheckM, the following summary files will be generated:
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `GenomeBinning/QC/`
+  - `checkm2_summary.tsv`: A summary table of the CheckM2 results.
 
 </details>
 
@@ -694,7 +795,7 @@ If the parameters `--cat_db_generate` and `--save_cat_db` are set, additionally 
 
 ### GTDB-Tk
 
-[GTDB-Tk](https://github.com/Ecogenomics/GTDBTk) is a toolkit for assigning taxonomic classifications to bacterial and archaeal genomes based on the Genome Database Taxonomy [GTDB](https://gtdb.ecogenomic.org/). nf-core/mag uses GTDB-Tk to classify binned genomes which satisfy certain quality criteria (i.e. completeness and contamination assessed with the BUSCO analysis).
+[GTDB-Tk](https://github.com/Ecogenomics/GTDBTk) is a toolkit for assigning taxonomic classifications to bacterial and archaeal genomes based on the Genome Database Taxonomy [GTDB](https://gtdb.ecogenomic.org/). nf-core/mag uses GTDB-Tk to classify binned genomes which satisfy certain quality criteria (i.e. completeness and contamination assessed with any of the bin QC tools: BUSCO, CheckM, or CheckM2).
 
 <details markdown="1">
 <summary>Output files</summary>
@@ -707,7 +808,7 @@ If the parameters `--cat_db_generate` and `--save_cat_db` are set, additionally 
   - `gtdbtk.[assembler]-[binner]-[domain]-[refinement]-[sample/group].{bac120/ar122}.filtered.tsv`: A list of genomes with an insufficient number of amino acids in MSA.
   - `gtdbtk.[assembler]-[binner]-[domain]-[refinement]-[sample/group].*.log`: Log files.
   - `gtdbtk.[assembler]-[binner]-[domain]-[refinement]-[sample/group].failed_genomes.tsv`: A list of genomes for which the GTDB-Tk analysis failed, e.g. because Prodigal could not detect any genes.
-- `Taxonomy/GTDB-Tk/gtdbtk_summary.tsv`: A summary table of the GTDB-Tk classification results for all bins, also containing bins which were discarded based on the BUSCO QC, which were filtered out by GTDB-Tk (listed in `*.filtered.tsv`) or for which the analysis failed (listed in `*.failed_genomes.tsv`).
+- `Taxonomy/GTDB-Tk/gtdbtk_summary.tsv`: A summary table of the GTDB-Tk classification results for all bins, also containing bins which were discarded based on the bin QC (BUSCO, CheckM, or CheckM2), which were filtered out by GTDB-Tk (listed in `*.filtered.tsv`) or for which the analysis failed (listed in `*.failed_genomes.tsv`).
 
 </details>
 
@@ -756,13 +857,31 @@ In cases where eukaryotic genomes are recovered in binning, [MetaEuk](https://gi
 <details markdown="1">
 <summary>Output files</summary>
 
-- `GenomeBinning/bin_summary.tsv`: Summary of bin sequencing depths together with BUSCO, CheckM, QUAST and GTDB-Tk results, if at least one of the later was generated. This will also include refined bins if `--refine_bins_dastool` binning refinement is performed. Note that in contrast to the other tools, for CheckM the bin name given in the column "Bin Id" does not contain the ".fa" extension.
+- `GenomeBinning/bin_summary.tsv`: Summary of bin sequencing depths together with any BUSCO, CheckM, CheckM2, QUAST, CAT, GTDB-Tk, pyDamage results, when any activated.
 
 </details>
 
+This `bin_summary.tsv` is the primary output file from nf-core/mag, giving the most comprehensive overview of the quality and taxonomic classification of all bins produced by the pipeline.
+
+This will also include rows for refined bins if `--refine_bins_dastool` binning refinement is performed.
+Note that in contrast to the other tools, for CheckM the bin name given in the column "Bin Id" does not contain the ".fa" extension.
+
+All columns other than the primary `bin` key column, and the `Depth <sample name>` columns, will include a suffix specifying from which bin QC tool the column is derived from to distinguish identically named columns from different tools.
+
+## Summary file to be used as input for BIgMAG
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `GenomeBinning/BIgMAG/bigmag_summary.tsv`: Summary of bin sequencing depths together with GUNC, QUAST, GTDB-Tk, BUSCO and CheckM2 results.
+
+</details>
+
+The output file in this directory is used as input for the dashboard [BIgMAG](https://github.com/jeffe107/BIgMAG) for visualisation and evaluation of MAG quality.
+
 ## Ancient DNA
 
-Optional, only running when parameter `-profile ancient_dna` is specified.
+These results files will only exist when the parameter `-profile ancient_dna` is specified.
 
 ### `PyDamage`
 
@@ -770,13 +889,20 @@ Optional, only running when parameter `-profile ancient_dna` is specified.
 
 <details markdown="1">
 <summary>Output files</summary>
-
 - `Ancient_DNA/pydamage/analyze`
   - `[assembler]_[sample/group]/[sample/group]_pydamage_results.csv`: PyDamage raw result tabular file in `.csv` format. Format described here: [pydamage.readthedocs.io/en/0.62/output.html](https://pydamage.readthedocs.io/en/0.62/output.html)
 - `Ancient_DNA/pydamage/filter`
   - `[assembler]_[sample/group]/[sample/group]_/pydamage_results.csv`: PyDamage filtered result tabular file in `.csv` format. Format described here: [pydamage.readthedocs.io/en/0.62/output.html](https://pydamage.readthedocs.io/en/0.62/output.html)
+- `GenomeBinning/QC/
+  - `contig_to_bin_map.tsv`: Mapping file describing which contig of each assembly is assigned to which bin
+  - `pydamage_bins_summary.tsv`: A summary of pyDamage results for each bin, derived from a median average of each pyDamage values across all contigs of a particular each bin
+  - `summarise_pydamagebins/[assembler]-[binner]-[sample/group]_pydamagebin_results.tsv`: A 'raw' `pydamage analyse` results format file but reorded to have the per-contig values grouped together for each given bin
 
 </details>
+
+:::note
+If `--binning_map_mode` is set to `group` or `all`, you may see variations in the output of pyDamage between runs or `-resume`, due to evaluation on different sets of BAM files.
+:::
 
 ### `variant_calling`
 
@@ -794,7 +920,7 @@ Because of aDNA damage, _de novo_ assemblers sometimes struggle to call a correc
 
 </details>
 
-### MultiQC
+## MultiQC
 
 <details markdown="1">
 <summary>Output files</summary>

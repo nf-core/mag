@@ -1,0 +1,68 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "binning_refinement"
+description: Refinement and optimization of metagenomic bins using DAS Tool and other methods
+keywords:
+  - binning
+  - refinement
+  - metagenomics
+  - das_tool
+  - optimization
+components:
+  - dastool/dastool
+  - dastool/fastatocontig2bin
+  - rename/postdastool
+  - rename/predastool
+input:
+  - ch_contigs_for_dastool:
+      description: Contigs for DAS Tool refinement
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - contigs:
+            type: file
+            description: Assembled contigs in FASTA format
+            pattern: "*.{fasta,fa}"
+  - ch_in_bins:
+      description: Metagenomic bins from different binning tools
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - bins:
+            type: file
+            description: Metagenomic bins in FASTA format
+            pattern: "*.{fasta,fa}"
+output:
+  - refined_bins:
+      description: Refined metagenomic bins
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - fasta:
+            type: file
+            description: Refined metagenomic bins in FASTA format
+            pattern: "*.{fasta,fa}"
+  - refined_unbins:
+      description: Refined unbinned sequences
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - fasta:
+            type: file
+            description: Refined unbinned sequences in FASTA format
+            pattern: "*.{fasta,fa}"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@jfy133"
+maintainers:
+  - "@jfy133"
+  - "@prototaxites"
+  - "@dialvarezs"
+  - "@d4straub"
+  - "@muabnezor"

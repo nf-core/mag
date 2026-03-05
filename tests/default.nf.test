@@ -14,6 +14,13 @@ nextflow_pipeline {
         }
 
         then {
+            // Output directory: multiqc
+            def stable_name_multiqc = getAllFilesFromDir(
+                params.outdir, include: ['multiqc/**'], relative: true, includeDir: false
+            )
+            def stable_path_multiqc = getAllFilesFromDir(
+                params.outdir, include: ['multiqc/**'], ignoreFile: 'tests/.nftignore'
+            )
             // // stable_name: All files + folders in ${params.outdir}/ with a stable name
             // def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
             // // stable_path: All files in ${params.outdir}/ with stable content
@@ -21,15 +28,15 @@ nextflow_pipeline {
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
-                    // Number of successful tasks
-                    workflow.trace.succeeded().size(),
                     // pipeline versions.yml file for multiqc from which Nextflow version is removed because we test pipelines on multiple Nextflow versions
                     removeNextflowVersion("$outputDir/pipeline_info/nf_core_mag_software_mqc_versions.yml"),
                     // // All stable path name, with a relative path
                     // stable_name,
                     // // All files with stable contents
                     // stable_path
-                ).match() }
+                ).match() },
+                { assert snapshot(stable_name_multiqc, stable_path_multiqc).match('multiqc') },
+
             )
         }
     }

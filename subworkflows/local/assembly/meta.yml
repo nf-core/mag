@@ -1,0 +1,78 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "assembly"
+description: Performs genome assembly using short-read, long-read, and hybrid assembly approaches
+keywords:
+  - assembly
+  - metagenomics
+  - shortread
+  - longread
+  - hybrid
+components:
+  - shortread_assembly
+  - longread_assembly
+  - hybrid_assembly
+  - cat/fastq
+  - gunzip
+input:
+  - ch_short_reads:
+      description: Short-read sequencing data
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - fastq1:
+            type: file
+            description: First pair of short-read FASTQ files
+            pattern: "*.{fastq,fq}.gz"
+        - fastq2:
+            type: file
+            description: Second pair of short-read FASTQ files
+            pattern: "*.{fastq,fq}.gz"
+  - ch_long_reads:
+      description: Long-read sequencing data
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - fastq:
+            type: file
+            description: Long-read FASTQ files
+            pattern: "*.{fastq,fq}.gz"
+output:
+  - shortread_assemblies:
+      description: Assembled contigs from short-read or hybrid approaches
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - fasta:
+            type: file
+            description: Assembled contigs in FASTA format
+            pattern: "*.fasta"
+  - longread_assemblies:
+      description: Assembled contigs from long-read approaches
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - fasta:
+            type: file
+            description: Assembled contigs in FASTA format
+            pattern: "*.fasta"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@HadrienG"
+  - "@skrakau"
+  - "@d4straub"
+  - "@jfy133"
+  - "@prototaxites"
+  - "@muabnezor"
+maintainers:
+  - "@jfy133"
+  - "@prototaxites"
+  - "@dialvarezs"
+  - "@d4straub"
+  - "@muabnezor"

@@ -2,17 +2,17 @@ process MMSEQS_DATABASES {
     tag "${database}"
     label 'process_medium'
 
-    conda "bioconda::mmseqs2=14.7e284"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/mmseqs2:14.7e284--pl5321h6a68c12_2':
-        'biocontainers/mmseqs2:14.7e284--pl5321h6a68c12_2' }"
+    conda "${moduleDir}/environment.yml"
+    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
+        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/ed/edfecaaca16ca7fb7b6428dce0ed9c737549b38146360c98fdabf74e6c4cac68/data'
+        : 'community.wave.seqera.io/library/mmseqs2_wget:aa683a2c5355899d'}"
 
     input:
     val database
 
     output:
-    path "${prefix}/" , emit: database
-    path "versions.yml"     , emit: versions
+    path "${prefix}/", emit: database
+    path "versions.yml", emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -28,7 +28,6 @@ process MMSEQS_DATABASES {
         ${prefix}/database \\
         tmp/ \\
         --threads ${task.cpus} \\
-        --compressed 1 \\
         ${args}
 
     cat <<-END_VERSIONS > versions.yml

@@ -230,6 +230,18 @@
                     "fa_icon": "far calendar",
                     "description": "Suffix to add to the trace report filename. Default is the date and time in the format yyyy-MM-dd_HH-mm-ss.",
                     "hidden": true
+                },
+                "help": {
+                    "type": ["boolean", "string"],
+                    "description": "Display the help message."
+                },
+                "help_full": {
+                    "type": "boolean",
+                    "description": "Display the full detailed help message."
+                },
+                "show_hidden": {
+                    "type": "boolean",
+                    "description": "Display hidden parameters in the help message (only works when --help or --help_full are provided)."
                 }
             }
         },
@@ -366,11 +378,10 @@
                 },
                 "phix_reference": {
                     "type": "string",
-                    "default": "${baseDir}/assets/data/GCA_002596845.1_ASM259684v1_genomic.fna.gz",
                     "description": "Genome reference used to remove Illumina PhiX contaminant reads.",
-                    "hidden": true,
                     "format": "file-path",
-                    "exists": true
+                    "exists": true,
+                    "help_text": "If not supplied, and keeping phix is turned off, an included genome (GCA_002596845.1) will be used "
                 },
                 "skip_clipping": {
                     "type": "boolean",
@@ -450,11 +461,10 @@
                 },
                 "lambda_reference": {
                     "type": "string",
-                    "default": "${baseDir}/assets/data/GCA_000840245.1_ViralProj14204_genomic.fna.gz",
-                    "hidden": true,
                     "description": "Genome reference used to remove ONT Lambda contaminant reads.",
                     "format": "file-path",
-                    "exists": true
+                    "exists": true,
+                    "help_text": "If not supplied, and keeping lambda is turned off, an included genome (GCA_000840245.1) will be used "
                 },
                 "save_lambdaremoved_reads": {
                     "type": "boolean",
@@ -526,20 +536,14 @@
                 "gtdb_db": {
                     "type": "string",
                     "description": "Specify the location of a GTDBTK database. Can be either an uncompressed directory or a `.tar.gz` archive. If not specified will be downloaded for you when GTDBTK or binning QC is not skipped.",
-                    "default": "https://data.gtdb.ecogenomic.org/releases/release220/220.0/auxillary_files/gtdbtk_package/full_package/gtdbtk_r220_data.tar.gz",
+                    "default": "https://data.gtdb.aau.ecogenomic.org/releases/release226/226.0/auxillary_files/gtdbtk_package/full_package/gtdbtk_r226_data.tar.gz",
                     "format": "path"
-                },
-                "gtdb_mash": {
-                    "type": "string",
-                    "description": "Specify the location of a GTDBTK mash database. If missing, GTDB-Tk will skip the ani_screening step",
-                    "format": "path",
-                    "exists": true
                 },
                 "gtdbtk_min_completeness": {
                     "type": "number",
                     "default": 50,
                     "description": "Min. bin completeness (in %) required to apply GTDB-tk classification.",
-                    "help_text": "Completeness assessed with BUSCO analysis (100% - %Missing). Must be greater than 0 (min. 0.01) to avoid GTDB-tk errors. If too low, GTDB-tk classification results can be impaired due to not enough marker genes!",
+                    "help_text": "Completeness assessed with any of the bin QC tools (BUSCO, CheckM, CheckM2). A bin passes if at least one QC tool reports completeness at or above the threshold. Must be greater than 0 (min. 0.01) to avoid GTDB-tk errors. If too low, GTDB-tk classification results can be impaired due to not enough marker genes!",
                     "minimum": 0.01,
                     "maximum": 100
                 },
@@ -547,7 +551,7 @@
                     "type": "number",
                     "default": 10,
                     "description": "Max. bin contamination (in %) allowed to apply GTDB-tk classification.",
-                    "help_text": "Contamination approximated based on BUSCO analysis (%Complete and duplicated). If too high, GTDB-tk classification results can be impaired due to contamination!",
+                    "help_text": "Contamination assessed with any of the bin QC tools (BUSCO, CheckM, CheckM2). A bin passes if at least one QC tool reports contamination at or below the threshold. If too high, GTDB-tk classification results can be impaired due to contamination!",
                     "minimum": 0,
                     "maximum": 100
                 },
@@ -579,6 +583,10 @@
                 "gtdbtk_use_full_tree": {
                     "type": "boolean",
                     "description": "Specify to have GTDBTk to use the full bacterial tree rather than the split tree (requires more memory!)"
+                },
+                "gtdbtk_skip_aniscreen": {
+                    "type": "boolean",
+                    "description": "Specify to disable fast classification of genomes by ANI using skani in GTDB-Tk."
                 }
             }
         },
@@ -620,6 +628,10 @@
                 "skip_megahit": {
                     "type": "boolean",
                     "description": "Skip MEGAHIT assembly."
+                },
+                "skip_ale": {
+                    "type": "boolean",
+                    "description": "Skip ALE"
                 },
                 "skip_quast": {
                     "type": "boolean",
@@ -765,6 +777,51 @@
                     "type": "boolean",
                     "description": "Skip CONCOCT Binning"
                 },
+                "skip_comebin": {
+                    "type": "boolean",
+                    "description": "Skip COMEBin Binning"
+                },
+                "skip_metabinner": {
+                    "type": "boolean",
+                    "description": "Skip MetaBinner Binning"
+                },
+                "bin_metabinner_scale": {
+                    "type": "string",
+                    "default": "large",
+                    "enum": ["small", "large", "huge"],
+                    "description": "Dataset scale for MetaBinner",
+                    "help_text": "Dataset scale; eg. small,large,huge (default:large); Users can choose `huge` to run MetaBinner on huge datasets with lower memory requirements."
+                },
+                "skip_semibin": {
+                    "type": "boolean",
+                    "description": "Skip SemiBin2 Binning"
+                },
+                "semibin_rng_seed": {
+                    "type": "integer",
+                    "default": 1,
+                    "description": "RNG seed for SemiBin2.",
+                    "help_text": "SemiBin2 is run by default with a fixed seed within this pipeline, thus producing reproducible results. You can set it also to any other positive integer to ensure reproducibility. Set the parameter to 0 to use a random seed."
+                },
+                "semibin_environment": {
+                    "type": "string",
+                    "default": "global",
+                    "enum": [
+                        "human_gut",
+                        "dog_gut",
+                        "ocean",
+                        "soil",
+                        "cat_gut",
+                        "human_oral",
+                        "mouse_gut",
+                        "pig_gut",
+                        "built_environment",
+                        "wastewater",
+                        "chicken_caecum",
+                        "global"
+                    ],
+                    "description": "Pre-trained model for SemiBin2 for single sample assemblies",
+                    "help_text": "SemiBin2 can use a pre-trained model when working with an assembly of a single sample (i.e. without `--coassemble_group` and with `--binning_map_mode own`). The model will be ignored when several samples are used for one assembly. Choose a model that fits your environment best. Default is `global`, a generic model."
+                },
                 "min_contig_size": {
                     "type": "integer",
                     "default": 1500,
@@ -863,11 +920,17 @@
                     "type": "boolean",
                     "description": "Disable bin QC with BUSCO, CheckM or CheckM2."
                 },
-                "binqc_tool": {
-                    "type": "string",
-                    "default": "busco",
-                    "description": "Specify which tool for bin quality-control validation to use.",
-                    "enum": ["busco", "checkm", "checkm2"]
+                "run_busco": {
+                    "type": "boolean",
+                    "description": "Enable running BUSCO during bin QC."
+                },
+                "run_checkm": {
+                    "type": "boolean",
+                    "description": "Enable running CheckM during bin QC."
+                },
+                "run_checkm2": {
+                    "type": "boolean",
+                    "description": "Enable running CheckM2 during bin QC."
                 },
                 "busco_db": {
                     "type": "string",
@@ -916,7 +979,7 @@
                 },
                 "checkm2_db": {
                     "type": "string",
-                    "description": "Path to local file of an already downloaded and uncompressed CheckM2 database (.dmnd file).",
+                    "description": "Path to local file of an already downloaded and uncompressed CheckM2 database file (.dmnd file).",
                     "help_text": "The pipeline can also download this for you if not specified, and you can save the resulting directory into your output directory by specifying `--save_checkm2_data`. You should move this file to somewhere else on your machine (and supply back to the pipeline in future runs again with `--checkm2_db`).",
                     "format": "file-path",
                     "exists": true
@@ -940,6 +1003,10 @@
                     "default": 0.5,
                     "description": "Specify single-copy gene score threshold for bin refinement.",
                     "help_text": "Score threshold for single-copy gene selection algorithm to keep selecting bins, with a value ranging from 0-1.\n\nFor description of scoring algorithm, see: Sieber, Christian M. K., et al. 2018. Nature Microbiology 3 (7): 836\u201343. https://doi.org/10.1038/s41564-018-0171-1.\n\n> Modifies DAS Tool parameter --score_threshold\n"
+                },
+                "refine_bins_dastool_savecontig2bin": {
+                    "type": "boolean",
+                    "description": "Specify to save contig to bin maps used for bin refinement"
                 },
                 "postbinning_input": {
                     "type": "string",
@@ -968,6 +1035,11 @@
                     "type": "boolean",
                     "description": "Save the used GUNC reference files downloaded when not using --gunc_db parameter.",
                     "help_text": "If specified, the corresponding DIAMOND file downloaded from the GUNC server will be stored in your output directory alongside your GUNC results."
+                },
+                "generate_bigmag_file": {
+                    "type": "boolean",
+                    "description": "Make a BIgMAG input file including GUNC results.",
+                    "help_text": "It requires --run_gunc and --run_checkm2 to be executed. BINQC, GTDB-TK, QUAST nor BUSCO can't be skipped."
                 }
             }
         },

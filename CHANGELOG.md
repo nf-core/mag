@@ -3,7 +3,153 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 4.1.0dev - [unreleased]
+## dev [unreleased]
+
+### `Added`
+
+### `Changed`
+
+### `Fixed`
+
+- [#984](https://github.com/nf-core/mag/pull/984) - Fix docs regarding usage of Bin QC tool scores when filtering bins for post-processing (by @dialvarezs, @claude)
+
+### `Dependencies`
+
+| Tool | Previous version | New version |
+| ---- | ---------------- | ----------- |
+|      |                  |             |
+
+### `Deprecated`
+
+## v5.4.0 - Yellow Frog [2026-02-02]
+
+### `Added`
+
+- [#965](https://github.com/nf-core/mag/pull/965) - Add support for the generation of custom contig to bin map files for all bins and refined bins (by @jfy133, @prototaxites)
+- [#965](https://github.com/nf-core/mag/pull/965) - Add support for optional saving of DAS Tool inpout `contig2bin` map files via `--refine_bins_dastool_savecontig2bin`, with now singular generation process (by @jfy133, @prototaxites)
+- [#963](https://github.com/nf-core/mag/pull/963) - Add support for outputting and median summarising pyDamage results at bin level when running in ancient DNA mode (by @jfy133)
+- [#931](https://github.com/nf-core/mag/pull/931) - Added ALE (Assembly Likelihood Estimator) for probabilistic assembly quality control (by @PetcuBogdan, @dialvarezs)
+
+### `Changed`
+
+- [#966](https://github.com/nf-core/mag/pull/966) - Replace aria2c downloading of CheckM2 database with native Nextflow downloading due to Zenodo issues (by @jfy133, @dialvarezs)
+
+### `Fixed`
+
+- [#962](https://github.com/nf-core/mag/pull/962) - MetaBinner/SemiBin2 are included during bin refinement with DASTool. (by @AlexHoratio)
+
+### `Dependencies`
+
+| Tool | Previous version | New version |
+| ---- | ---------------- | ----------- |
+| ale  |                  | 20180904    |
+
+### `Deprecated`
+
+## v5.3.0 - Rainbow Rattlesnake [2025-12-05]
+
+### `Added`
+
+- [#905](https://github.com/nf-core/mag/pull/905) - Add nf-test snapshot for `test_assembly_input` profile (by @dialvarezs)
+- [#930](https://github.com/nf-core/mag/pull/930) - Add binner SemiBin2 (by @d4straub)
+- [#861](https://github.com/nf-core/mag/pull/861) - Added `--generate_bigmag_file` to execute the bigmag workflow that generates the file to be used as input for [BIgMAG](https://github.com/jeffe107/BIgMAG) (added by @jeffe107)
+
+### `Changed`
+
+- [#932](https://github.com/nf-core/mag/pull/932) - Replaced usages of deprecated `Channel()` with `channel()` and fix other LSP warnings (by @dialvarezs)
+- [#937](https://github.com/nf-core/mag/pull/937) - Updated to nf-core 3.5.1 `TEMPLATE` (by @dialvarezs)
+- [#938](https://github.com/nf-core/mag/pull/938) - Update nf-core modules (by @dialvarezs)
+
+### `Fixed`
+
+- [#894](https://github.com/nf-core/mag/pull/894) - Fix read order in metaSPAdes to allow co-assembly of paired-end data of multiple samples (reported by @maartenciers, fix by @jfy133 with contributions from @prototaxites, @d4straub and @dialvarezs)
+- [#927](https://github.com/nf-core/mag/pull/927) - MetaBinner now succeeds when no contigs are too short or all are binned (reported by @MicroSeq, fix by @d4straub)
+- [#929](https://github.com/nf-core/mag/pull/929) - Allow the domain_classification.R script to run with any assembler, not just Megahit or Spades (reported by @MicroSeq, fix by @prototaxites)
+- [#943](https://github.com/nf-core/mag/pull/943) - Fixed concatenation of BUSCO summaries with uneven columns by changing from `csvtk` to `qsv` (reported by @jfy133 and @julianu, fix by @dialvarezs)
+- [#943](https://github.com/nf-core/mag/pull/943) - Fixed creation of the Tiara report channel used for concatenation (by @dialvarezs)
+- [#945](https://github.com/nf-core/mag/pull/945) - Skip mixing of GTDB-Tk MultiQC files when binning is skipped (reported by @amizeranschi, fix by @dialvarezs)
+- [#953](https://github.com/nf-core/mag/pull/953) - metaSPAdes retries upon error 250 (out of memory), rather than finishing the pipeline.
+- [#954](https://github.com/nf-core/mag/pull/954) - Skip GTDB-Tk when no bin QC tool is enabled and add warning messages (fix by @dialvarezs)
+- [#956](https://github.com/nf-core/mag/pull/956) - Support long reads assemblers in assembly input (fix by @dialvarezs)
+
+### `Dependencies`
+
+| Tool     | Previous version | New version |
+| -------- | ---------------- | ----------- |
+| bcftools | 1.21             | 1.22        |
+| csvtk    | 0.31.0           |             |
+| fastp    | 0.24.0           | 1.0.1       |
+| geNomad  | 1.11.1           | 1.11.2      |
+| metamdbg | 1.1              | 1.2         |
+| mmseqs   | 17.b804f         | 18.8cc5c    |
+| nf-core  |                  | 3.5.1       |
+| qsv      |                  | 5.1.0       |
+| samtools | 1.21             | 1.22.1      |
+| SemiBin2 |                  | 2.2.0       |
+
+### `Deprecated`
+
+- [#943](https://github.com/nf-core/mag/pull/943) - Remove `csvtk/concat` module (by @dialvarezs).
+
+## v5.2.0 - Puce Pangolin [2025-11-07]
+
+### `Added`
+
+- [#842](https://github.com/nf-core/mag/pull/842) - Add support for running multiple binQC tools in one run using dedicated `--run_busco`, `--run_checkm`, and `--run_checkm2` parameters (by @harper357, with contributions from @dialvarezs, @prototaxites and @jfy133)
+- [#881](https://github.com/nf-core/mag/pull/881) - Add binner MetaBinner (by @d4straub, insprired by @HeshamAlmessady & @AlphaSquad)
+
+### `Changed`
+
+- [#842](https://github.com/nf-core/mag/pull/842) - Change `bin_summary.tsv` format for improved clarity and more comprehensiveness (by @harper357, with contributions from @dialvarezs, @prototaxites and @jfy133)
+  - Now will include columns from all bin QC tools executed in a given run (i.e., all/any of BUSCO, CheckM and CheckM2)
+  - Adds suffixes to all columns (`_<toolname>`) to distinguish which column comes from which tool
+
+### `Fixed`
+
+- [#896](https://github.com/nf-core/mag/pull/896) - Remove obsolete execution command from README (by @dialvarezs)
+- [#907](https://github.com/nf-core/mag/pull/907) - Include refined bins from all binners in the `DASTool/bins` output folder (by @AlexHoratio)
+- [#911](https://github.com/nf-core/mag/pull/911) - Ensure column order is consistent when generating depth summaries to prevent swapped results on merged depth summary (by @dialvarezs)
+- [#912](https://github.com/nf-core/mag/pull/912) - Fix validation of multiple sequencing platforms when using `binning_map_mode = "all"` (reported by @mjfi2sb3, fix by @dialvarezs)
+- [#921](https://github.com/nf-core/mag/pull/921) - Fix publishing of BUSCO files (reported by @joao1980, fix by @dialvarezs)
+
+### `Dependencies`
+
+| Tool       | Previous version | New version |
+| ---------- | ---------------- | ----------- |
+| MetaBinner |                  | 1.4.4-0     |
+
+### `Deprecated`
+
+- [#842](https://github.com/nf-core/mag/pull/842) - Remove `--binqc_tool` (by @harper357, with contributions from @dialvarezs, @prototaxites and @jfy133)
+
+## v5.1.0 - Platinum Pudu [2025-10-27]
+
+### `Added`
+
+- [#873](https://github.com/nf-core/mag/pull/873) - Document usage of `longread_percentidentity` and `shortread_percentidentity` and set the value of `longread_percentidentity` in the `test_full` profile to 85 (by @prototaxites)
+- [#875](https://github.com/nf-core/mag/pull/875) - Add binner COMEBin (by @d4straub)
+
+### `Changed`
+
+- [#878](https://github.com/nf-core/mag/pull/878) - Refine test_full config with optimised resource usage for AWS release megatests (by @jfy133)
+- [#880](https://github.com/nf-core/mag/pull/880) - Updated to nf-core 3.4.1 `TEMPLATE` (by @jfy133)
+
+### `Fixed`
+
+- [#878](https://github.com/nf-core/mag/pull/878) - Fix METASPADES process not receiving the correct number of cpus from the fix CPUs parameter (by @jfy133)
+- [#885](https://github.com/nf-core/mag/pull/885) - Fix typo in long-read assembly mode selection (reported by @feixiang1209, fix by @jfy133)
+- [#888](https://github.com/nf-core/mag/pull/888) - Only error if all bins are size filtered if bins have actually been generated (reported by @hkaspersen, fix by @prototaxites)
+
+### `Dependencies`
+
+| Tool    | Previous version | New version |
+| ------- | ---------------- | ----------- |
+| nf-core | 3.3.2            | 3.4.1       |
+| COMEBin |                  | 1.0.4       |
+
+### `Deprecated`
+
+## v5.0.0 - Green Squirrel [2025-09-30]
 
 ### `Added`
 
@@ -12,6 +158,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#718](https://github.com/nf-core/mag/pull/718) - Added host removal for long reads using minimap2 as aligner (added by @muabnezor)
 - [#827](https://github.com/nf-core/mag/pull/827) - Added nf-test CI testing for all test profiles (added by @jfy133)
 - [#829](https://github.com/nf-core/mag/pull/829) - Add `--skip_shortread_qc` and `--skip_longread_qc` params for skipping certain default preprocessing steps (added by @erikrikarddaniel)
+- [#846](https://github.com/nf-core/mag/pull/846) - Improve documentation of `group` samplesheet column (added by @vinisalazar)
+- [#855](https://github.com/nf-core/mag/pull/855) - Add basic nf-tests for test_longreadonly, test_longreadonly_alternatives, test_hybrid and test_assembly_input (added by @dialvarezs)
+- [#864](https://github.com/nf-core/mag/pull/864) - Add `--gtdbtk_skip_aniscreen` to disable fast classification of genomes by ANI using skani in GTDB-Tk (by @jfy133 and @prototaxites).
 
 ### `Changed`
 
@@ -23,29 +172,56 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#823](https://github.com/nf-core/mag/pull/823) - Updated to nf-core 3.3.1`TEMPLATE` (by @jfy133 )
 - [#827](https://github.com/nf-core/mag/pull/827) - Updated to nf-core 3.3.2`TEMPLATE` (by @dialvarezs)
 - [#841](https://github.com/nf-core/mag/pull/841) - MultiQC config updated to support CheckM, CheckM2, and GTDB-Tk (by @harper357)
+- [#844](https://github.com/nf-core/mag/pull/843) - Change loading mechanism of internal PhiX/Lambda databases to improve Dev UX when schema building (by @jfy133)
+- [#851](https://github.com/nf-core/mag/pull/851) - Improve structure of local modules and subworkflows (by @dialvarezs)
+- [#853](https://github.com/nf-core/mag/pull/853) - Update nf-core modules and subworkflows (by @dialvarezs)
+- [#856](https://github.com/nf-core/mag/pull/856) - Update more nf-core modules (by @dialvarezs)
 
 ### `Fixed`
 
+- [#843](https://github.com/nf-core/mag/pull/843) - Fixed issue with large format Bowtie2 index files not being emitted from index module (reported by Nick Eckersley, fix by @jfy133)
+- [#847](https://github.com/nf-core/mag/pull/847) - Allow the BBNorm process to use only 0.8 of the memory allocated to the task to stop if from oversubscribing memory (reported by and fix by @erikrikarddaniel)
+- [#850](https://github.com/nf-core/mag/pull/850) - Fixed some modules of the GDTBTk subworkflow not being represented in version lists (fix by @jfy133)
+- [#852](https://github.com/nf-core/mag/pull/852) - Fixed version reporting by ensure all modules are represented in final version.yml for MultiQC (by @jfy133)
+- [#854](https://github.com/nf-core/mag/pull/854) - Update porechop/abi to a patched version to prevent duplicated read names (reported by @palec87, fix by @jfy133)
+- [#858](https://github.com/nf-core/mag/pull/858) - Fix a single parameter validation failure reporting errors for all parameters by updated nf-schema to 2.5.1 (reported by @Pranjal-Bioinfo, fix by @nvnieuwk and @jfy133)
+- [#864](https://github.com/nf-core/mag/pull/864) - Fix missing multi-threading of MetaEuk easypredict (reported by @OlivierCoen, fix by @prototaxites).
+
 ### `Dependencies`
 
-| Tool       | Previous version | New version |
-| ---------- | ---------------- | ----------- |
-| CAT        | 5.2.3            | 6.0.1       |
-| centrifuge | 1.0.4.1          | 1.0.4.2     |
-| nanolyse   | 1.41.6           | 1.44.1      |
-| flye       |                  | 2.9.5       |
-| metamdbg   |                  | 1.0         |
-| minimap2   |                  | 2.28        |
-| samtools   |                  | 1.21        |
-| nf-core    | 3.2.0            | 3.3.2       |
-| pydamage   | 0.7.0            | 1.0.0       |
+| Tool         | Previous version | New version |
+| ------------ | ---------------- | ----------- |
+| bcftools     | 1.17             | 1.21        |
+| BUSCO        | 5.8.3            | 6.0.0       |
+| CAT          | 5.2.3            | 6.0.1       |
+| centrifuge   | 1.0.4.1          | 1.0.4.2     |
+| dastool      | 1.1.6            | 1.1.7       |
+| nanolyse     | 1.41.6           | 1.44.1      |
+| fastp        | 0.23.4           | 0.24.0      |
+| flye         |                  | 2.9.5       |
+| Freebayes    | 1.3.6            | 1.3.10      |
+| geNomad      | 1.5.2            | 1.11.0      |
+| GTDB-Tk      | 2.4.0            | 2.5.2       |
+| metabat2     | 2.15             | 2.17        |
+| metamdbg     |                  | 1.0         |
+| minimap2     |                  | 2.29        |
+| mmseqs2      | 14.7e284         | 17.b804f    |
+| samtools     |                  | 1.21        |
+| nf-core      | 3.2.0            | 3.3.2       |
+| pydamage     | 0.7.0            | 1.0.0       |
+| seqtk        | 1.3              | 1.4         |
+| porechop_abi | 0.5.0            | 0.5.0post1  |
+| NanoPlot     | 1.44.1           | 1.46.1      |
 
 ### `Deprecated`
 
-[#799](https://github.comf/nf-core/mag/pull/799) - Removed `--cat_official_taxonomy` in favour of `--cat_allow_unofficial_lineages` to control CAT's use of unofficial lineages (added by @dialvarezs)
-[#825](https://github.com/nf-core/mag/pull/825) - Removed `--centrifuge_db`, `--kraken2_db`, `--krona_db` and `--skip_krona` parameters following the removal of taxonomic profiling functionality. See nf-core/taxprofiler for replacement (added by @dialvarezs).
+- [#799](https://github.comf/nf-core/mag/pull/799) - Removed `--cat_official_taxonomy` in favour of `--cat_allow_unofficial_lineages` to control CAT's use of unofficial lineages (added by @dialvarezs)
+- [#825](https://github.com/nf-core/mag/pull/825) - Removed `--centrifuge_db`, `--kraken2_db`, `--krona_db` and `--skip_krona` parameters following the removal of taxonomic profiling functionality. See nf-core/taxprofiler for replacement (added by @dialvarezs)
+- [#851](https://github.com/nf-core/mag/pull/851) - Remove `POOL_READ_*` local modules in favor of nf-core cat/fastq (by @dialvarezs)
+- [#855](https://github.com/nf-core/mag/pull/855) - Remove test_adapterremoval, test_ancient_dna, test_bbnorm, test_busco_auto, test_host_rm, test_hybrid_host_rm, test_binrefinement, test_concoct and test_longread profiles (added by @dialvarezs)
+- [#864](https://github.com/nf-core/mag/pull/864) - Remove `--gtdb_mash` due to dropping of support by GTDBTk itself (by @prototaxites and @jfy133)
 
-## v4.0.0 - [2025-05-22]
+## v4.0.0 - Blue Huemul [2025-05-22]
 
 ### `Added`
 
@@ -81,7 +257,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#730](https://github.com/nf-core/mag/pull/730) - Remove `--busco_auto_lineage_prok` due to update and simplified usage of BUSCO (added by @jfy133, @dialvarezs)
 
-## 3.4.0 [2025-04-04]
+## v3.4.0 - Green Gecko [2025-04-04]
 
 ### `Added`
 
@@ -130,7 +306,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Deprecated`
 
-## 3.3.0 [2024-12-19]
+## v3.3.0 - Red Reindeer [2024-12-19]
 
 ### `Added`
 
@@ -165,7 +341,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Deprecated`
 
-## 3.2.1 [2024-10-30]
+## v3.2.1 [2024-10-30]
 
 ### `Added`
 
@@ -179,7 +355,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Deprecated`
 
-## 3.2.0 [2024-10-27]
+## v3.2.0 - Salmon Salmon [2024-10-27]
 
 ### `Added`
 
@@ -211,7 +387,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Deprecated`
 
-## 3.1.0 [2024-10-04]
+## v3.1.0 - Pink Panda [2024-10-04]
 
 ### `Added`
 
@@ -239,7 +415,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#670](https://github.com/nf-core/mag/pull/670) - Deprecated `--gtdbtk_pplacer_scratch` due to unintuitive usage (reported by harper357, fixed by @jfy133)
 
-## 3.0.3 [2024-08-27]
+## v3.0.3 [2024-08-27]
 
 ### `Added`
 
@@ -258,7 +434,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Deprecated`
 
-## 3.0.2 [2024-07-04]
+## v3.0.2 [2024-07-04]
 
 ### `Added`
 
@@ -281,7 +457,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Deprecated`
 
-## 3.0.1 [2024-06-10]
+## v3.0.1 [2024-06-10]
 
 ### `Added`
 
@@ -301,7 +477,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Deprecated`
 
-## 3.0.0 - [2024-05-13]
+## v3.0.0 - Magenta Magpie [2024-05-13]
 
 ### `Added`
 
@@ -322,7 +498,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#599](https://github.com/nf-core/mag/pull/599) - Direct reads input (`--input 'sample_{R1,R2}.fastq.gz'`) is no longer supported, all input must come via samplesheets (by @jfy133)
 
-## 2.5.4 - [2024-02-12]
+## v2.5.4 [2024-02-12]
 
 ### `Added`
 
@@ -339,7 +515,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Deprecated`
 
-## 2.5.3 - [2024-02-05]
+## v2.5.3 [2024-02-05]
 
 ### `Added`
 
@@ -355,7 +531,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Deprecated`
 
-## 2.5.2 - [2024-02-02]
+## v2.5.2 [2024-02-02]
 
 ### `Added`
 
@@ -380,7 +556,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Deprecated`
 
-## 2.5.1 - [2023-11-17]
+## v2.5.1 [2023-11-17]
 
 ### `Added`
 
@@ -402,7 +578,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#536](https://github.com/nf-core/mag/pull/536) - Remove custom function with native Nextflow for checking file extension (reported by @d4straub, fix by @jfy133)
 
-## 2.5.0 - [2023-10-10]
+## 2.5.0 - Aquamarine Kangaroo - [2023-10-10]
 
 ### `Added`
 
@@ -427,7 +603,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#504](https://github.com/nf-core/mag/pull/504) - `--busco_reference`, `--busco_download_path`, `--save_busco_reference` parameters have been deprecated and replaced with new parameters (by @gregorysprenger).
 
-## 2.4.0 - 2023-09-26
+## v2.4.0 - Grey Hammerhead [2023-09-26]
 
 ### `Added`
 
@@ -491,7 +667,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#458](https://github.com/nf-core/mag/pull/458) - Correct the major issue in ancient DNA workflow of binning refinement being performed on uncorrected contigs instead of aDNA consensus recalled contigs (issue [#449](https://github.com/nf-core/mag/issues/449))
 - [#451](https://github.com/nf-core/mag/pull/451) - Fix results file overwriting in Ancient DNA workflow (reported by @alexhbnr, fix by @jfy133, and integrated by @maxibor in [#458](https://github.com/nf-core/mag/pull/458) )
 
-## v2.3.0 - [2023/03/02]
+## v2.3.0 - Red Cow [2023-03-02]
 
 ### `Added`
 
@@ -528,7 +704,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | Freebayes | 1.3.5            | 1.3.6       |
 | SAMtools  | 1.15             | 1.16.1      |
 
-## v2.2.1 - 2022/08/25
+## v2.2.1 [2022-08-25]
 
 ### `Added`
 
@@ -541,7 +717,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Dependencies`
 
-## v2.2.0 - 2022/06/14
+## v2.2.0 - Golden Mammoth [2022-06-14]
 
 ### `Added`
 
@@ -574,7 +750,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | fastp   | 0.20.1           | 0.23.2      |
 | MultiQC | 1.11             | 1.12        |
 
-## v2.1.1 - 2021/11/25
+## v2.1.1 [2021-11-25]
 
 ### `Added`
 
@@ -597,7 +773,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#255](https://github.com/nf-core/mag/pull/255) - Update gtdbtk conda channel.
 - [#258](https://github.com/nf-core/mag/pull/258) - FastP results are now in MultiQC.
 
-## v2.1.0 - 2021/07/29
+## v2.1.0 - Black Zebra [2021-07-29]
 
 ### `Added`
 
@@ -613,7 +789,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#226](https://github.com/nf-core/mag/pull/226) - Fix handling of `BUSCO` output when run in auto lineage selection mode and selected specific lineage is the same as the generic one.
 
-## v2.0.0 - 2021/06/01
+## v2.0.0 - Silver Swan [2021-06-01]
 
 ### `Added`
 
@@ -648,7 +824,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#195](https://github.com/nf-core/mag/pull/195) - Fix documentation regarding required compression of input FastQ files [#160](https://github.com/nf-core/mag/issues/160)
 - [#196](https://github.com/nf-core/mag/pull/196) - Add process for CAT database creation as solution for problem caused by incompatible `DIAMOND` version used for pre-built `CAT database` and `CAT classification` [#90](https://github.com/nf-core/mag/issues/90), [#188](https://github.com/nf-core/mag/issues/188)
 
-## v1.2.0 - 2021/02/10
+## v1.2.0 - Yellow Squirrel [2021-02-10]
 
 ### `Added`
 
@@ -668,7 +844,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#143](https://github.com/nf-core/mag/pull/143) - Change parameter: `--manifest` -> `--input`
 
-## v1.1.2 - 2020/11/24
+## v1.1.2 - Blue Panda [2020-11-24]
 
 ### `Changed`
 
@@ -678,7 +854,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#133](https://github.com/nf-core/mag/pull/133) - Fixed processing of `--input` parameter [#131](https://github.com/nf-core/mag/issues/131)
 
-## v1.1.1 - 2020/11/10
+## v1.1.1 - Lime Owl [2020-11-10]
 
 ### `Added`
 
@@ -695,7 +871,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#120](https://github.com/nf-core/mag/pull/120) - Fix link to CAT database in help message
 - [#124](https://github.com/nf-core/mag/pull/124) - Fix description of `CAT` process in `output.md`
 
-## v1.1.0 - 2020/10/06
+## v1.1.0 - White Elephant [2020-10-06]
 
 ### `Added`
 
@@ -740,7 +916,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#29](https://github.com/nf-core/mag/pull/29) - Change depreciated parameters: `--singleEnd` -> `--single_end`, `--igenomesIgnore` -> `--igenomes_ignore`
 
-## v1.0.0 - 2019/12/20
+## v1.0.0 - Purple Corgi [2019-12-20]
 
 Initial release of nf-core/mag, created with the [nf-core](http://nf-co.re/) template.
 

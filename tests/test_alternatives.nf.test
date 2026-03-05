@@ -1,0 +1,115 @@
+nextflow_pipeline {
+
+    name "Test pipeline with test_alternatives profile"
+    script "../main.nf"
+    tag "pipeline"
+    tag "test_alternatives"
+    profile "test_alternatives"
+
+    test("-profile test_alternatives") {
+
+        when {
+            params {
+                outdir = "${outputDir}"
+            }
+        }
+
+        then {
+
+            // Output dir: QC_shortreads
+            def stable_name_qc = getAllFilesFromDir(
+                params.outdir, include: ['QC_shortreads/**'], relative: true, includeDir: false
+            )
+            def stable_path_qc = getAllFilesFromDir(
+                params.outdir, include: ['QC_shortreads/**'], ignoreFile: 'tests/.nftignore'
+            )
+            def remove_phix_logs = getAllFilesFromDir(
+                params.outdir, include: ['QC_shortreads/remove_phix/*.log']
+            )
+
+            // Output dir: Assembly
+            def stable_name_assembly = getAllFilesFromDir(
+                params.outdir, include: ['Assembly/**'], relative: true, includeDir: false
+            )
+            def stable_path_assembly = getAllFilesFromDir(
+                params.outdir, include: ['Assembly/**'], ignoreFile: 'tests/.nftignore'
+            )
+            def megahit_logs = getAllFilesFromDir(
+                params.outdir, include: ['Assembly/MEGAHIT/*.log']
+            )
+            def bowtie2_logs = getAllFilesFromDir(
+                params.outdir, include: ['Assembly/MEGAHIT/QC/*/*.bowtie2.log']
+            )
+            def megahit_contigs = getAllFilesFromDir(
+                params.outdir, include: ['Assembly/MEGAHIT/*.contigs.fa.gz']
+            )
+
+            // Output dir: GenomeBinning
+            def stable_name_binning = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/**'], relative: true, includeDir: false
+            )
+            def stable_path_binning = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/**'], ignoreFile: 'tests/.nftignore'
+            )
+            def checkm2_logs = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/QC/CheckM2/*/checkm2.log']
+            )
+            def checkm2_diamond_results = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/QC/CheckM2/**/DIAMOND_RESULTS.tsv']
+            )
+            def metabat2_bins = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/MetaBAT2/bins/*.fa.gz']
+            )
+            def metabat2_unbins = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/MetaBAT2/{discarded,unbinned/*}/*.fa.gz']
+            )
+
+            // Output dir: multiqc
+            def stable_name_multiqc = getAllFilesFromDir(
+                params.outdir, include: ['multiqc/**'], relative: true, includeDir: false
+            )
+            def stable_path_multiqc = getAllFilesFromDir(
+                params.outdir, include: ['multiqc/**'], ignoreFile: 'tests/.nftignore'
+            )
+
+            assert workflow.success
+            assertAll(
+                { assert snapshot(
+                    workflow.trace.succeeded().size(),
+                    removeNextflowVersion("${outputDir}/pipeline_info/nf_core_mag_software_mqc_versions.yml"),
+                ).match() },
+                { assert snapshot(stable_name_qc,       stable_path_qc      ).match('qc') },
+                { assert snapshot(stable_name_assembly, stable_path_assembly).match('assembly') },
+                { assert snapshot(stable_name_binning,  stable_path_binning ).match('binning') },
+                { assert snapshot(stable_name_multiqc,  stable_path_multiqc ).match('multiqc') },
+                { assert snapshot(
+                        checkm2_diamond_results.collect { results -> results.text.readLines().size() },
+                    ).match('checkm2_diamond_results')
+                },
+
+                // FASTA checks
+                { assert megahit_contigs.collect { contigs -> path("${contigs}").fasta.size() > 0 }.every() },
+                { assert metabat2_bins.collect { contigs -> path("${contigs}").fasta.size() > 0 }.every() },
+                { assert metabat2_unbins.collect { contigs -> path("${contigs}").fasta.size() >= 0 }.every() },
+
+                // Log checks
+                { assert remove_phix_logs.collect {
+                        log -> log.readLines().last() ==~ /[0-9.]+% overall alignment rate/
+                    }.every()
+                },
+                { assert megahit_logs.collect {
+                        log -> (log.readLines().last() =~ /ALL DONE. Time elapsed: [0-9.]+ seconds/).find()
+                    }.every()
+                },
+                { assert bowtie2_logs.collect {
+                        log -> log.readLines().last() ==~ /[0-9.]+% overall alignment rate/
+                    }.every()
+                },
+                { assert checkm2_logs.collect {
+                        log -> log.readLines().last().contains('CheckM2 finished successfully.')
+                    }.every()
+                },
+            )
+        }
+    }
+}

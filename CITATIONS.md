@@ -14,6 +14,10 @@
 
   > Schubert, M., Lindgreen, S., and Orlando, L. 2016. "AdapterRemoval v2: Rapid Adapter Trimming, Identification, and Read Merging." BMC Research Notes 9 (February): 88. doi: 10.1186/s13104-016-1900-2
 
+- [ALE](https://github.com/sc932/ALE)
+
+  > Clark, S. C., Egan, R., Frazier, P. I., & Wang, Z. (2013). ALE: a generic assembly likelihood evaluation framework for assessing the accuracy of genome and metagenome assemblies. Bioinformatics, 29(4), 435-443. doi: 10.1093/bioinformatics/bts723
+
 - [BBnorm/BBTools](http://sourceforge.net/projects/bbmap/)
 
 - [BCFtools](https://doi.org/10.1093/gigascience/giab008)
@@ -24,7 +28,7 @@
 
   > Langmead, B. and Salzberg, S. L. 2012 Fast gapped-read alignment with Bowtie 2. Nature methods, 9(4), p. 357–359. doi: 10.1038/nmeth.1923.
 
-- [Busco](https://doi.org/10.1007/978-1-4939-9173-0_14)
+- [BUSCO](https://doi.org/10.1007/978-1-4939-9173-0_14)
 
   > Seppey, M., Manni, M., & Zdobnov, E. M. (2019). BUSCO: assessing genome assembly and annotation completeness. In Gene prediction (pp. 227-245). Humana, New York, NY. doi: 10.1007/978-1-4939-9173-0_14.
 
@@ -44,9 +48,21 @@
 
   > De Coster W, D'Hert S, Schultz DT, Cruts M, Van Broeckhoven C. NanoPack: visualizing and processing long-read sequencing data. Bioinformatics. 2018 Aug 1;34(15):2666-2669. doi: 10.1093/bioinformatics/bty149
 
+- [COMEBin](https://doi.org/10.1038/s41467-023-44290-z)
+
+  > Wang Z, You R, Han H, Liu W, Sun F, Zhu S. Effective binning of metagenomic contigs using contrastive multi-view representation learning. Nat Commun. 2024 Jan 17;15(1):585. doi: 10.1038/s41467-023-44290-z. PMID: 38233391; PMCID: PMC10794208.
+
 - [CONCOCT](https://doi.org/10.1038/nmeth.3103)
 
   > Alneberg, J., Bjarnason, B. S., de Bruijn, I., Schirmer, M., Quick, J., Ijaz, U. Z., Lahti, L., Loman, N. J., Andersson, A. F., & Quince, C. (2014). Binning metagenomic contigs by coverage and composition. Nature Methods, 11(11), 1144–1146. doi: 10.1038/nmeth.3103
+
+- [MetaBinner](https://doi.org/10.1186/s13059-022-02832-6)
+
+  > Wang Z, Huang P, You R, Sun F, Zhu S. MetaBinner: a high-performance and stand-alone ensemble binning method to recover individual genomes from complex microbial communities. Genome Biol. 2023 Jan 6;24(1):1. doi: 10.1186/s13059-022-02832-6. PMID: 36609515; PMCID: PMC9817263.
+
+- [SemiBin2](https://doi.org/10.1038/s41467-022-29843-y)
+
+  > Pan S, Zhu C, Zhao XM, Coelho LP. A deep siamese neural network improves metagenome-assembled genomes in microbiome datasets across different environments. Nat Commun. 2022 Apr 28;13(1):2326. doi: 10.1038/s41467-022-29843-y. PMID: 35484115; PMCID: PMC9051138.
 
 - [DAS Tool](https://doi.org/10.1038/s41564-018-0171-1)
 
@@ -81,6 +97,10 @@
 - [GUNC](https://doi.org/10.1186/s13059-021-02393-0.)
 
   > Orakov, A., Fullam, A., Coelho, A. P., Khedkar, S., Szklarczyk, D., Mende, D. R., Schmidt, T. S. B., and Bork, P.. 2021. “GUNC: Detection of Chimerism and Contamination in Prokaryotic Genomes.” Genome Biology 22 (1): 178. doi: 10.1186/s13059-021-02393-0.
+
+- [BIgMAG](https://doi.org/10.12688/f1000research.152290.2)
+
+  > Yepes-García, J., Falquet, L. (2024). Metagenome quality metrics and taxonomical annotation visualization through the integration of MAGFlow and BIgMAG. F1000Research 13:640. doi.org/10.12688/f1000research.152290.2
 
 - [MaxBin2](https://doi.org/10.1093/bioinformatics/btv638)
 
