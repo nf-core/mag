@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Fixed`
 
 - [#984](https://github.com/nf-core/mag/pull/984) - Fix docs regarding usage of Bin QC tool scores when filtering bins for post-processing (by @dialvarezs, @claude)
+- [#988](https://github.com/nf-core/mag/pull/988) - Fix regarding validation of column `long_reads_platform` in the input samplesheet ([#985](https://github.com/nf-core/mag/issues/985) by @vinisalazar)
 
 ### `Dependencies`
 
