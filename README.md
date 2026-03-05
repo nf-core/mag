@@ -27,7 +27,7 @@
 
 ## Introduction
 
-**nf-core/mag** is a bioinformatics best-practise analysis pipeline for assembly, binning and annotation of metagenomes.
+**nf-core/mag** is a bioinformatics best-practice analysis pipeline for assembly, binning and annotation of metagenomes.
 
 <p>
   <picture>
