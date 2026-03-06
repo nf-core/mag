@@ -55,15 +55,13 @@
                     "metamdbg": 1.2
                 },
                 "MINIMAP2_ASSEMBLY_ALIGN": {
-                    "minimap2": "2.29-r1283",
-                    "samtools": 1.21
+                    "minimap2": "2.29-r1283"
                 },
                 "MINIMAP2_ASSEMBLY_INDEX": {
                     "minimap2": "2.29-r1283"
                 },
                 "MINIMAP2_HOST_ALIGN": {
-                    "minimap2": "2.29-r1283",
-                    "samtools": 1.21
+                    "minimap2": "2.29-r1283"
                 },
                 "MINIMAP2_HOST_INDEX": {
                     "minimap2": "2.29-r1283"
@@ -120,11 +118,11 @@
                 }
             }
         ],
+        "timestamp": "2026-03-06T15:48:57.480763519",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.0"
-        },
-        "timestamp": "2025-11-27T11:34:46.475733493"
+            "nf-test": "0.9.4",
+            "nextflow": "25.10.4"
+        }
     },
     "multiqc": {
         "content": [
@@ -173,10 +171,10 @@
                 
             ]
         ],
+        "timestamp": "2025-10-17T15:53:16.48624226",
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "25.04.7"
-        },
-        "timestamp": "2025-10-17T15:53:16.48624226"
+        }
     }
 }
