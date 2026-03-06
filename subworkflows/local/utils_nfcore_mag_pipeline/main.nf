@@ -377,7 +377,7 @@ def validateInputParameters(hybrid) {
 
     if (!params.skip_gtdbtk) {
         if (params.skip_binqc) {
-            log.warn('[nf-core/mag]: --skip_binqc is specified, but --skip_gtdbtk is explictly set to run! GTDB-tk will be omitted because GTDB-tk bin classification requires bin filtering based on BUSCO or CheckM QC results to avoid GTDB-tk errors.')
+            log.warn('[nf-core/mag]: --skip_binqc is specified, but --skip_gtdbtk is explicitly set to run! GTDB-tk will be omitted because GTDB-tk bin classification requires bin filtering based on BUSCO or CheckM QC results to avoid GTDB-tk errors.')
         }
 
         if (!params.run_busco && !params.run_checkm && !params.run_checkm2) {
@@ -393,7 +393,7 @@ def validateInputParameters(hybrid) {
         error('[nf-core/mag] ERROR: Invalid parameter combination: parameter --save_cat_db specified, but not --cat_db_generate! Note also that the parameter --save_cat_db does not work in combination with --cat_db.')
     }
 
-    // Check MetaEuk db paramaters
+    // Check MetaEuk db parameters
     if (params.metaeuk_mmseqs_db && params.metaeuk_db) {
         error('[nf-core/mag] ERROR: Invalid parameter combination: both --metaeuk_mmseqs_db and --metaeuk_db are specified! Please specify either --metaeuk_mmseqs_db or --metaeuk_db.')
     }
@@ -413,7 +413,7 @@ def validateInputParameters(hybrid) {
 
     // Check ancient DNA damage parameters
     if (params.ancient_dna && params.binning_map_mode != 'own') {
-        log.warn("[nf-core/mag] WARNING: Running in --binning_map_mode ${params.binning_map_mode} will result in unstable pyDamage output files. You might not recieve pyDamage results for all bins in bin_summary.tsv, and `-resume` may not work `--binning_map_mode own` is recommended!")
+        log.warn("[nf-core/mag] WARNING: Running in --binning_map_mode ${params.binning_map_mode} will result in unstable pyDamage output files. You might not receive pyDamage results for all bins in bin_summary.tsv, and `-resume` may not work; `--binning_map_mode own` is recommended!")
     }
 }
 
@@ -423,10 +423,10 @@ def validateInputParameters(hybrid) {
 def validateInputSamplesheet(meta, sr1, sr2, lr) {
 
     if ((!sr2 && !lr) && !params.single_end) {
-        error("[nf-core/mag] ERROR: Single-end data must be executed with `--single_end`. Note that it is not possible to mix single- and paired-end data in one run! Check input TSV for sample: ${meta.id}")
+        error("[nf-core/mag] ERROR: Single-end data must be executed with `--single_end`. Note that it is not possible to mix single- and paired-end data in one run! Check input CSV for sample: ${meta.id}")
     }
     if (sr2 && params.single_end) {
-        error("[nf-core/mag] ERROR: Paired-end data must be executed without `--single_end`. Note that it is not possible to mix single- and paired-end data in one run! Check input TSV for sample: ${meta.id}")
+        error("[nf-core/mag] ERROR: Paired-end data must be executed without `--single_end`. Note that it is not possible to mix single- and paired-end data in one run! Check input CSV for sample: ${meta.id}")
     }
 
     return [meta, sr1, sr2, lr]
