@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## dev [unreleased]
+## 5.4.1 - Yellow Frog patch [2026-03-10]
 
 ### `Added`
 
@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#984](https://github.com/nf-core/mag/pull/984) - Fix docs regarding usage of Bin QC tool scores when filtering bins for post-processing (by @dialvarezs, @claude)
 - [#987](https://github.com/nf-core/mag/pull/987) - Fix several documentation issues (by @dialvarezs)
 - [#988](https://github.com/nf-core/mag/pull/988) - Fix regarding validation of column `long_reads_platform` in the input samplesheet ([#985](https://github.com/nf-core/mag/issues/985) by @vinisalazar)
-- [#986](https://github.com/nf-core/mag/pull/986) - Fix faulty YAML loading (by @jfy133)
+- [#986](https://github.com/nf-core/mag/pull/986) - Fix faulty ALE version YAML loading resulting in a snakeyaml error (by @jfy133)
 
 ### `Dependencies`
 
