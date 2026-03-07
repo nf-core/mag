@@ -27,8 +27,8 @@ process SPLIT_FASTA {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         python: \$(python --version 2>&1 | sed 's/Python //g')
-        biopython: 1.7.4
-        pandas: \$(python -c "import pkg_resources; print(pkg_resources.get_distribution('pandas').version)")
+        biopython: "\$(python -c 'import Bio; print(Bio.__version__)')"
+        pandas: \$(python -c "import pandas; print(pandas.__version__)")
     END_VERSIONS
     """
 }
