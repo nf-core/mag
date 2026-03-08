@@ -95,7 +95,7 @@
                     "seqkit": "2.9.0"
                 },
                 "SPLIT_FASTA": {
-                    "biopython": "1.7.4",
+                    "biopython": "1.74",
                     "pandas": "1.1.5",
                     "python": "3.6.7"
                 },

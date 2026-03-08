@@ -31,7 +31,7 @@ process SUMMARISE_PYDAMAGEBINS {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         python: \$(python --version 2>&1 | sed 's/Python //g')
-        pandas: \$(python -c "import pkg_resources; print(pkg_resources.get_distribution('pandas').version)")
+        pandas: \$(python -c "import pandas; print(pandas.__version__)")
     END_VERSIONS
     """
 
@@ -44,7 +44,7 @@ process SUMMARISE_PYDAMAGEBINS {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         python: \$(python --version 2>&1 | sed 's/Python //g')
-        pandas: \$(python -c "import pkg_resources; print(pkg_resources.get_distribution('pandas').version)")
+        pandas: \$(python -c "import pandas; print(pandas.__version__)")
     END_VERSIONS
     """
 }
