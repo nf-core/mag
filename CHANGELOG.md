@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
+- [#993](https://github.com/nf-core/mag/pull/993) - Tweak `test_full` resources to stop failures (by @jfy133)
+
 ### `Fixed`
 
 ### `Dependencies`
