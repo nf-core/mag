@@ -603,7 +603,7 @@
                 "spades_options": {
                     "type": "string",
                     "description": "Additional custom options for SPAdes and SPAdesHybrid. Do not specify `--meta` as this will be added for you!",
-                    "help_text": "An example is adjusting k-mers (\"-k 21,33,55,77\") or adding [advanced options](https://github.com/ablab/spades#advanced-options). But not --meta, -t, -m, -o or --out-prefix, because these are already in use. Must be used like this: --spades_options \"-k 21,33,55,77\")"
+                    "help_text": "An example is adjusting k-mers (\"-k 21,33,55,77\") or adding [advanced options](https://github.com/ablab/spades#advanced-options). But not --meta, -t, -m, -o or --out-prefix, because these are already in use. Must be used like this: --spades_options='-k 21,33,55,77'"
                 },
                 "spades_downstreaminput": {
                     "type": "string",
@@ -615,7 +615,7 @@
                 "megahit_options": {
                     "type": "string",
                     "description": "Additional custom options for MEGAHIT.",
-                    "help_text": "An example is adjusting presets (e.g. \"--presets meta-large\"), k-mers (e.g. \"-k 21,33,55,77\") or adding other [advanced options](https://github.com/voutcn/megahit#advanced-usage). For example, increase the minimum k-mer in the event of an error message such as \"Too many vertices in the unitig graph, you may increase the kmer size to remove tons of erroneous kmers.\" in the MEGAHIT log file. But not --threads, --memory, -o or input read files, because these are already in use. Must be used like this: --megahit_options \"--presets meta-large\""
+                    "help_text": "An example is adjusting presets (e.g. \"--presets meta-large\"), k-mers (e.g. \"-k 21,33,55,77\") or adding other [advanced options](https://github.com/voutcn/megahit#advanced-usage). For example, increase the minimum k-mer in the event of an error message such as \"Too many vertices in the unitig graph, you may increase the kmer size to remove tons of erroneous kmers.\" in the MEGAHIT log file. But not --threads, --memory, -o or input read files, because these are already in use. Must be used like this: --megahit_options='--presets meta-large'"
                 },
                 "skip_spades": {
                     "type": "boolean",
