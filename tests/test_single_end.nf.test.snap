@@ -55,10 +55,10 @@
                     "untar": 1.34
                 },
                 "CHECKM_LINEAGEWF": {
-                    "checkm": "1.2.3"
+                    "checkm": "1.2.5"
                 },
                 "CHECKM_QA": {
-                    "checkm": "1.2.3"
+                    "checkm": "1.2.5"
                 },
                 "CHECKM_UNTAR": {
                     "untar": 1.34

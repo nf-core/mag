@@ -3,11 +3,12 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 5.4.1 - Yellow Frog patch [2026-03-10]
+## 5.4.1 - Yellow Frog patch [2026-03-13]
 
 ### `Changed`
 
 - [#993](https://github.com/nf-core/mag/pull/993) - Tweak `test_full` resources to stop failures (by @jfy133)
+- [#995](https://github.com/nf-core/mag/pull/995) - Update CheckM and BUSCO modules (by @dialvarezs)
 
 ### `Fixed`
 
@@ -17,6 +18,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#988](https://github.com/nf-core/mag/pull/988) - Fix regarding validation of column `long_reads_platform` in the input samplesheet ([#985](https://github.com/nf-core/mag/issues/985) by @vinisalazar)
 - [#986](https://github.com/nf-core/mag/pull/986) - Fix faulty ALE version YAML loading resulting in a snakeyaml error (by @jfy133)
 - [#992](https://github.com/nf-core/mag/pull/992) - Fix command to get python package versions on local modules (by @dialvarezs)
+
+### `Dependencies`
+
+| Tool   | Previous version | New version |
+| ------ | ---------------- | ----------- |
+| CheckM | 1.2.3            | 1.2.5       |
 
 ## v5.4.0 - Yellow Frog [2026-02-02]
 

@@ -148,7 +148,7 @@ workflow BIN_QC {
                 [meta, dir, marker, []]
             }
 
-        CHECKM_QA(ch_checkmqa_input, [], [])
+        CHECKM_QA(ch_checkmqa_input, [], ch_checkm_db)
 
         ch_checkm_summaries = CHECKM_QA.out.output
             .map { _meta, summary -> [[id: 'checkm'], summary] }
