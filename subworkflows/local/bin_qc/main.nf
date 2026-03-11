@@ -110,7 +110,6 @@ workflow BIN_QC {
         }
 
         BUSCO_BUSCO(ch_bins, 'genome', params.busco_db_lineage, ch_busco_db, [], params.busco_clean)
-        ch_versions = ch_versions.mix(BUSCO_BUSCO.out.versions)
 
         ch_busco_summaries = BUSCO_BUSCO.out.batch_summary
             .map { _meta, summary -> [[id: 'busco'], summary] }
@@ -142,7 +141,6 @@ workflow BIN_QC {
             }
 
         CHECKM_LINEAGEWF(ch_bins_for_checkmlineagewf.reads, ch_bins_for_checkmlineagewf.ext, ch_checkm_db)
-        ch_versions = ch_versions.mix(CHECKM_LINEAGEWF.out.versions)
 
         ch_checkmqa_input = CHECKM_LINEAGEWF.out.checkm_output
             .join(CHECKM_LINEAGEWF.out.marker_file)
@@ -150,8 +148,7 @@ workflow BIN_QC {
                 [meta, dir, marker, []]
             }
 
-        CHECKM_QA(ch_checkmqa_input, [])
-        ch_versions = ch_versions.mix(CHECKM_QA.out.versions)
+        CHECKM_QA(ch_checkmqa_input, [], ch_checkm_db)
 
         ch_checkm_summaries = CHECKM_QA.out.output
             .map { _meta, summary -> [[id: 'checkm'], summary] }
