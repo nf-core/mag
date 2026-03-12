@@ -412,7 +412,7 @@ workflow MAG {
             )
             .groupTuple(by: 0)
 
-        DEPTHS(ch_input_for_postbinning, BINNING.out.metabat2depths, ch_reads_for_depths)
+        DEPTHS(ch_input_for_postbinning, BINNING.out.contig_depths, ch_reads_for_depths)
         ch_versions = ch_versions.mix(DEPTHS.out.versions)
 
         ch_input_for_binsummary = DEPTHS.out.depths_summary

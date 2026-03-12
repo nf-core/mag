@@ -87,16 +87,16 @@ output:
             type: file
             description: Unbinned sequences in compressed FASTA format
             pattern: "*.fasta.gz"
-  - metabat2depths:
-      description: Coverage depth files from MetaBAT2
+  - contig_depths:
+      description: Per-contig coverage depth files from CoverM
       structure:
         - meta:
             type: map
             description: Metadata map
         - txt:
             type: file
-            description: Coverage depth information
-            pattern: "*.txt"
+            description: Per-contig coverage depth information (MetaBAT2-compatible format)
+            pattern: "*.depth.txt"
   - versions:
       type: file
       description: File containing software versions
