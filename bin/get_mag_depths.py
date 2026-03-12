@@ -48,7 +48,8 @@ def main(args=None):
     # load contig depths for all samples into dict (could use pandas as well)
     sample_names = []
     dict_contig_depths = {}
-    with gzip.open(args.depths, "rt") as infile:
+    opener = gzip.open if args.depths.endswith('.gz') else open
+    with opener(args.depths, "rt") as infile:
         reader = csv.DictReader(infile, delimiter="\t")
         # process header to extract sample names from column names
         depth_columns = []

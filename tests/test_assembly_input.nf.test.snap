@@ -137,8 +137,8 @@
                 "MAXBIN2": {
                     "maxbin2": "2.2.7"
                 },
-                "METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_SHORTREAD": {
-                    "metabat2": 2.15
+                "COVERM_CONTIG_SHORTREAD": {
+                    "coverm": 2.15
                 },
                 "METABAT2_METABAT2": {
                     "metabat2": 2.17
@@ -382,10 +382,10 @@
                 "GenomeBinning/depths/bins/MEGAHIT-DASTool-test_minigut-binDepths.heatmap.png",
                 "GenomeBinning/depths/bins/SPAdes-DASTool-test_minigut-binDepths.heatmap.png",
                 "GenomeBinning/depths/bins/bin_depths_summary.tsv",
-                "GenomeBinning/depths/contigs/MEGAHIT-test_minigut-depth.txt.gz",
-                "GenomeBinning/depths/contigs/MEGAHIT-test_minigut_sample2-depth.txt.gz",
-                "GenomeBinning/depths/contigs/SPAdes-test_minigut-depth.txt.gz",
-                "GenomeBinning/depths/contigs/SPAdes-test_minigut_sample2-depth.txt.gz"
+                "GenomeBinning/depths/contigs/MEGAHIT-test_minigut-depth.txt",
+                "GenomeBinning/depths/contigs/MEGAHIT-test_minigut_sample2-depth.txt",
+                "GenomeBinning/depths/contigs/SPAdes-test_minigut-depth.txt",
+                "GenomeBinning/depths/contigs/SPAdes-test_minigut_sample2-depth.txt"
             ],
             [
                 "MEGAHIT-CONCOCT-test_minigut_0.fa.gz:md5,245ea168aa421e1e3e720cf223a80780",

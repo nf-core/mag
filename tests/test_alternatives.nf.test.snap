@@ -82,8 +82,8 @@
                 "MEGAHIT": {
                     "megahit": "1.2.9"
                 },
-                "METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_SHORTREAD": {
-                    "metabat2": 2.15
+                "COVERM_CONTIG_SHORTREAD": {
+                    "coverm": 2.15
                 },
                 "METABAT2_METABAT2": {
                     "metabat2": 2.17
@@ -225,7 +225,7 @@
                 "GenomeBinning/contig_to_bin/contig_to_bin_map.tsv",
                 "GenomeBinning/depths/bins/MEGAHIT-MetaBAT2-group-0-binDepths.heatmap.png",
                 "GenomeBinning/depths/bins/bin_depths_summary.tsv",
-                "GenomeBinning/depths/contigs/MEGAHIT-group-0-depth.txt.gz"
+                "GenomeBinning/depths/contigs/MEGAHIT-group-0-depth.txt"
             ],
             [
                 "MEGAHIT-MetaBAT2-group-0.1.fa.gz:md5,03980cd3f96ecbd947bec62aee97d507",

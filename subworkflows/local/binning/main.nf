@@ -1,27 +1,29 @@
 /*
  * Binning with MetaBAT2 and MaxBin2
  */
-include { FASTA_BINNING_CONCOCT                                                                  } from '../../../subworkflows/nf-core/fasta_binning_concoct/main'
-include { BINNING_METABINNER                                                                     } from '../../../subworkflows/local/binning_metabinner/main'
+include { FASTA_BINNING_CONCOCT                                     } from '../../../subworkflows/nf-core/fasta_binning_concoct/main'
+include { BINNING_METABINNER                                         } from '../../../subworkflows/local/binning_metabinner/main'
 
-include { METABAT2_METABAT2                                                                      } from '../../../modules/nf-core/metabat2/metabat2/main'
+include { METABAT2_METABAT2                                          } from '../../../modules/nf-core/metabat2/metabat2/main'
+include { COVERM_CONTIG as COVERM_CONTIG_SHORTREAD                                       } from '../../../modules/nf-core/coverm/contig/main'
+include { COVERM_CONTIG as COVERM_CONTIG_LONGREAD                                        } from '../../../modules/nf-core/coverm/contig/main'
 include { METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS as METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_SHORTREAD } from '../../../modules/nf-core/metabat2/jgisummarizebamcontigdepths/main'
 include { METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS as METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_LONGREAD  } from '../../../modules/nf-core/metabat2/jgisummarizebamcontigdepths/main'
-include { MAXBIN2                                                                                } from '../../../modules/nf-core/maxbin2/main'
-include { COMEBIN_RUNCOMEBIN                                                                     } from '../../../modules/nf-core/comebin/runcomebin/main'
-include { SEMIBIN_SINGLEEASYBIN                                                                  } from '../../../modules/nf-core/semibin/singleeasybin/main'
+include { MAXBIN2                                                    } from '../../../modules/nf-core/maxbin2/main'
+include { COMEBIN_RUNCOMEBIN                                         } from '../../../modules/nf-core/comebin/runcomebin/main'
+include { SEMIBIN_SINGLEEASYBIN                                      } from '../../../modules/nf-core/semibin/singleeasybin/main'
 
-include { GUNZIP as GUNZIP_BINS                                                                  } from '../../../modules/nf-core/gunzip/main'
-include { GUNZIP as GUNZIP_UNBINS                                                                } from '../../../modules/nf-core/gunzip/main'
-include { SEQKIT_STATS                                                                           } from '../../../modules/nf-core/seqkit/stats/main'
+include { GUNZIP as GUNZIP_BINS                                      } from '../../../modules/nf-core/gunzip/main'
+include { GUNZIP as GUNZIP_UNBINS                                    } from '../../../modules/nf-core/gunzip/main'
+include { SEQKIT_STATS                                               } from '../../../modules/nf-core/seqkit/stats/main'
 
-include { CONVERT_DEPTHS                                                                         } from '../../../modules/local/mag_depths_convert/main'
-include { ADJUST_MAXBIN2_EXT                                                                     } from '../../../modules/local/adjust_maxbin2_ext/main'
-include { SPLIT_FASTA                                                                            } from '../../../modules/local/split_fasta/main'
+include { CONVERT_DEPTHS                                             } from '../../../modules/local/mag_depths_convert/main'
+include { ADJUST_MAXBIN2_EXT                                         } from '../../../modules/local/adjust_maxbin2_ext/main'
+include { SPLIT_FASTA                                                } from '../../../modules/local/split_fasta/main'
 
 workflow BINNING {
     take:
-    ch_assemblies // [val(meta), path(assembly), path(bams), path(bais)]
+    ch_assemblies    // [val(meta), path(assembly), path(bams_or_reads), path(bais)]
     val_bin_min_size // val(int)
     val_bin_max_size // val(int)
 
@@ -30,27 +32,77 @@ workflow BINNING {
     ch_versions = channel.empty()
     ch_input_splitfasta = channel.empty()
 
-    // generate coverage depths for each contig and branch by assembler type
-    ch_summarizedepth_input = ch_assemblies
-        .map { meta, _assembly, bams, bais ->
-            [meta, bams, bais]
+    // Validate: BAM-requiring binners cannot be used with CoverM native mappers
+    // because no BAM files are produced in that path
+    if (params.coverm_mapper != 'bowtie2') {
+        if (!params.skip_concoct) {
+            error("[nf-core/mag] CONCOCT requires BAM files. Please use --skip_concoct or set --coverm_mapper 'bowtie2'.")
         }
-        .branch { meta, _bams, _bais ->
-            longread: meta.assembler in ['FLYE', 'METAMDBG']
+        if (!params.skip_comebin) {
+            error("[nf-core/mag] COMEBin requires BAM files. Please use --skip_comebin or set --coverm_mapper 'bowtie2'.")
+        }
+        if (!params.skip_semibin) {
+            error("[nf-core/mag] SemiBin2 requires BAM files. Please use --skip_semibin or set --coverm_mapper 'bowtie2'.")
+        }
+    }
+
+    // Branch assemblies by assembler type for appropriate depth estimation
+    ch_assemblies_branched = ch_assemblies
+        .branch { meta, _assembly, _files, _indices ->
+            longread:  meta.assembler in ['FLYE', 'METAMDBG']
             shortread: true
         }
 
-    // Process each through appropriate module
-    METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_LONGREAD(ch_summarizedepth_input.longread)
-    ch_versions = ch_versions.mix(METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_LONGREAD.out.versions)
+    // Long reads always come as BAMs (from minimap2)
+    if (params.depth_calculator == 'coverm') {
+        ch_longread_depth = ch_assemblies_branched.longread
+            .multiMap { meta, _assembly, bams, _bais ->
+                reads:     [meta, bams]
+                reference: [meta, []]
+            }
+        COVERM_CONTIG_LONGREAD(ch_longread_depth.reads, ch_longread_depth.reference, true, false)
+        ch_longread_contig_depths = COVERM_CONTIG_LONGREAD.out.coverage
+    }
+    else {
+        ch_longread_jgi_input = ch_assemblies_branched.longread
+            .map { meta, _assembly, bams, bais -> [meta, bams, bais] }
+        METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_LONGREAD(ch_longread_jgi_input)
+        ch_versions = ch_versions.mix(METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_LONGREAD.out.versions)
+        ch_longread_contig_depths = METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_LONGREAD.out.depth
+    }
 
-    METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_SHORTREAD(ch_summarizedepth_input.shortread)
-    ch_versions = ch_versions.mix(METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_SHORTREAD.out.versions)
+    // Short reads: either CoverM or MetaBAT2 jgi for depth calculation
+    if (params.depth_calculator == 'coverm') {
+        if (params.coverm_mapper == 'bowtie2') {
+            ch_shortread_depth = ch_assemblies_branched.shortread
+                .multiMap { meta, _assembly, bams, _bais ->
+                    reads:     [meta, bams]
+                    reference: [meta, []]
+                }
+            COVERM_CONTIG_SHORTREAD(ch_shortread_depth.reads, ch_shortread_depth.reference, true, false)
+        }
+        else {
+            // CoverM native mapper: pass reads + assembly reference directly
+            ch_shortread_depth = ch_assemblies_branched.shortread
+                .multiMap { meta, assembly, reads, _bais ->
+                    reads:     [meta, reads]
+                    reference: [meta, assembly]
+                }
+            COVERM_CONTIG_SHORTREAD(ch_shortread_depth.reads, ch_shortread_depth.reference, false, false)
+        }
+        ch_shortread_contig_depths = COVERM_CONTIG_SHORTREAD.out.coverage
+    }
+    else {
+        // MetaBAT2 jgi - only available with bowtie2 (BAMs required)
+        ch_shortread_jgi_input = ch_assemblies_branched.shortread
+            .map { meta, _assembly, bams, bais -> [meta, bams, bais] }
+        METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_SHORTREAD(ch_shortread_jgi_input)
+        ch_versions = ch_versions.mix(METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_SHORTREAD.out.versions)
+        ch_shortread_contig_depths = METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_SHORTREAD.out.depth
+    }
 
-    // Merge the outputs
-    ch_combined_depths = METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_LONGREAD.out.depth.mix(
-        METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_SHORTREAD.out.depth
-    )
+    // Merge depth outputs from short and long reads
+    ch_combined_depths = ch_longread_contig_depths.mix(ch_shortread_contig_depths)
     ch_metabat_depths = ch_combined_depths.map { meta, depths ->
         def meta_new = meta + [binner: 'MetaBAT2']
         [meta_new, depths]
@@ -67,7 +119,7 @@ workflow BINNING {
             [meta, assembly, depths]
         }
 
-    // convert metabat2 depth files to maxbin2
+    // convert coverm depth files to maxbin2 abundance format
     if (!params.skip_maxbin2) {
         CONVERT_DEPTHS(ch_metabat2_input)
         ch_versions = ch_versions.mix(CONVERT_DEPTHS.out.versions)
@@ -107,7 +159,7 @@ workflow BINNING {
         ch_input_splitfasta = ch_input_splitfasta.mix(MAXBIN2.out.unbinned_fasta)
     }
 
-    // CONCOCT
+    // CONCOCT (requires BAMs - only available with --coverm_mapper bowtie2)
     if (!params.skip_concoct) {
 
         ch_concoct_input = ch_assemblies
@@ -127,7 +179,7 @@ workflow BINNING {
         ch_binning_results_gzipped_final = ch_binning_results_gzipped_final.mix(FASTA_BINNING_CONCOCT.out.bins)
     }
 
-    // COMEBin
+    // COMEBin (requires BAMs - only available with --coverm_mapper bowtie2)
     if (!params.skip_comebin) {
         ch_comebin_input = ch_assemblies.map { meta, assembly, bams, _bais ->
             def meta_new = meta + [binner: 'COMEBin']
@@ -156,7 +208,7 @@ workflow BINNING {
         ch_input_splitfasta = ch_input_splitfasta.mix(BINNING_METABINNER.out.unbinned)
     }
 
-    // SemiBin2
+    // SemiBin2 (requires BAMs - only available with --coverm_mapper bowtie2)
     if (!params.skip_semibin) {
         ch_semibin_input = ch_assemblies.map { meta, assembly, bams, _bais ->
             def meta_new = meta + [binner: 'SemiBin2'] + [sample_count: bams.size()]
@@ -250,10 +302,10 @@ workflow BINNING {
     ch_splitfasta_results_gunzipped = GUNZIP_UNBINS.out.gunzip.groupTuple(by: 0)
 
     emit:
-    bins           = ch_binning_results_gunzipped
-    bins_gz        = ch_binning_results_gzipped_final
-    unbinned       = ch_splitfasta_results_gunzipped
-    unbinned_gz    = SPLIT_FASTA.out.unbinned
-    metabat2depths = ch_combined_depths
-    versions       = ch_versions
+    bins          = ch_binning_results_gunzipped
+    bins_gz       = ch_binning_results_gzipped_final
+    unbinned      = ch_splitfasta_results_gunzipped
+    unbinned_gz   = SPLIT_FASTA.out.unbinned
+    contig_depths = ch_combined_depths
+    versions      = ch_versions
 }

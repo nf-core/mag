@@ -71,8 +71,8 @@
                 "MAXBIN2": {
                     "maxbin2": "2.2.7"
                 },
-                "METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_SHORTREAD": {
-                    "metabat2": 2.15
+                "COVERM_CONTIG_SHORTREAD": {
+                    "coverm": 2.15
                 },
                 "METABAT2_METABAT2": {
                     "metabat2": 2.17
