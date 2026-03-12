@@ -61,7 +61,6 @@ workflow BINNING {
                 reference: [meta, []]
             }
         COVERM_CONTIG_LONGREAD(ch_longread_depth.reads, ch_longread_depth.reference, true, false)
-        ch_versions = ch_versions.mix(COVERM_CONTIG_LONGREAD.out.versions)
         ch_longread_contig_depths = COVERM_CONTIG_LONGREAD.out.coverage
     }
     else {
@@ -91,7 +90,6 @@ workflow BINNING {
                 }
             COVERM_CONTIG_SHORTREAD(ch_shortread_depth.reads, ch_shortread_depth.reference, false, false)
         }
-        ch_versions = ch_versions.mix(COVERM_CONTIG_SHORTREAD.out.versions)
         ch_shortread_contig_depths = COVERM_CONTIG_SHORTREAD.out.coverage
     }
     else {
