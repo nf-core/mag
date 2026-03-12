@@ -6,7 +6,7 @@ GenomeBinning/CONCOCT/stats/*_log.txt
 GenomeBinning/CONCOCT/stats/*.tsv
 GenomeBinning/SemiBin2/log/*.log
 GenomeBinning/DASTool/*.log
-GenomeBinning/depths/**/*-depth.txt.gz
+GenomeBinning/depths/**/*-depth.txt
 GenomeBinning/depths/bins/*.png
 GenomeBinning/MetaBAT2/unbinned/discarded/*.unbinned.pooled.fa.gz
 GenomeBinning/QC/busco_summary.tsv
