@@ -110,7 +110,7 @@
                     "trimmomatic": 0.39
                 },
                 "Workflow": {
-                    "nf-core/mag": "v5.4.1"
+                    "nf-core/mag": "v5.5.0dev"
                 }
             }
         ],
