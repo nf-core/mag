@@ -437,9 +437,30 @@ This may result in a different set or none of contigs being evaluated in pyDamag
 
 In order to run the binning tools included in the pipeline, MAG must first align reads back to the assemblies, and estimate the coverage of each contig.
 
-During the coverage estimation step, these alignments are by default filtered to retain alignments that have a percentage identity of 97% (i.e., of the base pairs that match between the read and the contig, 97% are identical). This value is a good default for short read Illumina data, however for certain long read technologies, the error rates in the reads can be much higher.
-For example, older Oxford Nanopore chemistries can have error rates approaching
-15% - 20%.
+By default, the pipeline uses [CoverM](https://github.com/wwood/CoverM) (`--depth_calculator coverm`) for coverage estimation, replacing the legacy `jgi_summarize_bam_contig_depths` tool from MetaBAT2. CoverM outputs a MetaBAT2-compatible depth file (using `--methods metabat`) which is compatible with all downstream binning tools.
+
+### Depth calculator
+
+The `--depth_calculator` parameter controls which tool is used for coverage estimation:
+
+- `coverm` (default): Uses CoverM with `--methods metabat` output format. Compatible with all mappers.
+- `metabat2`: Uses the original `jgi_summarize_bam_contig_depths` tool from MetaBAT2. Requires BAM files and therefore can only be used with `--coverm_mapper bowtie2`.
+
+### Mapper selection
+
+The `--coverm_mapper` parameter controls which aligner is used for mapping reads back to assembled contigs:
+
+- `bowtie2` (default): Runs Bowtie2 manually to produce BAM files, which are then passed to CoverM. This mode is compatible with all binning tools (MetaBAT2, MaxBin2, CONCOCT, COMEBin, SemiBin2, etc.).
+- CoverM-native mappers (`bwa-mem`, `bwa-mem2`, `minimap2-sr`, `minimap2-ont`, `minimap2-pb`, `minimap2-hifi`, `strobealign`): CoverM handles both mapping and coverage calculation directly from reads, bypassing the BAM generation step. When using a CoverM-native mapper, tools that require BAM files (CONCOCT, COMEBin, SemiBin2) must be disabled with their respective skip flags (`--skip_concoct`, `--skip_comebin`, `--skip_semibin`).
+
+### Coverage method
+
+The `--coverm_methods` parameter controls the coverage calculation method passed to CoverM. The default is `metabat`, which outputs a MetaBAT2 `jgi_summarize_bam_contig_depths`-compatible format required for binning. Other CoverM methods (e.g. `mean`, `trimmed_mean`, `rpkm`) are available but may not be compatible with downstream binning tools.
+
+### Alignment identity filtering
+
+During the coverage estimation step, alignments are by default filtered to retain alignments that have a percentage identity of 97% (i.e., of the base pairs that match between the read and the contig, 97% are identical). This value is a good default for short read Illumina data, however for certain long read technologies, the error rates in the reads can be much higher.
+For example, older Oxford Nanopore chemistries can have error rates approaching 15% - 20%.
 
 If you are having trouble with the coverage estimation steps (for example, the output depths for each bin are all at or near zero), it may be worth manually adjusting this parameter, if it is appropriate for your data.
 You can do this by adjusting the `--longread_percentidentity` and `--shortread_percentidentity` parameters for long reads and short reads, respectively.
