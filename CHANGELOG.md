@@ -3,6 +3,14 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+- [#997](https://github.com/nf-core/mag/pull/997) - Add CoverM as the default contig depth/coverage calculator, replacing `jgi_summarize_bam_contig_depths` from MetaBAT2. New parameters added: `--depth_calculator` (default: `coverm`), `--coverm_mapper` (default: `bowtie2`), and `--coverm_methods` (default: `metabat`) (by @vinisalazar)
+
+### `Dependencies`
+
+| Tool   | Previous version | New version |
+| ------ | ---------------- | ----------- |
+| CoverM |                  | 0.7.0       |
+
 ## 5.4.1 - Yellow Frog patch [2026-03-13]
 
 ### `Changed`
