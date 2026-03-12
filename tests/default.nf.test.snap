@@ -132,20 +132,20 @@
                     "seqkit": "2.9.0"
                 },
                 "SPLIT_FASTA": {
-                    "biopython": "1.7.4",
+                    "biopython": "1.74",
                     "pandas": "1.1.5",
                     "python": "3.6.7"
                 },
                 "Workflow": {
-                    "nf-core/mag": "v5.4.0"
+                    "nf-core/mag": "v5.4.1"
                 }
             }
         ],
+        "timestamp": "2026-03-06T16:40:13.709386829",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.0"
-        },
-        "timestamp": "2025-11-27T11:33:08.036474035"
+            "nf-test": "0.9.4",
+            "nextflow": "25.10.4"
+        }
     },
     "multiqc": {
         "content": [
@@ -391,10 +391,10 @@
                 "quast_table.yaml:md5,2d53029b92bc2e3940ee2ae932fa2c9d"
             ]
         ],
+        "timestamp": "2025-12-01T14:44:58.067666089",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
-        },
-        "timestamp": "2025-12-01T14:44:58.067666089"
+        }
     }
 }

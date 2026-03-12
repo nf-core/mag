@@ -3,6 +3,28 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 5.4.1 - Yellow Frog patch [2026-03-13]
+
+### `Changed`
+
+- [#993](https://github.com/nf-core/mag/pull/993) - Tweak `test_full` resources to stop failures (by @jfy133)
+- [#995](https://github.com/nf-core/mag/pull/995) - Update CheckM and BUSCO modules (by @dialvarezs)
+
+### `Fixed`
+
+- [#974](https://github.com/nf-core/mag/pull/974) - Re-add accidently removed functionality for using metaSPAdes contigs downstream rather than scaffolds (reported by @Pranjal-Bioinfo, fix by @jfy133)
+- [#984](https://github.com/nf-core/mag/pull/984) - Fix docs regarding usage of Bin QC tool scores when filtering bins for post-processing (by @dialvarezs, @claude)
+- [#987](https://github.com/nf-core/mag/pull/987) - Fix several documentation issues (by @dialvarezs)
+- [#988](https://github.com/nf-core/mag/pull/988) - Fix regarding validation of column `long_reads_platform` in the input samplesheet ([#985](https://github.com/nf-core/mag/issues/985) by @vinisalazar)
+- [#986](https://github.com/nf-core/mag/pull/986) - Fix faulty ALE version YAML loading resulting in a snakeyaml error (by @jfy133)
+- [#992](https://github.com/nf-core/mag/pull/992) - Fix command to get python package versions on local modules (by @dialvarezs)
+
+### `Dependencies`
+
+| Tool   | Previous version | New version |
+| ------ | ---------------- | ----------- |
+| CheckM | 1.2.3            | 1.2.5       |
+
 ## v5.4.0 - Yellow Frog [2026-02-02]
 
 ### `Added`
@@ -25,8 +47,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | Tool | Previous version | New version |
 | ---- | ---------------- | ----------- |
 | ale  |                  | 20180904    |
-
-### `Deprecated`
 
 ## v5.3.0 - Rainbow Rattlesnake [2025-12-05]
 
@@ -128,8 +148,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | ------- | ---------------- | ----------- |
 | nf-core | 3.3.2            | 3.4.1       |
 | COMEBin |                  | 1.0.4       |
-
-### `Deprecated`
 
 ## v5.0.0 - Green Squirrel [2025-09-30]
 
@@ -266,8 +284,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | CheckM2 | 1.0.2            | 1.1.0       |
 | SPAdes  | 4.0.0            | 4.1.0       |
 
-### `Deprecated`
-
 ## v3.3.1 - [2025-02-13]
 
 ### `Added`
@@ -285,8 +301,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#752](https://github.com/nf-core/mag/pull/752) - Fix QUAST results not being displayed when skipping certain steps (reported by @amizeranschi, fix by @jfy133)
 - [#753](https://github.com/nf-core/mag/pull/753) - Fix iGenomes reference support for host removal reference genome (reported by @Thomieh73, fix by @jfy133)
 - [#759](https://github.com/nf-core/mag/pull/758) - Fixed parameters that allow both files or directories to not error with directories, and general file input validation improvements (reported by @mjfi2sb3, fix by @jfy133)
-
-### `Deprecated`
 
 ## v3.3.0 - Red Reindeer [2024-12-19]
 
@@ -321,21 +335,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | GUNC    | 1.0.5            | 1.0.6       |
 | nanoq   |                  | 0.10.0      |
 
-### `Deprecated`
-
 ## v3.2.1 [2024-10-30]
-
-### `Added`
-
-### `Changed`
 
 ### `Fixed`
 
 - [#707](https://github.com/nf-core/mag/pull/674) - Fix missing space resulting in malformed args for MEGAHIT (reported by @d4straub, fix by @jfy133)
-
-### `Dependencies`
-
-### `Deprecated`
 
 ## v3.2.0 - Salmon Salmon [2024-10-27]
 
@@ -367,8 +371,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | Filtlong     | 0.2.0            | 0.2.1       |
 | SPAdes       | 3.15.3           | 4.0.0       |
 
-### `Deprecated`
-
 ## v3.1.0 - Pink Panda [2024-10-04]
 
 ### `Added`
@@ -399,10 +401,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v3.0.3 [2024-08-27]
 
-### `Added`
-
-### `Changed`
-
 ### `Fixed`
 
 - [#648](https://github.com/nf-core/mag/pull/648) - Fix sample ID/assembly ID check failure when no IDs match (reported by @zackhenny, fix by @prototaxites)
@@ -412,13 +410,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#652](https://github.com/nf-core/mag/pull/652) - Fix documentation typo in using user-defined assembly parameters (reported and fixed by @amizeranschi)
 - [#653](https://github.com/nf-core/mag/pull/653) - Fix overwriting of per-bin 'raw' GUNC RUN output files (multi-bin summary tables not affected) (reported by @zackhenny and fixed by @jfy133)
 
-### `Dependencies`
-
-### `Deprecated`
-
 ## v3.0.2 [2024-07-04]
-
-### `Added`
 
 ### `Changed`
 
@@ -437,11 +429,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | NanoPlot | 1.26.3           | 1.41.6      |
 | NanoLyse | 1.1.0            | 1.2.0       |
 
-### `Deprecated`
-
 ## v3.0.1 [2024-06-10]
-
-### `Added`
 
 ### `Changed`
 
@@ -456,8 +444,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | Tool       | Previous version | New version |
 | ---------- | ---------------- | ----------- |
 | Centrifuge | 1.0.4_beta       | 1.0.4.1     |
-
-### `Deprecated`
 
 ## v3.0.0 - Magenta Magpie [2024-05-13]
 
@@ -474,15 +460,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#606](https://github.com/nf-core/mag/pull/606) - Prevent pipeline crash when premade mashdb given to or no alignments found with GTDB-TK_CLASSIFYWF (reported by @cedwardson4, fix by @jfy133)
 
-### `Dependencies`
-
 ### `Deprecated`
 
 - [#599](https://github.com/nf-core/mag/pull/599) - Direct reads input (`--input 'sample_{R1,R2}.fastq.gz'`) is no longer supported, all input must come via samplesheets (by @jfy133)
 
 ## v2.5.4 [2024-02-12]
-
-### `Added`
 
 ### `Changed`
 
@@ -493,13 +475,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#583](https://github.com/nf-core/mag/pull/583) - Fix GTDB database input when directory supplied (fix by @jfy133)
 
-### `Dependencies`
-
-### `Deprecated`
-
 ## v2.5.3 [2024-02-05]
-
-### `Added`
 
 ### `Changed`
 
@@ -508,10 +484,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Fixed`
 
 - [#574](https://github.com/nf-core/mag/pull/574) - Fix wrong channel going to BIN_SUMMARY (fix by @maxibor)
-
-### `Dependencies`
-
-### `Deprecated`
 
 ## v2.5.2 [2024-02-02]
 
@@ -534,15 +506,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Correct CAT name files
 - [#558](https://github.com/nf-core/mag/pull/558) - Fix bug in run merging when dealing with single end data (reported by @roberta-davidson, fix by @jfy133)
 
-### `Dependencies`
-
-### `Deprecated`
-
 ## v2.5.1 [2023-11-17]
-
-### `Added`
-
-### `Changed`
 
 ### `Fixed`
 
@@ -578,8 +542,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#516](https://github.com/nf-core/mag/pull/516) - Fix edge-case bug where MEGAHIT re-uses previous work directory on resume and fails (reported by @husensofteng, fix by @prototaxites)
 - [#520](https://github.com/nf-core/mag/pull/520) - Fix missing Tiara output files (fix by @jfy133)
 - [#522](https://github.com/nf-core/mag/pull/522) - Fix 'nulls' in depth plot PNG files (fix by @jfy133)
-
-### `Dependencies`
 
 ### `Deprecated`
 
@@ -688,16 +650,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v2.2.1 [2022-08-25]
 
-### `Added`
-
-### `Changed`
-
 ### `Fixed`
 
 - [#328](https://github.com/nf-core/mag/pull/328) - Fix too many symbolic links issue in local convert_depths module (reported by @ChristophKnapp and fixed by @apeltzer, @jfy133)
 - [#329](https://github.com/nf-core/mag/pull/329) - Each sample now gets it's own result directory for PyDamage analysis and filter (reported and fixed by @maxibor)
-
-### `Dependencies`
 
 ## v2.2.0 - Golden Mammoth [2022-06-14]
 

@@ -38,7 +38,7 @@
                     },
                     "busco/busco": {
                         "branch": "master",
-                        "git_sha": "e753770db613ce014b3c4bc94f6cba443427b726",
+                        "git_sha": "25e280b4e6cac8cf6af580e9823264f5bc83cefa",
                         "installed_by": ["modules"]
                     },
                     "cat/fastq": {
@@ -78,12 +78,12 @@
                     },
                     "checkm/lineagewf": {
                         "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "git_sha": "76f4410c31b6307e37a3509c954f1e1c4db0e996",
                         "installed_by": ["modules"]
                     },
                     "checkm/qa": {
                         "branch": "master",
-                        "git_sha": "e753770db613ce014b3c4bc94f6cba443427b726",
+                        "git_sha": "76f4410c31b6307e37a3509c954f1e1c4db0e996",
                         "installed_by": ["modules"]
                     },
                     "checkm2/databasedownload": {
@@ -233,12 +233,12 @@
                     },
                     "minimap2/align": {
                         "branch": "master",
-                        "git_sha": "e753770db613ce014b3c4bc94f6cba443427b726",
+                        "git_sha": "5c9f8d5b7671237c906abadc9ff732b301ca15ca",
                         "installed_by": ["modules"]
                     },
                     "minimap2/index": {
                         "branch": "master",
-                        "git_sha": "e753770db613ce014b3c4bc94f6cba443427b726",
+                        "git_sha": "14980f759266eec42dac401fcafeb83d6c957b41",
                         "installed_by": ["modules"]
                     },
                     "mmseqs/databases": {
