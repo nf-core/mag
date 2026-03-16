@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
+- [#997](https://github.com/nf-core/mag/pull/997) - Add CoverM as the default contig depth/coverage calculator, replacing `jgi_summarize_bam_contig_depths` from MetaBAT2. New parameters added: `--depth_calculator` (default: `coverm`), `--coverm_mapper` (default: `bowtie2`), and `--coverm_methods` (default: `metabat`) (by @vinisalazar)
+
 ### `Changed`
 
 - [#1000](https://github.com/nf-core/mag/pull/1000) - Update GUNC modules and enable the tool in tests (by @dialvarezs)
@@ -15,9 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Dependencies`
 
-| Tool | Previous version | New version |
-| ---- | ---------------- | ----------- |
-| GUNC | 1.0.6            | 1.1.0       |
+| Tool   | Previous version | New version |
+| ------ | ---------------- | ----------- |
+| GUNC   | 1.0.6            | 1.1.0       |
+| CoverM |                  | 0.7.0       |
 
 ### `Deprecated`
 
