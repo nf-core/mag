@@ -211,6 +211,7 @@ workflow BIN_QC {
             .collectFile(
                 name: "gunc_summary.tsv",
                 keepHeader: true,
+                sort: { file -> file.toString() },
                 storeDir: "${params.outdir}/GenomeBinning/QC/",
             )
         if (params.run_checkm) {
@@ -224,6 +225,7 @@ workflow BIN_QC {
                 .collectFile(
                     name: "gunc_checkm_summary.tsv",
                     keepHeader: true,
+                    sort: { file -> file.toString() },
                     storeDir: "${params.outdir}/GenomeBinning/QC/",
                 )
         }
