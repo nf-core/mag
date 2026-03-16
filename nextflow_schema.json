@@ -1029,7 +1029,7 @@
                     "type": "string",
                     "default": "progenomes",
                     "description": "Specify which database to auto-download if not supplying own",
-                    "enum": ["progenomes", "gtdb"]
+                    "enum": ["progenomes", "gtdb", "test_data"]
                 },
                 "gunc_save_db": {
                     "type": "boolean",
