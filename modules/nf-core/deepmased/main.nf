@@ -26,9 +26,10 @@ process DEEPMASED {
     echo -e "bam\\tfasta" > ${prefix}_file_paths.tsv
     echo -e "${bam}\\t${fasta}" >> ${prefix}_file_paths.tsv
 
+    # Run features with -p 1 to avoid Python multiprocessing issues inside Docker
     DeepMAsED features \\
         ${prefix}_file_paths.tsv \\
-        -p ${task.cpus} \\
+        -p 1 \\
         -o . \\
         -n ${prefix}_feature_file_paths.tsv
 
