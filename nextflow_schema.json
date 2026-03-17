@@ -633,6 +633,10 @@
                     "type": "boolean",
                     "description": "Skip ALE"
                 },
+                "skip_deepmased": {
+                    "type": "boolean",
+                    "description": "Skip DeepMAsED assembly error detection"
+                },
                 "skip_quast": {
                     "type": "boolean",
                     "description": "Skip metaQUAST."

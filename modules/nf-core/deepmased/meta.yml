@@ -1,0 +1,66 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: "deepmased"
+description: "DeepMAsED: Deep learning for Metagenome Assembly Error Detection. Computes features from BAM and assembly FASTA, then predicts assembly errors."
+keywords:
+  - metagenomics
+  - assembly
+  - quality control
+  - error detection
+  - deep learning
+tools:
+  - "deepmased":
+      description: "Deep learning for Metagenome Assembly Error Detection"
+      homepage: "https://github.com/leylabmpi/DeepMAsED"
+      documentation: "https://github.com/leylabmpi/DeepMAsED"
+      tool_dev_url: "https://github.com/leylabmpi/DeepMAsED"
+      doi: "10.1093/bioinformatics/btaa386"
+      licence: ["MIT"]
+      identifier: ""
+
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. `[ id:'sample1' ]`
+    - bam:
+        type: file
+        description: Sorted BAM file of reads mapped to the assembly
+        pattern: "*.{bam}"
+        ontologies:
+          - edam: "http://edamontology.org/format_2572" # BAM
+    - bai:
+        type: file
+        description: BAM index file
+        pattern: "*.{bai}"
+    - fasta:
+        type: file
+        description: Assembly in FASTA format
+        pattern: "*.{fasta,fa,fna}"
+        ontologies:
+          - edam: "http://edamontology.org/format_1929" # FASTA
+
+output:
+  predictions:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'sample1' ]`
+      - "*_deepmased_predictions.tsv":
+          type: file
+          description: TSV file containing per-contig assembly error predictions
+          pattern: "*_deepmased_predictions.tsv"
+          ontologies:
+            - edam: "http://edamontology.org/format_3475" # TSV
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: "http://edamontology.org/format_3750" # YAML
+authors:
+  - "@SkyLexS"
+maintainers:
+  - "@SkyLexS"

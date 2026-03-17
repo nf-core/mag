@@ -36,6 +36,7 @@ include { PROKKA                          } from '../modules/nf-core/prokka/main
 include { MMSEQS_DATABASES                } from '../modules/nf-core/mmseqs/databases/main'
 include { METAEUK_EASYPREDICT             } from '../modules/nf-core/metaeuk/easypredict/main'
 include { ALE                             } from '../modules/nf-core/ale/main'
+include { DEEPMASED                       } from '../modules/nf-core/deepmased/main'
 
 //
 // MODULE: Local to the pipeline
@@ -292,6 +293,31 @@ workflow MAG {
 
         ALE(ch_ale_input)
         ch_versions = ch_versions.mix(ALE.out.versions.ifEmpty([]))
+    }
+
+    /*
+    ================================================================================
+                                    DeepMAsED
+    ================================================================================
+    */
+
+    if (!params.skip_deepmased) {
+        ch_shortread_assemblies_for_deepmased = ch_assemblies.filter { meta, _assembly ->
+            meta.sr_platform != null && meta.sr_platform != []
+        }
+
+        ch_deepmased_input = BINNING_PREPARATION.out.grouped_mappings
+            .join(ch_shortread_assemblies_for_deepmased, by: 0)
+            .map { meta, _contigs, bams, bais, assembly ->
+                // Match BAM to the same sample; fall back to sorted first BAM for co-assemblies
+                def own_bam = bams.find { bam -> bam.name.endsWith("-${meta.id}.bam") }
+                def bam = own_bam ?: bams.sort()[0]
+                def bai = bais.find { bai -> bai.name.startsWith(bam.name) } ?: bais.sort()[0]
+                [meta, bam, bai, assembly]
+            }
+
+        DEEPMASED(ch_deepmased_input)
+        ch_versions = ch_versions.mix(DEEPMASED.out.versions.ifEmpty([]))
     }
 
     /*
