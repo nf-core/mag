@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
+- [#1001](https://github.com/nf-core/mag/pull/1001) - Include all binners in parameter validation for running DASTool (by @dialvarezs)
+
 ### `Dependencies`
 
 | Tool | Previous version | New version |
