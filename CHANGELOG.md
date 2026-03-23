@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
+- [#1000](https://github.com/nf-core/mag/pull/1000) - Update GUNC modules and enable the tool in tests (by @dialvarezs)
+
 ### `Fixed`
 
 - [#1001](https://github.com/nf-core/mag/pull/1001) - Include all binners in parameter validation for running DASTool (by @dialvarezs)
@@ -17,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Tool | Previous version | New version |
 | ---- | ---------------- | ----------- |
-|      |                  |             |
+| GUNC | 1.0.6            | 1.1.0       |
 
 ### `Deprecated`
 
