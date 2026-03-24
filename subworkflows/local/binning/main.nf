@@ -5,10 +5,8 @@ include { FASTA_BINNING_CONCOCT                                     } from '../.
 include { BINNING_METABINNER                                         } from '../../../subworkflows/local/binning_metabinner/main'
 
 include { METABAT2_METABAT2                                          } from '../../../modules/nf-core/metabat2/metabat2/main'
-include { COVERM_CONTIG as COVERM_CONTIG_SHORTREAD                                       } from '../../../modules/nf-core/coverm/contig/main'
-include { COVERM_CONTIG as COVERM_CONTIG_LONGREAD                                        } from '../../../modules/nf-core/coverm/contig/main'
-include { METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS as METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_SHORTREAD } from '../../../modules/nf-core/metabat2/jgisummarizebamcontigdepths/main'
-include { METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS as METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_LONGREAD  } from '../../../modules/nf-core/metabat2/jgisummarizebamcontigdepths/main'
+include { COVERM_CONTIG as COVERM_CONTIG_SHORTREAD } from '../../../modules/nf-core/coverm/contig/main'
+include { COVERM_CONTIG as COVERM_CONTIG_LONGREAD  } from '../../../modules/nf-core/coverm/contig/main'
 include { MAXBIN2                                                    } from '../../../modules/nf-core/maxbin2/main'
 include { COMEBIN_RUNCOMEBIN                                         } from '../../../modules/nf-core/comebin/runcomebin/main'
 include { SEMIBIN_SINGLEEASYBIN                                      } from '../../../modules/nf-core/semibin/singleeasybin/main'
@@ -54,52 +52,33 @@ workflow BINNING {
         }
 
     // Long reads always come as BAMs (from minimap2)
-    if (params.depth_calculator == 'coverm') {
-        ch_longread_depth = ch_assemblies_branched.longread
+    ch_longread_depth = ch_assemblies_branched.longread
+        .multiMap { meta, _assembly, bams, _bais ->
+            reads:     [meta, bams]
+            reference: [meta, []]
+        }
+    COVERM_CONTIG_LONGREAD(ch_longread_depth.reads, ch_longread_depth.reference, true, false)
+    ch_longread_contig_depths = COVERM_CONTIG_LONGREAD.out.coverage
+
+    // Short reads: use CoverM for depth calculation
+    if (params.coverage_mapper == 'bowtie2') {
+        ch_shortread_depth = ch_assemblies_branched.shortread
             .multiMap { meta, _assembly, bams, _bais ->
                 reads:     [meta, bams]
                 reference: [meta, []]
             }
-        COVERM_CONTIG_LONGREAD(ch_longread_depth.reads, ch_longread_depth.reference, true, false)
-        ch_longread_contig_depths = COVERM_CONTIG_LONGREAD.out.coverage
+        COVERM_CONTIG_SHORTREAD(ch_shortread_depth.reads, ch_shortread_depth.reference, true, false)
     }
     else {
-        ch_longread_jgi_input = ch_assemblies_branched.longread
-            .map { meta, _assembly, bams, bais -> [meta, bams, bais] }
-        METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_LONGREAD(ch_longread_jgi_input)
-        ch_versions = ch_versions.mix(METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_LONGREAD.out.versions)
-        ch_longread_contig_depths = METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_LONGREAD.out.depth
+        // CoverM native mapper: pass reads + assembly reference directly
+        ch_shortread_depth = ch_assemblies_branched.shortread
+            .multiMap { meta, assembly, reads, _bais ->
+                reads:     [meta, reads]
+                reference: [meta, assembly]
+            }
+        COVERM_CONTIG_SHORTREAD(ch_shortread_depth.reads, ch_shortread_depth.reference, false, false)
     }
-
-    // Short reads: either CoverM or MetaBAT2 jgi for depth calculation
-    if (params.depth_calculator == 'coverm') {
-        if (params.coverage_mapper == 'bowtie2') {
-            ch_shortread_depth = ch_assemblies_branched.shortread
-                .multiMap { meta, _assembly, bams, _bais ->
-                    reads:     [meta, bams]
-                    reference: [meta, []]
-                }
-            COVERM_CONTIG_SHORTREAD(ch_shortread_depth.reads, ch_shortread_depth.reference, true, false)
-        }
-        else {
-            // CoverM native mapper: pass reads + assembly reference directly
-            ch_shortread_depth = ch_assemblies_branched.shortread
-                .multiMap { meta, assembly, reads, _bais ->
-                    reads:     [meta, reads]
-                    reference: [meta, assembly]
-                }
-            COVERM_CONTIG_SHORTREAD(ch_shortread_depth.reads, ch_shortread_depth.reference, false, false)
-        }
-        ch_shortread_contig_depths = COVERM_CONTIG_SHORTREAD.out.coverage
-    }
-    else {
-        // MetaBAT2 jgi - only available with bowtie2 (BAMs required)
-        ch_shortread_jgi_input = ch_assemblies_branched.shortread
-            .map { meta, _assembly, bams, bais -> [meta, bams, bais] }
-        METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_SHORTREAD(ch_shortread_jgi_input)
-        ch_versions = ch_versions.mix(METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_SHORTREAD.out.versions)
-        ch_shortread_contig_depths = METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_SHORTREAD.out.depth
-    }
+    ch_shortread_contig_depths = COVERM_CONTIG_SHORTREAD.out.coverage
 
     // Merge depth outputs from short and long reads
     ch_combined_depths = ch_longread_contig_depths.mix(ch_shortread_contig_depths)

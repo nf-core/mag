@@ -889,13 +889,6 @@
                         "strobealign"
                     ]
                 },
-                "depth_calculator": {
-                    "type": "string",
-                    "default": "coverm",
-                    "description": "Tool to use for contig depth/coverage estimation.",
-                    "help_text": "Specifies which tool to use for estimating contig depth after read mapping. Use `coverm` (default) to use CoverM with `--methods metabat` output format. Use `metabat2` to use the original `jgi_summarize_bam_contig_depths` tool from MetaBAT2. Note: `metabat2` requires BAM files and therefore cannot be used with CoverM-native mappers (i.e., requires `--coverage_mapper bowtie2`).",
-                    "enum": ["coverm", "metabat2"]
-                },
                 "save_assembly_mapped_reads": {
                     "type": "boolean",
                     "description": "Save the output of mapping raw reads back to assembled contigs",
