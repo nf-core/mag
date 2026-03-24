@@ -617,7 +617,7 @@ If a lineage dataset is specified already with `--busco_db`, only results for th
 <details markdown="1">
 <summary>Output files</summary>
 
-- `GenomeBinning/QC/BUSCO/[assembler]-[binner]-[sample/group]/`
+- `GenomeBinning/QC/BUSCO/[assembler]-[binner]-[domain]-[refinement]-[sample/group]/`
   - `[sample/group]-[lineage]-busco.batch_summary.txt`: Summary table of the BUSCO results for the bins in the sample.
   - `short_summary.generic.[lineage].[assembler]-[bin].{txt,json}`: A detailed BUSCO summary for each bin, available in both plain text and JSON format.
   - `[sample/group]-[lineage]-busco.log`: Log file of the BUSCO run.
