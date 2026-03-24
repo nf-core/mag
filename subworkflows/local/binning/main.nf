@@ -34,15 +34,15 @@ workflow BINNING {
 
     // Validate: BAM-requiring binners cannot be used with CoverM native mappers
     // because no BAM files are produced in that path
-    if (params.coverm_mapper != 'bowtie2') {
+    if (params.coverage_mapper != 'bowtie2') {
         if (!params.skip_concoct) {
-            error("[nf-core/mag] CONCOCT requires BAM files. Please use --skip_concoct or set --coverm_mapper 'bowtie2'.")
+            error("[nf-core/mag] CONCOCT requires BAM files. Please use --skip_concoct or set --coverage_mapper 'bowtie2'.")
         }
         if (!params.skip_comebin) {
-            error("[nf-core/mag] COMEBin requires BAM files. Please use --skip_comebin or set --coverm_mapper 'bowtie2'.")
+            error("[nf-core/mag] COMEBin requires BAM files. Please use --skip_comebin or set --coverage_mapper 'bowtie2'.")
         }
         if (!params.skip_semibin) {
-            error("[nf-core/mag] SemiBin2 requires BAM files. Please use --skip_semibin or set --coverm_mapper 'bowtie2'.")
+            error("[nf-core/mag] SemiBin2 requires BAM files. Please use --skip_semibin or set --coverage_mapper 'bowtie2'.")
         }
     }
 
@@ -73,7 +73,7 @@ workflow BINNING {
 
     // Short reads: either CoverM or MetaBAT2 jgi for depth calculation
     if (params.depth_calculator == 'coverm') {
-        if (params.coverm_mapper == 'bowtie2') {
+        if (params.coverage_mapper == 'bowtie2') {
             ch_shortread_depth = ch_assemblies_branched.shortread
                 .multiMap { meta, _assembly, bams, _bais ->
                     reads:     [meta, bams]

@@ -872,7 +872,7 @@
                     "help_text": "You can specify here Bowtie2 alignment options. For example: `--very-fast` , `--very-sensitive-local -N 1` , ... Must be used like this: --bowtie2_mode=\"--very-sensitive\". By default no settings are defined, thus Bowtie2 runs with it's own internal defaults (e.g. end-to-end alignment)",
                     "pattern": "^[-\\w]*$"
                 },
-                "coverm_mapper": {
+                "coverage_mapper": {
                     "type": "string",
                     "default": "bowtie2",
                     "description": "Mapper to use for coverage estimation of assembled contigs.",
@@ -893,7 +893,7 @@
                     "type": "string",
                     "default": "coverm",
                     "description": "Tool to use for contig depth/coverage estimation.",
-                    "help_text": "Specifies which tool to use for estimating contig depth after read mapping. Use `coverm` (default) to use CoverM with `--methods metabat` output format. Use `metabat2` to use the original `jgi_summarize_bam_contig_depths` tool from MetaBAT2. Note: `metabat2` requires BAM files and therefore cannot be used with CoverM-native mappers (i.e., requires `--coverm_mapper bowtie2`).",
+                    "help_text": "Specifies which tool to use for estimating contig depth after read mapping. Use `coverm` (default) to use CoverM with `--methods metabat` output format. Use `metabat2` to use the original `jgi_summarize_bam_contig_depths` tool from MetaBAT2. Note: `metabat2` requires BAM files and therefore cannot be used with CoverM-native mappers (i.e., requires `--coverage_mapper bowtie2`).",
                     "enum": ["coverm", "metabat2"]
                 },
                 "save_assembly_mapped_reads": {

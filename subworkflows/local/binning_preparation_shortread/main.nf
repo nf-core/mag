@@ -15,7 +15,7 @@ workflow SHORTREAD_BINNING_PREPARATION {
     ch_versions = channel.empty()
     ch_multiqc  = channel.empty()
 
-    if (params.coverm_mapper == 'bowtie2') {
+    if (params.coverage_mapper == 'bowtie2') {
         // build bowtie2 index for all assemblies
         BOWTIE2_ASSEMBLY_BUILD(ch_assemblies)
         ch_versions = ch_versions.mix(BOWTIE2_ASSEMBLY_BUILD.out.versions)
