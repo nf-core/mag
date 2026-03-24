@@ -918,12 +918,12 @@
                 "longread_percentidentity": {
                     "type": "number",
                     "description": "Specify a minimum percent identity filter for long reads mapping back to assembled contigs.",
-                    "help_text": "If specified, this parameter sets the `--percentIdentity` flag of the `metabat2 jgisummarizebamcontigdepths` command that is used to generate a read-depth per contig depth post assembly mapping. It can be useful in some cases to get more accurate depth coverages for binning by removing spurious alignments that can inflate coverage."
+                    "help_text": "If specified, this parameter sets the `--min-read-percent-identity` flag of CoverM that is used to generate a read-depth per contig depth post assembly mapping. It can be useful in some cases to get more accurate depth coverages for binning by removing spurious alignments that can inflate coverage."
                 },
                 "shortread_percentidentity": {
                     "type": "number",
                     "description": "Specify a minimum percent identity filter for short reads mapping back to assembled contigs.",
-                    "help_text": "If specified, this parameter sets the `--percentIdentity` flag of the `metabat2 jgisummarizebamcontigdepths` command that is used to generate a read-depth per contig depth post assembly mapping. It can be useful in some cases to get more accurate depth coverages for binning by removing spurious alignments that can inflate coverage."
+                    "help_text": "If specified, this parameter sets the `--min-read-percent-identity` flag of CoverM that is used to generate a read-depth per contig depth post assembly mapping. It can be useful in some cases to get more accurate depth coverages for binning by removing spurious alignments that can inflate coverage."
                 }
             }
         },
