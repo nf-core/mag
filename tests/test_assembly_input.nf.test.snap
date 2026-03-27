@@ -65,7 +65,7 @@
     },
     "-profile assembly_input": {
         "content": [
-            285,
+            286,
             {
                 "ADJUST_MAXBIN2_EXT": {
                     "coreutils": 9.5
@@ -89,6 +89,9 @@
                     "untar": 1.34
                 },
                 "CONCAT_BUSCO_TSV": {
+                    "qsv": "5.1.0"
+                },
+                "CONCAT_GUNC_TSV": {
                     "qsv": "5.1.0"
                 },
                 "CONCOCT_CONCOCT": {
@@ -174,9 +177,9 @@
                 }
             }
         ],
-        "timestamp": "2026-03-27T09:29:22.073080452",
+        "timestamp": "2026-03-27T17:58:59.080247138",
         "meta": {
-            "nf-test": "0.9.4",
+            "nf-test": "0.9.5",
             "nextflow": "25.10.4"
         }
     },
@@ -554,15 +557,15 @@
                 "missing_busco_list.tsv:md5,c7ee1e582e010aab60a566da7fe304de",
                 "GUNC.progenomes_2.1.maxCSS_level.tsv:md5,c3d611353770b42c99dd4fe9039ac10f",
                 "GUNC.progenomes_2.1.maxCSS_level.tsv:md5,02e72f9e57ed6defc4eb540453328c2e",
-                "gunc_summary.tsv:md5,c44bc95bb9d75e5d97532c4b852e1d1e",
+                "gunc_summary.tsv:md5,86dda28c13307b08d362185700ab7ccb",
                 "bin_summary.tsv:md5,60111a58bb0167ec1367f1e7463b7026",
                 "contig_to_bin_map.tsv:md5,4b640b728c3b42bfe65ea4a869708787",
                 "bin_depths_summary.tsv:md5,7153f759db72abb02e2ee3c2ab1b5e56"
             ]
         ],
-        "timestamp": "2026-03-27T10:00:15.852900418",
+        "timestamp": "2026-03-27T17:58:59.223381841",
         "meta": {
-            "nf-test": "0.9.4",
+            "nf-test": "0.9.5",
             "nextflow": "25.10.4"
         }
     },
