@@ -209,9 +209,9 @@ workflow BIN_QC {
         ch_gunc_summary = GUNC_RUN.out.maxcss_level_tsv
             .map { _meta, gunc_summary -> gunc_summary }
             .collectFile(
-                name: "gunc_summary.tsv",
+                name: 'gunc_summary.tsv',
                 keepHeader: true,
-                sort: { file -> file.toString() },
+                sort: 'deep',
                 storeDir: "${params.outdir}/GenomeBinning/QC/",
             )
         if (params.run_checkm) {
@@ -223,9 +223,9 @@ workflow BIN_QC {
             GUNC_MERGECHECKM.out.tsv
                 .map { _meta, gunc_checkm_summary -> gunc_checkm_summary }
                 .collectFile(
-                    name: "gunc_checkm_summary.tsv",
+                    name: 'gunc_checkm_summary.tsv',
                     keepHeader: true,
-                    sort: { file -> file.toString() },
+                    sort: 'deep',
                     storeDir: "${params.outdir}/GenomeBinning/QC/",
                 )
         }

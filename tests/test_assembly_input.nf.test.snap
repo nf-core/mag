@@ -554,13 +554,13 @@
                 "missing_busco_list.tsv:md5,c7ee1e582e010aab60a566da7fe304de",
                 "GUNC.progenomes_2.1.maxCSS_level.tsv:md5,c3d611353770b42c99dd4fe9039ac10f",
                 "GUNC.progenomes_2.1.maxCSS_level.tsv:md5,02e72f9e57ed6defc4eb540453328c2e",
-                "gunc_summary.tsv:md5,86dda28c13307b08d362185700ab7ccb",
+                "gunc_summary.tsv:md5,c44bc95bb9d75e5d97532c4b852e1d1e",
                 "bin_summary.tsv:md5,60111a58bb0167ec1367f1e7463b7026",
                 "contig_to_bin_map.tsv:md5,4b640b728c3b42bfe65ea4a869708787",
                 "bin_depths_summary.tsv:md5,7153f759db72abb02e2ee3c2ab1b5e56"
             ]
         ],
-        "timestamp": "2026-03-24T15:04:09.101990795",
+        "timestamp": "2026-03-27T10:00:15.852900418",
         "meta": {
             "nf-test": "0.9.4",
             "nextflow": "25.10.4"
