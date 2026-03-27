@@ -379,10 +379,10 @@
                 "quast_table.yaml:md5,55ee8b4825b107d592cfeb16928f3487"
             ]
         ],
-        "timestamp": "2025-12-01T14:43:55.379083582",
+        "timestamp": "2026-03-24T15:05:19.447226261",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.0"
+            "nf-test": "0.9.4",
+            "nextflow": "25.10.4"
         }
     }
 }
