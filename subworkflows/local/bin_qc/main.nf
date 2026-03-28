@@ -208,7 +208,7 @@ workflow BIN_QC {
         GUNC_RUN(ch_input_bins_for_gunc, ch_db_for_gunc)
 
         gunc_summaries = GUNC_RUN.out.maxcss_level_tsv
-            .toSortedList()
+            .toSortedList { meta, _summary -> meta.values().join('|') }
             .map { tuples -> [[id: 'gunc'], tuples.collect { _meta, summary -> summary }] }
 
         CONCAT_GUNC_TSV(gunc_summaries, 'rowskey', 'tsv', true)
