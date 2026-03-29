@@ -2,21 +2,23 @@
  * BUSCO/CheckM/CheckM2/GUNC: Quantitative measures for the assessment of genome assembly
  */
 
-include { BUSCO_BUSCO                   } from '../../../modules/nf-core/busco/busco/main'
+include { BUSCO_BUSCO                       } from '../../../modules/nf-core/busco/busco/main'
 // 2016-01-19: Temporarily diabling Checkm2 database downloading due to Zenodo blocking Aria2 downloads
 //include { CHECKM2_DATABASEDOWNLOAD      } from '../../../modules/nf-core/checkm2/databasedownload/main'
-include { CHECKM_QA                     } from '../../../modules/nf-core/checkm/qa/main'
-include { CHECKM_LINEAGEWF              } from '../../../modules/nf-core/checkm/lineagewf/main'
-include { CHECKM2_PREDICT               } from '../../../modules/nf-core/checkm2/predict/main'
-include { QSV_CAT as CONCAT_BUSCO_TSV   } from '../../../modules/nf-core/qsv/cat/main'
-include { QSV_CAT as CONCAT_CHECKM_TSV  } from '../../../modules/nf-core/qsv/cat/main'
-include { QSV_CAT as CONCAT_CHECKM2_TSV } from '../../../modules/nf-core/qsv/cat/main'
-include { GUNC_DOWNLOADDB               } from '../../../modules/nf-core/gunc/downloaddb/main'
-include { GUNC_RUN                      } from '../../../modules/nf-core/gunc/run/main'
-include { GUNC_MERGECHECKM              } from '../../../modules/nf-core/gunc/mergecheckm/main'
-include { UNTAR as BUSCO_UNTAR          } from '../../../modules/nf-core/untar/main'
-include { UNTAR as CHECKM_UNTAR         } from '../../../modules/nf-core/untar/main'
-include { UNTAR as CHECKM2_UNTAR        } from '../../../modules/nf-core/untar/main'
+include { CHECKM_QA                         } from '../../../modules/nf-core/checkm/qa/main'
+include { CHECKM_LINEAGEWF                  } from '../../../modules/nf-core/checkm/lineagewf/main'
+include { CHECKM2_PREDICT                   } from '../../../modules/nf-core/checkm2/predict/main'
+include { QSV_CAT as CONCAT_BUSCO_TSV       } from '../../../modules/nf-core/qsv/cat/main'
+include { QSV_CAT as CONCAT_CHECKM_TSV      } from '../../../modules/nf-core/qsv/cat/main'
+include { QSV_CAT as CONCAT_CHECKM2_TSV     } from '../../../modules/nf-core/qsv/cat/main'
+include { QSV_CAT as CONCAT_GUNC_TSV        } from '../../../modules/nf-core/qsv/cat/main'
+include { QSV_CAT as CONCAT_GUNC_CHECKM_TSV } from '../../../modules/nf-core/qsv/cat/main'
+include { GUNC_DOWNLOADDB                   } from '../../../modules/nf-core/gunc/downloaddb/main'
+include { GUNC_RUN                          } from '../../../modules/nf-core/gunc/run/main'
+include { GUNC_MERGECHECKM                  } from '../../../modules/nf-core/gunc/mergecheckm/main'
+include { UNTAR as BUSCO_UNTAR              } from '../../../modules/nf-core/untar/main'
+include { UNTAR as CHECKM_UNTAR             } from '../../../modules/nf-core/untar/main'
+include { UNTAR as CHECKM2_UNTAR            } from '../../../modules/nf-core/untar/main'
 
 
 workflow BIN_QC {
@@ -205,29 +207,24 @@ workflow BIN_QC {
 
         GUNC_RUN(ch_input_bins_for_gunc, ch_db_for_gunc)
 
-        // Make sure to keep directory in sync with modules.conf
-        ch_gunc_summary = GUNC_RUN.out.maxcss_level_tsv
-            .map { _meta, gunc_summary -> gunc_summary }
-            .collectFile(
-                name: "gunc_summary.tsv",
-                keepHeader: true,
-                sort: { file -> file.toString() },
-                storeDir: "${params.outdir}/GenomeBinning/QC/",
-            )
+        gunc_summaries = GUNC_RUN.out.maxcss_level_tsv
+            .toSortedList { tuple -> tuple[0].values().join('|') }
+            .map { tuples -> [[id: 'gunc'], tuples.collect { _meta, summary -> summary }] }
+
+        CONCAT_GUNC_TSV(gunc_summaries, 'rowskey', 'tsv', true)
+
+        ch_gunc_summary = CONCAT_GUNC_TSV.out.csv.map { _meta, csv -> csv }
+
         if (params.run_checkm) {
             ch_input_to_mergecheckm = GUNC_RUN.out.maxcss_level_tsv.combine(CHECKM_QA.out.output, by: 0)
 
             GUNC_MERGECHECKM(ch_input_to_mergecheckm)
 
-            // Make sure to keep directory in sync with modules.conf
-            GUNC_MERGECHECKM.out.tsv
-                .map { _meta, gunc_checkm_summary -> gunc_checkm_summary }
-                .collectFile(
-                    name: "gunc_checkm_summary.tsv",
-                    keepHeader: true,
-                    sort: { file -> file.toString() },
-                    storeDir: "${params.outdir}/GenomeBinning/QC/",
-                )
+            gunc_checkm_summaries = GUNC_MERGECHECKM.out.tsv
+                .map { _meta, summary -> [[id: 'gunc_checkm'], summary] }
+                .groupTuple()
+
+            CONCAT_GUNC_CHECKM_TSV(gunc_checkm_summaries, 'rowskey', 'tsv', true)
         }
     }
 
