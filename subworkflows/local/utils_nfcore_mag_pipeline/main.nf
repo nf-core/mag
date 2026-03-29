@@ -475,12 +475,18 @@ def toolCitationText() {
             tools << "Trimmomatic (Bolger et al. 2014)"
         }
     }
+    if (params.host_fasta || params.host_genome) {
+        tools << "Bowtie2 (Langmead and Salzberg 2012)"
+        if (params.longread_filtering_tool == 'filtlong' || params.longread_filtering_tool == 'nanoq' || params.longread_filtering_tool == 'chopper') {
+            tools << "minimap2 (Li 2018)"
+        }
+    }
     if (!params.skip_longread_qc && !params.skip_adapter_trimming) {
         if (params.longread_adaptertrimming_tool == 'porechop') {
             tools << "Porechop (Wick et al. 2017)"
         }
         else if (params.longread_adaptertrimming_tool == 'porechop_abi') {
-            tools << "Porechop ABI (Wick et al. 2017)"
+            tools << "Porechop ABI (Bonenfant et al. 2022)"
         }
     }
     if (!params.skip_longread_qc && !params.skip_longread_filtering) {
@@ -488,23 +494,27 @@ def toolCitationText() {
             tools << "Filtlong (Wick 2019)"
         }
         else if (params.longread_filtering_tool == 'nanoq') {
-            tools << "Nanoq (De Coster et al. 2023)"
+            tools << "Nanoq (Steinig et al. 2022)"
         }
         else if (params.longread_filtering_tool == 'chopper') {
-            tools << "Chopper (De Coster and Rademakers 2023)"
+            tools << "Chopper (De Coster et al. 2018)"
         }
     }
+    if (params.bbnorm) {
+        tools << "BBNorm (Bushnell et al.)"
+        tools << "Seqtk (Li et al.)"
+    }
     if (!params.skip_megahit) {
-        tools << "MEGAHIT (Li et al. 2015)"
+        tools << "MEGAHIT (Li et al. 2016)"
     }
     if (!params.skip_spades) {
-        tools << "SPAdes (Bankevich et al. 2012)"
+        tools << "metaSPAdes (Nurk et al. 2017)"
     }
     if (!params.skip_spadeshybrid) {
         tools << "hybridSPAdes (Antipov et al. 2016)"
     }
     if (!params.skip_metamdbg) {
-        tools << "metaMDBG (Bourgeade et al. 2024)"
+        tools << "metaMDBG (Benoit et al. 2024)"
     }
     if (!params.skip_flye) {
         tools << "metaFlye (Kolmogorov et al. 2020)"
@@ -523,33 +533,37 @@ def toolCitationText() {
     }
     if (!params.skip_metaeuk) {
         tools << "MetaEuk (Levy Karin et al. 2020)"
+        tools << "MMseqs2 (Steinegger and Söding 2017)"
     }
     if (params.run_virus_identification) {
         tools << "geNomad (Camargo et al. 2023)"
+    }
+    if (!params.skip_tiara) {
+        tools << "Tiara (Karlicki et al. 2022)"
     }
     if (!params.skip_binning) {
         if (!params.skip_metabat2) {
             tools << "MetaBAT2 (Kang et al. 2019)"
         }
         if (!params.skip_maxbin2) {
-            tools << "MaxBin2 (Wu et al. 2016)"
+            tools << "MaxBin2 (Wu et al. 2015)"
         }
         if (!params.skip_concoct) {
             tools << "CONCOCT (Alneberg et al. 2014)"
         }
         if (!params.skip_comebin) {
-            tools << "COMEBin (Wang et al. 2022)"
+            tools << "COMEBin (Wang et al. 2024)"
         }
         if (!params.skip_metabinner) {
             tools << "MetaBinner (Wang et al. 2023)"
         }
         if (!params.skip_semibin) {
-            tools << "SemiBin2 (Pan et al. 2023)"
+            tools << "SemiBin2 (Pan et al. 2022)"
         }
     }
     if (!params.skip_binqc) {
         if (params.run_busco) {
-            tools << "BUSCO (Manni et al. 2021)"
+            tools << "BUSCO (Seppey et al. 2019)"
         }
         if (params.run_checkm) {
             tools << "CheckM (Parks et al. 2015)"
@@ -565,13 +579,14 @@ def toolCitationText() {
         }
     }
     if (!params.skip_gtdbtk) {
-        tools << "GTDB-Tk (Chaumeil et al. 2022)"
+        tools << "GTDB-Tk (Chaumeil et al. 2020)"
     }
     if (params.ancient_dna) {
-        tools << "PyDamage (Neukamm et al. 2021)"
+        tools << "PyDamage (Borry et al. 2021)"
         if (!params.skip_ancient_damagecorrection) {
             tools << "FreeBayes (Garrison and Marth 2012)"
             tools << "BCFtools (Danecek et al. 2021)"
+            tools << "SAMtools (Li et al. 2009)"
         }
     }
 
@@ -582,19 +597,25 @@ def toolCitationText() {
 
 def toolBibliographyText() {
     def references = [
-        "<li>Andrews S. (2010). FastQC. URL: https://www.bioinformatics.babraham.ac.uk/projects/fastqc/</li>",
-        "<li>Ewels P, Magnusson M, Lundin S, Kaller M. (2016). MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics, 32(19), 3047-3048. https://doi.org/10.1093/bioinformatics/btw354</li>",
+        "<li>Andrews, S. (2010). FastQC: A Quality Control Tool for High Throughput Sequence Data [Online]. URL: https://www.bioinformatics.babraham.ac.uk/projects/fastqc/</li>",
+        "<li>Ewels P, Magnusson M, Lundin S, Käller M. (2016). MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics. 2016 Oct 1;32(19):3047-8. doi: 10.1093/bioinformatics/btw354. Epub 2016 Jun 16. PubMed PMID: 27312411; PubMed Central PMCID: PMC5039924.</li>",
     ]
 
     if (!params.skip_shortread_qc && !params.skip_clipping) {
         if (params.clip_tool == 'fastp') {
-            references << "<li>Chen S, Zhou Y, Chen Y, Gu J. (2018). fastp: an ultra-fast all-in-one FASTQ preprocessor. Bioinformatics, 34(17), i884-i890. https://doi.org/10.1093/bioinformatics/bty560</li>"
+            references << "<li>Chen, S., Zhou, Y., Chen, Y., & Gu, J. (2018). fastp: an ultra-fast all-in-one FASTQ preprocessor. Bioinformatics , 34(17), i884–i890. doi: 10.1093/bioinformatics/bty560.</li>"
         }
         else if (params.clip_tool == 'adapterremoval') {
-            references << "<li>Schubert M, Lindgreen S, Orlando L. (2016). AdapterRemoval v2: rapid adapter trimming, identification, and read merging. BMC Research Notes, 9, 88. https://doi.org/10.1186/s13104-016-1900-2</li>"
+            references << "<li>Schubert, M., Lindgreen, S., and Orlando, L. 2016. \"AdapterRemoval v2: Rapid Adapter Trimming, Identification, and Read Merging.\" BMC Research Notes 9 (February): 88. doi: 10.1186/s13104-016-1900-2</li>"
         }
         else if (params.clip_tool == 'trimmomatic') {
-            references << "<li>Bolger AM, Lohse M, Usadel B. (2014). Trimmomatic: a flexible trimmer for Illumina sequence data. Bioinformatics, 30(15), 2114-2120. https://doi.org/10.1093/bioinformatics/btu170</li>"
+            references << "<li>Bolger, A. M., Lohse, M., & Usadel, B. (2014). Trimmomatic: a flexible trimmer for Illumina sequence data. Bioinformatics, 30(15), 2114-2120. doi: 10.1093/bioinformatics/btu170</li>"
+        }
+    }
+    if (params.host_fasta || params.host_genome) {
+        references << "<li>Langmead, B. and Salzberg, S. L. 2012 Fast gapped-read alignment with Bowtie 2. Nature methods, 9(4), p. 357–359. doi: 10.1038/nmeth.1923.</li>"
+        if (params.longread_filtering_tool == 'filtlong' || params.longread_filtering_tool == 'nanoq' || params.longread_filtering_tool == 'chopper') {
+            references << "<li>Li, H. (2018). Minimap2: pairwise alignment for nucleotide sequences. Bioinformatics , 34(18), 3094–3100. doi: 10.1093/bioinformatics/bty191</li>"
         }
     }
     if (!params.skip_longread_qc && !params.skip_adapter_trimming) {
@@ -602,7 +623,7 @@ def toolBibliographyText() {
             references << "<li>Wick RR. (2017). Porechop. URL: https://github.com/rrwick/Porechop</li>"
         }
         else if (params.longread_adaptertrimming_tool == 'porechop_abi') {
-            references << "<li>Wick RR. (2017). Porechop. URL: https://github.com/rrwick/Porechop</li>"
+            references << "<li>Bonenfant, Q., Noé, L., & Touzet, H. (2022). Porechop_ABI: discovering unknown adapters in ONT sequencing reads for downstream trimming. bioRxiv. 10.1101/2022.07.07.499093</li>"
         }
     }
     if (!params.skip_longread_qc && !params.skip_longread_filtering) {
@@ -610,90 +631,99 @@ def toolBibliographyText() {
             references << "<li>Wick RR. (2019). Filtlong. URL: https://github.com/rrwick/Filtlong</li>"
         }
         else if (params.longread_filtering_tool == 'nanoq') {
-            references << "<li>De Coster W, Rademakers R. (2023). NanoQ: a python package for ultra-fast quality control of Oxford Nanopore sequencing data. Bioinformatics, 39(5), btad311. https://doi.org/10.1093/bioinformatics/btad311</li>"
+            references << "<li>Steinig, E., Coin, L. (2022). Nanoq: ultra-fast quality control for nanopore reads. Journal of Open Source Software, 7(69), 2991, doi: 10.21105/joss.02991</li>"
         }
         else if (params.longread_filtering_tool == 'chopper') {
-            references << "<li>De Coster W, Rademakers R. (2023). Chopper: a rust-based quality control tool for nanopore sequencing reads. Journal of Open Source Software, 8(84), 4991. https://doi.org/10.21105/joss.04991</li>"
+            references << "<li>De Coster W, D'Hert S, Schultz DT, Cruts M, Van Broeckhoven C. (2018). NanoPack: visualizing and processing long-read sequencing data. Bioinformatics. 2018 Aug 1;34(15):2666-2669. doi: 10.1093/bioinformatics/bty149</li>"
         }
     }
+    if (params.bbnorm) {
+        references << "<li>BBnorm/BBTools. URL: http://sourceforge.net/projects/bbmap/</li>"
+        references << "<li>Seqtk. URL: https://github.com/lh3/seqtk</li>"
+    }
     if (!params.skip_megahit) {
-        references << "<li>Li D, Liu CM, Luo R, Sadakane K, Lam TW. (2015). MEGAHIT: an ultra-fast single-node solution for large and complex metagenomics assembly via succinct de Bruijn graph. Bioinformatics, 31(10), 1674-1676. https://doi.org/10.1093/bioinformatics/btv033</li>"
+        references << "<li>Li, D., Luo, R., Liu, C. M., Leung, C. M., Ting, H. F., Sadakane, K., ... & Lam, T. W. (2016). MEGAHIT v1. 0: a fast and scalable metagenome assembler driven by advanced methodologies and community practices. Methods, 102, 3-11. doi: 10.1016/j.ymeth.2016.02.020.</li>"
     }
     if (!params.skip_spades) {
-        references << "<li>Bankevich A, Nurk S, Antipov D, et al. (2012). SPAdes: a new genome assembly algorithm and its applications to single-cell sequencing. Journal of Computational Biology, 19(5), 455-477. https://doi.org/10.1089/cmb.2012.0021</li>"
+        references << "<li>Nurk, S., Meleshko, D., Korobeynikov, A., & Pevzner, P. A. (2017). metaSPAdes: a new versatile metagenomic assembler. Genome research, 27(5), 824-834. doi: 10.1101/gr.213959.116.</li>"
     }
     if (!params.skip_spadeshybrid) {
         references << "<li>Antipov D, Korobeynikov A, McLean JS, Pevzner PA. (2016). hybridSPAdes: an algorithm for hybrid assembly of short and long reads. Bioinformatics, 32(7), 1009-1015. https://doi.org/10.1093/bioinformatics/btv688</li>"
     }
     if (!params.skip_metamdbg) {
-        references << "<li>Bourgeade P, Belser C, Bertrand D, et al. (2024). metaMDBG: a scalable long-read metagenome assembler. Nature Biotechnology. https://doi.org/10.1038/s41587-024-02298-5</li>"
+        references << "<li>Benoit, G., Raguideau, S., James, R. et al. (2024). High-quality metagenome assembly from long accurate reads with metaMDBG. Nat Biotechnol 42, 1378–1383. doi:10.1038/s41587-023-01983-6</li>"
     }
     if (!params.skip_flye) {
-        references << "<li>Kolmogorov M, Bickhart DM, Behsaz B, et al. (2020). metaFlye: scalable long-read metagenome assembly using repeat graphs. Nature Methods, 17(11), 1103-1110. https://doi.org/10.1038/s41592-020-00971-x</li>"
+        references << "<li>Kolmogorov, M., Bickhart, D.M., Behsaz, B. et al. (2020). metaFlye: scalable long-read metagenome assembly using repeat graphs. Nat Methods 17, 1103–1110. doi: 10.1038/s41592-020-00971-x</li>"
     }
     if (!params.skip_quast) {
         references << "<li>Mikheenko A, Saveliev V, Gurevich A. (2016). MetaQUAST: evaluation of metagenome assemblies. Bioinformatics, 32(7), 1088-1090. https://doi.org/10.1093/bioinformatics/btv697</li>"
     }
     if (!params.skip_ale) {
-        references << "<li>Clark SC, Egan R, Frazier PI, Wang Z. (2013). ALE: a generic assembly likelihood evaluation framework for assessing the accuracy of genome and metagenome assemblies. Bioinformatics, 29(4), 435-443. https://doi.org/10.1093/bioinformatics/bts723</li>"
+        references << "<li>Clark, S. C., Egan, R., Frazier, P. I., & Wang, Z. (2013). ALE: a generic assembly likelihood evaluation framework for assessing the accuracy of genome and metagenome assemblies. Bioinformatics, 29(4), 435-443. doi: 10.1093/bioinformatics/bts723</li>"
     }
     if (!params.skip_prodigal) {
-        references << "<li>Hyatt D, Chen GL, Locascio PF, Land ML, Larimer FW, Hauser LJ. (2010). Prodigal: prokaryotic gene recognition and translation initiation site identification. BMC Bioinformatics, 11, 119. https://doi.org/10.1186/1471-2105-11-119</li>"
+        references << "<li>Hyatt D, Chen GL, Locascio PF, Land ML, Larimer FW, Hauser LJ. (2010). Prodigal: prokaryotic gene recognition and translation initiation site identification. BMC Bioinformatics. 2010 Mar 8;11:119. doi: 10.1186/1471-2105-11-119. PMID: 20211023; PMCID: PMC2848648.</li>"
     }
     if (!params.skip_prokka) {
-        references << "<li>Seemann T. (2014). Prokka: rapid prokaryotic genome annotation. Bioinformatics, 30(14), 2068-2069. https://doi.org/10.1093/bioinformatics/btu153</li>"
+        references << "<li>Seemann T. (2014). Prokka: rapid prokaryotic genome annotation. Bioinformatics. 2014 Jul 15;30(14):2068-9. doi: 10.1093/bioinformatics/btu153. Epub 2014 Mar 18. PMID: 24642063.</li>"
     }
     if (!params.skip_metaeuk) {
-        references << "<li>Levy Karin E, Mirdita M, Söding J. (2020). MetaEuk-sensitive, high-throughput gene discovery, and annotation for large-scale eukaryotic metagenomics. Microbiome, 8, 48. https://doi.org/10.1186/s40168-020-00808-x</li>"
+        references << "<li>Levy Karin, E., Mirdita, M. & Söding, J. (2020). MetaEuk—sensitive, high-throughput gene discovery, and annotation for large-scale eukaryotic metagenomics. Microbiome 8, 48. 10.1186/s40168-020-00808-x</li>"
+        references << "<li>Steinegger, M., Söding, J. (2017). MMseqs2 enables sensitive protein sequence searching for the analysis of massive data sets. Nat Biotechnol 35, 1026–1028. 10.1038/nbt.3988</li>"
     }
     if (params.run_virus_identification) {
-        references << "<li>Camargo AP, Roux S, Schulz F, et al. (2023). Identification of mobile genetic elements with geNomad. Nature Biotechnology, 41(8), 1080-1089. https://doi.org/10.1038/s41587-023-01953-y</li>"
+        references << "<li>Camargo, A. P., et al. (2023). Identification of mobile genetic elements with geNomad. Nature Biotechnology 42, 1303–1312. https://doi.org/10.1038/s41587-023-01953-y</li>"
+    }
+    if (!params.skip_tiara) {
+        references << "<li>Karlicki, M., Antonowicz, S., Karnkowska, A., (2022). Tiara: deep learning-based classification system for eukaryotic sequences. Bioinformatics 38, 344–350. doi: 10.1093/bioinformatics/btab672</li>"
     }
     if (!params.skip_binning) {
         if (!params.skip_metabat2) {
-            references << "<li>Kang DD, Li F, Kirton E, Thomas A, Egan R, An H, Wang Z. (2019). MetaBAT 2: an adaptive binning algorithm for robust and efficient genome reconstruction from metagenome assemblies. PeerJ, 7, e7359. https://doi.org/10.7717/peerj.7359</li>"
+            references << "<li>Kang, D. D., Li, F., Kirton E., Thomas, A., Egan, R., An, H., & Wang, Z. (2019). MetaBAT 2: an adaptive binning algorithm for robust and efficient genome reconstruction from metagenome assemblies. PeerJ, 7, e7359. doi: 10.7717/peerj.7359.</li>"
         }
         if (!params.skip_maxbin2) {
-            references << "<li>Wu YW, Simmons BA, Singer SW. (2016). MaxBin 2.0: an automated binning algorithm to recover genomes from multiple metagenomic datasets. Bioinformatics, 32(4), 605-607. https://doi.org/10.1093/bioinformatics/btv638</li>"
+            references << "<li>Yu-Wei, W., Simmons, B. A. & Singer, S. W. (2015). MaxBin 2.0: An Automated Binning Algorithm to Recover Genomes from Multiple Metagenomic Datasets. Bioinformatics 32 (4): 605–7. doi: 10.1093/bioinformatics/btv638.</li>"
         }
         if (!params.skip_concoct) {
-            references << "<li>Alneberg J, Bjarnason BS, de Bruijn I, et al. (2014). Binning metagenomic contigs by coverage and composition. Nature Methods, 11(11), 1144-1146. https://doi.org/10.1038/nmeth.3103</li>"
+            references << "<li>Alneberg, J., Bjarnason, B. S., de Bruijn, I., Schirmer, M., Quick, J., Ijaz, U. Z., Lahti, L., Loman, N. J., Andersson, A. F., & Quince, C. (2014). Binning metagenomic contigs by coverage and composition. Nature Methods, 11(11), 1144–1146. doi: 10.1038/nmeth.3103</li>"
         }
         if (!params.skip_comebin) {
-            references << "<li>Wang Z, Niu X, Wang W, et al. (2022). COMEBin: a coverage and composition-based method for metagenomic binning. Research, 2022, 9873837. https://doi.org/10.34133/2022/9873837</li>"
+            references << "<li>Wang Z, You R, Han H, Liu W, Sun F, Zhu S. (2024). Effective binning of metagenomic contigs using contrastive multi-view representation learning. Nat Commun. 2024 Jan 17;15(1):585. doi: 10.1038/s41467-023-44290-z. PMID: 38233391; PMCID: PMC10794208.</li>"
         }
         if (!params.skip_metabinner) {
-            references << "<li>Wang Z, Niu X, Zheng Y, et al. (2023). MetaBinner: a high-performance and stand-alone ensemble binning method to recover individual genomes from complex microbial communities. ISME Communications, 3, 7. https://doi.org/10.1038/s43705-022-00235-0</li>"
+            references << "<li>Wang Z, Huang P, You R, Sun F, Zhu S. (2023). MetaBinner: a high-performance and stand-alone ensemble binning method to recover individual genomes from complex microbial communities. Genome Biol. 2023 Jan 6;24(1):1. doi: 10.1186/s13059-022-02832-6. PMID: 36609515; PMCID: PMC9817263.</li>"
         }
         if (!params.skip_semibin) {
-            references << "<li>Pan S, Zhu C, Zhao XM, Coelho LP. (2023). SemiBin2: self-supervised contrastive learning leads to better MAGs for short- and long-read sequencing. Bioinformatics, 39(Supplement_1), i21-i29. https://doi.org/10.1093/bioinformatics/btad209</li>"
+            references << "<li>Pan S, Zhu C, Zhao XM, Coelho LP. (2022). A deep siamese neural network improves metagenome-assembled genomes in microbiome datasets across different environments. Nat Commun. 2022 Apr 28;13(1):2326. doi: 10.1038/s41467-022-29843-y. PMID: 35484115; PMCID: PMC9051138.</li>"
         }
     }
     if (!params.skip_binqc) {
         if (params.run_busco) {
-            references << "<li>Manni M, Berkeley MR, Seppey M, Simão FA, Zdobnov EM. (2021). BUSCO update: novel and streamlined workflows along with broader and deeper phylogenetic coverage for scoring of eukaryotic, prokaryotic, and viral genomes. Molecular Biology and Evolution, 38(10), 4647-4654. https://doi.org/10.1093/molbev/msab199</li>"
+            references << "<li>Seppey, M., Manni, M., & Zdobnov, E. M. (2019). BUSCO: assessing genome assembly and annotation completeness. In Gene prediction (pp. 227-245). Humana, New York, NY. doi: 10.1007/978-1-4939-9173-0_14.</li>"
         }
         if (params.run_checkm) {
-            references << "<li>Parks DH, Imelfort M, Skennerton CT, Hugenholtz P, Tyson GW. (2015). CheckM: assessing the quality of microbial genomes recovered from isolates, single cells, and metagenomes. Genome Research, 25(7), 1043-1055. https://doi.org/10.1101/gr.186072.114</li>"
+            references << "<li>Parks, D. H., Imelfort, M., Skennerton, C. T., Hugenholtz, P., & Tyson, G. W. (2015). CheckM: assessing the quality of microbial genomes recovered from isolates, single cells, and metagenomes. Genome Research, 25(7), 1043–1055. doi: 10.1101/gr.186072.114</li>"
         }
         if (params.run_checkm2) {
-            references << "<li>Chklovski A, Parks DH, Woodcroft BJ, Tyson GW. (2023). CheckM2: a rapid, scalable and accurate tool for assessing microbial genome quality using machine learning. Nature Methods, 20(8), 1203-1212. https://doi.org/10.1038/s41592-023-01940-w</li>"
+            references << "<li>Chklovski, A., Parks, D. H., Woodcroft, B. J., & Tyson, G. W. (2023). CheckM2: a rapid, scalable and accurate tool for assessing microbial genome quality using machine learning. Nature Methods, 20(8), 1203-1212. doi: https://doi.org/10.1038/s41592-023-01940-w</li>"
         }
         if (params.refine_bins_dastool) {
-            references << "<li>Sieber CMK, Probst AJ, Sharrar A, et al. (2018). Recovery of genomes from metagenomes via a dereplication, aggregation and scoring strategy. Nature Microbiology, 3(7), 836-843. https://doi.org/10.1038/s41564-018-0171-1</li>"
+            references << "<li>Sieber, C. M. K., et al. 2018. \"Recovery of Genomes from Metagenomes via a Dereplication, Aggregation and Scoring Strategy.\" Nature Microbiology 3 (7): 836-43. doi: 10.1038/s41564-018-0171-1</li>"
         }
         if (params.run_gunc) {
-            references << "<li>Orakov AN, Fullam A, Coelho LP, et al. (2021). GUNC: detection of chimerism and contamination in prokaryotic genomes. Genome Biology, 22, 178. https://doi.org/10.1186/s13059-021-02393-0</li>"
+            references << "<li>Orakov, A., Fullam, A., Coelho, A. P., Khedkar, S., Szklarczyk, D., Mende, D. R., Schmidt, T. S. B., and Bork, P. (2021). GUNC: Detection of Chimerism and Contamination in Prokaryotic Genomes. Genome Biology 22 (1): 178. doi: 10.1186/s13059-021-02393-0.</li>"
         }
     }
     if (!params.skip_gtdbtk) {
-        references << "<li>Chaumeil PA, Mussig AJ, Hugenholtz P, Parks DH. (2022). GTDB-Tk v2: memory friendly classification with the Genome Taxonomy Database. Bioinformatics, 38(23), 5315-5316. https://doi.org/10.1093/bioinformatics/btac672</li>"
+        references << "<li>Chaumeil, P. A., Mussig, A. J., Hugenholtz, P., & Parks, D. H. (2020). GTDB-Tk: a toolkit to classify genomes with the Genome Taxonomy Database. Bioinformatics , 36(6), 1925–1927. doi: 10.1093/bioinformatics/btz848.</li>"
     }
     if (params.ancient_dna) {
-        references << "<li>Borry M, Hubner A, Rohrlach AB, Warinner C. (2021). PyDamage: automated ancient damage identification and estimation for contigs in ancient DNA de novo assembly. PeerJ, 9, e11845. https://doi.org/10.7717/peerj.11845</li>"
+        references << "<li>Borry M, Hübner A, Rohrlach AB, Warinner C. (2021). PyDamage: automated ancient damage identification and estimation for contigs in ancient DNA de novo assembly. PeerJ 9:e11845 doi: 10.7717/peerj.11845</li>"
         if (!params.skip_ancient_damagecorrection) {
-            references << "<li>Garrison E, Marth G. (2012). Haplotype-based variant detection from short-read sequencing. arXiv. https://arxiv.org/abs/1207.3907</li>"
-            references << "<li>Danecek P, Bonfield JK, Liddle J, et al. (2021). Twelve years of SAMtools and BCFtools. GigaScience, 10(2), giab008. https://doi.org/10.1093/gigascience/giab008</li>"
+            references << "<li>Garrison E, Marth G. (2012). Haplotype-based variant detection from short-read sequencing. arXiv preprint arXiv:1207.3907 [q-bio.GN] 2012</li>"
+            references << "<li>Danecek, Petr, et al. (2021). Twelve years of SAMtools and BCFtools. Gigascience 10.2: giab008. doi: 10.1093/gigascience/giab008</li>"
+            references << "<li>Li, H., Handsaker, B., Wysoker, A., Fennell, T., Ruan, J., Homer, N., … 1000 Genome Project Data Processing Subgroup. (2009). The Sequence Alignment/Map format and SAMtools. Bioinformatics , 25(16), 2078–2079. doi: 10.1093/bioinformatics/btp352.</li>"
         }
     }
 
