@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Changed`
 
 - [#1000](https://github.com/nf-core/mag/pull/1000) - Update GUNC modules and enable the tool in tests (by @dialvarezs)
+- [#1004](https://github.com/nf-core/mag/pull/1004) - Replace `collectFile` with `qsv/cat` on GUNC summary merging (by @dialvarezs)
 
 ### `Fixed`
 
