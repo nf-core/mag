@@ -65,7 +65,7 @@
     },
     "-profile assembly_input": {
         "content": [
-            285,
+            286,
             {
                 "ADJUST_MAXBIN2_EXT": {
                     "coreutils": 9.5
@@ -89,6 +89,9 @@
                     "untar": 1.34
                 },
                 "CONCAT_BUSCO_TSV": {
+                    "qsv": "5.1.0"
+                },
+                "CONCAT_GUNC_TSV": {
                     "qsv": "5.1.0"
                 },
                 "CONCOCT_CONCOCT": {
@@ -174,9 +177,9 @@
                 }
             }
         ],
-        "timestamp": "2026-03-27T09:29:22.073080452",
+        "timestamp": "2026-03-27T17:58:59.080247138",
         "meta": {
-            "nf-test": "0.9.4",
+            "nf-test": "0.9.5",
             "nextflow": "25.10.4"
         }
     },
@@ -560,9 +563,9 @@
                 "bin_depths_summary.tsv:md5,7153f759db72abb02e2ee3c2ab1b5e56"
             ]
         ],
-        "timestamp": "2026-03-24T15:04:09.101990795",
+        "timestamp": "2026-03-27T17:58:59.223381841",
         "meta": {
-            "nf-test": "0.9.4",
+            "nf-test": "0.9.5",
             "nextflow": "25.10.4"
         }
     },
