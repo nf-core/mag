@@ -475,11 +475,9 @@ def toolCitationText() {
             tools << "Trimmomatic (Bolger et al. 2014)"
         }
     }
-    if (params.host_fasta || params.host_genome) {
+    if (params.host_fasta || params.host_genome || !params.skip_binning || params.ancient_dna || !params.skip_ale) {
         tools << "Bowtie2 (Langmead and Salzberg 2012)"
-        if (params.longread_filtering_tool == 'filtlong' || params.longread_filtering_tool == 'nanoq' || params.longread_filtering_tool == 'chopper') {
-            tools << "minimap2 (Li 2018)"
-        }
+        tools << "minimap2 (Li 2018)"
     }
     if (!params.skip_longread_qc && !params.skip_adapter_trimming) {
         if (params.longread_adaptertrimming_tool == 'porechop') {
@@ -612,11 +610,10 @@ def toolBibliographyText() {
             references << "<li>Bolger, A. M., Lohse, M., & Usadel, B. (2014). Trimmomatic: a flexible trimmer for Illumina sequence data. Bioinformatics, 30(15), 2114-2120. doi: 10.1093/bioinformatics/btu170</li>"
         }
     }
-    if (params.host_fasta || params.host_genome) {
+    if (params.host_fasta || params.host_genome || !params.skip_binning || params.ancient_dna || !params.skip_ale) {
         references << "<li>Langmead, B. and Salzberg, S. L. 2012 Fast gapped-read alignment with Bowtie 2. Nature methods, 9(4), p. 357–359. doi: 10.1038/nmeth.1923.</li>"
-        if (params.longread_filtering_tool == 'filtlong' || params.longread_filtering_tool == 'nanoq' || params.longread_filtering_tool == 'chopper') {
-            references << "<li>Li, H. (2018). Minimap2: pairwise alignment for nucleotide sequences. Bioinformatics , 34(18), 3094–3100. doi: 10.1093/bioinformatics/bty191</li>"
-        }
+        // Note: we don't have a simple way to determine if long reads are present, so we add minimap2 at the same time as Bowtie2
+        references << "<li>Li, H. (2018). Minimap2: pairwise alignment for nucleotide sequences. Bioinformatics , 34(18), 3094–3100. doi: 10.1093/bioinformatics/bty191</li>"
     }
     if (!params.skip_longread_qc && !params.skip_adapter_trimming) {
         if (params.longread_adaptertrimming_tool == 'porechop') {
