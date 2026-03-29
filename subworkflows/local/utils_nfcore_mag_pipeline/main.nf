@@ -349,7 +349,7 @@ def validateInputParameters(hybrid) {
 
     // Check more than one binner is run for bin refinement  (required DAS by Tool)
     // If the number of run binners (i.e., number of not-skipped) is more than one, otherwise throw an error
-    if (params.refine_bins_dastool && !([params.skip_metabat2, params.skip_maxbin2, params.skip_concoct].count(false) > 1)) {
+    if (params.refine_bins_dastool && !([params.skip_metabat2, params.skip_maxbin2, params.skip_concoct, params.skip_metabinner, params.skip_comebin, params.skip_semibin].count(false) > 1)) {
         error('[nf-core/mag] ERROR: Bin refinement with --refine_bins_dastool requires at least two binners to be running (not skipped). Check input.')
     }
 

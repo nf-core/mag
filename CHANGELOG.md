@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## dev [unreleased]
+## 5.4.2 Yellow Frog patch [2026-03-31]
 
 ### `Added`
 
@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1000](https://github.com/nf-core/mag/pull/1000) - Update GUNC modules and enable the tool in tests (by @dialvarezs)
 
 ### `Fixed`
+
+- [#1001](https://github.com/nf-core/mag/pull/1001) - Include all binners in parameter validation for running DASTool (by @dialvarezs)
+- [#1002](https://github.com/nf-core/mag/pull/1002) - Fix BUSCO publish dir to prevent filename collision (by @dialvarezs)
+- [#1002](https://github.com/nf-core/mag/pull/1002) - Avoid whole-batch BUSCO failure when classification fails for a single bin. (by @dialvarezs)
 
 ### `Dependencies`
 
