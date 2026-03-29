@@ -10,7 +10,7 @@
 
 ## Pipeline tools
 
-- [AdapterRemoval2](https://doi.org/10.1186/)
+- [AdapterRemoval2](https://doi.org/10.1186/s13104-016-1900-2)
 
   > Schubert, M., Lindgreen, S., and Orlando, L. 2016. "AdapterRemoval v2: Rapid Adapter Trimming, Identification, and Read Merging." BMC Research Notes 9 (February): 88. doi: 10.1186/s13104-016-1900-2
 
@@ -24,7 +24,7 @@
 
   > Danecek, Petr, et al. "Twelve years of SAMtools and BCFtools." Gigascience 10.2 (2021): giab008. doi: 10.1093/gigascience/giab008
 
-- [Bowtie2](https:/dx.doi.org/10.1038/nmeth.1923)
+- [Bowtie2](https://doi.org/10.1038/nmeth.1923)
 
   > Langmead, B. and Salzberg, S. L. 2012 Fast gapped-read alignment with Bowtie 2. Nature methods, 9(4), p. 357–359. doi: 10.1038/nmeth.1923.
 
@@ -86,9 +86,9 @@
 
   > Garrison E, Marth G. Haplotype-based variant detection from short-read sequencing. arXiv preprint arXiv:1207.3907 [q-bio.GN] 2012
 
-- [geNomad](https://doi.org/10.1101/2023.03.05.531206)
+- [geNomad](https://doi.org/10.1038/s41587-023-01953-y)
 
-  > Camargo, A. P., et al. (2023). You can move, but you can’t hide: identification of mobile genetic elements with geNomad. bioRxiv preprint. doi: 10.1101/2023.03.05.531206
+  > Camargo, A. P., et al. (2023). Identification of mobile genetic elements with geNomad. Nature Biotechnology 42, 1303–1312. doi: doi.org/10.1038/s41587-023-01953-y
 
 - [GTDB-Tk](https://doi.org/10.1093/bioinformatics/btz848)
 
@@ -177,6 +177,10 @@
 - [Tiara](https://doi.org/10.1093/bioinformatics/btab672)
 
   > Karlicki, M., Antonowicz, S., Karnkowska, A., 2022. Tiara: deep learning-based classification system for eukaryotic sequences. Bioinformatics 38, 344–350. doi: 10.1093/bioinformatics/btab672
+
+- [Trimmomatic](https://doi.org/10.1093/bioinformatics/btu170)
+
+  > Bolger, A. M., Lohse, M., & Usadel, B. (2014). Trimmomatic: a flexible trimmer for Illumina sequence data. Bioinformatics, 30(15), 2114-2120. doi: 10.1093/bioinformatics/btu170
 
 ## Data
 
