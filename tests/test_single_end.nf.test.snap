@@ -134,7 +134,7 @@
                     "megahit": "1.2.9"
                 },
                 "COVERM_CONTIG_SHORTREAD": {
-                    "coverm": 0.7.0
+                    "coverm": "0.7.0"
                 },
                 "METABAT2_METABAT2": {
                     "metabat2": 2.17

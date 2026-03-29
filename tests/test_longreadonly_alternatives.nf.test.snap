@@ -43,7 +43,7 @@
                     "maxbin2": "2.2.7"
                 },
                 "COVERM_CONTIG_LONGREAD": {
-                    "coverm": 0.7.0
+                    "coverm": "0.7.0"
                 },
                 "METABAT2_METABAT2": {
                     "metabat2": 2.17
