@@ -84,6 +84,9 @@
                 "CONVERT_DEPTHS": {
                     "bioawk": 20110810
                 },
+                "COVERM_CONTIG_SHORTREAD": {
+                    "coverm": "0.7.0"
+                },
                 "FAIDX": {
                     "samtools": "1.22.1"
                 },
@@ -133,9 +136,6 @@
                 "MEGAHIT": {
                     "megahit": "1.2.9"
                 },
-                "COVERM_CONTIG_SHORTREAD": {
-                    "coverm": "0.7.0"
-                },
                 "METABAT2_METABAT2": {
                     "metabat2": 2.17
                 },
@@ -180,9 +180,9 @@
                 }
             }
         ],
-        "timestamp": "2026-03-27T09:31:10.471407874",
+        "timestamp": "2026-03-29T17:19:02.501129346",
         "meta": {
-            "nf-test": "0.9.4",
+            "nf-test": "0.9.5",
             "nextflow": "25.10.4"
         }
     },

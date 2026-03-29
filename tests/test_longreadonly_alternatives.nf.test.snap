@@ -22,6 +22,9 @@
                 "CONVERT_DEPTHS": {
                     "bioawk": 20110810
                 },
+                "COVERM_CONTIG_LONGREAD": {
+                    "coverm": "0.7.0"
+                },
                 "FLYE": {
                     "flye": "2.9.5-b1801"
                 },
@@ -41,9 +44,6 @@
                 },
                 "MAXBIN2": {
                     "maxbin2": "2.2.7"
-                },
-                "COVERM_CONTIG_LONGREAD": {
-                    "coverm": "0.7.0"
                 },
                 "METABAT2_METABAT2": {
                     "metabat2": 2.17
@@ -82,9 +82,9 @@
                 }
             }
         ],
-        "timestamp": "2026-03-27T09:28:24.661099992",
+        "timestamp": "2026-03-29T17:39:31.495599958",
         "meta": {
-            "nf-test": "0.9.4",
+            "nf-test": "0.9.5",
             "nextflow": "25.10.4"
         }
     },

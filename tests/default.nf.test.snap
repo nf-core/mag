@@ -50,6 +50,9 @@
                 "CONVERT_DEPTHS": {
                     "bioawk": 20110810
                 },
+                "COVERM_CONTIG_SHORTREAD": {
+                    "coverm": "0.7.0"
+                },
                 "FASTP": {
                     "fastp": "1.0.1"
                 },
@@ -98,9 +101,6 @@
                 "MEGAHIT": {
                     "megahit": "1.2.9"
                 },
-                "COVERM_CONTIG_SHORTREAD": {
-                    "coverm": "0.7.0"
-                },
                 "METABAT2_METABAT2": {
                     "metabat2": 2.17
                 },
@@ -141,9 +141,9 @@
                 }
             }
         ],
-        "timestamp": "2026-03-27T09:31:32.078746511",
+        "timestamp": "2026-03-29T14:16:55.104911858",
         "meta": {
-            "nf-test": "0.9.4",
+            "nf-test": "0.9.5",
             "nextflow": "25.10.4"
         }
     },
