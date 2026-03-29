@@ -459,136 +459,100 @@ def genomeExistsError() {
 // Generate methods description for MultiQC
 //
 def toolCitationText() {
-    def tools = [
-        "FastQC (Andrews 2010)",
-        "MultiQC (Ewels et al. 2016)",
+    def text_seq_qc = "Sequencing quality control was performed with FastQC (Andrews 2010)."
+
+    def shortread_qc_tools = [
+        params.clip_tool == 'fastp' ? "fastp (Chen et al. 2018)" : "",
+        params.clip_tool == 'adapterremoval' ? "AdapterRemoval (Schubert et al. 2016)" : "",
+        params.clip_tool == 'trimmomatic' ? "Trimmomatic (Bolger et al. 2014)" : "",
+    ].findAll { tool -> tool != '' }
+    def text_shortread_qc = "Short read preprocessing was performed with ${shortread_qc_tools.join(', ')}."
+
+    def text_mapping = "Read alignment was performed with Bowtie2 (Langmead and Salzberg 2012) and minimap2 (Li 2018)."
+
+    def longread_qc_tools = [
+        !params.skip_adapter_trimming && params.longread_adaptertrimming_tool == 'porechop' ? "Porechop (Wick et al. 2017)" : "",
+        !params.skip_adapter_trimming && params.longread_adaptertrimming_tool == 'porechop_abi' ? "Porechop ABI (Bonenfant et al. 2022)" : "",
+        !params.skip_longread_filtering && params.longread_filtering_tool == 'filtlong' ? "Filtlong (Wick 2019)" : "",
+        !params.skip_longread_filtering && params.longread_filtering_tool == 'nanoq' ? "Nanoq (Steinig et al. 2022)" : "",
+        !params.skip_longread_filtering && params.longread_filtering_tool == 'chopper' ? "Chopper (De Coster et al. 2018)" : "",
+    ].findAll { tool -> tool != '' }
+    def text_longread_qc = "Long read preprocessing was performed with ${longread_qc_tools.join(', ')}."
+
+    def text_bbnorm = "Read depth normalisation was carried out with BBNorm (Bushnell et al.) and Seqtk (Li et al.)."
+
+    def assembly_tools = [
+        !params.skip_megahit ? "MEGAHIT (Li et al. 2016)" : "",
+        !params.skip_spades ? "metaSPAdes (Nurk et al. 2017)" : "",
+        !params.skip_spadeshybrid ? "hybridSPAdes (Antipov et al. 2016)" : "",
+        !params.skip_metamdbg ? "metaMDBG (Benoit et al. 2024)" : "",
+        !params.skip_flye ? "metaFlye (Kolmogorov et al. 2020)" : "",
+    ].findAll { tool -> tool != '' }
+    def text_assembly = "Metagenome assembly was performed with ${assembly_tools.join(', ')}."
+
+    def assembly_qc_tools = [
+        !params.skip_quast ? "metaQUAST (Mikheenko et al. 2016)" : "",
+        !params.skip_ale ? "ALE (Clark et al. 2013)" : "",
+    ].findAll { tool -> tool != '' }
+    def text_assembly_qc = "Assembly quality was assessed with ${assembly_qc_tools.join(', ')}."
+
+    def gene_prediction_tools = [
+        !params.skip_prodigal ? "Prodigal (Hyatt et al. 2010)" : "",
+        !params.skip_prokka ? "Prokka (Seemann 2014)" : "",
+        !params.skip_metaeuk ? "MetaEuk (Levy Karin et al. 2020) with MMseqs2 (Steinegger and Söding 2017)" : "",
+    ].findAll { tool -> tool != '' }
+    def text_gene_prediction = "Gene prediction was performed with ${gene_prediction_tools.join(', ')}."
+
+    def text_virus_id = "Viral sequence identification was carried out with geNomad (Camargo et al. 2023)."
+
+    def text_tiara = "Eukaryotic contig classification was performed with Tiara (Karlicki et al. 2022)."
+
+    def binning_tools = [
+        !params.skip_metabat2 ? "MetaBAT2 (Kang et al. 2019)" : "",
+        !params.skip_maxbin2 ? "MaxBin2 (Wu et al. 2015)" : "",
+        !params.skip_concoct ? "CONCOCT (Alneberg et al. 2014)" : "",
+        !params.skip_comebin ? "COMEBin (Wang et al. 2024)" : "",
+        !params.skip_metabinner ? "MetaBinner (Wang et al. 2023)" : "",
+        !params.skip_semibin ? "SemiBin2 (Pan et al. 2022)" : "",
+    ].findAll { tool -> tool != '' }
+    def text_binning = "Metagenome binning was performed with ${binning_tools.join(', ')}."
+
+    def text_bin_refinement = "Bin refinement was performed with DAS Tool (Sieber et al. 2018)."
+
+    def binqc_tools = [
+        params.run_busco ? "BUSCO (Seppey et al. 2019)" : "",
+        params.run_checkm ? "CheckM (Parks et al. 2015)" : "",
+        params.run_checkm2 ? "CheckM2 (Chklovski et al. 2023)" : "",
+        params.run_gunc ? "GUNC (Orakov et al. 2021)" : "",
+    ].findAll { tool -> tool != '' }
+    def text_binqc = "Bin quality assessment was carried out with ${binqc_tools.join(', ')}."
+
+    def text_gtdbtk = "Taxonomic classification of bins was performed with GTDB-Tk (Chaumeil et al. 2020)."
+
+    def text_ancient_dna = [
+        "Ancient DNA damage assessment was performed with PyDamage (Borry et al. 2021).",
+        !params.skip_ancient_damagecorrection ? "Damage correction was carried out with variant calling using FreeBayes (Garrison and Marth 2012), BCFtools (Danecek et al. 2021), and SAMtools (Li et al. 2009)." : "",
     ]
 
-    if (!params.skip_shortread_qc && !params.skip_clipping) {
-        if (params.clip_tool == 'fastp') {
-            tools << "fastp (Chen et al. 2018)"
-        }
-        else if (params.clip_tool == 'adapterremoval') {
-            tools << "AdapterRemoval (Schubert et al. 2016)"
-        }
-        else if (params.clip_tool == 'trimmomatic') {
-            tools << "Trimmomatic (Bolger et al. 2014)"
-        }
-    }
-    if (params.host_fasta || params.host_genome || !params.skip_binning || params.ancient_dna || !params.skip_ale) {
-        tools << "Bowtie2 (Langmead and Salzberg 2012)"
-        tools << "minimap2 (Li 2018)"
-    }
-    if (!params.skip_longread_qc && !params.skip_adapter_trimming) {
-        if (params.longread_adaptertrimming_tool == 'porechop') {
-            tools << "Porechop (Wick et al. 2017)"
-        }
-        else if (params.longread_adaptertrimming_tool == 'porechop_abi') {
-            tools << "Porechop ABI (Bonenfant et al. 2022)"
-        }
-    }
-    if (!params.skip_longread_qc && !params.skip_longread_filtering) {
-        if (params.longread_filtering_tool == 'filtlong') {
-            tools << "Filtlong (Wick 2019)"
-        }
-        else if (params.longread_filtering_tool == 'nanoq') {
-            tools << "Nanoq (Steinig et al. 2022)"
-        }
-        else if (params.longread_filtering_tool == 'chopper') {
-            tools << "Chopper (De Coster et al. 2018)"
-        }
-    }
-    if (params.bbnorm) {
-        tools << "BBNorm (Bushnell et al.)"
-        tools << "Seqtk (Li et al.)"
-    }
-    if (!params.skip_megahit) {
-        tools << "MEGAHIT (Li et al. 2016)"
-    }
-    if (!params.skip_spades) {
-        tools << "metaSPAdes (Nurk et al. 2017)"
-    }
-    if (!params.skip_spadeshybrid) {
-        tools << "hybridSPAdes (Antipov et al. 2016)"
-    }
-    if (!params.skip_metamdbg) {
-        tools << "metaMDBG (Benoit et al. 2024)"
-    }
-    if (!params.skip_flye) {
-        tools << "metaFlye (Kolmogorov et al. 2020)"
-    }
-    if (!params.skip_quast) {
-        tools << "metaQUAST (Mikheenko et al. 2016)"
-    }
-    if (!params.skip_ale) {
-        tools << "ALE (Clark et al. 2013)"
-    }
-    if (!params.skip_prodigal) {
-        tools << "Prodigal (Hyatt et al. 2010)"
-    }
-    if (!params.skip_prokka) {
-        tools << "Prokka (Seemann 2014)"
-    }
-    if (!params.skip_metaeuk) {
-        tools << "MetaEuk (Levy Karin et al. 2020)"
-        tools << "MMseqs2 (Steinegger and Söding 2017)"
-    }
-    if (params.run_virus_identification) {
-        tools << "geNomad (Camargo et al. 2023)"
-    }
-    if (!params.skip_tiara) {
-        tools << "Tiara (Karlicki et al. 2022)"
-    }
-    if (!params.skip_binning) {
-        if (!params.skip_metabat2) {
-            tools << "MetaBAT2 (Kang et al. 2019)"
-        }
-        if (!params.skip_maxbin2) {
-            tools << "MaxBin2 (Wu et al. 2015)"
-        }
-        if (!params.skip_concoct) {
-            tools << "CONCOCT (Alneberg et al. 2014)"
-        }
-        if (!params.skip_comebin) {
-            tools << "COMEBin (Wang et al. 2024)"
-        }
-        if (!params.skip_metabinner) {
-            tools << "MetaBinner (Wang et al. 2023)"
-        }
-        if (!params.skip_semibin) {
-            tools << "SemiBin2 (Pan et al. 2022)"
-        }
-    }
-    if (!params.skip_binqc) {
-        if (params.run_busco) {
-            tools << "BUSCO (Seppey et al. 2019)"
-        }
-        if (params.run_checkm) {
-            tools << "CheckM (Parks et al. 2015)"
-        }
-        if (params.run_checkm2) {
-            tools << "CheckM2 (Chklovski et al. 2023)"
-        }
-        if (params.refine_bins_dastool) {
-            tools << "DAS Tool (Sieber et al. 2018)"
-        }
-        if (params.run_gunc) {
-            tools << "GUNC (Orakov et al. 2021)"
-        }
-    }
-    if (!params.skip_gtdbtk) {
-        tools << "GTDB-Tk (Chaumeil et al. 2020)"
-    }
-    if (params.ancient_dna) {
-        tools << "PyDamage (Borry et al. 2021)"
-        if (!params.skip_ancient_damagecorrection) {
-            tools << "FreeBayes (Garrison and Marth 2012)"
-            tools << "BCFtools (Danecek et al. 2021)"
-            tools << "SAMtools (Li et al. 2009)"
-        }
-    }
-
-    def citation_text = "Tools used in the workflow included: ${tools.join(', ')}."
+    def citation_text = [
+        "Tools used in the workflow included:",
+        text_seq_qc,
+        (!params.skip_shortread_qc && !params.skip_clipping) ? text_shortread_qc : "",
+        (params.host_fasta || params.host_genome || !params.skip_binning || params.ancient_dna || !params.skip_ale) ? text_mapping : "",
+        (!params.skip_longread_qc && longread_qc_tools) ? text_longread_qc : "",
+        params.bbnorm ? text_bbnorm : "",
+        assembly_tools ? text_assembly : "",
+        assembly_qc_tools ? text_assembly_qc : "",
+        gene_prediction_tools ? text_gene_prediction : "",
+        params.run_virus_identification ? text_virus_id : "",
+        !params.skip_tiara ? text_tiara : "",
+        (!params.skip_binning && binning_tools) ? text_binning : "",
+        (!params.skip_binqc && params.refine_bins_dastool) ? text_bin_refinement : "",
+        (!params.skip_binqc && binqc_tools) ? text_binqc : "",
+        !params.skip_gtdbtk ? text_gtdbtk : "",
+        params.ancient_dna ? text_ancient_dna : "",
+        "Pipeline results statistics were summarised with MultiQC (Ewels et al. 2016).",
+    ].flatten().join(' ').trim().replaceAll("\\s+", " ")
 
     return citation_text
 }
