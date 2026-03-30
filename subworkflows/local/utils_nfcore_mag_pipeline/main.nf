@@ -468,7 +468,7 @@ def toolCitationText() {
     ].findAll { tool -> tool != '' }
     def text_shortread_qc = "Short read preprocessing was performed with ${shortread_qc_tools.join(', ')}."
 
-    // Note: we don't have a simple way to determine if long reads are present, so we add minimap2 at the same time as Bowtie2
+    // Note: we don't have a simple way to determine if short or long reads are present, so we add a cite for both Bowtie2 and Minimap2 with a notice to suggest deletion when appropiate.
     def text_mapping = "Read alignment against assemblies was performed with Bowtie2 (Langmead and Salzberg 2012) for short-reads and minimap2 for long-reads (Li 2018) [DELETE AS APPROPRIATE]."
 
     def longread_qc_tools = [
