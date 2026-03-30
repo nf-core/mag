@@ -468,7 +468,8 @@ def toolCitationText() {
     ].findAll { tool -> tool != '' }
     def text_shortread_qc = "Short read preprocessing was performed with ${shortread_qc_tools.join(', ')}."
 
-    def text_mapping = "Read alignment was performed with Bowtie2 (Langmead and Salzberg 2012) and minimap2 (Li 2018)."
+    // Note: we don't have a simple way to determine if long reads are present, so we add minimap2 at the same time as Bowtie2
+    def text_mapping = "Read alignment against assemblies was performed with Bowtie2 (Langmead and Salzberg 2012) for short-reads and minimap2 for long-reads (Li 2018) [DELETE AS APPROPRIATE]."
 
     def longread_qc_tools = [
         !params.skip_adapter_trimming && params.longread_adaptertrimming_tool == 'porechop' ? "Porechop (Wick et al. 2017)" : "",
