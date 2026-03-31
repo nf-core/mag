@@ -3,6 +3,29 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 5.4.2 Yellow Frog patch [2026-03-31]
+
+### `Added`
+
+- [#1006](https://github.com/nf-core/mag/pull/1006) - Add citations and references texts in the `utils_nfcore_mag_pipeline` subworkflow (by @dialvarezs)
+
+### `Changed`
+
+- [#1000](https://github.com/nf-core/mag/pull/1000) - Update GUNC modules and enable the tool in tests (by @dialvarezs)
+- [#1004](https://github.com/nf-core/mag/pull/1004) - Replace `collectFile` with `qsv/cat` on GUNC summary merging (by @dialvarezs)
+
+### `Fixed`
+
+- [#1001](https://github.com/nf-core/mag/pull/1001) - Include all binners in parameter validation for running DASTool (by @dialvarezs)
+- [#1002](https://github.com/nf-core/mag/pull/1002) - Fix BUSCO publish dir to prevent filename collision (by @dialvarezs)
+- [#1002](https://github.com/nf-core/mag/pull/1002) - Avoid whole-batch BUSCO failure when classification fails for a single bin. (by @dialvarezs)
+
+### `Dependencies`
+
+| Tool | Previous version | New version |
+| ---- | ---------------- | ----------- |
+| GUNC | 1.0.6            | 1.1.0       |
+
 ## 5.4.1 - Yellow Frog patch [2026-03-13]
 
 ### `Changed`
@@ -12,7 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
-- [#974](https://github.com/nf-core/mag/pull/974) - Re-add accidently removed functionality for using metaSPAdes contigs downstream rather than scaffolds (reported by @Pranjal-Bioinfo, fix by @jfy133)
+- [#979](https://github.com/nf-core/mag/pull/979) - Re-add accidently removed functionality for using metaSPAdes contigs downstream rather than scaffolds (reported by @Pranjal-Bioinfo, fix by @jfy133)
 - [#984](https://github.com/nf-core/mag/pull/984) - Fix docs regarding usage of Bin QC tool scores when filtering bins for post-processing (by @dialvarezs, @claude)
 - [#987](https://github.com/nf-core/mag/pull/987) - Fix several documentation issues (by @dialvarezs)
 - [#988](https://github.com/nf-core/mag/pull/988) - Fix regarding validation of column `long_reads_platform` in the input samplesheet ([#985](https://github.com/nf-core/mag/issues/985) by @vinisalazar)

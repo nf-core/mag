@@ -41,11 +41,11 @@
                     "fastqc": "0.12.1"
                 },
                 "Workflow": {
-                    "nf-core/mag": "v5.4.1"
+                    "nf-core/mag": "v5.4.2"
                 }
             }
         ],
-        "timestamp": "2026-03-06T16:35:18.180316507",
+        "timestamp": "2026-03-27T09:26:33.066527861",
         "meta": {
             "nf-test": "0.9.4",
             "nextflow": "25.10.4"

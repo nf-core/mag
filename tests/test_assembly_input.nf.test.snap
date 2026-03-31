@@ -65,7 +65,7 @@
     },
     "-profile assembly_input": {
         "content": [
-            282,
+            286,
             {
                 "ADJUST_MAXBIN2_EXT": {
                     "coreutils": 9.5
@@ -91,6 +91,9 @@
                 "CONCAT_BUSCO_TSV": {
                     "qsv": "5.1.0"
                 },
+                "CONCAT_GUNC_TSV": {
+                    "qsv": "5.1.0"
+                },
                 "CONCOCT_CONCOCT": {
                     "concoct": "1.1.0"
                 },
@@ -114,6 +117,12 @@
                 },
                 "DASTOOL_FASTATOCONTIG2BIN": {
                     "dastool": "1.1.7"
+                },
+                "GUNC_DOWNLOADDB": {
+                    "gunc": "1.1.0"
+                },
+                "GUNC_RUN": {
+                    "gunc": "1.1.0"
                 },
                 "GUNZIP_ASSEMBLYINPUT": {
                     "gunzip": 1.13
@@ -164,13 +173,13 @@
                     "python": "3.6.7"
                 },
                 "Workflow": {
-                    "nf-core/mag": "v5.4.1"
+                    "nf-core/mag": "v5.4.2"
                 }
             }
         ],
-        "timestamp": "2026-03-06T16:37:48.089495655",
+        "timestamp": "2026-03-27T17:58:59.080247138",
         "meta": {
-            "nf-test": "0.9.4",
+            "nf-test": "0.9.5",
             "nextflow": "25.10.4"
         }
     },
@@ -348,35 +357,40 @@
                 "GenomeBinning/MetaBAT2/unbinned/discarded/SPAdes-MetaBAT2-test_minigut.unbinned.remaining.fa.gz",
                 "GenomeBinning/MetaBAT2/unbinned/discarded/SPAdes-MetaBAT2-test_minigut_sample2.unbinned.pooled.fa.gz",
                 "GenomeBinning/MetaBAT2/unbinned/discarded/SPAdes-MetaBAT2-test_minigut_sample2.unbinned.remaining.fa.gz",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-test_minigut/short_summary.specific.bacteria_odb10.MEGAHIT-MetaBAT2Refined-test_minigut.1.fa.json",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-test_minigut/short_summary.specific.bacteria_odb10.MEGAHIT-MetaBAT2Refined-test_minigut.1.fa.txt",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-test_minigut/short_summary.specific.bacteria_odb10.MEGAHIT-MetaBAT2Refined-test_minigut.2.fa.json",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-test_minigut/short_summary.specific.bacteria_odb10.MEGAHIT-MetaBAT2Refined-test_minigut.2.fa.txt",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-test_minigut/test_minigut-bacteria_odb10-busco.batch_summary.txt",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-test_minigut/test_minigut-bacteria_odb10-busco.log",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-test_minigut/test_minigut-bacteria_odb10-busco/MEGAHIT-MetaBAT2Refined-test_minigut.1.fa/run_bacteria_odb10/full_table.tsv",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-test_minigut/test_minigut-bacteria_odb10-busco/MEGAHIT-MetaBAT2Refined-test_minigut.1.fa/run_bacteria_odb10/missing_busco_list.tsv",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-test_minigut/test_minigut-bacteria_odb10-busco/MEGAHIT-MetaBAT2Refined-test_minigut.1.fa/run_bacteria_odb10/short_summary.json",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-test_minigut/test_minigut-bacteria_odb10-busco/MEGAHIT-MetaBAT2Refined-test_minigut.1.fa/run_bacteria_odb10/short_summary.txt",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-test_minigut/test_minigut-bacteria_odb10-busco/MEGAHIT-MetaBAT2Refined-test_minigut.2.fa/run_bacteria_odb10/full_table.tsv",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-test_minigut/test_minigut-bacteria_odb10-busco/MEGAHIT-MetaBAT2Refined-test_minigut.2.fa/run_bacteria_odb10/missing_busco_list.tsv",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-test_minigut/test_minigut-bacteria_odb10-busco/MEGAHIT-MetaBAT2Refined-test_minigut.2.fa/run_bacteria_odb10/short_summary.json",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-test_minigut/test_minigut-bacteria_odb10-busco/MEGAHIT-MetaBAT2Refined-test_minigut.2.fa/run_bacteria_odb10/short_summary.txt",
-                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-test_minigut/short_summary.specific.bacteria_odb10.SPAdes-CONCOCTRefined-test_minigut.7.fa.json",
-                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-test_minigut/short_summary.specific.bacteria_odb10.SPAdes-CONCOCTRefined-test_minigut.7.fa.txt",
-                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-test_minigut/short_summary.specific.bacteria_odb10.SPAdes-MaxBin2Refined-test_minigut.001_sub.fa.json",
-                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-test_minigut/short_summary.specific.bacteria_odb10.SPAdes-MaxBin2Refined-test_minigut.001_sub.fa.txt",
-                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-test_minigut/test_minigut-bacteria_odb10-busco.batch_summary.txt",
-                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-test_minigut/test_minigut-bacteria_odb10-busco.log",
-                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-test_minigut/test_minigut-bacteria_odb10-busco/SPAdes-CONCOCTRefined-test_minigut.7.fa/run_bacteria_odb10/full_table.tsv",
-                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-test_minigut/test_minigut-bacteria_odb10-busco/SPAdes-CONCOCTRefined-test_minigut.7.fa/run_bacteria_odb10/missing_busco_list.tsv",
-                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-test_minigut/test_minigut-bacteria_odb10-busco/SPAdes-CONCOCTRefined-test_minigut.7.fa/run_bacteria_odb10/short_summary.json",
-                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-test_minigut/test_minigut-bacteria_odb10-busco/SPAdes-CONCOCTRefined-test_minigut.7.fa/run_bacteria_odb10/short_summary.txt",
-                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-test_minigut/test_minigut-bacteria_odb10-busco/SPAdes-MaxBin2Refined-test_minigut.001_sub.fa/run_bacteria_odb10/full_table.tsv",
-                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-test_minigut/test_minigut-bacteria_odb10-busco/SPAdes-MaxBin2Refined-test_minigut.001_sub.fa/run_bacteria_odb10/missing_busco_list.tsv",
-                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-test_minigut/test_minigut-bacteria_odb10-busco/SPAdes-MaxBin2Refined-test_minigut.001_sub.fa/run_bacteria_odb10/short_summary.json",
-                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-test_minigut/test_minigut-bacteria_odb10-busco/SPAdes-MaxBin2Refined-test_minigut.001_sub.fa/run_bacteria_odb10/short_summary.txt",
+                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-unclassified-dastool_refined-test_minigut/short_summary.specific.bacteria_odb10.MEGAHIT-MetaBAT2Refined-test_minigut.1.fa.json",
+                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-unclassified-dastool_refined-test_minigut/short_summary.specific.bacteria_odb10.MEGAHIT-MetaBAT2Refined-test_minigut.1.fa.txt",
+                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-unclassified-dastool_refined-test_minigut/short_summary.specific.bacteria_odb10.MEGAHIT-MetaBAT2Refined-test_minigut.2.fa.json",
+                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-unclassified-dastool_refined-test_minigut/short_summary.specific.bacteria_odb10.MEGAHIT-MetaBAT2Refined-test_minigut.2.fa.txt",
+                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-unclassified-dastool_refined-test_minigut/test_minigut-bacteria_odb10-busco.batch_summary.txt",
+                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-unclassified-dastool_refined-test_minigut/test_minigut-bacteria_odb10-busco.log",
+                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-unclassified-dastool_refined-test_minigut/test_minigut-bacteria_odb10-busco/MEGAHIT-MetaBAT2Refined-test_minigut.1.fa/run_bacteria_odb10/full_table.tsv",
+                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-unclassified-dastool_refined-test_minigut/test_minigut-bacteria_odb10-busco/MEGAHIT-MetaBAT2Refined-test_minigut.1.fa/run_bacteria_odb10/missing_busco_list.tsv",
+                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-unclassified-dastool_refined-test_minigut/test_minigut-bacteria_odb10-busco/MEGAHIT-MetaBAT2Refined-test_minigut.1.fa/run_bacteria_odb10/short_summary.json",
+                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-unclassified-dastool_refined-test_minigut/test_minigut-bacteria_odb10-busco/MEGAHIT-MetaBAT2Refined-test_minigut.1.fa/run_bacteria_odb10/short_summary.txt",
+                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-unclassified-dastool_refined-test_minigut/test_minigut-bacteria_odb10-busco/MEGAHIT-MetaBAT2Refined-test_minigut.2.fa/run_bacteria_odb10/full_table.tsv",
+                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-unclassified-dastool_refined-test_minigut/test_minigut-bacteria_odb10-busco/MEGAHIT-MetaBAT2Refined-test_minigut.2.fa/run_bacteria_odb10/missing_busco_list.tsv",
+                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-unclassified-dastool_refined-test_minigut/test_minigut-bacteria_odb10-busco/MEGAHIT-MetaBAT2Refined-test_minigut.2.fa/run_bacteria_odb10/short_summary.json",
+                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-unclassified-dastool_refined-test_minigut/test_minigut-bacteria_odb10-busco/MEGAHIT-MetaBAT2Refined-test_minigut.2.fa/run_bacteria_odb10/short_summary.txt",
+                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-unclassified-dastool_refined-test_minigut/test_minigut-bacteria_odb10-busco/batch_summary.txt",
+                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-unclassified-dastool_refined-test_minigut/short_summary.specific.bacteria_odb10.SPAdes-CONCOCTRefined-test_minigut.7.fa.json",
+                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-unclassified-dastool_refined-test_minigut/short_summary.specific.bacteria_odb10.SPAdes-CONCOCTRefined-test_minigut.7.fa.txt",
+                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-unclassified-dastool_refined-test_minigut/short_summary.specific.bacteria_odb10.SPAdes-MaxBin2Refined-test_minigut.001_sub.fa.json",
+                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-unclassified-dastool_refined-test_minigut/short_summary.specific.bacteria_odb10.SPAdes-MaxBin2Refined-test_minigut.001_sub.fa.txt",
+                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-unclassified-dastool_refined-test_minigut/test_minigut-bacteria_odb10-busco.batch_summary.txt",
+                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-unclassified-dastool_refined-test_minigut/test_minigut-bacteria_odb10-busco.log",
+                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-unclassified-dastool_refined-test_minigut/test_minigut-bacteria_odb10-busco/SPAdes-CONCOCTRefined-test_minigut.7.fa/run_bacteria_odb10/full_table.tsv",
+                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-unclassified-dastool_refined-test_minigut/test_minigut-bacteria_odb10-busco/SPAdes-CONCOCTRefined-test_minigut.7.fa/run_bacteria_odb10/missing_busco_list.tsv",
+                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-unclassified-dastool_refined-test_minigut/test_minigut-bacteria_odb10-busco/SPAdes-CONCOCTRefined-test_minigut.7.fa/run_bacteria_odb10/short_summary.json",
+                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-unclassified-dastool_refined-test_minigut/test_minigut-bacteria_odb10-busco/SPAdes-CONCOCTRefined-test_minigut.7.fa/run_bacteria_odb10/short_summary.txt",
+                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-unclassified-dastool_refined-test_minigut/test_minigut-bacteria_odb10-busco/SPAdes-MaxBin2Refined-test_minigut.001_sub.fa/run_bacteria_odb10/full_table.tsv",
+                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-unclassified-dastool_refined-test_minigut/test_minigut-bacteria_odb10-busco/SPAdes-MaxBin2Refined-test_minigut.001_sub.fa/run_bacteria_odb10/missing_busco_list.tsv",
+                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-unclassified-dastool_refined-test_minigut/test_minigut-bacteria_odb10-busco/SPAdes-MaxBin2Refined-test_minigut.001_sub.fa/run_bacteria_odb10/short_summary.json",
+                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-unclassified-dastool_refined-test_minigut/test_minigut-bacteria_odb10-busco/SPAdes-MaxBin2Refined-test_minigut.001_sub.fa/run_bacteria_odb10/short_summary.txt",
+                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-unclassified-dastool_refined-test_minigut/test_minigut-bacteria_odb10-busco/batch_summary.txt",
+                "GenomeBinning/QC/GUNC/raw/MEGAHIT-DASTool-unclassified-dastool_refined-test_minigut/GUNC.progenomes_2.1.maxCSS_level.tsv",
+                "GenomeBinning/QC/GUNC/raw/SPAdes-DASTool-unclassified-dastool_refined-test_minigut/GUNC.progenomes_2.1.maxCSS_level.tsv",
                 "GenomeBinning/QC/busco_summary.tsv",
+                "GenomeBinning/QC/gunc_summary.tsv",
                 "GenomeBinning/bin_summary.tsv",
                 "GenomeBinning/contig_to_bin/contig_to_bin_map.tsv",
                 "GenomeBinning/depths/bins/MEGAHIT-DASTool-test_minigut-binDepths.heatmap.png",
@@ -541,15 +555,18 @@
                 "missing_busco_list.tsv:md5,c6807925eff74c7de1c1a38d88069b08",
                 "full_table.tsv:md5,877e4dad881ca7079c8b6118b59a34d4",
                 "missing_busco_list.tsv:md5,c7ee1e582e010aab60a566da7fe304de",
+                "GUNC.progenomes_2.1.maxCSS_level.tsv:md5,c3d611353770b42c99dd4fe9039ac10f",
+                "GUNC.progenomes_2.1.maxCSS_level.tsv:md5,02e72f9e57ed6defc4eb540453328c2e",
+                "gunc_summary.tsv:md5,86dda28c13307b08d362185700ab7ccb",
                 "bin_summary.tsv:md5,60111a58bb0167ec1367f1e7463b7026",
                 "contig_to_bin_map.tsv:md5,4b640b728c3b42bfe65ea4a869708787",
                 "bin_depths_summary.tsv:md5,7153f759db72abb02e2ee3c2ab1b5e56"
             ]
         ],
-        "timestamp": "2026-01-20T13:11:52.033742494",
+        "timestamp": "2026-03-27T17:58:59.223381841",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.0"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
         }
     },
     "csv-rows": {
