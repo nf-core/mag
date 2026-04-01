@@ -137,13 +137,13 @@
                     "python": "3.6.7"
                 },
                 "Workflow": {
-                    "nf-core/mag": "v5.4.2"
+                    "nf-core/mag": "v5.5.0dev"
                 }
             }
         ],
-        "timestamp": "2026-03-27T09:31:39.910789746",
+        "timestamp": "2026-04-01T14:55:50.11826155",
         "meta": {
-            "nf-test": "0.9.4",
+            "nf-test": "0.9.5",
             "nextflow": "25.10.4"
         }
     },

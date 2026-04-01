@@ -110,13 +110,13 @@
                     "trimmomatic": 0.39
                 },
                 "Workflow": {
-                    "nf-core/mag": "v5.4.2"
+                    "nf-core/mag": "v5.5.0dev"
                 }
             }
         ],
-        "timestamp": "2026-03-27T09:31:42.127769512",
+        "timestamp": "2026-04-01T14:55:43.449448611",
         "meta": {
-            "nf-test": "0.9.4",
+            "nf-test": "0.9.5",
             "nextflow": "25.10.4"
         }
     },
