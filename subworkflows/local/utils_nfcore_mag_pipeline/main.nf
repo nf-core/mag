@@ -546,7 +546,7 @@ def toolCitationText() {
         assembly_qc_tools ? text_assembly_qc : "",
         gene_prediction_tools ? text_gene_prediction : "",
         params.run_virus_identification ? text_virus_id : "",
-        !params.skip_tiara ? text_tiara : "",
+        params.bin_domain_classification_tool == "tiara" ? text_tiara : "",
         (!params.skip_binning && binning_tools) ? text_binning : "",
         (!params.skip_binqc && params.refine_bins_dastool) ? text_bin_refinement : "",
         (!params.skip_binqc && binqc_tools) ? text_binqc : "",
@@ -637,7 +637,7 @@ def toolBibliographyText() {
     if (params.run_virus_identification) {
         references << "<li>Camargo, A. P., et al. (2023). Identification of mobile genetic elements with geNomad. Nature Biotechnology 42, 1303–1312. doi: 10.1038/s41587-023-01953-y</li>"
     }
-    if (!params.skip_tiara) {
+    if (params.bin_domain_classification_tool == "tiara") {
         references << "<li>Karlicki, M., Antonowicz, S., & Karnkowska, A. (2022). Tiara: deep learning-based classification system for eukaryotic sequences. Bioinformatics, 38(2), 344–350. doi: 10.1093/bioinformatics/btab672</li>"
     }
     if (!params.skip_binning) {
