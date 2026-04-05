@@ -34,21 +34,30 @@ workflow LONGREAD_PREPROCESSING {
 
     if (!params.assembly_input) {
         if (!params.skip_adapter_trimming && !val_skip_qc) {
+            ch_long_reads_by_platform = ch_raw_long_reads.branch { meta, _reads ->
+                ont: meta.lr_platform in ['OXFORD_NANOPORE', 'OXFORD_NANOPORE_HQ']
+                pb: meta.lr_platform in ['PACBIO_CLR', 'PACBIO_HIFI']
+            }
+            ch_long_reads = channel.empty()
+
+            // PacBio reads bypass adapter trimming for now, as there is no tool for that.
+            ch_long_reads = ch_long_reads.mix(ch_long_reads_by_platform.pb)
+
             if (params.longread_adaptertrimming_tool && params.longread_adaptertrimming_tool == 'porechop_abi') {
                 PORECHOP_ABI(
-                    ch_raw_long_reads,
+                    ch_long_reads_by_platform.ont,
                     [],
                 )
                 ch_versions = ch_versions.mix(PORECHOP_ABI.out.versions)
-                ch_long_reads = PORECHOP_ABI.out.reads
+                ch_long_reads = ch_long_reads.mix(PORECHOP_ABI.out.reads)
                 ch_multiqc_files = ch_multiqc_files.mix(PORECHOP_ABI.out.log)
             }
             else if (params.longread_adaptertrimming_tool == 'porechop') {
                 PORECHOP_PORECHOP(
-                    ch_raw_long_reads
+                    ch_long_reads_by_platform.ont
                 )
                 ch_versions = ch_versions.mix(PORECHOP_PORECHOP.out.versions)
-                ch_long_reads = PORECHOP_PORECHOP.out.reads
+                ch_long_reads = ch_long_reads.mix(PORECHOP_PORECHOP.out.reads)
                 ch_multiqc_files = ch_multiqc_files.mix(PORECHOP_PORECHOP.out.log)
             }
         }
