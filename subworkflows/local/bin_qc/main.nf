@@ -3,8 +3,7 @@
  */
 
 include { BUSCO_BUSCO                       } from '../../../modules/nf-core/busco/busco/main'
-// 2016-01-19: Temporarily diabling Checkm2 database downloading due to Zenodo blocking Aria2 downloads
-//include { CHECKM2_DATABASEDOWNLOAD      } from '../../../modules/nf-core/checkm2/databasedownload/main'
+include { CHECKM2_DATABASEDOWNLOAD          } from '../../../modules/nf-core/checkm2/databasedownload/main'
 include { CHECKM_QA                         } from '../../../modules/nf-core/checkm/qa/main'
 include { CHECKM_LINEAGEWF                  } from '../../../modules/nf-core/checkm/lineagewf/main'
 include { CHECKM2_PREDICT                   } from '../../../modules/nf-core/checkm2/predict/main'
@@ -18,7 +17,6 @@ include { GUNC_RUN                          } from '../../../modules/nf-core/gun
 include { GUNC_MERGECHECKM                  } from '../../../modules/nf-core/gunc/mergecheckm/main'
 include { UNTAR as BUSCO_UNTAR              } from '../../../modules/nf-core/untar/main'
 include { UNTAR as CHECKM_UNTAR             } from '../../../modules/nf-core/untar/main'
-include { UNTAR as CHECKM2_UNTAR            } from '../../../modules/nf-core/untar/main'
 
 
 workflow BIN_QC {
@@ -67,14 +65,8 @@ workflow BIN_QC {
         ch_checkm2_db = [[:], file(params.checkm2_db, checkIfExists: true)]
     }
     else if (params.run_checkm2) {
-        // 2016-01-19: Temporarily diabling Checkm2 database downloading due to Zenodo blocking Aria2 downloads
-        //CHECKM2_DATABASEDOWNLOAD(params.checkm2_db_version)
-        //ch_versions = ch_versions.mix(CHECKM2_DATABASEDOWNLOAD.out.versions)
-        ch_checkm2_tar = channel.fromPath("https://zenodo.org/records/${params.checkm2_db_version}/files/checkm2_database.tar.gz", checkIfExists: true)
-            .map { db_tar -> [[id: 'checkm2_db', version: params.checkm2_db_version], db_tar] }
-        CHECKM2_UNTAR(ch_checkm2_tar)
-        ch_checkm2_db = CHECKM2_UNTAR.out.untar
-        ch_versions = ch_versions.mix(CHECKM2_UNTAR.out.versions)
+        CHECKM2_DATABASEDOWNLOAD(params.checkm2_db_version)
+        ch_checkm2_db = CHECKM2_DATABASEDOWNLOAD.out.database
     }
     else {
         ch_checkm2_db = []
@@ -172,7 +164,6 @@ workflow BIN_QC {
          * CheckM2
          */
         CHECKM2_PREDICT(ch_input_bins_for_qc.groupTuple(), ch_checkm2_db)
-        ch_versions = ch_versions.mix(CHECKM2_PREDICT.out.versions)
 
         ch_checkm2_summaries = CHECKM2_PREDICT.out.checkm2_tsv
             .map { _meta, summary -> [[id: 'checkm2'], summary] }

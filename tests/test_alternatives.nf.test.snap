@@ -36,11 +36,11 @@
                 "BUSCO_BUSCO": {
                     "busco": "6.0.0"
                 },
+                "CHECKM2_DATABASEDOWNLOAD": {
+                    "aria2": "1.37.0"
+                },
                 "CHECKM2_PREDICT": {
                     "checkm2": "1.1.0"
-                },
-                "CHECKM2_UNTAR": {
-                    "untar": 1.34
                 },
                 "CONCAT_BUSCO_TSV": {
                     "qsv": "5.1.0"
@@ -114,7 +114,7 @@
                 }
             }
         ],
-        "timestamp": "2026-04-01T14:55:43.449448611",
+        "timestamp": "2026-04-02T10:04:53.615386693",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
