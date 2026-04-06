@@ -9,9 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
+- [#1011](https://github.com/nf-core/mag/pull/1011) - Reverted CheckM2 database download workaround from #966 (by @dialvarezs)
+
 ### `Fixed`
 
 - [#1012](https://github.com/nf-core/mag/pull/1012) - Prevent adapter trimming with Porechop on PacBio reads (by @dialvarezs)
+- [#1011](https://github.com/nf-core/mag/pull/1011) - Fix issue making CheckM2 running only for one sample per run (by @dialvarezs)
 
 ### `Dependencies`
 
