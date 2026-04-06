@@ -10,7 +10,7 @@
 
 ## Pipeline tools
 
-- [AdapterRemoval2](https://doi.org/10.1186/)
+- [AdapterRemoval2](https://doi.org/10.1186/s13104-016-1900-2)
 
   > Schubert, M., Lindgreen, S., and Orlando, L. 2016. "AdapterRemoval v2: Rapid Adapter Trimming, Identification, and Read Merging." BMC Research Notes 9 (February): 88. doi: 10.1186/s13104-016-1900-2
 
@@ -24,7 +24,7 @@
 
   > Danecek, Petr, et al. "Twelve years of SAMtools and BCFtools." Gigascience 10.2 (2021): giab008. doi: 10.1093/gigascience/giab008
 
-- [Bowtie2](https:/dx.doi.org/10.1038/nmeth.1923)
+- [Bowtie2](https://doi.org/10.1038/nmeth.1923)
 
   > Langmead, B. and Salzberg, S. L. 2012 Fast gapped-read alignment with Bowtie 2. Nature methods, 9(4), p. 357–359. doi: 10.1038/nmeth.1923.
 
@@ -42,7 +42,7 @@
 
 - [CheckM2](https://doi.org/10.1038/s41592-023-01940-w)
 
-  > Chklovski, A., Parks, D. H., Woodcroft, B. J., & Tyson, G. W. (2023). CheckM2: a rapid, scalable and accurate tool for assessing microbial genome quality using machine learning. Nature Methods, 20(8), 1203-1212. doi: https://doi.org/10.1038/s41592-023-01940-w
+  > Chklovski, A., Parks, D. H., Woodcroft, B. J., & Tyson, G. W. (2023). CheckM2: a rapid, scalable and accurate tool for assessing microbial genome quality using machine learning. Nature Methods, 20(8), 1203-1212. doi: 10.1038/s41592-023-01940-w
 
 - [Chopper](https://doi.org/10.1093/bioinformatics/bty149)
 
@@ -90,9 +90,9 @@
 
   > Garrison E, Marth G. Haplotype-based variant detection from short-read sequencing. arXiv preprint arXiv:1207.3907 [q-bio.GN] 2012
 
-- [geNomad](https://doi.org/10.1101/2023.03.05.531206)
+- [geNomad](https://doi.org/10.1038/s41587-023-01953-y)
 
-  > Camargo, A. P., et al. (2023). You can move, but you can’t hide: identification of mobile genetic elements with geNomad. bioRxiv preprint. doi: 10.1101/2023.03.05.531206
+  > Camargo, A. P., et al. (2023). Identification of mobile genetic elements with geNomad. Nature Biotechnology 42, 1303–1312. doi: 10.1038/s41587-023-01953-y
 
 - [GTDB-Tk](https://doi.org/10.1093/bioinformatics/btz848)
 
@@ -104,7 +104,7 @@
 
 - [BIgMAG](https://doi.org/10.12688/f1000research.152290.2)
 
-  > Yepes-García, J., Falquet, L. (2024). Metagenome quality metrics and taxonomical annotation visualization through the integration of MAGFlow and BIgMAG. F1000Research 13:640. doi.org/10.12688/f1000research.152290.2
+  > Yepes-García, J., Falquet, L. (2024). Metagenome quality metrics and taxonomical annotation visualization through the integration of MAGFlow and BIgMAG. F1000Research 13:640. doi: 10.12688/f1000research.152290.2
 
 - [MaxBin2](https://doi.org/10.1093/bioinformatics/btv638)
 
@@ -120,11 +120,11 @@
 
 - [MetaEuk](https://doi.org/10.1186/s40168-020-00808-x)
 
-  > Levy Karin, E., Mirdita, M. & Söding, J. MetaEuk—sensitive, high-throughput gene discovery, and annotation for large-scale eukaryotic metagenomics. Microbiome 8, 48 (2020). 10.1186/s40168-020-00808-x
+  > Levy Karin, E., Mirdita, M. & Söding, J. MetaEuk—sensitive, high-throughput gene discovery, and annotation for large-scale eukaryotic metagenomics. Microbiome 8, 48 (2020). doi: 10.1186/s40168-020-00808-x
 
 - [metaMDBG](https://doi.org/10.1038/s41587-023-01983-6)
 
-  > Benoit, G., Raguideau, S., James, R. et al. High-quality metagenome assembly from long accurate reads with metaMDBG. Nat Biotechnol 42, 1378–1383 (2024). doi:10.1038/s41587-023-01983-6
+  > Benoit, G., Raguideau, S., James, R. et al. High-quality metagenome assembly from long accurate reads with metaMDBG. Nat Biotechnol 42, 1378–1383 (2024). doi: 10.1038/s41587-023-01983-6
 
 - [minimap2](https://doi.org/10.1093/bioinformatics/bty191)
 
@@ -132,7 +132,7 @@
 
 - [MMseqs2](https://www.nature.com/articles/nbt.3988)
 
-  > Steinegger, M., Söding, J. MMseqs2 enables sensitive protein sequence searching for the analysis of massive data sets. Nat Biotechnol 35, 1026–1028 (2017).10.1038/nbt.3988
+  > Steinegger, M., Söding, J. MMseqs2 enables sensitive protein sequence searching for the analysis of massive data sets. Nat Biotechnol 35, 1026–1028 (2017). doi: 10.1038/nbt.3988
 
 - [MultiQC](https://pubmed.ncbi.nlm.nih.gov/27312411/)
 
@@ -181,6 +181,10 @@
 - [Tiara](https://doi.org/10.1093/bioinformatics/btab672)
 
   > Karlicki, M., Antonowicz, S., Karnkowska, A., 2022. Tiara: deep learning-based classification system for eukaryotic sequences. Bioinformatics 38, 344–350. doi: 10.1093/bioinformatics/btab672
+
+- [Trimmomatic](https://doi.org/10.1093/bioinformatics/btu170)
+
+  > Bolger, A. M., Lohse, M., & Usadel, B. (2014). Trimmomatic: a flexible trimmer for Illumina sequence data. Bioinformatics, 30(15), 2114-2120. doi: 10.1093/bioinformatics/btu170
 
 ## Data
 

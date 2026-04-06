@@ -88,12 +88,12 @@
                     },
                     "checkm2/databasedownload": {
                         "branch": "master",
-                        "git_sha": "bcba09053293bbc4fcfecbe094af6d0127f2e0ec",
+                        "git_sha": "81470b59ebadb3d01dcfcd37d44f88eb890f4851",
                         "installed_by": ["modules"]
                     },
                     "checkm2/predict": {
                         "branch": "master",
-                        "git_sha": "92c71995da96e0e01946156302997cc86f9324c6",
+                        "git_sha": "81470b59ebadb3d01dcfcd37d44f88eb890f4851",
                         "installed_by": ["modules"]
                     },
                     "chopper": {

@@ -36,11 +36,11 @@
                 "BUSCO_BUSCO": {
                     "busco": "6.0.0"
                 },
+                "CHECKM2_DATABASEDOWNLOAD": {
+                    "aria2": "1.37.0"
+                },
                 "CHECKM2_PREDICT": {
                     "checkm2": "1.1.0"
-                },
-                "CHECKM2_UNTAR": {
-                    "untar": 1.34
                 },
                 "CONCAT_BUSCO_TSV": {
                     "qsv": "5.1.0"
@@ -110,7 +110,7 @@
                     "trimmomatic": 0.39
                 },
                 "Workflow": {
-                    "nf-core/mag": "v5.4.2"
+                    "nf-core/mag": "v5.5.0dev"
                 }
             }
         ],
