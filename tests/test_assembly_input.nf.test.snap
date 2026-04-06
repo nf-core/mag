@@ -396,10 +396,10 @@
                 "GenomeBinning/depths/bins/MEGAHIT-DASTool-test_minigut-binDepths.heatmap.png",
                 "GenomeBinning/depths/bins/SPAdes-DASTool-test_minigut-binDepths.heatmap.png",
                 "GenomeBinning/depths/bins/bin_depths_summary.tsv",
-                "GenomeBinning/depths/contigs/MEGAHIT-test_minigut-depth.txt",
-                "GenomeBinning/depths/contigs/MEGAHIT-test_minigut_sample2-depth.txt",
-                "GenomeBinning/depths/contigs/SPAdes-test_minigut-depth.txt",
-                "GenomeBinning/depths/contigs/SPAdes-test_minigut_sample2-depth.txt"
+                "GenomeBinning/depths/contigs/MEGAHIT-test_minigut-depth.depth.txt",
+                "GenomeBinning/depths/contigs/MEGAHIT-test_minigut_sample2-depth.depth.txt",
+                "GenomeBinning/depths/contigs/SPAdes-test_minigut-depth.depth.txt",
+                "GenomeBinning/depths/contigs/SPAdes-test_minigut_sample2-depth.depth.txt"
             ],
             [
                 "MEGAHIT-CONCOCT-test_minigut_0.fa.gz:md5,245ea168aa421e1e3e720cf223a80780",
@@ -558,12 +558,16 @@
                 "GUNC.progenomes_2.1.maxCSS_level.tsv:md5,c3d611353770b42c99dd4fe9039ac10f",
                 "GUNC.progenomes_2.1.maxCSS_level.tsv:md5,02e72f9e57ed6defc4eb540453328c2e",
                 "gunc_summary.tsv:md5,86dda28c13307b08d362185700ab7ccb",
-                "bin_summary.tsv:md5,60111a58bb0167ec1367f1e7463b7026",
+                "bin_summary.tsv:md5,b1f554f6d407c47f5198c79b096d81c1",
                 "contig_to_bin_map.tsv:md5,4b640b728c3b42bfe65ea4a869708787",
-                "bin_depths_summary.tsv:md5,7153f759db72abb02e2ee3c2ab1b5e56"
+                "bin_depths_summary.tsv:md5,e373a51ab498815fbb7e94b854882aeb",
+                "MEGAHIT-test_minigut-depth.depth.txt:md5,4d2307ca68ba07203784c905ab4e6292",
+                "MEGAHIT-test_minigut_sample2-depth.depth.txt:md5,eb21fb1df0775e84c3b3b1b48116c17d",
+                "SPAdes-test_minigut-depth.depth.txt:md5,8457d606af6e01526250363515dbbdbb",
+                "SPAdes-test_minigut_sample2-depth.depth.txt:md5,a6b53a303e743baa7fc7d046a3951adf"
             ]
         ],
-        "timestamp": "2026-03-27T17:58:59.223381841",
+        "timestamp": "2026-04-06T09:25:00.269527773",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
