@@ -134,26 +134,28 @@ workflow LONGREAD_PREPROCESSING {
             }
         }
 
-        // Run merging
-        ch_long_reads_forcat = ch_long_reads
-            .map { meta, reads ->
-                def meta_new = meta - meta.subMap('run')
-                meta_new.single_end = true
-                [meta_new, reads]
-            }
-            .groupTuple()
-            .branch { _meta, reads ->
-                cat: reads.size() >= 2
-                skip_cat: true
-            }
-        CAT_FASTQ_LONGREADS(ch_long_reads_forcat.cat.map { meta, reads -> [meta, reads.flatten()] })
-        ch_versions = ch_versions.mix(CAT_FASTQ_LONGREADS.out.versions)
-
-        ch_long_reads = CAT_FASTQ_LONGREADS.out.reads.mix(ch_long_reads_forcat.skip_cat.map { meta, reads -> [meta, reads[0]] })
+        ch_long_reads_for_merge = ch_long_reads
     }
     else {
-        ch_long_reads = ch_raw_long_reads
+        ch_long_reads_for_merge = ch_raw_long_reads
     }
+
+    // Run merging
+    ch_long_reads_forcat = ch_long_reads_for_merge
+        .map { meta, reads ->
+            def meta_new = meta - meta.subMap('run')
+            meta_new.single_end = true
+            [meta_new, reads]
+        }
+        .groupTuple()
+        .branch { _meta, reads ->
+            cat: reads.size() >= 2
+            skip_cat: true
+        }
+    CAT_FASTQ_LONGREADS(ch_long_reads_forcat.cat.map { meta, reads -> [meta, reads.flatten()] })
+    ch_versions = ch_versions.mix(CAT_FASTQ_LONGREADS.out.versions)
+
+    ch_long_reads = CAT_FASTQ_LONGREADS.out.reads.mix(ch_long_reads_forcat.skip_cat.map { meta, reads -> [meta, reads[0]] })
 
     emit:
     long_reads    = ch_long_reads

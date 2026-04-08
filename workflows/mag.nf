@@ -136,27 +136,19 @@ workflow MAG {
     ================================================================================
     */
 
-    if (!params.assembly_input) {
-        SHORTREAD_PREPROCESSING(
-            ch_raw_short_reads,
-            ch_host_fasta,
-            ch_host_bowtie2index,
-            ch_phix_db_file,
-            params.skip_shortread_qc,
-        )
-        ch_versions = ch_versions.mix(SHORTREAD_PREPROCESSING.out.versions)
-        ch_multiqc_files = ch_multiqc_files.mix(
-            SHORTREAD_PREPROCESSING.out.multiqc_files.collect { _meta, report -> report }.ifEmpty([])
-        )
-        ch_short_reads = SHORTREAD_PREPROCESSING.out.short_reads
-        ch_short_reads_assembly = SHORTREAD_PREPROCESSING.out.short_reads_assembly
-    }
-    else {
-        ch_short_reads = ch_raw_short_reads.map { meta, reads ->
-            def meta_new = meta - meta.subMap('run')
-            [meta_new, reads]
-        }
-    }
+    SHORTREAD_PREPROCESSING(
+        ch_raw_short_reads,
+        ch_host_fasta,
+        ch_host_bowtie2index,
+        ch_phix_db_file,
+        params.skip_shortread_qc,
+    )
+    ch_versions = ch_versions.mix(SHORTREAD_PREPROCESSING.out.versions)
+    ch_multiqc_files = ch_multiqc_files.mix(
+        SHORTREAD_PREPROCESSING.out.multiqc_files.collect { _meta, report -> report }.ifEmpty([])
+    )
+    ch_short_reads = SHORTREAD_PREPROCESSING.out.short_reads
+    ch_short_reads_assembly = SHORTREAD_PREPROCESSING.out.short_reads_assembly
 
     /*
     ================================================================================
