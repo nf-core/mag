@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Changed`
 
 - [#1011](https://github.com/nf-core/mag/pull/1011) - Reverted CheckM2 database download workaround from #966 (by @dialvarezs)
+- [#1020](https://github.com/nf-core/mag/pull/1020) - Update CONCOCT subworkflow and modules (by @dialvarezs)
 
 ### `Fixed`
 
