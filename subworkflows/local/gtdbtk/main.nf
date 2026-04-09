@@ -86,7 +86,7 @@ workflow GTDBTK {
         .count()
         .filter { count -> count == 0 }
         .subscribe { _count ->
-            log.warn("No bin QC results were available. Skipping GTDB-Tk classification.")
+            log.warn("[nf-core/mag] No bin QC results were available. Skipping GTDB-Tk classification.")
         }
 
     GTDBTK_CLASSIFYWF(
@@ -102,7 +102,7 @@ workflow GTDBTK {
         .combine(ch_filtered_bins.discarded.count())
         .subscribe { passed, failed ->
             if ((passed + failed) > 0 && passed == 0) {
-                log.warn("No contigs passed GTDB-TK min. completeness filters.")
+                log.warn("[nf-core/mag] No contigs passed GTDB-TK min. completeness filters. GTDB-Tk will not be executed.")
             }
         }
 
