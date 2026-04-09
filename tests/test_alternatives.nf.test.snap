@@ -13,7 +13,7 @@
     },
     "-profile test_alternatives": {
         "content": [
-            35,
+            34,
             {
                 "BIN_SUMMARY": {
                     "pandas": "1.4.3",
@@ -70,11 +70,6 @@
                     "pandas": "1.1.5",
                     "python": "3.6.7"
                 },
-                "MAG_DEPTHS_PLOT": {
-                    "pandas": "1.3.0",
-                    "python": "3.9.6",
-                    "seaborn": "0.11.0"
-                },
                 "MAG_DEPTHS_SUMMARY": {
                     "pandas": "1.4.3",
                     "python": "3.10.6"
@@ -114,7 +109,7 @@
                 }
             }
         ],
-        "timestamp": "2026-04-02T10:04:53.615386693",
+        "timestamp": "2026-04-09T05:17:32.772177507",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -224,8 +219,8 @@
                 "GenomeBinning/Tiara/tiara_summary.tsv",
                 "GenomeBinning/bin_summary.tsv",
                 "GenomeBinning/contig_to_bin/contig_to_bin_map.tsv",
-                "GenomeBinning/depths/bins/MEGAHIT-MetaBAT2-group-0-binDepths.heatmap.png",
                 "GenomeBinning/depths/bins/bin_depths_summary.tsv",
+                "GenomeBinning/depths/bins/versions.yml",
                 "GenomeBinning/depths/contigs/MEGAHIT-group-0-depth.txt.gz"
             ],
             [
@@ -244,12 +239,13 @@
                 "tiara_summary.tsv:md5,4cbfb0fd90ba48dc33d75d10c1eddb17",
                 "bin_summary.tsv:md5,cf879345b96d29b5b8584795504b81cf",
                 "contig_to_bin_map.tsv:md5,2bea485185ed808e9b5568438f603e2a",
-                "bin_depths_summary.tsv:md5,a73f2fc180a2c52038c88fbbfa6a95c3"
+                "bin_depths_summary.tsv:md5,a73f2fc180a2c52038c88fbbfa6a95c3",
+                "versions.yml:md5,553ee8a62e65d93ce1163bb16314da29"
             ]
         ],
-        "timestamp": "2026-03-24T15:06:03.885852698",
+        "timestamp": "2026-04-09T06:24:01.91450594",
         "meta": {
-            "nf-test": "0.9.4",
+            "nf-test": "0.9.5",
             "nextflow": "25.10.4"
         }
     },
