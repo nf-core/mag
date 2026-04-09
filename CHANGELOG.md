@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#1011](https://github.com/nf-core/mag/pull/1011) - Fix issue making CheckM2 running only for one sample per run (by @dialvarezs)
 - [#1012](https://github.com/nf-core/mag/pull/1012) - Prevent adapter trimming with Porechop on PacBio reads (by @dialvarezs)
-- [#1016](https://github.com/nf-core/mag/pull/1016) - Merge input reads on assembly input to prevent repeated filenames on multi-run samples (by @dialvarezs)
+- [#1016](https://github.com/nf-core/mag/pull/1016) - Merge input reads on assembly input to prevent repeated filenames on multi-run samples (reported by @erikrikarddaniel, fix by @dialvarezs)
 
 ### `Dependencies`
 
