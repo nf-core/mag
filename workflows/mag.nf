@@ -267,12 +267,8 @@ workflow MAG {
     */
 
     if (!params.skip_ale) {
-        ch_shortread_assemblies_for_ale = ch_assemblies.filter { meta, _assembly ->
-            meta.sr_platform != null && meta.sr_platform != []
-        }
-
         ch_ale_input = BINNING_PREPARATION.out.grouped_mappings
-            .join(ch_shortread_assemblies_for_ale, by: 0)
+            .join(ch_shortread_assemblies, by: 0)
             .map { meta, _contigs, bams, _bais, assembly ->
                 // Try to find the BAM where reads came from the same sample as the assembly (co-binning may include multiple BAMs)
                 // If none matches (coassembly), take the first one after sorting for determinism
@@ -395,16 +391,7 @@ workflow MAG {
             ? ch_input_for_postbinning_bins
             : ch_input_for_postbinning_bins.mix(ch_input_for_postbinning_unbins)
 
-        // Combine short and long reads by meta.id and meta.group for DEPTHS, making sure that
-        // read channel are not empty
-        ch_reads_for_depths = ch_short_reads
-            .map { meta, reads -> [[id: meta.id, group: meta.group], [short_reads: reads, long_reads: []]] }
-            .mix(
-                ch_long_reads.map { meta, reads -> [[id: meta.id, group: meta.group], [short_reads: [], long_reads: reads]] }
-            )
-            .groupTuple(by: 0)
-
-        DEPTHS(ch_input_for_postbinning, BINNING.out.metabat2depths, ch_reads_for_depths)
+        DEPTHS(ch_input_for_postbinning, BINNING.out.metabat2depths)
         ch_versions = ch_versions.mix(DEPTHS.out.versions)
 
         ch_input_for_binsummary = DEPTHS.out.depths_summary
