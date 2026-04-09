@@ -95,7 +95,7 @@ If you'd like to also _assemble_ your samples in a pooled fashion (co-assembly),
 
 ### Supplying pre-computed assemblies
 
-It is also possible to run nf-core/mag on pre-computed assemblies, by supplying a CSV file to the parameter `--assembly_input` in addition to the raw reads supplied to `--input`. Supplying assembly input skips all read pre-processing and assembly, jumping straight to the binning stage of the pipeline.
+It is also possible to run nf-core/mag on pre-computed assemblies, by supplying a CSV file to the parameter `--assembly_input` in addition to the raw reads supplied to `--input`. Supplying assembly input skips the assembly step and uses the provided assemblies for downstream analysis. The raw reads are still used for quality control and binning-related mapping.
 
 The assembly CSV file should contain the following columns:
 

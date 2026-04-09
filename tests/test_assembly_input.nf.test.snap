@@ -121,6 +121,9 @@
                 "DASTOOL_FASTATOCONTIG2BIN": {
                     "dastool": "1.1.7"
                 },
+                "FASTQC_RAW": {
+                    "fastqc": "0.12.1"
+                },
                 "GUNC_DOWNLOADDB": {
                     "gunc": "1.1.0"
                 },
@@ -136,11 +139,6 @@
                 "MAG_DEPTHS": {
                     "pandas": "1.1.5",
                     "python": "3.6.7"
-                },
-                "MAG_DEPTHS_PLOT": {
-                    "pandas": "1.3.0",
-                    "python": "3.9.6",
-                    "seaborn": "0.11.0"
                 },
                 "MAG_DEPTHS_SUMMARY": {
                     "pandas": "1.4.3",
@@ -177,7 +175,7 @@
                 }
             }
         ],
-        "timestamp": "2026-04-01T14:53:29.057015097",
+        "timestamp": "2026-04-09T08:14:07.251378475",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -393,13 +391,12 @@
                 "GenomeBinning/QC/gunc_summary.tsv",
                 "GenomeBinning/bin_summary.tsv",
                 "GenomeBinning/contig_to_bin/contig_to_bin_map.tsv",
-                "GenomeBinning/depths/bins/MEGAHIT-DASTool-test_minigut-binDepths.heatmap.png",
-                "GenomeBinning/depths/bins/SPAdes-DASTool-test_minigut-binDepths.heatmap.png",
                 "GenomeBinning/depths/bins/bin_depths_summary.tsv",
-                "GenomeBinning/depths/contigs/MEGAHIT-test_minigut-depth.depth.txt",
-                "GenomeBinning/depths/contigs/MEGAHIT-test_minigut_sample2-depth.depth.txt",
-                "GenomeBinning/depths/contigs/SPAdes-test_minigut-depth.depth.txt",
-                "GenomeBinning/depths/contigs/SPAdes-test_minigut_sample2-depth.depth.txt"
+                "GenomeBinning/depths/bins/versions.yml",
+                "GenomeBinning/depths/contigs/MEGAHIT-test_minigut-depth.txt.gz",
+                "GenomeBinning/depths/contigs/MEGAHIT-test_minigut_sample2-depth.txt.gz",
+                "GenomeBinning/depths/contigs/SPAdes-test_minigut-depth.txt.gz",
+                "GenomeBinning/depths/contigs/SPAdes-test_minigut_sample2-depth.txt.gz"
             ],
             [
                 "MEGAHIT-CONCOCT-test_minigut_0.fa.gz:md5,245ea168aa421e1e3e720cf223a80780",
@@ -560,14 +557,11 @@
                 "gunc_summary.tsv:md5,86dda28c13307b08d362185700ab7ccb",
                 "bin_summary.tsv:md5,b1f554f6d407c47f5198c79b096d81c1",
                 "contig_to_bin_map.tsv:md5,4b640b728c3b42bfe65ea4a869708787",
-                "bin_depths_summary.tsv:md5,e373a51ab498815fbb7e94b854882aeb",
-                "MEGAHIT-test_minigut-depth.depth.txt:md5,4d2307ca68ba07203784c905ab4e6292",
-                "MEGAHIT-test_minigut_sample2-depth.depth.txt:md5,eb21fb1df0775e84c3b3b1b48116c17d",
-                "SPAdes-test_minigut-depth.depth.txt:md5,8457d606af6e01526250363515dbbdbb",
-                "SPAdes-test_minigut_sample2-depth.depth.txt:md5,a6b53a303e743baa7fc7d046a3951adf"
+                "bin_depths_summary.tsv:md5,7153f759db72abb02e2ee3c2ab1b5e56",
+                "versions.yml:md5,553ee8a62e65d93ce1163bb16314da29"
             ]
         ],
-        "timestamp": "2026-04-06T09:25:00.269527773",
+        "timestamp": "2026-04-09T06:20:28.133008138",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -589,6 +583,14 @@
             [
                 "multiqc/multiqc_data/bowtie2_pe_plot.yaml",
                 "multiqc/multiqc_data/busco_plot_bacteria_odb10.yaml",
+                "multiqc/multiqc_data/fastqc-status-check-heatmap.yaml",
+                "multiqc/multiqc_data/fastqc_per_base_n_content_plot.yaml",
+                "multiqc/multiqc_data/fastqc_per_base_sequence_quality_plot.yaml",
+                "multiqc/multiqc_data/fastqc_per_sequence_gc_content_plot_Counts.yaml",
+                "multiqc/multiqc_data/fastqc_per_sequence_gc_content_plot_Percentages.yaml",
+                "multiqc/multiqc_data/fastqc_per_sequence_quality_scores_plot.yaml",
+                "multiqc/multiqc_data/fastqc_sequence_counts_plot.yaml",
+                "multiqc/multiqc_data/fastqc_sequence_duplication_levels_plot.yaml",
                 "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/multiqc.log",
                 "multiqc/multiqc_data/multiqc.parquet",
@@ -596,6 +598,7 @@
                 "multiqc/multiqc_data/multiqc_busco.yaml",
                 "multiqc/multiqc_data/multiqc_citations.yaml",
                 "multiqc/multiqc_data/multiqc_data.json",
+                "multiqc/multiqc_data/multiqc_fastqc.yaml",
                 "multiqc/multiqc_data/multiqc_general_stats.yaml",
                 "multiqc/multiqc_data/multiqc_software_versions.yaml",
                 "multiqc/multiqc_data/multiqc_sources.yaml",
@@ -603,29 +606,65 @@
                 "multiqc/multiqc_plots/pdf/bowtie2_pe_plot-pct.pdf",
                 "multiqc/multiqc_plots/pdf/busco_plot_bacteria_odb10-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/busco_plot_bacteria_odb10-pct.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc-status-check-heatmap.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc_per_base_n_content_plot.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc_per_base_sequence_quality_plot.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc_per_sequence_gc_content_plot_Counts.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc_per_sequence_gc_content_plot_Percentages.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc_per_sequence_quality_scores_plot.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc_sequence_counts_plot-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc_sequence_counts_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc_sequence_duplication_levels_plot.pdf",
                 "multiqc/multiqc_plots/png/bowtie2_pe_plot-cnt.png",
                 "multiqc/multiqc_plots/png/bowtie2_pe_plot-pct.png",
                 "multiqc/multiqc_plots/png/busco_plot_bacteria_odb10-cnt.png",
                 "multiqc/multiqc_plots/png/busco_plot_bacteria_odb10-pct.png",
+                "multiqc/multiqc_plots/png/fastqc-status-check-heatmap.png",
+                "multiqc/multiqc_plots/png/fastqc_per_base_n_content_plot.png",
+                "multiqc/multiqc_plots/png/fastqc_per_base_sequence_quality_plot.png",
+                "multiqc/multiqc_plots/png/fastqc_per_sequence_gc_content_plot_Counts.png",
+                "multiqc/multiqc_plots/png/fastqc_per_sequence_gc_content_plot_Percentages.png",
+                "multiqc/multiqc_plots/png/fastqc_per_sequence_quality_scores_plot.png",
+                "multiqc/multiqc_plots/png/fastqc_sequence_counts_plot-cnt.png",
+                "multiqc/multiqc_plots/png/fastqc_sequence_counts_plot-pct.png",
+                "multiqc/multiqc_plots/png/fastqc_sequence_duplication_levels_plot.png",
                 "multiqc/multiqc_plots/svg/bowtie2_pe_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/bowtie2_pe_plot-pct.svg",
                 "multiqc/multiqc_plots/svg/busco_plot_bacteria_odb10-cnt.svg",
                 "multiqc/multiqc_plots/svg/busco_plot_bacteria_odb10-pct.svg",
+                "multiqc/multiqc_plots/svg/fastqc-status-check-heatmap.svg",
+                "multiqc/multiqc_plots/svg/fastqc_per_base_n_content_plot.svg",
+                "multiqc/multiqc_plots/svg/fastqc_per_base_sequence_quality_plot.svg",
+                "multiqc/multiqc_plots/svg/fastqc_per_sequence_gc_content_plot_Counts.svg",
+                "multiqc/multiqc_plots/svg/fastqc_per_sequence_gc_content_plot_Percentages.svg",
+                "multiqc/multiqc_plots/svg/fastqc_per_sequence_quality_scores_plot.svg",
+                "multiqc/multiqc_plots/svg/fastqc_sequence_counts_plot-cnt.svg",
+                "multiqc/multiqc_plots/svg/fastqc_sequence_counts_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/fastqc_sequence_duplication_levels_plot.svg",
                 "multiqc/multiqc_report.html"
             ],
             [
                 "bowtie2_pe_plot.yaml:md5,d47c21d3c14102edf43e36521aa3fcf6",
                 "busco_plot_bacteria_odb10.yaml:md5,7f5685578d237300ffde11c05693f754",
+                "fastqc-status-check-heatmap.yaml:md5,45096eff6b0531cbe7ba0771e272d65d",
+                "fastqc_per_base_n_content_plot.yaml:md5,ea488ff73d10d4a84b551020409db087",
+                "fastqc_per_base_sequence_quality_plot.yaml:md5,73a043ea7f124e6474ac11270533de03",
+                "fastqc_per_sequence_gc_content_plot_Counts.yaml:md5,c900477e0cd3a369f269bc65857377ed",
+                "fastqc_per_sequence_gc_content_plot_Percentages.yaml:md5,84477f6801dcadfe0d759c2c50799b6e",
+                "fastqc_per_sequence_quality_scores_plot.yaml:md5,c04ad6e6a6d61f2bbc238c61e1883317",
+                "fastqc_sequence_counts_plot.yaml:md5,d9fd3b9d7b190aba26702cf73a50bd20",
+                "fastqc_sequence_duplication_levels_plot.yaml:md5,73719c3f3fa610204a42cd7155d73db1",
                 "multiqc_bowtie2_bowtie2-2.yaml:md5,34efd9a91ede5c3d7150b8de2f4c20f0",
                 "multiqc_busco.yaml:md5,bd57c1b4856b5536bf89d54b2d8cd807",
                 "multiqc_citations.yaml:md5,4aaa7714bb3dba1dd50f383c2ae4f4bb",
-                "multiqc_general_stats.yaml:md5,72e40481d31afb109adb0908b18d8758"
+                "multiqc_fastqc.yaml:md5,f50da8bfd062b9399911ba19b34831db",
+                "multiqc_general_stats.yaml:md5,74cbceac2d727ad5a62cfa1865765cb1"
             ]
         ],
-        "timestamp": "2026-01-20T13:11:52.235775414",
+        "timestamp": "2026-04-09T08:14:07.456816727",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.0"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
         }
     }
 }
