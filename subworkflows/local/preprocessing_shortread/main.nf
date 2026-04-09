@@ -29,11 +29,11 @@ workflow SHORTREAD_PREPROCESSING {
     ch_versions = channel.empty()
     ch_multiqc_files = channel.empty()
 
-    if (!params.assembly_input) {
-        FASTQC_RAW(ch_raw_short_reads)
-        ch_versions = ch_versions.mix(FASTQC_RAW.out.versions)
-        ch_multiqc_files = ch_multiqc_files.mix(FASTQC_RAW.out.zip)
+    FASTQC_RAW(ch_raw_short_reads)
+    ch_versions = ch_versions.mix(FASTQC_RAW.out.versions)
+    ch_multiqc_files = ch_multiqc_files.mix(FASTQC_RAW.out.zip)
 
+    if (!params.assembly_input) {
         if (!params.skip_clipping && !val_skip_qc) {
             if (params.clip_tool == 'fastp') {
                 FASTP(
