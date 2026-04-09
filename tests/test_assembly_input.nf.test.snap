@@ -65,7 +65,7 @@
     },
     "-profile assembly_input": {
         "content": [
-            284,
+            290,
             {
                 "ADJUST_MAXBIN2_EXT": {
                     "coreutils": 9.5
@@ -130,6 +130,9 @@
                 "GUNZIP_BINS": {
                     "gunzip": 1.13
                 },
+                "GUNZIP_UNBINS": {
+                    "gunzip": 1.13
+                },
                 "MAG_DEPTHS": {
                     "pandas": "1.1.5",
                     "python": "3.6.7"
@@ -172,7 +175,7 @@
                 }
             }
         ],
-        "timestamp": "2026-04-09T05:12:45.397031113",
+        "timestamp": "2026-04-09T08:45:39.471473448",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

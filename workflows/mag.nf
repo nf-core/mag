@@ -327,7 +327,7 @@ workflow MAG {
                 ch_assemblies_for_domainclassification = ch_assemblies
             }
 
-            DOMAIN_CLASSIFICATION(ch_assemblies_for_domainclassification, BINNING.out.bins, BINNING.out.unbins)
+            DOMAIN_CLASSIFICATION(ch_assemblies_for_domainclassification, BINNING.out.bins, BINNING.out.unbinned)
             ch_versions = ch_versions.mix(DOMAIN_CLASSIFICATION.out.versions)
 
             ch_binning_results_bins = DOMAIN_CLASSIFICATION.out.classified_bins
@@ -338,7 +338,7 @@ workflow MAG {
                 def meta_new = meta + [domain: 'unclassified']
                 [meta_new, bins]
             }
-            ch_binning_results_unbins = BINNING.out.unbins.map { meta, bins ->
+            ch_binning_results_unbins = BINNING.out.unbinned.map { meta, bins ->
                 def meta_new = meta + [domain: 'unclassified']
                 [meta_new, bins]
             }
@@ -467,7 +467,7 @@ workflow MAG {
         if (params.cat_db || params.cat_db_generate) {
             CATPACK(
                 ch_input_for_postbinning_bins,
-                BINNING.out.unbins,
+                ch_input_for_postbinning_unbins,
             )
             ch_versions = ch_versions.mix(CATPACK.out.versions)
 

@@ -233,21 +233,24 @@ workflow BINNING {
             [meta.minus([bin_total_length: meta.bin_total_length]), bin]
         }
 
-    GUNZIP_UNBINS(ch_input_splitfasta)
-    ch_versions = ch_versions.mix(GUNZIP_UNBINS.out.versions)
-
-    // Split unbinned contigs into individual large contigs for publishing
+    // remove too-short contigs from unbinned contigs
     SPLIT_FASTA(ch_input_splitfasta)
     ch_versions = ch_versions.mix(SPLIT_FASTA.out.versions)
+    ch_split_fasta_results_transposed = SPLIT_FASTA.out.unbinned.transpose()
 
     GUNZIP_BINS(ch_final_bins_for_gunzip)
     ch_versions = ch_versions.mix(GUNZIP_BINS.out.versions)
     ch_binning_results_gunzipped = GUNZIP_BINS.out.gunzip.groupTuple(by: 0)
 
+    GUNZIP_UNBINS(ch_split_fasta_results_transposed)
+    ch_versions = ch_versions.mix(GUNZIP_UNBINS.out.versions)
+    ch_splitfasta_results_gunzipped = GUNZIP_UNBINS.out.gunzip.groupTuple(by: 0)
+
     emit:
     bins           = ch_binning_results_gunzipped
     bins_gz        = ch_binning_results_gzipped_final
-    unbins         = GUNZIP_UNBINS.out.gunzip
+    unbinned       = ch_splitfasta_results_gunzipped
+    unbinned_gz    = SPLIT_FASTA.out.unbinned
     metabat2depths = ch_combined_depths
     versions       = ch_versions
 }
