@@ -23,6 +23,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Dependencies`
 
+| Tool   | Previous version | New version |
+| ------ | ---------------- | ----------- |
+| CoverM |                  | 0.7.0       |
+
 ### `Deprecated`
 
 - [#1018](https://github.com/nf-core/mag/pull/1018) - Remove `mag_depths_plot` local module (by @dialvarezs)
@@ -46,10 +50,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Dependencies`
 
-| Tool   | Previous version | New version |
-| ------ | ---------------- | ----------- |
-| GUNC   | 1.0.6            | 1.1.0       |
-| CoverM |                  | 0.7.0       |
+| Tool | Previous version | New version |
+| ---- | ---------------- | ----------- |
+| GUNC | 1.0.6            | 1.1.0       |
 
 ## 5.4.1 - Yellow Frog patch [2026-03-13]
 
