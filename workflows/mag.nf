@@ -275,12 +275,8 @@ workflow MAG {
     */
 
     if (!params.skip_ale) {
-        ch_shortread_assemblies_for_ale = ch_assemblies.filter { meta, _assembly ->
-            meta.sr_platform != null && meta.sr_platform != []
-        }
-
         ch_ale_input = BINNING_PREPARATION.out.grouped_mappings
-            .join(ch_shortread_assemblies_for_ale, by: 0)
+            .join(ch_shortread_assemblies, by: 0)
             .map { meta, _contigs, bams, _bais, assembly ->
                 // Try to find the BAM where reads came from the same sample as the assembly (co-binning may include multiple BAMs)
                 // If none matches (coassembly), take the first one after sorting for determinism
