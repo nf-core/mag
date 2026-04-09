@@ -393,10 +393,10 @@
                 "GenomeBinning/contig_to_bin/contig_to_bin_map.tsv",
                 "GenomeBinning/depths/bins/bin_depths_summary.tsv",
                 "GenomeBinning/depths/bins/versions.yml",
-                "GenomeBinning/depths/contigs/MEGAHIT-test_minigut-depth.txt.gz",
-                "GenomeBinning/depths/contigs/MEGAHIT-test_minigut_sample2-depth.txt.gz",
-                "GenomeBinning/depths/contigs/SPAdes-test_minigut-depth.txt.gz",
-                "GenomeBinning/depths/contigs/SPAdes-test_minigut_sample2-depth.txt.gz"
+                "GenomeBinning/depths/contigs/MEGAHIT-test_minigut-depth.depth.txt",
+                "GenomeBinning/depths/contigs/MEGAHIT-test_minigut_sample2-depth.depth.txt",
+                "GenomeBinning/depths/contigs/SPAdes-test_minigut-depth.depth.txt",
+                "GenomeBinning/depths/contigs/SPAdes-test_minigut_sample2-depth.depth.txt"
             ],
             [
                 "MEGAHIT-CONCOCT-test_minigut_0.fa.gz:md5,245ea168aa421e1e3e720cf223a80780",
@@ -557,11 +557,15 @@
                 "gunc_summary.tsv:md5,86dda28c13307b08d362185700ab7ccb",
                 "bin_summary.tsv:md5,b1f554f6d407c47f5198c79b096d81c1",
                 "contig_to_bin_map.tsv:md5,4b640b728c3b42bfe65ea4a869708787",
-                "bin_depths_summary.tsv:md5,7153f759db72abb02e2ee3c2ab1b5e56",
-                "versions.yml:md5,553ee8a62e65d93ce1163bb16314da29"
+                "bin_depths_summary.tsv:md5,e373a51ab498815fbb7e94b854882aeb",
+                "versions.yml:md5,553ee8a62e65d93ce1163bb16314da29",
+                "MEGAHIT-test_minigut-depth.depth.txt:md5,4d2307ca68ba07203784c905ab4e6292",
+                "MEGAHIT-test_minigut_sample2-depth.depth.txt:md5,7ea1a0bc5ad742ca60d6acad53f049e1",
+                "SPAdes-test_minigut-depth.depth.txt:md5,8457d606af6e01526250363515dbbdbb",
+                "SPAdes-test_minigut_sample2-depth.depth.txt:md5,9c32e3750c3b8c9de36b21253fcaac92"
             ]
         ],
-        "timestamp": "2026-04-09T06:20:28.133008138",
+        "timestamp": "2026-04-09T15:48:18.239546355",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
