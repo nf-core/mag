@@ -67,8 +67,8 @@ output:
             type: file
             description: Binned sequences in compressed FASTA format
             pattern: "*.fasta.gz"
-  - unbinned:
-      description: Uncompressed FASTA files with unbinned sequences
+  - unbins:
+      description: Uncompressed FASTA files with unbinned sequences (one per binner per sample)
       structure:
         - meta:
             type: map
@@ -77,16 +77,6 @@ output:
             type: file
             description: Unbinned sequences in FASTA format
             pattern: "*.fasta"
-  - unbinned_gz:
-      description: Compressed FASTA files with unbinned sequences
-      structure:
-        - meta:
-            type: map
-            description: Metadata map
-        - fasta:
-            type: file
-            description: Unbinned sequences in compressed FASTA format
-            pattern: "*.fasta.gz"
   - metabat2depths:
       description: Coverage depth files from MetaBAT2
       structure:
