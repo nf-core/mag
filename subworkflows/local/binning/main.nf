@@ -236,6 +236,9 @@ workflow BINNING {
     // remove too-short contigs from unbinned contigs
     SPLIT_FASTA(ch_input_splitfasta)
     ch_versions = ch_versions.mix(SPLIT_FASTA.out.versions)
+
+    // large unbinned contigs from SPLIT_FASTA for decompressing for MAG_DEPTHS,
+    // first have to separate and re-group due to limitation of GUNZIP module
     ch_split_fasta_results_transposed = SPLIT_FASTA.out.unbinned.transpose()
 
     GUNZIP_BINS(ch_final_bins_for_gunzip)

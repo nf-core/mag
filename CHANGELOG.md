@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1011](https://github.com/nf-core/mag/pull/1011) - Fix issue making CheckM2 running only for one sample per run (by @dialvarezs)
 - [#1017](https://github.com/nf-core/mag/pull/1017) - Prevent ALE running on long read assemblies when a sample has both LR and SR data (reported by @jfy133, fix by @dialvarezs)
 - [#1018](https://github.com/nf-core/mag/pull/1018) - Ignore `catpack/summarise` errors, since it's a limitation from the tool (reported by @jfy133, fix by @dialvarezs)
-- [#1018](https://github.com/nf-core/mag/pull/1018) - Use merged unbinned output for post-processing steps to prevent catpack/contig erros (reported by @Juassis, fix by @dialvarezs)
+- [#1018](https://github.com/nf-core/mag/pull/1018) - Feed `catpack/contig` with merged unbinned output to prevent execution errors (reported by @Juassis, fix by @dialvarezs)
 
 ### `Dependencies`
 

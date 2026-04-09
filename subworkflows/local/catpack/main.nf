@@ -9,7 +9,7 @@ include { CATPACK_DOWNLOAD                              } from '../../../modules
 include { CATPACK_PREPARE                               } from '../../../modules/nf-core/catpack/prepare/main'
 include { CATPACK_SUMMARISE as CATPACK_SUMMARISE_BINS   } from '../../../modules/nf-core/catpack/summarise/main'
 include { CATPACK_SUMMARISE as CATPACK_SUMMARISE_UNBINS } from '../../../modules/nf-core/catpack/summarise/main'
-include { FIND_CONCATENATE as CONCAT_CATPACK_UNBINS     } from '../../../modules/nf-core/find/concatenate/main'
+include { FIND_CONCATENATE as CONCAT_UNBINS             } from '../../../modules/nf-core/find/concatenate/main'
 include { UNTAR as CAT_DB_UNTAR                         } from '../../../modules/nf-core/untar/main'
 
 workflow CATPACK {
@@ -100,18 +100,10 @@ workflow CATPACK {
      */
 
     if (params.cat_classify_unbinned) {
-        ch_merged_unbins = ch_unbins
-            .map { meta, contigs ->
-                [meta, contigs.findAll { it.size() > 0 }]
-            }
-            .filter { _meta, contigs ->
-                !contigs.isEmpty()
-            }
-
-        CONCAT_CATPACK_UNBINS(ch_merged_unbins)
+        CONCAT_UNBINS(ch_unbins)
 
         CATPACK_UNBINS(
-            CONCAT_CATPACK_UNBINS.out.file_out,
+            CONCAT_UNBINS.out.file_out,
             ch_cat_db.db,
             ch_cat_db.taxonomy,
             [[:], []],
@@ -124,7 +116,7 @@ workflow CATPACK {
 
         if (!params.cat_allow_unofficial_lineages) {
             ch_unbin_classification = CATPACK_ADDNAMES_UNBINS.out.txt
-                .join(CONCAT_CATPACK_UNBINS.out.file_out)
+                .join(CONCAT_UNBINS.out.file_out)
                 .multiMap { meta, names, contigs ->
                     names: [meta, names]
                     contigs: [meta, contigs]
