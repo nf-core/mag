@@ -68,7 +68,7 @@ output:
             description: Binned sequences in compressed FASTA format
             pattern: "*.fasta.gz"
   - unbins:
-      description: Uncompressed FASTA files with unbinned sequences (one per binner per sample)
+      description: Uncompressed FASTA files with unbinned sequences
       structure:
         - meta:
             type: map
