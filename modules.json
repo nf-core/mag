@@ -133,7 +133,7 @@
                     },
                     "coverm/contig": {
                         "branch": "master",
-                        "git_sha": "d432a24be8619f7ac92307e1e2c2aed8e7f06840",
+                        "git_sha": "38c52b07d406618f6ba4bb21e80172e0230c5623",
                         "installed_by": ["modules"]
                     },
                     "dastool/dastool": {
