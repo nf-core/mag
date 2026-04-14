@@ -221,7 +221,6 @@
                 "GenomeBinning/contig_to_bin/contig_to_bin_map.tsv",
                 "GenomeBinning/depths/bins/bin_depths_summary.tsv",
                 "GenomeBinning/depths/bins/versions.yml",
-                "GenomeBinning/depths/contigs/MEGAHIT-group-0-depth.depth.txt"
             ],
             [
                 "MEGAHIT-MetaBAT2-group-0.1.fa.gz:md5,03980cd3f96ecbd947bec62aee97d507",
@@ -241,7 +240,6 @@
                 "contig_to_bin_map.tsv:md5,2bea485185ed808e9b5568438f603e2a",
                 "bin_depths_summary.tsv:md5,4e27e15b960fbeab890c3fd3eab9adfb",
                 "versions.yml:md5,553ee8a62e65d93ce1163bb16314da29",
-                "MEGAHIT-group-0-depth.depth.txt:md5,025a51d78f7f1abb0d8b9bad6963bc6b"
             ]
         ],
         "timestamp": "2026-04-09T15:48:29.077751452",
