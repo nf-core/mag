@@ -36,6 +36,7 @@ nextflow_pipeline {
                 params.outdir,
                 include: ['GenomeBinning/**'],
                 ignore: ['GenomeBinning/QC/BUSCO/**/{logs,prodigal_output,busco_sequences}/**'],
+                ignoreFile: 'tests/.nftignore',
                 relative: true,
                 includeDir: false
             )
