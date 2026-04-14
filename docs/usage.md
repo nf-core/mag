@@ -441,10 +441,12 @@ The pipeline uses [CoverM](https://github.com/wwood/CoverM) for coverage estimat
 
 ### Mapper selection
 
-The `--coverage_mapper` parameter controls which aligner is used for mapping reads back to assembled contigs:
+The `--shortread_coverage_mapper` parameter controls which aligner is used for mapping short reads back to assembled contigs:
 
-- `bowtie2` (default): Runs Bowtie2 manually to produce BAM files, which are then passed to CoverM. This mode is compatible with all binning tools (MetaBAT2, MaxBin2, CONCOCT, COMEBin, SemiBin2, etc.).
-- CoverM-native mappers (`bwa-mem`, `bwa-mem2`, `minimap2-sr`, `minimap2-ont`, `minimap2-pb`, `minimap2-hifi`, `strobealign`): CoverM handles both mapping and coverage calculation directly from reads, bypassing the BAM generation step. When using a CoverM-native mapper, tools that require BAM files (CONCOCT, COMEBin, SemiBin2) must be disabled with their respective skip flags (`--skip_concoct`, `--skip_comebin`, `--skip_semibin`).
+- `bowtie2` (default): Runs Bowtie2 manually to produce BAM files, which are then passed to CoverM.
+- CoverM-native short-read mappers (`bwa-mem`, `bwa-mem2`, `minimap2-sr`, `strobealign`): CoverM handles both mapping and coverage calculation directly from reads and exports cached BAM files for downstream binners.
+
+Long-read coverage mapping is handled by CoverM automatically from the samplesheet `long_reads_platform` metadata, using `minimap2-ont` for Oxford Nanopore reads, `minimap2-pb` for PacBio CLR reads, and `minimap2-hifi` for PacBio HiFi reads.
 
 ### Alignment identity filtering
 

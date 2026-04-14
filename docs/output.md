@@ -371,7 +371,7 @@ These depth files are used for downstream binning steps.
 <summary>Output files</summary>
 
 - `GenomeBinning/depths/contigs/`
-  - `[assembler]-[sample/group]-depth.txt.gz`: Sequencing depth for each contig and sample or group, only for short reads.
+  - `[assembler]-[sample/group]-depth.tsv`: Sequencing depth for each contig and sample or group.
 
 </details>
 
