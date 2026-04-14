@@ -393,10 +393,6 @@
                 "GenomeBinning/contig_to_bin/contig_to_bin_map.tsv",
                 "GenomeBinning/depths/bins/bin_depths_summary.tsv",
                 "GenomeBinning/depths/bins/versions.yml",
-                "GenomeBinning/depths/contigs/MEGAHIT-test_minigut-depth.depth.txt",
-                "GenomeBinning/depths/contigs/MEGAHIT-test_minigut_sample2-depth.depth.txt",
-                "GenomeBinning/depths/contigs/SPAdes-test_minigut-depth.depth.txt",
-                "GenomeBinning/depths/contigs/SPAdes-test_minigut_sample2-depth.depth.txt"
             ],
             [
                 "MEGAHIT-CONCOCT-test_minigut_0.fa.gz:md5,245ea168aa421e1e3e720cf223a80780",
@@ -559,10 +555,6 @@
                 "contig_to_bin_map.tsv:md5,4b640b728c3b42bfe65ea4a869708787",
                 "bin_depths_summary.tsv:md5,e373a51ab498815fbb7e94b854882aeb",
                 "versions.yml:md5,553ee8a62e65d93ce1163bb16314da29",
-                "MEGAHIT-test_minigut-depth.depth.txt:md5,4d2307ca68ba07203784c905ab4e6292",
-                "MEGAHIT-test_minigut_sample2-depth.depth.txt:md5,7ea1a0bc5ad742ca60d6acad53f049e1",
-                "SPAdes-test_minigut-depth.depth.txt:md5,8457d606af6e01526250363515dbbdbb",
-                "SPAdes-test_minigut_sample2-depth.depth.txt:md5,9c32e3750c3b8c9de36b21253fcaac92"
             ]
         ],
         "timestamp": "2026-04-09T15:48:18.239546355",
