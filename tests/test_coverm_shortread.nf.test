@@ -33,6 +33,10 @@ nextflow_pipeline {
 
             assert workflow.success
             assertAll(
+                { assert snapshot(
+                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we test pipelines on multiple Nextflow versions
+                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_mag_software_mqc_versions.yml"),
+                ).match() },
                 { assert coverm_depths.size() > 0 },
                 { assert coverm_bams.size() > 0 },
                 { assert coverm_bais.size() > 0 },
