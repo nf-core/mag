@@ -872,22 +872,12 @@
                     "help_text": "You can specify here Bowtie2 alignment options. For example: `--very-fast` , `--very-sensitive-local -N 1` , ... Must be used like this: --bowtie2_mode=\"--very-sensitive\". By default no settings are defined, thus Bowtie2 runs with it's own internal defaults (e.g. end-to-end alignment)",
                     "pattern": "^[-\\w]*$"
                 },
-                "coverage_mapper": {
+                "shortread_coverage_mapper": {
                     "type": "string",
                     "default": "bowtie2",
-                    "description": "Mapper to use for coverage estimation of assembled contigs.",
-                    "help_text": "Specifies which aligner to use for mapping reads back to assembled contigs for coverage estimation. Use `bowtie2` (default) to run bowtie2 (or minimap2) manually and provide BAMs to CoverM. Use a CoverM-supported aligner (`bwa-mem`, `bwa-mem2`, `minimap2-sr`, `minimap2-ont`, `minimap2-pb`, `minimap2-hifi`, `strobealign`) to skip manual alignment and let CoverM handle both mapping and coverage calculation. Note: when using a CoverM-native mapper, tools that require BAM files (CONCOCT, COMEBin, SemiBin2) must be disabled with their respective skip flags.",
-                    "enum": [
-                        "bowtie2",
-                        "minimap2",
-                        "bwa-mem",
-                        "bwa-mem2",
-                        "minimap2-sr",
-                        "minimap2-ont",
-                        "minimap2-pb",
-                        "minimap2-hifi",
-                        "strobealign"
-                    ]
+                    "description": "Short-read mapper to use for coverage estimation of assembled contigs.",
+                    "help_text": "Specifies which aligner to use for mapping short reads back to assembled contigs during binning preparation. Use `bowtie2` (default) to run Bowtie2 manually and provide BAMs to CoverM. Use a CoverM-supported short-read aligner (`bwa-mem`, `bwa-mem2`, `minimap2-sr`, `strobealign`) to let CoverM handle both mapping and coverage calculation while also exporting cached BAM files.",
+                    "enum": ["bowtie2", "bwa-mem", "bwa-mem2", "minimap2-sr", "strobealign"]
                 },
                 "save_assembly_mapped_reads": {
                     "type": "boolean",

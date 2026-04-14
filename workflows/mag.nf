@@ -296,6 +296,7 @@ workflow MAG {
                 BINNING_PREPARATION.out.grouped_mappings.join(ANCIENT_DNA_ASSEMBLY_VALIDATION.out.contigs_recalled).map { meta, _contigs, bams, bais, corrected_contigs ->
                     [meta, corrected_contigs, bams, bais]
                 },
+                BINNING_PREPARATION.out.contig_depths,
                 params.bin_min_size,
                 params.bin_max_size,
             )
@@ -303,6 +304,7 @@ workflow MAG {
         else {
             BINNING(
                 BINNING_PREPARATION.out.grouped_mappings,
+                BINNING_PREPARATION.out.contig_depths,
                 params.bin_min_size,
                 params.bin_max_size,
             )

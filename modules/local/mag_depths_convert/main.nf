@@ -32,7 +32,7 @@ process CONVERT_DEPTHS {
     # Generate abundance files for each read set
     for i in \$(seq 1 \$n_abund); do
         col=\$((i*2+2))
-        name=\$( echo \${header[\$col-1]} | sed s/\\.bam\$// )
+        name=\$( basename "\${header[\$col-1]}" | sed s/\\.bam\$// )
         bioawk -t '{if (NR > 1) {print \$1, \$'"\$col"'}}' ${depth_unzipped} > \${name}.abund
     done
 

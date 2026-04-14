@@ -4,6 +4,8 @@
 
 include { BOWTIE2_ASSEMBLY_BUILD } from '../../../modules/local/bowtie2_assembly_build/main'
 include { BOWTIE2_ASSEMBLY_ALIGN } from '../../../modules/local/bowtie2_assembly_align/main'
+include { COVERM_CONTIG as COVERM_CONTIG_SHORTREAD } from '../../../modules/nf-core/coverm/contig/main'
+include { SAMTOOLS_INDEX as SAMTOOLS_COVERM_SHORTREAD_INDEX } from '../../../modules/nf-core/samtools/index/main'
 
 workflow SHORTREAD_BINNING_PREPARATION {
     take:
@@ -14,8 +16,9 @@ workflow SHORTREAD_BINNING_PREPARATION {
 
     ch_versions = channel.empty()
     ch_multiqc  = channel.empty()
+    ch_contig_depths = channel.empty()
 
-    if (params.coverage_mapper == 'bowtie2') {
+    if (params.shortread_coverage_mapper == 'bowtie2') {
         // build bowtie2 index for all assemblies
         BOWTIE2_ASSEMBLY_BUILD(ch_assemblies)
         ch_versions = ch_versions.mix(BOWTIE2_ASSEMBLY_BUILD.out.versions)
@@ -55,6 +58,13 @@ workflow SHORTREAD_BINNING_PREPARATION {
             .groupTuple(by: 0)
             .map { meta, assembly, bams, bais -> [meta, assembly.sort()[0], bams, bais] }
 
+        ch_coverm_input = ch_grouped_mappings.multiMap { meta, _assembly, bams, _bais ->
+            reads:     [meta, bams]
+            reference: [meta, []]
+        }
+        COVERM_CONTIG_SHORTREAD(ch_coverm_input.reads, ch_coverm_input.reference, true, false, false)
+        ch_contig_depths = COVERM_CONTIG_SHORTREAD.out.coverage
+
         ch_multiqc = BOWTIE2_ASSEMBLY_ALIGN.out.log.map { _assembly_meta, _reads_meta, log -> [log] }
     }
     else {
@@ -81,17 +91,31 @@ workflow SHORTREAD_BINNING_PREPARATION {
                 .map { _id, assembly_meta, assembly, reads -> [assembly_meta, assembly, reads] }
         }
 
-        // group reads for each assembly; flatten paired-end read pairs so CoverM receives
-        // them as a flat list suitable for --coupled: [R1_s1, R2_s1, R1_s2, R2_s2, ...]
-        ch_grouped_mappings = ch_coverm_reads
+        ch_coverm_input = ch_coverm_reads
             .groupTuple(by: 0)
             .map { meta, assembly, reads_list ->
-                [meta, assembly.sort()[0], reads_list.flatten(), []]
+                [meta, assembly.sort()[0], reads_list.flatten()]
             }
+
+        ch_coverm_input_multi = ch_coverm_input.multiMap { meta, assembly, reads ->
+            reads:     [meta, reads]
+            reference: [meta, assembly]
+        }
+        COVERM_CONTIG_SHORTREAD(ch_coverm_input_multi.reads, ch_coverm_input_multi.reference, false, false, true)
+        ch_contig_depths = COVERM_CONTIG_SHORTREAD.out.coverage
+
+        SAMTOOLS_COVERM_SHORTREAD_INDEX(COVERM_CONTIG_SHORTREAD.out.bam.transpose())
+        ch_versions = ch_versions.mix(SAMTOOLS_COVERM_SHORTREAD_INDEX.out.versions)
+
+        ch_grouped_mappings = COVERM_CONTIG_SHORTREAD.out.bam
+            .combine(SAMTOOLS_COVERM_SHORTREAD_INDEX.out.bai.groupTuple(by: 0), by: 0)
+            .combine(ch_coverm_input.map { meta, assembly, _reads -> [meta, assembly] }, by: 0)
+            .map { meta, bams, bais, assembly -> [meta, assembly, bams, bais] }
     }
 
     emit:
     bowtie2_assembly_multiqc = ch_multiqc
     versions                 = ch_versions
     grouped_mappings         = ch_grouped_mappings
+    contig_depths            = ch_contig_depths
 }
