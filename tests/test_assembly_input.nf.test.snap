@@ -392,7 +392,7 @@
                 "GenomeBinning/bin_summary.tsv",
                 "GenomeBinning/contig_to_bin/contig_to_bin_map.tsv",
                 "GenomeBinning/depths/bins/bin_depths_summary.tsv",
-                "GenomeBinning/depths/bins/versions.yml",
+                "GenomeBinning/depths/bins/versions.yml"
             ],
             [
                 "MEGAHIT-CONCOCT-test_minigut_0.fa.gz:md5,245ea168aa421e1e3e720cf223a80780",
@@ -554,7 +554,7 @@
                 "bin_summary.tsv:md5,b1f554f6d407c47f5198c79b096d81c1",
                 "contig_to_bin_map.tsv:md5,4b640b728c3b42bfe65ea4a869708787",
                 "bin_depths_summary.tsv:md5,e373a51ab498815fbb7e94b854882aeb",
-                "versions.yml:md5,553ee8a62e65d93ce1163bb16314da29",
+                "versions.yml:md5,553ee8a62e65d93ce1163bb16314da29"
             ]
         ],
         "timestamp": "2026-04-09T15:48:18.239546355",
