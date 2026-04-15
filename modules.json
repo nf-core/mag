@@ -156,6 +156,11 @@
                         "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
+                    "find/concatenate": {
+                        "branch": "master",
+                        "git_sha": "8d8ab5d337f91c136f0bf78ec137e0599a2024ce",
+                        "installed_by": ["modules"]
+                    },
                     "flye": {
                         "branch": "master",
                         "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",

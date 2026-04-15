@@ -18,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1012](https://github.com/nf-core/mag/pull/1012) - Prevent adapter trimming with Porechop on PacBio reads (by @dialvarezs)
 - [#1016](https://github.com/nf-core/mag/pull/1016) - Merge input reads on assembly input to prevent repeated filenames on multi-run samples (reported by @erikrikarddaniel, fix by @dialvarezs)
 - [#1017](https://github.com/nf-core/mag/pull/1017) - Prevent ALE running on long read assemblies when a sample has both LR and SR data (reported by @jfy133, fix by @dialvarezs)
+- [#1018](https://github.com/nf-core/mag/pull/1018) - Ignore `catpack/summarise` errors, since it's a limitation from the tool (reported by @jfy133, fix by @dialvarezs)
+- [#1018](https://github.com/nf-core/mag/pull/1018) - Feed `catpack/contig` with merged unbinned output to prevent execution errors (reported by @Juassis, fix by @dialvarezs)
 - [#1021](https://github.com/nf-core/mag/pull/1021) - Prevent execution of `gtdbtk/summary` when no bins pass QC (reported by @jfy133, fix by @dialvarezs)
 
 ### `Dependencies`
