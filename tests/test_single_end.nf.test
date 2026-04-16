@@ -136,8 +136,8 @@ nextflow_pipeline {
                 params.outdir, include: ['multiqc/**'], ignoreFile: 'tests/.nftignore'
             )
 
-            assert workflow.success
             assertAll(
+                { assert workflow.success },
                 { assert snapshot(
                     workflow.trace.succeeded().size(),
                     removeNextflowVersion("$outputDir/pipeline_info/nf_core_mag_software_mqc_versions.yml"),
