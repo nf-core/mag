@@ -562,11 +562,11 @@
                 "MEGAHIT-MetaBAT2-test_minigut.1.txt:md5,19fc9de937e7dae80ea2d061cc9a4644"
             ]
         ],
+        "timestamp": "2025-11-14T22:14:29.389477815",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
-        },
-        "timestamp": "2025-11-14T22:14:29.389477815"
+        }
     },
     "qc": {
         "content": [
@@ -589,11 +589,11 @@
                 "test_minigut_sample2_run0_host_removed.bowtie2.log:md5,ce114382b98cd86beeea13aeeeee2bbd"
             ]
         ],
+        "timestamp": "2025-11-14T21:15:52.468158396",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
-        },
-        "timestamp": "2025-11-14T21:15:52.468158396"
+        }
     },
     "assembly": {
         "content": [
@@ -666,11 +666,11 @@
                 "transposed_report.txt:md5,dbba99eba513c647e640d1794278f657"
             ]
         ],
+        "timestamp": "2025-11-14T21:15:52.629282786",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
-        },
-        "timestamp": "2025-11-14T21:15:52.629282786"
+        }
     },
     "binning": {
         "content": [
@@ -749,8 +749,8 @@
                 "GenomeBinning/QC/CheckM/MEGAHIT-CONCOCT-unclassified-unrefined-test_minigut_sample2_wf/bins/MEGAHIT-CONCOCT-test_minigut_sample2_3/genes.gff",
                 "GenomeBinning/QC/CheckM/MEGAHIT-CONCOCT-unclassified-unrefined-test_minigut_sample2_wf/bins/MEGAHIT-CONCOCT-test_minigut_sample2_3/hmmer.analyze.txt",
                 "GenomeBinning/QC/CheckM/MEGAHIT-CONCOCT-unclassified-unrefined-test_minigut_sample2_wf/bins/MEGAHIT-CONCOCT-test_minigut_sample2_3/hmmer.tree.txt",
-                "GenomeBinning/QC/CheckM/MEGAHIT-CONCOCT-unclassified-unrefined-test_minigut_sample2_wf/bins/MEGAHIT-CONCOCT-test_minigut_sample2_4/genes.faa",
-                "GenomeBinning/QC/CheckM/MEGAHIT-CONCOCT-unclassified-unrefined-test_minigut_sample2_wf/bins/MEGAHIT-CONCOCT-test_minigut_sample2_4/genes.gff",
+                "GenomeBinning/QC/CheckM/MEGAHIT-CONCOCT-unclassified-unrefined-test_minigut_sample2_wf/bins/MEGAHIT-CONCOCT-test_minigut_sample2_4/genes.faa.4",
+                "GenomeBinning/QC/CheckM/MEGAHIT-CONCOCT-unclassified-unrefined-test_minigut_sample2_wf/bins/MEGAHIT-CONCOCT-test_minigut_sample2_4/genes.gff.4",
                 "GenomeBinning/QC/CheckM/MEGAHIT-CONCOCT-unclassified-unrefined-test_minigut_sample2_wf/bins/MEGAHIT-CONCOCT-test_minigut_sample2_5/genes.faa",
                 "GenomeBinning/QC/CheckM/MEGAHIT-CONCOCT-unclassified-unrefined-test_minigut_sample2_wf/bins/MEGAHIT-CONCOCT-test_minigut_sample2_5/genes.gff",
                 "GenomeBinning/QC/CheckM/MEGAHIT-CONCOCT-unclassified-unrefined-test_minigut_sample2_wf/bins/MEGAHIT-CONCOCT-test_minigut_sample2_5/hmmer.analyze.txt",
@@ -1381,9 +1381,39 @@
                 "GenomeBinning/QC/QUAST/MEGAHIT-MetaBAT2-test_minigut.1.fa/transposed_report.txt",
                 "GenomeBinning/QC/QUAST/MEGAHIT-MetaBAT2-unclassified-unrefined-test_minigut-quast_summary.tsv",
                 "GenomeBinning/QC/checkm_summary.tsv",
+                "GenomeBinning/QC/pydamage_bins_summary.tsv",
                 "GenomeBinning/QC/quast_bin_summary.tsv",
+                "GenomeBinning/QC/summarise_pydamagebins/MEGAHIT-CONCOCT-test_minigut_0_pydamage_bin_results.tsv",
+                "GenomeBinning/QC/summarise_pydamagebins/MEGAHIT-CONCOCT-test_minigut_10_pydamage_bin_results.tsv",
+                "GenomeBinning/QC/summarise_pydamagebins/MEGAHIT-CONCOCT-test_minigut_11_pydamage_bin_results.tsv",
+                "GenomeBinning/QC/summarise_pydamagebins/MEGAHIT-CONCOCT-test_minigut_12_pydamage_bin_results.tsv",
+                "GenomeBinning/QC/summarise_pydamagebins/MEGAHIT-CONCOCT-test_minigut_13_pydamage_bin_results.tsv",
+                "GenomeBinning/QC/summarise_pydamagebins/MEGAHIT-CONCOCT-test_minigut_14_pydamage_bin_results.tsv",
+                "GenomeBinning/QC/summarise_pydamagebins/MEGAHIT-CONCOCT-test_minigut_15_pydamage_bin_results.tsv",
+                "GenomeBinning/QC/summarise_pydamagebins/MEGAHIT-CONCOCT-test_minigut_1_pydamage_bin_results.tsv",
+                "GenomeBinning/QC/summarise_pydamagebins/MEGAHIT-CONCOCT-test_minigut_2_pydamage_bin_results.tsv",
+                "GenomeBinning/QC/summarise_pydamagebins/MEGAHIT-CONCOCT-test_minigut_3_pydamage_bin_results.tsv",
+                "GenomeBinning/QC/summarise_pydamagebins/MEGAHIT-CONCOCT-test_minigut_4_pydamage_bin_results.tsv",
+                "GenomeBinning/QC/summarise_pydamagebins/MEGAHIT-CONCOCT-test_minigut_5_pydamage_bin_results.tsv",
+                "GenomeBinning/QC/summarise_pydamagebins/MEGAHIT-CONCOCT-test_minigut_6_pydamage_bin_results.tsv",
+                "GenomeBinning/QC/summarise_pydamagebins/MEGAHIT-CONCOCT-test_minigut_7_pydamage_bin_results.tsv",
+                "GenomeBinning/QC/summarise_pydamagebins/MEGAHIT-CONCOCT-test_minigut_8_pydamage_bin_results.tsv",
+                "GenomeBinning/QC/summarise_pydamagebins/MEGAHIT-CONCOCT-test_minigut_9_pydamage_bin_results.tsv",
+                "GenomeBinning/QC/summarise_pydamagebins/MEGAHIT-CONCOCT-test_minigut_sample2_0_pydamage_bin_results.tsv",
+                "GenomeBinning/QC/summarise_pydamagebins/MEGAHIT-CONCOCT-test_minigut_sample2_1_pydamage_bin_results.tsv",
+                "GenomeBinning/QC/summarise_pydamagebins/MEGAHIT-CONCOCT-test_minigut_sample2_2_pydamage_bin_results.tsv",
+                "GenomeBinning/QC/summarise_pydamagebins/MEGAHIT-CONCOCT-test_minigut_sample2_3_pydamage_bin_results.tsv",
+                "GenomeBinning/QC/summarise_pydamagebins/MEGAHIT-CONCOCT-test_minigut_sample2_4_pydamage_bin_results.tsv",
+                "GenomeBinning/QC/summarise_pydamagebins/MEGAHIT-CONCOCT-test_minigut_sample2_5_pydamage_bin_results.tsv",
+                "GenomeBinning/QC/summarise_pydamagebins/MEGAHIT-CONCOCT-test_minigut_sample2_6_pydamage_bin_results.tsv",
+                "GenomeBinning/QC/summarise_pydamagebins/MEGAHIT-CONCOCT-test_minigut_sample2_7_pydamage_bin_results.tsv",
+                "GenomeBinning/QC/summarise_pydamagebins/MEGAHIT-MaxBin2-test_minigut.001_pydamage_bin_results.tsv",
+                "GenomeBinning/QC/summarise_pydamagebins/MEGAHIT-MaxBin2-test_minigut.002_pydamage_bin_results.tsv",
+                "GenomeBinning/QC/summarise_pydamagebins/MEGAHIT-MetaBAT2-test_minigut.1_pydamage_bin_results.tsv",
                 "GenomeBinning/bin_summary.tsv",
+                "GenomeBinning/contig_to_bin/contig_to_bin_map.tsv",
                 "GenomeBinning/depths/bins/bin_depths_summary.tsv",
+                "GenomeBinning/depths/bins/versions.yml",
                 "GenomeBinning/depths/contigs/MEGAHIT-test_minigut-depth.txt.gz",
                 "GenomeBinning/depths/contigs/MEGAHIT-test_minigut_sample2-depth.txt.gz"
             ],
@@ -1442,8 +1472,8 @@
                 "genes.gff:md5,c7999702b5b4aa7baed917e95f349d0d",
                 "genes.faa:md5,c9e5ba9a1caa1525dfddef4841ed872a",
                 "genes.gff:md5,12648e1cbbe2a94aaab85e31d4ed6753",
-                "genes.faa:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "genes.gff:md5,4b925aed1107d98cb9e88341b3e229b6",
+                "genes.faa.4:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "genes.gff.4:md5,4b925aed1107d98cb9e88341b3e229b6",
                 "genes.faa:md5,3eff42705008807c0b40b27049928fbe",
                 "genes.gff:md5,47d5c19cd107edf6e9c5bec83b4e45e4",
                 "genes.faa:md5,e6f276fc551f4b307b9879fd26c533e7",
@@ -1487,9 +1517,9 @@
                 "genes.gff:md5,e32081d326e6a440f6d8eb1e5c4bb2e7",
                 "PF11987.3.masked.faa:md5,4dddf2d3ac51209f8797f2063b06c388",
                 "concatenated.fasta:md5,1b77332f066e985aee5c65abf2475841",
-                "concatenated.pplacer.json:md5,e3d37de1b8e05da5655fd544250b9021",
+                "concatenated.pplacer.json:md5,c79ee75835bd0b2b0aaddbaefdd840bb",
                 "concatenated.tre:md5,94ec7e122759243633fa2c60733fea20",
-                "pplacer.out:md5,5ebb749c88fc59464f84658cdaa09afd",
+                "pplacer.out:md5,a5a5bba7d768027f4b2fe7fbc317957f",
                 "MEGAHIT-MaxBin2-unclassified-unrefined-test_minigut_qa.txt:md5,ce8d6ec038cf6dda5d40eb4da854cee7",
                 "MEGAHIT-MaxBin2-unclassified-unrefined-test_minigut_wf.tsv:md5,f90200717fd35d744187bd19c943e3b2",
                 "genes.faa:md5,b784e2e3dd8998b3ab8d1fc7e33a0a25",
@@ -1498,9 +1528,9 @@
                 "genes.gff:md5,57ab4b2d99fe09a52908cbb6f5cf3832",
                 "PF11987.3.masked.faa:md5,6d0358fd0f3b98dcd40587ca0854107c",
                 "concatenated.fasta:md5,91780ae7701bcdd54adb0289b15ed8d2",
-                "concatenated.pplacer.json:md5,76c6055c163aa74e92631f171b5fee32",
+                "concatenated.pplacer.json:md5,fe79547aa8e48f87960f48a42739a0ae",
                 "concatenated.tre:md5,e96d85201ac943a178f0823b17f2706c",
-                "pplacer.out:md5,db095f354c2bd4daa997866ae7fdf538",
+                "pplacer.out:md5,471ad484cc26a5a63dc47fc637c6cde0",
                 "MEGAHIT-MetaBAT2-unclassified-unrefined-test_minigut_qa.txt:md5,f34a4f8dea80a9015f99110d4929e66f",
                 "MEGAHIT-MetaBAT2-unclassified-unrefined-test_minigut_wf.tsv:md5,ebaf170db38fcc90a88e96b2969243b6",
                 "genes.faa:md5,d23c92c0ec2471874eb2fcf07962f70b",
@@ -1728,16 +1758,46 @@
                 "transposed_report.txt:md5,bb0bf1821380ebe75eadb77016a99565",
                 "MEGAHIT-MetaBAT2-unclassified-unrefined-test_minigut-quast_summary.tsv:md5,2431a08c5a8f77d147fc99811b7dda94",
                 "checkm_summary.tsv:md5,0ba48ca4d6557e95a8acb5cfc50d8d16",
+                "pydamage_bins_summary.tsv:md5,088aefb5bd256c514423a4cd81645771",
                 "quast_bin_summary.tsv:md5,5c9a2beb6c9a1f319c1d93908b37b1da",
-                "bin_summary.tsv:md5,5e557c3b6b00b006c477d547baba01d3",
-                "bin_depths_summary.tsv:md5,bd54b32dc4c741cd4edd2bbba51f6552"
+                "MEGAHIT-CONCOCT-test_minigut_0_pydamage_bin_results.tsv:md5,b6c4b20df43c161354da2376dc80ad05",
+                "MEGAHIT-CONCOCT-test_minigut_10_pydamage_bin_results.tsv:md5,4995ded0a43be727f4d2233001de0448",
+                "MEGAHIT-CONCOCT-test_minigut_11_pydamage_bin_results.tsv:md5,c40982d12f98e6412125f5b7af0b17ac",
+                "MEGAHIT-CONCOCT-test_minigut_12_pydamage_bin_results.tsv:md5,24226c5731ce84db677e1b7b71334959",
+                "MEGAHIT-CONCOCT-test_minigut_13_pydamage_bin_results.tsv:md5,d332b389e6f114ea2e699f907d9c047c",
+                "MEGAHIT-CONCOCT-test_minigut_14_pydamage_bin_results.tsv:md5,e6e328dc2e1ee7978767d8f8fce94fbf",
+                "MEGAHIT-CONCOCT-test_minigut_15_pydamage_bin_results.tsv:md5,1989602160dde279116af8c05457801c",
+                "MEGAHIT-CONCOCT-test_minigut_1_pydamage_bin_results.tsv:md5,60f54a3f42bbdeaa00d455ab7cee0f61",
+                "MEGAHIT-CONCOCT-test_minigut_2_pydamage_bin_results.tsv:md5,3745b90df536fefe69b9cb854eb2d960",
+                "MEGAHIT-CONCOCT-test_minigut_3_pydamage_bin_results.tsv:md5,024c58ba88d26ad6df47f87164447e04",
+                "MEGAHIT-CONCOCT-test_minigut_4_pydamage_bin_results.tsv:md5,497d0ef0f9fa6c6d6c26fac4eddadbd1",
+                "MEGAHIT-CONCOCT-test_minigut_5_pydamage_bin_results.tsv:md5,c6836d187851f8368a43cea4e73f317f",
+                "MEGAHIT-CONCOCT-test_minigut_6_pydamage_bin_results.tsv:md5,1098fd2fa7d66b9ad61d9c492c84ea83",
+                "MEGAHIT-CONCOCT-test_minigut_7_pydamage_bin_results.tsv:md5,3be55b4bbd4944e4c1c4611895d3f0fb",
+                "MEGAHIT-CONCOCT-test_minigut_8_pydamage_bin_results.tsv:md5,8bc8a1a6525abd99f08883176f6f757d",
+                "MEGAHIT-CONCOCT-test_minigut_9_pydamage_bin_results.tsv:md5,7a71a1caa47561ff4553c59d2e2c0dec",
+                "MEGAHIT-CONCOCT-test_minigut_sample2_0_pydamage_bin_results.tsv:md5,bab6ba3d2f133c1a2c19428d3267f812",
+                "MEGAHIT-CONCOCT-test_minigut_sample2_1_pydamage_bin_results.tsv:md5,4fd1b0d0c9046c0f0e20990a4a2d8e0f",
+                "MEGAHIT-CONCOCT-test_minigut_sample2_2_pydamage_bin_results.tsv:md5,b8296632aa92fa958f142140b4332a09",
+                "MEGAHIT-CONCOCT-test_minigut_sample2_3_pydamage_bin_results.tsv:md5,b8d387efbbac429e2763040eaab821d7",
+                "MEGAHIT-CONCOCT-test_minigut_sample2_4_pydamage_bin_results.tsv:md5,bd1c4cfc4bd80be24ea8897bf8ebab3c",
+                "MEGAHIT-CONCOCT-test_minigut_sample2_5_pydamage_bin_results.tsv:md5,04ce4e0b56f842ca731ac6a937c9ace2",
+                "MEGAHIT-CONCOCT-test_minigut_sample2_6_pydamage_bin_results.tsv:md5,3be4281b7c83b57029ac8135b0c5044f",
+                "MEGAHIT-CONCOCT-test_minigut_sample2_7_pydamage_bin_results.tsv:md5,19389a972ae2cc622ad74336ca89843e",
+                "MEGAHIT-MaxBin2-test_minigut.001_pydamage_bin_results.tsv:md5,99bb3502616c763cd62ee79fa2e3b1d2",
+                "MEGAHIT-MaxBin2-test_minigut.002_pydamage_bin_results.tsv:md5,9974a24fa3787a38b3939cbfbd9226df",
+                "MEGAHIT-MetaBAT2-test_minigut.1_pydamage_bin_results.tsv:md5,3d2237a104a6ed0bf1f7efb52195ea82",
+                "bin_summary.tsv:md5,63b2c0d2164c16a997f12b94bd7037fc",
+                "contig_to_bin_map.tsv:md5,9a146f6bd0eaf2fd9605cf1885dd37bc",
+                "bin_depths_summary.tsv:md5,bd54b32dc4c741cd4edd2bbba51f6552",
+                "versions.yml:md5,553ee8a62e65d93ce1163bb16314da29"
             ]
         ],
+        "timestamp": "2026-04-16T16:12:12.720882082",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.0"
-        },
-        "timestamp": "2025-11-14T21:15:52.782652223"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "viral": {
         "content": [
@@ -1792,11 +1852,11 @@
                 "MEGAHIT-test_minigut_sample2.contigs_virus_summary.tsv:md5,2d9c0006336752f4a41253e6570119a1"
             ]
         ],
+        "timestamp": "2025-11-14T23:17:18.54920095",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
-        },
-        "timestamp": "2025-11-14T23:17:18.54920095"
+        }
     },
     "taxonomy": {
         "content": [
@@ -1869,11 +1929,11 @@
                 "gtdbtk_summary.tsv:md5,af05337c99159421caf2348dcae802e7"
             ]
         ],
+        "timestamp": "2025-11-14T21:15:53.000167717",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
-        },
-        "timestamp": "2025-11-14T21:15:53.000167717"
+        }
     },
     "-profile test_single_end": {
         "content": [
@@ -2256,6 +2316,47 @@
             ]
         ],
         "timestamp": "2026-04-09T09:23:33.023311074",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
+    "ancient": {
+        "content": [
+            [
+                "Ancient_DNA/pydamage/analyze/MEGAHIT-test_minigut/MEGAHIT-test_minigut_pydamage_results.csv",
+                "Ancient_DNA/pydamage/analyze/MEGAHIT-test_minigut_sample2/MEGAHIT-test_minigut_sample2_pydamage_results.csv",
+                "Ancient_DNA/pydamage/filter/MEGAHIT-test_minigut/MEGAHIT-test_minigut_pydamage_filtered_results.csv",
+                "Ancient_DNA/pydamage/filter/MEGAHIT-test_minigut_sample2/MEGAHIT-test_minigut_sample2_pydamage_filtered_results.csv",
+                "Ancient_DNA/variant_calling/consensus/MEGAHIT-test_minigut.fa",
+                "Ancient_DNA/variant_calling/consensus/MEGAHIT-test_minigut_sample2.fa",
+                "Ancient_DNA/variant_calling/filtered/MEGAHIT-test_minigut.filtered.vcf.gz",
+                "Ancient_DNA/variant_calling/filtered/MEGAHIT-test_minigut_sample2.filtered.vcf.gz",
+                "Ancient_DNA/variant_calling/freebayes/MEGAHIT-test_minigut.vcf.gz",
+                "Ancient_DNA/variant_calling/freebayes/MEGAHIT-test_minigut_sample2.vcf.gz"
+            ],
+            [
+                "MEGAHIT-test_minigut_pydamage_filtered_results.csv:md5,6414a400229f9cc5e31368703020b039",
+                "MEGAHIT-test_minigut_sample2_pydamage_filtered_results.csv:md5,6414a400229f9cc5e31368703020b039",
+                "MEGAHIT-test_minigut.fa:md5,34fe41ac66dfc601afcfa067f86f2e75",
+                "MEGAHIT-test_minigut_sample2.fa:md5,f76f599c3048c8794ade2a8f3bfdb205"
+            ]
+        ],
+        "timestamp": "2026-04-16T16:12:12.423243744",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
+    "summary-rows": {
+        "content": [
+            27,
+            26,
+            27,
+            27,
+            26
+        ],
+        "timestamp": "2026-04-16T16:12:13.299319947",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
