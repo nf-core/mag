@@ -13,6 +13,7 @@ process BIN_SUMMARY {
     path busco_sum
     path checkm_sum
     path checkm2_sum
+    path pydamagebins_sum
 
     output:
     path "bin_summary.tsv", emit: summary
@@ -25,6 +26,7 @@ process BIN_SUMMARY {
     def busco_summary = busco_sum.sort().size() > 0 ? "--busco_summary ${busco_sum}" : ""
     def checkm_summary = checkm_sum.sort().size() > 0 ? "--checkm_summary ${checkm_sum}" : ""
     def checkm2_summary = checkm2_sum.sort().size() > 0 ? "--checkm2_summary ${checkm2_sum}" : ""
+    def pydamagebins_summary = pydamagebins_sum.sort().size() > 0 ? "--pydamagebins_summary ${pydamagebins_sum}" : ""
     """
     combine_tables.py \
         --depths_summary ${bin_depths} \
@@ -34,12 +36,13 @@ process BIN_SUMMARY {
         ${busco_summary} \
         ${checkm_summary} \
         ${checkm2_summary} \
+        ${pydamagebins_summary} \
         --out bin_summary.tsv
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         python: \$(python --version 2>&1 | sed 's/Python //g')
-        pandas: \$(python -c "import pkg_resources; print(pkg_resources.get_distribution('pandas').version)")
+        pandas: \$(python -c "import pandas; print(pandas.__version__)")
     END_VERSIONS
     """
 }

@@ -20,7 +20,8 @@ If long reads are provided (`long_reads`), the `long_reads_platform` column is r
 
 - `OXFORD_NANOPORE`: Oxford Nanopore Technologies (ONT) reads, which may have higher error rates compared to newer technologies.
 - `OXFORD_NANOPORE_HQ`: High-quality ONT reads, typically with an error rate of less than 5%, achievable with the latest ONT chemistries and sequencing platforms. This option should generally be used unless working with older data.
-- `PACBIO_SMRT`: Pacific Biosciences Single Molecule Real-Time (SMRT) sequencing reads.
+- `PACBIO_CLR`: Pacific Biosciences Continuous Long Read (CLR) reads.
+- `PACBIO_HIFI`: Pacific Biosciences High Fidelity (HiFi) reads, with high accuracy achieved through circular consensus sequencing.
 
 These platform fields are important for downstream alignment and assembly tools.
 
@@ -87,14 +88,14 @@ A common strategy is to assemble each sample individually (single assembly) and 
 This is usually chosen since assembly is a computationally intensive process, it is very costly to assemble all samples together.
 For binning, however, resources aren't as limiting, and binning algorithms can leverage the fact that there are multiple samples from which to draw information, which can improve the quality of output bins.
 
-nf-core/mag, by default, follows this approach: the group information from the input sample sheet in is only used to compute co-abundances for the binning step (co-binning), but not for group-wise co-assembly (thus single assembly).
+nf-core/mag, by default, follows this approach: the group information from the input sample sheet is only used to compute co-abundances for the binning step (co-binning), but not for group-wise co-assembly (thus single assembly).
 That means that if you define one group for all of your samples, they will be assembled individually, and then binned in a pooled fashion, with samples being mapped to all contigs of all other samples.
 
 If you'd like to also _assemble_ your samples in a pooled fashion (co-assembly), see the parameter docs for [`--coassemble_group`](https://nf-co.re/mag/parameters#coassemble_group) and [`--binning_map_mode`](https://nf-co.re/mag/parameters#binning_map_mode).
 
 ### Supplying pre-computed assemblies
 
-It is also possible to run nf-core/mag on pre-computed assemblies, by supplying a CSV file to the parameter `--assembly_input` in addition to the raw reads supplied to `--input`. Supplying assembly input skips all read pre-processing and assembly, jumping straight to the binning stage of the pipeline.
+It is also possible to run nf-core/mag on pre-computed assemblies, by supplying a CSV file to the parameter `--assembly_input` in addition to the raw reads supplied to `--input`. Supplying assembly input skips the assembly step and uses the provided assemblies for downstream analysis. The raw reads are still used for quality control and binning-related mapping.
 
 The assembly CSV file should contain the following columns:
 
@@ -131,7 +132,7 @@ group-1,1,MEGAHIT,MEGAHIT-group-1.contigs.fa.gz
 group-1,1,SPAdes,SPAdes-group-1.contigs.fasta.gz
 ```
 
-When supplying pre-computed assemblies, reads **must** also be provided in the CSV input format to `--input`, and should be the reads used to build the assemblies, i.e., adapter-removed, run-merged etc.. Preprocessing steps will not be ran on raw reads when pre-computed assemblies are supplied. As long reads are only used for assembly, any long read fastq files listed in the reads CSV are ignored.
+When supplying pre-computed assemblies, reads **must** also be provided in the CSV input format to `--input`, and should be the reads used to build the assemblies, i.e., adapter-removed, run-merged etc. Preprocessing steps will not be run on raw reads when pre-computed assemblies are supplied. As long reads are only used for assembly, any long read fastq files listed in the reads CSV are ignored.
 
 ### Databases
 
@@ -188,8 +189,8 @@ If you enable the `--save_cat_db` option, the database will be saved in the `Tax
 > This database is very large at ~110 GB!
 > This can take a long time, so we strongly recommend downloading and unzipping prior the pipeline run.
 
-This database can be downloaded from the [GTDB developers' website](default: https://data.gtdb.ecogenomic.org/releases/release220/220.0/auxillary_files/gtdbtk_package/full_package/), which is based in Australia (and could be slow for other regions of the world).
-The developers also offer a 'split' archive of 10GB files that can be downloaded more stably from [here](https://data.gtdb.ecogenomic.org/releases/release220/220.0/auxillary_files/gtdbtk_package/split_package/) and subsequently (manually) combined after.
+This database can be downloaded from the GTDB developers' website. The current pipeline default points to [the GTDB-Tk r226 full package](https://data.gtdb.aau.ecogenomic.org/releases/release226/226.0/auxillary_files/gtdbtk_package/full_package/gtdbtk_r226_data.tar.gz), which is hosted in Australia (and could be slow for other regions of the world).
+The developers also offer a split archive of 10 GB files that can be downloaded more stably from [the split package directory](https://data.gtdb.aau.ecogenomic.org/releases/release226/226.0/auxillary_files/gtdbtk_package/split_package/) and subsequently (manually) combined after.
 More documentation can be seen [here](https://ecogenomics.github.io/GTDBTk/installing/index.html#gtdb-tk-reference-data).
 
 ## Running the pipeline
@@ -260,13 +261,15 @@ To further assist in reproducibility, you can use share and reuse [parameter fil
 Additionally, to enable also reproducible results from the individual assembly tools this pipeline provides extra parameters. SPAdes is designed to be deterministic for a given number of threads. To generate reproducible results set the number of cpus with `--spades_fix_cpus` or `--spadeshybrid_fix_cpus`. This will overwrite the number of cpus specified in the `base.config` file and additionally ensure that it is not increased in case of retries for individual samples. MEGAHIT only generates reproducible results when run single-threaded.
 You can fix this by using the parameter `--megahit_fix_cpu_1`. In both cases, do not specify the number of cpus for these processes in additional custom config files, this would result in an error.
 
+Assembly quality is assessed using [ALE](https://github.com/sc932/ALE) for short-read assemblies only (MEGAHIT, SPAdes); long-read assemblies are excluded, and hybrid assemblies use only the short-read component for scoring.
+
 MetaBAT2 is run by default with a fixed seed within this pipeline, thus producing reproducible results.
 
 Using the BUSCO auto-lineage mode with an internet connection may lead to non-reproducible results, since the databases are frequently updated and automatic lineage selection depends on the version of the database used when running BUSCO.
 Therefore, we strongly recommend downloading the required lineage datasets in advance and specifying the lineage to check against.
 To ensure reproducibility when using auto-lineage mode, download `all` lineages (see [Databases](#databases)) and provide the download path to `--busco_db`. This will enable offline mode and produce consistent results across runs.
 
-For the taxonomic bin classification with [CAT](https://github.com/dutilh/CAT), when running the pipeline with `--cat_db_generate` the parameter `--save_cat_db` can be used to also save the generated database to allow reproducibility in future runs. Note that when specifying a pre-built database with `--cat_db`, currently the database can not be saved.
+For the taxonomic bin classification with [CAT](https://github.com/dutilh/CAT), when running the pipeline with `--cat_db_generate` the parameter `--save_cat_db` can be used to also save the generated database to allow reproducibility in future runs. Note that when specifying a pre-built database with `--cat_db`, currently the database cannot be saved.
 
 The taxonomic classification of bins with GTDB-Tk is not guaranteed to be reproducible, since the placement of bins in the reference tree is non-deterministic. However, the authors of the GTDB-Tk article examined the reproducibility on a set of 100 genomes across 50 trials and did not observe any difference (see [https://doi.org/10.1093/bioinformatics/btz848](https://doi.org/10.1093/bioinformatics/btz848)).
 
@@ -323,7 +326,7 @@ Specify the path to a specific config file (this is a core Nextflow command). Se
 
 ### Resource requests
 
-Whilst the default requirements set within the pipeline will hopefully work for most people and with most input data, you may find that you want to customise the compute resources that the pipeline requests. Each step in the pipeline has a default set of requirements for number of CPUs, memory and time. For most of the pipeline steps, if the job exits with any of the error codes specified [here](https://github.com/nf-core/rnaseq/blob/4c27ef5610c87db00c3c5a3eed10b1d161abf575/conf/base.config#L18) it will automatically be resubmitted with higher resources request (2 x original, then 3 x original). If it still fails after the third attempt then the pipeline execution is stopped.
+Whilst the default requirements set within the pipeline will hopefully work for most people and with most input data, you may find that you want to customise the compute resources that the pipeline requests. Each step in the pipeline has a default set of requirements for number of CPUs, memory and time. For most of the pipeline steps, if the job exits with one of the retryable error codes configured in `conf/base.config`, it will automatically be resubmitted with higher resources request (2 x original, then 3 x original). If it still fails after the third attempt then the pipeline execution is stopped.
 
 To change the resource requests, please see the [max resources](https://nf-co.re/docs/usage/configuration#max-resources) and [tuning workflow resources](https://nf-co.re/docs/usage/configuration#tuning-workflow-resources) section of the nf-core website.
 
@@ -341,24 +344,26 @@ To learn how to provide additional arguments to a particular tool of the pipelin
 
 Note, do not change number of CPUs with custom config files for the processes `spades`, `spadeshybrid` or `megahit` when specifying the parameters `--spades_fix_cpus`, `--spadeshybrid_fix_cpus` and `--megahit_fix_cpu_1` respectively.
 
-> **NB:** We specify the full process name i.e. `NFCORE_RNASEQ:RNASEQ:ALIGN_STAR:STAR_ALIGN` in the config file because this takes priority over the short name (`STAR_ALIGN`) and allows existing configuration using the full process name to be correctly overridden.
+> **NB:** We specify the full process name (for example `NFCORE_MAG:MAG:ASSEMBLY:SHORTREAD_ASSEMBLY:METASPADES`) in the config file because this takes priority over the short name (`METASPADES`) and allows existing configuration using the full process name to be correctly overridden.
 >
 > If you get a warning suggesting that the process selector isn't recognised check that the process name has been specified correctly.
 
 ### Updating containers (advanced users)
 
-The [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) implementation of this pipeline uses one container per process which makes it much easier to maintain and update software dependencies. If for some reason you need to use a different version of a particular tool with the pipeline then you just need to identify the `process` name and override the Nextflow `container` definition for that process using the `withName` declaration. For example, in the [nf-core/viralrecon](https://nf-co.re/viralrecon) pipeline a tool called [Pangolin](https://github.com/cov-lineages/pangolin) has been used during the COVID-19 pandemic to assign lineages to SARS-CoV-2 genome sequenced samples. Given that the lineage assignments change quite frequently it doesn't make sense to re-release the nf-core/viralrecon everytime a new version of Pangolin has been released. However, you can override the default container used by the pipeline by creating a custom config file and passing it as a command-line argument via `-c custom.config`.
+The [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) implementation of this pipeline uses one container per process which makes it much easier to maintain and update software dependencies. If for some reason you need to use a different version of a particular tool with the pipeline then you just need to identify the `process` name and override the Nextflow `container` definition for that process using the `withName` declaration.
 
-1. Check the default version used by the pipeline in the module file for [Pangolin](https://github.com/nf-core/viralrecon/blob/a85d5969f9025409e3618d6c280ef15ce417df65/modules/nf-core/software/pangolin/main.nf#L14-L19)
-2. Find the latest version of the Biocontainer available on [Quay.io](https://quay.io/repository/biocontainers/pangolin?tag=latest&tab=tags)
-3. Create the custom config accordingly:
+For example, to override the container used by the `METASPADES` process in `nf-core/mag`:
+
+1. Check the default process definition in the module file (for example [`modules/nf-core/spades/main.nf`](https://github.com/nf-core/mag/blob/dev/modules/nf-core/spades/main.nf)).
+2. Choose the replacement container or conda package version you want to use.
+3. Create a custom config and pass it with `-c custom.config`:
 
 - For Docker:
 
   ```nextflow
   process {
-      withName: PANGOLIN {
-          container = 'quay.io/biocontainers/pangolin:3.0.5--pyhdfd78af_0'
+      withName: METASPADES {
+          container = 'quay.io/biocontainers/spades:<tag>'
       }
   }
   ```
@@ -367,8 +372,8 @@ The [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) implementatio
 
   ```nextflow
   process {
-      withName: PANGOLIN {
-          container = 'https://depot.galaxyproject.org/singularity/pangolin:3.0.5--pyhdfd78af_0'
+      withName: METASPADES {
+          container = 'https://depot.galaxyproject.org/singularity/spades:<tag>'
       }
   }
   ```
@@ -377,13 +382,13 @@ The [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) implementatio
 
   ```nextflow
   process {
-      withName: PANGOLIN {
-          conda = 'bioconda::pangolin=3.0.5'
+      withName: METASPADES {
+          conda = 'bioconda::spades=<version>'
       }
   }
   ```
 
-> **NB:** If you wish to periodically update individual tool-specific results (e.g. Pangolin) generated by the pipeline then you must ensure to keep the `work/` directory otherwise the `-resume` ability of the pipeline will be compromised and it will restart from scratch.
+> **NB:** If you wish to periodically update individual tool-specific results generated by the pipeline, you must ensure to keep the `work/` directory, otherwise the `-resume` ability of the pipeline will be compromised and it will restart from scratch.
 
 ### nf-core/configs
 
@@ -413,9 +418,20 @@ NXF_OPTS='-Xms1g -Xmx4g'
 
 ## A note on the ancient DNA subworkflow
 
-nf-core/mag integrates an additional subworkflow to validate ancient DNA _de novo_ assembly:
+nf-core/mag integrates an additional subworkflow to validate ancient DNA _de novo_ assembly that is activated by the parameter `--ancient_dna`.
 
-[Characteristic patterns of ancient DNA (aDNA) damage](<(https://doi.org/10.1073/pnas.0704665104)>), namely DNA fragmentation and cytosine deamination (observed as C-to-T transitions) are typically used to authenticate aDNA sequences. By identifying assembled contigs carrying typical aDNA damages using [PyDamage](https://github.com/maxibor/pydamage), nf-core/mag can report and distinguish ancient contigs from contigs carrying no aDNA damage. Furthermore, to mitigate the effect of aDNA damage on contig sequence assembly, [freebayes](https://github.com/freebayes/freebayes) in combination with [BCFtools](https://github.com/samtools/bcftools) are used to (re)call the variants from the reads aligned to the contigs, and (re)generate contig consensus sequences.
+[Characteristic patterns of ancient DNA (aDNA) damage](<(https://doi.org/10.1073/pnas.0704665104)>), namely DNA fragmentation and cytosine deamination (observed as C-to-T transitions) are typically used to authenticate aDNA sequences.
+By identifying assembled contigs carrying typical aDNA damages using [PyDamage](https://github.com/maxibor/pydamage), nf-core/mag can report and distinguish ancient contigs from contigs carrying no aDNA damage.
+Furthermore, to mitigate the effect of aDNA damage on contig sequence assembly, [freebayes](https://github.com/freebayes/freebayes) in combination with [BCFtools](https://github.com/samtools/bcftools) are used to (re)call the variants from the reads aligned to the contigs, and (re)generate contig consensus sequences.
+
+Finally, when binning is activated, the pipeline will also run a custom script to generate bin-level pyDamage results, by taking per-contig pyDamage results and re-sort them into per-bin results and also making per-bin 'summaries' by averaging each value with a median.
+The latter median values will be included in the `bin_summary.tsv` results file and particularly useful to quickly assess whether a bin is likely to be ancient or not.
+
+:::warning
+It is highly recommended to run `--ancient_dna` mode with `--binning_map_mode` set to `own` for reproducibility of the pyDamage results across runs and `-resume`, unless you _truly_ need co-binning.
+When using mapping modes of `group` or `all`, different BAM files may be used for damage estimation on each run or `-resume` and thus may differ.
+This may result in a different set or none of contigs being evaluated in pyDamage compared to the final bin.
+:::
 
 ## A note on coverage estimation
 
@@ -445,14 +461,14 @@ If you are regularly getting such errors, you can try reducing the `--refine_bin
 
 ## A note on bin filtering
 
-The pipeline offers the ability to filter out bins that fall outside of a certain size in base pairs (`--bin_max_length`, `--bin_min_length`).
+The pipeline offers the ability to filter out bins that fall outside of a certain size in base pairs (`--bin_max_size`, `--bin_min_size`).
 
 This can be useful if you have a set of target organisms that you know approximately the size of the genome for, or if you are looking to filter out small bins that are likely to be contaminants or assembly artifacts.
 By removing these bins, you can speed up run time of the pipeline considerably in some cases.
 
 This can also remove 'nonsense' bins of e.g. a single or a collection of very short contigs that can occur with more aggressive binners (e.g. CONCOCT), and can in some cases prevent GUNC [from running correctly](https://github.com/grp-bork/gunc/issues/42#issue-2148763805).
 
-Note that in this context, it is recommended to also set `--min_length_unbinned_contigs` to a suitably high value that corresponds to a reasonable bin size if the `-bin_*_length` parameters are used, so you have useful 'singular' contigs in the unbinned output.
+Note that in this context, it is recommended to also set `--min_length_unbinned_contigs` to a suitably high value that corresponds to a reasonable bin size if the `--bin_min_size` / `--bin_max_size` parameters are used, so you have useful 'singular' contigs in the unbinned output.
 
 ## A note on GTDB having too many files or using too many inodes
 
@@ -468,25 +484,25 @@ This feature is only available with container engines `apptainer` and `singulari
 To generate your SquashFS image:
 
 1. Install [squashfs-tools](https://github.com/plougher/squashfs-tools), if it is not already on your system
-2. Download the GTDB archive either via the full [`.tar.gz` archive](https://data.ace.uq.edu.au/public/gtdb/data/releases/release220/220.0/auxillary_files/gtdbtk_package/full_package/) or the [split database](https://data.ace.uq.edu.au/public/gtdb/data/releases/release220/220.0/auxillary_files/gtdbtk_package/split_package) version.
+2. Download the GTDB archive either via the full [`.tar.gz` archive](https://data.gtdb.aau.ecogenomic.org/releases/release226/226.0/auxillary_files/gtdbtk_package/full_package/) or the [split database](https://data.gtdb.aau.ecogenomic.org/releases/release226/226.0/auxillary_files/gtdbtk_package/split_package) version.
 3. Convert to a SquashFS image
 
 - Full package (compressed):
 
   ```bash
-  gzip -cd gtdbtk_r220_data.tar.gz | mksquashfs - gtdbtk_r220.squashfs -tar
+  gzip -cd gtdbtk_r226_data.tar.gz | mksquashfs - gtdbtk_r226.squashfs -tar
   ```
 
 - Full package (uncompressed)
 
   ```bash
-  mksquashfs /path/to/database gtdbtk_r220.squashfs
+  mksquashfs /path/to/database gtdbtk_r226.squashfs
   ```
 
 - Split package (compressed)
 
   ```bash
-  cat gtdbtk_r220_data.tar.gz.part_* | gzip -cd - | mksquashfs - gtdbtk_r220.squashfs -tar
+  cat gtdbtk_r226_data.tar.gz.part_* | gzip -cd - | mksquashfs - gtdbtk_r226.squashfs -tar
   ```
 
 To use the image in the pipeline:
@@ -497,7 +513,7 @@ To use the image in the pipeline:
    ```nextflow
    process {
        withName: GTDBTK_CLASSIFYWF {
-               containerOptions = "-B /<path>/<to>/gtdbtk_r220.squashfs:${params.gtdb_db}:image-src=/"
+               containerOptions = "-B /<path>/<to>/gtdbtk_r226.squashfs:${params.gtdb_db}:image-src=/"
        }
    }
    ```
@@ -509,7 +525,7 @@ To use the image in the pipeline:
    ```
 
 :::warning
-Make sure to update the paths where indicated, and the GTDB release version if using a more recent one than r220!
+Make sure to update the paths where indicated, and the GTDB release version if using a different one than r226.
 :::
 
 :::note
@@ -518,7 +534,7 @@ If you have issues with this, you may need to specify a different `image-src=` s
 You can determine this with:
 
 ```bash
-unsquashfs -l -max-depth 1 -d'' gtdbtk_r220.squashfs
+unsquashfs -l -max-depth 1 -d'' gtdbtk_r226.squashfs
 ```
 
 And use the resulting output in `image-src=`
@@ -526,7 +542,7 @@ And use the resulting output in `image-src=`
 ```nextflow
 process {
     withName: GTDBTK_CLASSIFYWF {
-            containerOptions = "-B /<path>/<to>/gtdbtk_r220.squashfs:${params.gtdb_db}:image-src=/<output_from_unsquashfs_ls>"
+            containerOptions = "-B /<path>/<to>/gtdbtk_r226.squashfs:${params.gtdb_db}:image-src=/<output_from_unsquashfs_ls>"
     }
 }
 ```

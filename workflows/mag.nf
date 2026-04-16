@@ -25,6 +25,7 @@ include { LONGREAD_PREPROCESSING          } from '../subworkflows/local/preproce
 include { SHORTREAD_PREPROCESSING         } from '../subworkflows/local/preprocessing_shortread/main'
 include { ASSEMBLY                        } from '../subworkflows/local/assembly/main'
 include { CATPACK                         } from '../subworkflows/local/catpack/main'
+include { BINNING_PYDAMAGE                } from '../subworkflows/local/binning_pydamage/main'
 
 //
 // MODULE: Installed directly from nf-core/modules
@@ -35,6 +36,7 @@ include { PROKKA                          } from '../modules/nf-core/prokka/main
 include { MMSEQS_DATABASES                } from '../modules/nf-core/mmseqs/databases/main'
 include { METAEUK_EASYPREDICT             } from '../modules/nf-core/metaeuk/easypredict/main'
 include { QSV_CAT as CONCAT_QUAST_SUMMARY } from '../modules/nf-core/qsv/cat/main'
+include { ALE                             } from '../modules/nf-core/ale/main'
 
 //
 // MODULE: Local to the pipeline
@@ -134,27 +136,19 @@ workflow MAG {
     ================================================================================
     */
 
-    if (!params.assembly_input) {
-        SHORTREAD_PREPROCESSING(
-            ch_raw_short_reads,
-            ch_host_fasta,
-            ch_host_bowtie2index,
-            ch_phix_db_file,
-            params.skip_shortread_qc,
-        )
-        ch_versions = ch_versions.mix(SHORTREAD_PREPROCESSING.out.versions)
-        ch_multiqc_files = ch_multiqc_files.mix(
-            SHORTREAD_PREPROCESSING.out.multiqc_files.collect { _meta, report -> report }.ifEmpty([])
-        )
-        ch_short_reads = SHORTREAD_PREPROCESSING.out.short_reads
-        ch_short_reads_assembly = SHORTREAD_PREPROCESSING.out.short_reads_assembly
-    }
-    else {
-        ch_short_reads = ch_raw_short_reads.map { meta, reads ->
-            def meta_new = meta - meta.subMap('run')
-            [meta_new, reads]
-        }
-    }
+    SHORTREAD_PREPROCESSING(
+        ch_raw_short_reads,
+        ch_host_fasta,
+        ch_host_bowtie2index,
+        ch_phix_db_file,
+        params.skip_shortread_qc,
+    )
+    ch_versions = ch_versions.mix(SHORTREAD_PREPROCESSING.out.versions)
+    ch_multiqc_files = ch_multiqc_files.mix(
+        SHORTREAD_PREPROCESSING.out.multiqc_files.collect { _meta, report -> report }.ifEmpty([])
+    )
+    ch_short_reads = SHORTREAD_PREPROCESSING.out.short_reads
+    ch_short_reads_assembly = SHORTREAD_PREPROCESSING.out.short_reads_assembly
 
     /*
     ================================================================================
@@ -245,7 +239,7 @@ workflow MAG {
     ================================================================================
     */
 
-    if (!params.skip_binning || params.ancient_dna) {
+    if (!params.skip_binning || params.ancient_dna || !params.skip_ale) {
         BINNING_PREPARATION(
             ch_shortread_assemblies,
             ch_short_reads,
@@ -264,6 +258,28 @@ workflow MAG {
     if (params.ancient_dna) {
         ANCIENT_DNA_ASSEMBLY_VALIDATION(BINNING_PREPARATION.out.grouped_mappings)
         ch_versions = ch_versions.mix(ANCIENT_DNA_ASSEMBLY_VALIDATION.out.versions)
+    }
+
+    /*
+    ================================================================================
+                                        ALE
+    ================================================================================
+    */
+
+    if (!params.skip_ale) {
+        ch_ale_input = BINNING_PREPARATION.out.grouped_mappings
+            .join(ch_shortread_assemblies, by: 0)
+            .map { meta, _contigs, bams, _bais, assembly ->
+                // Try to find the BAM where reads came from the same sample as the assembly (co-binning may include multiple BAMs)
+                // If none matches (coassembly), take the first one after sorting for determinism
+                def own_bam = bams.find { bam -> bam.name.endsWith("-${meta.id}.bam") }
+                def bam = own_bam ?: bams.sort()[0]
+
+                [meta, assembly, bam]
+            }
+
+        ALE(ch_ale_input)
+        ch_versions = ch_versions.mix(ALE.out.versions)
     }
 
     /*
@@ -375,19 +391,32 @@ workflow MAG {
             ? ch_input_for_postbinning_bins
             : ch_input_for_postbinning_bins.mix(ch_input_for_postbinning_unbins)
 
-        // Combine short and long reads by meta.id and meta.group for DEPTHS, making sure that
-        // read channel are not empty
-        ch_reads_for_depths = ch_short_reads
-            .map { meta, reads -> [[id: meta.id, group: meta.group], [short_reads: reads, long_reads: []]] }
-            .mix(
-                ch_long_reads.map { meta, reads -> [[id: meta.id, group: meta.group], [short_reads: [], long_reads: reads]] }
-            )
-            .groupTuple(by: 0)
-
-        DEPTHS(ch_input_for_postbinning, BINNING.out.metabat2depths, ch_reads_for_depths)
+        DEPTHS(ch_input_for_postbinning, BINNING.out.metabat2depths)
         ch_versions = ch_versions.mix(DEPTHS.out.versions)
 
         ch_input_for_binsummary = DEPTHS.out.depths_summary
+
+        /*
+            Generate contig2bin map files for all bins
+        */
+
+        // generate a contig2bin map
+        // separate the contig files, use Nextflow splitFasta to extract header name
+        // and add other metadata from the metamap into a string with a prefixed header
+        // then use collectFile to save this as a tsv file.
+        ch_allcontig2binmap = ch_input_for_postbinning
+            .transpose()
+            .map { meta, binfile -> [meta + [bin_id: binfile.name], binfile] }
+            .splitFasta(record: [header: true], elem: 1)
+            .map { meta, contig_header ->
+                "assembly_id\tcontig_id\tbinner\tbin_id\n${meta['assembler']}-${meta['id']}\t${contig_header['header']}\t${meta['binner']}\t${meta['bin_id']}\n"
+            }
+            .collectFile(
+                name: 'contig_to_bin_map.tsv',
+                storeDir: params.outdir + '/GenomeBinning/contig_to_bin/',
+                keepHeader: true,
+                sort: true,
+            )
 
         /*
         * Bin QC subworkflows: for checking bin completeness with either BUSCO, CHECKM, CHECKM2, and/or GUNC
@@ -461,6 +490,16 @@ workflow MAG {
         else {
             ch_gtdbtk_summary = channel.empty()
         }
+
+        if (params.ancient_dna) {
+            BINNING_PYDAMAGE(ANCIENT_DNA_ASSEMBLY_VALIDATION.out.pydamage_results, ch_allcontig2binmap)
+            ch_versions = ch_versions.mix(BINNING_PYDAMAGE.out.versions)
+            ch_summarisepydamage = BINNING_PYDAMAGE.out.tsv
+        }
+        else {
+            ch_summarisepydamage = channel.empty()
+        }
+
         if ((!params.skip_binqc) || !params.skip_quast || !params.skip_gtdbtk) {
             BIN_SUMMARY(
                 ch_input_for_binsummary,
@@ -470,6 +509,7 @@ workflow MAG {
                 ch_busco_summary.ifEmpty([]),
                 ch_checkm_summary.ifEmpty([]),
                 ch_checkm2_summary.ifEmpty([]),
+                ch_summarisepydamage.ifEmpty([]),
             )
             ch_versions = ch_versions.mix(BIN_SUMMARY.out.versions)
         }

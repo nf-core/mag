@@ -84,8 +84,7 @@
                     "spades": "4.1.0"
                 },
                 "MINIMAP2_HOST_ALIGN": {
-                    "minimap2": "2.29-r1283",
-                    "samtools": 1.21
+                    "minimap2": "2.29-r1283"
                 },
                 "MINIMAP2_HOST_INDEX": {
                     "minimap2": "2.29-r1283"
@@ -133,20 +132,20 @@
                     "seqkit": "2.9.0"
                 },
                 "SPLIT_FASTA": {
-                    "biopython": "1.7.4",
+                    "biopython": "1.74",
                     "pandas": "1.1.5",
                     "python": "3.6.7"
                 },
                 "Workflow": {
-                    "nf-core/mag": "v5.4.0dev"
+                    "nf-core/mag": "v5.5.0dev"
                 }
             }
         ],
+        "timestamp": "2026-04-01T14:55:50.11826155",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2025-12-13T01:44:52.567061114"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "multiqc": {
         "content": [
@@ -389,10 +388,10 @@
                 "quast_table.yaml:md5,e5720e81c420f07480481ac3c75bb822"
             ]
         ],
+        "timestamp": "2025-12-01T14:45:00.164025293",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
-        },
-        "timestamp": "2025-12-01T14:45:00.164025293"
+        }
     }
 }

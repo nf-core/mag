@@ -38,11 +38,11 @@
                 "SPAdes-MaxBin2Refined-test_minigut.001_sub.headersMap.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
+        "timestamp": "2026-01-20T13:11:51.860678532",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
-        },
-        "timestamp": "2025-11-20T10:08:12.587500203"
+        }
     },
     "assembly": {
         "content": [
@@ -57,15 +57,15 @@
                 "Assembly/SPAdes/QC/test_minigut_sample2/SPAdes-test_minigut_sample2.bowtie2.log"
             ]
         ],
+        "timestamp": "2025-11-03T13:09:25.820313196",
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "25.10.0"
-        },
-        "timestamp": "2025-11-03T13:09:25.820313196"
+        }
     },
     "-profile assembly_input": {
         "content": [
-            203,
+            286,
             {
                 "ADJUST_MAXBIN2_EXT": {
                     "coreutils": 9.5
@@ -91,6 +91,9 @@
                 "CONCAT_BUSCO_TSV": {
                     "qsv": "5.1.0"
                 },
+                "CONCAT_GUNC_TSV": {
+                    "qsv": "5.1.0"
+                },
                 "CONCOCT_CONCOCT": {
                     "concoct": "1.1.0"
                 },
@@ -112,14 +115,17 @@
                 "DASTOOL_DASTOOL": {
                     "dastool": "1.1.7"
                 },
-                "DASTOOL_FASTATOCONTIG2BIN_CONCOCT": {
+                "DASTOOL_FASTATOCONTIG2BIN": {
                     "dastool": "1.1.7"
                 },
-                "DASTOOL_FASTATOCONTIG2BIN_MAXBIN2": {
-                    "dastool": "1.1.7"
+                "FASTQC_RAW": {
+                    "fastqc": "0.12.1"
                 },
-                "DASTOOL_FASTATOCONTIG2BIN_METABAT2": {
-                    "dastool": "1.1.7"
+                "GUNC_DOWNLOADDB": {
+                    "gunc": "1.1.0"
+                },
+                "GUNC_RUN": {
+                    "gunc": "1.1.0"
                 },
                 "GUNZIP_ASSEMBLYINPUT": {
                     "gunzip": 1.13
@@ -130,11 +136,6 @@
                 "MAG_DEPTHS": {
                     "pandas": "1.1.5",
                     "python": "3.6.7"
-                },
-                "MAG_DEPTHS_PLOT": {
-                    "pandas": "1.3.0",
-                    "python": "3.9.6",
-                    "seaborn": "0.11.0"
                 },
                 "MAG_DEPTHS_SUMMARY": {
                     "pandas": "1.4.3",
@@ -161,27 +162,24 @@
                 "RENAME_PREDASTOOL": {
                     "coreutils": 9.5
                 },
-                "SEMIBIN_SINGLEEASYBIN": {
-                    "SemiBin": "2.2.0"
-                },
                 "SEQKIT_STATS": {
                     "seqkit": "2.9.0"
                 },
                 "SPLIT_FASTA": {
-                    "biopython": "1.7.4",
+                    "biopython": "1.74",
                     "pandas": "1.1.5",
                     "python": "3.6.7"
                 },
                 "Workflow": {
-                    "nf-core/mag": "v5.4.0dev"
+                    "nf-core/mag": "v5.5.0dev"
                 }
             }
         ],
+        "timestamp": "2026-04-09T09:21:33.205568806",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.0"
-        },
-        "timestamp": "2025-11-27T11:31:36.634994563"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "binning": {
         "content": [
@@ -357,47 +355,44 @@
                 "GenomeBinning/MetaBAT2/unbinned/discarded/SPAdes-MetaBAT2-test_minigut.unbinned.remaining.fa.gz",
                 "GenomeBinning/MetaBAT2/unbinned/discarded/SPAdes-MetaBAT2-test_minigut_sample2.unbinned.pooled.fa.gz",
                 "GenomeBinning/MetaBAT2/unbinned/discarded/SPAdes-MetaBAT2-test_minigut_sample2.unbinned.remaining.fa.gz",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-test_minigut/short_summary.specific.bacteria_odb10.MEGAHIT-MetaBAT2Refined-test_minigut.1.fa.json",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-test_minigut/short_summary.specific.bacteria_odb10.MEGAHIT-MetaBAT2Refined-test_minigut.1.fa.txt",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-test_minigut/short_summary.specific.bacteria_odb10.MEGAHIT-MetaBAT2Refined-test_minigut.2.fa.json",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-test_minigut/short_summary.specific.bacteria_odb10.MEGAHIT-MetaBAT2Refined-test_minigut.2.fa.txt",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-test_minigut/test_minigut-bacteria_odb10-busco.batch_summary.txt",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-test_minigut/test_minigut-bacteria_odb10-busco.log",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-test_minigut/test_minigut-bacteria_odb10-busco/MEGAHIT-MetaBAT2Refined-test_minigut.1.fa/run_bacteria_odb10/full_table.tsv",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-test_minigut/test_minigut-bacteria_odb10-busco/MEGAHIT-MetaBAT2Refined-test_minigut.1.fa/run_bacteria_odb10/missing_busco_list.tsv",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-test_minigut/test_minigut-bacteria_odb10-busco/MEGAHIT-MetaBAT2Refined-test_minigut.1.fa/run_bacteria_odb10/short_summary.json",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-test_minigut/test_minigut-bacteria_odb10-busco/MEGAHIT-MetaBAT2Refined-test_minigut.1.fa/run_bacteria_odb10/short_summary.txt",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-test_minigut/test_minigut-bacteria_odb10-busco/MEGAHIT-MetaBAT2Refined-test_minigut.2.fa/run_bacteria_odb10/full_table.tsv",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-test_minigut/test_minigut-bacteria_odb10-busco/MEGAHIT-MetaBAT2Refined-test_minigut.2.fa/run_bacteria_odb10/missing_busco_list.tsv",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-test_minigut/test_minigut-bacteria_odb10-busco/MEGAHIT-MetaBAT2Refined-test_minigut.2.fa/run_bacteria_odb10/short_summary.json",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-test_minigut/test_minigut-bacteria_odb10-busco/MEGAHIT-MetaBAT2Refined-test_minigut.2.fa/run_bacteria_odb10/short_summary.txt",
-                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-test_minigut/short_summary.specific.bacteria_odb10.SPAdes-CONCOCTRefined-test_minigut.7.fa.json",
-                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-test_minigut/short_summary.specific.bacteria_odb10.SPAdes-CONCOCTRefined-test_minigut.7.fa.txt",
-                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-test_minigut/short_summary.specific.bacteria_odb10.SPAdes-MaxBin2Refined-test_minigut.001_sub.fa.json",
-                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-test_minigut/short_summary.specific.bacteria_odb10.SPAdes-MaxBin2Refined-test_minigut.001_sub.fa.txt",
-                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-test_minigut/test_minigut-bacteria_odb10-busco.batch_summary.txt",
-                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-test_minigut/test_minigut-bacteria_odb10-busco.log",
-                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-test_minigut/test_minigut-bacteria_odb10-busco/SPAdes-CONCOCTRefined-test_minigut.7.fa/run_bacteria_odb10/full_table.tsv",
-                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-test_minigut/test_minigut-bacteria_odb10-busco/SPAdes-CONCOCTRefined-test_minigut.7.fa/run_bacteria_odb10/missing_busco_list.tsv",
-                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-test_minigut/test_minigut-bacteria_odb10-busco/SPAdes-CONCOCTRefined-test_minigut.7.fa/run_bacteria_odb10/short_summary.json",
-                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-test_minigut/test_minigut-bacteria_odb10-busco/SPAdes-CONCOCTRefined-test_minigut.7.fa/run_bacteria_odb10/short_summary.txt",
-                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-test_minigut/test_minigut-bacteria_odb10-busco/SPAdes-MaxBin2Refined-test_minigut.001_sub.fa/run_bacteria_odb10/full_table.tsv",
-                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-test_minigut/test_minigut-bacteria_odb10-busco/SPAdes-MaxBin2Refined-test_minigut.001_sub.fa/run_bacteria_odb10/missing_busco_list.tsv",
-                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-test_minigut/test_minigut-bacteria_odb10-busco/SPAdes-MaxBin2Refined-test_minigut.001_sub.fa/run_bacteria_odb10/short_summary.json",
-                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-test_minigut/test_minigut-bacteria_odb10-busco/SPAdes-MaxBin2Refined-test_minigut.001_sub.fa/run_bacteria_odb10/short_summary.txt",
+                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-unclassified-dastool_refined-test_minigut/short_summary.specific.bacteria_odb10.MEGAHIT-MetaBAT2Refined-test_minigut.1.fa.json",
+                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-unclassified-dastool_refined-test_minigut/short_summary.specific.bacteria_odb10.MEGAHIT-MetaBAT2Refined-test_minigut.1.fa.txt",
+                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-unclassified-dastool_refined-test_minigut/short_summary.specific.bacteria_odb10.MEGAHIT-MetaBAT2Refined-test_minigut.2.fa.json",
+                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-unclassified-dastool_refined-test_minigut/short_summary.specific.bacteria_odb10.MEGAHIT-MetaBAT2Refined-test_minigut.2.fa.txt",
+                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-unclassified-dastool_refined-test_minigut/test_minigut-bacteria_odb10-busco.batch_summary.txt",
+                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-unclassified-dastool_refined-test_minigut/test_minigut-bacteria_odb10-busco.log",
+                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-unclassified-dastool_refined-test_minigut/test_minigut-bacteria_odb10-busco/MEGAHIT-MetaBAT2Refined-test_minigut.1.fa/run_bacteria_odb10/full_table.tsv",
+                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-unclassified-dastool_refined-test_minigut/test_minigut-bacteria_odb10-busco/MEGAHIT-MetaBAT2Refined-test_minigut.1.fa/run_bacteria_odb10/missing_busco_list.tsv",
+                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-unclassified-dastool_refined-test_minigut/test_minigut-bacteria_odb10-busco/MEGAHIT-MetaBAT2Refined-test_minigut.1.fa/run_bacteria_odb10/short_summary.json",
+                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-unclassified-dastool_refined-test_minigut/test_minigut-bacteria_odb10-busco/MEGAHIT-MetaBAT2Refined-test_minigut.1.fa/run_bacteria_odb10/short_summary.txt",
+                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-unclassified-dastool_refined-test_minigut/test_minigut-bacteria_odb10-busco/MEGAHIT-MetaBAT2Refined-test_minigut.2.fa/run_bacteria_odb10/full_table.tsv",
+                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-unclassified-dastool_refined-test_minigut/test_minigut-bacteria_odb10-busco/MEGAHIT-MetaBAT2Refined-test_minigut.2.fa/run_bacteria_odb10/missing_busco_list.tsv",
+                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-unclassified-dastool_refined-test_minigut/test_minigut-bacteria_odb10-busco/MEGAHIT-MetaBAT2Refined-test_minigut.2.fa/run_bacteria_odb10/short_summary.json",
+                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-unclassified-dastool_refined-test_minigut/test_minigut-bacteria_odb10-busco/MEGAHIT-MetaBAT2Refined-test_minigut.2.fa/run_bacteria_odb10/short_summary.txt",
+                "GenomeBinning/QC/BUSCO/MEGAHIT-DASTool-unclassified-dastool_refined-test_minigut/test_minigut-bacteria_odb10-busco/batch_summary.txt",
+                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-unclassified-dastool_refined-test_minigut/short_summary.specific.bacteria_odb10.SPAdes-CONCOCTRefined-test_minigut.7.fa.json",
+                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-unclassified-dastool_refined-test_minigut/short_summary.specific.bacteria_odb10.SPAdes-CONCOCTRefined-test_minigut.7.fa.txt",
+                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-unclassified-dastool_refined-test_minigut/short_summary.specific.bacteria_odb10.SPAdes-MaxBin2Refined-test_minigut.001_sub.fa.json",
+                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-unclassified-dastool_refined-test_minigut/short_summary.specific.bacteria_odb10.SPAdes-MaxBin2Refined-test_minigut.001_sub.fa.txt",
+                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-unclassified-dastool_refined-test_minigut/test_minigut-bacteria_odb10-busco.batch_summary.txt",
+                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-unclassified-dastool_refined-test_minigut/test_minigut-bacteria_odb10-busco.log",
+                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-unclassified-dastool_refined-test_minigut/test_minigut-bacteria_odb10-busco/SPAdes-CONCOCTRefined-test_minigut.7.fa/run_bacteria_odb10/full_table.tsv",
+                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-unclassified-dastool_refined-test_minigut/test_minigut-bacteria_odb10-busco/SPAdes-CONCOCTRefined-test_minigut.7.fa/run_bacteria_odb10/missing_busco_list.tsv",
+                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-unclassified-dastool_refined-test_minigut/test_minigut-bacteria_odb10-busco/SPAdes-CONCOCTRefined-test_minigut.7.fa/run_bacteria_odb10/short_summary.json",
+                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-unclassified-dastool_refined-test_minigut/test_minigut-bacteria_odb10-busco/SPAdes-CONCOCTRefined-test_minigut.7.fa/run_bacteria_odb10/short_summary.txt",
+                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-unclassified-dastool_refined-test_minigut/test_minigut-bacteria_odb10-busco/SPAdes-MaxBin2Refined-test_minigut.001_sub.fa/run_bacteria_odb10/full_table.tsv",
+                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-unclassified-dastool_refined-test_minigut/test_minigut-bacteria_odb10-busco/SPAdes-MaxBin2Refined-test_minigut.001_sub.fa/run_bacteria_odb10/missing_busco_list.tsv",
+                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-unclassified-dastool_refined-test_minigut/test_minigut-bacteria_odb10-busco/SPAdes-MaxBin2Refined-test_minigut.001_sub.fa/run_bacteria_odb10/short_summary.json",
+                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-unclassified-dastool_refined-test_minigut/test_minigut-bacteria_odb10-busco/SPAdes-MaxBin2Refined-test_minigut.001_sub.fa/run_bacteria_odb10/short_summary.txt",
+                "GenomeBinning/QC/BUSCO/SPAdes-DASTool-unclassified-dastool_refined-test_minigut/test_minigut-bacteria_odb10-busco/batch_summary.txt",
+                "GenomeBinning/QC/GUNC/raw/MEGAHIT-DASTool-unclassified-dastool_refined-test_minigut/GUNC.progenomes_2.1.maxCSS_level.tsv",
+                "GenomeBinning/QC/GUNC/raw/SPAdes-DASTool-unclassified-dastool_refined-test_minigut/GUNC.progenomes_2.1.maxCSS_level.tsv",
                 "GenomeBinning/QC/busco_summary.tsv",
-                "GenomeBinning/SemiBin2/bins/MEGAHIT-SemiBin2-test_minigut_0.fa.gz",
-                "GenomeBinning/SemiBin2/bins/MEGAHIT-SemiBin2-test_minigut_1.fa.gz",
-                "GenomeBinning/SemiBin2/bins/SPAdes-SemiBin2-test_minigut_0.fa.gz",
-                "GenomeBinning/SemiBin2/bins/SPAdes-SemiBin2-test_minigut_1.fa.gz",
-                "GenomeBinning/SemiBin2/log/MEGAHIT-SemiBin2-test_minigut.SemiBinRun.log",
-                "GenomeBinning/SemiBin2/log/MEGAHIT-SemiBin2-test_minigut_sample2.SemiBinRun.log",
-                "GenomeBinning/SemiBin2/log/SPAdes-SemiBin2-test_minigut.SemiBinRun.log",
-                "GenomeBinning/SemiBin2/log/SPAdes-SemiBin2-test_minigut_sample2.SemiBinRun.log",
+                "GenomeBinning/QC/gunc_summary.tsv",
                 "GenomeBinning/bin_summary.tsv",
-                "GenomeBinning/depths/bins/MEGAHIT-DASTool-test_minigut-binDepths.heatmap.png",
-                "GenomeBinning/depths/bins/SPAdes-DASTool-test_minigut-binDepths.heatmap.png",
+                "GenomeBinning/contig_to_bin/contig_to_bin_map.tsv",
                 "GenomeBinning/depths/bins/bin_depths_summary.tsv",
+                "GenomeBinning/depths/bins/versions.yml",
                 "GenomeBinning/depths/contigs/MEGAHIT-test_minigut-depth.txt.gz",
                 "GenomeBinning/depths/contigs/MEGAHIT-test_minigut_sample2-depth.txt.gz",
                 "GenomeBinning/depths/contigs/SPAdes-test_minigut-depth.txt.gz",
@@ -507,12 +502,12 @@
                 "SPAdes-CONCOCT-test_minigut_sample2_clustering_gt1000.csv:md5,4bbba6a0ba80b107ef2b13b7089e2156",
                 "MEGAHIT-DASTool-test_minigut.seqlength:md5,f154f9ef4a4c0adb8d8f9ebb8163df93",
                 "MEGAHIT-DASTool-test_minigut_DASTool_contig2bin.tsv:md5,6add6f39f4fd9c31ff9f58df5f28fcdf",
-                "MEGAHIT-DASTool-test_minigut_DASTool_summary.tsv:md5,a900f80e0820a1e9416c2e391b37d06c",
-                "MEGAHIT-DASTool-test_minigut_allBins.eval:md5,b31d82ad1f410e66fd41661ffb4d0604",
+                "MEGAHIT-DASTool-test_minigut_DASTool_summary.tsv:md5,33aee7453e0ee3bd84b4d911e0419032",
+                "MEGAHIT-DASTool-test_minigut_allBins.eval:md5,48415e0a36f6cb05fc36ea64d9394b1f",
                 "SPAdes-DASTool-test_minigut.seqlength:md5,4860a5cb7b0bf2e78e959111b5619006",
                 "SPAdes-DASTool-test_minigut_DASTool_contig2bin.tsv:md5,07c1af95dd0da4c11de390c2f188fe6c",
-                "SPAdes-DASTool-test_minigut_DASTool_summary.tsv:md5,b04bb7c85b2e393bfdaec7d754210a5a",
-                "SPAdes-DASTool-test_minigut_allBins.eval:md5,5bb0af6ad3d3ba960cb8d1242bd3f485",
+                "SPAdes-DASTool-test_minigut_DASTool_summary.tsv:md5,29dcb8c0665f0b129f6fd66a83112380",
+                "SPAdes-DASTool-test_minigut_allBins.eval:md5,966f10c283df77494d43ed7ce5106a03",
                 "MEGAHIT-MetaBAT2Refined-test_minigut.1.fa:md5,489a5f7ba3795477e09d2d396fe535c3",
                 "MEGAHIT-MetaBAT2Refined-test_minigut.2.fa:md5,1addf634bca82af85d36621585f93f52",
                 "SPAdes-CONCOCTRefined-test_minigut.7.fa:md5,4be1cc2c06f329e0102cb27b03e30624",
@@ -557,36 +552,45 @@
                 "missing_busco_list.tsv:md5,c6807925eff74c7de1c1a38d88069b08",
                 "full_table.tsv:md5,877e4dad881ca7079c8b6118b59a34d4",
                 "missing_busco_list.tsv:md5,c7ee1e582e010aab60a566da7fe304de",
-                "MEGAHIT-SemiBin2-test_minigut_0.fa.gz:md5,3688b9460d9a4a1e4ea912721f226b5d",
-                "MEGAHIT-SemiBin2-test_minigut_1.fa.gz:md5,12381d7733271d3e28c39f7ad1ca4e74",
-                "SPAdes-SemiBin2-test_minigut_0.fa.gz:md5,daf60d669f93aecce24c715d863388a9",
-                "SPAdes-SemiBin2-test_minigut_1.fa.gz:md5,19ce02b104d195bf57130398e7b2dd2e",
+                "GUNC.progenomes_2.1.maxCSS_level.tsv:md5,c3d611353770b42c99dd4fe9039ac10f",
+                "GUNC.progenomes_2.1.maxCSS_level.tsv:md5,02e72f9e57ed6defc4eb540453328c2e",
+                "gunc_summary.tsv:md5,86dda28c13307b08d362185700ab7ccb",
                 "bin_summary.tsv:md5,60111a58bb0167ec1367f1e7463b7026",
-                "bin_depths_summary.tsv:md5,7153f759db72abb02e2ee3c2ab1b5e56"
+                "contig_to_bin_map.tsv:md5,4b640b728c3b42bfe65ea4a869708787",
+                "bin_depths_summary.tsv:md5,7153f759db72abb02e2ee3c2ab1b5e56",
+                "versions.yml:md5,553ee8a62e65d93ce1163bb16314da29"
             ]
         ],
+        "timestamp": "2026-04-09T06:20:28.133008138",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.0"
-        },
-        "timestamp": "2025-11-11T07:13:39.966382867"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "csv-rows": {
         "content": [
             4,
             4
         ],
+        "timestamp": "2025-11-12T05:04:37.179720571",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
-        },
-        "timestamp": "2025-11-12T05:04:37.179720571"
+        }
     },
     "multiqc": {
         "content": [
             [
                 "multiqc/multiqc_data/bowtie2_pe_plot.yaml",
                 "multiqc/multiqc_data/busco_plot_bacteria_odb10.yaml",
+                "multiqc/multiqc_data/fastqc-status-check-heatmap.yaml",
+                "multiqc/multiqc_data/fastqc_per_base_n_content_plot.yaml",
+                "multiqc/multiqc_data/fastqc_per_base_sequence_quality_plot.yaml",
+                "multiqc/multiqc_data/fastqc_per_sequence_gc_content_plot_Counts.yaml",
+                "multiqc/multiqc_data/fastqc_per_sequence_gc_content_plot_Percentages.yaml",
+                "multiqc/multiqc_data/fastqc_per_sequence_quality_scores_plot.yaml",
+                "multiqc/multiqc_data/fastqc_sequence_counts_plot.yaml",
+                "multiqc/multiqc_data/fastqc_sequence_duplication_levels_plot.yaml",
                 "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/multiqc.log",
                 "multiqc/multiqc_data/multiqc.parquet",
@@ -594,6 +598,7 @@
                 "multiqc/multiqc_data/multiqc_busco.yaml",
                 "multiqc/multiqc_data/multiqc_citations.yaml",
                 "multiqc/multiqc_data/multiqc_data.json",
+                "multiqc/multiqc_data/multiqc_fastqc.yaml",
                 "multiqc/multiqc_data/multiqc_general_stats.yaml",
                 "multiqc/multiqc_data/multiqc_software_versions.yaml",
                 "multiqc/multiqc_data/multiqc_sources.yaml",
@@ -601,29 +606,65 @@
                 "multiqc/multiqc_plots/pdf/bowtie2_pe_plot-pct.pdf",
                 "multiqc/multiqc_plots/pdf/busco_plot_bacteria_odb10-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/busco_plot_bacteria_odb10-pct.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc-status-check-heatmap.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc_per_base_n_content_plot.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc_per_base_sequence_quality_plot.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc_per_sequence_gc_content_plot_Counts.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc_per_sequence_gc_content_plot_Percentages.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc_per_sequence_quality_scores_plot.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc_sequence_counts_plot-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc_sequence_counts_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc_sequence_duplication_levels_plot.pdf",
                 "multiqc/multiqc_plots/png/bowtie2_pe_plot-cnt.png",
                 "multiqc/multiqc_plots/png/bowtie2_pe_plot-pct.png",
                 "multiqc/multiqc_plots/png/busco_plot_bacteria_odb10-cnt.png",
                 "multiqc/multiqc_plots/png/busco_plot_bacteria_odb10-pct.png",
+                "multiqc/multiqc_plots/png/fastqc-status-check-heatmap.png",
+                "multiqc/multiqc_plots/png/fastqc_per_base_n_content_plot.png",
+                "multiqc/multiqc_plots/png/fastqc_per_base_sequence_quality_plot.png",
+                "multiqc/multiqc_plots/png/fastqc_per_sequence_gc_content_plot_Counts.png",
+                "multiqc/multiqc_plots/png/fastqc_per_sequence_gc_content_plot_Percentages.png",
+                "multiqc/multiqc_plots/png/fastqc_per_sequence_quality_scores_plot.png",
+                "multiqc/multiqc_plots/png/fastqc_sequence_counts_plot-cnt.png",
+                "multiqc/multiqc_plots/png/fastqc_sequence_counts_plot-pct.png",
+                "multiqc/multiqc_plots/png/fastqc_sequence_duplication_levels_plot.png",
                 "multiqc/multiqc_plots/svg/bowtie2_pe_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/bowtie2_pe_plot-pct.svg",
                 "multiqc/multiqc_plots/svg/busco_plot_bacteria_odb10-cnt.svg",
                 "multiqc/multiqc_plots/svg/busco_plot_bacteria_odb10-pct.svg",
+                "multiqc/multiqc_plots/svg/fastqc-status-check-heatmap.svg",
+                "multiqc/multiqc_plots/svg/fastqc_per_base_n_content_plot.svg",
+                "multiqc/multiqc_plots/svg/fastqc_per_base_sequence_quality_plot.svg",
+                "multiqc/multiqc_plots/svg/fastqc_per_sequence_gc_content_plot_Counts.svg",
+                "multiqc/multiqc_plots/svg/fastqc_per_sequence_gc_content_plot_Percentages.svg",
+                "multiqc/multiqc_plots/svg/fastqc_per_sequence_quality_scores_plot.svg",
+                "multiqc/multiqc_plots/svg/fastqc_sequence_counts_plot-cnt.svg",
+                "multiqc/multiqc_plots/svg/fastqc_sequence_counts_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/fastqc_sequence_duplication_levels_plot.svg",
                 "multiqc/multiqc_report.html"
             ],
             [
                 "bowtie2_pe_plot.yaml:md5,d47c21d3c14102edf43e36521aa3fcf6",
                 "busco_plot_bacteria_odb10.yaml:md5,7f5685578d237300ffde11c05693f754",
+                "fastqc-status-check-heatmap.yaml:md5,45096eff6b0531cbe7ba0771e272d65d",
+                "fastqc_per_base_n_content_plot.yaml:md5,ea488ff73d10d4a84b551020409db087",
+                "fastqc_per_base_sequence_quality_plot.yaml:md5,73a043ea7f124e6474ac11270533de03",
+                "fastqc_per_sequence_gc_content_plot_Counts.yaml:md5,c900477e0cd3a369f269bc65857377ed",
+                "fastqc_per_sequence_gc_content_plot_Percentages.yaml:md5,84477f6801dcadfe0d759c2c50799b6e",
+                "fastqc_per_sequence_quality_scores_plot.yaml:md5,c04ad6e6a6d61f2bbc238c61e1883317",
+                "fastqc_sequence_counts_plot.yaml:md5,d9fd3b9d7b190aba26702cf73a50bd20",
+                "fastqc_sequence_duplication_levels_plot.yaml:md5,73719c3f3fa610204a42cd7155d73db1",
                 "multiqc_bowtie2_bowtie2-2.yaml:md5,34efd9a91ede5c3d7150b8de2f4c20f0",
                 "multiqc_busco.yaml:md5,bd57c1b4856b5536bf89d54b2d8cd807",
                 "multiqc_citations.yaml:md5,4aaa7714bb3dba1dd50f383c2ae4f4bb",
-                "multiqc_general_stats.yaml:md5,72e40481d31afb109adb0908b18d8758"
+                "multiqc_fastqc.yaml:md5,f50da8bfd062b9399911ba19b34831db",
+                "multiqc_general_stats.yaml:md5,74cbceac2d727ad5a62cfa1865765cb1"
             ]
         ],
+        "timestamp": "2026-04-09T08:14:07.456816727",
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.10.0"
-        },
-        "timestamp": "2025-11-03T13:09:26.024757138"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     }
 }

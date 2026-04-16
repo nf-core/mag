@@ -1877,7 +1877,7 @@
     },
     "-profile test_single_end": {
         "content": [
-            158,
+            159,
             {
                 "ADAPTERREMOVAL_SE": {
                     "adapterremoval": "2.3.2"
@@ -1931,10 +1931,10 @@
                     "untar": 1.34
                 },
                 "CHECKM_LINEAGEWF": {
-                    "checkm": "1.2.3"
+                    "checkm": "1.2.5"
                 },
                 "CHECKM_QA": {
-                    "checkm": "1.2.3"
+                    "checkm": "1.2.5"
                 },
                 "CHECKM_UNTAR": {
                     "untar": 1.34
@@ -2043,20 +2043,24 @@
                     "seqkit": "2.9.0"
                 },
                 "SPLIT_FASTA": {
-                    "biopython": "1.7.4",
+                    "biopython": "1.74",
                     "pandas": "1.1.5",
                     "python": "3.6.7"
                 },
+                "SUMMARISE_PYDAMAGEBINS": {
+                    "pandas": "1.4.3",
+                    "python": "3.10.6"
+                },
                 "Workflow": {
-                    "nf-core/mag": "v5.4.0dev"
+                    "nf-core/mag": "v5.5.0dev"
                 }
             }
         ],
+        "timestamp": "2026-04-09T09:23:32.984986358",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2025-12-13T01:43:57.701847676"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "multiqc": {
         "content": [
@@ -2251,51 +2255,10 @@
                 "quast_table.yaml:md5,55ee8b4825b107d592cfeb16928f3487"
             ]
         ],
+        "timestamp": "2026-04-09T09:23:33.023311074",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.0"
-        },
-        "timestamp": "2025-11-20T08:08:25.158079231"
-    },
-    "ancient": {
-        "content": [
-            [
-                "Ancient_DNA/pydamage/analyze/MEGAHIT-test_minigut/MEGAHIT-test_minigut_pydamage_results.csv",
-                "Ancient_DNA/pydamage/analyze/MEGAHIT-test_minigut_sample2/MEGAHIT-test_minigut_sample2_pydamage_results.csv",
-                "Ancient_DNA/pydamage/filter/MEGAHIT-test_minigut/MEGAHIT-test_minigut_pydamage_filtered_results.csv",
-                "Ancient_DNA/pydamage/filter/MEGAHIT-test_minigut_sample2/MEGAHIT-test_minigut_sample2_pydamage_filtered_results.csv",
-                "Ancient_DNA/variant_calling/consensus/MEGAHIT-test_minigut.fa",
-                "Ancient_DNA/variant_calling/consensus/MEGAHIT-test_minigut_sample2.fa",
-                "Ancient_DNA/variant_calling/filtered/MEGAHIT-test_minigut.filtered.vcf.gz",
-                "Ancient_DNA/variant_calling/filtered/MEGAHIT-test_minigut_sample2.filtered.vcf.gz",
-                "Ancient_DNA/variant_calling/freebayes/MEGAHIT-test_minigut.vcf.gz",
-                "Ancient_DNA/variant_calling/freebayes/MEGAHIT-test_minigut_sample2.vcf.gz"
-            ],
-            [
-                "MEGAHIT-test_minigut_pydamage_filtered_results.csv:md5,6414a400229f9cc5e31368703020b039",
-                "MEGAHIT-test_minigut_sample2_pydamage_filtered_results.csv:md5,6414a400229f9cc5e31368703020b039",
-                "MEGAHIT-test_minigut.fa:md5,34fe41ac66dfc601afcfa067f86f2e75",
-                "MEGAHIT-test_minigut_sample2.fa:md5,f76f599c3048c8794ade2a8f3bfdb205"
-            ]
-        ],
-        "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.0"
-        },
-        "timestamp": "2025-11-20T09:32:54.923289645"
-    },
-    "summary-rows": {
-        "content": [
-            27,
-            26,
-            27,
-            27,
-            26
-        ],
-        "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.0"
-        },
-        "timestamp": "2025-11-20T09:32:55.357874836"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     }
 }
