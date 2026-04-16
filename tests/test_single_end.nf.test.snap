@@ -1948,7 +1948,7 @@
             "ancient DNA VCF files have variants: true",
             "geNomad classification results non-empty: true"
         ],
-        "timestamp": "2026-04-16T17:37:10.932707808",
+        "timestamp": "2026-04-16T18:00:45.134237447",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -2436,11 +2436,13 @@
                 "MEGAHIT-test_minigut_sample2_pydamage_filtered_results.csv:md5,6414a400229f9cc5e31368703020b039",
                 "MEGAHIT-test_minigut.fa:md5,34fe41ac66dfc601afcfa067f86f2e75",
                 "MEGAHIT-test_minigut_sample2.fa:md5,f76f599c3048c8794ade2a8f3bfdb205",
+                "MEGAHIT-test_minigut.filtered.vcf.gz:md5,58bbe94c6744ae56506b366af0952ac0",
+                "MEGAHIT-test_minigut_sample2.filtered.vcf.gz:md5,6e09ef7d9ebbb3e2b3836cf6717d298e",
                 "MEGAHIT-test_minigut.vcf.gz:md5,e215cf420912ca86a5246a3c831c49cb",
                 "MEGAHIT-test_minigut_sample2.vcf.gz:md5,4b7b7ce1968ccd6409ef1f3e9cacee1a"
             ]
         ],
-        "timestamp": "2026-04-16T17:24:23.503268341",
+        "timestamp": "2026-04-16T18:00:44.574171046",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
