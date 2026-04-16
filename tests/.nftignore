@@ -1,6 +1,6 @@
 .DS_Store
 Ancient_DNA/pydamage/analyze/*/*.csv
-Ancient_DNA/variant_calling/*/*.vcf.gz  # VCF files include date/datetime in header
+Ancient_DNA/variant_calling/*/*.vcf.gz
 Annotation/Prokka/**/*.{log,err}
 Annotation/Prokka/**/*.tmp.*
 Assembly/MEGAHIT/*.log
