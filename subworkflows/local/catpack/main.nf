@@ -86,6 +86,7 @@ workflow CATPACK {
             name: 'bat_summary.tsv',
             storeDir: "${params.outdir}/Taxonomy/CAT/",
             keepHeader: true,
+            sort: 'deep',
         )
 
     if (!params.cat_allow_unofficial_lineages) {

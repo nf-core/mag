@@ -19,6 +19,9 @@
                 "CONCAT_BUSCO_TSV": {
                     "qsv": "5.1.0"
                 },
+                "CONCAT_QUAST_SUMMARY": {
+                    "qsv": "5.1.0"
+                },
                 "CONVERT_DEPTHS": {
                     "bioawk": 20110810
                 },
@@ -92,9 +95,6 @@
                 "QUAST_BINS": {
                     "metaquast": "5.0.2",
                     "python": "3.7.6"
-                },
-                "QUAST_BINS_SUMMARY": {
-                    "cp": 9.5
                 },
                 "SAMTOOLS_HOSTREMOVED_INDEX": {
                     "samtools": "1.22.1"

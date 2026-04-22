@@ -35,6 +35,7 @@ include { PRODIGAL                        } from '../modules/nf-core/prodigal/ma
 include { PROKKA                          } from '../modules/nf-core/prokka/main'
 include { MMSEQS_DATABASES                } from '../modules/nf-core/mmseqs/databases/main'
 include { METAEUK_EASYPREDICT             } from '../modules/nf-core/metaeuk/easypredict/main'
+include { QSV_CAT as CONCAT_QUAST_SUMMARY } from '../modules/nf-core/qsv/cat/main'
 include { ALE                             } from '../modules/nf-core/ale/main'
 
 //
@@ -42,7 +43,6 @@ include { ALE                             } from '../modules/nf-core/ale/main'
 //
 include { QUAST                           } from '../modules/local/quast_run/main'
 include { QUAST_BINS                      } from '../modules/local/quast_bins/main'
-include { QUAST_BINS_SUMMARY              } from '../modules/local/quast_bins_summary/main'
 include { BIN_SUMMARY                     } from '../modules/local/bin_summary/main'
 include { PREPARE_BIGMAG_SUMMARY          } from '../modules/local/bigmag_summary/main'
 
@@ -437,19 +437,19 @@ workflow MAG {
             ch_input_for_quast_bins = ch_input_for_postbinning
                 .groupTuple()
                 .map { meta, bins ->
-                    def new_bins = bins.flatten()
-                    [meta, new_bins]
+                    [meta, bins.flatten().sort { a, b -> a.getBaseName() <=> b.getBaseName() }]
                 }
 
             QUAST_BINS(ch_input_for_quast_bins)
             ch_versions = ch_versions.mix(QUAST_BINS.out.versions)
-            ch_quast_bin_summary = QUAST_BINS.out.quast_bin_summaries.collectFile(keepHeader: true) { meta, summary ->
-                ["${meta.id}.tsv", summary]
-            }
-            QUAST_BINS_SUMMARY(ch_quast_bin_summary.collect())
-            ch_versions = ch_versions.mix(QUAST_BINS_SUMMARY.out.versions)
 
-            ch_quast_bins_summary = QUAST_BINS_SUMMARY.out.summary
+            ch_quast_bin_summaries = QUAST_BINS.out.quast_bin_summaries
+                .collect { _meta, summary -> summary }
+                .map { summaries -> [[id: 'quast_bin_summary'], summaries.sort { a, b -> a.getBaseName() <=> b.getBaseName() }] }
+
+            CONCAT_QUAST_SUMMARY(ch_quast_bin_summaries, 'rowskey', 'tsv', true)
+
+            ch_quast_bins_summary = CONCAT_QUAST_SUMMARY.out.csv.map { _meta, summary -> summary }
         }
 
         /*
