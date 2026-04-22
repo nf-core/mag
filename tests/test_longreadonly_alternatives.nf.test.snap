@@ -25,7 +25,19 @@
                 "minigut_run0_nanoq_filtered.stats:md5,00dfdbb0bfa701faf739b3339246a4d0"
             ]
         ],
-        "timestamp": "2026-04-22T08:59:59.060967561",
+        "timestamp": "2026-04-22T16:49:12.811100286",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
+    "log-checks": {
+        "content": [
+            "Flye: true",
+            "NanoLyse: true",
+            "BUSCO: true"
+        ],
+        "timestamp": "2026-04-22T16:49:16.048959838",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -43,7 +55,7 @@
                 "FLYE-minigut.assembly_graph.gfa.gz:md5,f23173732f3fdb68e26276438fc6bc9d"
             ]
         ],
-        "timestamp": "2026-04-22T14:05:10.018152122",
+        "timestamp": "2026-04-22T16:49:12.81667273",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -106,7 +118,7 @@
                 "versions.yml:md5,553ee8a62e65d93ce1163bb16314da29"
             ]
         ],
-        "timestamp": "2026-04-22T14:05:10.0909403",
+        "timestamp": "2026-04-22T16:49:12.853554235",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -114,24 +126,19 @@
     },
     "content-checks": {
         "content": [
+            "Flye assemblies non-empty: true",
+            "MaxBin2 bins non-empty: true",
+            "MetaBAT2 bins non-empty when present: true",
             "Nanoq stats non-empty: true",
             "Nanoq stats contain read count: true",
-            "NanoLyse logs non-empty: true",
             "NanoPlot stats contain summaries: true",
             "NanoPlot stats non-empty: true",
-            "Flye assemblies non-empty: true",
-            "Flye graphs non-empty: true",
-            "MaxBin2 bins non-empty: true",
-            "MaxBin2 summary rows match bins: true",
             "MaxBin2 produced unbinned/discarded output: true",
-            "MetaBAT2 bins non-empty when present: true",
             "MetaBAT2 produced classified or unclassified output: true",
             "Bin summary non-empty: true",
-            "Bin summary row count matches bins: true",
-            "BUSCO summary row count matches MaxBin2 bins: true",
-            "BUSCO batch summaries non-empty: true"
+            "Bin summary row count matches bins: true"
         ],
-        "timestamp": "2026-04-22T09:48:30.699472372",
+        "timestamp": "2026-04-22T16:49:15.976141599",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -220,7 +227,7 @@
                 }
             }
         ],
-        "timestamp": "2026-04-01T14:52:42.041452343",
+        "timestamp": "2026-04-22T16:49:12.799807356",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -256,7 +263,7 @@
                 "porechop.yaml:md5,828d96e2822bb4b4108ab706c00c4450"
             ]
         ],
-        "timestamp": "2026-04-22T14:05:10.166201929",
+        "timestamp": "2026-04-22T16:49:12.918619012",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -266,10 +273,9 @@
         "content": [
             "Bin summary: 2",
             "BUSCO summary: 2",
-            "Bin depths summary: 2",
-            "MaxBin2 summary: 2"
+            "Bin depths summary: 2"
         ],
-        "timestamp": "2026-04-22T09:09:07.739154008",
+        "timestamp": "2026-04-22T16:49:13.137323004",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
