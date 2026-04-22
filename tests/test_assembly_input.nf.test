@@ -87,7 +87,7 @@ nextflow_pipeline {
             assertAll(
                 { assert snapshot(
                     workflow.trace.succeeded().size(),
-                    removeNextflowVersion("${outputDir}/pipeline_info/nf_core_mag_software_mqc_versions.yml"),
+                    removeNextflowVersion("${params.outdir}/pipeline_info/nf_core_mag_software_mqc_versions.yml"),
                 ).match() },
                 { assert snapshot(stable_name_assembly                          ).match('assembly') },
                 { assert snapshot(stable_name_annotation, stable_path_annotation).match('annotation') },
