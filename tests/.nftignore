@@ -18,6 +18,10 @@ GenomeBinning/MetaBAT2/unbinned/discarded/*.unbinned.pooled.fa.gz
 GenomeBinning/QC/busco_summary.tsv
 GenomeBinning/QC/BUSCO/**/.checkpoint
 GenomeBinning/QC/BUSCO/**/{logs,prodigal_output,busco_sequences}/**
+GenomeBinning/QC/BUSCO/**/logs/**
+GenomeBinning/QC/BUSCO/**/prodigal_output/**
+GenomeBinning/QC/BUSCO/**/busco_sequences/**
+GenomeBinning/QC/BUSCO/**/hmmer_output/**
 GenomeBinning/QC/BUSCO/**/*.json
 GenomeBinning/QC/BUSCO/**/*.log
 GenomeBinning/QC/BUSCO/**/*.txt
@@ -42,6 +46,9 @@ multiqc/multiqc_data/multiqc.parquet
 multiqc/multiqc_plots/{svg,pdf,png}/*.{svg,pdf,png}
 multiqc/multiqc_report.html
 pipeline_info/*.{html,json,txt,yml}
+Assembly/FLYE/*.log
+QC_longreads/NanoLyse/*.log
+QC_longreads/NanoPlot/**/*.{html,png}
 QC_shortreads/fastqc/*_fastqc.{html,zip}
 QC_shortreads/remove_phix/*.log
 Taxonomy/CAT/**/*.log
