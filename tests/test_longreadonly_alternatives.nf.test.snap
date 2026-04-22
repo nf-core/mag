@@ -39,11 +39,11 @@
                 "Assembly/FLYE/FLYE-minigut.flye.log"
             ],
             [
-                "FLYE-minigut.assembly.fasta.gz:md5,a553b780e83d7dd4c4c5d4a3d47cf3b2",
-                "FLYE-minigut.assembly_graph.gfa.gz:md5,4df0471bcd7172ee2771d7217e3540da"
+                "FLYE-minigut.assembly.fasta.gz:md5,f4fcf5e1c94901ef1fac2b335f4729f1",
+                "FLYE-minigut.assembly_graph.gfa.gz:md5,f23173732f3fdb68e26276438fc6bc9d"
             ]
         ],
-        "timestamp": "2026-04-22T13:50:47.427131307",
+        "timestamp": "2026-04-22T14:05:10.018152122",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -87,26 +87,26 @@
                 "GenomeBinning/depths/contigs/FLYE-minigut-depth.txt.gz"
             ],
             [
-                "FLYE-MaxBin2-minigut.summary:md5,369cbe6956cbec31da5386bbd557d3f8",
-                "FLYE-MaxBin2-minigut.001.fa.gz:md5,8ee3e0beda64a6aa4c56b48926d8e776",
-                "FLYE-MaxBin2-minigut.002.fa.gz:md5,a3da8e2a805083a8462b05df4f0233c3",
+                "FLYE-MaxBin2-minigut.summary:md5,539ef40150966e52802c5bb7eca397a7",
+                "FLYE-MaxBin2-minigut.001.fa.gz:md5,53a792c971b74f32a91ad3511f2071b4",
+                "FLYE-MaxBin2-minigut.002.fa.gz:md5,9a8f989c9f00eead95927520ec51b34f",
                 "FLYE-MaxBin2-minigut.tooshort.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "FLYE-MaxBin2-minigut.noclass.pooled.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "FLYE-MaxBin2-minigut.noclass.remaining.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "FLYE-MetaBAT2-minigut.lowDepth.fa.gz:md5,a553b780e83d7dd4c4c5d4a3d47cf3b2",
+                "FLYE-MetaBAT2-minigut.lowDepth.fa.gz:md5,f4fcf5e1c94901ef1fac2b335f4729f1",
                 "FLYE-MetaBAT2-minigut.tooShort.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "FLYE-MetaBAT2-minigut.unbinned.remaining.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "full_table.tsv:md5,a34b3df61d7a8d52064b3958f2c3229e",
-                "missing_busco_list.tsv:md5,3a624a3b59504815e56504a94b175e93",
-                "full_table.tsv:md5,e01cf869f736f547e7c23a536261a490",
+                "full_table.tsv:md5,5f6215b5c7781a97fb714431bc102d5b",
+                "missing_busco_list.tsv:md5,2bd36668a9230051a19fc245ed517c54",
+                "full_table.tsv:md5,69fcd108a0570558310d5655a1a605df",
                 "missing_busco_list.tsv:md5,f32ca1d7d341a4f405d1be2f9b4eda58",
-                "bin_summary.tsv:md5,7977338b2f69d1fd9d0b151cfba36a29",
+                "bin_summary.tsv:md5,dc0c07942220b9768abfd4ab5cc0007d",
                 "contig_to_bin_map.tsv:md5,6a781efcbb14d97f5c049c69c935c0da",
                 "bin_depths_summary.tsv:md5,985f843d43973cbfe5b49f0ad0628193",
                 "versions.yml:md5,553ee8a62e65d93ce1163bb16314da29"
             ]
         ],
-        "timestamp": "2026-04-22T13:50:47.599568557",
+        "timestamp": "2026-04-22T14:05:10.0909403",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -249,17 +249,17 @@
                 "multiqc/multiqc_report.html"
             ],
             [
-                "busco_plot_bacteria_odb10.yaml:md5,61ea14a5ac60fa3b48ee832af75effff",
-                "multiqc_busco.yaml:md5,0a1896fc18fdea30852125167730c8c5",
+                "busco_plot_bacteria_odb10.yaml:md5,b9602874259ba8bcb3903136ba26c34e",
+                "multiqc_busco.yaml:md5,7f414ae44f5277a881c7ae86bac13ab6",
                 "multiqc_citations.yaml:md5,cd0615b89829a041bc2a33cdb69b585b",
-                "multiqc_general_stats.yaml:md5,fbf8803248aa40052113485a7bfbb8d0",
+                "multiqc_general_stats.yaml:md5,29514b760bf201d07e47885543807eb8",
                 "porechop.yaml:md5,828d96e2822bb4b4108ab706c00c4450"
             ]
         ],
-        "timestamp": "2025-11-27T13:31:05.010588102",
+        "timestamp": "2026-04-22T14:05:10.166201929",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.0"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
         }
     },
     "summary-rows": {
