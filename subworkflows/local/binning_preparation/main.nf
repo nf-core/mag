@@ -20,11 +20,15 @@ workflow BINNING_PREPARATION {
     ch_grouped_mappings = SHORTREAD_BINNING_PREPARATION.out.grouped_mappings.mix(
         LONGREAD_BINNING_PREPARATION.out.grouped_mappings
     )
+    ch_contig_depths = SHORTREAD_BINNING_PREPARATION.out.contig_depths.mix(
+        LONGREAD_BINNING_PREPARATION.out.contig_depths
+    )
 
     ch_multiqc_files = ch_multiqc_files.mix(SHORTREAD_BINNING_PREPARATION.out.bowtie2_assembly_multiqc)
 
     emit:
     grouped_mappings = ch_grouped_mappings
+    contig_depths    = ch_contig_depths
     versions         = ch_versions
     multiqc_files    = ch_multiqc_files
 }

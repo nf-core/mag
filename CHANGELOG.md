@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
+- [#997](https://github.com/nf-core/mag/pull/997) - Add CoverM as the default contig depth/coverage calculator, replacing `jgi_summarize_bam_contig_depths` from MetaBAT2. New parameters added: `--depth_calculator` (default: `coverm`), `--coverm_mapper` (default: `bowtie2`), and `--coverm_methods` (default: `metabat`) (by @vinisalazar)
 - [#908](https://github.com/nf-core/mag/pull/908) - Add nf-test snapshot for `test_single_end` profile (by @dialvarezs)
 
 ### `Changed`
@@ -25,6 +26,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1021](https://github.com/nf-core/mag/pull/1021) - Prevent execution of `gtdbtk/summary` when no bins pass QC (reported by @jfy133, fix by @dialvarezs)
 
 ### `Dependencies`
+
+| Tool   | Previous version | New version |
+| ------ | ---------------- | ----------- |
+| CoverM |                  | 0.7.0       |
 
 ### `Deprecated`
 

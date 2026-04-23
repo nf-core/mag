@@ -1,0 +1,48 @@
+nextflow_pipeline {
+
+    name "Test pipeline with test_coverm_shortread profile"
+    script "../main.nf"
+    tag "pipeline"
+    tag "test_coverm_shortread"
+    profile "test_coverm_shortread"
+
+    test("-profile test_coverm_shortread") {
+
+        when {
+            params {
+                outdir = "${outputDir}"
+            }
+        }
+
+        then {
+            def coverm_depths = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/depths/contigs/*.depth.tsv']
+            )
+            def coverm_bams = getAllFilesFromDir(
+                params.outdir, include: ['Assembly/**/QC/**/*.bam']
+            )
+            def coverm_bais = getAllFilesFromDir(
+                params.outdir, include: ['Assembly/**/QC/**/*.bam.bai']
+            )
+            def metabat2_bins = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/MetaBAT2/bins/*.fa.gz']
+            )
+            def maxbin2_bins = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/MaxBin2/bins/*.fa.gz']
+            )
+
+            assert workflow.success
+            assertAll(
+                { assert snapshot(
+                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we test pipelines on multiple Nextflow versions
+                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_mag_software_mqc_versions.yml"),
+                ).match() },
+                { assert coverm_depths.size() > 0 },
+                { assert coverm_bams.size() > 0 },
+                { assert coverm_bais.size() > 0 },
+                { assert metabat2_bins.size() > 0 },
+                { assert maxbin2_bins.size() > 0 },
+            )
+        }
+    }
+}

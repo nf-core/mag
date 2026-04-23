@@ -1,5 +1,5 @@
-include { MINIMAP2_INDEX as MINIMAP2_ASSEMBLY_INDEX } from '../../../modules/nf-core/minimap2/index/main'
-include { MINIMAP2_ALIGN as MINIMAP2_ASSEMBLY_ALIGN } from '../../../modules/nf-core/minimap2/align/main'
+include { COVERM_CONTIG as COVERM_CONTIG_LONGREAD } from '../../../modules/nf-core/coverm/contig/main'
+include { SAMTOOLS_INDEX as SAMTOOLS_COVERM_LONGREAD_INDEX } from '../../../modules/nf-core/samtools/index/main'
 
 workflow LONGREAD_BINNING_PREPARATION {
     take:
@@ -8,42 +8,52 @@ workflow LONGREAD_BINNING_PREPARATION {
 
     main:
     ch_versions = channel.empty()
-
-    MINIMAP2_ASSEMBLY_INDEX(ch_assemblies)
+    ch_contig_depths = channel.empty()
 
     if (params.binning_map_mode == 'all') {
-        ch_minimap2_input = MINIMAP2_ASSEMBLY_INDEX.out.index
+        ch_coverm_reads = ch_assemblies
             .combine(ch_reads)
-            .map { meta_idx, idx, meta_reads, reads -> [meta_idx, idx, meta_reads, reads] }
+            .map { assembly_meta, assembly, _reads_meta, reads -> [assembly_meta, assembly, reads] }
     }
     else if (params.binning_map_mode == 'group') {
-        ch_reads_minimap2 = ch_reads.map { meta, reads -> [meta.group, meta, reads] }
-        ch_minimap2_input = MINIMAP2_ASSEMBLY_INDEX.out.index
-            .map { meta_idx, index -> [meta_idx.group, meta_idx, index] }
-            .combine(ch_reads_minimap2, by: 0)
-            .map { _group, meta_idx, idx, meta_reads, reads -> [meta_idx, idx, meta_reads, reads] }
+        ch_reads_grouped = ch_reads.map { meta, reads -> [meta.group, reads] }
+        ch_coverm_reads  = ch_assemblies
+            .map { meta, assembly -> [meta.group, meta, assembly] }
+            .combine(ch_reads_grouped, by: 0)
+            .map { _group, assembly_meta, assembly, reads -> [assembly_meta, assembly, reads] }
     }
     else {
-        ch_reads_minimap2 = ch_reads.map { meta, reads -> [meta.id, meta, reads] }
-        ch_minimap2_input = MINIMAP2_ASSEMBLY_INDEX.out.index
-            .map { meta_idx, index -> [meta_idx.id, meta_idx, index] }
-            .combine(ch_reads_minimap2, by: 0)
-            .map { _id, meta_idx, idx, meta_reads, reads -> [meta_idx, idx, meta_reads, reads] }
+        ch_reads_grouped = ch_reads.map { meta, reads -> [meta.id, reads] }
+        ch_coverm_reads  = ch_assemblies
+            .map { meta, assembly -> [meta.id, meta, assembly] }
+            .combine(ch_reads_grouped, by: 0)
+            .map { _id, assembly_meta, assembly, reads -> [assembly_meta, assembly, reads] }
     }
 
-    ch_minimap2_input_reads = ch_minimap2_input.map { meta_idx, _index, _meta, reads -> [meta_idx, reads] }
-    ch_minimap2_input_idx = ch_minimap2_input.map { _meta_idx, index, meta, _reads -> [meta, index] }
+    ch_coverm_input = ch_coverm_reads
+        .groupTuple(by: 0)
+        .map { meta, assembly, reads_list ->
+            [meta, assembly.sort()[0], reads_list.flatten()]
+        }
 
-    MINIMAP2_ASSEMBLY_ALIGN(ch_minimap2_input_reads, ch_minimap2_input_idx, true, 'bai', false, false)
+    ch_coverm_input_multi = ch_coverm_input.multiMap { meta, assembly, reads ->
+        reads:     [meta + [single_end: true], reads]
+        reference: [meta + [single_end: true], assembly]
+    }
+    COVERM_CONTIG_LONGREAD(ch_coverm_input_multi.reads, ch_coverm_input_multi.reference, false, false, true)
+    ch_contig_depths = COVERM_CONTIG_LONGREAD.out.coverage.map { meta, depth -> [meta - meta.subMap('single_end'), depth] }
+    ch_coverm_bam = COVERM_CONTIG_LONGREAD.out.bam.map { meta, bams -> [meta - meta.subMap('single_end'), bams] }
 
-    ch_grouped_mappings_reads = MINIMAP2_ASSEMBLY_ALIGN.out.bam.groupTuple(by: 0)
-    ch_grouped_mappings_index = MINIMAP2_ASSEMBLY_ALIGN.out.index.groupTuple(by: 0)
-    ch_grouped_mappings = ch_grouped_mappings_reads
-        .combine(ch_grouped_mappings_index, by: 0)
-        .combine(ch_assemblies, by: 0)
+    SAMTOOLS_COVERM_LONGREAD_INDEX(ch_coverm_bam.transpose())
+    ch_versions = ch_versions.mix(SAMTOOLS_COVERM_LONGREAD_INDEX.out.versions)
+
+    ch_grouped_mappings = ch_coverm_bam
+        .combine(SAMTOOLS_COVERM_LONGREAD_INDEX.out.bai.groupTuple(by: 0), by: 0)
+        .combine(ch_coverm_input.map { meta, assembly, _reads -> [meta, assembly] }, by: 0)
         .map { meta, bams, bais, assembly -> [meta, assembly, bams, bais] }
 
     emit:
     versions         = ch_versions
     grouped_mappings = ch_grouped_mappings
+    contig_depths    = ch_contig_depths
 }

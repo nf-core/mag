@@ -437,12 +437,24 @@ This may result in a different set or none of contigs being evaluated in pyDamag
 
 In order to run the binning tools included in the pipeline, MAG must first align reads back to the assemblies, and estimate the coverage of each contig.
 
-During the coverage estimation step, these alignments are by default filtered to retain alignments that have a percentage identity of 97% (i.e., of the base pairs that match between the read and the contig, 97% are identical). This value is a good default for short read Illumina data, however for certain long read technologies, the error rates in the reads can be much higher.
-For example, older Oxford Nanopore chemistries can have error rates approaching
-15% - 20%.
+The pipeline uses [CoverM](https://github.com/wwood/CoverM) for coverage estimation. CoverM outputs a MetaBAT2-compatible depth file (using `--methods metabat`) which is compatible with all downstream binning tools.
+
+### Mapper selection
+
+The `--shortread_coverage_mapper` parameter controls which aligner is used for mapping short reads back to assembled contigs:
+
+- `bowtie2` (default): Runs Bowtie2 manually to produce BAM files, which are then passed to CoverM.
+- CoverM-native short-read mappers (`bwa-mem`, `bwa-mem2`, `minimap2-sr`, `strobealign`): CoverM handles both mapping and coverage calculation directly from reads and exports cached BAM files for downstream binners.
+
+Long-read coverage mapping is handled by CoverM automatically from the samplesheet `long_reads_platform` metadata, using `minimap2-ont` for Oxford Nanopore reads, `minimap2-pb` for PacBio CLR reads, and `minimap2-hifi` for PacBio HiFi reads.
+
+### Alignment identity filtering
+
+During the coverage estimation step, alignments are by default filtered to retain alignments that have a percentage identity of 97% (i.e., of the base pairs that match between the read and the contig, 97% are identical). This value is a good default for short read Illumina data, however for certain long read technologies, the error rates in the reads can be much higher.
+For example, older Oxford Nanopore chemistries can have error rates approaching 15% - 20%.
 
 If you are having trouble with the coverage estimation steps (for example, the output depths for each bin are all at or near zero), it may be worth manually adjusting this parameter, if it is appropriate for your data.
-You can do this by adjusting the `--longread_percentidentity` and `--shortread_percentidentity` parameters for long reads and short reads, respectively.
+You can do this by adjusting the `--longread_percentidentity` and `--shortread_percentidentity` parameters for long reads and short reads, respectively. These set CoverM's `--min-read-percent-identity` flag.
 For older ONT data, you may wish to look at values of around 85% to improve coverage estimation.
 
 ## A note on bin refinement

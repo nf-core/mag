@@ -5,7 +5,7 @@
                 803
             ]
         ],
-        "timestamp": "2026-04-09T09:26:17.051486942",
+        "timestamp": "2026-04-15T04:54:44.189089926",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -51,6 +51,9 @@
                 "CONCAT_TIARA_TSV": {
                     "qsv": "5.1.0"
                 },
+                "COVERM_CONTIG_SHORTREAD": {
+                    "coverm": "0.7.0"
+                },
                 "DASTOOL_FASTATOCONTIG2BIN_TIARA": {
                     "dastool": "1.1.7"
                 },
@@ -76,9 +79,6 @@
                 },
                 "MEGAHIT": {
                     "megahit": "1.2.9"
-                },
-                "METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_SHORTREAD": {
-                    "metabat2": 2.15
                 },
                 "METABAT2_METABAT2": {
                     "metabat2": 2.17
@@ -109,7 +109,7 @@
                 }
             }
         ],
-        "timestamp": "2026-04-09T09:26:16.022799747",
+        "timestamp": "2026-04-15T04:54:43.32436478",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -136,10 +136,10 @@
                 "test_minigut_sample2_run0_trimmomatic_trim.log:md5,ea9f15adce3091c96ef7ba6285957676"
             ]
         ],
-        "timestamp": "2025-11-06T10:43:54.445183941",
+        "timestamp": "2026-04-15T04:54:43.333996067",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.0"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
         }
     },
     "assembly": {
@@ -154,10 +154,10 @@
                 "MEGAHIT-group-0.contigs.fa.gz:md5,4b1c9360be95e596b87194b12a5db645"
             ]
         ],
-        "timestamp": "2025-11-06T10:43:54.492525519",
+        "timestamp": "2026-04-15T04:54:43.360858566",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.0"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
         }
     },
     "binning": {
@@ -167,61 +167,19 @@
                 "GenomeBinning/MetaBAT2/bins/MEGAHIT-MetaBAT2-group-0.2.fa.gz",
                 "GenomeBinning/MetaBAT2/discarded/MEGAHIT-MetaBAT2-group-0.lowDepth.fa.gz",
                 "GenomeBinning/MetaBAT2/discarded/MEGAHIT-MetaBAT2-group-0.tooShort.fa.gz",
-                "GenomeBinning/MetaBAT2/unbinned/discarded/MEGAHIT-MetaBAT2-group-0.unbinned.pooled.fa.gz",
                 "GenomeBinning/MetaBAT2/unbinned/discarded/MEGAHIT-MetaBAT2-group-0.unbinned.remaining.fa.gz",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/group-0-auto-busco.batch_summary.txt",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/group-0-auto-busco.log",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/group-0-auto-busco/MEGAHIT-MetaBAT2-group-0.1.fa/logs/bbtools_err.log",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/group-0-auto-busco/MEGAHIT-MetaBAT2-group-0.1.fa/logs/bbtools_out.log",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/group-0-auto-busco/MEGAHIT-MetaBAT2-group-0.1.fa/logs/hmmsearch_err.log",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/group-0-auto-busco/MEGAHIT-MetaBAT2-group-0.1.fa/logs/hmmsearch_out.log",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/group-0-auto-busco/MEGAHIT-MetaBAT2-group-0.1.fa/logs/miniprot_align_eukaryota_odb12_err.log",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/group-0-auto-busco/MEGAHIT-MetaBAT2-group-0.1.fa/logs/miniprot_align_eukaryota_odb12_out.log",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/group-0-auto-busco/MEGAHIT-MetaBAT2-group-0.1.fa/logs/miniprot_index_err.log",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/group-0-auto-busco/MEGAHIT-MetaBAT2-group-0.1.fa/logs/miniprot_index_out.log",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/group-0-auto-busco/MEGAHIT-MetaBAT2-group-0.1.fa/logs/prodigal_err.log",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/group-0-auto-busco/MEGAHIT-MetaBAT2-group-0.1.fa/logs/prodigal_out.log",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/group-0-auto-busco/MEGAHIT-MetaBAT2-group-0.1.fa/logs/sepp_err.log",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/group-0-auto-busco/MEGAHIT-MetaBAT2-group-0.1.fa/logs/sepp_out.log",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/group-0-auto-busco/MEGAHIT-MetaBAT2-group-0.1.fa/prodigal_output/.checkpoint",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/group-0-auto-busco/MEGAHIT-MetaBAT2-group-0.1.fa/prodigal_output/predicted_genes/predicted.faa",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/group-0-auto-busco/MEGAHIT-MetaBAT2-group-0.1.fa/prodigal_output/predicted_genes/predicted.fna",
                 "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/group-0-auto-busco/MEGAHIT-MetaBAT2-group-0.1.fa/tmp/refseq_db.faa",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/group-0-auto-busco/MEGAHIT-MetaBAT2-group-0.2.fa/logs/bbtools_err.log",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/group-0-auto-busco/MEGAHIT-MetaBAT2-group-0.2.fa/logs/bbtools_out.log",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/group-0-auto-busco/MEGAHIT-MetaBAT2-group-0.2.fa/logs/hmmsearch_err.log",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/group-0-auto-busco/MEGAHIT-MetaBAT2-group-0.2.fa/logs/hmmsearch_out.log",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/group-0-auto-busco/MEGAHIT-MetaBAT2-group-0.2.fa/logs/miniprot_align_eukaryota_odb12_err.log",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/group-0-auto-busco/MEGAHIT-MetaBAT2-group-0.2.fa/logs/miniprot_align_eukaryota_odb12_out.log",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/group-0-auto-busco/MEGAHIT-MetaBAT2-group-0.2.fa/logs/miniprot_index_err.log",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/group-0-auto-busco/MEGAHIT-MetaBAT2-group-0.2.fa/logs/miniprot_index_out.log",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/group-0-auto-busco/MEGAHIT-MetaBAT2-group-0.2.fa/logs/prodigal_err.log",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/group-0-auto-busco/MEGAHIT-MetaBAT2-group-0.2.fa/logs/prodigal_out.log",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/group-0-auto-busco/MEGAHIT-MetaBAT2-group-0.2.fa/logs/sepp_err.log",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/group-0-auto-busco/MEGAHIT-MetaBAT2-group-0.2.fa/logs/sepp_out.log",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/group-0-auto-busco/MEGAHIT-MetaBAT2-group-0.2.fa/prodigal_output/.checkpoint",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/group-0-auto-busco/MEGAHIT-MetaBAT2-group-0.2.fa/prodigal_output/predicted_genes/predicted.faa",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/group-0-auto-busco/MEGAHIT-MetaBAT2-group-0.2.fa/prodigal_output/predicted_genes/predicted.fna",
                 "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/group-0-auto-busco/MEGAHIT-MetaBAT2-group-0.2.fa/tmp/refseq_db.faa",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/group-0-auto-busco/batch_summary.txt",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/short_summary.specific.bacteria_odb12.MEGAHIT-MetaBAT2-group-0.1.fa.json",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/short_summary.specific.bacteria_odb12.MEGAHIT-MetaBAT2-group-0.1.fa.txt",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/short_summary.specific.bacteria_odb12.MEGAHIT-MetaBAT2-group-0.2.fa.json",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/short_summary.specific.bacteria_odb12.MEGAHIT-MetaBAT2-group-0.2.fa.txt",
-                "GenomeBinning/QC/CheckM2/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/checkm2.log",
-                "GenomeBinning/QC/CheckM2/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/diamond_output/DIAMOND_RESULTS.tsv",
                 "GenomeBinning/QC/CheckM2/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/protein_files/MEGAHIT-MetaBAT2-group-0.1.faa",
                 "GenomeBinning/QC/CheckM2/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/protein_files/MEGAHIT-MetaBAT2-group-0.2.faa",
                 "GenomeBinning/QC/CheckM2/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/quality_report.tsv",
                 "GenomeBinning/QC/CheckM2/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0_checkm2_report.tsv",
-                "GenomeBinning/QC/busco_summary.tsv",
                 "GenomeBinning/QC/checkm2_summary.tsv",
                 "GenomeBinning/Tiara/tiara_summary.tsv",
                 "GenomeBinning/bin_summary.tsv",
                 "GenomeBinning/contig_to_bin/contig_to_bin_map.tsv",
                 "GenomeBinning/depths/bins/bin_depths_summary.tsv",
-                "GenomeBinning/depths/bins/versions.yml",
-                "GenomeBinning/depths/contigs/MEGAHIT-group-0-depth.txt.gz"
+                "GenomeBinning/depths/bins/versions.yml"
             ],
             [
                 "MEGAHIT-MetaBAT2-group-0.1.fa.gz:md5,03980cd3f96ecbd947bec62aee97d507",
@@ -237,13 +195,13 @@
                 "MEGAHIT-MetaBAT2-prokarya-unrefined-group-0_checkm2_report.tsv:md5,ec01903b7f8a7203856a35a7bd2d4c34",
                 "checkm2_summary.tsv:md5,ec01903b7f8a7203856a35a7bd2d4c34",
                 "tiara_summary.tsv:md5,4cbfb0fd90ba48dc33d75d10c1eddb17",
-                "bin_summary.tsv:md5,cf879345b96d29b5b8584795504b81cf",
+                "bin_summary.tsv:md5,5e0fa97c3a0e8187c1be94ee1a81fea4",
                 "contig_to_bin_map.tsv:md5,2bea485185ed808e9b5568438f603e2a",
-                "bin_depths_summary.tsv:md5,a73f2fc180a2c52038c88fbbfa6a95c3",
+                "bin_depths_summary.tsv:md5,4e27e15b960fbeab890c3fd3eab9adfb",
                 "versions.yml:md5,553ee8a62e65d93ce1163bb16314da29"
             ]
         ],
-        "timestamp": "2026-04-09T09:26:16.336537006",
+        "timestamp": "2026-04-15T04:54:43.398829817",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -401,7 +359,7 @@
                 "trimmomatic_plot.yaml:md5,9557cd587ace0a93912179cb0deafe3b"
             ]
         ],
-        "timestamp": "2026-04-09T09:26:16.702407899",
+        "timestamp": "2026-04-15T04:54:43.79998485",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

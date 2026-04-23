@@ -8,9 +8,7 @@ keywords:
   - metagenomics
   - mapping
 components:
-  - minimap2/index
-  - minimap2/align
-  - samtools/sort
+  - coverm/contig
   - samtools/index
 input:
   - ch_assemblies:
@@ -52,6 +50,16 @@ output:
             type: file
             description: BAM index files (array)
             pattern: "*.bai"
+  - contig_depths:
+      description: Per-contig coverage depth files from CoverM
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - tsv:
+            type: file
+            description: Per-contig coverage depth information (MetaBAT2-compatible format)
+            pattern: "*.depth.tsv"
   - versions:
       type: file
       description: File containing software versions

@@ -1,0 +1,75 @@
+{
+    "-profile test_coverm_shortread": {
+        "content": [
+            {
+                "ADJUST_MAXBIN2_EXT": {
+                    "coreutils": 9.5
+                },
+                "CAT_FASTQ": {
+                    "cat": 9.5
+                },
+                "CONVERT_DEPTHS": {
+                    "bioawk": 20110810
+                },
+                "COVERM_CONTIG_SHORTREAD": {
+                    "coverm": "0.7.0"
+                },
+                "FASTQC_RAW": {
+                    "fastqc": "0.12.1"
+                },
+                "GUNZIP_BINS": {
+                    "gunzip": 1.13
+                },
+                "GUNZIP_SHORTREAD_ASSEMBLIES": {
+                    "gunzip": 1.13
+                },
+                "GUNZIP_UNBINS": {
+                    "gunzip": 1.13
+                },
+                "MAG_DEPTHS": {
+                    "pandas": "1.1.5",
+                    "python": "3.6.7"
+                },
+                "MAG_DEPTHS_SUMMARY": {
+                    "pandas": "1.4.3",
+                    "python": "3.10.6"
+                },
+                "MAXBIN2": {
+                    "maxbin2": "2.2.7"
+                },
+                "MEGAHIT": {
+                    "megahit": "1.2.9"
+                },
+                "METABAT2_METABAT2": {
+                    "metabat2": 2.17
+                },
+                "METASPADES": {
+                    "spades": "4.1.0"
+                },
+                "PRODIGAL": {
+                    "pigz": 2.6,
+                    "prodigal": "2.6.3"
+                },
+                "SAMTOOLS_COVERM_SHORTREAD_INDEX": {
+                    "samtools": "1.22.1"
+                },
+                "SEQKIT_STATS": {
+                    "seqkit": "2.9.0"
+                },
+                "SPLIT_FASTA": {
+                    "biopython": "1.74",
+                    "pandas": "1.1.5",
+                    "python": "3.6.7"
+                },
+                "Workflow": {
+                    "nf-core/mag": "v5.5.0dev"
+                }
+            }
+        ],
+        "timestamp": "2026-04-15T04:40:32.932513941",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    }
+}

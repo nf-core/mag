@@ -1,58 +1,19 @@
 {
     "-profile longreadonly_alternatives": {
         "content": [
-            26,
+            11,
             {
-                "ADJUST_MAXBIN2_EXT": {
-                    "coreutils": 9.5
-                },
-                "BIN_SUMMARY": {
-                    "pandas": "1.4.3",
-                    "python": "3.10.6"
-                },
-                "BUSCO_BUSCO": {
-                    "busco": "6.0.0"
-                },
                 "BUSCO_UNTAR": {
                     "untar": 1.34
                 },
-                "CONCAT_BUSCO_TSV": {
-                    "qsv": "5.1.0"
-                },
-                "CONVERT_DEPTHS": {
-                    "bioawk": 20110810
+                "COVERM_CONTIG_LONGREAD": {
+                    "coverm": "0.7.0"
                 },
                 "FLYE": {
                     "flye": "2.9.5-b1801"
                 },
-                "GUNZIP_BINS": {
-                    "gunzip": 1.13
-                },
                 "GUNZIP_LONGREAD_ASSEMBLIES": {
                     "gunzip": 1.13
-                },
-                "MAG_DEPTHS": {
-                    "pandas": "1.1.5",
-                    "python": "3.6.7"
-                },
-                "MAG_DEPTHS_SUMMARY": {
-                    "pandas": "1.4.3",
-                    "python": "3.10.6"
-                },
-                "MAXBIN2": {
-                    "maxbin2": "2.2.7"
-                },
-                "METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_LONGREAD": {
-                    "metabat2": 2.15
-                },
-                "METABAT2_METABAT2": {
-                    "metabat2": 2.17
-                },
-                "MINIMAP2_ASSEMBLY_ALIGN": {
-                    "minimap2": "2.29-r1283"
-                },
-                "MINIMAP2_ASSEMBLY_INDEX": {
-                    "minimap2": "2.29-r1283"
                 },
                 "NANOLYSE": {
                     "nanolyse": "1.2.0"
@@ -69,20 +30,15 @@
                 "PORECHOP_PORECHOP": {
                     "porechop": "0.2.4"
                 },
-                "SEQKIT_STATS": {
-                    "seqkit": "2.9.0"
-                },
-                "SPLIT_FASTA": {
-                    "biopython": "1.74",
-                    "pandas": "1.1.5",
-                    "python": "3.6.7"
+                "SAMTOOLS_COVERM_LONGREAD_INDEX": {
+                    "samtools": "1.22.1"
                 },
                 "Workflow": {
                     "nf-core/mag": "v5.5.0dev"
                 }
             }
         ],
-        "timestamp": "2026-04-01T14:52:42.041452343",
+        "timestamp": "2026-04-15T04:40:17.72075473",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -91,37 +47,27 @@
     "multiqc": {
         "content": [
             [
-                "multiqc/multiqc_data/busco_plot_bacteria_odb10.yaml",
                 "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/multiqc.log",
                 "multiqc/multiqc_data/multiqc.parquet",
-                "multiqc/multiqc_data/multiqc_busco.yaml",
                 "multiqc/multiqc_data/multiqc_citations.yaml",
                 "multiqc/multiqc_data/multiqc_data.json",
                 "multiqc/multiqc_data/multiqc_general_stats.yaml",
                 "multiqc/multiqc_data/multiqc_software_versions.yaml",
                 "multiqc/multiqc_data/multiqc_sources.yaml",
                 "multiqc/multiqc_data/porechop.yaml",
-                "multiqc/multiqc_plots/pdf/busco_plot_bacteria_odb10-cnt.pdf",
-                "multiqc/multiqc_plots/pdf/busco_plot_bacteria_odb10-pct.pdf",
-                "multiqc/multiqc_plots/png/busco_plot_bacteria_odb10-cnt.png",
-                "multiqc/multiqc_plots/png/busco_plot_bacteria_odb10-pct.png",
-                "multiqc/multiqc_plots/svg/busco_plot_bacteria_odb10-cnt.svg",
-                "multiqc/multiqc_plots/svg/busco_plot_bacteria_odb10-pct.svg",
                 "multiqc/multiqc_report.html"
             ],
             [
-                "busco_plot_bacteria_odb10.yaml:md5,61ea14a5ac60fa3b48ee832af75effff",
-                "multiqc_busco.yaml:md5,0a1896fc18fdea30852125167730c8c5",
-                "multiqc_citations.yaml:md5,cd0615b89829a041bc2a33cdb69b585b",
-                "multiqc_general_stats.yaml:md5,fbf8803248aa40052113485a7bfbb8d0",
+                "multiqc_citations.yaml:md5,96e837cbd6357188fbf13476810a4326",
+                "multiqc_general_stats.yaml:md5,f5594b277c894e24b538c4ef9e468e3d",
                 "porechop.yaml:md5,828d96e2822bb4b4108ab706c00c4450"
             ]
         ],
-        "timestamp": "2025-11-27T13:31:05.010588102",
+        "timestamp": "2026-04-15T04:40:17.771358764",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.0"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
         }
     }
 }

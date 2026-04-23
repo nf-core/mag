@@ -53,6 +53,9 @@
                 "CONVERT_DEPTHS": {
                     "bioawk": 20110810
                 },
+                "COVERM_CONTIG_SHORTREAD": {
+                    "coverm": "0.7.0"
+                },
                 "FASTP": {
                     "fastp": "1.0.1"
                 },
@@ -95,9 +98,6 @@
                 },
                 "MEGAHIT": {
                     "megahit": "1.2.9"
-                },
-                "METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_SHORTREAD": {
-                    "metabat2": 2.15
                 },
                 "METABAT2_METABAT2": {
                     "metabat2": 2.17

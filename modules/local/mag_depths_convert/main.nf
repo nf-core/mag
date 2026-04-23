@@ -15,21 +15,25 @@ process CONVERT_DEPTHS {
     path "versions.yml"                                   , emit: versions
 
     script:
+    def depth_unzipped = depth.toString() - '.gz'
     """
-    gunzip -f ${depth}
+    # Decompress only if gzipped
+    if [[ "${depth}" == *.gz ]]; then
+        gunzip -f "${depth}"
+    fi
 
     # Determine the number of abundance columns
-    n_abund=\$(awk 'NR==1 {print int((NF-3)/2)}' ${depth.toString() - '.gz'})
+    n_abund=\$(awk 'NR==1 {print int((NF-3)/2)}' ${depth_unzipped})
 
     # Get column names
-    read -r header<${depth.toString() - '.gz'}
+    read -r header<${depth_unzipped}
     header=(\$header)
 
     # Generate abundance files for each read set
     for i in \$(seq 1 \$n_abund); do
         col=\$((i*2+2))
-        name=\$( echo \${header[\$col-1]} | sed s/\\.bam\$// )
-        bioawk -t '{if (NR > 1) {print \$1, \$'"\$col"'}}' ${depth.toString() - '.gz'} > \${name}.abund
+        name=\$( basename "\${header[\$col-1]}" | sed s/\\.bam\$// )
+        bioawk -t '{if (NR > 1) {print \$1, \$'"\$col"'}}' ${depth_unzipped} > \${name}.abund
     done
 
     cat <<-END_VERSIONS > versions.yml

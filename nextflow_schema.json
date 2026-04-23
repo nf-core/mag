@@ -872,6 +872,13 @@
                     "help_text": "You can specify here Bowtie2 alignment options. For example: `--very-fast` , `--very-sensitive-local -N 1` , ... Must be used like this: --bowtie2_mode=\"--very-sensitive\". By default no settings are defined, thus Bowtie2 runs with it's own internal defaults (e.g. end-to-end alignment)",
                     "pattern": "^[-\\w]*$"
                 },
+                "shortread_coverage_mapper": {
+                    "type": "string",
+                    "default": "bowtie2",
+                    "description": "Short-read mapper to use for coverage estimation of assembled contigs.",
+                    "help_text": "Specifies which aligner to use for mapping short reads back to assembled contigs during binning preparation. Use `bowtie2` (default) to run Bowtie2 manually and provide BAMs to CoverM. Use a CoverM-supported short-read aligner (`bwa-mem`, `bwa-mem2`, `minimap2-sr`, `strobealign`) to let CoverM handle both mapping and coverage calculation while also exporting cached BAM files.",
+                    "enum": ["bowtie2", "bwa-mem", "bwa-mem2", "minimap2-sr", "strobealign"]
+                },
                 "save_assembly_mapped_reads": {
                     "type": "boolean",
                     "description": "Save the output of mapping raw reads back to assembled contigs",
@@ -901,12 +908,12 @@
                 "longread_percentidentity": {
                     "type": "number",
                     "description": "Specify a minimum percent identity filter for long reads mapping back to assembled contigs.",
-                    "help_text": "If specified, this parameter sets the `--percentIdentity` flag of the `metabat2 jgisummarizebamcontigdepths` command that is used to generate a read-depth per contig depth post assembly mapping. It can be useful in some cases to get more accurate depth coverages for binning by removing spurious alignments that can inflate coverage."
+                    "help_text": "If specified, this parameter sets the `--min-read-percent-identity` flag of CoverM that is used to generate a read-depth per contig depth post assembly mapping. It can be useful in some cases to get more accurate depth coverages for binning by removing spurious alignments that can inflate coverage."
                 },
                 "shortread_percentidentity": {
                     "type": "number",
                     "description": "Specify a minimum percent identity filter for short reads mapping back to assembled contigs.",
-                    "help_text": "If specified, this parameter sets the `--percentIdentity` flag of the `metabat2 jgisummarizebamcontigdepths` command that is used to generate a read-depth per contig depth post assembly mapping. It can be useful in some cases to get more accurate depth coverages for binning by removing spurious alignments that can inflate coverage."
+                    "help_text": "If specified, this parameter sets the `--min-read-percent-identity` flag of CoverM that is used to generate a read-depth per contig depth post assembly mapping. It can be useful in some cases to get more accurate depth coverages for binning by removing spurious alignments that can inflate coverage."
                 }
             }
         },

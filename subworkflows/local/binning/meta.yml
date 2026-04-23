@@ -12,7 +12,6 @@ components:
   - binning/metabinner
   - fasta/binning/concoct
   - metabat2/metabat2
-  - metabat2/jgisummarizebamcontigdepths
   - maxbin2
   - comebin/runcomebin
   - gunzip
@@ -40,6 +39,16 @@ input:
             type: file
             description: BAM index files
             pattern: "*.bai"
+  - ch_contig_depths:
+      description: Per-contig coverage depth files from CoverM
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - tsv:
+            type: file
+            description: Per-contig coverage depth information (MetaBAT2-compatible format)
+            pattern: "*.depth.tsv"
   - val_bin_min_size:
       type: val
       description: Minimum bin size threshold for filtering
@@ -87,16 +96,16 @@ output:
             type: file
             description: Unbinned sequences in compressed FASTA format
             pattern: "*.fasta.gz"
-  - metabat2depths:
-      description: Coverage depth files from MetaBAT2
+  - contig_depths:
+      description: Per-contig coverage depth files from CoverM
       structure:
         - meta:
             type: map
             description: Metadata map
-        - txt:
+        - tsv:
             type: file
-            description: Coverage depth information
-            pattern: "*.txt"
+            description: Per-contig coverage depth information (MetaBAT2-compatible format)
+            pattern: "*.depth.tsv"
   - versions:
       type: file
       description: File containing software versions
