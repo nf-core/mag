@@ -602,7 +602,7 @@ The pipeline also generates a 'contig to bin map' to help users explore track wh
   - `predicted_genes/barrnap.log`: Barrnap log file (ribosomal RNA predictor)
 - `GenomeBinning/QC/`
   - `[assembler]-[binner]-[domain]-[refinement]-[sample/group]-quast_summary.tsv`: QUAST output summarized per sample/condition.
-  - `quast_summary.tsv`: QUAST output for all bins summarized
+  - `quast_bin_summary.tsv`: QUAST output for all bins summarized
 
 </details>
 

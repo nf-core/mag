@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Added`
 
 - [#997](https://github.com/nf-core/mag/pull/997) - Add CoverM as the default contig depth/coverage calculator, replacing `jgi_summarize_bam_contig_depths` from MetaBAT2. New parameters added: `--depth_calculator` (default: `coverm`), `--coverm_mapper` (default: `bowtie2`), and `--coverm_methods` (default: `metabat`) (by @vinisalazar)
+- [#908](https://github.com/nf-core/mag/pull/908) - Add nf-test snapshot for `test_single_end` profile (by @dialvarezs)
 
 ### `Changed`
 
@@ -32,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Deprecated`
 
+- [#908](https://github.com/nf-core/mag/pull/908) - Removed local `quast_bins_summary` in favor of `csvtk/concat` (by @dialvarezs)
 - [#1018](https://github.com/nf-core/mag/pull/1018) - Remove `mag_depths_plot` local module (by @dialvarezs)
 
 ## 5.4.2 Yellow Frog patch [2026-03-31]

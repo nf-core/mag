@@ -90,10 +90,10 @@ nextflow_pipeline {
                     workflow.trace.succeeded().size(),
                     removeNextflowVersion("${outputDir}/pipeline_info/nf_core_mag_software_mqc_versions.yml"),
                 ).match() },
-                { assert snapshot(stable_name_assembly).match('assembly') },
+                { assert snapshot(stable_name_assembly                          ).match('assembly') },
                 { assert snapshot(stable_name_annotation, stable_path_annotation).match('annotation') },
-                { assert snapshot(stable_name_binning,  stable_path_binning ).match('binning') },
-                { assert snapshot(stable_name_multiqc, stable_path_multiqc).match('multiqc') },
+                { assert snapshot(stable_name_binning,    stable_path_binning   ).match('binning') },
+                { assert snapshot(stable_name_multiqc,    stable_path_multiqc   ).match('multiqc') },
 
                 // FASTA checks
                 { assert concoct_bins.collect { file -> path("${file}").fasta.size() > 0 }.every() },

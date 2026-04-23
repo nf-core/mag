@@ -65,7 +65,7 @@
     },
     "-profile assembly_input": {
         "content": [
-            286,
+            285,
             {
                 "ADJUST_MAXBIN2_EXT": {
                     "coreutils": 9.5
@@ -124,9 +124,6 @@
                 "FASTQC_RAW": {
                     "fastqc": "0.12.1"
                 },
-                "GUNC_DOWNLOADDB": {
-                    "gunc": "1.1.0"
-                },
                 "GUNC_RUN": {
                     "gunc": "1.1.0"
                 },
@@ -175,7 +172,7 @@
                 }
             }
         ],
-        "timestamp": "2026-04-09T09:21:33.205568806",
+        "timestamp": "2026-04-21T06:05:20.469766681",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

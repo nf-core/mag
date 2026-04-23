@@ -9,6 +9,15 @@
                 "COVERM_CONTIG_LONGREAD": {
                     "coverm": "0.7.0"
                 },
+                "CONCAT_BUSCO_TSV": {
+                    "qsv": "5.1.0"
+                },
+                "CONCAT_QUAST_SUMMARY": {
+                    "qsv": "5.1.0"
+                },
+                "CONVERT_DEPTHS": {
+                    "bioawk": 20110810
+                },
                 "FILTLONG": {
                     "filtlong": "0.2.1"
                 },
@@ -49,6 +58,10 @@
                 },
                 "SAMTOOLS_COVERM_LONGREAD_INDEX": {
                     "samtools": "1.22.1"
+                },
+                "QUAST_BINS": {
+                    "metaquast": "5.0.2",
+                    "python": "3.7.6"
                 },
                 "SAMTOOLS_HOSTREMOVED_INDEX": {
                     "samtools": "1.22.1"
