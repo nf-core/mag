@@ -3,10 +3,11 @@ Ancient_DNA/pydamage/analyze/*/*.csv
 Ancient_DNA/variant_calling/*/*.vcf.gz
 Annotation/Prokka/**/*.{err,gbk,log,sqn}
 Annotation/Prokka/**/*.tmp.*
-Assembly/MEGAHIT/*.log
-Assembly/MEGAHIT/QC/*/*.bowtie2.log
-Assembly/MEGAHIT/QC/*/QUAST/*.{pdf,html,log}
-Assembly/MEGAHIT/QC/*/QUAST/**/*.{pdf,html}
+Assembly/*/*.log
+Assembly/*/QC/*/*.bowtie2.log
+Assembly/*/QC/*/QUAST/*.{pdf,html,log}
+Assembly/*/QC/*/QUAST/**/*.{pdf,html}
+QC_longreads/NanoPlot/**/*.html
 GenomeBinning/CONCOCT/stats/*_{original,PCA_components,PCA_transformed}_data_gt1000.csv
 GenomeBinning/CONCOCT/stats/*_log.txt
 GenomeBinning/CONCOCT/stats/*.tsv
@@ -17,7 +18,7 @@ GenomeBinning/depths/bins/*.png
 GenomeBinning/MetaBAT2/unbinned/discarded/*.unbinned.pooled.fa.gz
 GenomeBinning/QC/busco_summary.tsv
 GenomeBinning/QC/BUSCO/**/.checkpoint
-GenomeBinning/QC/BUSCO/**/{logs,prodigal_output,busco_sequences}/**
+GenomeBinning/QC/BUSCO/**/{logs,prodigal_output,busco_sequences,hmmer_output}/**
 GenomeBinning/QC/BUSCO/**/*.json
 GenomeBinning/QC/BUSCO/**/*.log
 GenomeBinning/QC/BUSCO/**/*.txt
@@ -43,6 +44,7 @@ multiqc/multiqc_plots/{svg,pdf,png}/*.{svg,pdf,png}
 multiqc/multiqc_report.html
 pipeline_info/*.{html,json,txt,yml}
 QC_shortreads/fastqc/*_fastqc.{html,zip}
+QC_shortreads/fastp/**/*.html
 QC_shortreads/remove_phix/*.log
 Taxonomy/CAT/**/*.log
 VirusIdentification/geNomad/**/*_aggregated_classification.tsv
