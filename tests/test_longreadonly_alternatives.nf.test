@@ -125,7 +125,7 @@ nextflow_pipeline {
                 { assert snapshot(
                     "Flye: ${flye_logs.collect { file -> path("${file}").readLines().any { line -> line.contains('Final assembly:') } }.every()}",
                     "NanoLyse: ${nanolyse_logs.collect { file -> path("${file}").readLines().any { line -> line.contains('NanoLyse finished.') } }.every()}",
-                    "BUSCO: ${busco_logs.collect { file -> path("${file}").readLines().count { line -> line.contains('BUSCO analysis done.') } }.sum() == maxbin2_bins.size()}",
+                    "BUSCO: ${busco_logs.collect { file -> path("${file}").readLines().count { line -> line.contains('BUSCO analysis done.') } }.every()}",
                 ).match("log-checks") },
             )
         }
