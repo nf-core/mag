@@ -10,7 +10,7 @@ nextflow_pipeline {
 
         when {
             params {
-                outdir = "$outputDir"
+                outdir = "${outputDir}"
             }
         }
 
@@ -22,6 +22,9 @@ nextflow_pipeline {
             )
             def stable_path_qc_short = getAllFilesFromDir(
                 params.outdir, include: ['QC_shortreads/**'], ignoreFile: 'tests/.nftignore'
+            )
+            def bowtie2_logs = getAllFilesFromDir(
+                params.outdir, include: ['QC_shortreads/remove_*/*.bowtie2.log', 'Assembly/*/QC/*/*.bowtie2.log']
             )
 
             // Output dir: QC_longreads
@@ -42,10 +45,17 @@ nextflow_pipeline {
             def assembly_quast_logs = getAllFilesFromDir(
                 params.outdir, include: ['Assembly/SPAdesHybrid/QC/*/QUAST/quast.log']
             )
+            def spades_logs = getAllFilesFromDir(
+                params.outdir, include: ['Assembly/SPAdesHybrid/*.spades.log']
+            )
 
             // Output dir: GenomeBinning
             def stable_name_binning = getAllFilesFromDir(
-                params.outdir, include: ['GenomeBinning/**'], relative: true, includeDir: false
+                params.outdir,
+                include: ['GenomeBinning/**'],
+                ignore: ['GenomeBinning/QC/BUSCO/**/{logs,prodigal_output,busco_sequences,hmmer_output}/**'],
+                relative: true,
+                includeDir: false
             )
             def stable_path_binning = getAllFilesFromDir(
                 params.outdir, include: ['GenomeBinning/**'], ignoreFile: 'tests/.nftignore'
@@ -67,6 +77,12 @@ nextflow_pipeline {
             )
             def binning_quast_logs = getAllFilesFromDir(
                 params.outdir, include: ['GenomeBinning/QC/QUAST/*/quast.log']
+            )
+            def busco_logs = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/QC/BUSCO/*/*-busco.log']
+            )
+            def semibin2_logs = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/SemiBin2/log/*.log']
             )
             def bin_summary = path("${params.outdir}/GenomeBinning/bin_summary.tsv")
             def quast_bin_summary = path("${params.outdir}/GenomeBinning/QC/quast_bin_summary.tsv")
@@ -105,7 +121,7 @@ nextflow_pipeline {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.trace.succeeded().size(),
-                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_mag_software_mqc_versions.yml"),
+                    removeNextflowVersion("${params.outdir}/pipeline_info/nf_core_mag_software_mqc_versions.yml"),
                 ).match() },
                 { assert snapshot(stable_name_qc_short,   stable_path_qc_short  ).match('qc_shortreads') },
                 { assert snapshot(stable_name_qc_long,    stable_path_qc_long   ).match('qc_longreads') },
@@ -135,8 +151,12 @@ nextflow_pipeline {
                 ).match("summary-rows") },
 
                 { assert snapshot(
+                    "SPAdes hybrid: ${spades_logs.collect { log -> log.readLines().any { it.contains('SPAdes pipeline finished.') } }.every()}",
                     "assembly QUAST: ${assembly_quast_logs.collect { log -> log.readLines().any { it.contains('Finished:') } }.every()}",
                     "binning QUAST: ${binning_quast_logs.collect { log -> log.readLines().any { it.contains('Finished:') } }.every()}",
+                    "BUSCO: ${busco_logs.collect { log -> log.readLines().any { it.contains('BUSCO analysis done.') } }.every()}",
+                    "SemiBin2: ${semibin2_logs.collect { log -> log.readLines().any { it.contains('Finished binning.') } }.every()}",
+                    "Bowtie2: ${bowtie2_logs.collect { log -> log.readLines().any { it.contains('overall alignment rate') } }.every()}",
                     "Prokka: ${prokka_logs.collect { log -> log.readLines().any { it.contains('Annotation finished successfully.') } }.every()}",
                 ).match("log-checks") },
             )
