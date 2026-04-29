@@ -1,4 +1,149 @@
 {
+    "qc": {
+        "content": [
+            [
+                "QC_longreads/NanoLyse/minigut_run0_lambdafiltered.nanolyse.log",
+                "QC_longreads/NanoPlot/minigut/filtered_NanoPlot-report.html",
+                "QC_longreads/NanoPlot/minigut/filtered_NanoStats.txt",
+                "QC_longreads/NanoPlot/minigut/filtered_Non_weightedHistogramReadlength.html",
+                "QC_longreads/NanoPlot/minigut/filtered_Non_weightedLogTransformed_HistogramReadlength.html",
+                "QC_longreads/NanoPlot/minigut/filtered_WeightedHistogramReadlength.html",
+                "QC_longreads/NanoPlot/minigut/filtered_WeightedLogTransformed_HistogramReadlength.html",
+                "QC_longreads/NanoPlot/minigut/filtered_Yield_By_Length.html",
+                "QC_longreads/NanoPlot/minigut/raw_NanoPlot-report.html",
+                "QC_longreads/NanoPlot/minigut/raw_NanoStats.txt",
+                "QC_longreads/NanoPlot/minigut/raw_Non_weightedHistogramReadlength.html",
+                "QC_longreads/NanoPlot/minigut/raw_Non_weightedLogTransformed_HistogramReadlength.html",
+                "QC_longreads/NanoPlot/minigut/raw_WeightedHistogramReadlength.html",
+                "QC_longreads/NanoPlot/minigut/raw_WeightedLogTransformed_HistogramReadlength.html",
+                "QC_longreads/NanoPlot/minigut/raw_Yield_By_Length.html",
+                "QC_longreads/Nanoq/minigut_run0_nanoq_filtered.stats"
+            ],
+            [
+                "filtered_NanoStats.txt:md5,d9172457c41a768738984559a9d3030a",
+                "raw_NanoStats.txt:md5,12f26e909ca384e5b71a391c39f1e287",
+                "minigut_run0_nanoq_filtered.stats:md5,00dfdbb0bfa701faf739b3339246a4d0"
+            ]
+        ],
+        "timestamp": "2026-04-22T16:49:12.811100286",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
+    "log-checks": {
+        "content": [
+            "Flye: true",
+            "NanoLyse: true",
+            "BUSCO: true"
+        ],
+        "timestamp": "2026-04-22T16:49:16.048959838",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
+    "assembly": {
+        "content": [
+            [
+                "Assembly/FLYE/FLYE-minigut.assembly.fasta.gz",
+                "Assembly/FLYE/FLYE-minigut.assembly_graph.gfa.gz",
+                "Assembly/FLYE/FLYE-minigut.flye.log"
+            ],
+            [
+                "FLYE-minigut.assembly.fasta.gz:md5,f4fcf5e1c94901ef1fac2b335f4729f1",
+                "FLYE-minigut.assembly_graph.gfa.gz:md5,f23173732f3fdb68e26276438fc6bc9d"
+            ]
+        ],
+        "timestamp": "2026-04-22T16:49:12.81667273",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
+    "binning": {
+        "content": [
+            [
+                "GenomeBinning/MaxBin2/FLYE-MaxBin2-minigut.summary",
+                "GenomeBinning/MaxBin2/bins/FLYE-MaxBin2-minigut.001.fa.gz",
+                "GenomeBinning/MaxBin2/bins/FLYE-MaxBin2-minigut.002.fa.gz",
+                "GenomeBinning/MaxBin2/discarded/FLYE-MaxBin2-minigut.tooshort.gz",
+                "GenomeBinning/MaxBin2/unbinned/discarded/FLYE-MaxBin2-minigut.noclass.pooled.fa.gz",
+                "GenomeBinning/MaxBin2/unbinned/discarded/FLYE-MaxBin2-minigut.noclass.remaining.fa.gz",
+                "GenomeBinning/MetaBAT2/discarded/FLYE-MetaBAT2-minigut.lowDepth.fa.gz",
+                "GenomeBinning/MetaBAT2/discarded/FLYE-MetaBAT2-minigut.tooShort.fa.gz",
+                "GenomeBinning/MetaBAT2/unbinned/discarded/FLYE-MetaBAT2-minigut.unbinned.pooled.fa.gz",
+                "GenomeBinning/MetaBAT2/unbinned/discarded/FLYE-MetaBAT2-minigut.unbinned.remaining.fa.gz",
+                "GenomeBinning/QC/BUSCO/FLYE-MaxBin2-unclassified-unrefined-minigut/minigut-bacteria_odb10-busco.batch_summary.txt",
+                "GenomeBinning/QC/BUSCO/FLYE-MaxBin2-unclassified-unrefined-minigut/minigut-bacteria_odb10-busco.log",
+                "GenomeBinning/QC/BUSCO/FLYE-MaxBin2-unclassified-unrefined-minigut/minigut-bacteria_odb10-busco/FLYE-MaxBin2-minigut.001.fa/run_bacteria_odb10/.bbtools_output/.checkpoint",
+                "GenomeBinning/QC/BUSCO/FLYE-MaxBin2-unclassified-unrefined-minigut/minigut-bacteria_odb10-busco/FLYE-MaxBin2-minigut.001.fa/run_bacteria_odb10/full_table.tsv",
+                "GenomeBinning/QC/BUSCO/FLYE-MaxBin2-unclassified-unrefined-minigut/minigut-bacteria_odb10-busco/FLYE-MaxBin2-minigut.001.fa/run_bacteria_odb10/missing_busco_list.tsv",
+                "GenomeBinning/QC/BUSCO/FLYE-MaxBin2-unclassified-unrefined-minigut/minigut-bacteria_odb10-busco/FLYE-MaxBin2-minigut.001.fa/run_bacteria_odb10/short_summary.json",
+                "GenomeBinning/QC/BUSCO/FLYE-MaxBin2-unclassified-unrefined-minigut/minigut-bacteria_odb10-busco/FLYE-MaxBin2-minigut.001.fa/run_bacteria_odb10/short_summary.txt",
+                "GenomeBinning/QC/BUSCO/FLYE-MaxBin2-unclassified-unrefined-minigut/minigut-bacteria_odb10-busco/FLYE-MaxBin2-minigut.002.fa/run_bacteria_odb10/.bbtools_output/.checkpoint",
+                "GenomeBinning/QC/BUSCO/FLYE-MaxBin2-unclassified-unrefined-minigut/minigut-bacteria_odb10-busco/FLYE-MaxBin2-minigut.002.fa/run_bacteria_odb10/full_table.tsv",
+                "GenomeBinning/QC/BUSCO/FLYE-MaxBin2-unclassified-unrefined-minigut/minigut-bacteria_odb10-busco/FLYE-MaxBin2-minigut.002.fa/run_bacteria_odb10/missing_busco_list.tsv",
+                "GenomeBinning/QC/BUSCO/FLYE-MaxBin2-unclassified-unrefined-minigut/minigut-bacteria_odb10-busco/FLYE-MaxBin2-minigut.002.fa/run_bacteria_odb10/short_summary.json",
+                "GenomeBinning/QC/BUSCO/FLYE-MaxBin2-unclassified-unrefined-minigut/minigut-bacteria_odb10-busco/FLYE-MaxBin2-minigut.002.fa/run_bacteria_odb10/short_summary.txt",
+                "GenomeBinning/QC/BUSCO/FLYE-MaxBin2-unclassified-unrefined-minigut/minigut-bacteria_odb10-busco/batch_summary.txt",
+                "GenomeBinning/QC/BUSCO/FLYE-MaxBin2-unclassified-unrefined-minigut/short_summary.specific.bacteria_odb10.FLYE-MaxBin2-minigut.001.fa.json",
+                "GenomeBinning/QC/BUSCO/FLYE-MaxBin2-unclassified-unrefined-minigut/short_summary.specific.bacteria_odb10.FLYE-MaxBin2-minigut.001.fa.txt",
+                "GenomeBinning/QC/BUSCO/FLYE-MaxBin2-unclassified-unrefined-minigut/short_summary.specific.bacteria_odb10.FLYE-MaxBin2-minigut.002.fa.json",
+                "GenomeBinning/QC/BUSCO/FLYE-MaxBin2-unclassified-unrefined-minigut/short_summary.specific.bacteria_odb10.FLYE-MaxBin2-minigut.002.fa.txt",
+                "GenomeBinning/QC/busco_summary.tsv",
+                "GenomeBinning/bin_summary.tsv",
+                "GenomeBinning/contig_to_bin/contig_to_bin_map.tsv",
+                "GenomeBinning/depths/bins/bin_depths_summary.tsv",
+                "GenomeBinning/depths/bins/versions.yml",
+                "GenomeBinning/depths/contigs/FLYE-minigut-depth.txt.gz"
+            ],
+            [
+                "FLYE-MaxBin2-minigut.summary:md5,539ef40150966e52802c5bb7eca397a7",
+                "FLYE-MaxBin2-minigut.001.fa.gz:md5,53a792c971b74f32a91ad3511f2071b4",
+                "FLYE-MaxBin2-minigut.002.fa.gz:md5,9a8f989c9f00eead95927520ec51b34f",
+                "FLYE-MaxBin2-minigut.tooshort.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "FLYE-MaxBin2-minigut.noclass.pooled.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "FLYE-MaxBin2-minigut.noclass.remaining.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "FLYE-MetaBAT2-minigut.lowDepth.fa.gz:md5,f4fcf5e1c94901ef1fac2b335f4729f1",
+                "FLYE-MetaBAT2-minigut.tooShort.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "FLYE-MetaBAT2-minigut.unbinned.remaining.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "full_table.tsv:md5,5f6215b5c7781a97fb714431bc102d5b",
+                "missing_busco_list.tsv:md5,2bd36668a9230051a19fc245ed517c54",
+                "full_table.tsv:md5,69fcd108a0570558310d5655a1a605df",
+                "missing_busco_list.tsv:md5,f32ca1d7d341a4f405d1be2f9b4eda58",
+                "bin_summary.tsv:md5,dc0c07942220b9768abfd4ab5cc0007d",
+                "contig_to_bin_map.tsv:md5,6a781efcbb14d97f5c049c69c935c0da",
+                "bin_depths_summary.tsv:md5,985f843d43973cbfe5b49f0ad0628193",
+                "versions.yml:md5,553ee8a62e65d93ce1163bb16314da29"
+            ]
+        ],
+        "timestamp": "2026-04-22T16:49:12.853554235",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
+    "content-checks": {
+        "content": [
+            "Flye assemblies non-empty: true",
+            "MaxBin2 bins non-empty: true",
+            "MetaBAT2 bins non-empty when present: true",
+            "Nanoq stats non-empty: true",
+            "Nanoq stats contain read count: true",
+            "NanoPlot stats contain summaries: true",
+            "NanoPlot stats non-empty: true",
+            "MaxBin2 produced unbinned/discarded output: true",
+            "MetaBAT2 produced classified or unclassified output: true",
+            "Bin summary non-empty: true",
+            "Bin summary row count matches bins: true"
+        ],
+        "timestamp": "2026-04-22T16:49:15.976141599",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
     "-profile longreadonly_alternatives": {
         "content": [
             26,
@@ -82,7 +227,7 @@
                 }
             }
         ],
-        "timestamp": "2026-04-01T14:52:42.041452343",
+        "timestamp": "2026-04-22T16:49:12.799807356",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -111,17 +256,29 @@
                 "multiqc/multiqc_report.html"
             ],
             [
-                "busco_plot_bacteria_odb10.yaml:md5,61ea14a5ac60fa3b48ee832af75effff",
-                "multiqc_busco.yaml:md5,0a1896fc18fdea30852125167730c8c5",
+                "busco_plot_bacteria_odb10.yaml:md5,b9602874259ba8bcb3903136ba26c34e",
+                "multiqc_busco.yaml:md5,7f414ae44f5277a881c7ae86bac13ab6",
                 "multiqc_citations.yaml:md5,cd0615b89829a041bc2a33cdb69b585b",
-                "multiqc_general_stats.yaml:md5,fbf8803248aa40052113485a7bfbb8d0",
+                "multiqc_general_stats.yaml:md5,29514b760bf201d07e47885543807eb8",
                 "porechop.yaml:md5,828d96e2822bb4b4108ab706c00c4450"
             ]
         ],
-        "timestamp": "2025-11-27T13:31:05.010588102",
+        "timestamp": "2026-04-22T16:49:12.918619012",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.0"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
+    "summary-rows": {
+        "content": [
+            "Bin summary: 2",
+            "BUSCO summary: 2",
+            "Bin depths summary: 2"
+        ],
+        "timestamp": "2026-04-22T16:49:13.137323004",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
         }
     }
 }
