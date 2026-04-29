@@ -1,16 +1,4 @@
 {
-    "checkm2_diamond_results": {
-        "content": [
-            [
-                803
-            ]
-        ],
-        "timestamp": "2026-04-09T09:26:17.051486942",
-        "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
-        }
-    },
     "-profile test_alternatives": {
         "content": [
             34,
@@ -142,6 +130,19 @@
             "nextflow": "25.10.0"
         }
     },
+    "log-checks": {
+        "content": [
+            "PhiX removal: true",
+            "MEGAHIT: true",
+            "Bowtie2 assembly alignment: true",
+            "CheckM2: true"
+        ],
+        "timestamp": "2026-04-22T08:27:57.789443458",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
     "assembly": {
         "content": [
             [
@@ -244,6 +245,24 @@
             ]
         ],
         "timestamp": "2026-04-09T09:26:16.336537006",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
+    "content-checks": {
+        "content": [
+            "MEGAHIT contigs non-empty: true",
+            "MetaBAT2 bins non-empty: true",
+            "MetaBAT2 unbinned/discarded non-empty: true",
+            "Bin summary non-empty: true",
+            "Bin summary row count matches bins: true",
+            "BUSCO summary non-empty: true",
+            "CheckM2 summary non-empty: true",
+            "CheckM2 DIAMOND results non-empty: true",
+            "Tiara summary non-empty: true"
+        ],
+        "timestamp": "2026-04-22T08:27:57.756822178",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -402,6 +421,20 @@
             ]
         ],
         "timestamp": "2026-04-09T09:26:16.702407899",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
+    "summary-rows": {
+        "content": [
+            "Bin summary: 2",
+            "BUSCO summary: 2",
+            "CheckM2 summary: 2",
+            "CheckM2 DIAMOND results: [803]",
+            "Tiara summary: 2"
+        ],
+        "timestamp": "2026-04-22T08:27:57.772778533",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

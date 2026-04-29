@@ -63,6 +63,10 @@ nextflow_pipeline {
             def metabat2_unbins = getAllFilesFromDir(
                 params.outdir, include: ['GenomeBinning/MetaBAT2/{discarded,unbinned/*}/*.fa.gz']
             )
+            def bin_summary = path("${params.outdir}/GenomeBinning/bin_summary.tsv")
+            def busco_summary = path("${params.outdir}/GenomeBinning/QC/busco_summary.tsv")
+            def checkm2_summary = path("${params.outdir}/GenomeBinning/QC/checkm2_summary.tsv")
+            def tiara_summary = path("${params.outdir}/GenomeBinning/Tiara/tiara_summary.tsv")
 
             // Output dir: multiqc
             def stable_name_multiqc = getAllFilesFromDir(
@@ -72,43 +76,45 @@ nextflow_pipeline {
                 params.outdir, include: ['multiqc/**'], ignoreFile: 'tests/.nftignore'
             )
 
-            assert workflow.success
             assertAll(
+                { assert workflow.success },
                 { assert snapshot(
                     workflow.trace.succeeded().size(),
-                    removeNextflowVersion("${outputDir}/pipeline_info/nf_core_mag_software_mqc_versions.yml"),
+                    removeNextflowVersion("${params.outdir}/pipeline_info/nf_core_mag_software_mqc_versions.yml"),
                 ).match() },
                 { assert snapshot(stable_name_qc,       stable_path_qc      ).match('qc') },
                 { assert snapshot(stable_name_assembly, stable_path_assembly).match('assembly') },
                 { assert snapshot(stable_name_binning,  stable_path_binning ).match('binning') },
                 { assert snapshot(stable_name_multiqc,  stable_path_multiqc ).match('multiqc') },
+
                 { assert snapshot(
-                        checkm2_diamond_results.collect { results -> results.text.readLines().size() },
-                    ).match('checkm2_diamond_results')
-                },
+                    // FASTA content checks
+                    "MEGAHIT contigs non-empty: ${megahit_contigs.collect { file -> path("${file}").fasta.size() > 0 }.every()}",
+                    "MetaBAT2 bins non-empty: ${metabat2_bins.collect { file -> path("${file}").fasta.size() > 0 }.every()}",
+                    "MetaBAT2 unbinned/discarded non-empty: ${metabat2_unbins.collect { file -> path("${file}").fasta.size() >= 0 }.every()}",
+                    // Summary and result checks
+                    "Bin summary non-empty: ${bin_summary.csv(sep: '\t').rowCount > 0}",
+                    "Bin summary row count matches bins: ${bin_summary.csv(sep: '\t').rowCount == metabat2_bins.size()}",
+                    "BUSCO summary non-empty: ${busco_summary.csv(sep: '\t').rowCount > 0}",
+                    "CheckM2 summary non-empty: ${checkm2_summary.csv(sep: '\t').rowCount > 0}",
+                    "CheckM2 DIAMOND results non-empty: ${checkm2_diamond_results.collect { file -> path("${file}").text.readLines().size() > 1 }.every()}",
+                    "Tiara summary non-empty: ${tiara_summary.csv(sep: '\t').rowCount > 0}",
+                ).match("content-checks") },
 
-                // FASTA checks
-                { assert megahit_contigs.collect { contigs -> path("${contigs}").fasta.size() > 0 }.every() },
-                { assert metabat2_bins.collect { contigs -> path("${contigs}").fasta.size() > 0 }.every() },
-                { assert metabat2_unbins.collect { contigs -> path("${contigs}").fasta.size() >= 0 }.every() },
+                { assert snapshot(
+                    "Bin summary: ${bin_summary.csv(sep: '\t').rowCount}",
+                    "BUSCO summary: ${busco_summary.csv(sep: '\t').rowCount}",
+                    "CheckM2 summary: ${checkm2_summary.csv(sep: '\t').rowCount}",
+                    "CheckM2 DIAMOND results: ${checkm2_diamond_results.collect { file -> path("${file}").text.readLines().size() }}",
+                    "Tiara summary: ${tiara_summary.csv(sep: '\t').rowCount}"
+                ).match("summary-rows") },
 
-                // Log checks
-                { assert remove_phix_logs.collect {
-                        log -> log.readLines().last() ==~ /[0-9.]+% overall alignment rate/
-                    }.every()
-                },
-                { assert megahit_logs.collect {
-                        log -> (log.readLines().last() =~ /ALL DONE. Time elapsed: [0-9.]+ seconds/).find()
-                    }.every()
-                },
-                { assert bowtie2_logs.collect {
-                        log -> log.readLines().last() ==~ /[0-9.]+% overall alignment rate/
-                    }.every()
-                },
-                { assert checkm2_logs.collect {
-                        log -> log.readLines().last().contains('CheckM2 finished successfully.')
-                    }.every()
-                },
+                { assert snapshot(
+                    "PhiX removal: ${remove_phix_logs.collect { log -> log.readLines().last() ==~ /[0-9.]+% overall alignment rate/ }.every()}",
+                    "MEGAHIT: ${megahit_logs.collect { log -> (log.readLines().last() =~ /ALL DONE. Time elapsed: [0-9.]+ seconds/).find() }.every()}",
+                    "Bowtie2 assembly alignment: ${bowtie2_logs.collect { log -> log.readLines().last() ==~ /[0-9.]+% overall alignment rate/ }.every()}",
+                    "CheckM2: ${checkm2_logs.collect { log -> log.readLines().last().contains('CheckM2 finished successfully.') }.every()}",
+                ).match("log-checks") },
             )
         }
     }
