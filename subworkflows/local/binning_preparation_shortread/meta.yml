@@ -1,0 +1,77 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "shortread_binning_preparation"
+description: Preparation of short-read assemblies for metagenomic binning
+keywords:
+  - binning
+  - preparation
+  - short reads
+  - metagenomics
+  - mapping
+components:
+  - bowtie2/assembly/build
+  - bowtie2/assembly/align
+  - samtools/sort
+  - samtools/index
+input:
+  - ch_assemblies:
+      description: Short-read assembled contigs
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - fasta:
+            type: file
+            description: Short-read assembled contigs in FASTA format
+            pattern: "*.{fasta,fa}"
+  - ch_reads:
+      description: Short reads
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - fastq1:
+            type: file
+            description: First pair of short-read FASTQ files
+            pattern: "*.{fastq,fq}.gz"
+        - fastq2:
+            type: file
+            description: Second pair of short-read FASTQ files
+            pattern: "*.{fastq,fq}.gz"
+output:
+  - grouped_mappings:
+      description: Grouped mappings of reads to assemblies
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - assembly:
+            type: file
+            description: Assembly FASTA file
+            pattern: "*.{fasta,fa}"
+        - bam:
+            type: file
+            description: BAM alignment files (array)
+            pattern: "*.bam"
+        - bai:
+            type: file
+            description: BAM index files (array)
+            pattern: "*.bai"
+  - bowtie2_assembly_multiqc:
+      description: Bowtie2 alignment log files for MultiQC
+      structure:
+        - log:
+            type: file
+            description: Bowtie2 alignment log files
+            pattern: "*.log"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@muabnezor"
+maintainers:
+  - "@jfy133"
+  - "@prototaxites"
+  - "@dialvarezs"
+  - "@d4straub"
+  - "@muabnezor"

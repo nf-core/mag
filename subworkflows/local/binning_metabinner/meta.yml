@@ -1,0 +1,70 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "binning_metabinner"
+description: Performs metagenomic binning using MetaBinner
+keywords:
+  - binning
+  - metagenomics
+  - metabinner
+components:
+  - metabinner/kmer
+  - metabinner/tooshort
+  - metabinner/metabinner
+  - metabinner/bins
+input:
+  - ch_input:
+      description: Assembled contigs with corresponding depth information
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - fasta:
+            type: file
+            description: Assembled contigs in FASTA format
+            pattern: "*.{fasta,fa}"
+        - depth:
+            type: file
+            description: Contig depth/coverage information
+            pattern: "*.txt"
+output:
+  - tooshort:
+      description: Contigs below the minimum size threshold
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - fasta:
+            type: file
+            description: Short contigs in FASTA format
+            pattern: "*.{fasta,fa}"
+  - unbinned:
+      description: Unbinned sequences
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - fasta:
+            type: file
+            description: Unbinned sequences in FASTA format
+            pattern: "*.{fasta,fa}"
+  - bins:
+      description: Binned sequences
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - fasta:
+            type: file
+            description: Binned sequences in FASTA format
+            pattern: "*.{fasta,fa}"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@d4straub"
+maintainers:
+  - "@jfy133"
+  - "@prototaxites"
+  - "@dialvarezs"
+  - "@d4straub"
+  - "@muabnezor"

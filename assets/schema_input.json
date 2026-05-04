@@ -10,24 +10,72 @@
             "sample": {
                 "type": "string",
                 "pattern": "^\\S+$",
-                "errorMessage": "Sample name must be provided and cannot contain spaces",
-                "meta": ["id"]
+                "meta": ["id"],
+                "errorMessage": "Sample needs to be string or integer with no spaces!"
             },
-            "fastq_1": {
+            "run": {
+                "type": ["string", "integer"],
+                "pattern": "^\\S+$",
+                "meta": ["run"],
+                "unique": ["sample"],
+                "errorMessage": "Run needs to be string or integer with no spaces!"
+            },
+            "group": {
+                "type": ["string", "integer"],
+                "pattern": "^\\S+$",
+                "meta": ["group"],
+                "errorMessage": "Group needs to be string or integer with no spaces!"
+            },
+            "short_reads_1": {
                 "type": "string",
                 "format": "file-path",
                 "exists": true,
-                "pattern": "^([\\S\\s]*\\/)?[^\\s\\/]+\\.f(ast)?q\\.gz$",
-                "errorMessage": "FastQ file for reads 1 must be provided, cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
+                "pattern": "^\\S+\\.f(ast)?q\\.gz$",
+                "errorMessage": "short_reads_1 needs to be a file path with no spaces.\n\nFile needs to exist!"
             },
-            "fastq_2": {
+            "short_reads_2": {
                 "type": "string",
                 "format": "file-path",
                 "exists": true,
-                "pattern": "^([\\S\\s]*\\/)?[^\\s\\/]+\\.f(ast)?q\\.gz$",
-                "errorMessage": "FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
+                "pattern": "^\\S+\\.f(ast)?q\\.gz$",
+                "errorMessage": "short_reads_2 needs to be a file path with no spaces.\n\nFile needs to exist!"
+            },
+            "short_reads_platform": {
+                "type": "string",
+                "enum": [
+                    "ILLUMINA",
+                    "BGISEQ",
+                    "LS454",
+                    "ION_TORRENT",
+                    "DNBSEQ",
+                    "ELEMENT",
+                    "ULTIMA",
+                    "VELA_DIAGNOSTICS",
+                    "GENAPSYS",
+                    "GENEMIND",
+                    "TAPESTRI"
+                ],
+                "meta": ["sr_platform"]
+            },
+            "long_reads": {
+                "type": "string",
+                "format": "file-path",
+                "exists": true,
+                "pattern": "^\\S+\\.f(ast)?q\\.gz$"
+            },
+            "long_reads_platform": {
+                "type": "string",
+                "enum": ["OXFORD_NANOPORE", "OXFORD_NANOPORE_HQ", "PACBIO_CLR", "PACBIO_HIFI"],
+                "meta": ["lr_platform"]
             }
         },
-        "required": ["sample", "fastq_1"]
-    }
+        "required": ["sample", "group"],
+        "anyOf": [{ "required": ["short_reads_1"] }, { "required": ["long_reads"] }],
+        "dependentRequired": {
+            "short_reads_2": ["short_reads_1"],
+            "short_reads_1": ["short_reads_platform"],
+            "long_reads": ["long_reads_platform"]
+        }
+    },
+    "uniqueEntries": ["sample", "run"]
 }

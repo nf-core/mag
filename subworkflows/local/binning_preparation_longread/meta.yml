@@ -1,0 +1,66 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "longread_binning_preparation"
+description: Preparation of long-read assemblies for metagenomic binning
+keywords:
+  - binning
+  - preparation
+  - long reads
+  - metagenomics
+  - mapping
+components:
+  - minimap2/index
+  - minimap2/align
+  - samtools/sort
+  - samtools/index
+input:
+  - ch_assemblies:
+      description: Long-read assembled contigs
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - fasta:
+            type: file
+            description: Long-read assembled contigs in FASTA format
+            pattern: "*.{fasta,fa}"
+  - ch_reads:
+      description: Long reads
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - fastq:
+            type: file
+            description: Long-read FASTQ files
+            pattern: "*.{fastq,fq}.gz"
+output:
+  - grouped_mappings:
+      description: Grouped mappings of reads to assemblies
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - assembly:
+            type: file
+            description: Assembly FASTA file
+            pattern: "*.{fasta,fa}"
+        - bam:
+            type: file
+            description: BAM alignment files (array)
+            pattern: "*.bam"
+        - bai:
+            type: file
+            description: BAM index files (array)
+            pattern: "*.bai"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@muabnezor"
+maintainers:
+  - "@jfy133"
+  - "@prototaxites"
+  - "@dialvarezs"
+  - "@d4straub"
+  - "@muabnezor"
