@@ -134,10 +134,10 @@
                 "SPAdesHybrid-SemiBin2-minigut_1.txt:md5,4e816e8ece9df68f04e211b5a1bdafaf"
             ]
         ],
-        "timestamp": "2026-04-28T16:00:28.107117607",
+        "timestamp": "2026-05-04T16:23:33.110973355",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.0"
         }
     },
     "-profile hybrid": {
@@ -282,10 +282,10 @@
                 }
             }
         ],
-        "timestamp": "2026-04-28T16:00:25.769321048",
+        "timestamp": "2026-05-04T16:23:31.360326171",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.0"
         }
     },
     "log-checks": {
@@ -298,10 +298,10 @@
             "Bowtie2: true",
             "Prokka: true"
         ],
-        "timestamp": "2026-04-28T17:09:35.25284171",
+        "timestamp": "2026-05-04T16:23:37.97190849",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.0"
         }
     },
     "qc_longreads": {
@@ -331,10 +331,10 @@
                 "minigut_null.stats:md5,e7ef22efc494097a3ad803e35d2b6469"
             ]
         ],
-        "timestamp": "2026-04-28T16:22:06.468716793",
+        "timestamp": "2026-05-04T16:23:31.385786675",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.0"
         }
     },
     "assembly": {
@@ -382,10 +382,10 @@
                 "SPAdesHybrid-minigut.scaffolds.fa.gz:md5,9f8379b4e650bc0377b87d589cb4e274"
             ]
         ],
-        "timestamp": "2026-04-28T16:14:52.589842664",
+        "timestamp": "2026-05-04T16:23:31.972802832",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.0"
         }
     },
     "binning": {
@@ -672,10 +672,10 @@
                 "versions.yml:md5,553ee8a62e65d93ce1163bb16314da29"
             ]
         ],
-        "timestamp": "2026-04-28T16:54:30.014024564",
+        "timestamp": "2026-05-04T16:23:32.520753737",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.0"
         }
     },
     "content-checks": {
@@ -689,10 +689,10 @@
             "Prokka SQN files non-empty: true",
             "Bin summary row count matches bins: true"
         ],
-        "timestamp": "2026-04-28T16:54:32.052999716",
+        "timestamp": "2026-05-04T16:23:36.511781566",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.0"
         }
     },
     "qc_shortreads": {
@@ -712,10 +712,10 @@
                 "minigut_run0_host_removed.bowtie2.log:md5,7f8750bca9c172f14c13703bfaa9aaa5"
             ]
         ],
-        "timestamp": "2026-04-28T16:14:51.504593154",
+        "timestamp": "2026-05-04T16:23:31.371340119",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.0"
         }
     },
     "multiqc": {
@@ -959,17 +959,10 @@
                 "quast_table.yaml:md5,e5720e81c420f07480481ac3c75bb822"
             ]
         ],
-<<<<<<< HEAD
-        "timestamp": "2026-04-28T16:00:28.862120477",
-||||||| c2cce5dc
-        "timestamp": "2025-12-01T14:45:00.164025293",
-=======
-        "timestamp": "2026-05-04T10:28:55.649537639",
->>>>>>> dev
+        "timestamp": "2026-05-04T16:23:33.836970957",
         "meta": {
-<<<<<<< HEAD
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.0"
         }
     },
     "summary-rows": {
@@ -978,17 +971,10 @@
             "QUAST bin summary: 6",
             "BUSCO summary: 6"
         ],
-        "timestamp": "2026-04-28T14:45:41.627528534",
+        "timestamp": "2026-05-04T16:23:37.243562549",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
-||||||| c2cce5dc
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.0"
-=======
-            "nf-test": "0.9.5",
             "nextflow": "26.04.0"
->>>>>>> dev
         }
     }
 }
