@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1018](https://github.com/nf-core/mag/pull/1018) - Ignore `catpack/summarise` errors, since it's a limitation from the tool (reported by @jfy133, fix by @dialvarezs)
 - [#1018](https://github.com/nf-core/mag/pull/1018) - Feed `catpack/contig` with merged unbinned output to prevent execution errors (reported by @Juassis, fix by @dialvarezs)
 - [#1021](https://github.com/nf-core/mag/pull/1021) - Prevent execution of `gtdbtk/summary` when no bins pass QC (reported by @jfy133, fix by @dialvarezs)
+- [#1031](https://github.com/nf-core/mag/pull/1031) - Fix hybrid co-assembly with SPAdes (short & long reads with `--coassemble_group`) (fix by @d4straub)
 
 ### `Dependencies`
 
