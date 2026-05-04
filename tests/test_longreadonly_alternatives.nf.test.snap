@@ -236,24 +236,34 @@
     "multiqc": {
         "content": [
             [
+                "multiqc/multiqc_data/busco_plot_bacteria_odb10.yaml",
                 "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/multiqc.log",
                 "multiqc/multiqc_data/multiqc.parquet",
+                "multiqc/multiqc_data/multiqc_busco.yaml",
                 "multiqc/multiqc_data/multiqc_citations.yaml",
                 "multiqc/multiqc_data/multiqc_data.json",
                 "multiqc/multiqc_data/multiqc_general_stats.yaml",
                 "multiqc/multiqc_data/multiqc_software_versions.yaml",
                 "multiqc/multiqc_data/multiqc_sources.yaml",
                 "multiqc/multiqc_data/porechop.yaml",
+                "multiqc/multiqc_plots/pdf/busco_plot_bacteria_odb10-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/busco_plot_bacteria_odb10-pct.pdf",
+                "multiqc/multiqc_plots/png/busco_plot_bacteria_odb10-cnt.png",
+                "multiqc/multiqc_plots/png/busco_plot_bacteria_odb10-pct.png",
+                "multiqc/multiqc_plots/svg/busco_plot_bacteria_odb10-cnt.svg",
+                "multiqc/multiqc_plots/svg/busco_plot_bacteria_odb10-pct.svg",
                 "multiqc/multiqc_report.html"
             ],
             [
-                "multiqc_citations.yaml:md5,96e837cbd6357188fbf13476810a4326",
-                "multiqc_general_stats.yaml:md5,f5594b277c894e24b538c4ef9e468e3d",
+                "busco_plot_bacteria_odb10.yaml:md5,b9602874259ba8bcb3903136ba26c34e",
+                "multiqc_busco.yaml:md5,7f414ae44f5277a881c7ae86bac13ab6",
+                "multiqc_citations.yaml:md5,cd0615b89829a041bc2a33cdb69b585b",
+                "multiqc_general_stats.yaml:md5,29514b760bf201d07e47885543807eb8",
                 "porechop.yaml:md5,828d96e2822bb4b4108ab706c00c4450"
             ]
         ],
-        "timestamp": "2026-05-04T09:01:09.408367383",
+        "timestamp": "2026-05-04T10:26:58.989023787",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.0"

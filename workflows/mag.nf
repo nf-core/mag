@@ -56,7 +56,6 @@ workflow MAG {
     multiqc_methods_description
     outdir
 
-
     main:
 
     def ch_versions = channel.empty()
@@ -591,13 +590,39 @@ workflow MAG {
             storeDir: "${outdir}/pipeline_info",
             name: 'nf_core_' + 'mag_software_' + 'mqc_' + 'versions.yml',
             sort: true,
-            newLine: true
+            newLine: true,
         )
 
     //
     // MODULE: MultiQC
     //
     ch_multiqc_files = ch_multiqc_files.mix(ch_collated_versions)
+    if (!params.skip_quast) {
+        ch_multiqc_files = ch_multiqc_files.mix(QUAST.out.report.collect().ifEmpty([]))
+
+        if (!params.skip_binning) {
+            ch_multiqc_files = ch_multiqc_files.mix(QUAST_BINS.out.dir.collect().ifEmpty([]))
+        }
+    }
+
+    if (!params.skip_binning || params.ancient_dna) {
+        ch_multiqc_files = ch_multiqc_files.mix(BINNING_PREPARATION.out.multiqc_files.collect().ifEmpty([]))
+    }
+
+    if (!params.skip_binning) {
+        if (!params.skip_prokka) {
+            ch_multiqc_files = ch_multiqc_files.mix(PROKKA.out.txt.collect { _meta, report -> report }.ifEmpty([]))
+        }
+
+        if (!params.skip_binqc) {
+            ch_multiqc_files = ch_multiqc_files.mix(BIN_QC.out.multiqc_files.collect().ifEmpty([]))
+        }
+
+        if (!params.skip_gtdbtk) {
+            ch_multiqc_files = ch_multiqc_files.mix(GTDBTK.out.multiqc_files.collect().ifEmpty([]))
+        }
+    }
+
     def ch_summary_params = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
     def ch_workflow_summary = channel.value(paramsSummaryMultiqc(ch_summary_params))
     ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
@@ -620,6 +645,8 @@ workflow MAG {
             ]
         }
     )
-    emit:multiqc_report = MULTIQC.out.report.map { _meta, report -> [report] }.toList() // channel: /path/to/multiqc_report.html
-    versions       = ch_versions                 // channel: [ path(versions.yml) ]
+
+    emit:
+    multiqc_report = MULTIQC.out.report.map { _meta, report -> [report] }.toList() // channel: /path/to/multiqc_report.html
+    versions       = ch_versions // channel: [ path(versions.yml) ]
 }
