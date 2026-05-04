@@ -1,16 +1,4 @@
 {
-    "checkm2_diamond_results": {
-        "content": [
-            [
-                803
-            ]
-        ],
-        "timestamp": "2026-04-09T09:26:17.051486942",
-        "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
-        }
-    },
     "-profile test_alternatives": {
         "content": [
             34,
@@ -109,10 +97,10 @@
                 }
             }
         ],
-        "timestamp": "2026-04-09T09:26:16.022799747",
+        "timestamp": "2026-05-04T09:01:04.93757437",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.0"
         }
     },
     "qc": {
@@ -136,10 +124,23 @@
                 "test_minigut_sample2_run0_trimmomatic_trim.log:md5,ea9f15adce3091c96ef7ba6285957676"
             ]
         ],
-        "timestamp": "2025-11-06T10:43:54.445183941",
+        "timestamp": "2026-05-04T09:01:04.988679626",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.0"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
+    },
+    "log-checks": {
+        "content": [
+            "PhiX removal: true",
+            "MEGAHIT: true",
+            "Bowtie2 assembly alignment: true",
+            "CheckM2: true"
+        ],
+        "timestamp": "2026-04-22T08:27:57.789443458",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
         }
     },
     "assembly": {
@@ -154,10 +155,10 @@
                 "MEGAHIT-group-0.contigs.fa.gz:md5,4b1c9360be95e596b87194b12a5db645"
             ]
         ],
-        "timestamp": "2025-11-06T10:43:54.492525519",
+        "timestamp": "2026-05-04T09:01:05.048972831",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.0"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
         }
     },
     "binning": {
@@ -243,7 +244,25 @@
                 "versions.yml:md5,553ee8a62e65d93ce1163bb16314da29"
             ]
         ],
-        "timestamp": "2026-04-09T09:26:16.336537006",
+        "timestamp": "2026-05-04T09:01:05.436317997",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
+    },
+    "content-checks": {
+        "content": [
+            "MEGAHIT contigs non-empty: true",
+            "MetaBAT2 bins non-empty: true",
+            "MetaBAT2 unbinned/discarded non-empty: true",
+            "Bin summary non-empty: true",
+            "Bin summary row count matches bins: true",
+            "BUSCO summary non-empty: true",
+            "CheckM2 summary non-empty: true",
+            "CheckM2 DIAMOND results non-empty: true",
+            "Tiara summary non-empty: true"
+        ],
+        "timestamp": "2026-04-22T08:27:57.756822178",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -373,22 +392,22 @@
                 "busco_plot_bacteria_odb12.yaml:md5,fe957f6a2657f22027eab7c93a4db021",
                 "checkm2-first-table.yaml:md5,0efa2d81e6b4dea3218aa0fbc12d853e",
                 "fastqc-1-status-check-heatmap.yaml:md5,30f0c0bbefd3e9c549116c8b7cc2ac25",
-                "fastqc-1_per_base_n_content_plot.yaml:md5,f43001053b544ba5585040c18859a098",
-                "fastqc-1_per_base_sequence_quality_plot.yaml:md5,48276488936fd9c2e52b53a58dae0ffb",
-                "fastqc-1_per_sequence_gc_content_plot_Counts.yaml:md5,8bd25680506b10fe51bc4945b1656c4c",
-                "fastqc-1_per_sequence_gc_content_plot_Percentages.yaml:md5,3779a4e9c77ef8c227ea81d9888951f1",
-                "fastqc-1_per_sequence_quality_scores_plot.yaml:md5,833a15c40019cb984d098baa07e221b9",
+                "fastqc-1_per_base_n_content_plot.yaml:md5,80a627bfce9e28c6597176a216d95350",
+                "fastqc-1_per_base_sequence_quality_plot.yaml:md5,be62d6c90a866e05b052f08462c3867f",
+                "fastqc-1_per_sequence_gc_content_plot_Counts.yaml:md5,2fc6484b083f7b0a19d80ccef7adc63e",
+                "fastqc-1_per_sequence_gc_content_plot_Percentages.yaml:md5,034791501983db6dcea0d115cc6cdd94",
+                "fastqc-1_per_sequence_quality_scores_plot.yaml:md5,3b835a0af90e0f2428df1bac44f6878a",
                 "fastqc-1_sequence_counts_plot.yaml:md5,f0bcde34333ad21ba714a6aeb8d6a858",
-                "fastqc-1_sequence_duplication_levels_plot.yaml:md5,93c7de02685a5a922b310ad94b67cf2f",
+                "fastqc-1_sequence_duplication_levels_plot.yaml:md5,7ed8c62f38424e0183e115932632be85",
                 "fastqc-status-check-heatmap.yaml:md5,45096eff6b0531cbe7ba0771e272d65d",
-                "fastqc_per_base_n_content_plot.yaml:md5,ea488ff73d10d4a84b551020409db087",
-                "fastqc_per_base_sequence_quality_plot.yaml:md5,73a043ea7f124e6474ac11270533de03",
-                "fastqc_per_sequence_gc_content_plot_Counts.yaml:md5,c900477e0cd3a369f269bc65857377ed",
-                "fastqc_per_sequence_gc_content_plot_Percentages.yaml:md5,84477f6801dcadfe0d759c2c50799b6e",
-                "fastqc_per_sequence_quality_scores_plot.yaml:md5,c04ad6e6a6d61f2bbc238c61e1883317",
+                "fastqc_per_base_n_content_plot.yaml:md5,20ec18f0f43f248fe82d72935ec58e6a",
+                "fastqc_per_base_sequence_quality_plot.yaml:md5,74ca6b5aa4d26bede51537e853821f30",
+                "fastqc_per_sequence_gc_content_plot_Counts.yaml:md5,27a1eefc1162f3efcb6c49625d8dab20",
+                "fastqc_per_sequence_gc_content_plot_Percentages.yaml:md5,0a6b969bf02309636f5a285978a17b65",
+                "fastqc_per_sequence_quality_scores_plot.yaml:md5,2ab35cd593832260498b8352eed31894",
                 "fastqc_sequence_counts_plot.yaml:md5,d9fd3b9d7b190aba26702cf73a50bd20",
-                "fastqc_sequence_duplication_levels_plot.yaml:md5,73719c3f3fa610204a42cd7155d73db1",
-                "fastqc_sequence_length_distribution_plot.yaml:md5,78c762e20322ee4d63f869961186c15c",
+                "fastqc_sequence_duplication_levels_plot.yaml:md5,12e97e035fe5b0a924d47873e215c6c2",
+                "fastqc_sequence_length_distribution_plot.yaml:md5,a39b46c991ab0b8589bace6a12c30bdd",
                 "multiqc_bowtie2.yaml:md5,6607915ea98168dbcad83cda2ec464dc",
                 "multiqc_bowtie2_bowtie2-2.yaml:md5,2a389e80ea3e2afb772fe4cd2779d0b2",
                 "multiqc_busco.yaml:md5,c8778357e4d7c966e6360ba024bea55b",
@@ -401,7 +420,21 @@
                 "trimmomatic_plot.yaml:md5,9557cd587ace0a93912179cb0deafe3b"
             ]
         ],
-        "timestamp": "2026-04-09T09:26:16.702407899",
+        "timestamp": "2026-05-04T10:26:57.512598405",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
+    },
+    "summary-rows": {
+        "content": [
+            "Bin summary: 2",
+            "BUSCO summary: 2",
+            "CheckM2 summary: 2",
+            "CheckM2 DIAMOND results: [803]",
+            "Tiara summary: 2"
+        ],
+        "timestamp": "2026-04-22T08:27:57.772778533",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
