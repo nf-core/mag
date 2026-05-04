@@ -154,11 +154,6 @@
                     "enum": ["symlink", "rellink", "link", "copy", "copyNoFollow", "move"],
                     "hidden": true
                 },
-                "monochrome_logs": {
-                    "type": "boolean",
-                    "description": "Use monochrome_logs",
-                    "hidden": true
-                },
                 "email_on_fail": {
                     "type": "string",
                     "description": "Email address for completion summary, only when pipeline fails.",

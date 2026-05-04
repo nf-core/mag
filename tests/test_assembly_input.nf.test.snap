@@ -578,8 +578,6 @@
     "multiqc": {
         "content": [
             [
-                "multiqc/multiqc_data/bowtie2_pe_plot.yaml",
-                "multiqc/multiqc_data/busco_plot_bacteria_odb10.yaml",
                 "multiqc/multiqc_data/fastqc-status-check-heatmap.yaml",
                 "multiqc/multiqc_data/fastqc_per_base_n_content_plot.yaml",
                 "multiqc/multiqc_data/fastqc_per_base_sequence_quality_plot.yaml",
@@ -591,18 +589,12 @@
                 "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/multiqc.log",
                 "multiqc/multiqc_data/multiqc.parquet",
-                "multiqc/multiqc_data/multiqc_bowtie2_bowtie2-2.yaml",
-                "multiqc/multiqc_data/multiqc_busco.yaml",
                 "multiqc/multiqc_data/multiqc_citations.yaml",
                 "multiqc/multiqc_data/multiqc_data.json",
                 "multiqc/multiqc_data/multiqc_fastqc.yaml",
                 "multiqc/multiqc_data/multiqc_general_stats.yaml",
                 "multiqc/multiqc_data/multiqc_software_versions.yaml",
                 "multiqc/multiqc_data/multiqc_sources.yaml",
-                "multiqc/multiqc_plots/pdf/bowtie2_pe_plot-cnt.pdf",
-                "multiqc/multiqc_plots/pdf/bowtie2_pe_plot-pct.pdf",
-                "multiqc/multiqc_plots/pdf/busco_plot_bacteria_odb10-cnt.pdf",
-                "multiqc/multiqc_plots/pdf/busco_plot_bacteria_odb10-pct.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc-status-check-heatmap.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc_per_base_n_content_plot.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc_per_base_sequence_quality_plot.pdf",
@@ -612,10 +604,6 @@
                 "multiqc/multiqc_plots/pdf/fastqc_sequence_counts_plot-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc_sequence_counts_plot-pct.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc_sequence_duplication_levels_plot.pdf",
-                "multiqc/multiqc_plots/png/bowtie2_pe_plot-cnt.png",
-                "multiqc/multiqc_plots/png/bowtie2_pe_plot-pct.png",
-                "multiqc/multiqc_plots/png/busco_plot_bacteria_odb10-cnt.png",
-                "multiqc/multiqc_plots/png/busco_plot_bacteria_odb10-pct.png",
                 "multiqc/multiqc_plots/png/fastqc-status-check-heatmap.png",
                 "multiqc/multiqc_plots/png/fastqc_per_base_n_content_plot.png",
                 "multiqc/multiqc_plots/png/fastqc_per_base_sequence_quality_plot.png",
@@ -625,10 +613,6 @@
                 "multiqc/multiqc_plots/png/fastqc_sequence_counts_plot-cnt.png",
                 "multiqc/multiqc_plots/png/fastqc_sequence_counts_plot-pct.png",
                 "multiqc/multiqc_plots/png/fastqc_sequence_duplication_levels_plot.png",
-                "multiqc/multiqc_plots/svg/bowtie2_pe_plot-cnt.svg",
-                "multiqc/multiqc_plots/svg/bowtie2_pe_plot-pct.svg",
-                "multiqc/multiqc_plots/svg/busco_plot_bacteria_odb10-cnt.svg",
-                "multiqc/multiqc_plots/svg/busco_plot_bacteria_odb10-pct.svg",
                 "multiqc/multiqc_plots/svg/fastqc-status-check-heatmap.svg",
                 "multiqc/multiqc_plots/svg/fastqc_per_base_n_content_plot.svg",
                 "multiqc/multiqc_plots/svg/fastqc_per_base_sequence_quality_plot.svg",
@@ -641,27 +625,23 @@
                 "multiqc/multiqc_report.html"
             ],
             [
-                "bowtie2_pe_plot.yaml:md5,d47c21d3c14102edf43e36521aa3fcf6",
-                "busco_plot_bacteria_odb10.yaml:md5,7f5685578d237300ffde11c05693f754",
                 "fastqc-status-check-heatmap.yaml:md5,45096eff6b0531cbe7ba0771e272d65d",
-                "fastqc_per_base_n_content_plot.yaml:md5,ea488ff73d10d4a84b551020409db087",
-                "fastqc_per_base_sequence_quality_plot.yaml:md5,73a043ea7f124e6474ac11270533de03",
-                "fastqc_per_sequence_gc_content_plot_Counts.yaml:md5,c900477e0cd3a369f269bc65857377ed",
-                "fastqc_per_sequence_gc_content_plot_Percentages.yaml:md5,84477f6801dcadfe0d759c2c50799b6e",
-                "fastqc_per_sequence_quality_scores_plot.yaml:md5,c04ad6e6a6d61f2bbc238c61e1883317",
+                "fastqc_per_base_n_content_plot.yaml:md5,20ec18f0f43f248fe82d72935ec58e6a",
+                "fastqc_per_base_sequence_quality_plot.yaml:md5,74ca6b5aa4d26bede51537e853821f30",
+                "fastqc_per_sequence_gc_content_plot_Counts.yaml:md5,27a1eefc1162f3efcb6c49625d8dab20",
+                "fastqc_per_sequence_gc_content_plot_Percentages.yaml:md5,0a6b969bf02309636f5a285978a17b65",
+                "fastqc_per_sequence_quality_scores_plot.yaml:md5,2ab35cd593832260498b8352eed31894",
                 "fastqc_sequence_counts_plot.yaml:md5,d9fd3b9d7b190aba26702cf73a50bd20",
-                "fastqc_sequence_duplication_levels_plot.yaml:md5,73719c3f3fa610204a42cd7155d73db1",
-                "multiqc_bowtie2_bowtie2-2.yaml:md5,34efd9a91ede5c3d7150b8de2f4c20f0",
-                "multiqc_busco.yaml:md5,bd57c1b4856b5536bf89d54b2d8cd807",
-                "multiqc_citations.yaml:md5,4aaa7714bb3dba1dd50f383c2ae4f4bb",
+                "fastqc_sequence_duplication_levels_plot.yaml:md5,12e97e035fe5b0a924d47873e215c6c2",
+                "multiqc_citations.yaml:md5,96e837cbd6357188fbf13476810a4326",
                 "multiqc_fastqc.yaml:md5,f50da8bfd062b9399911ba19b34831db",
-                "multiqc_general_stats.yaml:md5,74cbceac2d727ad5a62cfa1865765cb1"
+                "multiqc_general_stats.yaml:md5,72d18deaa40c2f178cb47b70c00a6a89"
             ]
         ],
-        "timestamp": "2026-04-09T08:14:07.456816727",
+        "timestamp": "2026-05-04T09:00:17.676079533",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.0"
         }
     }
 }
