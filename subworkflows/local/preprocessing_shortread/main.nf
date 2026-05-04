@@ -30,7 +30,6 @@ workflow SHORTREAD_PREPROCESSING {
     ch_multiqc_files = channel.empty()
 
     FASTQC_RAW(ch_raw_short_reads)
-    ch_versions = ch_versions.mix(FASTQC_RAW.out.versions)
     ch_multiqc_files = ch_multiqc_files.mix(FASTQC_RAW.out.zip)
 
     if (!params.assembly_input) {
@@ -157,7 +156,6 @@ workflow SHORTREAD_PREPROCESSING {
                 FASTQC_TRIMMED(
                     ch_short_reads_for_merge
                 )
-                ch_versions = ch_versions.mix(FASTQC_TRIMMED.out.versions)
                 ch_multiqc_files = ch_multiqc_files.mix(FASTQC_TRIMMED.out.zip)
             }
         }

@@ -147,21 +147,21 @@
             [
                 "bowtie2_pe_plot.yaml:md5,2d7ab6533274a65092fca46026274f4d",
                 "fastqc-1-status-check-heatmap.yaml:md5,d12f9971085a7f5d75ce27b0f39d9634",
-                "fastqc-1_per_base_n_content_plot.yaml:md5,26ce498e1e954cf5abb64eb6a2ac21c9",
-                "fastqc-1_per_base_sequence_quality_plot.yaml:md5,4f6d6bfa43ffca593045203774d798e0",
-                "fastqc-1_per_sequence_gc_content_plot_Counts.yaml:md5,46ef2d8474c0ad1614512a148215cfbc",
-                "fastqc-1_per_sequence_gc_content_plot_Percentages.yaml:md5,463a8ee72ef5e7be6397e7a7b546b6ed",
-                "fastqc-1_per_sequence_quality_scores_plot.yaml:md5,055849ce72423c26bdb0daaffe523523",
+                "fastqc-1_per_base_n_content_plot.yaml:md5,fc8f9f860611f9a3065b3c25d5bf5200",
+                "fastqc-1_per_base_sequence_quality_plot.yaml:md5,271e50ca9b301ae41325bd7ace69ec2d",
+                "fastqc-1_per_sequence_gc_content_plot_Counts.yaml:md5,f37575ade0a5d357f2ce7b8556527a17",
+                "fastqc-1_per_sequence_gc_content_plot_Percentages.yaml:md5,e5324b5be5e63b7400dd4faaf63accb0",
+                "fastqc-1_per_sequence_quality_scores_plot.yaml:md5,3f380ae2787fbd78dae7775537a2aabc",
                 "fastqc-1_sequence_counts_plot.yaml:md5,59acbe311b14c6fdff8889a5dc0be188",
-                "fastqc-1_sequence_duplication_levels_plot.yaml:md5,943e6c1dd6d2e3dab955ccd9f8a4fa32",
+                "fastqc-1_sequence_duplication_levels_plot.yaml:md5,d0eafe1e02513408456d83c5c55aaf06",
                 "fastqc-status-check-heatmap.yaml:md5,45096eff6b0531cbe7ba0771e272d65d",
-                "fastqc_per_base_n_content_plot.yaml:md5,ea488ff73d10d4a84b551020409db087",
-                "fastqc_per_base_sequence_quality_plot.yaml:md5,73a043ea7f124e6474ac11270533de03",
-                "fastqc_per_sequence_gc_content_plot_Counts.yaml:md5,c900477e0cd3a369f269bc65857377ed",
-                "fastqc_per_sequence_gc_content_plot_Percentages.yaml:md5,84477f6801dcadfe0d759c2c50799b6e",
-                "fastqc_per_sequence_quality_scores_plot.yaml:md5,c04ad6e6a6d61f2bbc238c61e1883317",
+                "fastqc_per_base_n_content_plot.yaml:md5,20ec18f0f43f248fe82d72935ec58e6a",
+                "fastqc_per_base_sequence_quality_plot.yaml:md5,74ca6b5aa4d26bede51537e853821f30",
+                "fastqc_per_sequence_gc_content_plot_Counts.yaml:md5,27a1eefc1162f3efcb6c49625d8dab20",
+                "fastqc_per_sequence_gc_content_plot_Percentages.yaml:md5,0a6b969bf02309636f5a285978a17b65",
+                "fastqc_per_sequence_quality_scores_plot.yaml:md5,2ab35cd593832260498b8352eed31894",
                 "fastqc_sequence_counts_plot.yaml:md5,d9fd3b9d7b190aba26702cf73a50bd20",
-                "fastqc_sequence_duplication_levels_plot.yaml:md5,73719c3f3fa610204a42cd7155d73db1",
+                "fastqc_sequence_duplication_levels_plot.yaml:md5,12e97e035fe5b0a924d47873e215c6c2",
                 "multiqc_bowtie2.yaml:md5,ec545a7f2fb2063843656189a8f230d3",
                 "multiqc_citations.yaml:md5,05dac77128eb2753da32070f6f51b242",
                 "multiqc_fastqc.yaml:md5,f50da8bfd062b9399911ba19b34831db",
@@ -169,10 +169,10 @@
                 "multiqc_general_stats.yaml:md5,7af44ea787e0cd5aa679fb7e7e7370f8"
             ]
         ],
-        "timestamp": "2025-12-01T14:39:25.68546084",
+        "timestamp": "2026-05-04T08:58:06.583951903",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.0"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
         }
     }
 }

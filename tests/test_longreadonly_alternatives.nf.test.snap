@@ -25,10 +25,10 @@
                 "minigut_run0_nanoq_filtered.stats:md5,00dfdbb0bfa701faf739b3339246a4d0"
             ]
         ],
-        "timestamp": "2026-04-22T16:49:12.811100286",
+        "timestamp": "2026-05-04T09:01:09.14935308",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.0"
         }
     },
     "log-checks": {
@@ -55,10 +55,10 @@
                 "FLYE-minigut.assembly_graph.gfa.gz:md5,f23173732f3fdb68e26276438fc6bc9d"
             ]
         ],
-        "timestamp": "2026-04-22T16:49:12.81667273",
+        "timestamp": "2026-05-04T09:01:09.225550467",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.0"
         }
     },
     "binning": {
@@ -118,10 +118,10 @@
                 "versions.yml:md5,553ee8a62e65d93ce1163bb16314da29"
             ]
         ],
-        "timestamp": "2026-04-22T16:49:12.853554235",
+        "timestamp": "2026-05-04T09:01:09.311479538",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.0"
         }
     },
     "content-checks": {
@@ -227,10 +227,10 @@
                 }
             }
         ],
-        "timestamp": "2026-04-22T16:49:12.799807356",
+        "timestamp": "2026-05-04T09:01:09.110131351",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.0"
         }
     },
     "multiqc": {
@@ -263,10 +263,10 @@
                 "porechop.yaml:md5,828d96e2822bb4b4108ab706c00c4450"
             ]
         ],
-        "timestamp": "2026-04-22T16:49:12.918619012",
+        "timestamp": "2026-05-04T10:26:58.989023787",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.0"
         }
     },
     "summary-rows": {
