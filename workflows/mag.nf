@@ -36,7 +36,8 @@ include { PROKKA                          } from '../modules/nf-core/prokka/main
 include { MMSEQS_DATABASES                } from '../modules/nf-core/mmseqs/databases/main'
 include { METAEUK_EASYPREDICT             } from '../modules/nf-core/metaeuk/easypredict/main'
 include { ALE                             } from '../modules/nf-core/ale/main'
-include { DEEPMASED                       } from '../modules/nf-core/deepmased/main'
+include { DEEPMASED_FEATURES              } from '../modules/nf-core/deepmased/features/main'
+include { DEEPMASED_PREDICT               } from '../modules/nf-core/deepmased/predict/main'
 
 //
 // MODULE: Local to the pipeline
@@ -302,6 +303,14 @@ workflow MAG {
     */
 
     if (!params.skip_deepmased) {
+        // Validate DeepMAsED subcommand dependencies at startup:
+        // DEEPMASED_PREDICT requires the output of DEEPMASED_FEATURES and cannot run without it.
+        if (params.skip_deepmased_features && !params.skip_deepmased_predict) {
+            error "[nf-core/mag] ERROR: '--skip_deepmased_features true' cannot be used without '--skip_deepmased_predict true'. " +
+                  "DEEPMASED_PREDICT requires the feature tables produced by DEEPMASED_FEATURES as input. " +
+                  "Either run both steps (default) or skip DeepMAsED entirely with '--skip_deepmased'."
+        }
+
         ch_shortread_assemblies_for_deepmased = ch_assemblies.filter { meta, _assembly ->
             meta.sr_platform != null && meta.sr_platform != []
         }
@@ -316,8 +325,15 @@ workflow MAG {
                 [meta, bam, bai, assembly]
             }
 
-        DEEPMASED(ch_deepmased_input)
-        ch_versions = ch_versions.mix(DEEPMASED.out.versions.ifEmpty([]))
+        if (!params.skip_deepmased_features) {
+            DEEPMASED_FEATURES(ch_deepmased_input)
+            ch_versions = ch_versions.mix(DEEPMASED_FEATURES.out.versions.ifEmpty([]))
+
+            if (!params.skip_deepmased_predict) {
+                DEEPMASED_PREDICT(DEEPMASED_FEATURES.out.features)
+                ch_versions = ch_versions.mix(DEEPMASED_PREDICT.out.versions.ifEmpty([]))
+            }
+        }
     }
 
     /*

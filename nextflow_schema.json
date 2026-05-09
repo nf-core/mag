@@ -635,7 +635,15 @@
                 },
                 "skip_deepmased": {
                     "type": "boolean",
-                    "description": "Skip DeepMAsED assembly error detection"
+                    "description": "Skip DeepMAsED assembly error detection (skips both features and predict)"
+                },
+                "skip_deepmased_features": {
+                    "type": "boolean",
+                    "description": "Skip DeepMAsED features step only. Cannot be used without also setting --skip_deepmased_predict."
+                },
+                "skip_deepmased_predict": {
+                    "type": "boolean",
+                    "description": "Skip DeepMAsED predict step only. Cannot be set to false when --skip_deepmased_features is true."
                 },
                 "skip_quast": {
                     "type": "boolean",

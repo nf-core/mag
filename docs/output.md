@@ -313,6 +313,27 @@ ALE can run only on assemblies generated from short reads, like SPAdes and MEGAH
 
 </details>
 
+### Assembly Quality Control with DeepMAsED
+
+[DeepMAsED (Deep learning for Metagenome Assembly Error Detection)](https://github.com/leylabmpi/DeepMAsED) uses a pre-trained neural network to predict per-contig misassembly scores from read alignment features. It runs in two sequential steps implemented as separate Nextflow modules:
+
+**`DEEPMASED_FEATURES`** extracts alignment statistics (coverage, mismatches, indels, base quality) from the BAM file for each contig and produces feature tables. This is the computationally intensive step.
+
+**`DEEPMASED_PREDICT`** applies the pre-trained model to the feature tables and outputs a misassembly score per contig (0 = correctly assembled, 1 = likely misassembly).
+
+DeepMAsED only runs on short-read assemblies (MEGAHIT, SPAdes). It cannot be used with long-read or hybrid assemblies.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `Assembly/[assembler]/QC/[sample/group]/DeepMAsED/features/`
+  - `[sample]-[assembler]_feature_file_paths.tsv`: Index file listing all generated feature table files
+  - `[sample]-[assembler]*_feats.tsv`: Per-contig feature tables (one per parallel processing bin)
+- `Assembly/[assembler]/QC/[sample/group]/DeepMAsED/`
+  - `[sample]-[assembler]_deepmased_predictions.tsv`: Per-contig misassembly scores. Score of 0 indicates a correctly assembled contig; score of 1 indicates a likely misassembly.
+
+</details>
+
 ## Gene prediction
 
 Protein-coding genes are predicted for each assembly.
