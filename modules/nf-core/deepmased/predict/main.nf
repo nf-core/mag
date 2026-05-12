@@ -19,7 +19,7 @@ process DEEPMASED_PREDICT {
     task.ext.when == null || task.ext.when
 
     script:
-    def args   = task.ext.args ?: ''
+    def args   = task.ext.args ?: 
     def prefix = task.ext.prefix ?: "${meta.id}"
     def VERSION = '0.3.1' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
     """
@@ -35,7 +35,6 @@ process DEEPMASED_PREDICT {
     DeepMAsED predict \\
         ${feature_file_table} \\
         --n-procs ${task.cpus} \\
-        --cpu-only \\
         --save-name ${prefix}_deepmased \\
         ${args}
 
