@@ -20,7 +20,8 @@ If long reads are provided (`long_reads`), the `long_reads_platform` column is r
 
 - `OXFORD_NANOPORE`: Oxford Nanopore Technologies (ONT) reads, which may have higher error rates compared to newer technologies.
 - `OXFORD_NANOPORE_HQ`: High-quality ONT reads, typically with an error rate of less than 5%, achievable with the latest ONT chemistries and sequencing platforms. This option should generally be used unless working with older data.
-- `PACBIO_SMRT`: Pacific Biosciences Single Molecule Real-Time (SMRT) sequencing reads.
+- `PACBIO_CLR`: Pacific Biosciences Continuous Long Read (CLR) reads.
+- `PACBIO_HIFI`: Pacific Biosciences High Fidelity (HiFi) reads, with high accuracy achieved through circular consensus sequencing.
 
 These platform fields are important for downstream alignment and assembly tools.
 

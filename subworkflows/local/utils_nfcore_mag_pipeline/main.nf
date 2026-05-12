@@ -349,7 +349,7 @@ def validateInputParameters(hybrid) {
 
     // Check more than one binner is run for bin refinement  (required DAS by Tool)
     // If the number of run binners (i.e., number of not-skipped) is more than one, otherwise throw an error
-    if (params.refine_bins_dastool && !([params.skip_metabat2, params.skip_maxbin2, params.skip_concoct].count(false) > 1)) {
+    if (params.refine_bins_dastool && !([params.skip_metabat2, params.skip_maxbin2, params.skip_concoct, params.skip_metabinner, params.skip_comebin, params.skip_semibin].count(false) > 1)) {
         error('[nf-core/mag] ERROR: Bin refinement with --refine_bins_dastool requires at least two binners to be running (not skipped). Check input.')
     }
 
@@ -459,27 +459,237 @@ def genomeExistsError() {
 // Generate methods description for MultiQC
 //
 def toolCitationText() {
-    // TODO nf-core: Optionally add in-text citation tools to this list.
-    // Can use ternary operators to dynamically construct based conditions, e.g. params["run_xyz"] ? "Tool (Foo et al. 2023)" : "",
-    // Uncomment function in methodsDescriptionText to render in MultiQC report
+    def text_seq_qc = "Sequencing quality control was performed with FastQC (Andrews 2010)."
+
+    def shortread_qc_tools = [
+        params.clip_tool == 'fastp' ? "fastp (Chen et al. 2018)" : "",
+        params.clip_tool == 'adapterremoval' ? "AdapterRemoval (Schubert et al. 2016)" : "",
+        params.clip_tool == 'trimmomatic' ? "Trimmomatic (Bolger et al. 2014)" : "",
+    ].findAll { tool -> tool != '' }
+    def text_shortread_qc = "Short read preprocessing was performed with ${shortread_qc_tools.join(', ')}."
+
+    // Note: we don't have a simple way to determine if short or long reads are present, so we add a cite for both Bowtie2 and Minimap2 with a notice to suggest deletion when appropiate.
+    def text_mapping = "Read alignment against assemblies was performed with Bowtie2 (Langmead and Salzberg 2012) for short-reads and minimap2 for long-reads (Li 2018) [DELETE AS APPROPRIATE]."
+
+    def longread_qc_tools = [
+        !params.skip_adapter_trimming && params.longread_adaptertrimming_tool == 'porechop' ? "Porechop (Wick et al. 2017)" : "",
+        !params.skip_adapter_trimming && params.longread_adaptertrimming_tool == 'porechop_abi' ? "Porechop ABI (Bonenfant et al. 2022)" : "",
+        !params.skip_longread_filtering && params.longread_filtering_tool == 'filtlong' ? "Filtlong (Wick 2019)" : "",
+        !params.skip_longread_filtering && params.longread_filtering_tool == 'nanoq' ? "Nanoq (Steinig et al. 2022)" : "",
+        !params.skip_longread_filtering && params.longread_filtering_tool == 'chopper' ? "Chopper (De Coster et al. 2018)" : "",
+    ].findAll { tool -> tool != '' }
+    def text_longread_qc = "Long read preprocessing was performed with ${longread_qc_tools.join(', ')}."
+
+    def text_bbnorm = "Read depth normalisation was carried out with BBNorm (Bushnell et al.) and Seqtk (Li et al.)."
+
+    def assembly_tools = [
+        !params.skip_megahit ? "MEGAHIT (Li et al. 2016)" : "",
+        !params.skip_spades ? "metaSPAdes (Nurk et al. 2017)" : "",
+        !params.skip_spadeshybrid ? "hybridSPAdes (Antipov et al. 2016)" : "",
+        !params.skip_metamdbg ? "metaMDBG (Benoit et al. 2024)" : "",
+        !params.skip_flye ? "metaFlye (Kolmogorov et al. 2020)" : "",
+    ].findAll { tool -> tool != '' }
+    def text_assembly = "Metagenome assembly was performed with ${assembly_tools.join(', ')}."
+
+    def assembly_qc_tools = [
+        !params.skip_quast ? "metaQUAST (Mikheenko et al. 2016)" : "",
+        !params.skip_ale ? "ALE (Clark et al. 2013)" : "",
+    ].findAll { tool -> tool != '' }
+    def text_assembly_qc = "Assembly quality was assessed with ${assembly_qc_tools.join(', ')}."
+
+    def gene_prediction_tools = [
+        !params.skip_prodigal ? "Prodigal (Hyatt et al. 2010)" : "",
+        !params.skip_prokka ? "Prokka (Seemann 2014)" : "",
+        !params.skip_metaeuk ? "MetaEuk (Levy Karin et al. 2020) with MMseqs2 (Steinegger and Söding 2017)" : "",
+    ].findAll { tool -> tool != '' }
+    def text_gene_prediction = "Gene prediction was performed with ${gene_prediction_tools.join(', ')}."
+
+    def text_virus_id = "Viral sequence identification was carried out with geNomad (Camargo et al. 2023)."
+
+    def text_tiara = "Eukaryotic contig classification was performed with Tiara (Karlicki et al. 2022)."
+
+    def binning_tools = [
+        !params.skip_metabat2 ? "MetaBAT2 (Kang et al. 2019)" : "",
+        !params.skip_maxbin2 ? "MaxBin2 (Wu et al. 2015)" : "",
+        !params.skip_concoct ? "CONCOCT (Alneberg et al. 2014)" : "",
+        !params.skip_comebin ? "COMEBin (Wang et al. 2024)" : "",
+        !params.skip_metabinner ? "MetaBinner (Wang et al. 2023)" : "",
+        !params.skip_semibin ? "SemiBin2 (Pan et al. 2022)" : "",
+    ].findAll { tool -> tool != '' }
+    def text_binning = "Metagenome binning was performed with ${binning_tools.join(', ')}."
+
+    def text_bin_refinement = "Bin refinement was performed with DAS Tool (Sieber et al. 2018)."
+
+    def binqc_tools = [
+        params.run_busco ? "BUSCO (Seppey et al. 2019)" : "",
+        params.run_checkm ? "CheckM (Parks et al. 2015)" : "",
+        params.run_checkm2 ? "CheckM2 (Chklovski et al. 2023)" : "",
+        params.run_gunc ? "GUNC (Orakov et al. 2021)" : "",
+    ].findAll { tool -> tool != '' }
+    def text_binqc = "Bin quality assessment was carried out with ${binqc_tools.join(', ')}."
+
+    def text_gtdbtk = "Taxonomic classification of bins was performed with GTDB-Tk (Chaumeil et al. 2020)."
+
+    def text_ancient_dna = [
+        "Ancient DNA damage assessment was performed with PyDamage (Borry et al. 2021).",
+        !params.skip_ancient_damagecorrection ? "Damage correction was carried out with variant calling using FreeBayes (Garrison and Marth 2012), BCFtools (Danecek et al. 2021), and SAMtools (Li et al. 2009)." : "",
+    ]
+
     def citation_text = [
         "Tools used in the workflow included:",
-        "FastQC (Andrews 2010),",
-        "MultiQC (Ewels et al. 2016)",
-        ".",
-    ].join(' ').trim()
+        text_seq_qc,
+        (!params.skip_shortread_qc && !params.skip_clipping) ? text_shortread_qc : "",
+        (params.host_fasta || params.host_genome || !params.skip_binning || params.ancient_dna || !params.skip_ale) ? text_mapping : "",
+        (!params.skip_longread_qc && longread_qc_tools) ? text_longread_qc : "",
+        params.bbnorm ? text_bbnorm : "",
+        assembly_tools ? text_assembly : "",
+        assembly_qc_tools ? text_assembly_qc : "",
+        gene_prediction_tools ? text_gene_prediction : "",
+        params.run_virus_identification ? text_virus_id : "",
+        !params.skip_tiara ? text_tiara : "",
+        (!params.skip_binning && binning_tools) ? text_binning : "",
+        (!params.skip_binqc && params.refine_bins_dastool) ? text_bin_refinement : "",
+        (!params.skip_binqc && binqc_tools) ? text_binqc : "",
+        !params.skip_gtdbtk ? text_gtdbtk : "",
+        params.ancient_dna ? text_ancient_dna : "",
+        "Pipeline results statistics were summarised with MultiQC (Ewels et al. 2016).",
+    ].flatten().join(' ').trim().replaceAll("\\s+", " ")
 
     return citation_text
 }
 
 def toolBibliographyText() {
-    // TODO nf-core: Optionally add bibliographic entries to this list.
-    // Can use ternary operators to dynamically construct based conditions, e.g. params["run_xyz"] ? "<li>Author (2023) Pub name, Journal, DOI</li>" : "",
-    // Uncomment function in methodsDescriptionText to render in MultiQC report
-    def reference_text = [
-        "<li>Andrews S, (2010) FastQC, URL: https://www.bioinformatics.babraham.ac.uk/projects/fastqc/).</li>",
-        "<li>Ewels, P., Magnusson, M., Lundin, S., & Käller, M. (2016). MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics , 32(19), 3047–3048. doi: /10.1093/bioinformatics/btw354</li>",
-    ].join(' ').trim()
+    def references = [
+        "<li>Andrews, S. (2010). FastQC: A Quality Control Tool for High Throughput Sequence Data [Online]. URL: https://www.bioinformatics.babraham.ac.uk/projects/fastqc/</li>",
+        "<li>Ewels, P., Magnusson, M., Lundin, S., & Käller, M. (2016). MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics, 32(19), 3047-3048. doi: 10.1093/bioinformatics/btw354</li>",
+    ]
+
+    if (!params.skip_shortread_qc && !params.skip_clipping) {
+        if (params.clip_tool == 'fastp') {
+            references << "<li>Chen, S., Zhou, Y., Chen, Y., & Gu, J. (2018). fastp: an ultra-fast all-in-one FASTQ preprocessor. Bioinformatics, 34(17), i884–i890. doi: 10.1093/bioinformatics/bty560</li>"
+        }
+        else if (params.clip_tool == 'adapterremoval') {
+            references << "<li>Schubert, M., Lindgreen, S., & Orlando, L. (2016). AdapterRemoval v2: rapid adapter trimming, identification, and read merging. BMC Research Notes, 9, 88. doi: 10.1186/s13104-016-1900-2</li>"
+        }
+        else if (params.clip_tool == 'trimmomatic') {
+            references << "<li>Bolger, A. M., Lohse, M., & Usadel, B. (2014). Trimmomatic: a flexible trimmer for Illumina sequence data. Bioinformatics, 30(15), 2114-2120. doi: 10.1093/bioinformatics/btu170</li>"
+        }
+    }
+    if (params.host_fasta || params.host_genome || !params.skip_binning || params.ancient_dna || !params.skip_ale) {
+        references << "<li>Langmead, B. and Salzberg, S. L. 2012 Fast gapped-read alignment with Bowtie 2. Nature methods, 9(4), p. 357–359. doi: 10.1038/nmeth.1923.</li>"
+        // Note: we don't have a simple way to determine if long reads are present, so we add minimap2 at the same time as Bowtie2
+        references << "<li>Li, H. (2018). Minimap2: pairwise alignment for nucleotide sequences. Bioinformatics , 34(18), 3094–3100. doi: 10.1093/bioinformatics/bty191</li>"
+    }
+    if (!params.skip_longread_qc && !params.skip_adapter_trimming) {
+        if (params.longread_adaptertrimming_tool == 'porechop') {
+            references << "<li>Wick RR. (2017). Porechop. URL: https://github.com/rrwick/Porechop</li>"
+        }
+        else if (params.longread_adaptertrimming_tool == 'porechop_abi') {
+            references << "<li>Bonenfant, Q., Noé, L., & Touzet, H. (2022). Porechop_ABI: discovering unknown adapters in ONT sequencing reads for downstream trimming. bioRxiv. 10.1101/2022.07.07.499093</li>"
+        }
+    }
+    if (!params.skip_longread_qc && !params.skip_longread_filtering) {
+        if (params.longread_filtering_tool == 'filtlong') {
+            references << "<li>Wick RR. (2019). Filtlong. URL: https://github.com/rrwick/Filtlong</li>"
+        }
+        else if (params.longread_filtering_tool == 'nanoq') {
+            references << "<li>Steinig, E., Coin, L. (2022). Nanoq: ultra-fast quality control for nanopore reads. Journal of Open Source Software, 7(69), 2991, doi: 10.21105/joss.02991</li>"
+        }
+        else if (params.longread_filtering_tool == 'chopper') {
+            references << "<li>De Coster W, D'Hert S, Schultz DT, Cruts M, Van Broeckhoven C. (2018). NanoPack: visualizing and processing long-read sequencing data. Bioinformatics. 2018 Aug 1;34(15):2666-2669. doi: 10.1093/bioinformatics/bty149</li>"
+        }
+    }
+    if (params.bbnorm) {
+        references << "<li>BBnorm/BBTools. URL: http://sourceforge.net/projects/bbmap/</li>"
+        references << "<li>Seqtk. URL: https://github.com/lh3/seqtk</li>"
+    }
+    if (!params.skip_megahit) {
+        references << "<li>Li, D., Luo, R., Liu, C. M., Leung, C. M., Ting, H. F., Sadakane, K., ... & Lam, T. W. (2016). MEGAHIT v1. 0: a fast and scalable metagenome assembler driven by advanced methodologies and community practices. Methods, 102, 3-11. doi: 10.1016/j.ymeth.2016.02.020.</li>"
+    }
+    if (!params.skip_spades) {
+        references << "<li>Nurk, S., Meleshko, D., Korobeynikov, A., & Pevzner, P. A. (2017). metaSPAdes: a new versatile metagenomic assembler. Genome research, 27(5), 824-834. doi: 10.1101/gr.213959.116.</li>"
+    }
+    if (!params.skip_spadeshybrid) {
+        references << "<li>Antipov, D., Korobeynikov, A., McLean, J. S., & Pevzner, P. A. (2016). hybridSPAdes: an algorithm for hybrid assembly of short and long reads. Bioinformatics, 32(7), 1009-1015. doi: 10.1093/bioinformatics/btv688</li>"
+    }
+    if (!params.skip_metamdbg) {
+        references << "<li>Benoit, G., Raguideau, S., James, R. et al. (2024). High-quality metagenome assembly from long accurate reads with metaMDBG. Nat Biotechnol 42, 1378–1383. doi: 10.1038/s41587-023-01983-6</li>"
+    }
+    if (!params.skip_flye) {
+        references << "<li>Kolmogorov, M., Bickhart, D. M., Behsaz, B. et al. (2020). metaFlye: scalable long-read metagenome assembly using repeat graphs. Nature Methods, 17(11), 1103-1110. doi: 10.1038/s41592-020-00971-x</li>"
+    }
+    if (!params.skip_quast) {
+        references << "<li>Mikheenko, A., Saveliev, V., & Gurevich, A. (2016). MetaQUAST: evaluation of metagenome assemblies. Bioinformatics, 32(7), 1088-1090. doi: 10.1093/bioinformatics/btv697</li>"
+    }
+    if (!params.skip_ale) {
+        references << "<li>Clark, S. C., Egan, R., Frazier, P. I., & Wang, Z. (2013). ALE: a generic assembly likelihood evaluation framework for assessing the accuracy of genome and metagenome assemblies. Bioinformatics, 29(4), 435-443. doi: 10.1093/bioinformatics/bts723</li>"
+    }
+    if (!params.skip_prodigal) {
+        references << "<li>Hyatt, D., Chen, G. L., Locascio, P. F., Land, M. L., Larimer, F. W., & Hauser, L. J. (2010). Prodigal: prokaryotic gene recognition and translation initiation site identification. BMC Bioinformatics, 11, 119. doi: 10.1186/1471-2105-11-119</li>"
+    }
+    if (!params.skip_prokka) {
+        references << "<li>Seemann, T. (2014). Prokka: rapid prokaryotic genome annotation. Bioinformatics, 30(14), 2068-2069. doi: 10.1093/bioinformatics/btu153</li>"
+    }
+    if (!params.skip_metaeuk) {
+        references << "<li>Levy Karin, E., Mirdita, M. & Söding, J. (2020). MetaEuk—sensitive, high-throughput gene discovery, and annotation for large-scale eukaryotic metagenomics. Microbiome 8, 48. doi: 10.1186/s40168-020-00808-x</li>"
+        references << "<li>Steinegger, M., & Söding, J. (2017). MMseqs2 enables sensitive protein sequence searching for the analysis of massive data sets. Nat Biotechnol 35, 1026–1028. doi: 10.1038/nbt.3988</li>"
+    }
+    if (params.run_virus_identification) {
+        references << "<li>Camargo, A. P., et al. (2023). Identification of mobile genetic elements with geNomad. Nature Biotechnology 42, 1303–1312. doi: 10.1038/s41587-023-01953-y</li>"
+    }
+    if (!params.skip_tiara) {
+        references << "<li>Karlicki, M., Antonowicz, S., & Karnkowska, A. (2022). Tiara: deep learning-based classification system for eukaryotic sequences. Bioinformatics, 38(2), 344–350. doi: 10.1093/bioinformatics/btab672</li>"
+    }
+    if (!params.skip_binning) {
+        if (!params.skip_metabat2) {
+            references << "<li>Kang, D. D., Li, F., Kirton, E., Thomas, A., Egan, R., An, H., & Wang, Z. (2019). MetaBAT 2: an adaptive binning algorithm for robust and efficient genome reconstruction from metagenome assemblies. PeerJ, 7, e7359. doi: 10.7717/peerj.7359</li>"
+        }
+        if (!params.skip_maxbin2) {
+            references << "<li>Wu, Y. W., Simmons, B. A., & Singer, S. W. (2015). MaxBin 2.0: an automated binning algorithm to recover genomes from multiple metagenomic datasets. Bioinformatics, 32(4), 605-607. doi: 10.1093/bioinformatics/btv638</li>"
+        }
+        if (!params.skip_concoct) {
+            references << "<li>Alneberg, J., Bjarnason, B. S., de Bruijn, I., Schirmer, M., Quick, J., Ijaz, U. Z., Lahti, L., Loman, N. J., Andersson, A. F., & Quince, C. (2014). Binning metagenomic contigs by coverage and composition. Nature Methods, 11(11), 1144–1146. doi: 10.1038/nmeth.3103</li>"
+        }
+        if (!params.skip_comebin) {
+            references << "<li>Wang, Z., You, R., Han, H., Liu, W., Sun, F., & Zhu, S. (2024). Effective binning of metagenomic contigs using contrastive multi-view representation learning. Nat Commun. 2024 Jan 17;15(1):585. doi: 10.1038/s41467-023-44290-z</li>"
+        }
+        if (!params.skip_metabinner) {
+            references << "<li>Wang, Z., Huang, P., You, R., Sun, F., & Zhu, S. (2023). MetaBinner: a high-performance and stand-alone ensemble binning method to recover individual genomes from complex microbial communities. Genome Biol. 2023 Jan 6;24(1):1. doi: 10.1186/s13059-022-02832-6</li>"
+        }
+        if (!params.skip_semibin) {
+            references << "<li>Pan, S., Zhu, C., Zhao, X. M., & Coelho, L. P. (2022). A deep siamese neural network improves metagenome-assembled genomes in microbiome datasets across different environments. Nat Commun. 2022 Apr 28;13(1):2326. doi: 10.1038/s41467-022-29843-y</li>"
+        }
+    }
+    if (!params.skip_binqc) {
+        if (params.run_busco) {
+            references << "<li>Seppey, M., Manni, M., & Zdobnov, E. M. (2019). BUSCO: assessing genome assembly and annotation completeness. In Gene prediction (pp. 227-245). Humana, New York, NY. doi: 10.1007/978-1-4939-9173-0_14</li>"
+        }
+        if (params.run_checkm) {
+            references << "<li>Parks, D. H., Imelfort, M., Skennerton, C. T., Hugenholtz, P., & Tyson, G. W. (2015). CheckM: assessing the quality of microbial genomes recovered from isolates, single cells, and metagenomes. Genome Research, 25(7), 1043–1055. doi: 10.1101/gr.186072.114</li>"
+        }
+        if (params.run_checkm2) {
+            references << "<li>Chklovski, A., Parks, D. H., Woodcroft, B. J., & Tyson, G. W. (2023). CheckM2: a rapid, scalable and accurate tool for assessing microbial genome quality using machine learning. Nature Methods, 20(8), 1203-1212. doi: 10.1038/s41592-023-01940-w</li>"
+        }
+        if (params.refine_bins_dastool) {
+            references << "<li>Sieber, C. M. K., et al. (2018). Recovery of Genomes from Metagenomes via a Dereplication, Aggregation and Scoring Strategy. Nature Microbiology 3 (7): 836-43. doi: 10.1038/s41564-018-0171-1</li>"
+        }
+        if (params.run_gunc) {
+            references << "<li>Orakov, A., Fullam, A., Coelho, A. P., Khedkar, S., Szklarczyk, D., Mende, D. R., Schmidt, T. S. B., & Bork, P. (2021). GUNC: detection of chimerism and contamination in prokaryotic genomes. Genome Biology, 22(1), 178. doi: 10.1186/s13059-021-02393-0</li>"
+        }
+    }
+    if (!params.skip_gtdbtk) {
+        references << "<li>Chaumeil, P. A., Mussig, A. J., Hugenholtz, P., & Parks, D. H. (2020). GTDB-Tk: a toolkit to classify genomes with the Genome Taxonomy Database. Bioinformatics, 36(6), 1925–1927. doi: 10.1093/bioinformatics/btz848</li>"
+    }
+    if (params.ancient_dna) {
+        references << "<li>Borry, M., Hübner, A., Rohrlach, A. B., & Warinner, C. (2021). PyDamage: automated ancient damage identification and estimation for contigs in ancient DNA de novo assembly. PeerJ, 9, e11845. doi: 10.7717/peerj.11845</li>"
+        if (!params.skip_ancient_damagecorrection) {
+            references << "<li>Garrison, E., & Marth, G. (2012). Haplotype-based variant detection from short-read sequencing. arXiv preprint arXiv:1207.3907 [q-bio.GN]</li>"
+            references << "<li>Danecek, P., Bonfield, J. K., Liddle, J., Marshall, J., Stackmayer, V., Li, H., ... & SAMtools Subgroup. (2021). Twelve years of SAMtools and BCFtools. GigaScience, 10(2), giab008. doi: 10.1093/gigascience/giab008</li>"
+            references << "<li>Li, H., Handsaker, B., Wysoker, A., Fennell, T., Ruan, J., Homer, N., … 1000 Genome Project Data Processing Subgroup. (2009). The Sequence Alignment/Map format and SAMtools. Bioinformatics, 25(16), 2078–2079. doi: 10.1093/bioinformatics/btp352</li>"
+        }
+    }
+
+    def reference_text = references.join(' ').trim()
 
     return reference_text
 }
@@ -508,12 +718,8 @@ def methodsDescriptionText(mqc_methods_yaml) {
     meta["nodoi_text"] = meta.manifest_map.doi ? "" : "<li>If available, make sure to update the text to include the Zenodo DOI of version of the pipeline used. </li>"
 
     // Tool references
-    meta["tool_citations"] = ""
-    meta["tool_bibliography"] = ""
-
-    // TODO nf-core: Only uncomment below if logic in toolCitationText/toolBibliographyText has been filled!
-    // meta["tool_citations"] = toolCitationText().replaceAll(", \\.", ".").replaceAll("\\. \\.", ".").replaceAll(", \\.", ".")
-    // meta["tool_bibliography"] = toolBibliographyText()
+    meta["tool_citations"] = toolCitationText().replaceAll(", \\.", ".").replaceAll("\\. \\.", ".").replaceAll(", \\.", ".")
+    meta["tool_bibliography"] = toolBibliographyText()
 
 
     def methods_text = mqc_methods_yaml.text

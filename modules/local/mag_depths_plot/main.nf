@@ -22,8 +22,8 @@ process MAG_DEPTHS_PLOT {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         python: \$(python --version 2>&1 | sed 's/Python //g')
-        pandas: \$(python -c "import pkg_resources; print(pkg_resources.get_distribution('pandas').version)")
-        seaborn: \$(python -c "import pkg_resources; print(pkg_resources.get_distribution('seaborn').version)")
+        pandas: \$(python -c "import pandas; print(pandas.__version__)")
+        seaborn: \$(python -c "import seaborn; print(seaborn.__version__)")
     END_VERSIONS
     """
 }
