@@ -19,7 +19,7 @@ process DEEPMASED_PREDICT {
     task.ext.when == null || task.ext.when
 
     script:
-    def args   = task.ext.args ?: 
+    def args   = task.ext.args ?: '--cpu-only'
     def prefix = task.ext.prefix ?: "${meta.id}"
     def VERSION = '0.3.1' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
     """
