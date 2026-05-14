@@ -134,7 +134,7 @@
                 "SPAdesHybrid-SemiBin2-minigut_1.txt:md5,4e816e8ece9df68f04e211b5a1bdafaf"
             ]
         ],
-        "timestamp": "2026-05-04T16:23:33.110973355",
+        "timestamp": "2026-05-14T14:18:02.972771646",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.0"
@@ -282,7 +282,7 @@
                 }
             }
         ],
-        "timestamp": "2026-05-04T16:23:31.360326171",
+        "timestamp": "2026-05-14T14:17:58.94021452",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.0"
@@ -307,6 +307,7 @@
     "qc_longreads": {
         "content": [
             [
+                "QC_longreads/Chopper/minigut_run0_chopper.fastq.gz",
                 "QC_longreads/NanoPlot/minigut/filtered_NanoPlot-report.html",
                 "QC_longreads/NanoPlot/minigut/filtered_NanoStats.txt",
                 "QC_longreads/NanoPlot/minigut/filtered_Non_weightedHistogramReadlength.html",
@@ -322,16 +323,17 @@
                 "QC_longreads/NanoPlot/minigut/raw_WeightedLogTransformed_HistogramReadlength.html",
                 "QC_longreads/NanoPlot/minigut/raw_Yield_By_Length.html",
                 "QC_longreads/minimap2/index/genome.hg38.chr21_10000bp_region.mmi",
-                "QC_longreads/samtools/stats/minigut_null.stats"
+                "QC_longreads/samtools/stats/minigut_0.stats"
             ],
             [
+                "minigut_run0_chopper.fastq.gz:md5,ff8cd09fbb73cb7ca2a39d1dded680e3",
                 "filtered_NanoStats.txt:md5,f88f0e39fb38c6106f3809fbd5745f78",
                 "raw_NanoStats.txt:md5,12f26e909ca384e5b71a391c39f1e287",
                 "genome.hg38.chr21_10000bp_region.mmi:md5,41d7183050e07736691ae550f3a736e5",
-                "minigut_null.stats:md5,e7ef22efc494097a3ad803e35d2b6469"
+                "minigut_0.stats:md5,e7ef22efc494097a3ad803e35d2b6469"
             ]
         ],
-        "timestamp": "2026-05-04T16:23:31.385786675",
+        "timestamp": "2026-05-14T14:17:59.708860064",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.0"
@@ -382,7 +384,7 @@
                 "SPAdesHybrid-minigut.scaffolds.fa.gz:md5,9f8379b4e650bc0377b87d589cb4e274"
             ]
         ],
-        "timestamp": "2026-05-04T16:23:31.972802832",
+        "timestamp": "2026-05-14T14:18:00.741079571",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.0"
@@ -672,7 +674,7 @@
                 "versions.yml:md5,553ee8a62e65d93ce1163bb16314da29"
             ]
         ],
-        "timestamp": "2026-05-04T16:23:32.520753737",
+        "timestamp": "2026-05-14T14:18:01.787143221",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.0"
@@ -712,7 +714,7 @@
                 "minigut_run0_host_removed.bowtie2.log:md5,7f8750bca9c172f14c13703bfaa9aaa5"
             ]
         ],
-        "timestamp": "2026-05-04T16:23:31.371340119",
+        "timestamp": "2026-05-14T14:17:58.961006784",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.0"
@@ -959,7 +961,7 @@
                 "quast_table.yaml:md5,e5720e81c420f07480481ac3c75bb822"
             ]
         ],
-        "timestamp": "2026-05-04T16:23:33.836970957",
+        "timestamp": "2026-05-14T14:18:04.173385831",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.0"
