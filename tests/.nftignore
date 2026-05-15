@@ -3,11 +3,10 @@ Ancient_DNA/pydamage/analyze/*/*.csv
 Ancient_DNA/variant_calling/*/*.vcf.gz
 Annotation/Prokka/**/*.{err,gbk,log,sqn}
 Annotation/Prokka/**/*.tmp.*
-Assembly/FLYE/*.log
-Assembly/MEGAHIT/*.log
-Assembly/MEGAHIT/QC/*/*.bowtie2.log
-Assembly/MEGAHIT/QC/*/QUAST/*.{pdf,html,log}
-Assembly/MEGAHIT/QC/*/QUAST/**/*.{pdf,html}
+Assembly/*/*.log
+Assembly/*/QC/*/*.bowtie2.log
+Assembly/*/QC/*/QUAST/*.{pdf,html,log}
+Assembly/*/QC/*/QUAST/**/*.{pdf,html}
 GenomeBinning/CONCOCT/stats/*_{original,PCA_components,PCA_transformed}_data_gt1000.csv
 GenomeBinning/CONCOCT/stats/*_log.txt
 GenomeBinning/CONCOCT/stats/*.tsv
@@ -43,6 +42,7 @@ multiqc/multiqc_report.html
 pipeline_info/*.{html,json,txt,yml}
 QC_longreads/NanoLyse/*.log
 QC_longreads/NanoPlot/**/*.{html,png}
+QC_shortreads/fastp/**/*.html
 QC_shortreads/fastqc/*_fastqc.{html,zip}
 QC_shortreads/remove_phix/*.log
 Taxonomy/CAT/**/*.log
