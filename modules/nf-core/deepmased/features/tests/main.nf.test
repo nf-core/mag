@@ -23,6 +23,9 @@ nextflow_process {
                 ]
                 """
             }
+            // Use debug mode (-d) to disable coverage filtering so low-coverage
+            // sarscov2 contigs are retained for downstream predict testing
+            process.ext.args = '-d'
         }
 
         then {

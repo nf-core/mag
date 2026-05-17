@@ -6,13 +6,13 @@ process DEEPMASED_FEATURES {
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/deepmased:0.3.1--pyh5ca1d4c_0':
-        'biocontainers/deepmased:0.3.1--pyh5ca1d4c_0' }"
+        'quay.io/biocontainers/deepmased:0.3.1--pyh5ca1d4c_0' }"
 
     input:
     tuple val(meta), path(bam), path(bai), path(fasta)
 
     output:
-    tuple val(meta), path("${prefix}_feature_file_paths.tsv"), path("*_feats.tsv"), emit: features
+    tuple val(meta), path("${prefix}_feature_file_paths.tsv"), path("*_feats.tsv{,.gz}"), emit: features
     path "versions.yml"                                                                , emit: versions
 
     when:

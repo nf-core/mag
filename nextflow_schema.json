@@ -645,6 +645,21 @@
                     "type": "boolean",
                     "description": "Skip DeepMAsED predict step only. Cannot be set to false when --skip_deepmased_features is true."
                 },
+                "deepmased_cpu_only": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Run DeepMAsED predict in CPU-only mode (no GPU). Set to false if a GPU is available to accelerate inference."
+                },
+                "deepmased_features_gzip": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Gzip DeepMAsED feature tables output. Useful for large assemblies to reduce disk usage."
+                },
+                "deepmased_predict_seed": {
+                    "type": "integer",
+                    "default": 12,
+                    "description": "Random seed for numpy in DeepMAsED predict. Set for reproducible results."
+                },
                 "skip_quast": {
                     "type": "boolean",
                     "description": "Skip metaQUAST."
