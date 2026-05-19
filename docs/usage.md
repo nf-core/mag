@@ -4,6 +4,67 @@
 
 > _Documentation of pipeline parameters is generated automatically from the pipeline schema and can no longer be found in markdown files._
 
+## General considerations
+
+The pipeline's defaults are aimed towards common quality control options, all appropriate assemblers, all binners and broadly applicable bin evaluation tools. The defaults are not optimized for speed or modesty in resource requirements but rather to maximize choice for exploring the all options in search for the optimal tool combination. The following sections provides non-exhaustive ideas to adapt the choice of tools, if desired or needed.
+
+### Preprocessing
+
+Omitting or skipping preprocessing steps should be only done on a case-by-case basis with good reason.
+
+Preprocessing of short and long reads does not include by default host depletion. In case samples were derived from a host, e.g. mouse or human, removing the host data can benefit runtimes and assembly quality.
+
+### Assembly
+
+Generally, by default the pipeline is assembling each sample separately. However, pooling data from several samples to perform "co-assembly" can be beneficial by increasing the overall sequencing depth and improve comparability. But co-assembly can be detrimental when pooling data from unrelated samples, by increasing complexity and thereby drastically increasing runtime and memory requirements, also it can promote fragmented sequences of mixed origin (chimeras).
+
+All assemblers are run for the data provided. No assembler is perfect, all tools generate approximations with uncertainties, and at the time of writing no assembler is always performing best. Therefore, testing more options can aid results. But for reducing computational burden and speed up the analysis, making choices can be necessary. The following table summarizes available assemblers:
+
+| Assembler     | Input              | Comment              |
+| ------------- | ------------------ | -------------------- |
+| MEGAHIT       | Short reads        | Fast and low memory  |
+| SPAdes        | Short reads        | Slow and high memory |
+| SPAdes Hybrid | Short & long reads | Slow and high memory |
+| FLYE          | Long reads         | Slow and high memory |
+| MetaDBG       | Long reads         | Fast and low memory  |
+
+When short and long reads are available, short-read-first assembly with SPAdes Hybrid and/or long read assembly with FLYE or MetaDBG can be performed. With high depth long reads, usually the long read assembly will lead to more coherent results, the short-read-first assembly can be better with high depth short reads or low quality long reads and leads typically to more fragmented but higher accuracy assemblies.
+
+No polishing of assemblies with short or long reads is implemented in the pipeline. For metagenomes, polishing can harm the assembly by erroneously changing low abundance genomes with high abundance data. High quality Nanopore data (i.e. 10.4) also might not benefit a lot from long read polishing (i.e. with Medaka). Polishing a long read assembly with short read data might be beneficial, but is debated, and not available in the pipeline (e.g. Polypolish & Pypolca).
+
+### Binning
+
+All binners use abundance information across one or several samples to extract (fragmented) genomes. This abundance information can be calculated across all samples, a specific sample group, or only based on the one dataset the assembly originates from. The more abundanc einformation is supplied to the binners, the more helpful it can be. However, the
+
+All binners are used by default. These tools are all implementing different algorithms and approaches. No binner is perfect and at the time of writing no binner is always performing best. Therefore, exploring all options can improve results. The following table summarizes available assemblers:
+
+| Binner        | Comment            |
+| ------------- | ------------------ |
+| MetaBat2      | Short reads        |
+| MaxBin2       | Short reads        |
+| CONCOCT       | Short & long reads |
+| COMEBin       | Long reads         |
+| Metabinner    | Long reads         |
+| Semibin2      | Long reads         |
+
+All binners are currently run exclusively with CPUs, GPU-based execution should speed up several binners considerably.
+
+### Bin refinement (opt-in)
+
+Bin refinement can aid the genome retrieval by unifying all binner outputs and choosing "the best" result (by DASTool). Bin refinement is not default but opt-in.
+
+### Bin quality control, and classification
+
+Bin quality control is performed by default with BUSCO that can evaluate prokaryotes and eucaryotes based on marker genes. Alternatives are the marker-genes-based CheckM and the ML-based CheckM2 that are only applicable to prokaryotes. Changing the default is typically driven by comparability to other studies.
+
+Chemirism checks with GUNC can be opted into if desired.
+
+Taxonomic classification requires large reference databases. When supplied, GTDBTk classifies bins using specific marker genes, yielding GTDB-based taxonomies. That approach requires bins of at least medium quality, otherwise it is inaccurate. CAT on the other hand uses all detectable genes to assign NCBI-based taxonomies. The choice between GTDBTk and CAT can be based on the desired taxonomies or the completeness of the bins.
+
+### Virus identification and ancient DNA
+
+Virus identification and ancient DNA analysis are not adopted by default. Virus identification can be interesting in case they might be interesting to the research question at hand. Ancient DNA processing involves a set of tools and specialized analysis to ascertain best-practice steps for that particular data.
+
 ## Input specifications
 
 The input data can be passed to nf-core/mag in two possible ways, either using the `--input` parameter of raw-reads alone or `--input` additionally with `--assembly_input` that specifies pre-built assemblies.
