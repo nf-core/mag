@@ -12,7 +12,7 @@
 [![GitHub Actions CI Status](https://github.com/nf-core/mag/actions/workflows/nf-test.yml/badge.svg)](https://github.com/nf-core/mag/actions/workflows/nf-test.yml)[![GitHub Actions Linting Status](https://github.com/nf-core/mag/actions/workflows/linting.yml/badge.svg)](https://github.com/nf-core/mag/actions/workflows/linting.yml)
 [![nf-core/documentation](https://img.shields.io/badge/Read-documentation-green?style=flat&logo=nfcore&logoColor=white&color=%2324B064&link=https%3A%2F%2Fnf-co.re/mag/usage)](https://nf-co.re/mag/usage)
 [![Get help on Slack](http://img.shields.io/badge/slack-nf--core%20%23mag-4A154B?labelColor=000000&logo=slack)](https://nfcore.slack.com/channels/mag)
-{% if is_nfcore -%}[![AWS CI](https://img.shields.io/badge/See-example%20results-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/{{ short_name }}/results){% endif -%}
+[![AWS CI](https://img.shields.io/badge/See-example%20results-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/mag/results)
 
 <!-- Executable with badges -->
 
@@ -24,7 +24,7 @@
 
 <!-- Extra badges -->
 
-[![Cite Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.XXXXXXX-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.XXXXXXX)
+[![Cite Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.3589527-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.3589527)
 [![Cite Publication](https://img.shields.io/badge/Cite%20-Publication-orange)](https://doi.org/10.1093/nargab/lqac007)
 ![HiRSE Code Promo Badge](https://img.shields.io/badge/Promo-8db427?label=HiRSE&labelColor=005aa0&link=https%3A%2F%2Fgo.fzj.de%2FCodePromo) [![Static Badge](https://img.shields.io/badge/%F0%9F%8D%94%20%20BIgMAG-compatible-%2324B064)](https://github.com/jeffe107/BIgMAG)
 
