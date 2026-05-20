@@ -16,9 +16,9 @@ Preprocessing of short and long reads does **not** include host depletion by def
 
 ### Assembly
 
-**By default, the pipeline assembles each sample separately.** However, **co-assembly** (pooling data from multiple samples) can be beneficial by increasing overall sequencing depth and improving comparability. Conversely, co-assembly can be detrimental when combining unrelated samples, as it increases complexity, drastically raises computational requirements, and promotes chimeric sequences (contigs of mixed origin). Further reading [here](https://www.sciencedirect.com/science/article/pii/S2667237525000414) and [here](https://training.galaxyproject.org/training-material/topics/assembly/tutorials/metagenomics-assembly/tutorial.html)
+**By default, the pipeline assembles each sample separately.** However, **co-assembly** (pooling data from multiple samples) can be beneficial by increasing overall sequencing depth and improving comparability. Conversely, co-assembly can be detrimental when combining unrelated samples, as it increases complexity, drastically raises computational requirements, and promotes chimeric sequences (contigs of mixed origin) ([Hofmeyr et al. 2020](https://doi.org/10.1038/s41598-020-67416-5), [Meyer et al. 2022](https://doi.org/10.1038/s41592-022-01431-4)).
 
-**All assemblers are run on the provided data.** No assembler performs equally across all datasets, and no tool consistently outperforms others ([here](https://pmc.ncbi.nlm.nih.gov/articles/PMC5411777/)). Therefore, testing multiple options can improve results. However, reducing computational burden and accelerating analysis may require tool selection. The following table summarizes available assemblers:
+**All assemblers are run on the provided data.** No assembler performs equally across all datasets, and no tool consistently outperforms others ([Meyer et al. 2022](https://doi.org/10.1038/s41592-022-01431-4)). Therefore, testing multiple options can improve results. However, reducing computational burden and accelerating analysis may require tool selection. The following table summarizes available assemblers:
 
 | Assembler     | Input              | Comment              |
 | ------------- | ------------------ | -------------------- |
@@ -28,7 +28,7 @@ Preprocessing of short and long reads does **not** include host depletion by def
 | FLYE          | Long reads         | Slow and memory-intensive; suitable for long-read assemblies but not optimized for speed. |
 | MetaDBG       | Long reads         | Fast and memory-efficient alternative to FLYE for long-read assembly. |
 
-When both short and long reads are available, consider running **SPAdes Hybrid** and/or **long-read assembly with FLYE or MetaDBG**. With high-depth long reads, long-read assembly typically yields more coherent results. Short-read-first assembly performs better with high-depth short reads or low-quality long reads and produces more fragmented but higher-accuracy assemblies.
+When both short and long reads are available, consider running **SPAdes Hybrid** and/or **long-read assembly with FLYE or MetaDBG**. With high-depth long reads, long-read assembly typically yields more coherent results ([Agustinho et al. 2024](https://doi.org/10.1038/s41592-024-02262-1)). Short-read-first assembly performs better with high-depth short reads or low-quality long reads and produces more fragmented but higher-accuracy assemblies ([Overholt et al. 2020](https://doi.org/10.1111/1462-2920.15186), [Meyer et al. 2022](https://doi.org/10.1038/s41592-022-01431-4)).
 
 **No polishing of assemblies with short or long reads is implemented in the pipeline.** For metagenomes, polishing can harm assembly quality by erroneously modifying low-abundance genomes using high-abundance data. High-quality Nanopore data (10.4) may not benefit substantially from long-read polishing (for example, with Medaka). Polishing long-read assemblies with short-read data might be beneficial but remains debated and is not currently available in the pipeline (for example, Polypolish and Pypolca).
 
@@ -36,7 +36,7 @@ When both short and long reads are available, consider running **SPAdes Hybrid**
 
 **All binners use abundance information across one or multiple samples to extract (fragmented) genomes.** This abundance information can be calculated across all samples, a specific sample group, or only the single dataset from which the assembly originates. Providing more abundance information across samples generally improves binning performance, particularly in multi-sample modes. However, single-sample binning remains viable when only one dataset is available.
 
-**All binners are run by default.** These tools implement different algorithms and approaches, and no binner consistently performs best across all scenarios ([here](https://www.nature.com/articles/s41467-025-57957-6)). Exploring all options can improve results. The following table summarizes available binners:
+**All binners are run by default.** These tools implement different algorithms and approaches, and no binner consistently performs best across all scenarios ([Meyer et al. 2022](https://doi.org/10.1038/s41592-022-01431-4)). Exploring all options can improve results. The following table summarizes available binners:
 
 | Binner        | Comment            |
 | ------------- | ------------------ |
@@ -51,7 +51,7 @@ All binners currently run exclusively with CPUs. GPU-based execution should acce
 
 ### Bin Refinement (opt-in)
 
-**Bin refinement can improve genome recovery by consolidating outputs from all binners and selecting the "best" result using DAS Tool.** Bin refinement is optional and not enabled by default.
+**Bin refinement can improve genome recovery by consolidating outputs from all binners and selecting the "best" result using DAS Tool** ([Song and Thomas, 2017](https://doi.org/10.1093/bioinformatics/btx086)). Bin refinement is optional and not enabled by default.
 
 ### Bin Quality Control and Classification
 
