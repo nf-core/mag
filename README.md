@@ -27,7 +27,7 @@
 
 [![Cite Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.3589527-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.3589527)
 [![Cite Publication](https://img.shields.io/badge/cite%20-Publication-orange)](https://doi.org/10.1093/nargab/lqac007)
-![HiRSE Code Promo Badge](https://img.shields.io/badge/Promo-8db427?label=HiRSE&labelColor=005aa0&link=https%3A%2F%2Fgo.fzj.de%2FCodePromo) [![Static Badge](https://img.shields.io/badge/%F0%9F%8D%94%20%20BIgMAG-compatible-%2324B064)](https://github.com/jeffe107/BIgMAG)
+![HiRSE Code Promo Badge](https://img.shields.io/badge/Promo-8db427?label=HiRSE&labelColor=005aa0&link=go.fzj.de/CodePromo) [![Static Badge](https://img.shields.io/badge/%F0%9F%8D%94%20%20BIgMAG-compatible-%2324B064)](https://github.com/jeffe107/BIgMAG)
 
 ## Introduction
 
