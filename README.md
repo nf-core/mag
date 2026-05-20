@@ -12,6 +12,7 @@
 [![GitHub Actions CI Status](https://github.com/nf-core/mag/actions/workflows/nf-test.yml/badge.svg)](https://github.com/nf-core/mag/actions/workflows/nf-test.yml)[![GitHub Actions Linting Status](https://github.com/nf-core/mag/actions/workflows/linting.yml/badge.svg)](https://github.com/nf-core/mag/actions/workflows/linting.yml)
 [![nf-core/documentation](https://img.shields.io/badge/Read-documentation-green?style=flat&logo=nfcore&logoColor=white&color=%2324B064&link=https%3A%2F%2Fnf-co.re/mag/usage)](https://nf-co.re/mag/usage)
 [![Get help on Slack](http://img.shields.io/badge/slack-nf--core%20%23mag-4A154B?labelColor=000000&logo=slack)](https://nfcore.slack.com/channels/mag)
+{% if is_nfcore -%}[![AWS CI](https://img.shields.io/badge/See-example%20results-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/{{ short_name }}/results){% endif -%}
 
 <!-- Executable with badges -->
 
