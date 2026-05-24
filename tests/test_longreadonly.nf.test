@@ -132,16 +132,16 @@ nextflow_pipeline {
 
                 { assert snapshot(
                     // FASTA content checks
-                    "Flye assemblies non-empty: ${flye_assemblies.every { f -> path(f).fasta.size() > 0 }}",
-                    "MetaMDBG assemblies non-empty: ${metamdbg_assemblies.every { f -> path(f).fasta.size() > 0 }}",
-                    "MaxBin2 bins non-empty: ${maxbin2_bins.every { f -> path(f).fasta.size() > 0 }}",
-                    "MetaBAT2 bins non-empty when present: ${metabat2_bins.every { f -> path(f).fasta.size() > 0 }}",
+                    "Flye assemblies non-empty: ${flye_assemblies.every { f -> path("${f}").fasta.size() > 0 }}",
+                    "MetaMDBG assemblies non-empty: ${metamdbg_assemblies.every { f -> path("${f}").fasta.size() > 0 }}",
+                    "MaxBin2 bins non-empty: ${maxbin2_bins.every { f -> path("${f}").fasta.size() > 0 }}",
+                    "MetaBAT2 bins non-empty when present: ${metabat2_bins.every { f -> path("${f}").fasta.size() > 0 }}",
                     // Prokka annotation file checks
-                    "Prokka GBK files contain LOCUS: ${prokka_gbk.every { f -> path(f).text.contains('LOCUS') }}",
-                    "Prokka SQN files non-empty: ${prokka_sqn.every { f -> path(f).size() > 0 }}",
+                    "Prokka GBK files contain LOCUS: ${prokka_gbk.every { f -> path("${f}").text.contains('LOCUS') }}",
+                    "Prokka SQN files non-empty: ${prokka_sqn.every { f -> path("${f}").size() > 0 }}",
                     // QC content checks
-                    "NanoPlot stats non-empty: ${nanoplot_stats.every { f -> path(f).size() > 0 }}",
-                    "NanoPlot stats contain summaries: ${nanoplot_stats.every { f -> path(f).text.contains('General summary:') }}",
+                    "NanoPlot stats non-empty: ${nanoplot_stats.every { f -> path("${f}").size() > 0 }}",
+                    "NanoPlot stats contain summaries: ${nanoplot_stats.every { f -> path("${f}").text.contains('General summary:') }}",
                     // Binning content checks
                     "MaxBin2 produced unbinned/discarded output: ${maxbin2_unbins.size() > 0}",
                     "MetaBAT2 produced classified or unclassified output: ${metabat2_bins.size() + metabat2_unbins.size() > 0}",
@@ -161,13 +161,13 @@ nextflow_pipeline {
                 ).match("summary-rows") },
 
                 { assert snapshot(
-                    "assembly QUAST: ${assembly_quast_logs.every { f -> path(f).text.contains('Finished:') }}",
-                    "binning QUAST: ${binning_quast_logs.every { f -> path(f).text.contains('Finished:') }}",
-                    "BUSCO: ${busco_logs.every { f -> path(f).text.contains('BUSCO analysis done.') }}",
-                    "Prokka: ${prokka_logs.every { f -> path(f).text.contains('Annotation finished successfully.') }}",
-                    "NanoLyse: ${nanolyse_logs.every { f -> path(f).text.contains('NanoLyse finished.') }}",
-                    "Flye: ${flye_logs.every { f -> path(f).text.contains('Final assembly:') }}",
-                    "MetaMDBG: ${metamdbg_logs.every { f -> path(f).text.contains('Done!') }}",
+                    "assembly QUAST: ${assembly_quast_logs.every { f -> path("${f}").text.contains('Finished:') }}",
+                    "binning QUAST: ${binning_quast_logs.every { f -> path("${f}").text.contains('Finished:') }}",
+                    "BUSCO: ${busco_logs.every { f -> path("${f}").text.contains('BUSCO analysis done.') }}",
+                    "Prokka: ${prokka_logs.every { f -> path("${f}").text.contains('Annotation finished successfully.') }}",
+                    "NanoLyse: ${nanolyse_logs.every { f -> path("${f}").text.contains('NanoLyse finished.') }}",
+                    "Flye: ${flye_logs.every { f -> path("${f}").text.contains('Final assembly:') }}",
+                    "MetaMDBG: ${metamdbg_logs.every { f -> path("${f}").text.contains('Done!') }}",
                 ).match("log-checks") },
             )
         }
