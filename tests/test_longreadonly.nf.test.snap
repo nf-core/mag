@@ -127,13 +127,13 @@
                 "QC_longreads/NanoPlot/minigut/raw_WeightedLogTransformed_HistogramReadlength.html",
                 "QC_longreads/NanoPlot/minigut/raw_Yield_By_Length.html",
                 "QC_longreads/minimap2/index/genome.hg38.chr21_10000bp_region.mmi",
-                "QC_longreads/samtools/stats/minigut_null.stats"
+                "QC_longreads/samtools/stats/minigut_0.stats"
             ],
             [
                 "filtered_NanoStats.txt:md5,3b1910052587d2d5070c179587798a39",
                 "raw_NanoStats.txt:md5,12f26e909ca384e5b71a391c39f1e287",
                 "genome.hg38.chr21_10000bp_region.mmi:md5,41d7183050e07736691ae550f3a736e5",
-                "minigut_null.stats:md5,d5aa023b5696e7a2349546cf4759929b"
+                "minigut_0.stats:md5,d5aa023b5696e7a2349546cf4759929b"
             ]
         ],
         "timestamp": "2026-05-21T16:21:14.184382761",
