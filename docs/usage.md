@@ -20,13 +20,13 @@ Preprocessing of short and long reads does **not** include host depletion by def
 
 **All assemblers are run on the provided data.** No assembler performs equally across all datasets, and no tool consistently outperforms others ([Meyer et al. 2022](https://doi.org/10.1038/s41592-022-01431-4)). Therefore, testing multiple options can improve results. However, reducing computational burden and accelerating analysis may require tool selection. The following table summarizes available assemblers:
 
-| Assembler     | Input              | Comment              |
-| ------------- | ------------------ | -------------------- |
+| Assembler     | Input              | Comment                                                                                                                          |
+| ------------- | ------------------ | -------------------------------------------------------------------------------------------------------------------------------- |
 | MEGAHIT       | Short reads        | Fast and memory-efficient; produces competitive assemblies though occasionally with higher misassembly rates compared to SPAdes. |
-| SPAdes        | Short reads        | Computationally demanding but produces high-quality assemblies with lower misassembly rates; slower than MEGAHIT. |
-| SPAdes Hybrid | Short & long reads | Slow and memory-intensive; leverages both read types for improved assembly accuracy. |
-| FLYE          | Long reads         | Slow and memory-intensive; suitable for long-read assemblies but not optimized for speed. |
-| MetaDBG       | Long reads         | Fast and memory-efficient alternative to FLYE for long-read assembly. |
+| SPAdes        | Short reads        | Computationally demanding but produces high-quality assemblies with lower misassembly rates; slower than MEGAHIT.                |
+| SPAdes Hybrid | Short & long reads | Slow and memory-intensive; leverages both read types for improved assembly accuracy.                                             |
+| FLYE          | Long reads         | Slow and memory-intensive; suitable for long-read assemblies but not optimized for speed.                                        |
+| MetaDBG       | Long reads         | Fast and memory-efficient alternative to FLYE for long-read assembly.                                                            |
 
 When both short and long reads are available, consider running **SPAdes Hybrid** and/or **long-read assembly with FLYE or MetaDBG**. With high-depth long reads, long-read assembly typically yields more coherent results ([Agustinho et al. 2024](https://doi.org/10.1038/s41592-024-02262-1)). Short-read-first assembly performs better with high-depth short reads or low-quality long reads and produces more fragmented but higher-accuracy assemblies ([Overholt et al. 2020](https://doi.org/10.1111/1462-2920.15186), [Meyer et al. 2022](https://doi.org/10.1038/s41592-022-01431-4)).
 
@@ -38,14 +38,14 @@ When both short and long reads are available, consider running **SPAdes Hybrid**
 
 **All binners are run by default.** These tools implement different algorithms and approaches, and no binner consistently performs best across all scenarios ([Meyer et al. 2022](https://doi.org/10.1038/s41592-022-01431-4)). Exploring all options can improve results. The following table summarizes available binners:
 
-| Binner        | Comment            |
-| ------------- | ------------------ |
-| MetaBat2      | Unsupervised probabilistic binner combining sequence composition and differential coverage; performs well in multi-sample mode and is widely used in ensemble pipelines. |
-| MaxBin2       | Uses Expectation-Maximization with tetranucleotide frequency and single-copy marker genes; particularly effective with multiple samples. |
-| CONCOCT       | Unsupervised Gaussian mixture model clustering with strong performance in multi-sample binning; frequently complemented by other binners in pipelines. |
-| COMEBin       | Deep learning-based binner optimized for contrastive multi-view learning; shows strong performance on hybrid and long-read assemblies. |
-| Metabinner    | Machine learning approach combining contig composition and coverage; designed for improved accuracy in complex metagenomes. |
-| Semibin2      | Semi-supervised binner using pre-trained models and marker genes; performs competitively on diverse metagenome types including challenging datasets. |
+| Binner     | Comment                                                                                                                                                                  |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| MetaBat2   | Unsupervised probabilistic binner combining sequence composition and differential coverage; performs well in multi-sample mode and is widely used in ensemble pipelines. |
+| MaxBin2    | Uses Expectation-Maximization with tetranucleotide frequency and single-copy marker genes; particularly effective with multiple samples.                                 |
+| CONCOCT    | Unsupervised Gaussian mixture model clustering with strong performance in multi-sample binning; frequently complemented by other binners in pipelines.                   |
+| COMEBin    | Deep learning-based binner optimized for contrastive multi-view learning; shows strong performance on hybrid and long-read assemblies.                                   |
+| Metabinner | Machine learning approach combining contig composition and coverage; designed for improved accuracy in complex metagenomes.                                              |
+| Semibin2   | Semi-supervised binner using pre-trained models and marker genes; performs competitively on diverse metagenome types including challenging datasets.                     |
 
 All binners currently run exclusively with CPUs. GPU-based execution should accelerate several binners considerably.
 
