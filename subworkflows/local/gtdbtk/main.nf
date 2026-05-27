@@ -94,7 +94,6 @@ workflow GTDBTK {
         ch_db_for_gtdbtk,
         params.gtdbtk_pplacer_useram ? false : true,
     )
-    ch_versions = ch_versions.mix(GTDBTK_CLASSIFYWF.out.versions)
 
     // Print warning why GTDB-TK summary empty if passed channel gets no files
     ch_filtered_bins.passed
