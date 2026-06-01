@@ -134,7 +134,9 @@ The following table summarizes available binners:
 
 All binners currently run exclusively with CPUs.
 GPU-based execution should accelerate several binners considerably.
-Note that CONCOCT and COMEBin typically have long run times, and not recommended for time sensitive projects, although can have better quality bins in some cases.
+
+> ![NOTE]
+> CONCOCT and COMEBin typically have long run times, and not recommended for time sensitive projects, although can have better quality bins in some cases.
 
 **Recommendation**: run as many binners as computationally feasible.
 
@@ -179,6 +181,8 @@ The choice between GTDBTk and CAT depends on the desired taxonomy framework or t
 **Recommendation**: select on a per-project basis.
 
 ## Input types
+
+<!-- TODO JAmes continue from here -->
 
 ### Short reads assembly
 
