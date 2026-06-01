@@ -32,6 +32,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Dependencies`
 
+| Tool    | Previous version | New version |
+| ------- | ---------------- | ----------- |
+| GTDB-Tk | 2.5.2            | 2.7.2       |
+
 ### `Deprecated`
 
 - [#908](https://github.com/nf-core/mag/pull/908) - Removed local `quast_bins_summary` in favor of `csvtk/concat` (by @dialvarezs)
