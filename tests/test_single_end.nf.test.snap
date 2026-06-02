@@ -1977,7 +1977,7 @@
     },
     "-profile test_single_end": {
         "content": [
-            159,
+            157,
             {
                 "ADAPTERREMOVAL_SE": {
                     "adapterremoval": "2.3.2"
