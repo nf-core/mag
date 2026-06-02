@@ -45,7 +45,8 @@ include { QUAST                           } from '../modules/local/quast_run/mai
 include { QUAST_BINS                      } from '../modules/local/quast_bins/main'
 include { BIN_SUMMARY                     } from '../modules/local/bin_summary/main'
 include { PREPARE_BIGMAG_SUMMARY          } from '../modules/local/bigmag_summary/main'
-include { PYPOLCA                         } from '../modules/local/pypolca/main'
+include { PYPOLCA_RUN                     } from '../modules/nf-core/pypolca/run/main'
+
 
 workflow MAG {
     take:
@@ -208,43 +209,22 @@ workflow MAG {
         ch_longread_assemblies = ch_assemblies.filter { meta, _contigs -> meta.assembler.toUpperCase() in ['FLYE', 'METAMDBG'] }
     }
     
-    if (params.run_pypolca) {
-    
-    ch_polished_assemblied = ch_longread_assemblies
-    
-    ASSEMBLY.out.longread_assemblies.view()
-    
-    ch_longread_assemblies.view()
-    ch_short_reads.view()
-    
-    ch_pypolca_input = ch_longread_assemblies
-    .map { meta, assembly ->
-    tuple(meta.id, meta, assembly)
-    }
-    .join(
-    ch_short_reads.map { meta, reads ->
-    tuple(meta.id, reads)
-    }
-    )
-    .map { id, meta, assembly, reads ->
-    tuple(meta, assembly, reads)
-    }
+    ch_polished_assemblies = ch_longread_assemblies
 
-    ch_pypolca_input.view()
-    
-    PYPOLCA(
-    	ch_pypolca_input
+    if (params.run_pypolca) {
+
+    PYPOLCA_RUN(
+       ch_short_reads,
+       ch_longread_assemblies
     )
+
+    ch_versions = ch_versions.mix(PYPOLCA_RUN.out.versions_pypolca)
+
+    ch_polished_assemblies = PYPOLCA_RUN.out.polished
     
-    ch_versions = ch_versions.mix(PYPOLCA.out.versions)
-    
-    ch_polished_assemblies = PYPOLCA.out.polished
+    }
     
     ch_assemblies = ch_shortread_assemblies.mix(ch_polished_assemblies)
-    }
-    else {
-    ch_assemblies = ch_shortread_assemblies.mix(ch_longread_assemblies)
-    }
     
     if (!params.skip_quast) {
         QUAST(ch_assemblies)
