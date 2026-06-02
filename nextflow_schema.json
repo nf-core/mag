@@ -529,7 +529,7 @@
                 "gtdb_db": {
                     "type": "string",
                     "description": "Specify the location of a GTDBTK database. Can be either an uncompressed directory or a `.tar.gz` archive. If not specified will be downloaded for you when GTDBTK or binning QC is not skipped.",
-                    "default": "https://data.gtdb.aau.ecogenomic.org/releases/release226/226.0/auxillary_files/gtdbtk_package/full_package/gtdbtk_r226_data.tar.gz",
+                    "default": "https://data.gtdb.aau.ecogenomic.org/releases/release232/232.0/auxillary_files/gtdbtk_package/full_package/gtdbtk_r232_data.tar.gz",
                     "format": "path"
                 },
                 "gtdbtk_min_completeness": {
@@ -577,9 +577,14 @@
                     "type": "boolean",
                     "description": "Specify to have GTDBTk to use the full bacterial tree rather than the split tree (requires more memory!)"
                 },
-                "gtdbtk_skip_aniscreen": {
+                "gtdbtk_place_species": {
                     "type": "boolean",
                     "description": "Specify to disable fast classification of genomes by ANI using skani in GTDB-Tk."
+                },
+                "gtdbtk_skip_aniscreen": {
+                    "type": "boolean",
+                    "description": "[DEPRECATED] Use `--gtdbtk_place_species` instead. Specify to disable fast classification of genomes by ANI using skani in GTDB-Tk.",
+                    "hidden": true
                 },
                 "gtdbtk_single_job": {
                     "type": "boolean",

@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1028](https://github.com/nf-core/mag/pull/1028) - Add nf-test snapshot for `test_longread_alternatives` profile (by @dialvarezs)
 - [#1039](https://github.com/nf-core/mag/pull/1039) - Add nf-test snapshot for `test_longread` profile (started by @brovolia, finished by @dialvarezs)
 - [#1041](https://github.com/nf-core/mag/pull/1041) - Refined and corrected unclear section of metromap (by @jfy133)
+- [#1044](https://github.com/nf-core/mag/pull/1044) - Add new `--gtdbtk_place_species` parameter (by @dialvarezs)
 - [#1047](https://github.com/nf-core/mag/issues/1007) - Add `--gtdbtk_single_job` to run GTDB-Tk classification for all bins in a single job (requested by @sarah-shah-bioinf, by @dialvarezs)
 
 ### `Changed`
@@ -18,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1011](https://github.com/nf-core/mag/pull/1011) - Reverted CheckM2 database download workaround from #966 (by @dialvarezs)
 - [#1020](https://github.com/nf-core/mag/pull/1020) - Update CONCOCT subworkflow and modules (by @dialvarezs)
 - [#1030](https://github.com/nf-core/mag/pull/1030) - Updated to nf-core 4.0.2 template (by @dialvarezs)
+- [#1044](https://github.com/nf-core/mag/pull/1044) - Updated GTDB-Tk to v2.7.2 / GTDB r232 (by @dialvarezs)
 
 ### `Fixed`
 
@@ -32,10 +34,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Dependencies`
 
+| Tool    | Previous version | New version |
+| ------- | ---------------- | ----------- |
+| GTDB-Tk | 2.5.2            | 2.7.2       |
+
 ### `Deprecated`
 
 - [#908](https://github.com/nf-core/mag/pull/908) - Removed local `quast_bins_summary` in favor of `csvtk/concat` (by @dialvarezs)
 - [#1018](https://github.com/nf-core/mag/pull/1018) - Remove `mag_depths_plot` local module (by @dialvarezs)
+- [#1018](https://github.com/nf-core/mag/pull/1018) - Deprecated `--gtdbtk_skip_aniscreen` in favor of `--gtdbtk_place_species` (by @dialvarezs)
 
 ## 5.4.2 Yellow Frog patch [2026-03-31]
 

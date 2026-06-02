@@ -376,6 +376,10 @@ def validateInputParameters(hybrid) {
         }
     }
 
+    if (params.gtdbtk_skip_aniscreen) {
+        log.warn("[nf-core/mag]: The parameter '--gtdbtk_skip_aniscreen' is deprecated and will be removed in a future release. Please use '--gtdbtk_place_species' instead.")
+    }
+
     if (!params.skip_gtdbtk) {
         if (params.skip_binqc) {
             log.warn('[nf-core/mag]: --skip_binqc is specified, but --skip_gtdbtk is explicitly set to run! GTDB-tk will be omitted because GTDB-tk bin classification requires bin filtering based on BUSCO or CheckM QC results to avoid GTDB-tk errors.')
