@@ -20,6 +20,16 @@ This page is split into four specific sections:
 - [**Input types**](#input-types): discusses suitable input data configurations depending on your input data files
 - [**Domain and research specific guidance**](domain-and-research-specific-guidance): discusses research-domain specific options (e.g. when targeting specific organisms, or types of DNA)
 
+## Introduction to metagenomic _de novo_ assembly
+
+If you are new to metagenomic _de novo_ assembly, and while reading this page you do not feel comfortable with the terminology used in this page, we suggest reading some introductory literature before running your analysis.
+A few suggestions are as follows:
+
+- Quince, C., et al. (2017). Shotgun metagenomics, from sampling to analysis. Nature Biotechnology, 35(9), 833–844. [https://doi.org/10.1038/nbt.3935](https://doi.org/10.1038/nbt.3935)
+- Goussarov, G., et al. (2022). Introduction to the principles and methods underlying the recovery of metagenome-assembled genomes from metagenomic data. MicrobiologyOpen, 11(3), e1298. [https://doi.org/10.1002/mbo3.1298](https://doi.org/10.1002/mbo3.1298)
+- Liu, S., et al. (2025). Analysis of metagenomic data. Nature Reviews. Methods Primers, 5(1), 5. [https://doi.org/10.1038/s43586-024-00376-6](https://doi.org/10.1038/s43586-024-00376-6)
+- New, F. N., & Brito, I. L. (2020). What Is Metagenomics Teaching Us, and What Is Missed? Annual Review of Microbiology, 74, 117–135. [https://doi.org/10.1146/annurev-micro-012520-072314](https://doi.org/10.1146/annurev-micro-012520-072314)
+
 ## Brief introduction to nf-core/mag
 
 The primary aim of nf-core/mag is to generate metagenomic assembled genomes (MAG), perform quality control, and evaluate the quality of each MAG.
@@ -184,30 +194,62 @@ The choice between GTDBTk and CAT depends on the desired taxonomy framework or t
 
 <!-- TODO JAmes continue from here -->
 
-### Short reads assembly
+### I only have short reads
 
-Short read assembly is performed by default if you have specified paths to short-read FASTQ files in the [input samplesheet](../usage.md#input-specifications), and you do not turn off running MEGAHIT and SPAdes using the relevant `--skip_*` [parameters](https://nf-co.re/mag/parameters/).
+Short read assembly is performed by default with MEGAHIT and SPAdes if you include paths to short-read FASTQ files in the [input samplesheet](../usage.md#input-specifications).
 
-### Long reads assembly
+You do not need to turn on any assembler.
+If you want to turn off running a particular assembler, you can turn it off using the relevant `--skip_*` [parameter](https://nf-co.re/mag/parameters/).
 
-Long read assembly is performed by default if you have specified long-read FASTQ files in the [input samplesheet](../usage.md#input-specifications), and you do not turn off running Flye and MetaDBG using the relevant `--skip_*` [parameters](https://nf-co.re/mag/parameters/).
+### I only have long reads
 
-### Hybrid assembly (short and long reads)
+Long read assembly is performed by default with Flye and MetaDBG if you have specified long-read FASTQ files in the [input samplesheet](../usage#input-specifications).
 
-Hybrid-read assembly is performed by default if you have specified _both_ short- and long-read FASTQ files in the [input samplesheet](../usage.md#input-specifications), and you do not turn off running SPAdesHbyrid using the relevant `--skip_*` [parameters](https://nf-co.re/mag/parameters/).
+You do not need to turn on an assembler.
+If you want to turn off running a particular assembler, you can turn it off using the relevant `--skip_*` [parameter](https://nf-co.re/mag/parameters/).
 
-### Pre-assembled input (binning only)
+### I have both short and long reads
+
+Hybrid-read assembly is performed by default with SPAdes in hybrid mode if you have specified _both_ short- and long-read FASTQ files in the [input samplesheet](../usage.md#input-specifications), in addition to standalone short-read and long-read assembly.
+
+If you do not want hybrid assembly, you can turn it off using the relevant `--skip_*` [parameter](https://nf-co.re/mag/parameters/) for SPAdes hybrid.
+
+### I already have assemblies, can I just run binning and downstream steps?
+
+nf-core/mag supports 'assembly input', where you can specify pre-assembled contigs in the samplesheet.
+This can be useful when you want to use an assembler not currently supported by nf-core/mag, or you wish to reanalyse publicly available assemblies.
+
+For you this you must still supply an input samplesheet as usual, however you will skip the assembly step if you provide a second samplesheet to `--assembly_input`
+
+For more information on how to prepare both samplesheets, see the usage documentation's [Supplying precomputed assemblies](../usage/#supplying-pre-computed-assemblies) section.
 
 ## Domain and research specific guidance
 
-### Virus Identification
+### I want to identify viruses in my metagenome
 
-**Virus identification and ancient DNA analysis are not enabled by default.** Virus identification is worth considering if viruses may be relevant to your research question.
+If you wish to identify viruses in your metagenome, you need to specify `--run_virus_identification`.
 
-### Eukaryotic MAGs
+This will execute [`geNomad`](https://github.com/apcamargo/genomad/) to identify contigs that can be assigned to viral genomes.
+Note that `geNomad` does identify viral contigs in bins or MAGs - only raw assemblies.
 
-**Annotation of MAGs for eukaryotic genes is not enabled by default.** You must select a database with `--metaeuk_mmseqs_db` to activate this.
+**Recommendation** Activate with `--run_virus_identification` to identify viral contigs in assemblies.
 
-### Ancient DNA
+### I want to identify eukaryotic MAGs
 
-**Ancient DNA analysis are not enabled by default.** Ancient DNA processing involves specialized tools and analysis steps to ensure best-practice handling of that particular data type.
+If you wish to identify eukaryotic bins your metagenome, you need to specify or supply a `MetaEuk` compatible database.
+
+nf-core/mag will by default [MetaEuk](https://github.com/soedinglab/metaeuk) to predict and annotate eukaryotic genes on bins, if a valid pre-built MetaEuk database name is supplied to `--metaeuk_mmseqs_db`, or a path to a locally downloaded `MMseqs2` formatted database to `--metaeuk_db`.
+
+**Recommendation**: Specify a MetaEuk database name or supply a database path to the relevant path to annotate eukaryotic genes in bins.
+
+### I want to assemble Ancient DNA
+
+If you have ancient DNA sequences, nf-core/mag has a dedicated sub-workflow to carry out damage pattern authentication and correction.
+This does not run by default, and must be activated with `--ancient_dna`
+
+The pipeline will run `pyDamage` to generate per-contig statistical probabilities of typical ancient DNA deamination miscoding lesion patterns.
+If binning is not skipped, you will also recieve per-bin averaged damage statistics in the final bin summary file.
+
+If the ancient DNA analysis mode is activated, the pipeline will also by default perform damage correction to remove accidently incorporated damaged positions in assemblies.
+
+**Recommendation**: Activate ancient DNA mode with `--ancient_dna` to get damage authentication statistics and correct misincorporated damage in assemblies.
