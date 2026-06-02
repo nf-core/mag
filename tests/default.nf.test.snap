@@ -63,8 +63,8 @@
                     "fastqc": "0.12.1"
                 },
                 "GTDBTK_CLASSIFYWF": {
-                    "gtdb_db": "r226",
-                    "gtdbtk": "2.5.2"
+                    "gtdb_db": "r232",
+                    "gtdbtk": "2.7.2"
                 },
                 "GTDBTK_DB_PREPARATION": {
                     "tar": 1.34
@@ -136,10 +136,10 @@
                 }
             }
         ],
-        "timestamp": "2026-05-04T09:02:47.805341806",
+        "timestamp": "2026-05-27T09:38:57.61754217",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.0"
+            "nextflow": "26.04.2"
         }
     },
     "multiqc": {
@@ -368,7 +368,7 @@
                 "fastqc_sequence_counts_plot.yaml:md5,914b960f91309a956e21c178901982bc",
                 "fastqc_sequence_duplication_levels_plot.yaml:md5,93d0cd165640262a7d44005856c624ab",
                 "fastqc_sequence_length_distribution_plot.yaml:md5,8bc1572ea1e12100dd1b41f54f060879",
-                "gtdbtk-first-table.yaml:md5,08b7e4d446732aa6282caff9f8cfc314",
+                "gtdbtk-first-table.yaml:md5,35227792ecdac2f09857800052cd2546",
                 "multiqc_bowtie2.yaml:md5,dbe34bb5e06f65c3cf7af116f1d54a10",
                 "multiqc_bowtie2_bowtie2-2.yaml:md5,b60f4adf7e78bec1bf16046ce5ea3b7d",
                 "multiqc_busco.yaml:md5,8dfe2fb699e8c4aad16a65a30ce42aad",
@@ -376,8 +376,8 @@
                 "multiqc_fastp.yaml:md5,51ec2abfc64be1bc93c4c3f7298da1e1",
                 "multiqc_fastqc.yaml:md5,c856302b60a6c3c3fd5f273ed1a7c967",
                 "multiqc_fastqc_fastqc-1.yaml:md5,b090818c369a65b9218bae720078035c",
-                "multiqc_general_stats.yaml:md5,eb0e0141f528d72ac61cfc98dd86f538",
-                "multiqc_gtdbtk.yaml:md5,3bbdb38502ded227673a4e25c6d7219a",
+                "multiqc_general_stats.yaml:md5,d812f12329d4132ac1405614124254dc",
+                "multiqc_gtdbtk.yaml:md5,19e1814e0e8c7170b2aa6417b0afb32a",
                 "multiqc_prokka.yaml:md5,7a103b0d4385c2de011fc286cb4c5cc3",
                 "multiqc_quast.yaml:md5,1be7cc2def0a960cbc3c19bdc4504c78",
                 "multiqc_quast_quast-1.yaml:md5,2ef7e71adce9f4e864e27565057a6632",
@@ -386,10 +386,10 @@
                 "quast_table.yaml:md5,2d53029b92bc2e3940ee2ae932fa2c9d"
             ]
         ],
-        "timestamp": "2026-05-04T10:28:41.89347695",
+        "timestamp": "2026-05-27T09:38:57.667416849",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.0"
+            "nextflow": "26.04.2"
         }
     }
 }
