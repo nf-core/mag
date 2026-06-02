@@ -1966,13 +1966,13 @@
                 "MEGAHIT-MetaBAT2-test_minigut-bins_bin2classification.names.txt:md5,ce1b6bae00995e88d70722462d9fcedb",
                 "MEGAHIT-MetaBAT2-test_minigut-bins_summary.txt:md5,c2986e27b93008b06709a59bb298e3ea",
                 "bat_summary.tsv:md5,ab01c0858ee334804fb97180d1ba321e",
-                "gtdbtk_summary.tsv:md5,e4d3f904cdfb4737d52a587e13547720"
+                "gtdbtk_summary.tsv:md5,75c4048c09d6126dc7f1019d138d33fe"
             ]
         ],
-        "timestamp": "2026-05-27T09:54:51.894785301",
+        "timestamp": "2026-06-02T06:28:57.339358478",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.2"
+            "nextflow": "26.04.3"
         }
     },
     "-profile test_single_end": {
@@ -2346,7 +2346,7 @@
                 "multiqc_fastqc.yaml:md5,2bbd80f21c5c264249bc935eada2ff41",
                 "multiqc_fastqc_fastqc-1.yaml:md5,b21efcd71ad261049a5aeaa238492f92",
                 "multiqc_general_stats.yaml:md5,8e3cd8d0950bf1e8869d5833e3fb4228",
-                "multiqc_gtdbtk.yaml:md5,7e80512a87910eb1cd97214d5ab7220b",
+                "multiqc_gtdbtk.yaml:md5,280f2d76c51024eb41df184c3b0dae70",
                 "multiqc_prokka.yaml:md5,e55c687925d611b869e4c4b27c71470c",
                 "multiqc_quast.yaml:md5,b7dae5bb61679ff9d5a3ede9898e5cfa",
                 "multiqc_quast_quast-1.yaml:md5,0b8fe8ee8f69277c0471dfe621c27b03",
@@ -2355,10 +2355,10 @@
                 "quast_table.yaml:md5,55ee8b4825b107d592cfeb16928f3487"
             ]
         ],
-        "timestamp": "2026-05-27T09:54:51.802758126",
+        "timestamp": "2026-06-02T06:28:57.250315083",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.2"
+            "nextflow": "26.04.3"
         }
     },
     "ancient": {
