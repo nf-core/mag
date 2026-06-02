@@ -81,7 +81,7 @@ nextflow run nf-core/mag --input samplesheet.csv --outdir <OUTDIR> -profile dock
 or with parameters specified in a [Nextflow parameter file](https://docs.seqera.io/nextflow/cli#pipeline-parameters).
 
 ```bash
-nextflow run nf-core/mag --input samplesheet.csv --outdir <OUTDIR> -profile docker
+nextflow run nf-core/mag -params-file params.json -profile docker
 ```
 
 ### What is the output from nf-core/mag?
