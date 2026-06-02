@@ -189,7 +189,8 @@ If you enable the `--save_cat_db` option, the database will be saved in the `Tax
 > This database is very large at ~110 GB!
 > This can take a long time, so we strongly recommend downloading and unzipping prior the pipeline run.
 
-This database can be downloaded from the GTDB developers' website. The current pipeline default points to [the GTDB-Tk r232 full package](https://data.gtdb.aau.ecogenomic.org/releases/release232/232.0/auxillary_files/gtdbtk_package/full_package/gtdbtk_r232_data.tar.gz), which is hosted in Australia (and could be slow for other regions of the world).
+This database can be downloaded from the GTDB developers' website. The current pipeline default points to [the GTDB-Tk r232 full package](https://data.gtdb.aau.ecogenomic.org/releases/release232/232.0/auxillary_files/gtdbtk_package/full_package/gtdbtk_r232_data.tar.gz), which is hosted in Europe (and could be slow for other regions of the world).
+See the [GTDB downloads page](https://gtdb.ecogenomic.org/downloads) for other mirrors.
 The developers also offer a split archive of 10 GB files that can be downloaded more stably from [the split package directory](https://data.gtdb.aau.ecogenomic.org/releases/release232/232.0/auxillary_files/gtdbtk_package/split_package/) and subsequently (manually) combined after.
 More documentation can be seen [here](https://ecogenomics.github.io/GTDBTk/installing/index.html#gtdb-tk-reference-data).
 
