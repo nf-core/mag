@@ -10,7 +10,10 @@
             "type": "object",
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should find input data and save output data.",
-            "required": ["input", "outdir"],
+            "required": [
+                "input",
+                "outdir"
+            ],
             "properties": {
                 "input": {
                     "type": "string",
@@ -151,7 +154,14 @@
                     "description": "Method used to save pipeline results to output directory.",
                     "help_text": "The Nextflow `publishDir` option specifies which intermediate files should be saved to the output directory. This option tells the pipeline what method should be used to move these files. See [Nextflow docs](https://www.nextflow.io/docs/latest/process.html#publishdir) for details.",
                     "fa_icon": "fas fa-copy",
-                    "enum": ["symlink", "rellink", "link", "copy", "copyNoFollow", "move"],
+                    "enum": [
+                        "symlink",
+                        "rellink",
+                        "link",
+                        "copy",
+                        "copyNoFollow",
+                        "move"
+                    ],
                     "hidden": true
                 },
                 "email_on_fail": {
@@ -225,7 +235,10 @@
                     "hidden": true
                 },
                 "help": {
-                    "type": ["boolean", "string"],
+                    "type": [
+                        "boolean",
+                        "string"
+                    ],
                     "description": "Display the help message."
                 },
                 "help_full": {
@@ -280,7 +293,11 @@
                     "type": "string",
                     "default": "fastp",
                     "description": "Specify which adapter clipping tool to use.",
-                    "enum": ["fastp", "adapterremoval", "trimmomatic"]
+                    "enum": [
+                        "fastp",
+                        "adapterremoval",
+                        "trimmomatic"
+                    ]
                 },
                 "save_clipped_reads": {
                     "type": "boolean",
@@ -474,13 +491,20 @@
                 "longread_adaptertrimming_tool": {
                     "type": "string",
                     "description": "Specify which long read adapter trimming tool to use.",
-                    "enum": ["porechop", "porechop_abi"],
+                    "enum": [
+                        "porechop",
+                        "porechop_abi"
+                    ],
                     "default": "porechop_abi"
                 },
                 "longread_filtering_tool": {
                     "type": "string",
                     "description": "Specify which long read filtering tool to use.",
-                    "enum": ["filtlong", "nanoq", "chopper"],
+                    "enum": [
+                        "filtlong",
+                        "nanoq",
+                        "chopper"
+                    ],
                     "default": "filtlong"
                 }
             }
@@ -534,7 +558,7 @@
                 },
                 "gtdbtk_min_completeness": {
                     "type": "number",
-                    "default": 50,
+                    "default": 50.0,
                     "description": "Min. bin completeness (in %) required to apply GTDB-tk classification.",
                     "help_text": "Completeness assessed with any of the bin QC tools (BUSCO, CheckM, CheckM2). A bin passes if at least one QC tool reports completeness at or above the threshold. Must be greater than 0 (min. 0.01) to avoid GTDB-tk errors. If too low, GTDB-tk classification results can be impaired due to not enough marker genes!",
                     "minimum": 0.01,
@@ -542,7 +566,7 @@
                 },
                 "gtdbtk_max_contamination": {
                     "type": "number",
-                    "default": 10,
+                    "default": 10.0,
                     "description": "Max. bin contamination (in %) allowed to apply GTDB-tk classification.",
                     "help_text": "Contamination assessed with any of the bin QC tools (BUSCO, CheckM, CheckM2). A bin passes if at least one QC tool reports contamination at or below the threshold. If too high, GTDB-tk classification results can be impaired due to contamination!",
                     "minimum": 0,
@@ -550,7 +574,7 @@
                 },
                 "gtdbtk_min_perc_aa": {
                     "type": "number",
-                    "default": 10,
+                    "default": 10.0,
                     "description": "Min. fraction of AA (in %) in the MSA for bins to be kept.",
                     "minimum": 0,
                     "maximum": 100
@@ -602,7 +626,10 @@
                     "type": "string",
                     "description": "Specify whether to use contigs or scaffolds assembled by SPAdes",
                     "help_text": "By default the SPAdes documentation recommends using scaffolds rather than contigs, as these are longer as they combine multiple contigs. However there is an increased risk of misassemblies or chimeras. Use this flag to specify to just use contigs for downstream processes such as binning.",
-                    "enum": ["scaffolds", "contigs"],
+                    "enum": [
+                        "scaffolds",
+                        "contigs"
+                    ],
                     "default": "scaffolds"
                 },
                 "megahit_options": {
@@ -752,7 +779,11 @@
                     "default": "group",
                     "description": "Defines mapping strategy to compute co-abundances for binning, i.e. which samples will be mapped against the assembly.",
                     "help_text": "Available: `all`, `group` or `own`. Note that `own` cannot be specified in combination with `--coassemble_group`.\n\nNote that specifying `all` without additionally specifying `--coassemble_group` results in `n^2` mapping processes for each assembly method, where `n` is the number of samples.",
-                    "enum": ["all", "group", "own"]
+                    "enum": [
+                        "all",
+                        "group",
+                        "own"
+                    ]
                 },
                 "skip_binning": {
                     "type": "boolean",
@@ -781,7 +812,11 @@
                 "bin_metabinner_scale": {
                     "type": "string",
                     "default": "large",
-                    "enum": ["small", "large", "huge"],
+                    "enum": [
+                        "small",
+                        "large",
+                        "huge"
+                    ],
                     "description": "Dataset scale for MetaBinner",
                     "help_text": "Dataset scale; eg. small,large,huge (default:large); Users can choose `huge` to run MetaBinner on huge datasets with lower memory requirements."
                 },
@@ -915,7 +950,8 @@
                 },
                 "run_busco": {
                     "type": "boolean",
-                    "description": "Enable running BUSCO during bin QC."
+                    "description": "Enable running BUSCO during bin QC.",
+                    "default": true
                 },
                 "run_checkm": {
                     "type": "boolean",
@@ -1006,7 +1042,11 @@
                     "default": "raw_bins_only",
                     "description": "Specify which binning output is sent for downstream annotation, taxonomic classification, bin quality control etc.",
                     "help_text": "`raw_bins_only`: only bins (and unbinned contigs) from the binners.\n`refined_bins_only`: only bins (and unbinned contigs) from the bin refinement step.\n`both`: bins and unbinned contigs from both the binning and bin refinement steps.",
-                    "enum": ["raw_bins_only", "refined_bins_only", "both"]
+                    "enum": [
+                        "raw_bins_only",
+                        "refined_bins_only",
+                        "both"
+                    ]
                 },
                 "run_gunc": {
                     "type": "boolean",
@@ -1022,7 +1062,11 @@
                     "type": "string",
                     "default": "progenomes",
                     "description": "Specify which database to auto-download if not supplying own",
-                    "enum": ["progenomes", "gtdb", "test_data"]
+                    "enum": [
+                        "progenomes",
+                        "gtdb",
+                        "test_data"
+                    ]
                 },
                 "gunc_save_db": {
                     "type": "boolean",
@@ -1131,5 +1175,10 @@
         {
             "$ref": "#/$defs/ancient_dna_assembly"
         }
-    ]
+    ],
+    "properties": {
+        "run_pypolca": {
+            "type": "boolean"
+        }
+    }
 }
