@@ -41,7 +41,7 @@ A run of nf-core/mag without any customisation or additional parameters will:
   - Quality control by `QUAST` and `ALE`
   - Annotate assemblies with `prodigal`
 - Group contigs
-  - By binning with `MetaBat2`, `MaxBin2`, `CONCOCT`, `COMEBin`, `MetaBinner`, `SemiBin2`
+  - By binning with `MetaBat2`, `MaxBin2`, `CONCOCT`, `COMEBin`, `MetaBinner` and `SemiBin2`
 - Post-binning tasks
   - Quality control bins with `QUAST` and `BUSCO`
   - Annotate bins with `PROKKA` (for bacteria and archaea) and `MetaEuk` (for Eukaryotes)
@@ -97,7 +97,7 @@ Typically, the primary output files you will want from a typical run:
 You can explore example output from real data on the dedicated [Results](https://nf-co.re/mag/results/) page.
 
 However, you will need to explore output on a per-project basis, as the exact files you need will depend on your question.
-You can see detailed descriptions of all output files on the [Output](https://nf-co.re/mag/5.4.2/docs/output/) page.
+You can see detailed descriptions of all output files on the [Output](https://nf-co.re/mag/latest/docs/output/) page.
 
 ## Defaults and tool selection
 
