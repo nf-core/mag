@@ -1977,7 +1977,7 @@
     },
     "-profile test_single_end": {
         "content": [
-            159,
+            157,
             {
                 "ADAPTERREMOVAL_SE": {
                     "adapterremoval": "2.3.2"
@@ -2156,10 +2156,10 @@
                 }
             }
         ],
-        "timestamp": "2026-05-04T09:02:42.319883678",
+        "timestamp": "2026-06-01T11:04:28.94748105",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.0"
+            "nextflow": "26.04.2"
         }
     },
     "multiqc": {
