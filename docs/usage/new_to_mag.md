@@ -20,21 +20,13 @@ This page is split into four specific sections:
 - [**Input types**](#input-types): discusses suitable input data configurations depending on your input data files
 - [**Domain and research specific guidance**](domain-and-research-specific-guidance): discusses research-domain specific options (e.g. when targeting specific organisms, or types of DNA)
 
-## Introduction to metagenomic _de novo_ assembly
-
-If you are new to metagenomic _de novo_ assembly, and while reading this page you do not feel comfortable with the terminology used in this page, we suggest reading some introductory literature before running your analysis.
-A few suggestions are as follows:
-
-- Quince, C., et al. (2017). Shotgun metagenomics, from sampling to analysis. Nature Biotechnology, 35(9), 833–844. [https://doi.org/10.1038/nbt.3935](https://doi.org/10.1038/nbt.3935)
-- Goussarov, G., et al. (2022). Introduction to the principles and methods underlying the recovery of metagenome-assembled genomes from metagenomic data. MicrobiologyOpen, 11(3), e1298. [https://doi.org/10.1002/mbo3.1298](https://doi.org/10.1002/mbo3.1298)
-- Liu, S., et al. (2025). Analysis of metagenomic data. Nature Reviews. Methods Primers, 5(1), 5. [https://doi.org/10.1038/s43586-024-00376-6](https://doi.org/10.1038/s43586-024-00376-6)
-- New, F. N., & Brito, I. L. (2020). What Is Metagenomics Teaching Us, and What Is Missed? Annual Review of Microbiology, 74, 117–135. [https://doi.org/10.1146/annurev-micro-012520-072314](https://doi.org/10.1146/annurev-micro-012520-072314)
-
 ## Brief introduction to nf-core/mag
+
+### What does nf-core/mag do
 
 The primary aim of nf-core/mag is to generate metagenomic assembled genomes (MAG), perform quality control, and evaluate the quality of each MAG.
 
-A run of the pipeline without any customisation or additional parameters will:
+A run of nf-core/mag without any customisation or additional parameters will:
 
 - Preprocess input reads to
   - Remove adapters (short reads: `fastp`, long reads: `porechop_ABI`)
@@ -55,21 +47,68 @@ A run of the pipeline without any customisation or additional parameters will:
   - Annotate bins with `PROKKA` (for bacteria and archaea) and `MetaEuk` (for Eukaryotes)
   - Taxonomic assign bins with `GTDB-Tk` (for bacteria and archaea)
 
+> [!NOTE]
+> If you are new to metagenomic _de novo_ assembly, and while reading this page you do not feel comfortable with the terminology used in this page, we suggest reading some introductory literature before running your analysis.
+> A few suggestions are as follows:
+>
+> - Quince, C., et al. (2017). Shotgun metagenomics, from sampling to analysis. Nature Biotechnology, 35(9), 833–844. [https://doi.org/10.1038/nbt.3935](https://doi.org/10.1038/nbt.3935)
+> - Goussarov, G., et al. (2022). Introduction to the principles and methods underlying the recovery of metagenome-assembled genomes from metagenomic data. MicrobiologyOpen, 11(3), e1298. [https://doi.org/10.1002/mbo3.1298](https://doi.org/10.1002/mbo3.1298)
+> - Liu, S., et al. (2025). Analysis of metagenomic data. Nature Reviews. Methods Primers, 5(1), 5. [https://doi.org/10.1038/s43586-024-00376-6](https://doi.org/10.1038/s43586-024-00376-6)
+> - New, F. N., & Brito, I. L. (2020). What Is Metagenomics Teaching Us, and What Is Missed? Annual Review of Microbiology, 74, 117–135. [https://doi.org/10.1146/annurev-micro-012520-072314](https://doi.org/10.1146/annurev-micro-012520-072314)
+
 The pipeline will download database files for you where necessary.
 All other functionality must be activated using dedicated [parameters](https://nf-co.re/mag/parameters).
 
-The rest of this section provides recommendations and advice for tool selection in these default sections of the pipeline.
+### How do I run nf-core/mag?
+
+Before you start, if you are unfamiliar with executing nf-core pipelines, we highly recommend reading the central ['Getting started with nf-core'](https://nf-co.re/docs/get_started/nf-core) documentation.
+
+To run nf-core/mag, at a minimum, you will need:
+
+- Nextflow
+- A software dependency and compute environment manager (typically Conda, Docker, or Singularity/Apptainer)
+- Metagenomic FASTQ files (Illumina or Nanopore sequence data is directly supported)
+- A UNIX, and ideally internet connected, computing infrastructure (e.g., laptop, server, HPC, or cloud)
+
+You will then need to prepare a [samplesheet](../usage#samplesheet-input-file) specifying the names and paths to the FASTQ Files.
+
+Finally to execute, you run a typical Nextflow command, either with [parameters](https://nf-co.re/mag/parameters/) customising the run specified on the command line:
+
+```bash
+nextflow run nf-core/mag --input samplesheet.csv --outdir <OUTDIR> -profile docker --clip_tool adapterremoval --reads_minlength 25 <...>
+```
+
+Or with parameters specified in a [Nextflow parameter file](https://docs.seqera.io/nextflow/cli#pipeline-parameters):
+
+```bash
+nextflow run nf-core/mag --input samplesheet.csv --outdir <OUTDIR> -profile docker
+```
+
+### What is the output from nf-core/mag?
+
+nf-core/mag produces many different output directories and files, depending on what parameters you set.
+
+Typically, the primary output files you will want from a typical run:
+
+- `multiqc/multiqc_report.html`: For overall run summary statistics
+- `GenomeBinning/bin_summary.tsv`: Summary statistics with quality metrics for the bins
+- `GenomeBinning/<binner name>/`: The bin FASTA files themselves
+
+You can explore example output from real data on the dedicated [Results](https://nf-co.re/mag/results/) page.
+
+However, you will need to explore output on a per-project basis, as the exact files you need will depend on your question.
+You can see detailed descriptions of all output files on the [Output](https://nf-co.re/mag/5.4.2/docs/output/) page
 
 ## Defaults and tool selection
 
-The pipeline's defaults are designed to perform comprehensive quality control, support all appropriate assemblers and binners, and employ broadly applicable bin evaluation tools.
+The pipeline's default tool executions are designed to perform comprehensive quality control, support all appropriate assemblers and binners, and employ broadly applicable bin evaluation tools.
 
-The defaults prioritize exploring all options to find the optimal tool combination rather than optimizing for speed or resource efficiency.
+The default tool selection prioritises exploring all options to find the optimal tool combination rather than optimising for speed or resource efficiency.
 The following sections provide non-exhaustive ideas for adapting tool choices if desired or needed.
 
 ### Preprocessing
 
-Preprocessing of short and long reads does _not_ include host depletion by default. If samples were derived from a host organism (for example, mouse or human), removing host-derived data can improve runtime and assembly quality.
+Preprocessing of short and long reads does _not_ include host depletion by default. If samples were derived from a host organism (for example, mouse, or human), removing host-derived data can improve runtime and assembly quality.
 
 **Recommendation**: Omit or skip preprocessing steps only on a case-by-case basis with documented justification.
 
@@ -92,14 +131,14 @@ Therefore, despite the larger computational overhead, testing multiple options c
 
 However, reducing computational burden and accelerating analysis may require tool selection.
 
-The following table summarizes available assemblers:
+The following table summarises available assemblers:
 
 | Assembler      | Input              | Comment                                                                                                                          |
 | -------------- | ------------------ | -------------------------------------------------------------------------------------------------------------------------------- |
 | `MEGAHIT`      | Short reads        | Fast and memory-efficient; produces competitive assemblies though occasionally with higher misassembly rates compared to SPAdes. |
 | `SPAdes`       | Short reads        | Computationally demanding but produces high-quality assemblies with lower misassembly rates; slower than MEGAHIT.                |
 | `SPAdesHybrid` | Short & long reads | Slow and memory-intensive; leverages both read types for improved assembly accuracy.                                             |
-| `FLYE`         | Long reads         | Slow and memory-intensive; suitable for long-read assemblies but not optimized for speed.                                        |
+| `FLYE`         | Long reads         | Slow and memory-intensive; suitable for long-read assemblies but not optimised for speed.                                        |
 | `MetaDBG`      | Long reads         | Fast and memory-efficient alternative to FLYE for long-read assembly.                                                            |
 
 When both short and long reads are available, consider running `SPAdesHybrid` and/or **long-read assembly with FLYE or MetaDBG**.
@@ -131,16 +170,16 @@ However, single-sample binning remains viable when only one dataset is available
 Each binning tool implements different algorithms and approaches, and no binner consistently performs best across all scenarios ([Meyer et al. 2022](https://doi.org/10.1038/s41592-022-01431-4)).
 Exploring all options can improve results.
 
-The following table summarizes available binners:
+The following table summarises available binners:
 
-| Binner      | Comment                                                                                                                                                                   |
-| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `MetaBat2`  | Unsupervised probabilistic binner combining sequence composition and differential coverage; performs well in multi-sample mode and is widely used in ensemble pi`pelines. |
-| `MaxBin2`   | Uses Expectation-Maximization with tetranucleotide frequency and single-copy marker genes; particularly effective with multiple sa`mples.                                 |
-| `CONCOCT`   | Unsupervised Gaussian mixture model clustering with strong performance in multi-sample binning; frequently complemented by other binners in pi`pelines.                   |
-| `COMEBin`   | Deep learning-based binner optimized for contrastive multi-view learning; shows strong performance on hybrid and long-read as`semblies.                                   |
-| `Metabinner | Machine learning approach combining contig composition and coverage; designed for improved accuracy in complex me`tagenomes.                                              |
-| `Semibin2`  | Semi-supervised binner using pre-trained models and marker genes; performs competitively on diverse metagenome types including challenging datasets.                      |
+| Binner      | Comment                                                                                                                                                                  |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `MetaBat2`  | Unsupervised probabilistic binner combining sequence composition and differential coverage; performs well in multi-sample mode and is widely used in ensemble pipelines. |
+| `MaxBin2`   | Uses Expectation-Maximisation with tetranucleotide frequency and single-copy marker genes; particularly effective with multiple samples.                                 |
+| `CONCOCT`   | Unsupervised Gaussian mixture model clustering with strong performance in multi-sample binning; frequently complemented by other binners in pipelines.                   |
+| `COMEBin`   | Deep learning-based binner optimised for contrastive multi-view learning; shows strong performance on hybrid and long-read assemblies.                                   |
+| `Metabinner | Machine learning approach combining contig composition and coverage; designed for improved accuracy in complex metagenomes.                                              |
+| `Semibin2`  | Semi-supervised binner using pretrained models and marker genes; performs competitively on diverse metagenome types including challenging datasets.                      |
 
 All binners currently run exclusively with CPUs.
 GPU-based execution should accelerate several binners considerably.
@@ -168,7 +207,7 @@ Bin quality controls checks for quality of the assembled bins against a range of
 Bin quality control is performed by default in nf-core/mag using BUSCO, which evaluates both prokaryotes and eukaryotes based on marker genes.
 
 Alternatives include **CheckM** (marker-gene-based, prokaryote-only) and **CheckM2** (machine learning-based, prokaryote-only).
-CheckM is well established and commonly used, but the newer CheckM2 version has an more recent database and accurate evaluation.
+CheckM is well established and commonly used, but the newer CheckM2 version has a more recent database and accurate evaluation.
 
 Changing the default is typically driven by the need for comparability with other studies.
 
@@ -190,9 +229,19 @@ The choice between GTDBTk and CAT depends on the desired taxonomy framework or t
 
 **Recommendation**: select on a per-project basis.
 
-## Input types
+## What parameters should I change?
 
-<!-- TODO JAmes continue from here -->
+Many of the tools in nf-core/mag can be adjusted using pipeline level parameters (e.g. `--min_contig_size` or `--gtdbtk_min_completeness`).
+
+The defaults to these parameters in the vast majority of cases are set to the default of the tool themselves.
+
+While these are reasonable defaults, these may not be suitable for all use cases.
+These are selected as nf-core/mag is aimed at being a generalist pipeline that can be used in many different research contexts.
+You should read the documentation of the specific tools and literature of similar projects to get an idea of which parameters may be useful to adjust for your own project.
+
+**Recommendation**: adjust parameters on a per-project basis.
+
+## Input types
 
 ### I only have short reads
 
@@ -227,29 +276,38 @@ For more information on how to prepare both samplesheets, see the usage document
 
 ### I want to identify viruses in my metagenome
 
+nf-core/mag will not identify viral sequences by default.
+
 If you wish to identify viruses in your metagenome, you need to specify `--run_virus_identification`.
 
 This will execute [`geNomad`](https://github.com/apcamargo/genomad/) to identify contigs that can be assigned to viral genomes.
 Note that `geNomad` does identify viral contigs in bins or MAGs - only raw assemblies.
 
-**Recommendation** Activate with `--run_virus_identification` to identify viral contigs in assemblies.
+**Recommendation** Eukaryotic bins identification are not screened for by default. Activate with `--run_virus_identification` to identify viral contigs in assemblies.
 
 ### I want to identify eukaryotic MAGs
 
-If you wish to identify eukaryotic bins your metagenome, you need to specify or supply a `MetaEuk` compatible database.
+nf-core/mag will not identify eukaryotic MAGs by default.
 
-nf-core/mag will by default [MetaEuk](https://github.com/soedinglab/metaeuk) to predict and annotate eukaryotic genes on bins, if a valid pre-built MetaEuk database name is supplied to `--metaeuk_mmseqs_db`, or a path to a locally downloaded `MMseqs2` formatted database to `--metaeuk_db`.
+If you wish to identify eukaryotic bins your metagenome, you need to run `--bin_domain_classification` and/or you need to specify or supply a `MetaEuk` compatible database.
 
-**Recommendation**: Specify a MetaEuk database name or supply a database path to the relevant path to annotate eukaryotic genes in bins.
+You can distinguish between eukaryotic and prokaryotic bins if you supply `--bin_domain_classification`, which will execute [Tiara](https://github.com/ibe-uw/tiara).
+This will also only send prokaryotic bins to downstream steps that expect only prokaryotic bins.
+
+If a valid prebuilt MetaEuk database name is supplied to `--metaeuk_mmseqs_db`, or a path to a locally downloaded `MMseqs2` formatted database to `--metaeuk_db`, nf-core/mag will execute [MetaEuk](https://github.com/soedinglab/metaeuk) to predict and annotate eukaryotic genes on bins,
+
+**Recommendation**: Eukaryotic bins identification is not executed by default. Specify `--bin_domain_classification` to taxonomic classify bins at domain level, or supply a MetaEuk database name or supply a database path to the relevant path to annotate eukaryotic genes in bins.
 
 ### I want to assemble Ancient DNA
+
+nf-core/mag will not appropriately analyse ancient DNA seuqence by default.
 
 If you have ancient DNA sequences, nf-core/mag has a dedicated sub-workflow to carry out damage pattern authentication and correction.
 This does not run by default, and must be activated with `--ancient_dna`
 
-The pipeline will run `pyDamage` to generate per-contig statistical probabilities of typical ancient DNA deamination miscoding lesion patterns.
-If binning is not skipped, you will also recieve per-bin averaged damage statistics in the final bin summary file.
+The pipeline will run `pyDamage` to generate _per-contig_ statistical probabilities of typical ancient DNA deamination miscoding lesion patterns.
+If binning is not skipped, you will also receive by default, _per-bin_ averaged damage statistics in the final bin summary file.
 
-If the ancient DNA analysis mode is activated, the pipeline will also by default perform damage correction to remove accidently incorporated damaged positions in assemblies.
+If the ancient DNA analysis mode is activated, the pipeline will also by default perform damage correction to remove accidentally incorporated damaged positions in assemblies.
 
-**Recommendation**: Activate ancient DNA mode with `--ancient_dna` to get damage authentication statistics and correct misincorporated damage in assemblies.
+**Recommendation**: Ancient DNA data is not appropriately processed by default. Activate ancient DNA mode with `--ancient_dna` to get damage authentication statistics and correct misincorporated damage in assemblies.
