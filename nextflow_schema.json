@@ -580,6 +580,11 @@
                 "gtdbtk_place_species": {
                     "type": "boolean",
                     "description": "Specify to disable fast classification of genomes by ANI using skani in GTDB-Tk."
+                },
+                "gtdbtk_skip_aniscreen": {
+                    "type": "boolean",
+                    "description": "[DEPRECATED] Use `--gtdbtk_place_species` instead. Specify to disable fast classification of genomes by ANI using skani in GTDB-Tk.",
+                    "hidden": true
                 }
             }
         },
