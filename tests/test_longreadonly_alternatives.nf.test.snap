@@ -48,10 +48,12 @@
             [
                 "Assembly/FLYE/FLYE-minigut.assembly.fasta.gz",
                 "Assembly/FLYE/FLYE-minigut.assembly_graph.gfa.gz",
+                "Assembly/FLYE/FLYE-minigut.assembly_info.txt",
                 "Assembly/FLYE/FLYE-minigut.flye.log"
             ],
             [
                 "FLYE-minigut.assembly.fasta.gz:md5,f4fcf5e1c94901ef1fac2b335f4729f1",
+                "FLYE-minigut.assembly_info.txt:md5,8af4d61c811efe1796e8af7a4385bb26",
                 "FLYE-minigut.assembly_graph.gfa.gz:md5,f23173732f3fdb68e26276438fc6bc9d"
             ]
         ],
