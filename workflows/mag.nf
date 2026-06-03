@@ -208,7 +208,7 @@ workflow MAG {
         ch_shortread_assemblies = ch_assemblies.filter { meta, _contigs -> meta.assembler.toUpperCase() in ['SPADES', 'SPADESHYBRID', 'MEGAHIT'] }
         ch_longread_assemblies = ch_assemblies.filter { meta, _contigs -> meta.assembler.toUpperCase() in ['FLYE', 'METAMDBG'] }
     }
-    
+
     ch_polished_assemblies = ch_longread_assemblies
 
     if (params.run_pypolca) {
@@ -221,11 +221,11 @@ workflow MAG {
     ch_versions = ch_versions.mix(PYPOLCA_RUN.out.versions_pypolca)
 
     ch_polished_assemblies = PYPOLCA_RUN.out.polished
-    
+
     }
-    
+
     ch_assemblies = ch_shortread_assemblies.mix(ch_polished_assemblies)
-    
+
     if (!params.skip_quast) {
         QUAST(ch_assemblies)
         ch_versions = ch_versions.mix(QUAST.out.versions)
