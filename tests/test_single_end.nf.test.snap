@@ -601,12 +601,13 @@
             "binning QUAST: true",
             "CheckM: true",
             "Prokka: true",
-            "BAT: true"
+            "BAT: true",
+            "GTDB-Tk: true"
         ],
-        "timestamp": "2026-04-16T17:37:11.044394324",
+        "timestamp": "2026-06-02T09:03:26.414420505",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.3"
         }
     },
     "assembly": {
@@ -1934,6 +1935,19 @@
                 "Taxonomy/CAT/MEGAHIT/MetaBAT2/test_minigut/bins/MEGAHIT-MetaBAT2-test_minigut-bins_bin2classification.names.txt",
                 "Taxonomy/CAT/MEGAHIT/MetaBAT2/test_minigut/bins/MEGAHIT-MetaBAT2-test_minigut-bins_summary.txt",
                 "Taxonomy/CAT/bat_summary.tsv",
+                "Taxonomy/GTDB-Tk/all/all/all_bins/all-all-all-all-all_bins/align/all-all-all-all-all_bins.bac120.filtered.tsv",
+                "Taxonomy/GTDB-Tk/all/all/all_bins/all-all-all-all-all_bins/align/all-all-all-all-all_bins.bac120.msa.fasta.gz",
+                "Taxonomy/GTDB-Tk/all/all/all_bins/all-all-all-all-all_bins/align/all-all-all-all-all_bins.bac120.user_msa.fasta.gz",
+                "Taxonomy/GTDB-Tk/all/all/all_bins/all-all-all-all-all_bins/all-all-all-all-all_bins.bac120.summary.tsv",
+                "Taxonomy/GTDB-Tk/all/all/all_bins/all-all-all-all-all_bins/all-all-all-all-all_bins.log",
+                "Taxonomy/GTDB-Tk/all/all/all_bins/all-all-all-all-all_bins/all-all-all-all-all_bins.warnings.log",
+                "Taxonomy/GTDB-Tk/all/all/all_bins/all-all-all-all-all_bins/classify/all-all-all-all-all_bins.bac120.classify.tree",
+                "Taxonomy/GTDB-Tk/all/all/all_bins/all-all-all-all-all_bins/classify/all-all-all-all-all_bins.bac120.summary.tsv",
+                "Taxonomy/GTDB-Tk/all/all/all_bins/all-all-all-all-all_bins/gtdbtk.json",
+                "Taxonomy/GTDB-Tk/all/all/all_bins/all-all-all-all-all_bins/identify/all-all-all-all-all_bins.ar53.markers_summary.tsv",
+                "Taxonomy/GTDB-Tk/all/all/all_bins/all-all-all-all-all_bins/identify/all-all-all-all-all_bins.bac120.markers_summary.tsv",
+                "Taxonomy/GTDB-Tk/all/all/all_bins/all-all-all-all-all_bins/identify/all-all-all-all-all_bins.failed_genomes.tsv",
+                "Taxonomy/GTDB-Tk/all/all/all_bins/all-all-all-all-all_bins/identify/all-all-all-all-all_bins.translation_table_summary.tsv",
                 "Taxonomy/GTDB-Tk/gtdbtk_summary.tsv"
             ],
             [
@@ -1966,10 +1980,20 @@
                 "MEGAHIT-MetaBAT2-test_minigut-bins_bin2classification.names.txt:md5,ce1b6bae00995e88d70722462d9fcedb",
                 "MEGAHIT-MetaBAT2-test_minigut-bins_summary.txt:md5,c2986e27b93008b06709a59bb298e3ea",
                 "bat_summary.tsv:md5,ab01c0858ee334804fb97180d1ba321e",
+                "all-all-all-all-all_bins.bac120.filtered.tsv:md5,ada7444f82a0a09c6847d678d4021861",
+                "all-all-all-all-all_bins.bac120.msa.fasta.gz:md5,d39510f003e637f0e92233e0f645bb15",
+                "all-all-all-all-all_bins.bac120.user_msa.fasta.gz:md5,1f629d7b49268b8cc012bf32ca46cd75",
+                "all-all-all-all-all_bins.bac120.summary.tsv:md5,1b5e71e188cd9957a2fea6684d109a7e",
+                "all-all-all-all-all_bins.bac120.classify.tree:md5,a1ec58cdb3d2f7bab8735984001464f8",
+                "all-all-all-all-all_bins.bac120.summary.tsv:md5,1b5e71e188cd9957a2fea6684d109a7e",
+                "all-all-all-all-all_bins.ar53.markers_summary.tsv:md5,b459f6f579fdc472770a126923f2423e",
+                "all-all-all-all-all_bins.bac120.markers_summary.tsv:md5,3faab26df7bc9a423877af3e133532d4",
+                "all-all-all-all-all_bins.failed_genomes.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "all-all-all-all-all_bins.translation_table_summary.tsv:md5,eda231a53ccda53989e475ab6b62b29b",
                 "gtdbtk_summary.tsv:md5,75c4048c09d6126dc7f1019d138d33fe"
             ]
         ],
-        "timestamp": "2026-06-02T06:28:57.339358478",
+        "timestamp": "2026-06-02T08:42:11.480762022",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.3"

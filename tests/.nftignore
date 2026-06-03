@@ -45,4 +45,6 @@ QC_longreads/NanoPlot/**/*.{html,png}
 QC_shortreads/fastqc/*_fastqc.{html,zip}
 QC_shortreads/remove_phix/*.log
 Taxonomy/CAT/**/*.log
+Taxonomy/GTDB-Tk/**/*.log
+Taxonomy/GTDB-Tk/**/gtdbtk.json
 VirusIdentification/geNomad/**/*_aggregated_classification.tsv
