@@ -20,6 +20,25 @@ This page is split into four specific sections:
 - [**Input types**](#input-types): discusses suitable input data configurations depending on your input data files.
 - [**Domain and research specific guidance**](#domain-and-research-specific-guidance): discusses research-domain specific options (for example, when targeting specific organisms, or types of DNA).
 
+> [!IMPORTANT]
+> We highly recommend reading the full sections for each question, as many of the suggestions come with caveats.
+> However, we list here a very brief summary of the advice for commonly asked questions:
+>
+> - **Short read only data?** SPAdes and MEGAHIT will run by default
+> - **Long read only data?** Flye and MetaMDBG will run by default
+> - **Short and long reads?** All assemblers run by default, including SPAdes in Hybrid mode
+> - **Already have assemblies?** Use the `--assembly_input` flag to start from binning
+> - **Assemble or co-assemble?** It's complicated! Check our advice below.
+> - **Which assembler to use?** Use as many as you can.
+> - **Can I polish my assemblies?** No, but it is being considered.
+> - **Which binner to use?** Use as many as you can.
+> - **Should I refine my bins?** It depends on your context.
+> - **Which bin QC tool to use?** CheckM/CheckM2 for prokaryote only projects, BUSCO for projects with wider taxonomic targets.
+> - **Which taxonomic assignment tool?** It depends on your context.
+> - **I want to find viruses** Explore running with `--run_virus_identification`
+> - **I want to identify eukaryotes** Explore running with `--bin_domain_classification` and `--metaeuk_mmseqs_db`
+> - **I have ancient DNA** Use `--ancient_dna`
+
 ## Brief introduction to nf-core/mag
 
 ### What does nf-core/mag do
@@ -109,7 +128,7 @@ Typically, the primary output files you will want from a typical run:
 
 You can explore example output from real data on the dedicated [Results](https://nf-co.re/mag/results/) page.
 
-However, you will need to explore output on a per-project basis, as the exact files you need will depend on your question.
+However, you will need to explore output on a per-project basis, as the exact files you will need depend on your question.
 You can see detailed descriptions of all output files on the [Output](https://nf-co.re/mag/latest/docs/output/) page.
 
 ## Defaults and tool selection
