@@ -68,7 +68,9 @@ To run nf-core/mag, at a minimum, you will need:
 - Nextflow
 - A software dependency and compute environment manager (typically Conda, Docker, or Singularity/Apptainer)
 - Metagenomic FASTQ files (Illumina or Nanopore sequence data is directly supported)
-- A UNIX, and ideally internet connected, computing infrastructure (for example, laptop, server, high performance computing cluster (HPC), or cloud)
+- A UNIX-based (Linux, Mac OSX etc.) computing infrastructure (for example, laptop, server, high performance computing cluster (HPC), or cloud)
+  - Internet connection is needed for automatic download of databases, however you can download these files yourself. See [parameters](https://nf-co.re/mag/parameters/) for more information.
+  - You will need a large amount of hard drive space, as some of the the databases (>100 GB per database) and output can be very large
 
 You will then need to prepare a [samplesheet](../usage#samplesheet-input-file) specifying the names and paths to the FASTQ Files.
 
@@ -133,13 +135,13 @@ However, reducing computational burden and accelerating analysis may require too
 
 The following table summarises available assemblers:
 
-| Assembler      | Input              | Comment                                                                                                                          |
-| -------------- | ------------------ | -------------------------------------------------------------------------------------------------------------------------------- |
-| `MEGAHIT`      | Short reads        | Fast and memory-efficient. Produces competitive assemblies though occasionally with higher misassembly rates compared to SPAdes. |
-| `SPAdes`       | Short reads        | Computationally demanding but produces high-quality assemblies with lower misassembly rates. Slower than MEGAHIT.                |
-| `SPAdesHybrid` | Short & long reads | Slow and memory-intensive. Leverages both read types for improved assembly accuracy.                                             |
-| `FLYE`         | Long reads         | Slow and memory-intensive. Suitable for long-read assemblies but not optimised for speed.                                        |
-| `MetaDBG`      | Long reads         | Fast and memory-efficient alternative to FLYE for long-read assembly.                                                            |
+| Assembler      | Input              | Comment                                                                                                                                                                                 |
+| -------------- | ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `MEGAHIT`      | Short reads        | Faster and more memory-efficient. Produces competitive assemblies though occasionally with higher misassembly rates compared to SPAdes.                                                 |
+| `SPAdes`       | Short reads        | Computationally demanding but produces high-quality assemblies with lower misassembly rates. Slower than MEGAHIT.                                                                       |
+| `SPAdesHybrid` | Short & long reads | Slower and more memory-intensive. Leverages both read types for improved assembly accuracy.                                                                                             |
+| `FLYE`         | Long reads         | Slower and more memory-intensive. Suitable for long-read assemblies but not optimised for speed. In some cases may perform better when you have issues with noisy reads or low coverage |
+| `MetaDBG`      | Long reads         | Faster and more memory-efficient alternative to FLYE for long-read assembly.                                                                                                            |
 
 When both short and long reads are available, consider running `SPAdesHybrid` and/or **long-read assembly with FLYE or MetaDBG**.
 
