@@ -41,10 +41,10 @@ A run of nf-core/mag without any customisation or additional parameters will:
   - Quality control by `QUAST` and `ALE`
   - Annotate assemblies with `prodigal`
 - Group contigs
-  - By binning with `MetaBat2`, `MaxBin2`, `CONCOCT`, `COMEBin`, `MetaBinner`, `SemiBin2`
+  - By binning with `MetaBat2`, `MaxBin2`, `CONCOCT`, `COMEBin`, `MetaBinner` and `SemiBin2`
 - Post-binning tasks
   - Quality control bins with `QUAST` and `BUSCO`
-  - Annotate bins with `PROKKA` (for bacteria and archaea) and `MetaEuk` (for Eukaryotes)
+  - Annotate bins with `PROKKA` (for bacteria and archaea) and `MetaEuk` (for eukaryotes)
   - Taxonomically assign bins with `GTDB-Tk` (for bacteria and archaea)
 
 > [!NOTE]
@@ -77,13 +77,24 @@ You will then need to prepare a [samplesheet](../usage#samplesheet-input-file) s
 Finally to execute, you will run a typical Nextflow command, either with [parameters](https://nf-co.re/mag/parameters/) customising the run specified on the command line,
 
 ```bash
-nextflow run nf-core/mag --input samplesheet.csv --outdir <OUTDIR> -profile docker --clip_tool adapterremoval --reads_minlength 25 <...>
+nextflow run nf-core/mag --input samplesheet.csv --outdir results/ -profile docker --clip_tool adapterremoval --reads_minlength 25 <...>
 ```
 
 or with parameters specified in a [Nextflow parameter file](https://docs.seqera.io/nextflow/cli#pipeline-parameters).
 
 ```bash
-nextflow run nf-core/mag --input samplesheet.csv --outdir <OUTDIR> -profile docker
+nextflow run nf-core/mag -params-file params.json -profile docker
+```
+
+Where params.json contains:
+
+```json
+{
+  "input": "samplesheet.csv",
+  "output": "results/",
+  "clip_tool": "adapterremoval",
+  "reads_minlength": 25
+}
 ```
 
 ### What is the output from nf-core/mag?
@@ -99,7 +110,7 @@ Typically, the primary output files you will want from a typical run:
 You can explore example output from real data on the dedicated [Results](https://nf-co.re/mag/results/) page.
 
 However, you will need to explore output on a per-project basis, as the exact files you need will depend on your question.
-You can see detailed descriptions of all output files on the [Output](https://nf-co.re/mag/5.4.2/docs/output/) page.
+You can see detailed descriptions of all output files on the [Output](https://nf-co.re/mag/latest/docs/output/) page.
 
 ## Defaults and tool selection
 
@@ -140,10 +151,10 @@ The following table summarises available assemblers:
 | `MEGAHIT`      | Short reads        | Faster and more memory-efficient. Produces competitive assemblies though occasionally with higher misassembly rates compared to SPAdes.                                                 |
 | `SPAdes`       | Short reads        | Computationally demanding but produces high-quality assemblies with lower misassembly rates. Slower than MEGAHIT.                                                                       |
 | `SPAdesHybrid` | Short & long reads | Slower and more memory-intensive. Leverages both read types for improved assembly accuracy.                                                                                             |
-| `FLYE`         | Long reads         | Slower and more memory-intensive. Suitable for long-read assemblies but not optimised for speed. In some cases may perform better when you have issues with noisy reads or low coverage |
-| `MetaDBG`      | Long reads         | Faster and more memory-efficient alternative to FLYE for long-read assembly.                                                                                                            |
+| `Flye`         | Long reads         | Slower and more memory-intensive. Suitable for long-read assemblies but not optimised for speed. In some cases may perform better when you have issues with noisy reads or low coverage |
+| `MetaDBG`      | Long reads         | Faster and more memory-efficient alternative to Flye for long-read assembly.                                                                                                            |
 
-When both short and long reads are available, consider running `SPAdesHybrid` and/or **long-read assembly with FLYE or MetaDBG**.
+When both short and long reads are available, consider running `SPAdesHybrid` and/or **long-read assembly with Flye or MetaDBG**.
 
 With high-depth long reads, long-read assembly typically yields more coherent results ([Agustinho et al. 2024](https://doi.org/10.1038/s41592-024-02262-1)).
 Short-read-first assembly performs better with high-depth short reads or low-quality long reads and produces more fragmented but higher-accuracy assemblies ([Overholt et al. 2020](https://doi.org/10.1111/1462-2920.15186), [Meyer et al. 2022](https://doi.org/10.1038/s41592-022-01431-4)).
@@ -222,17 +233,17 @@ Additional chimerism checks with GUNC can be enabled if desired.
 
 Taxonomic assignment involves comparing bins for similarity to known genomes and other MAGs.
 
-**GTDBTk** classifies bins using specific marker genes and yields GTDB-based taxonomies. This approach requires bins of at least medium quality for accuracy. GTDB only supports bacteria and archaea.
+**GTDB-Tk** classifies bins using specific marker genes and yields GTDB-based taxonomies. This approach requires bins of at least medium quality for accuracy. GTDB only supports bacteria and archaea.
 **CAT**, by contrast, uses all detectable genes to assign NCBI-based taxonomies. CAT only supports microbes.
 
-The choice between GTDBTk and CAT depends on the desired taxonomy framework or the completeness of bins.
+The choice between GTDB-Tk and CAT depends on the desired taxonomy framework or the completeness of bins.
 
 > [!WARNING]
 > All taxonomic assignment tools for bins in nf-core/mag requires very large reference databases (10-100 GBs)!
 
 **Recommendation**: select on a per-project basis.
 
-## What parameters should I change?
+### What parameters should I change?
 
 Many of the tools in nf-core/mag can be adjusted using pipeline level parameters (for example, `--min_contig_size` or `--gtdbtk_min_completeness`).
 
