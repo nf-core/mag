@@ -44,7 +44,7 @@ A run of nf-core/mag without any customisation or additional parameters will:
   - By binning with `MetaBat2`, `MaxBin2`, `CONCOCT`, `COMEBin`, `MetaBinner` and `SemiBin2`
 - Post-binning tasks
   - Quality control bins with `QUAST` and `BUSCO`
-  - Annotate bins with `PROKKA` (for bacteria and archaea) and `MetaEuk` (for Eukaryotes)
+  - Annotate bins with `PROKKA` (for bacteria and archaea) and `MetaEuk` (for eukaryotes)
   - Taxonomically assign bins with `GTDB-Tk` (for bacteria and archaea)
 
 > [!NOTE]
@@ -150,9 +150,9 @@ The following table summarises available assemblers:
 | `SPAdes`       | Short reads        | Computationally demanding but produces high-quality assemblies with lower misassembly rates. Slower than MEGAHIT.                |
 | `SPAdesHybrid` | Short & long reads | Slow and memory-intensive. Leverages both read types for improved assembly accuracy.                                             |
 | `FLYE`         | Long reads         | Slow and memory-intensive. Suitable for long-read assemblies but not optimised for speed.                                        |
-| `MetaDBG`      | Long reads         | Fast and memory-efficient alternative to FLYE for long-read assembly.                                                            |
+| `MetaMDBG`      | Long reads         | Fast and memory-efficient alternative to Flye for long-read assembly.                                                            |
 
-When both short and long reads are available, consider running `SPAdesHybrid` and/or **long-read assembly with FLYE or MetaDBG**.
+When both short and long reads are available, consider running `SPAdesHybrid` and/or **long-read assembly with Flye or MetaDBG**.
 
 With high-depth long reads, long-read assembly typically yields more coherent results ([Agustinho et al. 2024](https://doi.org/10.1038/s41592-024-02262-1)).
 Short-read-first assembly performs better with high-depth short reads or low-quality long reads and produces more fragmented but higher-accuracy assemblies ([Overholt et al. 2020](https://doi.org/10.1111/1462-2920.15186), [Meyer et al. 2022](https://doi.org/10.1038/s41592-022-01431-4)).
@@ -231,17 +231,17 @@ Additional chimerism checks with GUNC can be enabled if desired.
 
 Taxonomic assignment involves comparing bins for similarity to known genomes and other MAGs.
 
-**GTDBTk** classifies bins using specific marker genes and yields GTDB-based taxonomies. This approach requires bins of at least medium quality for accuracy. GTDB only supports bacteria and archaea.
+**GTDB-Tk** classifies bins using specific marker genes and yields GTDB-based taxonomies. This approach requires bins of at least medium quality for accuracy. GTDB only supports bacteria and archaea.
 **CAT**, by contrast, uses all detectable genes to assign NCBI-based taxonomies. CAT only supports microbes.
 
-The choice between GTDBTk and CAT depends on the desired taxonomy framework or the completeness of bins.
+The choice between GTDB-Tk and CAT depends on the desired taxonomy framework or the completeness of bins.
 
 > [!WARNING]
 > All taxonomic assignment tools for bins in nf-core/mag requires very large reference databases (10-100 GBs)!
 
 **Recommendation**: select on a per-project basis.
 
-## What parameters should I change?
+### What parameters should I change?
 
 Many of the tools in nf-core/mag can be adjusted using pipeline level parameters (for example, `--min_contig_size` or `--gtdbtk_min_completeness`).
 
