@@ -224,7 +224,7 @@ GPU-based execution should accelerate several binners considerably.
 
 ### Should I refine my bins?
 
-Bin refinement tools aims to cross-compare outputs, and selects the highest quality 'version' of the same bin from across all binners.
+Bin refinement tools aim to cross-compare outputs, and select the highest quality 'version' of the same bin from across all binners.
 
 Bin refinement can improve genome recovery by consolidating outputs from all binners, and selecting the 'best' result using DAS Tool ([Song and Thomas, 2017](https://doi.org/10.1093/bioinformatics/btx086)).
 
