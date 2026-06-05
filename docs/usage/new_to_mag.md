@@ -96,13 +96,13 @@ You will then need to prepare a [samplesheet](../usage#samplesheet-input-file) s
 Finally to execute, you will run a typical Nextflow command, either with [parameters](https://nf-co.re/mag/parameters/) customising the run specified on the command line,
 
 ```bash
-nextflow run nf-core/mag --input samplesheet.csv --outdir results/ -profile docker --clip_tool adapterremoval --reads_minlength 25 <...>
+nextflow run nf-core/mag -r 5.4.2  --input samplesheet.csv --outdir results/ -profile docker --clip_tool adapterremoval --reads_minlength 25 <...>
 ```
 
 or with parameters specified in a [Nextflow parameter file](https://docs.seqera.io/nextflow/cli#pipeline-parameters).
 
 ```bash
-nextflow run nf-core/mag -params-file params.json -profile docker
+nextflow run nf-core/mag -r 5.4.2 -params-file params.json -profile docker
 ```
 
 Where params.json contains:
