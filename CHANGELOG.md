@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#908](https://github.com/nf-core/mag/pull/908) - Add nf-test snapshot for `test_single_end` profile (by @dialvarezs)
 - [#1028](https://github.com/nf-core/mag/pull/1028) - Add nf-test snapshot for `test_longread_alternatives` profile (by @dialvarezs)
-- [#1037](https://github.com/nf-core/mag/issues/1037) - Complement usage documentation with guidance on pipeline defaults, choices and alternatives
+- [#1037](https://github.com/nf-core/mag/pull/1037) - Complement usage documentation with guidance on pipeline defaults, choices and alternatives
 - [#1039](https://github.com/nf-core/mag/pull/1039) - Add nf-test snapshot for `test_longread` profile (started by @brovolia, finished by @dialvarezs)
 - [#1041](https://github.com/nf-core/mag/pull/1041) - Refined and corrected unclear section of metromap (by @jfy133)
 - [#1044](https://github.com/nf-core/mag/pull/1044) - Add new `--gtdbtk_place_species` parameter (by @dialvarezs)
