@@ -89,12 +89,17 @@ workflow GTDBTK {
             log.warn("[nf-core/mag] No bin QC results were available. Skipping GTDB-Tk classification.")
         }
 
+    // Optionally combine all bins into a single GTDB-Tk job, instead of one job
+    // per bin group, which can be more efficient for very large bin counts
+    ch_bins_for_classifywf = params.gtdbtk_single_job
+        ? ch_filtered_bins.passed.map { _meta, bin -> [[id: 'all_bins', assembler: 'all', binner: 'all', domain: 'all', refinement: 'all'], bin] }.groupTuple()
+        : ch_filtered_bins.passed.groupTuple()
+
     GTDBTK_CLASSIFYWF(
-        ch_filtered_bins.passed.groupTuple(),
+        ch_bins_for_classifywf,
         ch_db_for_gtdbtk,
         params.gtdbtk_pplacer_useram ? false : true,
     )
-    ch_versions = ch_versions.mix(GTDBTK_CLASSIFYWF.out.versions)
 
     // Print warning why GTDB-TK summary empty if passed channel gets no files
     ch_filtered_bins.passed

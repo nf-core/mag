@@ -601,12 +601,13 @@
             "binning QUAST: true",
             "CheckM: true",
             "Prokka: true",
-            "BAT: true"
+            "BAT: true",
+            "GTDB-Tk: true"
         ],
-        "timestamp": "2026-04-16T17:37:11.044394324",
+        "timestamp": "2026-06-02T09:03:26.414420505",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.3"
         }
     },
     "assembly": {
@@ -1801,16 +1802,16 @@
                 "MEGAHIT-MaxBin2-test_minigut.001_pydamage_bin_results.tsv:md5,99bb3502616c763cd62ee79fa2e3b1d2",
                 "MEGAHIT-MaxBin2-test_minigut.002_pydamage_bin_results.tsv:md5,9974a24fa3787a38b3939cbfbd9226df",
                 "MEGAHIT-MetaBAT2-test_minigut.1_pydamage_bin_results.tsv:md5,3d2237a104a6ed0bf1f7efb52195ea82",
-                "bin_summary.tsv:md5,63b2c0d2164c16a997f12b94bd7037fc",
+                "bin_summary.tsv:md5,4c73af8b474fed74ca5ef59111606afe",
                 "contig_to_bin_map.tsv:md5,9a146f6bd0eaf2fd9605cf1885dd37bc",
                 "bin_depths_summary.tsv:md5,bd54b32dc4c741cd4edd2bbba51f6552",
                 "versions.yml:md5,553ee8a62e65d93ce1163bb16314da29"
             ]
         ],
-        "timestamp": "2026-05-04T09:02:43.048161171",
+        "timestamp": "2026-05-27T09:54:51.697235507",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.0"
+            "nextflow": "26.04.2"
         }
     },
     "viral": {
@@ -1934,6 +1935,19 @@
                 "Taxonomy/CAT/MEGAHIT/MetaBAT2/test_minigut/bins/MEGAHIT-MetaBAT2-test_minigut-bins_bin2classification.names.txt",
                 "Taxonomy/CAT/MEGAHIT/MetaBAT2/test_minigut/bins/MEGAHIT-MetaBAT2-test_minigut-bins_summary.txt",
                 "Taxonomy/CAT/bat_summary.tsv",
+                "Taxonomy/GTDB-Tk/all/all/all_bins/all-all-all-all-all_bins/align/all-all-all-all-all_bins.bac120.filtered.tsv",
+                "Taxonomy/GTDB-Tk/all/all/all_bins/all-all-all-all-all_bins/align/all-all-all-all-all_bins.bac120.msa.fasta.gz",
+                "Taxonomy/GTDB-Tk/all/all/all_bins/all-all-all-all-all_bins/align/all-all-all-all-all_bins.bac120.user_msa.fasta.gz",
+                "Taxonomy/GTDB-Tk/all/all/all_bins/all-all-all-all-all_bins/all-all-all-all-all_bins.bac120.summary.tsv",
+                "Taxonomy/GTDB-Tk/all/all/all_bins/all-all-all-all-all_bins/all-all-all-all-all_bins.log",
+                "Taxonomy/GTDB-Tk/all/all/all_bins/all-all-all-all-all_bins/all-all-all-all-all_bins.warnings.log",
+                "Taxonomy/GTDB-Tk/all/all/all_bins/all-all-all-all-all_bins/classify/all-all-all-all-all_bins.bac120.classify.tree",
+                "Taxonomy/GTDB-Tk/all/all/all_bins/all-all-all-all-all_bins/classify/all-all-all-all-all_bins.bac120.summary.tsv",
+                "Taxonomy/GTDB-Tk/all/all/all_bins/all-all-all-all-all_bins/gtdbtk.json",
+                "Taxonomy/GTDB-Tk/all/all/all_bins/all-all-all-all-all_bins/identify/all-all-all-all-all_bins.ar53.markers_summary.tsv",
+                "Taxonomy/GTDB-Tk/all/all/all_bins/all-all-all-all-all_bins/identify/all-all-all-all-all_bins.bac120.markers_summary.tsv",
+                "Taxonomy/GTDB-Tk/all/all/all_bins/all-all-all-all-all_bins/identify/all-all-all-all-all_bins.failed_genomes.tsv",
+                "Taxonomy/GTDB-Tk/all/all/all_bins/all-all-all-all-all_bins/identify/all-all-all-all-all_bins.translation_table_summary.tsv",
                 "Taxonomy/GTDB-Tk/gtdbtk_summary.tsv"
             ],
             [
@@ -1966,18 +1980,28 @@
                 "MEGAHIT-MetaBAT2-test_minigut-bins_bin2classification.names.txt:md5,ce1b6bae00995e88d70722462d9fcedb",
                 "MEGAHIT-MetaBAT2-test_minigut-bins_summary.txt:md5,c2986e27b93008b06709a59bb298e3ea",
                 "bat_summary.tsv:md5,ab01c0858ee334804fb97180d1ba321e",
-                "gtdbtk_summary.tsv:md5,af05337c99159421caf2348dcae802e7"
+                "all-all-all-all-all_bins.bac120.filtered.tsv:md5,ada7444f82a0a09c6847d678d4021861",
+                "all-all-all-all-all_bins.bac120.msa.fasta.gz:md5,d39510f003e637f0e92233e0f645bb15",
+                "all-all-all-all-all_bins.bac120.user_msa.fasta.gz:md5,1f629d7b49268b8cc012bf32ca46cd75",
+                "all-all-all-all-all_bins.bac120.summary.tsv:md5,1b5e71e188cd9957a2fea6684d109a7e",
+                "all-all-all-all-all_bins.bac120.classify.tree:md5,a1ec58cdb3d2f7bab8735984001464f8",
+                "all-all-all-all-all_bins.bac120.summary.tsv:md5,1b5e71e188cd9957a2fea6684d109a7e",
+                "all-all-all-all-all_bins.ar53.markers_summary.tsv:md5,b459f6f579fdc472770a126923f2423e",
+                "all-all-all-all-all_bins.bac120.markers_summary.tsv:md5,3faab26df7bc9a423877af3e133532d4",
+                "all-all-all-all-all_bins.failed_genomes.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "all-all-all-all-all_bins.translation_table_summary.tsv:md5,eda231a53ccda53989e475ab6b62b29b",
+                "gtdbtk_summary.tsv:md5,75c4048c09d6126dc7f1019d138d33fe"
             ]
         ],
-        "timestamp": "2026-05-04T09:02:44.075431879",
+        "timestamp": "2026-06-02T08:42:11.480762022",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.0"
+            "nextflow": "26.04.3"
         }
     },
     "-profile test_single_end": {
         "content": [
-            159,
+            157,
             {
                 "ADAPTERREMOVAL_SE": {
                     "adapterremoval": "2.3.2"
@@ -2082,8 +2106,8 @@
                     "genomad": "1.11.2"
                 },
                 "GTDBTK_CLASSIFYWF": {
-                    "gtdb_db": "r226",
-                    "gtdbtk": "2.5.2"
+                    "gtdb_db": "r232",
+                    "gtdbtk": "2.7.2"
                 },
                 "GTDBTK_DB_PREPARATION": {
                     "tar": 1.34
@@ -2156,10 +2180,10 @@
                 }
             }
         ],
-        "timestamp": "2026-05-04T09:02:42.319883678",
+        "timestamp": "2026-05-27T09:54:51.480520914",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.0"
+            "nextflow": "26.04.2"
         }
     },
     "multiqc": {
@@ -2336,7 +2360,7 @@
                 "fastqc_sequence_counts_plot.yaml:md5,f742336e560c390f4179dc1c6d766585",
                 "fastqc_sequence_duplication_levels_plot.yaml:md5,c515ca326698a98b7a561df2bb44603b",
                 "fastqc_sequence_length_distribution_plot.yaml:md5,65d8d87d8ca970f93b1168c0d0c416e1",
-                "gtdbtk-first-table.yaml:md5,f579edc5838374386ed0e3fd8cf85e18",
+                "gtdbtk-first-table.yaml:md5,ca74632a902424875d32ad022b38b070",
                 "multiqc_adapter_removal.yaml:md5,a1af2581288dffacad44a69744f6d93b",
                 "multiqc_bowtie2.yaml:md5,b4e58a2943b5009634fa5da76214073d",
                 "multiqc_bowtie2_bowtie2-1.yaml:md5,b4e58a2943b5009634fa5da76214073d",
@@ -2345,8 +2369,8 @@
                 "multiqc_citations.yaml:md5,332da3731e12b7a0d205f47685ddd53e",
                 "multiqc_fastqc.yaml:md5,2bbd80f21c5c264249bc935eada2ff41",
                 "multiqc_fastqc_fastqc-1.yaml:md5,b21efcd71ad261049a5aeaa238492f92",
-                "multiqc_general_stats.yaml:md5,1942d207cff0cb6a2f88ccf4e72c1661",
-                "multiqc_gtdbtk.yaml:md5,9629f17dc32ae85aaccede6db3f7f823",
+                "multiqc_general_stats.yaml:md5,8e3cd8d0950bf1e8869d5833e3fb4228",
+                "multiqc_gtdbtk.yaml:md5,280f2d76c51024eb41df184c3b0dae70",
                 "multiqc_prokka.yaml:md5,e55c687925d611b869e4c4b27c71470c",
                 "multiqc_quast.yaml:md5,b7dae5bb61679ff9d5a3ede9898e5cfa",
                 "multiqc_quast_quast-1.yaml:md5,0b8fe8ee8f69277c0471dfe621c27b03",
@@ -2355,10 +2379,10 @@
                 "quast_table.yaml:md5,55ee8b4825b107d592cfeb16928f3487"
             ]
         ],
-        "timestamp": "2026-05-04T10:28:44.987525115",
+        "timestamp": "2026-06-02T06:28:57.250315083",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.0"
+            "nextflow": "26.04.3"
         }
     },
     "ancient": {
@@ -2396,10 +2420,10 @@
             "BAT summary: 27",
             "GTDB-Tk summary: 26"
         ],
-        "timestamp": "2026-04-16T17:37:10.984121707",
+        "timestamp": "2026-05-27T09:04:17.164489007",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.2"
         }
     }
 }
