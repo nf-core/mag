@@ -4,6 +4,14 @@
 
 > _Documentation of pipeline parameters is generated automatically from the pipeline schema and can no longer be found in markdown files._
 
+## Introduction
+
+**nf-core/mag** is a bioinformatics best-practice analysis pipeline for assembly, binning and annotation of metagenomes.
+
+In addition to this page, you can find additional usage information on the following pages:
+
+- [New to mag?](usage/new_to_mag.md)
+
 ## Input specifications
 
 The input data can be passed to nf-core/mag in two possible ways, either using the `--input` parameter of raw-reads alone or `--input` additionally with `--assembly_input` that specifies pre-built assemblies.
