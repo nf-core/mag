@@ -12,11 +12,10 @@ process PYPOLCA_RUN {
     tuple val(meta2), path(contigs)
 
     output:
-    tuple val(meta), path("${prefix}/*_corrected.fasta"), emit: polished
-    tuple val(meta), path("${prefix}/*.vcf")            , emit: vcf
-    tuple val(meta), path("${prefix}/*.report")         , emit: report
-    tuple val("${task.process}"), val('pypolca'), eval('pypolca --version'), emit: versions_pypolca, topic: versions
-
+    tuple val(meta2), path("${prefix}/*_corrected.fasta"), emit: polished
+    tuple val(meta2), path("${prefix}/*.vcf")            , emit: vcf
+    tuple val(meta2), path("${prefix}/*.report")         , emit: report
+    path "versions.yml"                                 , emit: versions
     when:
     task.ext.when == null || task.ext.when
 
@@ -26,7 +25,11 @@ process PYPOLCA_RUN {
     def read_files    = reads instanceof List ? reads : [reads]
     def read_file_arg = read_files.size() > 1 ? "-1 ${read_files[0]} -2 ${read_files[1]}" : "-1 ${read_files[0]}"
     """
-    gzip -cdf $contigs > contigs_uncompressed
+    if [[ "$contigs" == *.gz ]]; then
+         gzip -cdf $contigs > contigs_uncompressed
+    else
+         cp $contigs contigs_uncompressed
+    fi
 
     pypolca \
         run \
@@ -36,8 +39,13 @@ process PYPOLCA_RUN {
         -o ${prefix} \\
         --prefix ${prefix} \\
         $args
+    
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        pypolca: \$(pypolca --version | sed 's/.*version //')
+    END_VERSIONS
     """
-
+    
     stub:
     def args = task.ext.args   ?: ''
     prefix   = task.ext.prefix ?: "${meta.id}"

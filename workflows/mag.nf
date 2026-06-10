@@ -218,7 +218,7 @@ workflow MAG {
        ch_longread_assemblies
     )
 
-    ch_versions = ch_versions.mix(PYPOLCA_RUN.out.versions_pypolca)
+    ch_versions = ch_versions.mix(PYPOLCA_RUN.out.versions)
 
     ch_polished_assemblies = PYPOLCA_RUN.out.polished
 

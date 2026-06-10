@@ -647,6 +647,10 @@
                 "skip_flye": {
                     "type": "boolean",
                     "description": "Skip Flye assembly."
+                },
+                "run_pypolca": {
+                "type": "boolean",
+                 "description": "Run PyPOLCA polishing on long-read assemblies before binning."
                 }
             }
         },
@@ -1142,10 +1146,5 @@
         {
             "$ref": "#/$defs/ancient_dna_assembly"
         }
-    ],
-    "properties": {
-        "run_pypolca": {
-            "type": "boolean"
-        }
-    }
+    ]
 }
