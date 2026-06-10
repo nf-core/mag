@@ -649,8 +649,8 @@
                     "description": "Skip Flye assembly."
                 },
                 "run_pypolca": {
-                "type": "boolean",
-                 "description": "Run PyPOLCA polishing on long-read assemblies before binning."
+                    "type": "boolean",
+                    "description": "Run PyPOLCA polishing on long-read assemblies before binning."
                 }
             }
         },
