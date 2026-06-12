@@ -16,6 +16,7 @@ process PYPOLCA_RUN {
     tuple val(meta), path("${prefix}/*.vcf")            , emit: vcf
     tuple val(meta), path("${prefix}/*.report")         , emit: report
     tuple val("${task.process}"), val('pypolca'), eval('pypolca --version'), emit: versions_pypolca, topic: versions
+
     when:
     task.ext.when == null || task.ext.when
 
@@ -36,7 +37,7 @@ process PYPOLCA_RUN {
         --prefix ${prefix} \\
         $args
     """
-    
+
     stub:
     def args = task.ext.args   ?: ''
     prefix   = task.ext.prefix ?: "${meta.id}"
