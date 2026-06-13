@@ -327,11 +327,13 @@ workflow MAG {
 
         if (!params.skip_deepmased_features) {
             DEEPMASED_FEATURES(ch_deepmased_input)
-            ch_versions = ch_versions.mix(DEEPMASED_FEATURES.out.versions.ifEmpty([]))
+            ch_versions = ch_versions.mix(DEEPMASED_FEATURES.out.versions_deepmased.ifEmpty([]))
+            ch_versions = ch_versions.mix(DEEPMASED_FEATURES.out.versions_setuptools.ifEmpty([]))
 
             if (!params.skip_deepmased_predict) {
-                DEEPMASED_PREDICT(DEEPMASED_FEATURES.out.features)
-                ch_versions = ch_versions.mix(DEEPMASED_PREDICT.out.versions.ifEmpty([]))
+                DEEPMASED_PREDICT(DEEPMASED_FEATURES.out.feature_table.join(DEEPMASED_FEATURES.out.feature_files, by: 0))
+                ch_versions = ch_versions.mix(DEEPMASED_PREDICT.out.versions_deepmased.ifEmpty([]))
+                ch_versions = ch_versions.mix(DEEPMASED_PREDICT.out.versions_setuptools.ifEmpty([]))
             }
         }
     }

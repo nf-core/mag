@@ -8,6 +8,7 @@ nextflow_process {
     tag "modules"
     tag "modules_nfcore"
     tag "deepmased"
+    tag "deepmased/predict"
     tag "deepmased_predict"
 
     // NOTE: DeepMAsED is designed for metagenome assemblies with sufficient read
@@ -36,8 +37,9 @@ nextflow_process {
             assertAll(
                 { assert process.success },
                 { assert snapshot(
-                    process.out,
-                    path(process.out.versions[0]).yaml
+                    process.out.predictions,
+                    process.out.versions_deepmased,
+                    process.out.versions_setuptools
                 ).match() }
             )
         }

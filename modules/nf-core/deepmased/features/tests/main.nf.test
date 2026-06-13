@@ -8,6 +8,7 @@ nextflow_process {
     tag "modules"
     tag "modules_nfcore"
     tag "deepmased"
+    tag "deepmased/features"
     tag "deepmased_features"
 
     test("sarscov2 [fasta] - paired-end sorted bam") {
@@ -23,17 +24,17 @@ nextflow_process {
                 ]
                 """
             }
-            // Use debug mode (-d) to disable coverage filtering so low-coverage
-            // sarscov2 contigs are retained for downstream predict testing
-            process.ext.args = '-d'
         }
 
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out).match() },
-                { assert path(process.out.features[0][1]).exists() },
-                { assert path(process.out.features[0][1]).readLines().size() > 1 }
+                { assert snapshot(
+                    process.out.feature_table,
+                    process.out.feature_files
+                ).match() },
+                { assert path(process.out.feature_table[0][1]).exists() },
+                { assert path(process.out.feature_table[0][1]).readLines().size() > 1 }
             )
         }
 
@@ -60,8 +61,10 @@ nextflow_process {
             assertAll(
                 { assert process.success },
                 { assert snapshot(
-                    process.out,
-                    path(process.out.versions[0]).yaml
+                    process.out.feature_table,
+                    process.out.feature_files,
+                    process.out.versions_deepmased,
+                    process.out.versions_setuptools
                 ).match() }
             )
         }

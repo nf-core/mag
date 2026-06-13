@@ -1,0 +1,58 @@
+{
+    "sarscov2 [fasta] - paired-end sorted bam": {
+        "content": [
+            [
+                
+            ],
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-06-10T11:27:22.610110768"
+    },
+    "sarscov2 [fasta] - paired-end sorted bam - stub": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test_feature_file_paths.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test_feats.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ],
+            [
+                [
+                    "DEEPMASED_FEATURES",
+                    "deepmased",
+                    "0.3.1"
+                ]
+            ],
+            [
+                [
+                    "DEEPMASED_FEATURES",
+                    "setuptools",
+                    "78.1"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-06-10T11:27:32.44823272"
+    }
+}
