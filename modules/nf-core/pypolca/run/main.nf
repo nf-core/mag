@@ -28,7 +28,7 @@ process PYPOLCA_RUN {
     """
 
     if [[ "${contigs}" == *.gz ]]; then
-         gzip -cdf ${contigs} > contigs_uncompressed
+        gzip -cdf ${contigs} > contigs_uncompressed
     else
         cp ${contigs} contigs_uncompressed
     fi
