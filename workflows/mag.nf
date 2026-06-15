@@ -213,40 +213,35 @@ workflow MAG {
 
     if (params.run_pypolca) {
 
-    if (params.coassemble_group) {
+        if (params.coassemble_group) {
 
-        ch_short_reads_pypolca = ch_short_reads
-            .map { meta, reads -> [meta.group, meta, reads] }
-            .groupTuple(by: 0)
-            .map { group, metas, reads ->
-                def assemble_as_single = params.single_end || (params.bbnorm && params.coassemble_group)
+            ch_short_reads_pypolca = ch_short_reads
+                .map { meta, reads -> [meta.group, meta, reads] }
+                .groupTuple(by: 0)
+                .map { group, metas, reads ->
+                    def assemble_as_single = params.single_end || (params.bbnorm && params.coassemble_group)
 
-                def meta = [
-                    id: "group-${group}",
-                    group: group,
-                    single_end: assemble_as_single,
-                    sr_platform: metas.sr_platform[0]
-                ]
+                    def meta = [id: "group-${group}", group: group, single_end: assemble_as_single, sr_platform: metas.sr_platform[0]]
 
-                if (assemble_as_single) {
-                    [meta, reads.sort { files -> files[0].getName() }.flatten()]
+                    if (assemble_as_single) {
+                        [meta, reads.sort { files -> files[0].getName() }.flatten()]
+                    }
+                    else {
+                        [meta, reads.sort { files -> files[0].getName() }.transpose().flatten()]
+                    }
                 }
-                else {
-                    [meta, reads.sort { files -> files[0].getName() }.transpose().flatten()]
-                }
-            }
+        }
+        else {
+            ch_short_reads_pypolca = ch_short_reads
+        }
 
-    } else {
-        ch_short_reads_pypolca = ch_short_reads
+        PYPOLCA_RUN(
+            ch_short_reads_pypolca,
+            ch_longread_assemblies,
+        )
+
+        ch_polished_assemblies = PYPOLCA_RUN.out.polished
     }
-
-    PYPOLCA_RUN(
-        ch_short_reads_pypolca,
-        ch_longread_assemblies
-    )
-
-    ch_polished_assemblies = PYPOLCA_RUN.out.polished
-}
 
     ch_assemblies = ch_shortread_assemblies.mix(ch_polished_assemblies)
 
