@@ -59,11 +59,10 @@
                 "FLYE-minigut.assembly_graph.gfa.gz:md5,f23173732f3fdb68e26276438fc6bc9d",
                 "FLYE-minigut.assembly_info.txt:md5,8af4d61c811efe1796e8af7a4385bb26",
                 "minigut.report:md5,56ea0f4e221dd083e45bcc5b3743532c",
-                "minigut.vcf:md5,5da47aa6e10cb135c11ea39f601aefc3",
                 "minigut_corrected.fasta:md5,79c2c6b99d5808d1ea1fb3bc70427837"
             ]
         ],
-        "timestamp": "2026-06-16T08:47:14.900232393",
+        "timestamp": "2026-06-16T10:24:28.771970435",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.3"
