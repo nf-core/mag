@@ -235,9 +235,21 @@ workflow MAG {
             ch_short_reads_pypolca = ch_short_reads
         }
 
+        // Join reads and assemblies by sample id so PYPOLCA pairs them correctly
+        ch_pypolca_input = ch_longread_assemblies
+            .map { meta, assembly -> [meta.id, meta, assembly] }
+            .combine(
+                ch_short_reads_pypolca.map { meta, reads -> [meta.id, meta, reads] },
+                by: 0,
+            )
+            .multiMap { _id, assembly_meta, assembly, reads_meta, reads ->
+                reads: [reads_meta, reads]
+                assembly: [assembly_meta, assembly]
+            }
+
         PYPOLCA_RUN(
-            ch_short_reads_pypolca,
-            ch_longread_assemblies,
+            ch_pypolca_input.reads,
+            ch_pypolca_input.assembly,
         )
 
         ch_polished_assemblies = PYPOLCA_RUN.out.polished
