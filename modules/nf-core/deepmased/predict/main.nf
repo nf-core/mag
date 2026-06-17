@@ -22,14 +22,12 @@ process DEEPMASED_PREDICT {
     script:
     def args   = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def VERSION = '0.3.1' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
     """
     DeepMAsED predict \\
         ${feature_file_table} \\
         --n-procs ${task.cpus} \\
         --save-name ${prefix} \\
         ${args}
-
     """
 
     stub:

@@ -37,9 +37,7 @@ nextflow_process {
             assertAll(
                 { assert process.success },
                 { assert snapshot(
-                    process.out.predictions,
-                    process.out.versions_deepmased,
-                    process.out.versions_setuptools
+                    sanitizeOutput(process.out)
                 ).match() }
             )
         }

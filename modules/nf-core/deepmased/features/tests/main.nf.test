@@ -30,8 +30,7 @@ nextflow_process {
             assertAll(
                 { assert process.success },
                 { assert snapshot(
-                    process.out.feature_table,
-                    process.out.feature_files
+                    sanitizeOutput(process.out)
                 ).match() },
                 { assert path(process.out.feature_table[0][1]).exists() },
                 { assert path(process.out.feature_table[0][1]).readLines().size() > 1 }
@@ -61,10 +60,7 @@ nextflow_process {
             assertAll(
                 { assert process.success },
                 { assert snapshot(
-                    process.out.feature_table,
-                    process.out.feature_files,
-                    process.out.versions_deepmased,
-                    process.out.versions_setuptools
+                    sanitizeOutput(process.out)
                 ).match() }
             )
         }
