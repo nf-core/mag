@@ -221,7 +221,12 @@ workflow MAG {
                 .map { group, metas, reads ->
                     def assemble_as_single = params.single_end || (params.bbnorm && params.coassemble_group)
 
-                    def meta = [id: "group-${group}", group: group, single_end: assemble_as_single, sr_platform: metas.sr_platform[0]]
+                    def meta = [
+                        id: "group-${group}",
+                        group: group,
+                        single_end: assemble_as_single,
+                        sr_platform: metas.sr_platform[0]
+                    ]
 
                     if (assemble_as_single) {
                         [meta, reads.sort { files -> files[0].getName() }.flatten()]
@@ -246,13 +251,22 @@ workflow MAG {
                 reads: [reads_meta, reads]
                 assembly: [assembly_meta, assembly]
             }
-
         PYPOLCA_RUN(
             ch_pypolca_input.reads,
             ch_pypolca_input.assembly,
         )
-
         ch_polished_assemblies = PYPOLCA_RUN.out.polished
+            .map { meta, polished ->
+                [meta.id, polished]
+            }
+            .join(
+                ch_longread_assemblies.map { meta, assembly ->
+                    [meta.id, meta]
+                }
+            )
+            .map { id, polished, meta ->
+                [meta, polished]
+            }
     }
 
     ch_assemblies = ch_shortread_assemblies.mix(ch_polished_assemblies)
