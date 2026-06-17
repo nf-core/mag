@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1041](https://github.com/nf-core/mag/pull/1041) - Refined and corrected unclear section of metromap (by @jfy133)
 - [#1044](https://github.com/nf-core/mag/pull/1044) - Add new `--gtdbtk_place_species` parameter (by @dialvarezs)
 - [#1047](https://github.com/nf-core/mag/issues/1007) - Add `--gtdbtk_single_job` to run GTDB-Tk classification for all bins in a single job (requested by @sarah-shah-bioinf, by @dialvarezs)
+- Add DeepMAsED assembly error detection to the MAG workflow as two sequential steps (`features` and `predict`) for short-read assemblies.
 
 ### `Changed`
 
@@ -21,6 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1020](https://github.com/nf-core/mag/pull/1020) - Update CONCOCT subworkflow and modules (by @dialvarezs)
 - [#1030](https://github.com/nf-core/mag/pull/1030) - Updated to nf-core 4.0.2 template (by @dialvarezs)
 - [#1044](https://github.com/nf-core/mag/pull/1044) - Updated GTDB-Tk to v2.7.2 / GTDB r232 (by @dialvarezs)
+- Update DeepMAsED module tests to the current `sanitizeOutput(process.out)` snapshot pattern and regenerate snapshots.
+- Update version aggregation compatibility to support topic-based module version tuples.
 
 ### `Fixed`
 
@@ -33,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1021](https://github.com/nf-core/mag/pull/1021) - Prevent execution of `gtdbtk/summary` when no bins pass QC (reported by @jfy133, fix by @dialvarezs)
 - [#1031](https://github.com/nf-core/mag/pull/1031) - Fix hybrid co-assembly with SPAdes (short & long reads with `--coassemble_group`) (fix by @d4straub)
 - [#1049](https://github.com/nf-core/mag/pull/1049) - Fix publishing issue with `gtdbtk/classifywf` (by @dialvarezs)
+- Validate DeepMAsED skip-parameter dependencies early, preventing invalid combinations where `predict` would run without `features` outputs.
 
 ### `Dependencies`
 

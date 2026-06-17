@@ -281,14 +281,14 @@ The two steps are implemented as separate modules, allowing Nextflow to resume f
 
 The following parameters control DeepMAsED execution:
 
-| Parameter | Description |
-|-----------|-------------|
-| `--skip_deepmased` | Skip DeepMAsED entirely (both features and predict) |
-| `--skip_deepmased_predict` | Run only the features step, skip prediction |
-| `--skip_deepmased_features` | **Not allowed** unless `--skip_deepmased_predict` is also set — DeepMAsED predict requires features output |
-| `--deepmased_cpu_only` | Run DeepMAsED predict in CPU-only mode. Default: `true` (recommended for HPC environments without GPU) |
+| Parameter                   | Description                                                                                                           |
+| --------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `--skip_deepmased`          | Skip DeepMAsED entirely (both features and predict)                                                                   |
+| `--skip_deepmased_predict`  | Run only the features step, skip prediction                                                                           |
+| `--skip_deepmased_features` | **Not allowed** unless `--skip_deepmased_predict` is also set — DeepMAsED predict requires features output            |
+| `--deepmased_cpu_only`      | Run DeepMAsED predict in CPU-only mode. Default: `true` (recommended for HPC environments without GPU)                |
 | `--deepmased_features_gzip` | Gzip feature tables produced by the features step. Useful for large assemblies to reduce disk usage. Default: `false` |
-| `--deepmased_predict_seed` | Random seed for numpy in DeepMAsED predict. Set for reproducible results. Default: `12` |
+| `--deepmased_predict_seed`  | Random seed for numpy in DeepMAsED predict. Set for reproducible results. Default: `12`                               |
 
 MetaBAT2 is run by default with a fixed seed within this pipeline, thus producing reproducible results.
 

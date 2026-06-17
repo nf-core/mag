@@ -141,9 +141,14 @@
                         "git_sha": "e753770db613ce014b3c4bc94f6cba443427b726",
                         "installed_by": ["modules"]
                     },
-                    "deepmased": {
+                    "deepmased/features": {
                         "branch": "master",
-                        "git_sha": "local",
+                        "git_sha": "8eb801777f42fb9e3e1f6e0402e7f571c59e431c",
+                        "installed_by": ["modules"]
+                    },
+                    "deepmased/predict": {
+                        "branch": "master",
+                        "git_sha": "8eb801777f42fb9e3e1f6e0402e7f571c59e431c",
                         "installed_by": ["modules"]
                     },
                     "fastp": {
