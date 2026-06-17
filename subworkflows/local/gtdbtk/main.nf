@@ -81,12 +81,25 @@ workflow GTDBTK {
         error("Unsupported object given to --gtdb, database must be supplied as either a directory or a .tar.gz file!")
     }
 
+    // Warn if no QC data was available (all QC tools likely failed)
+    ch_bin_qc_summary
+        .count()
+        .filter { count -> count == 0 }
+        .subscribe { _count ->
+            log.warn("[nf-core/mag] No bin QC results were available. Skipping GTDB-Tk classification.")
+        }
+
+    // Optionally combine all bins into a single GTDB-Tk job, instead of one job
+    // per bin group, which can be more efficient for very large bin counts
+    ch_bins_for_classifywf = params.gtdbtk_single_job
+        ? ch_filtered_bins.passed.map { _meta, bin -> [[id: 'all_bins', assembler: 'all', binner: 'all', domain: 'all', refinement: 'all'], bin] }.groupTuple()
+        : ch_filtered_bins.passed.groupTuple()
+
     GTDBTK_CLASSIFYWF(
-        ch_filtered_bins.passed.groupTuple(),
+        ch_bins_for_classifywf,
         ch_db_for_gtdbtk,
         params.gtdbtk_pplacer_useram ? false : true,
     )
-    ch_versions = ch_versions.mix(GTDBTK_CLASSIFYWF.out.versions)
 
     // Print warning why GTDB-TK summary empty if passed channel gets no files
     ch_filtered_bins.passed
@@ -94,20 +107,22 @@ workflow GTDBTK {
         .combine(ch_filtered_bins.discarded.count())
         .subscribe { passed, failed ->
             if ((passed + failed) > 0 && passed == 0) {
-                log.warn("No contigs passed GTDB-TK min. completeness filters. GTDB-TK summary will execute but results will be empty!")
+                log.warn("[nf-core/mag] No contigs passed GTDB-TK min. completeness filters. GTDB-Tk will not be executed.")
             }
         }
 
     GTDBTK_SUMMARY(
         ch_filtered_bins.discarded.map { _meta, bin -> bin }.collect().ifEmpty([]),
-        GTDBTK_CLASSIFYWF.out.summary.map { _meta, summary -> summary }.collect().ifEmpty { ([]) },
+        GTDBTK_CLASSIFYWF.out.summary.map { _meta, summary -> summary }.collect(),
         [],
         [],
     )
+
+    ch_summary = channel.empty().mix(GTDBTK_SUMMARY.out.summary)
     ch_versions = ch_versions.mix(GTDBTK_SUMMARY.out.versions)
 
     emit:
-    summary       = GTDBTK_SUMMARY.out.summary
-    multiqc_files = GTDBTK_SUMMARY.out.summary
+    summary       = ch_summary
+    multiqc_files = ch_summary
     versions      = ch_versions
 }

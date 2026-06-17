@@ -121,7 +121,6 @@ workflow BINNING {
             }
 
         FASTA_BINNING_CONCOCT(ch_concoct_input.bins, ch_concoct_input.bams)
-        ch_versions = ch_versions.mix(FASTA_BINNING_CONCOCT.out.versions)
 
         ch_bins_for_seqkit = ch_bins_for_seqkit.mix(FASTA_BINNING_CONCOCT.out.bins.transpose())
         ch_binning_results_gzipped_final = ch_binning_results_gzipped_final.mix(FASTA_BINNING_CONCOCT.out.bins)

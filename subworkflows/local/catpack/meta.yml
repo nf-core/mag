@@ -15,6 +15,7 @@ components:
   - catpack/download
   - catpack/prepare
   - catpack/summarise
+  - find/concatenate
   - untar
 input:
   - ch_bins:

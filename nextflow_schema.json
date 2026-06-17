@@ -36,8 +36,8 @@
                     "exists": true,
                     "schema": "assets/schema_assembly_input.json",
                     "pattern": "^\\S+\\.csv$",
-                    "description": "Additional input CSV samplesheet containing information about pre-computed assemblies. When set, both read pre-processing and assembly are skipped and the pipeline begins at the binning stage.",
-                    "help_text": "If you have pre-computed assemblies from another source, it is possible to jump straight to the binning stage of the pipeline by supplying these assemblies in a CSV file. This CSV file must contain the required columns `id,group,assembler,fasta` (including `group` for single assemblies). Short reads must still be supplied to `--input` in CSV format. See [usage docs](https://nf-co.re/mag/usage#input-specifications) for further details.",
+                    "description": "Additional input CSV samplesheet containing information about pre-computed assemblies. When set, assembly is skipped and the supplied assemblies are used for downstream analysis.",
+                    "help_text": "If you have pre-computed assemblies from another source, you can skip the assembly step by supplying these assemblies in a CSV file. This CSV file must contain the required columns `id,group,assembler,fasta` (including `group` for single assemblies). Short reads must still be supplied to `--input` in CSV format for downstream steps such as QC and binning. See [usage docs](https://nf-co.re/mag/usage#input-specifications) for further details.",
                     "fa_icon": "fas fa-file-csv"
                 },
                 "outdir": {
@@ -76,7 +76,6 @@
                 },
                 "igenomes_base": {
                     "type": "string",
-                    "format": "directory-path",
                     "description": "The base path to the igenomes reference files",
                     "fa_icon": "fas fa-ban",
                     "hidden": true,
@@ -155,11 +154,6 @@
                     "enum": ["symlink", "rellink", "link", "copy", "copyNoFollow", "move"],
                     "hidden": true
                 },
-                "monochrome_logs": {
-                    "type": "boolean",
-                    "description": "Use monochrome_logs",
-                    "hidden": true
-                },
                 "email_on_fail": {
                     "type": "string",
                     "description": "Email address for completion summary, only when pipeline fails.",
@@ -182,11 +176,10 @@
                     "fa_icon": "fas fa-file-upload",
                     "hidden": true
                 },
-                "hook_url": {
-                    "type": "string",
-                    "description": "Incoming hook URL for messaging service",
-                    "fa_icon": "fas fa-people-group",
-                    "help_text": "Incoming hook URL for messaging service. Currently, MS Teams and Slack are supported.",
+                "monochrome_logs": {
+                    "type": "boolean",
+                    "description": "Do not use coloured log outputs.",
+                    "fa_icon": "fas fa-palette",
                     "hidden": true
                 },
                 "multiqc_config": {
@@ -536,7 +529,7 @@
                 "gtdb_db": {
                     "type": "string",
                     "description": "Specify the location of a GTDBTK database. Can be either an uncompressed directory or a `.tar.gz` archive. If not specified will be downloaded for you when GTDBTK or binning QC is not skipped.",
-                    "default": "https://data.gtdb.aau.ecogenomic.org/releases/release226/226.0/auxillary_files/gtdbtk_package/full_package/gtdbtk_r226_data.tar.gz",
+                    "default": "https://data.gtdb.aau.ecogenomic.org/releases/release232/232.0/auxillary_files/gtdbtk_package/full_package/gtdbtk_r232_data.tar.gz",
                     "format": "path"
                 },
                 "gtdbtk_min_completeness": {
@@ -584,9 +577,19 @@
                     "type": "boolean",
                     "description": "Specify to have GTDBTk to use the full bacterial tree rather than the split tree (requires more memory!)"
                 },
-                "gtdbtk_skip_aniscreen": {
+                "gtdbtk_place_species": {
                     "type": "boolean",
                     "description": "Specify to disable fast classification of genomes by ANI using skani in GTDB-Tk."
+                },
+                "gtdbtk_skip_aniscreen": {
+                    "type": "boolean",
+                    "description": "[DEPRECATED] Use `--gtdbtk_place_species` instead. Specify to disable fast classification of genomes by ANI using skani in GTDB-Tk.",
+                    "hidden": true
+                },
+                "gtdbtk_single_job": {
+                    "type": "boolean",
+                    "description": "Run GTDB-Tk classification for all bins in a single job, rather than one job per sample/assembler/binner group.",
+                    "help_text": "By default nf-core/mag submits a separate GTDBTK_CLASSIFYWF job per group of bins. When classifying very large numbers of bins, it can be more efficient to run all bins together in one job, as steps such as skani and pplacer are then performed once over the whole dataset instead of being repeated per job."
                 }
             }
         },

@@ -34,21 +34,30 @@ workflow LONGREAD_PREPROCESSING {
 
     if (!params.assembly_input) {
         if (!params.skip_adapter_trimming && !val_skip_qc) {
+            ch_long_reads_by_platform = ch_raw_long_reads.branch { meta, _reads ->
+                ont: meta.lr_platform in ['OXFORD_NANOPORE', 'OXFORD_NANOPORE_HQ']
+                pb: meta.lr_platform in ['PACBIO_CLR', 'PACBIO_HIFI']
+            }
+            ch_long_reads = channel.empty()
+
+            // PacBio reads bypass adapter trimming for now, as there is no tool for that.
+            ch_long_reads = ch_long_reads.mix(ch_long_reads_by_platform.pb)
+
             if (params.longread_adaptertrimming_tool && params.longread_adaptertrimming_tool == 'porechop_abi') {
                 PORECHOP_ABI(
-                    ch_raw_long_reads,
+                    ch_long_reads_by_platform.ont,
                     [],
                 )
                 ch_versions = ch_versions.mix(PORECHOP_ABI.out.versions)
-                ch_long_reads = PORECHOP_ABI.out.reads
+                ch_long_reads = ch_long_reads.mix(PORECHOP_ABI.out.reads)
                 ch_multiqc_files = ch_multiqc_files.mix(PORECHOP_ABI.out.log)
             }
             else if (params.longread_adaptertrimming_tool == 'porechop') {
                 PORECHOP_PORECHOP(
-                    ch_raw_long_reads
+                    ch_long_reads_by_platform.ont
                 )
                 ch_versions = ch_versions.mix(PORECHOP_PORECHOP.out.versions)
-                ch_long_reads = PORECHOP_PORECHOP.out.reads
+                ch_long_reads = ch_long_reads.mix(PORECHOP_PORECHOP.out.reads)
                 ch_multiqc_files = ch_multiqc_files.mix(PORECHOP_PORECHOP.out.log)
             }
         }
@@ -125,26 +134,28 @@ workflow LONGREAD_PREPROCESSING {
             }
         }
 
-        // Run merging
-        ch_long_reads_forcat = ch_long_reads
-            .map { meta, reads ->
-                def meta_new = meta - meta.subMap('run')
-                meta_new.single_end = true
-                [meta_new, reads]
-            }
-            .groupTuple()
-            .branch { _meta, reads ->
-                cat: reads.size() >= 2
-                skip_cat: true
-            }
-        CAT_FASTQ_LONGREADS(ch_long_reads_forcat.cat.map { meta, reads -> [meta, reads.flatten()] })
-        ch_versions = ch_versions.mix(CAT_FASTQ_LONGREADS.out.versions)
-
-        ch_long_reads = CAT_FASTQ_LONGREADS.out.reads.mix(ch_long_reads_forcat.skip_cat.map { meta, reads -> [meta, reads[0]] })
+        ch_long_reads_for_merge = ch_long_reads
     }
     else {
-        ch_long_reads = ch_raw_long_reads
+        ch_long_reads_for_merge = ch_raw_long_reads
     }
+
+    // Run merging
+    ch_long_reads_forcat = ch_long_reads_for_merge
+        .map { meta, reads ->
+            def meta_new = meta - meta.subMap('run')
+            meta_new.single_end = true
+            [meta_new, reads]
+        }
+        .groupTuple()
+        .branch { _meta, reads ->
+            cat: reads.size() >= 2
+            skip_cat: true
+        }
+    CAT_FASTQ_LONGREADS(ch_long_reads_forcat.cat.map { meta, reads -> [meta, reads.flatten()] })
+    ch_versions = ch_versions.mix(CAT_FASTQ_LONGREADS.out.versions)
+
+    ch_long_reads = CAT_FASTQ_LONGREADS.out.reads.mix(ch_long_reads_forcat.skip_cat.map { meta, reads -> [meta, reads[0]] })
 
     emit:
     long_reads    = ch_long_reads

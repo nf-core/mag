@@ -35,6 +35,7 @@ include { PRODIGAL                        } from '../modules/nf-core/prodigal/ma
 include { PROKKA                          } from '../modules/nf-core/prokka/main'
 include { MMSEQS_DATABASES                } from '../modules/nf-core/mmseqs/databases/main'
 include { METAEUK_EASYPREDICT             } from '../modules/nf-core/metaeuk/easypredict/main'
+include { QSV_CAT as CONCAT_QUAST_SUMMARY } from '../modules/nf-core/qsv/cat/main'
 include { ALE                             } from '../modules/nf-core/ale/main'
 include { DEEPMASED_FEATURES              } from '../modules/nf-core/deepmased/features/main'
 include { DEEPMASED_PREDICT               } from '../modules/nf-core/deepmased/predict/main'
@@ -44,7 +45,6 @@ include { DEEPMASED_PREDICT               } from '../modules/nf-core/deepmased/p
 //
 include { QUAST                           } from '../modules/local/quast_run/main'
 include { QUAST_BINS                      } from '../modules/local/quast_bins/main'
-include { QUAST_BINS_SUMMARY              } from '../modules/local/quast_bins_summary/main'
 include { BIN_SUMMARY                     } from '../modules/local/bin_summary/main'
 include { PREPARE_BIGMAG_SUMMARY          } from '../modules/local/bigmag_summary/main'
 
@@ -53,11 +53,15 @@ workflow MAG {
     ch_raw_short_reads // channel: samplesheet read in from --input
     ch_raw_long_reads
     ch_input_assemblies
+    multiqc_config
+    multiqc_logo
+    multiqc_methods_description
+    outdir
 
     main:
 
-    ch_versions = channel.empty()
-    ch_multiqc_files = channel.empty()
+    def ch_versions = channel.empty()
+    def ch_multiqc_files = channel.empty()
 
     ////////////////////////////////////////////////////
     /* --  Create channel for reference databases  -- */
@@ -138,27 +142,19 @@ workflow MAG {
     ================================================================================
     */
 
-    if (!params.assembly_input) {
-        SHORTREAD_PREPROCESSING(
-            ch_raw_short_reads,
-            ch_host_fasta,
-            ch_host_bowtie2index,
-            ch_phix_db_file,
-            params.skip_shortread_qc,
-        )
-        ch_versions = ch_versions.mix(SHORTREAD_PREPROCESSING.out.versions)
-        ch_multiqc_files = ch_multiqc_files.mix(
-            SHORTREAD_PREPROCESSING.out.multiqc_files.collect { _meta, report -> report }.ifEmpty([])
-        )
-        ch_short_reads = SHORTREAD_PREPROCESSING.out.short_reads
-        ch_short_reads_assembly = SHORTREAD_PREPROCESSING.out.short_reads_assembly
-    }
-    else {
-        ch_short_reads = ch_raw_short_reads.map { meta, reads ->
-            def meta_new = meta - meta.subMap('run')
-            [meta_new, reads]
-        }
-    }
+    SHORTREAD_PREPROCESSING(
+        ch_raw_short_reads,
+        ch_host_fasta,
+        ch_host_bowtie2index,
+        ch_phix_db_file,
+        params.skip_shortread_qc,
+    )
+    ch_versions = ch_versions.mix(SHORTREAD_PREPROCESSING.out.versions)
+    ch_multiqc_files = ch_multiqc_files.mix(
+        SHORTREAD_PREPROCESSING.out.multiqc_files.collect { _meta, report -> report }.ifEmpty([])
+    )
+    ch_short_reads = SHORTREAD_PREPROCESSING.out.short_reads
+    ch_short_reads_assembly = SHORTREAD_PREPROCESSING.out.short_reads_assembly
 
     /*
     ================================================================================
@@ -277,12 +273,8 @@ workflow MAG {
     */
 
     if (!params.skip_ale) {
-        ch_shortread_assemblies_for_ale = ch_assemblies.filter { meta, _assembly ->
-            meta.sr_platform != null && meta.sr_platform != []
-        }
-
         ch_ale_input = BINNING_PREPARATION.out.grouped_mappings
-            .join(ch_shortread_assemblies_for_ale, by: 0)
+            .join(ch_shortread_assemblies, by: 0)
             .map { meta, _contigs, bams, _bais, assembly ->
                 // Try to find the BAM where reads came from the same sample as the assembly (co-binning may include multiple BAMs)
                 // If none matches (coassembly), take the first one after sorting for determinism
@@ -447,16 +439,7 @@ workflow MAG {
             ? ch_input_for_postbinning_bins
             : ch_input_for_postbinning_bins.mix(ch_input_for_postbinning_unbins)
 
-        // Combine short and long reads by meta.id and meta.group for DEPTHS, making sure that
-        // read channel are not empty
-        ch_reads_for_depths = ch_short_reads
-            .map { meta, reads -> [[id: meta.id, group: meta.group], [short_reads: reads, long_reads: []]] }
-            .mix(
-                ch_long_reads.map { meta, reads -> [[id: meta.id, group: meta.group], [short_reads: [], long_reads: reads]] }
-            )
-            .groupTuple(by: 0)
-
-        DEPTHS(ch_input_for_postbinning, BINNING.out.metabat2depths, ch_reads_for_depths)
+        DEPTHS(ch_input_for_postbinning, BINNING.out.metabat2depths)
         ch_versions = ch_versions.mix(DEPTHS.out.versions)
 
         ch_input_for_binsummary = DEPTHS.out.depths_summary
@@ -502,19 +485,19 @@ workflow MAG {
             ch_input_for_quast_bins = ch_input_for_postbinning
                 .groupTuple()
                 .map { meta, bins ->
-                    def new_bins = bins.flatten()
-                    [meta, new_bins]
+                    [meta, bins.flatten().sort { a, b -> a.getBaseName() <=> b.getBaseName() }]
                 }
 
             QUAST_BINS(ch_input_for_quast_bins)
             ch_versions = ch_versions.mix(QUAST_BINS.out.versions)
-            ch_quast_bin_summary = QUAST_BINS.out.quast_bin_summaries.collectFile(keepHeader: true) { meta, summary ->
-                ["${meta.id}.tsv", summary]
-            }
-            QUAST_BINS_SUMMARY(ch_quast_bin_summary.collect())
-            ch_versions = ch_versions.mix(QUAST_BINS_SUMMARY.out.versions)
 
-            ch_quast_bins_summary = QUAST_BINS_SUMMARY.out.summary
+            ch_quast_bin_summaries = QUAST_BINS.out.quast_bin_summaries
+                .collect { _meta, summary -> summary }
+                .map { summaries -> [[id: 'quast_bin_summary'], summaries.sort { a, b -> a.getBaseName() <=> b.getBaseName() }] }
+
+            CONCAT_QUAST_SUMMARY(ch_quast_bin_summaries, 'rowskey', 'tsv', true)
+
+            ch_quast_bins_summary = CONCAT_QUAST_SUMMARY.out.csv.map { _meta, summary -> summary }
         }
 
         /*
@@ -645,54 +628,19 @@ workflow MAG {
             "${process}:\n${tool_versions.join('\n')}"
         }
 
-    softwareVersionsToYAML(ch_versions.mix(topic_versions.versions_file))
+    def ch_collated_versions = softwareVersionsToYAML(ch_versions.mix(topic_versions.versions_file))
         .mix(topic_versions_string)
         .collectFile(
-            storeDir: "${params.outdir}/pipeline_info",
+            storeDir: "${outdir}/pipeline_info",
             name: 'nf_core_' + 'mag_software_' + 'mqc_' + 'versions.yml',
             sort: true,
             newLine: true,
         )
-        .set { ch_collated_versions }
-
 
     //
     // MODULE: MultiQC
     //
-    ch_multiqc_config = channel.fromPath(
-        "${projectDir}/assets/multiqc_config.yml",
-        checkIfExists: true
-    )
-    ch_multiqc_custom_config = params.multiqc_config
-        ? channel.fromPath(params.multiqc_config, checkIfExists: true)
-        : channel.empty()
-    ch_multiqc_logo = params.multiqc_logo
-        ? channel.fromPath(params.multiqc_logo, checkIfExists: true)
-        : channel.fromPath("${workflow.projectDir}/docs/images/mag_logo_mascot_light.png", checkIfExists: true)
-
-    summary_params = paramsSummaryMap(
-        workflow,
-        parameters_schema: "nextflow_schema.json"
-    )
-    ch_workflow_summary = channel.value(paramsSummaryMultiqc(summary_params))
-    ch_multiqc_files = ch_multiqc_files.mix(
-        ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml')
-    )
-    ch_multiqc_custom_methods_description = params.multiqc_methods_description
-        ? file(params.multiqc_methods_description, checkIfExists: true)
-        : file("${projectDir}/assets/methods_description_template.yml", checkIfExists: true)
-    ch_methods_description = channel.value(
-        methodsDescriptionText(ch_multiqc_custom_methods_description)
-    )
-
     ch_multiqc_files = ch_multiqc_files.mix(ch_collated_versions)
-    ch_multiqc_files = ch_multiqc_files.mix(
-        ch_methods_description.collectFile(
-            name: 'methods_description_mqc.yaml',
-            sort: true,
-        )
-    )
-
     if (!params.skip_quast) {
         ch_multiqc_files = ch_multiqc_files.mix(QUAST.out.report.collect().ifEmpty([]))
 
@@ -719,16 +667,30 @@ workflow MAG {
         }
     }
 
+    def ch_summary_params = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
+    def ch_workflow_summary = channel.value(paramsSummaryMultiqc(ch_summary_params))
+    ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
+    def ch_multiqc_custom_methods_description = multiqc_methods_description
+        ? file(multiqc_methods_description, checkIfExists: true)
+        : file("${projectDir}/assets/methods_description_template.yml", checkIfExists: true)
+    def ch_methods_description = channel.value(methodsDescriptionText(ch_multiqc_custom_methods_description))
+    ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml', sort: true))
     MULTIQC(
-        ch_multiqc_files.collect(),
-        ch_multiqc_config.toList(),
-        ch_multiqc_custom_config.toList(),
-        ch_multiqc_logo.toList(),
-        [],
-        [],
+        ch_multiqc_files.flatten().collect().map { files ->
+            [
+                [id: 'mag'],
+                files,
+                multiqc_config
+                    ? file(multiqc_config, checkIfExists: true)
+                    : file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true),
+                multiqc_logo ? file(multiqc_logo, checkIfExists: true) : [],
+                [],
+                [],
+            ]
+        }
     )
 
     emit:
-    multiqc_report = MULTIQC.out.report.toList() // channel: /path/to/multiqc_report.html
+    multiqc_report = MULTIQC.out.report.map { _meta, report -> [report] }.toList() // channel: /path/to/multiqc_report.html
     versions       = ch_versions // channel: [ path(versions.yml) ]
 }

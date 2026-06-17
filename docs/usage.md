@@ -4,6 +4,14 @@
 
 > _Documentation of pipeline parameters is generated automatically from the pipeline schema and can no longer be found in markdown files._
 
+## Introduction
+
+**nf-core/mag** is a bioinformatics best-practice analysis pipeline for assembly, binning and annotation of metagenomes.
+
+In addition to this page, you can find additional usage information on the following pages:
+
+- [New to mag?](usage/new_to_mag.md)
+
 ## Input specifications
 
 The input data can be passed to nf-core/mag in two possible ways, either using the `--input` parameter of raw-reads alone or `--input` additionally with `--assembly_input` that specifies pre-built assemblies.
@@ -95,7 +103,7 @@ If you'd like to also _assemble_ your samples in a pooled fashion (co-assembly),
 
 ### Supplying pre-computed assemblies
 
-It is also possible to run nf-core/mag on pre-computed assemblies, by supplying a CSV file to the parameter `--assembly_input` in addition to the raw reads supplied to `--input`. Supplying assembly input skips all read pre-processing and assembly, jumping straight to the binning stage of the pipeline.
+It is also possible to run nf-core/mag on pre-computed assemblies, by supplying a CSV file to the parameter `--assembly_input` in addition to the raw reads supplied to `--input`. Supplying assembly input skips the assembly step and uses the provided assemblies for downstream analysis. The raw reads are still used for quality control and binning-related mapping.
 
 The assembly CSV file should contain the following columns:
 
@@ -189,8 +197,9 @@ If you enable the `--save_cat_db` option, the database will be saved in the `Tax
 > This database is very large at ~110 GB!
 > This can take a long time, so we strongly recommend downloading and unzipping prior the pipeline run.
 
-This database can be downloaded from the GTDB developers' website. The current pipeline default points to [the GTDB-Tk r226 full package](https://data.gtdb.aau.ecogenomic.org/releases/release226/226.0/auxillary_files/gtdbtk_package/full_package/gtdbtk_r226_data.tar.gz), which is hosted in Australia (and could be slow for other regions of the world).
-The developers also offer a split archive of 10 GB files that can be downloaded more stably from [the split package directory](https://data.gtdb.aau.ecogenomic.org/releases/release226/226.0/auxillary_files/gtdbtk_package/split_package/) and subsequently (manually) combined after.
+This database can be downloaded from the GTDB developers' website. The current pipeline default points to [the GTDB-Tk r232 full package](https://data.gtdb.aau.ecogenomic.org/releases/release232/232.0/auxillary_files/gtdbtk_package/full_package/gtdbtk_r232_data.tar.gz), which is hosted in Europe (and could be slow for other regions of the world).
+See the [GTDB downloads page](https://gtdb.ecogenomic.org/downloads) for other mirrors.
+The developers also offer a split archive of 10 GB files that can be downloaded more stably from [the split package directory](https://data.gtdb.aau.ecogenomic.org/releases/release232/232.0/auxillary_files/gtdbtk_package/split_package/) and subsequently (manually) combined after.
 More documentation can be seen [here](https://ecogenomics.github.io/GTDBTk/installing/index.html#gtdb-tk-reference-data).
 
 ## Running the pipeline
@@ -217,7 +226,7 @@ If you wish to repeatedly use the same parameters for multiple runs, rather than
 Pipeline settings can be provided in a `yaml` or `json` file via `-params-file <file>`.
 
 > [!WARNING]
-> Do not use `-c <file>` to specify parameters as this will result in errors. Custom config files specified with `-c` must only be used for [tuning process resource specifications](https://nf-co.re/docs/usage/configuration#tuning-workflow-resources), other infrastructural tweaks (such as output directories), or module arguments (args).
+> Do not use `-c <file>` to specify parameters as this will result in errors. Custom config files specified with `-c` must only be used for [tuning process resource specifications](https://nf-co.re/docs/running/run-pipelines#configuring-pipelines), other infrastructural tweaks (such as output directories), or module arguments (args).
 
 The above pipeline run specified with a params file in yaml format:
 
@@ -346,19 +355,19 @@ Specify the path to a specific config file (this is a core Nextflow command). Se
 
 Whilst the default requirements set within the pipeline will hopefully work for most people and with most input data, you may find that you want to customise the compute resources that the pipeline requests. Each step in the pipeline has a default set of requirements for number of CPUs, memory and time. For most of the pipeline steps, if the job exits with one of the retryable error codes configured in `conf/base.config`, it will automatically be resubmitted with higher resources request (2 x original, then 3 x original). If it still fails after the third attempt then the pipeline execution is stopped.
 
-To change the resource requests, please see the [max resources](https://nf-co.re/docs/usage/configuration#max-resources) and [tuning workflow resources](https://nf-co.re/docs/usage/configuration#tuning-workflow-resources) section of the nf-core website.
+To change the resource requests, please see the [max resources](https://nf-co.re/docs/running/configuration/nextflow-for-your-system#set-max-resources) and [customise process resources](https://nf-co.re/docs/running/configuration/nextflow-for-your-system#customize-process-resources) section of the nf-core website.
 
 ### Custom Containers
 
 In some cases, you may wish to change the container or conda environment used by a pipeline steps for a particular tool. By default, nf-core pipelines use containers and software from the [biocontainers](https://biocontainers.pro/) or [bioconda](https://bioconda.github.io/) projects. However, in some cases the pipeline specified version may be out of date.
 
-To use a different container from the default container or conda environment specified in a pipeline, please see the [updating tool versions](https://nf-co.re/docs/usage/configuration#updating-tool-versions) section of the nf-core website.
+To use a different container from the default container or conda environment specified in a pipeline, please see the [updating tool versions](https://nf-co.re/docs/running/configuration/nextflow-for-your-system#update-tool-versions) section of the nf-core website.
 
 ### Custom Tool Arguments
 
 A pipeline might not always support every possible argument or option of a particular tool used in pipeline. Fortunately, nf-core pipelines provide some freedom to users to insert additional parameters that the pipeline does not include by default.
 
-To learn how to provide additional arguments to a particular tool of the pipeline, please see the [customising tool arguments](https://nf-co.re/docs/usage/configuration#customising-tool-arguments) section of the nf-core website.
+To learn how to provide additional arguments to a particular tool of the pipeline, please see the [customising tool arguments](https://nf-co.re/docs/running/configuration/nextflow-for-your-system#modifying-tool-arguments) section of the nf-core website.
 
 Note, do not change number of CPUs with custom config files for the processes `spades`, `spadeshybrid` or `megahit` when specifying the parameters `--spades_fix_cpus`, `--spadeshybrid_fix_cpus` and `--megahit_fix_cpu_1` respectively.
 
@@ -502,25 +511,25 @@ This feature is only available with container engines `apptainer` and `singulari
 To generate your SquashFS image:
 
 1. Install [squashfs-tools](https://github.com/plougher/squashfs-tools), if it is not already on your system
-2. Download the GTDB archive either via the full [`.tar.gz` archive](https://data.gtdb.aau.ecogenomic.org/releases/release226/226.0/auxillary_files/gtdbtk_package/full_package/) or the [split database](https://data.gtdb.aau.ecogenomic.org/releases/release226/226.0/auxillary_files/gtdbtk_package/split_package) version.
+2. Download the GTDB archive either via the full [`.tar.gz` archive](https://data.gtdb.aau.ecogenomic.org/releases/release232/232.0/auxillary_files/gtdbtk_package/full_package/) or the [split database](https://data.gtdb.aau.ecogenomic.org/releases/release232/232.0/auxillary_files/gtdbtk_package/split_package/) version.
 3. Convert to a SquashFS image
 
 - Full package (compressed):
 
   ```bash
-  gzip -cd gtdbtk_r226_data.tar.gz | mksquashfs - gtdbtk_r226.squashfs -tar
+  gzip -cd gtdbtk_r232_data.tar.gz | mksquashfs - gtdbtk_r232.squashfs -tar
   ```
 
 - Full package (uncompressed)
 
   ```bash
-  mksquashfs /path/to/database gtdbtk_r226.squashfs
+  mksquashfs /path/to/database gtdbtk_r232.squashfs
   ```
 
 - Split package (compressed)
 
   ```bash
-  cat gtdbtk_r226_data.tar.gz.part_* | gzip -cd - | mksquashfs - gtdbtk_r226.squashfs -tar
+  cat gtdbtk_r232_data.tar.gz.part_* | gzip -cd - | mksquashfs - gtdbtk_r232.squashfs -tar
   ```
 
 To use the image in the pipeline:
@@ -531,7 +540,7 @@ To use the image in the pipeline:
    ```nextflow
    process {
        withName: GTDBTK_CLASSIFYWF {
-               containerOptions = "-B /<path>/<to>/gtdbtk_r226.squashfs:${params.gtdb_db}:image-src=/"
+               containerOptions = "-B /<path>/<to>/gtdbtk_r232.squashfs:${params.gtdb_db}:image-src=/"
        }
    }
    ```
@@ -543,7 +552,7 @@ To use the image in the pipeline:
    ```
 
 :::warning
-Make sure to update the paths where indicated, and the GTDB release version if using a different one than r226.
+Make sure to update the paths where indicated, and the GTDB release version if using a different one than r232.
 :::
 
 :::note
@@ -552,7 +561,7 @@ If you have issues with this, you may need to specify a different `image-src=` s
 You can determine this with:
 
 ```bash
-unsquashfs -l -max-depth 1 -d'' gtdbtk_r226.squashfs
+unsquashfs -l -max-depth 1 -d'' gtdbtk_r232.squashfs
 ```
 
 And use the resulting output in `image-src=`
@@ -560,7 +569,7 @@ And use the resulting output in `image-src=`
 ```nextflow
 process {
     withName: GTDBTK_CLASSIFYWF {
-            containerOptions = "-B /<path>/<to>/gtdbtk_r226.squashfs:${params.gtdb_db}:image-src=/<output_from_unsquashfs_ls>"
+            containerOptions = "-B /<path>/<to>/gtdbtk_r232.squashfs:${params.gtdb_db}:image-src=/<output_from_unsquashfs_ls>"
     }
 }
 ```
