@@ -237,7 +237,7 @@
                     "porechop": "0.2.4"
                 },
                 "PYPOLCA_RUN": {
-                    "pypolca": "pypolca, version 0.4.0"
+                    "pypolca": "0.4.0"
                 },
                 "SEQKIT_STATS": {
                     "seqkit": "2.9.0"
@@ -252,7 +252,7 @@
                 }
             }
         ],
-        "timestamp": "2026-06-17T17:01:33.516709478",
+        "timestamp": "2026-06-18T03:35:00.775314288",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.3"
