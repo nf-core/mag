@@ -303,7 +303,7 @@
                     },
                     "pypolca/run": {
                         "branch": "master",
-                        "git_sha": "3dce2078849798d8aca4b407e6212bcd21ecb3ab",
+                        "git_sha": "6f0aa2d0d03726ae23b15aae876649c120f696ec",
                         "installed_by": ["modules"]
                     },
                     "qsv/cat": {

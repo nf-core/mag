@@ -244,31 +244,16 @@ workflow MAG {
         ch_pypolca_input = ch_longread_assemblies
             .map { meta, assembly -> [meta.id, meta, assembly] }
             .combine(
-                ch_short_reads_pypolca.map { meta, reads -> [meta.id, meta, reads] },
+                ch_short_reads_pypolca.map { meta, reads -> [meta.id, reads] },
                 by: 0,
-            )
-            .multiMap { _id, assembly_meta, assembly, reads_meta, reads ->
-                reads: [reads_meta, reads]
-                assembly: [assembly_meta, assembly]
-            }
-        PYPOLCA_RUN(
-            ch_pypolca_input.reads,
-            ch_pypolca_input.assembly,
-        )
-        ch_polished_assemblies = PYPOLCA_RUN.out.polished
-            .map { meta, polished ->
-                [meta.id, polished]
-            }
-            .join(
-                ch_longread_assemblies.map { meta, assembly ->
-                    [meta.id, meta]
-                }
-            )
-            .map { id, polished, meta ->
-                [meta, polished]
-            }
-    }
+             )
+             .map { _id, assembly_meta, assembly, reads ->
+                 [assembly_meta, assembly, reads]
+              }
 
+        PYPOLCA_RUN(ch_pypolca_input)
+        ch_polished_assemblies = PYPOLCA_RUN.out.polished
+        }
     ch_assemblies = ch_shortread_assemblies.mix(ch_polished_assemblies)
 
     if (!params.skip_quast) {
