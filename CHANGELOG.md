@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1041](https://github.com/nf-core/mag/pull/1041) - Refined and corrected unclear section of metromap (by @jfy133)
 - [#1044](https://github.com/nf-core/mag/pull/1044) - Add new `--gtdbtk_place_species` parameter (by @dialvarezs)
 - [#1047](https://github.com/nf-core/mag/issues/1007) - Add `--gtdbtk_single_job` to run GTDB-Tk classification for all bins in a single job (requested by @sarah-shah-bioinf, by @dialvarezs)
+- [#1048](https://github.com/nf-core/mag/pull/1048) - Add optional PyPOLCA polishing for long-read assemblies via `--run_pypolca` (by @Harshita-sriv)
 
 ### `Changed`
 
