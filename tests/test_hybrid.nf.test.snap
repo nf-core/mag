@@ -1,7 +1,7 @@
 {
     "-profile hybrid": {
         "content": [
-            59,
+            61,
             {
                 "ADJUST_MAXBIN2_EXT": {
                     "coreutils": 9.5
@@ -47,6 +47,14 @@
                 },
                 "CONVERT_DEPTHS": {
                     "bioawk": 20110810
+                },
+                "DEEPMASED_FEATURES": {
+                    "deepmased": "0.3.1",
+                    "setuptools": 78.1
+                },
+                "DEEPMASED_PREDICT": {
+                    "deepmased": "0.3.1",
+                    "setuptools": 78.1
                 },
                 "FASTP": {
                     "fastp": "1.0.1"
@@ -141,11 +149,11 @@
                 }
             }
         ],
-        "timestamp": "2026-04-01T14:55:50.11826155",
         "meta": {
-            "nf-test": "0.9.5",
+            "nf-test": "0.9.3",
             "nextflow": "25.10.4"
-        }
+        },
+        "timestamp": "2026-06-19T12:29:00.145218281"
     },
     "multiqc": {
         "content": [
@@ -388,10 +396,10 @@
                 "quast_table.yaml:md5,e5720e81c420f07480481ac3c75bb822"
             ]
         ],
-        "timestamp": "2026-05-04T10:28:55.649537639",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.0"
-        }
+        },
+        "timestamp": "2026-05-04T10:28:55.649537639"
     }
 }

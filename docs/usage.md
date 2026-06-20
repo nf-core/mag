@@ -272,24 +272,6 @@ You can fix this by using the parameter `--megahit_fix_cpu_1`. In both cases, do
 
 Assembly quality is assessed using [ALE](https://github.com/sc932/ALE) for short-read assemblies only (MEGAHIT, SPAdes); long-read assemblies are excluded, and hybrid assemblies use only the short-read component for scoring.
 
-Per-contig assembly error detection is also performed using [DeepMAsED](https://github.com/leylabmpi/DeepMAsED), a deep learning tool that predicts misassemblies from read alignment features. DeepMAsED runs in two sequential steps:
-
-1. **`DeepMAsED features`** (`DEEPMASED_FEATURES`): Extracts alignment-based features from the BAM file and assembly FASTA for each contig. This step is I/O intensive and is the most time-consuming part of the analysis, especially for large assemblies.
-2. **`DeepMAsED predict`** (`DEEPMASED_PREDICT`): Runs the pre-trained deep learning model on the feature tables to produce a per-contig misassembly score (0 = correctly assembled, 1 = likely misassembly).
-
-The two steps are implemented as separate modules, allowing Nextflow to resume from `predict` if `features` has already completed successfully. DeepMAsED only runs on short-read assemblies (MEGAHIT, SPAdes).
-
-The following parameters control DeepMAsED execution:
-
-| Parameter                   | Description                                                                                                           |
-| --------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| `--skip_deepmased`          | Skip DeepMAsED entirely (both features and predict)                                                                   |
-| `--skip_deepmased_predict`  | Run only the features step, skip prediction                                                                           |
-| `--skip_deepmased_features` | **Not allowed** unless `--skip_deepmased_predict` is also set — DeepMAsED predict requires features output            |
-| `--deepmased_cpu_only`      | Run DeepMAsED predict in CPU-only mode. Default: `true` (recommended for HPC environments without GPU)                |
-| `--deepmased_features_gzip` | Gzip feature tables produced by the features step. Useful for large assemblies to reduce disk usage. Default: `false` |
-| `--deepmased_predict_seed`  | Random seed for numpy in DeepMAsED predict. Set for reproducible results. Default: `12`                               |
-
 MetaBAT2 is run by default with a fixed seed within this pipeline, thus producing reproducible results.
 
 Using the BUSCO auto-lineage mode with an internet connection may lead to non-reproducible results, since the databases are frequently updated and automatic lineage selection depends on the version of the database used when running BUSCO.
@@ -586,6 +568,16 @@ Up until version 4.0.0, this pipeline offered raw read taxonomic profiling using
 This feature was removed in version 5.0.0 to strengthen the pipeline's focus on metagenome assembly and binning.
 
 If you require taxonomic profiling of raw reads, we recommend using [nf-core/taxprofiler](https://nf-co.re/taxprofiler/), which is specifically designed for taxonomic profiling of raw reads and supports a wide range of tools for this purpose.
+
+## A note on DeepMAsED assembly error detection
+
+When enabled, DeepMAsED performs per-contig assembly error detection on short-read assemblies (MEGAHIT and SPAdes).
+
+Useful parameters:
+
+- `--skip_deepmased` to skip DeepMAsED entirely.
+- `--skip_deepmased_predict` to run only feature extraction.
+- `--deepmased_cpu_only` to force CPU-only inference.
 
 ## BIgMAG compatibility
 

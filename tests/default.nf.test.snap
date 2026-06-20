@@ -53,6 +53,14 @@
                 "CONVERT_DEPTHS": {
                     "bioawk": 20110810
                 },
+                "DEEPMASED_FEATURES": {
+                    "deepmased": "0.3.1",
+                    "setuptools": 78.1
+                },
+                "DEEPMASED_PREDICT": {
+                    "deepmased": "0.3.1",
+                    "setuptools": 78.1
+                },
                 "FASTP": {
                     "fastp": "1.0.1"
                 },
@@ -136,11 +144,11 @@
                 }
             }
         ],
-        "timestamp": "2026-05-27T09:38:57.61754217",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "26.04.2"
-        }
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.4"
+        },
+        "timestamp": "2026-06-19T10:47:19.819213995"
     },
     "multiqc": {
         "content": [
@@ -386,10 +394,10 @@
                 "quast_table.yaml:md5,2d53029b92bc2e3940ee2ae932fa2c9d"
             ]
         ],
-        "timestamp": "2026-05-27T09:38:57.667416849",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "26.04.2"
-        }
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.4"
+        },
+        "timestamp": "2026-06-19T10:47:19.94958561"
     }
 }

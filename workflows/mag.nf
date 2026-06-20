@@ -295,14 +295,6 @@ workflow MAG {
     */
 
     if (!params.skip_deepmased) {
-        // Validate DeepMAsED subcommand dependencies at startup:
-        // DEEPMASED_PREDICT requires the output of DEEPMASED_FEATURES and cannot run without it.
-        if (params.skip_deepmased_features && !params.skip_deepmased_predict) {
-            error "[nf-core/mag] ERROR: '--skip_deepmased_features true' cannot be used without '--skip_deepmased_predict true'. " +
-                  "DEEPMASED_PREDICT requires the feature tables produced by DEEPMASED_FEATURES as input. " +
-                  "Either run both steps (default) or skip DeepMAsED entirely with '--skip_deepmased'."
-        }
-
         ch_shortread_assemblies_for_deepmased = ch_assemblies.filter { meta, _assembly ->
             meta.sr_platform != null && meta.sr_platform != []
         }
@@ -319,13 +311,9 @@ workflow MAG {
 
         if (!params.skip_deepmased_features) {
             DEEPMASED_FEATURES(ch_deepmased_input)
-            ch_versions = ch_versions.mix(DEEPMASED_FEATURES.out.versions_deepmased.ifEmpty([]))
-            ch_versions = ch_versions.mix(DEEPMASED_FEATURES.out.versions_setuptools.ifEmpty([]))
 
             if (!params.skip_deepmased_predict) {
                 DEEPMASED_PREDICT(DEEPMASED_FEATURES.out.feature_table.join(DEEPMASED_FEATURES.out.feature_files, by: 0))
-                ch_versions = ch_versions.mix(DEEPMASED_PREDICT.out.versions_deepmased.ifEmpty([]))
-                ch_versions = ch_versions.mix(DEEPMASED_PREDICT.out.versions_setuptools.ifEmpty([]))
             }
         }
     }
