@@ -276,6 +276,20 @@ SPAdesHybrid is a part of the [SPAdes](http://cab.spbu.ru/software/spades/) soft
 
 </details>
 
+### Assembly polishing with PyPOLCA
+
+[PyPOLCA](https://github.com/gbouras13/pypolca) is a Python reimplementation of the POLCA polisher (from MaSuRCA). It uses accurate short reads to correct base-level errors (substitutions and small indels) in long-read assemblies, such as those produced by Flye and metaMDBG. Polishing is run before binning when `--run_pypolca` is set and short reads are available for the assembly.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `Assembly/PYPOLCA/[sample/group]/`
+  - `[assembler]-[sample/group]_pypolca.fasta`: Polished (error-corrected) assembly in fasta format
+  - `[assembler]-[sample/group].report`: Polishing statistics, including the number of substitution and indel errors corrected
+  - `[assembler]-[sample/group].vcf`: Variants called against the input assembly and used for correction
+
+</details>
+
 ### Metagenome QC with QUAST
 
 [QUAST](http://cab.spbu.ru/software/quast/) is a tool that evaluates metagenome assemblies by computing various metrics. The QUAST output is also included in the MultiQC report, as well as in the assembly directories themselves.

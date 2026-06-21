@@ -47,6 +47,8 @@ include { QUAST                           } from '../modules/local/quast_run/mai
 include { QUAST_BINS                      } from '../modules/local/quast_bins/main'
 include { BIN_SUMMARY                     } from '../modules/local/bin_summary/main'
 include { PREPARE_BIGMAG_SUMMARY          } from '../modules/local/bigmag_summary/main'
+include { PYPOLCA_RUN                     } from '../modules/nf-core/pypolca/run/main'
+
 
 workflow MAG {
     take:
@@ -190,9 +192,7 @@ workflow MAG {
         ch_versions = ch_versions.mix(ASSEMBLY.out.versions)
 
         ch_shortread_assemblies = ASSEMBLY.out.shortread_assemblies
-        ch_longread_assemblies = ASSEMBLY.out.longread_assemblies
-
-        ch_assemblies = ch_shortread_assemblies.mix(ch_longread_assemblies)
+        ch_longread_raw_assemblies = ASSEMBLY.out.longread_assemblies
     }
     else {
         ch_assemblies_split = ch_input_assemblies.branch { _meta, assembly ->
@@ -203,11 +203,55 @@ workflow MAG {
         GUNZIP_ASSEMBLYINPUT(ch_assemblies_split.gzipped)
         ch_versions = ch_versions.mix(GUNZIP_ASSEMBLYINPUT.out.versions)
 
-        ch_assemblies = channel.empty()
-        ch_assemblies = ch_assemblies.mix(ch_assemblies_split.ungzip, GUNZIP_ASSEMBLYINPUT.out.gunzip)
-        ch_shortread_assemblies = ch_assemblies.filter { meta, _contigs -> meta.assembler.toUpperCase() in ['SPADES', 'SPADESHYBRID', 'MEGAHIT'] }
-        ch_longread_assemblies = ch_assemblies.filter { meta, _contigs -> meta.assembler.toUpperCase() in ['FLYE', 'METAMDBG'] }
+        ch_assemblies_unzipped = ch_assemblies_split.ungzip.mix(GUNZIP_ASSEMBLYINPUT.out.gunzip)
+        ch_shortread_assemblies = ch_assemblies_unzipped.filter { meta, _contigs -> meta.assembler.toUpperCase() in ['SPADES', 'SPADESHYBRID', 'MEGAHIT'] }
+        ch_longread_raw_assemblies = ch_assemblies_unzipped.filter { meta, _contigs -> meta.assembler.toUpperCase() in ['FLYE', 'METAMDBG'] }
     }
+
+    if (params.run_pypolca) {
+        if (params.coassemble_group) {
+            ch_short_reads_pypolca = ch_short_reads
+                .map { meta, reads -> [meta.group, meta, reads] }
+                .groupTuple(by: 0)
+                .map { group, metas, reads ->
+                    def assemble_as_single = params.single_end || (params.bbnorm && params.coassemble_group)
+                    def meta = [
+                        id: "group-${group}",
+                        group: group,
+                        single_end: assemble_as_single,
+                        sr_platform: metas.sr_platform[0],
+                    ]
+
+                    if (assemble_as_single) {
+                        [meta, reads.sort { files -> files[0].getName() }.flatten()]
+                    }
+                    else {
+                        [meta, reads.sort { files -> files[0].getName() }.transpose().flatten()]
+                    }
+                }
+        }
+        else {
+            ch_short_reads_pypolca = ch_short_reads
+        }
+
+        // Join reads and assemblies by sample id so PYPOLCA pairs them correctly
+        ch_pypolca_input = ch_longread_raw_assemblies
+            .map { meta, assembly -> [meta.id, meta, assembly] }
+            .combine(
+                ch_short_reads_pypolca.map { meta, reads -> [meta.id, reads] },
+                by: 0
+            )
+            .map { _id, assembly_meta, assembly, reads ->
+                [assembly_meta, assembly, reads]
+            }
+
+        PYPOLCA_RUN(ch_pypolca_input)
+        ch_longread_assemblies = PYPOLCA_RUN.out.polished
+    } else {
+        ch_longread_assemblies = ch_longread_raw_assemblies
+    }
+
+    ch_assemblies = ch_shortread_assemblies.mix(ch_longread_assemblies)
 
     if (!params.skip_quast) {
         QUAST(ch_assemblies)
