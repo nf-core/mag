@@ -338,7 +338,7 @@ workflow MAG {
     ================================================================================
     */
 
-    if (!params.skip_deepmased) {
+    if (!params.skip_deepmased && !params.skip_binning) {
         ch_shortread_assemblies_for_deepmased = ch_assemblies.filter { meta, _assembly ->
             meta.sr_platform != null && meta.sr_platform != []
         }
