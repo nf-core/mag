@@ -163,6 +163,7 @@
             [
                 "Assembly/FLYE/FLYE-minigut.assembly.fasta.gz",
                 "Assembly/FLYE/FLYE-minigut.assembly_graph.gfa.gz",
+                "Assembly/FLYE/FLYE-minigut.assembly_info.txt",
                 "Assembly/FLYE/FLYE-minigut.flye.log",
                 "Assembly/FLYE/QC/minigut/QUAST/basic_stats/FLYE-minigut_GC_content_plot.pdf",
                 "Assembly/FLYE/QC/minigut/QUAST/basic_stats/GC_content_plot.pdf",
@@ -208,6 +209,7 @@
             [
                 "FLYE-minigut.assembly.fasta.gz:md5,5ff4368f02b97821387a83c3ddc24e0d",
                 "FLYE-minigut.assembly_graph.gfa.gz:md5,6ab5987e12078e63856e9f3594858087",
+                "FLYE-minigut.assembly_info.txt:md5,132a366f90dab04c7f8c381d1516077a",
                 "FLYE-minigut.rna.gff:md5,04a96a7603ba6e23ccc3d9d94f578931",
                 "barrnap.log:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "report.tex:md5,27961b0d35b2951a0e53bdaf957dd332",

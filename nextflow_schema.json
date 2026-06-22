@@ -529,12 +529,12 @@
                 "gtdb_db": {
                     "type": "string",
                     "description": "Specify the location of a GTDBTK database. Can be either an uncompressed directory or a `.tar.gz` archive. If not specified will be downloaded for you when GTDBTK or binning QC is not skipped.",
-                    "default": "https://data.gtdb.aau.ecogenomic.org/releases/release226/226.0/auxillary_files/gtdbtk_package/full_package/gtdbtk_r226_data.tar.gz",
+                    "default": "https://data.gtdb.aau.ecogenomic.org/releases/release232/232.0/auxillary_files/gtdbtk_package/full_package/gtdbtk_r232_data.tar.gz",
                     "format": "path"
                 },
                 "gtdbtk_min_completeness": {
                     "type": "number",
-                    "default": 50,
+                    "default": 50.0,
                     "description": "Min. bin completeness (in %) required to apply GTDB-tk classification.",
                     "help_text": "Completeness assessed with any of the bin QC tools (BUSCO, CheckM, CheckM2). A bin passes if at least one QC tool reports completeness at or above the threshold. Must be greater than 0 (min. 0.01) to avoid GTDB-tk errors. If too low, GTDB-tk classification results can be impaired due to not enough marker genes!",
                     "minimum": 0.01,
@@ -542,7 +542,7 @@
                 },
                 "gtdbtk_max_contamination": {
                     "type": "number",
-                    "default": 10,
+                    "default": 10.0,
                     "description": "Max. bin contamination (in %) allowed to apply GTDB-tk classification.",
                     "help_text": "Contamination assessed with any of the bin QC tools (BUSCO, CheckM, CheckM2). A bin passes if at least one QC tool reports contamination at or below the threshold. If too high, GTDB-tk classification results can be impaired due to contamination!",
                     "minimum": 0,
@@ -550,7 +550,7 @@
                 },
                 "gtdbtk_min_perc_aa": {
                     "type": "number",
-                    "default": 10,
+                    "default": 10.0,
                     "description": "Min. fraction of AA (in %) in the MSA for bins to be kept.",
                     "minimum": 0,
                     "maximum": 100
@@ -577,9 +577,19 @@
                     "type": "boolean",
                     "description": "Specify to have GTDBTk to use the full bacterial tree rather than the split tree (requires more memory!)"
                 },
-                "gtdbtk_skip_aniscreen": {
+                "gtdbtk_place_species": {
                     "type": "boolean",
                     "description": "Specify to disable fast classification of genomes by ANI using skani in GTDB-Tk."
+                },
+                "gtdbtk_skip_aniscreen": {
+                    "type": "boolean",
+                    "description": "[DEPRECATED] Use `--gtdbtk_place_species` instead. Specify to disable fast classification of genomes by ANI using skani in GTDB-Tk.",
+                    "hidden": true
+                },
+                "gtdbtk_single_job": {
+                    "type": "boolean",
+                    "description": "Run GTDB-Tk classification for all bins in a single job, rather than one job per sample/assembler/binner group.",
+                    "help_text": "By default nf-core/mag submits a separate GTDBTK_CLASSIFYWF job per group of bins. When classifying very large numbers of bins, it can be more efficient to run all bins together in one job, as steps such as skani and pplacer are then performed once over the whole dataset instead of being repeated per job."
                 }
             }
         },
@@ -637,6 +647,10 @@
                 "skip_flye": {
                     "type": "boolean",
                     "description": "Skip Flye assembly."
+                },
+                "run_pypolca": {
+                    "type": "boolean",
+                    "description": "Run PyPOLCA polishing on long-read assemblies before binning."
                 }
             }
         },
@@ -915,7 +929,8 @@
                 },
                 "run_busco": {
                     "type": "boolean",
-                    "description": "Enable running BUSCO during bin QC."
+                    "description": "Enable running BUSCO during bin QC.",
+                    "default": true
                 },
                 "run_checkm": {
                     "type": "boolean",

@@ -7,6 +7,7 @@ Assembly/*/*.log
 Assembly/*/QC/*/*.bowtie2.log
 Assembly/*/QC/*/QUAST/*.{pdf,html,log}
 Assembly/*/QC/*/QUAST/**/*.{pdf,html}
+Assembly/PYPOLCA/*/*/*.vcf
 Assembly/MEGAHIT/QC/*/*.bowtie2.log
 GenomeBinning/CONCOCT/stats/*_{original,PCA_components,PCA_transformed}_data_gt1000.csv
 GenomeBinning/CONCOCT/stats/*_log.txt
@@ -47,4 +48,6 @@ QC_shortreads/fastp/**/*.html
 QC_shortreads/fastqc/*_fastqc.{html,zip}
 QC_shortreads/remove_phix/*.log
 Taxonomy/CAT/**/*.log
+Taxonomy/GTDB-Tk/**/*.log
+Taxonomy/GTDB-Tk/**/gtdbtk.json
 VirusIdentification/geNomad/**/*_aggregated_classification.tsv

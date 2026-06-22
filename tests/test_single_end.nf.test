@@ -114,6 +114,11 @@ nextflow_pipeline {
             def bat_logs = getAllFilesFromDir(
                 params.outdir, include: ['Taxonomy/CAT/**/*.log']
             )
+            def gtdbtk_logs = getAllFilesFromDir(
+                params.outdir,
+                include: ['Taxonomy/GTDB-Tk/**/*.log'],
+                ignore: ['Taxonomy/GTDB-Tk/**/*.warnings.log']
+            )
             def bat_summary = path("${params.outdir}/Taxonomy/CAT/bat_summary.tsv")
             def gtdbtk_summary = path("${params.outdir}/Taxonomy/GTDB-Tk/gtdbtk_summary.tsv")
 
@@ -190,6 +195,7 @@ nextflow_pipeline {
                     "CheckM: ${checkm_logs.collect { log -> log.readLines().any { it.contains('QA information written to:') } }.every()}",
                     "Prokka: ${prokka_logs.collect { log -> log.readLines().any { it.contains('Annotation finished successfully.') } }.every()}",
                     "BAT: ${bat_logs.collect { log -> log.readLines().any { it.contains('BAT is done!') } }.every()}",
+                    "GTDB-Tk: ${gtdbtk_logs.collect { log -> log.readLines().any { it.contains('Done.') } }.every()}",
                 ).match("log-checks") },
             )
         }

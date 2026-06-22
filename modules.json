@@ -183,7 +183,7 @@
                     },
                     "gtdbtk/classifywf": {
                         "branch": "master",
-                        "git_sha": "5e433c4659a72e3e4aaf9d7275147d1a944165ee",
+                        "git_sha": "b581ebb37c529fa07e22c38d128a7c5c273ed286",
                         "installed_by": ["modules"]
                     },
                     "gunc/downloaddb": {
@@ -299,6 +299,11 @@
                     "pydamage/filter": {
                         "branch": "master",
                         "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "installed_by": ["modules"]
+                    },
+                    "pypolca/run": {
+                        "branch": "master",
+                        "git_sha": "6f0aa2d0d03726ae23b15aae876649c120f696ec",
                         "installed_by": ["modules"]
                     },
                     "qsv/cat": {
