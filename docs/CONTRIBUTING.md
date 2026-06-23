@@ -182,4 +182,7 @@ If you update images or graphics, follow the nf-core [style guidelines](https://
 
 ## Pipeline specific contribution guidelines
 
-<!-- TODO nf-core: Add any pipeline specific contribution guidelines here, such as coding styles, procedures, checklists etc. -->
+### Gate tools by read type
+
+mag processes short-read, long-read, and hybrid data, and not every tool is valid for every read type.
+When you add or modify a step, decide which read types it applies to and gate it accordingly (for example, ALE is not run on long reads, Porechop adapter trimming is skipped for PacBio reads, and short- vs long-read alignment uses Bowtie2 vs minimap2).
