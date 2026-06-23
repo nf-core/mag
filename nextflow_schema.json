@@ -383,7 +383,12 @@
                 "skip_shortread_qc": {
                     "type": "boolean",
                     "description": "Skip all default QC steps for short reads (adapter trimming, phiX removal).",
-                    "help": "Skips clipping and removal of phiX sequences. Does not affect host sequence removal as this is opt in."
+                    "help": "Skips clipping and removal of phiX sequences. Does not affect host sequence removal as this is opt in. Does not prevent FastQC from running if host removal is enabled."
+                },
+                "skip_fastqc": {
+                    "type": "boolean",
+                    "description": "Skip running FastQC on short reads both before and after QC.",
+                    "help": "Skips running FastQC on short reads. Most metrics are redundant with fastp reports, but some metrics are not available in fastp. This option is useful to save time and resources when running the pipeline."
                 },
                 "save_phixremoved_reads": {
                     "type": "boolean",
