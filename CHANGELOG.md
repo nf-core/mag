@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
+- []() - Add skip_fastqc switch to turn off FastQC reporting (by @jorondo1)
+
 - [#1006](https://github.com/nf-core/mag/pull/1006) - Add citations and references texts in the `utils_nfcore_mag_pipeline` subworkflow (by @dialvarezs)
 
 ### `Changed`
