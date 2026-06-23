@@ -10,7 +10,6 @@
 include { UTILS_NFSCHEMA_PLUGIN     } from '../../nf-core/utils_nfschema_plugin'
 include { paramsSummaryMap          } from 'plugin/nf-schema'
 include { samplesheetToList         } from 'plugin/nf-schema'
-include { paramsHelp                } from 'plugin/nf-schema'
 include { completionEmail           } from '../../nf-core/utils_nfcore_pipeline'
 include { completionSummary         } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NFCORE_PIPELINE     } from '../../nf-core/utils_nfcore_pipeline'
@@ -374,6 +373,10 @@ def validateInputParameters(hybrid) {
         if (params.busco_db && file(params.busco_db).isDirectory() && !file(params.busco_db).listFiles().any { file -> file.toString().contains('lineages') }) {
             error("[nf-core/mag] ERROR: Directory supplied to `--busco_db` must contain a `lineages/` subdirectory that itself contains one or more BUSCO lineage files! Check: --busco_db ${params.busco_db}")
         }
+    }
+
+    if (params.gtdbtk_skip_aniscreen) {
+        log.warn("[nf-core/mag]: The parameter '--gtdbtk_skip_aniscreen' is deprecated and will be removed in a future release. Please use '--gtdbtk_place_species' instead.")
     }
 
     if (!params.skip_gtdbtk) {
