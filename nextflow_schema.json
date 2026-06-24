@@ -388,7 +388,7 @@
                 "skip_fastqc": {
                     "type": "boolean",
                     "description": "Skip running FastQC on short reads both before and after QC.",
-                    "help": "Skips running FastQC on short reads. Most metrics are redundant with fastp reports, but some metrics are not available in fastp. This option is useful to save time and resources when running the pipeline."
+                    "help": "Skips running FastQC on short reads. Most metrics are redundant with reports from adapter clipping tools, but some metrics are not available from adapter clipping tools. This option is useful to save time and resources when running the pipeline."
                 },
                 "save_phixremoved_reads": {
                     "type": "boolean",
