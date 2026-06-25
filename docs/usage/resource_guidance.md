@@ -1,9 +1,7 @@
 # Resource usage guidance
 
 **nf-core/mag** is a bioinformatics best-practice analysis pipeline for the assembly, binning, and annotation of metagenomes.
-
 Due to the nature of metagenomic samples, nf-core/mag can in some cases require large amounts of computational resources to execute.
-
 In this page we provide information and guidance on how nf-core/mag works by default, and in some cases how to optimise computational resource usage.
 
 ## Multi-sample or bin executing modules
