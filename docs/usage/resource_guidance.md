@@ -18,7 +18,7 @@ There are a few exceptions to this.
 In the following cases, depending on the options you set in the pipeline, you may see some steps running as a single job with multiple samples.
 
 - Multiple samples processed in one job:
-  - If `--coassemble_group`: all reads across all samples will be pooled into one assembly job (e.g. MEGAHIT, metaSPAdes)
+  - If `--coassemble_group`: all reads across all samples in a group will be pooled into one assembly job (e.g. MEGAHIT, metaSPAdes)
   - If `--gtdbtk_single_job`: all bins across all samples will be pooled into a single GTDBTk classification job
 
 ## Default resource requests
@@ -30,7 +30,7 @@ To customise these resource requests, see the central [nf-core instructions](htt
 
 Please also note the following:
 
-- Not all modules in this table will run in every pipeline run, nor that the tool will necessarily actually _use_ the requested amount.
+- Not all modules in this table will run in every pipeline run, nor will the tool necessarily _use_ the requested amount.
 - On certain module execution failures (such as out of memory), Nextflow will try and resubmit with increased resources with the equation `<resource value> * task.attempt`, up to a certain number of retries. See `conf/base.conf` for more information.
 - Some modules have a dedicate flag to fix the number of CPUs for reproducibility reasons (e.g. `--megahit_fix_cpu_1`). See the [parameters page](https://nf-co.re/mag/dev/parameters).
 
