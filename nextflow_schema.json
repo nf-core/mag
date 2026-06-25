@@ -440,12 +440,12 @@
                 "longreads_keep_percent": {
                     "type": "integer",
                     "default": 90,
-                    "description": "Keep this percent of bases."
+                    "description": "Keep this percent of bases. Only used by filtlong."
                 },
                 "longreads_length_weight": {
                     "type": "integer",
                     "default": 10,
-                    "description": "The higher the more important is read length when choosing the best reads.",
+                    "description": "The higher the more important is read length when choosing the best reads. Only used by filtlong.",
                     "help_text": "The default value focuses on length instead of quality to improve assembly size.\nIn order to assign equal weights to read lengths and read qualities set this parameter to 1.\nThis might be useful, for example, to benefit indirectly from the removal of short host reads (causing lower qualities for reads not overlapping filtered short reads)."
                 },
                 "keep_lambda": {
@@ -480,8 +480,13 @@
                 "longread_filtering_tool": {
                     "type": "string",
                     "description": "Specify which long read filtering tool to use.",
-                    "enum": ["filtlong", "nanoq", "chopper"],
-                    "default": "filtlong"
+                    "enum": ["chopper", "filtlong", "nanoq"],
+                    "default": "chopper"
+                },
+                "longread_filtering_by_shortreads": {
+                    "type": "boolean",
+                    "description": "Filter long reads against short reads when using filtlong.",
+                    "help_text": "Only applies when `--longread_filtering_tool filtlong` and short reads are supplied. When enabled, filtlong derives long read quality from k-mer matches to the short reads instead of the Phred scores. This can discard long reads not overlapping the short reads, leading to data loss if short read coverage is poor or the metagenomes differ. Disabled by default."
                 }
             }
         },
