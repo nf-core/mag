@@ -148,6 +148,7 @@ workflow MAG {
         ch_host_bowtie2index,
         ch_phix_db_file,
         params.skip_shortread_qc,
+        params.skip_fastqc,
     )
     ch_versions = ch_versions.mix(SHORTREAD_PREPROCESSING.out.versions)
     ch_multiqc_files = ch_multiqc_files.mix(
