@@ -138,7 +138,7 @@ The pipeline uses porechop_abi or porechop to perform adapter trimming of the lo
 
 ### Long read filtering
 
-The pipeline uses filtlong, chopper, or nanoq for quality filtering of long reads, specified with `--longread_filtering_tool <filtlong|chopper|nanoq>`. Only filtlong is capable of filtering long reads against short reads, and is therefore currently recommended in the hybrid mode. If chopper is selected as long read filtering tool, Lambda Phage removal will be performed with chopper as well, instead of nanolyse.
+The pipeline uses chopper, filtlong, or nanoq for quality filtering of long reads, specified with `--longread_filtering_tool <chopper|filtlong|nanoq>`. The default is chopper, which performs length/quality filtering and (unless `--keep_lambda` is set) Lambda Phage removal in a single step. Filtlong can filter long reads against short reads (opt-in via `--longread_filtering_by_shortreads`, see the note below). The `--longreads_keep_percent` and `--longreads_length_weight` parameters only apply to filtlong.
 
 <details markdown="1">
 <summary>Output files</summary>
@@ -148,14 +148,14 @@ The pipeline uses filtlong, chopper, or nanoq for quality filtering of long read
 - `QC_longreads/Nanoq/`
   - `[sample]_[run]_nanoq_filtered.fastq.gz`: The length and quality filtered reads in FASTQ from Nanoq
 - `QC_longreads/Chopper/`
-  - `[sample]_[run]_nanoq_chopper.fastq.gz`: The length and quality filtered, optionally phage lambda removed reads in FASTQ from Chopper
+  - `[sample]_[run]_chopper.fastq.gz`: The length and quality filtered, optionally phage lambda removed reads in FASTQ from Chopper
 
 </details>
 
 Trimmed and filtered FASTQ output directories and files will only exist if `--save_porechop_reads` and/or `--save_filtered_longreads` (respectively) are provided to the run command.
 
 No direct host read removal is performed for long reads.
-However, since within this pipeline filtlong uses a read quality based on k-mer matches to the already filtered short reads, reads not overlapping those short reads might be discarded. Note that this only applies when using filtlong as long read filtering tool.
+When filtlong is run with `--longread_filtering_by_shortreads` and short reads are supplied, it derives read quality from k-mer matches to the already filtered short reads instead of the Phred scores. Reads not overlapping those short reads might then be discarded, which can cause data loss if short read coverage is poor or the long- and short-read metagenomes differ.
 The lower the parameter `--longreads_length_weight`, the higher the impact of the read qualities for filtering.
 For further documentation see the [filtlong online documentation](https://github.com/rrwick/Filtlong).
 
