@@ -47,7 +47,7 @@ def main():
 
     with open(fasta) as handle:
         for record in SeqIO.parse(handle, "fasta"):
-            if len(record) < length:
+            if len(record) <= length:
                 out = get_handle(root, prefix + ".tooShort.fa")
             elif record.id not in metabinner_bins:
                 out = get_handle(root, prefix + ".unbinned.fa")
