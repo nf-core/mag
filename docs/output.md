@@ -140,7 +140,7 @@ The pipeline uses porechop_abi or porechop to perform adapter trimming of the lo
 
 The pipeline uses chopper, filtlong, or nanoq for quality filtering of long reads, specified with `--longread_filtering_tool <chopper|filtlong|nanoq>`.
 The default is chopper, which performs length/quality filtering and (unless `--keep_lambda` is set) Lambda Phage removal in a single step.
-Filtlong can filter long reads against short reads (opt-in via `--longread_filtering_by_shortreads`, see the note below).
+Filtlong can filter long reads against short reads (opt-in via `--filtlong_filtering_by_shortreads`, see the [note on long read filtering](usage.md#a-note-on-long-read-filtering)).
 The `--longreads_keep_percent` and `--longreads_length_weight` parameters only apply to filtlong.
 
 <details markdown="1">
@@ -158,8 +158,6 @@ The `--longreads_keep_percent` and `--longreads_length_weight` parameters only a
 Trimmed and filtered FASTQ output directories and files will only exist if `--save_porechop_reads` and/or `--save_filtered_longreads` (respectively) are provided to the run command.
 
 No direct host read removal is performed for long reads.
-When filtlong is run with `--longread_filtering_by_shortreads` and short reads are supplied, it derives read quality from k-mer matches to the already filtered short reads instead of the Phred scores.
-Reads not overlapping those short reads might then be discarded, which can cause data loss if short read coverage is poor or the long- and short-read metagenomes differ.
 The lower the parameter `--longreads_length_weight`, the higher the impact of the read qualities for filtering.
 For further documentation see the [filtlong online documentation](https://github.com/rrwick/Filtlong).
 

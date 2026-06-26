@@ -75,7 +75,7 @@ workflow LONGREAD_PREPROCESSING {
         }
         if (!params.skip_longread_filtering && !val_skip_qc) {
             if (params.longread_filtering_tool == 'filtlong') {
-                if (params.longread_filtering_by_shortreads) {
+                if (params.filtlong_filtering_by_shortreads) {
                     // join long and short reads by sample name
                     ch_short_reads_tmp = ch_short_reads.map { meta, sr -> [meta.id, sr] }
 
