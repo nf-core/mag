@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1030](https://github.com/nf-core/mag/pull/1030) - Updated to nf-core 4.0.2 template (by @dialvarezs)
 - [#1044](https://github.com/nf-core/mag/pull/1044) - Updated GTDB-Tk to v2.7.2 / GTDB r232 (by @dialvarezs)
 - [#1059](https://github.com/nf-core/mag/pull/1059) - Changed the default long read filtering tool from `filtlong` to `chopper` (by @dialvarezs)
+- [#1060](https://github.com/nf-core/mag/pull/1060) - Updated module tags to make them more specific (by @dialvarezs)
 
 ### `Fixed`
 
