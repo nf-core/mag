@@ -155,7 +155,7 @@ nextflow_pipeline {
                     "assembly QUAST: ${assembly_quast_logs.collect { log -> log.readLines().any { it.contains('Finished:') } }.every()}",
                     "binning QUAST: ${binning_quast_logs.collect { log -> log.readLines().any { it.contains('Finished:') } }.every()}",
                     "BUSCO: ${busco_logs.collect { log -> log.readLines().any { it.contains('BUSCO analysis done.') } }.every()}",
-                    "SemiBin2: ${semibin2_logs.collect { log -> log.readLines().any { it.contains('Finished binning.') } }.every()}",
+                    "SemiBin2: ${semibin2_logs.collect { log -> log.readLines().any { it.contains('Binning finished') } }.every()}",
                     "Bowtie2: ${bowtie2_logs.collect { log -> log.readLines().any { it.contains('overall alignment rate') } }.every()}",
                     "Prokka: ${prokka_logs.collect { log -> log.readLines().any { it.contains('Annotation finished successfully.') } }.every()}",
                 ).match("log-checks") },

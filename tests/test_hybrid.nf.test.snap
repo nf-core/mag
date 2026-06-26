@@ -280,7 +280,7 @@
             "assembly QUAST: true",
             "binning QUAST: true",
             "BUSCO: true",
-            "SemiBin2: false",
+            "SemiBin2: true",
             "Bowtie2: true",
             "Prokka: true"
         ],
