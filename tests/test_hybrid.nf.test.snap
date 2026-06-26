@@ -951,9 +951,9 @@
     },
     "summary-rows": {
         "content": [
-            "bin_summary.tsv nr. rows: 5",
-            "quast_bin_summary.tsv nr. rows: 5",
-            "busco_summary.tsv nr. rows: 5"
+            "bin_summary.tsv rows: 5",
+            "quast_bin_summary.tsv rows: 5",
+            "busco_summary.tsv rows: 5"
         ],
         "timestamp": "2026-06-26T15:16:43.543930305",
         "meta": {
