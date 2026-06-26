@@ -8,7 +8,7 @@ keywords:
   - statistics
   - damage
 components:
-  - pydamage_summary
+  - summarise/pydamagebins
 input:
   - ch_contig_pydamage_results:
       description: Output TSV files from pydamage summarise

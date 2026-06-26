@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
+- [#1057](https://github.com/nf-core/mag/pull/1057) - Add skip_fastqc switch (by @jorondo1)
 - [#908](https://github.com/nf-core/mag/pull/908) - Add nf-test snapshot for `test_single_end` profile (by @dialvarezs)
 - [#1028](https://github.com/nf-core/mag/pull/1028) - Add nf-test snapshot for `test_longread_alternatives` profile (by @dialvarezs)
 - [#1029](https://github.com/nf-core/mag/pull/908) - Add nf-test snapshot for `test_hybrid` profile (by @dialvarezs)
@@ -16,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1044](https://github.com/nf-core/mag/pull/1044) - Add new `--gtdbtk_place_species` parameter (by @dialvarezs)
 - [#1047](https://github.com/nf-core/mag/issues/1007) - Add `--gtdbtk_single_job` to run GTDB-Tk classification for all bins in a single job (requested by @sarah-shah-bioinf, by @dialvarezs)
 - [#1048](https://github.com/nf-core/mag/pull/1048) - Add optional PyPOLCA polishing for long-read assemblies via `--run_pypolca` (by @Harshita-sriv)
+- [#1059](https://github.com/nf-core/mag/pull/1059) - Add `--filtlong_filtering_by_shortreads` parameter to enable filtlong's short-read-based long read filtering (by @dialvarezs)
 
 ### `Changed`
 
@@ -23,6 +25,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1020](https://github.com/nf-core/mag/pull/1020) - Update CONCOCT subworkflow and modules (by @dialvarezs)
 - [#1030](https://github.com/nf-core/mag/pull/1030) - Updated to nf-core 4.0.2 template (by @dialvarezs)
 - [#1044](https://github.com/nf-core/mag/pull/1044) - Updated GTDB-Tk to v2.7.2 / GTDB r232 (by @dialvarezs)
+- [#1059](https://github.com/nf-core/mag/pull/1059) - Changed the default long read filtering tool from `filtlong` to `chopper` (by @dialvarezs)
+- [#1060](https://github.com/nf-core/mag/pull/1060) - Updated module tags to make them more specific (by @dialvarezs)
 
 ### `Fixed`
 
@@ -35,6 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1021](https://github.com/nf-core/mag/pull/1021) - Prevent execution of `gtdbtk/summary` when no bins pass QC (reported by @jfy133, fix by @dialvarezs)
 - [#1031](https://github.com/nf-core/mag/pull/1031) - Fix hybrid co-assembly with SPAdes (short & long reads with `--coassemble_group`) (fix by @d4straub)
 - [#1049](https://github.com/nf-core/mag/pull/1049) - Fix publishing issue with `gtdbtk/classifywf` (by @dialvarezs)
+- [#1058](https://github.com/nf-core/mag/pull/1058) - Make `create_metabinner_bins.py` save gzipped bin files to prevent NFS race condition (by @dialvarezs)
 
 ### `Dependencies`
 
