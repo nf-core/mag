@@ -569,7 +569,6 @@
                 "GenomeBinning/bin_summary.tsv",
                 "GenomeBinning/contig_to_bin/contig_to_bin_map.tsv",
                 "GenomeBinning/depths/bins/bin_depths_summary.tsv",
-                "GenomeBinning/depths/bins/versions.yml",
                 "GenomeBinning/depths/contigs/SPAdesHybrid-group-0-depth.txt.gz"
             ],
             [
@@ -642,8 +641,7 @@
                 "SPAdesHybrid-SemiBin2-group-0_0.fa.gz:md5,2b30803aaf880a9d4c99d41e4754cb2b",
                 "bin_summary.tsv:md5,d994b2bf1b88e002fbac287b089bd5d5",
                 "contig_to_bin_map.tsv:md5,72e8419cccfbed712d40b72449333dca",
-                "bin_depths_summary.tsv:md5,1bb4397dfe72ad4cab619de32a3f36f8",
-                "versions.yml:md5,553ee8a62e65d93ce1163bb16314da29"
+                "bin_depths_summary.tsv:md5,1bb4397dfe72ad4cab619de32a3f36f8"
             ]
         ],
         "timestamp": "2026-06-26T15:16:33.31572821",

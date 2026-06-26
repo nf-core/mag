@@ -221,7 +221,6 @@
                 "GenomeBinning/bin_summary.tsv",
                 "GenomeBinning/contig_to_bin/contig_to_bin_map.tsv",
                 "GenomeBinning/depths/bins/bin_depths_summary.tsv",
-                "GenomeBinning/depths/bins/versions.yml",
                 "GenomeBinning/depths/contigs/MEGAHIT-group-0-depth.txt.gz"
             ],
             [
@@ -240,14 +239,13 @@
                 "tiara_summary.tsv:md5,4cbfb0fd90ba48dc33d75d10c1eddb17",
                 "bin_summary.tsv:md5,cf879345b96d29b5b8584795504b81cf",
                 "contig_to_bin_map.tsv:md5,2bea485185ed808e9b5568438f603e2a",
-                "bin_depths_summary.tsv:md5,a73f2fc180a2c52038c88fbbfa6a95c3",
-                "versions.yml:md5,553ee8a62e65d93ce1163bb16314da29"
+                "bin_depths_summary.tsv:md5,a73f2fc180a2c52038c88fbbfa6a95c3"
             ]
         ],
-        "timestamp": "2026-05-04T09:01:05.436317997",
+        "timestamp": "2026-06-26T17:10:28.927694741",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.0"
+            "nextflow": "26.04.4"
         }
     },
     "content-checks": {

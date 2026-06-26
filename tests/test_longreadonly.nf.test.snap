@@ -372,7 +372,6 @@
                 "GenomeBinning/bin_summary.tsv",
                 "GenomeBinning/contig_to_bin/contig_to_bin_map.tsv",
                 "GenomeBinning/depths/bins/bin_depths_summary.tsv",
-                "GenomeBinning/depths/bins/versions.yml",
                 "GenomeBinning/depths/contigs/FLYE-minigut-depth.txt.gz",
                 "GenomeBinning/depths/contigs/METAMDBG-minigut-depth.txt.gz"
             ],
@@ -440,11 +439,10 @@
                 "quast_bin_summary.tsv:md5,6a3fcf654797655ec1334dc80199237a",
                 "bin_summary.tsv:md5,305d69623ff4112163025ff92a70bccc",
                 "contig_to_bin_map.tsv:md5,ef14a8638a6f639add03ca38ff22e4b9",
-                "bin_depths_summary.tsv:md5,b3efc921cfe1789a5a4763a12cfe50f8",
-                "versions.yml:md5,553ee8a62e65d93ce1163bb16314da29"
+                "bin_depths_summary.tsv:md5,b3efc921cfe1789a5a4763a12cfe50f8"
             ]
         ],
-        "timestamp": "2026-06-25T18:07:32.093613936",
+        "timestamp": "2026-06-26T17:16:11.919967336",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"

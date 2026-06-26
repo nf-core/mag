@@ -1428,7 +1428,6 @@
                 "GenomeBinning/bin_summary.tsv",
                 "GenomeBinning/contig_to_bin/contig_to_bin_map.tsv",
                 "GenomeBinning/depths/bins/bin_depths_summary.tsv",
-                "GenomeBinning/depths/bins/versions.yml",
                 "GenomeBinning/depths/contigs/MEGAHIT-test_minigut-depth.txt.gz",
                 "GenomeBinning/depths/contigs/MEGAHIT-test_minigut_sample2-depth.txt.gz"
             ],
@@ -1804,14 +1803,13 @@
                 "MEGAHIT-MetaBAT2-test_minigut.1_pydamage_bin_results.tsv:md5,3d2237a104a6ed0bf1f7efb52195ea82",
                 "bin_summary.tsv:md5,4c73af8b474fed74ca5ef59111606afe",
                 "contig_to_bin_map.tsv:md5,9a146f6bd0eaf2fd9605cf1885dd37bc",
-                "bin_depths_summary.tsv:md5,bd54b32dc4c741cd4edd2bbba51f6552",
-                "versions.yml:md5,553ee8a62e65d93ce1163bb16314da29"
+                "bin_depths_summary.tsv:md5,bd54b32dc4c741cd4edd2bbba51f6552"
             ]
         ],
-        "timestamp": "2026-05-27T09:54:51.697235507",
+        "timestamp": "2026-06-26T17:11:10.116501179",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.2"
+            "nextflow": "26.04.4"
         }
     },
     "viral": {
