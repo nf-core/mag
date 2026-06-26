@@ -444,9 +444,15 @@ This may result in a different set or none of contigs being evaluated in pyDamag
 
 ## A note on long read filtering
 
-Long reads are quality/length filtered with the tool set by `--longread_filtering_tool`. The default is `chopper`, which also removes Lambda Phage reads (unless `--keep_lambda` is set). Alternatives are `filtlong` and `nanoq`, which run in combination with NanoLyse to remove Lambda Phage reads.
+Long reads are quality/length filtered with the tool set by `--longread_filtering_tool`.
+The default is `chopper`, which also removes Lambda Phage reads (unless `--keep_lambda` is set).
+Alternatives are `filtlong` and `nanoq`, which run in combination with NanoLyse to remove Lambda Phage reads.
 
-`filtlong` can filter long reads against the short reads of the same sample. This is disabled by default and enabled with `--longread_filtering_by_shortreads`. When enabled, filtlong derives long read quality from k-mer matches to the (already filtered) short reads instead of the Phred scores. This can improve filtering when short read coverage is good and both libraries come from the same metagenome, but it can also discard long reads not overlapping the short reads, causing data loss when short read coverage is poor or the long- and short-read metagenomes differ. The `--longreads_keep_percent` and `--longreads_length_weight` parameters only apply to filtlong.
+`filtlong` can filter long reads against the short reads of the same sample.
+This is disabled by default and enabled with `--longread_filtering_by_shortreads`.
+When enabled, filtlong derives long read quality from k-mer matches to the (already filtered) short reads instead of the Phred scores.
+This can improve filtering when short read coverage is good and both libraries come from the same metagenome, but it can also discard long reads not overlapping the short reads, causing data loss when short read coverage is poor or the long- and short-read metagenomes differ.
+The `--longreads_keep_percent` and `--longreads_length_weight` parameters only apply to filtlong.
 
 ## A note on coverage estimation
 
