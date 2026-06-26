@@ -276,13 +276,13 @@
     },
     "log-checks": {
         "content": [
-            "SPAdes hybrid: true",
-            "assembly QUAST: true",
-            "binning QUAST: true",
-            "BUSCO: true",
-            "SemiBin2: true",
-            "Bowtie2: true",
-            "Prokka: true"
+            "spades_logs contains 'SPAdes pipeline finished.': true",
+            "assembly_quast_logs contains 'Finished:': true",
+            "binning_quast_logs contains 'Finished:': true",
+            "busco_logs contains 'BUSCO analysis done.': true",
+            "semibin2_logs contains 'Binning finished': true",
+            "bowtie2_logs contains 'overall alignment rate': true",
+            "prokka_logs contains 'Annotation finished successfully.': true"
         ],
         "timestamp": "2026-06-26T15:16:45.477590782",
         "meta": {
@@ -951,9 +951,9 @@
     },
     "summary-rows": {
         "content": [
-            "Bin summary: 5",
-            "QUAST bin summary: 5",
-            "BUSCO summary: 5"
+            "bin_summary.tsv nr. rows: 5",
+            "quast_bin_summary.tsv nr. rows: 5",
+            "busco_summary.tsv nr. rows: 5"
         ],
         "timestamp": "2026-06-26T15:16:43.543930305",
         "meta": {

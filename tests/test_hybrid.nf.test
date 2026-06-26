@@ -145,19 +145,19 @@ nextflow_pipeline {
                 ).match("content-checks") },
 
                 { assert snapshot(
-                    "Bin summary: ${bin_summary.csv(sep: '\t').rowCount}",
-                    "QUAST bin summary: ${quast_bin_summary.csv(sep: '\t').rowCount}",
-                    "BUSCO summary: ${busco_summary.csv(sep: '\t').rowCount}",
+                    "bin_summary.tsv nr. rows: ${bin_summary.csv(sep: '\t').rowCount}",
+                    "quast_bin_summary.tsv nr. rows: ${quast_bin_summary.csv(sep: '\t').rowCount}",
+                    "busco_summary.tsv nr. rows: ${busco_summary.csv(sep: '\t').rowCount}",
                 ).match("summary-rows") },
 
                 { assert snapshot(
-                    "SPAdes hybrid: ${spades_logs.collect { log -> log.readLines().any { it.contains('SPAdes pipeline finished.') } }.every()}",
-                    "assembly QUAST: ${assembly_quast_logs.collect { log -> log.readLines().any { it.contains('Finished:') } }.every()}",
-                    "binning QUAST: ${binning_quast_logs.collect { log -> log.readLines().any { it.contains('Finished:') } }.every()}",
-                    "BUSCO: ${busco_logs.collect { log -> log.readLines().any { it.contains('BUSCO analysis done.') } }.every()}",
-                    "SemiBin2: ${semibin2_logs.collect { log -> log.readLines().any { it.contains('Binning finished') } }.every()}",
-                    "Bowtie2: ${bowtie2_logs.collect { log -> log.readLines().any { it.contains('overall alignment rate') } }.every()}",
-                    "Prokka: ${prokka_logs.collect { log -> log.readLines().any { it.contains('Annotation finished successfully.') } }.every()}",
+                    "spades_logs contains 'SPAdes pipeline finished.': ${spades_logs.collect { log -> log.readLines().any { it.contains('SPAdes pipeline finished.') } }.every()}",
+                    "assembly_quast_logs contains 'Finished:': ${assembly_quast_logs.collect { log -> log.readLines().any { it.contains('Finished:') } }.every()}",
+                    "binning_quast_logs contains 'Finished:': ${binning_quast_logs.collect { log -> log.readLines().any { it.contains('Finished:') } }.every()}",
+                    "busco_logs contains 'BUSCO analysis done.': ${busco_logs.collect { log -> log.readLines().any { it.contains('BUSCO analysis done.') } }.every()}",
+                    "semibin2_logs contains 'Binning finished': ${semibin2_logs.collect { log -> log.readLines().any { it.contains('Binning finished') } }.every()}",
+                    "bowtie2_logs contains 'overall alignment rate': ${bowtie2_logs.collect { log -> log.readLines().any { it.contains('overall alignment rate') } }.every()}",
+                    "prokka_logs contains 'Annotation finished successfully.': ${prokka_logs.collect { log -> log.readLines().any { it.contains('Annotation finished successfully.') } }.every()}",
                 ).match("log-checks") },
             )
         }
