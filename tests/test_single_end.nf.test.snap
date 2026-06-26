@@ -1993,10 +1993,10 @@
                 "gtdbtk_summary.tsv:md5,75c4048c09d6126dc7f1019d138d33fe"
             ]
         ],
-        "timestamp": "2026-06-02T08:42:11.480762022",
+        "timestamp": "2026-06-26T15:12:30.111621895",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.3"
+            "nextflow": "26.04.4"
         }
     },
     "-profile test_single_end": {
