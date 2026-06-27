@@ -1428,7 +1428,6 @@
                 "GenomeBinning/bin_summary.tsv",
                 "GenomeBinning/contig_to_bin/contig_to_bin_map.tsv",
                 "GenomeBinning/depths/bins/bin_depths_summary.tsv",
-                "GenomeBinning/depths/bins/versions.yml",
                 "GenomeBinning/depths/contigs/MEGAHIT-test_minigut-depth.txt.gz",
                 "GenomeBinning/depths/contigs/MEGAHIT-test_minigut_sample2-depth.txt.gz"
             ],
@@ -1474,7 +1473,9 @@
                 "MEGAHIT-MetaBAT2-test_minigut.tooShort.fa.gz:md5,8ce2baf3b4f81a6f3331ce1b0c0d643f",
                 "MEGAHIT-MetaBAT2-test_minigut_sample2.lowDepth.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "MEGAHIT-MetaBAT2-test_minigut_sample2.tooShort.fa.gz:md5,38f8f37512946f14eee564fe77754577",
+                "MEGAHIT-MetaBAT2-test_minigut.unbinned.pooled.fa.gz:md5,5cd9bb6d7cf060ba7aa74eb2e4af6948",
                 "MEGAHIT-MetaBAT2-test_minigut.unbinned.remaining.fa.gz:md5,cfa7bab2966552185edb5f3174558765",
+                "MEGAHIT-MetaBAT2-test_minigut_sample2.unbinned.pooled.fa.gz:md5,327fd92572b692bff214c29d1cf09cde",
                 "MEGAHIT-MetaBAT2-test_minigut_sample2.unbinned.remaining.fa.gz:md5,aa4dac8443c4395c5bc1f4db0263dd07",
                 "MEGAHIT-CONCOCT-unclassified-unrefined-test_minigut_qa.txt:md5,7e659ca54d75c9242e6920727e4aaf26",
                 "MEGAHIT-CONCOCT-unclassified-unrefined-test_minigut_sample2_qa.txt:md5,04f52a788be4b721946d8c2a1879cdf6",
@@ -1804,14 +1805,13 @@
                 "MEGAHIT-MetaBAT2-test_minigut.1_pydamage_bin_results.tsv:md5,3d2237a104a6ed0bf1f7efb52195ea82",
                 "bin_summary.tsv:md5,4c73af8b474fed74ca5ef59111606afe",
                 "contig_to_bin_map.tsv:md5,9a146f6bd0eaf2fd9605cf1885dd37bc",
-                "bin_depths_summary.tsv:md5,bd54b32dc4c741cd4edd2bbba51f6552",
-                "versions.yml:md5,553ee8a62e65d93ce1163bb16314da29"
+                "bin_depths_summary.tsv:md5,bd54b32dc4c741cd4edd2bbba51f6552"
             ]
         ],
-        "timestamp": "2026-05-27T09:54:51.697235507",
+        "timestamp": "2026-06-27T02:53:58.111925518",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.2"
+            "nextflow": "26.04.4"
         }
     },
     "viral": {
@@ -1993,10 +1993,10 @@
                 "gtdbtk_summary.tsv:md5,75c4048c09d6126dc7f1019d138d33fe"
             ]
         ],
-        "timestamp": "2026-06-02T08:42:11.480762022",
+        "timestamp": "2026-06-26T15:12:30.111621895",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.3"
+            "nextflow": "26.04.4"
         }
     },
     "-profile test_single_end": {

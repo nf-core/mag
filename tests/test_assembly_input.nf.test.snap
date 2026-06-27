@@ -389,7 +389,6 @@
                 "GenomeBinning/bin_summary.tsv",
                 "GenomeBinning/contig_to_bin/contig_to_bin_map.tsv",
                 "GenomeBinning/depths/bins/bin_depths_summary.tsv",
-                "GenomeBinning/depths/bins/versions.yml",
                 "GenomeBinning/depths/contigs/MEGAHIT-test_minigut-depth.txt.gz",
                 "GenomeBinning/depths/contigs/MEGAHIT-test_minigut_sample2-depth.txt.gz",
                 "GenomeBinning/depths/contigs/SPAdes-test_minigut-depth.txt.gz",
@@ -537,9 +536,13 @@
                 "SPAdes-MetaBAT2-test_minigut.tooShort.fa.gz:md5,346dfe36b73b1527b2c7d54652f56354",
                 "SPAdes-MetaBAT2-test_minigut_sample2.lowDepth.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "SPAdes-MetaBAT2-test_minigut_sample2.tooShort.fa.gz:md5,9bddbc167f9f357f9ce51dfd4b3f90ea",
+                "MEGAHIT-MetaBAT2-test_minigut.unbinned.pooled.fa.gz:md5,2ef67a43a591a666c534d818b56cb063",
                 "MEGAHIT-MetaBAT2-test_minigut.unbinned.remaining.fa.gz:md5,d22ec86d2e92f05c494fef2702f843c2",
+                "MEGAHIT-MetaBAT2-test_minigut_sample2.unbinned.pooled.fa.gz:md5,86e0eea0c74fd34dc4ee1e1175e036e0",
                 "MEGAHIT-MetaBAT2-test_minigut_sample2.unbinned.remaining.fa.gz:md5,26500281c2553df9ba913417f325bea1",
+                "SPAdes-MetaBAT2-test_minigut.unbinned.pooled.fa.gz:md5,c3e7974ee419ebc3bf915cdba686ac8c",
                 "SPAdes-MetaBAT2-test_minigut.unbinned.remaining.fa.gz:md5,b7d946b4e8fb2263d1e26ce46bd5ee63",
+                "SPAdes-MetaBAT2-test_minigut_sample2.unbinned.pooled.fa.gz:md5,915df8b60f271b647f784586cbdb1da8",
                 "SPAdes-MetaBAT2-test_minigut_sample2.unbinned.remaining.fa.gz:md5,df1dd296842bcf4e9420485a5dad8191",
                 "full_table.tsv:md5,599081c38cfceb1124999cc391a13140",
                 "missing_busco_list.tsv:md5,da2d1bf8d167eecc9ddc6adac9cd5d3d",
@@ -554,14 +557,13 @@
                 "gunc_summary.tsv:md5,86dda28c13307b08d362185700ab7ccb",
                 "bin_summary.tsv:md5,60111a58bb0167ec1367f1e7463b7026",
                 "contig_to_bin_map.tsv:md5,4b640b728c3b42bfe65ea4a869708787",
-                "bin_depths_summary.tsv:md5,7153f759db72abb02e2ee3c2ab1b5e56",
-                "versions.yml:md5,553ee8a62e65d93ce1163bb16314da29"
+                "bin_depths_summary.tsv:md5,7153f759db72abb02e2ee3c2ab1b5e56"
             ]
         ],
-        "timestamp": "2026-04-09T06:20:28.133008138",
+        "timestamp": "2026-06-27T02:51:38.572839428",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.4"
         }
     },
     "csv-rows": {

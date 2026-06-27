@@ -102,7 +102,6 @@
                 "GenomeBinning/bin_summary.tsv",
                 "GenomeBinning/contig_to_bin/contig_to_bin_map.tsv",
                 "GenomeBinning/depths/bins/bin_depths_summary.tsv",
-                "GenomeBinning/depths/bins/versions.yml",
                 "GenomeBinning/depths/contigs/FLYE-minigut-depth.txt.gz"
             ],
             [
@@ -114,6 +113,7 @@
                 "FLYE-MaxBin2-minigut.noclass.remaining.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "FLYE-MetaBAT2-minigut.lowDepth.fa.gz:md5,79c2c6b99d5808d1ea1fb3bc70427837",
                 "FLYE-MetaBAT2-minigut.tooShort.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "FLYE-MetaBAT2-minigut.unbinned.pooled.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "FLYE-MetaBAT2-minigut.unbinned.remaining.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "full_table.tsv:md5,e508daf6f2d78d865f843082b186f429",
                 "missing_busco_list.tsv:md5,e23067e29e590c11349ca5bd313d8a8a",
@@ -121,14 +121,13 @@
                 "missing_busco_list.tsv:md5,5e98b7bf4cca84833076ce2b97b1e236",
                 "bin_summary.tsv:md5,6eed9ea4021e61af50ac5f1ce393edda",
                 "contig_to_bin_map.tsv:md5,6a781efcbb14d97f5c049c69c935c0da",
-                "bin_depths_summary.tsv:md5,985f843d43973cbfe5b49f0ad0628193",
-                "versions.yml:md5,553ee8a62e65d93ce1163bb16314da29"
+                "bin_depths_summary.tsv:md5,985f843d43973cbfe5b49f0ad0628193"
             ]
         ],
-        "timestamp": "2026-06-17T17:01:33.813434636",
+        "timestamp": "2026-06-27T02:53:13.562426222",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.3"
+            "nextflow": "26.04.4"
         }
     },
     "content-checks": {
