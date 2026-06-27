@@ -1,7 +1,7 @@
 {
     "-profile hybrid": {
         "content": [
-            60,
+            62,
             {
                 "ADJUST_MAXBIN2_EXT": {
                     "coreutils": 9.5
@@ -144,7 +144,7 @@
                 }
             }
         ],
-        "timestamp": "2026-06-25T13:22:30.581877242",
+        "timestamp": "2026-06-27T03:55:22.637919924",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
