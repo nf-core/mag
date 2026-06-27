@@ -110,6 +110,9 @@ nextflow_pipeline {
             def prokka_sqn = getAllFilesFromDir(
                 params.outdir, include: ['Annotation/Prokka/**/*.sqn']
             )
+            def prokka_tsv = getAllFilesFromDir(
+                params.outdir, include: ['Annotation/Prokka/**/*.tsv']
+            )
 
             // Output dir: Taxonomy
             def stable_name_taxonomy = getAllFilesFromDir(
@@ -154,6 +157,7 @@ nextflow_pipeline {
                     // Prokka annotation file checks
                     "Prokka GBK files contain LOCUS: ${prokka_gbk.every { f -> path("${f}").text.contains('LOCUS') }}",
                     "Prokka SQN files non-empty: ${prokka_sqn.every { f -> path("${f}").size() > 0 }}",
+                    "Prokka TSV row counts: ${prokka_tsv.collect { f -> "${f.name}=${path("${f}").csv(sep: '\t').rowCount}" }.sort()}",
                     // Summary row count checks
                     "Bin summary non-empty: ${bin_summary.csv(sep: '\t').rowCount > 0}",
                     "Bin summary row count matches bins: ${bin_summary.csv(sep: '\t').rowCount == maxbin2_bins.size() + metabat2_bins.size() + semibin2_bins.size()}",
@@ -164,23 +168,23 @@ nextflow_pipeline {
                 ).match("content-checks") },
 
                 { assert snapshot(
-                    "Bin summary: ${bin_summary.csv(sep: '\t').rowCount}",
-                    "BUSCO summary: ${busco_summary.csv(sep: '\t').rowCount}",
-                    "QUAST bin summary: ${quast_bin_summary.csv(sep: '\t').rowCount}",
-                    "BAT summary: ${bat_summary.text.readLines().size() - 1}",
-                    "GTDB-Tk summary: ${gtdbtk_summary.csv(sep: '\t').rowCount}",
+                    "bin_summary.tsv rows: ${bin_summary.csv(sep: '\t').rowCount}",
+                    "busco_summary.tsv rows: ${busco_summary.csv(sep: '\t').rowCount}",
+                    "quast_bin_summary.tsv rows: ${quast_bin_summary.csv(sep: '\t').rowCount}",
+                    "bat_summary.tsv rows: ${bat_summary.text.readLines().size() - 1}",
+                    "gtdbtk_summary.tsv rows: ${gtdbtk_summary.csv(sep: '\t').rowCount}",
                 ).match("summary-rows") },
 
                 { assert snapshot(
-                    "PhiX removal: ${remove_phix_logs.collect { log -> log.readLines().last() ==~ /[0-9.]+% overall alignment rate/ }.every()}",
-                    "MEGAHIT: ${megahit_logs.collect { log -> (log.readLines().last() =~ /ALL DONE. Time elapsed: [0-9.]+ seconds/).find() }.every()}",
-                    "SPAdes: ${spades_logs.collect { log -> log.readLines().any { it.contains('SPAdes pipeline finished.') } }.every()}",
-                    "assembly QUAST: ${assembly_quast_logs.collect { log -> log.readLines().any { it.contains('Finished:') } }.every()}",
-                    "Bowtie2 assembly alignment: ${bowtie2_assembly_logs.collect { log -> log.readLines().any { it.contains('overall alignment rate') } }.every()}",
-                    "binning QUAST: ${binning_quast_logs.collect { log -> log.readLines().any { it.contains('Finished:') } }.every()}",
-                    "BUSCO: ${busco_logs.collect { log -> log.readLines().any { it.contains('BUSCO analysis done.') } }.every()}",
-                    "SemiBin2: ${semibin2_logs.collect { log -> log.readLines().any { it.contains('Binning finished') } }.every()}",
-                    "Prokka: ${prokka_logs.collect { log -> log.readLines().any { it.contains('Annotation finished successfully.') } }.every()}",
+                    "remove_phix_logs match 'overall alignment rate': ${remove_phix_logs.every { log -> log.readLines().last() ==~ /[0-9.]+% overall alignment rate/ }}",
+                    "megahit_logs match 'ALL DONE. Time elapsed': ${megahit_logs.every { log -> (log.readLines().last() =~ /ALL DONE. Time elapsed: [0-9.]+ seconds/).find() }}",
+                    "spades_logs contains 'SPAdes pipeline finished.': ${spades_logs.every { log -> log.readLines().any { it.contains('SPAdes pipeline finished.') } }}",
+                    "assembly_quast_logs contains 'Finished:': ${assembly_quast_logs.every { log -> log.readLines().any { it.contains('Finished:') } }}",
+                    "bowtie2_assembly_logs contains 'overall alignment rate': ${bowtie2_assembly_logs.every { log -> log.readLines().any { it.contains('overall alignment rate') } }}",
+                    "binning_quast_logs contains 'Finished:': ${binning_quast_logs.every { log -> log.readLines().any { it.contains('Finished:') } }}",
+                    "busco_logs contains 'BUSCO analysis done': ${busco_logs.every { log -> log.readLines().any { it.contains('BUSCO analysis done') } }}",
+                    "semibin2_logs contains 'Binning finished': ${semibin2_logs.every { log -> log.readLines().any { it.contains('Binning finished') } }}",
+                    "prokka_logs contains 'Annotation finished successfully.': ${prokka_logs.every { log -> log.readLines().any { it.contains('Annotation finished successfully.') } }}",
                 ).match("log-checks") },
             )
         }

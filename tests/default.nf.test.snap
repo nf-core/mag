@@ -667,17 +667,17 @@
     },
     "log-checks": {
         "content": [
-            "PhiX removal: true",
-            "MEGAHIT: true",
-            "SPAdes: true",
-            "assembly QUAST: true",
-            "Bowtie2 assembly alignment: true",
-            "binning QUAST: true",
-            "BUSCO: false",
-            "SemiBin2: true",
-            "Prokka: true"
+            "remove_phix_logs match 'overall alignment rate': true",
+            "megahit_logs match 'ALL DONE. Time elapsed': true",
+            "spades_logs contains 'SPAdes pipeline finished.': true",
+            "assembly_quast_logs contains 'Finished:': true",
+            "bowtie2_assembly_logs contains 'overall alignment rate': true",
+            "binning_quast_logs contains 'Finished:': true",
+            "busco_logs contains 'BUSCO analysis done': true",
+            "semibin2_logs contains 'Binning finished': true",
+            "prokka_logs contains 'Annotation finished successfully.': true"
         ],
-        "timestamp": "2026-06-23T06:08:12.263363797",
+        "timestamp": "2026-06-27T14:06:34.544224383",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
@@ -1507,7 +1507,6 @@
                 "GenomeBinning/bin_summary.tsv",
                 "GenomeBinning/contig_to_bin/contig_to_bin_map.tsv",
                 "GenomeBinning/depths/bins/bin_depths_summary.tsv",
-                "GenomeBinning/depths/bins/versions.yml",
                 "GenomeBinning/depths/contigs/MEGAHIT-test_minigut-depth.txt.gz",
                 "GenomeBinning/depths/contigs/MEGAHIT-test_minigut_sample2-depth.txt.gz",
                 "GenomeBinning/depths/contigs/SPAdes-test_minigut-depth.txt.gz",
@@ -1556,9 +1555,13 @@
                 "SPAdes-MetaBAT2-test_minigut.unbinned.2.fa.gz:md5,8d8cf802dcf4cf2b7f7ef60b48e9d17e",
                 "SPAdes-MetaBAT2-test_minigut_sample2.unbinned.1.fa.gz:md5,4af78e4327511c2922d296515bb91ede",
                 "SPAdes-MetaBAT2-test_minigut_sample2.unbinned.2.fa.gz:md5,f0817f0772a1d04601474d3ada861aa9",
+                "MEGAHIT-MetaBAT2-test_minigut.unbinned.pooled.fa.gz:md5,ca6484eec7eaf321787a47173532bd6b",
                 "MEGAHIT-MetaBAT2-test_minigut.unbinned.remaining.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "MEGAHIT-MetaBAT2-test_minigut_sample2.unbinned.pooled.fa.gz:md5,36c8d4c273c730fa9210b65305e67224",
                 "MEGAHIT-MetaBAT2-test_minigut_sample2.unbinned.remaining.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SPAdes-MetaBAT2-test_minigut.unbinned.pooled.fa.gz:md5,047e394c48a2affb663858093f2321c0",
                 "SPAdes-MetaBAT2-test_minigut.unbinned.remaining.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "SPAdes-MetaBAT2-test_minigut_sample2.unbinned.pooled.fa.gz:md5,55ad54ca11b8cdae6afb53549ecb07f3",
                 "SPAdes-MetaBAT2-test_minigut_sample2.unbinned.remaining.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "full_table.tsv:md5,9a6d2b228a29283233de065c8c89248a",
                 "missing_busco_list.tsv:md5,c137a528505c9c5cdd0e8c9f29189c9c",
@@ -1798,11 +1801,10 @@
                 "SPAdes-SemiBin2-test_minigut_1.fa.gz:md5,40ec6d89351332f6f34a442441757ca7",
                 "bin_summary.tsv:md5,85c0b3a15c2494c730b1d7387172df68",
                 "contig_to_bin_map.tsv:md5,c5434e4d14baa4453dbafa41e858eaa3",
-                "bin_depths_summary.tsv:md5,3dacec5981315f96e7b9a7d1dadee766",
-                "versions.yml:md5,553ee8a62e65d93ce1163bb16314da29"
+                "bin_depths_summary.tsv:md5,3dacec5981315f96e7b9a7d1dadee766"
             ]
         ],
-        "timestamp": "2026-06-23T06:08:06.19718658",
+        "timestamp": "2026-06-27T14:06:31.303943392",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
@@ -1819,6 +1821,7 @@
             "SemiBin2 bins non-empty: true",
             "Prokka GBK files contain LOCUS: true",
             "Prokka SQN files non-empty: true",
+            "Prokka TSV row counts: [MEGAHIT-MaxBin2-test_minigut.001.tsv=746, MEGAHIT-MaxBin2-test_minigut.002.tsv=770, MEGAHIT-MetaBAT2-test_minigut.1.tsv=716, MEGAHIT-MetaBAT2-test_minigut.2.tsv=627, MEGAHIT-MetaBAT2-test_minigut.unbinned.1.tsv=24, MEGAHIT-MetaBAT2-test_minigut.unbinned.2.tsv=25, MEGAHIT-MetaBAT2-test_minigut_sample2.unbinned.1.tsv=6, MEGAHIT-MetaBAT2-test_minigut_sample2.unbinned.2.tsv=5, MEGAHIT-SemiBin2-test_minigut_0.tsv=1503, SPAdes-MaxBin2-test_minigut.001.tsv=736, SPAdes-MaxBin2-test_minigut.002.tsv=827, SPAdes-MaxBin2-test_minigut_sample2.001.tsv=188, SPAdes-MaxBin2-test_minigut_sample2.noclass.1.tsv=5, SPAdes-MaxBin2-test_minigut_sample2.noclass.2.tsv=4, SPAdes-MetaBAT2-test_minigut.1.tsv=777, SPAdes-MetaBAT2-test_minigut.2.tsv=721, SPAdes-MetaBAT2-test_minigut.unbinned.1.tsv=14, SPAdes-MetaBAT2-test_minigut.unbinned.2.tsv=15, SPAdes-MetaBAT2-test_minigut_sample2.unbinned.1.tsv=13, SPAdes-MetaBAT2-test_minigut_sample2.unbinned.2.tsv=6, SPAdes-SemiBin2-test_minigut_0.tsv=721, SPAdes-SemiBin2-test_minigut_1.tsv=818]",
             "Bin summary non-empty: true",
             "Bin summary row count matches bins: false",
             "BUSCO summary non-empty: true",
@@ -1826,7 +1829,7 @@
             "BAT summary non-empty: true",
             "GTDB-Tk summary non-empty: true"
         ],
-        "timestamp": "2026-06-23T06:08:10.854321937",
+        "timestamp": "2026-06-27T14:06:34.159943885",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
@@ -2373,13 +2376,13 @@
     },
     "summary-rows": {
         "content": [
-            "Bin summary: 22",
-            "BUSCO summary: 22",
-            "QUAST bin summary: 22",
-            "BAT summary: 12",
-            "GTDB-Tk summary: 22"
+            "bin_summary.tsv rows: 22",
+            "busco_summary.tsv rows: 22",
+            "quast_bin_summary.tsv rows: 22",
+            "bat_summary.tsv rows: 12",
+            "gtdbtk_summary.tsv rows: 22"
         ],
-        "timestamp": "2026-06-23T06:08:11.549032267",
+        "timestamp": "2026-06-27T14:06:34.335343881",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
