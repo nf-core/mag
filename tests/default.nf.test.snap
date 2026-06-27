@@ -674,7 +674,7 @@
             "Bowtie2 assembly alignment: true",
             "binning QUAST: true",
             "BUSCO: false",
-            "SemiBin2: false",
+            "SemiBin2: true",
             "Prokka: true"
         ],
         "timestamp": "2026-06-23T06:08:12.263363797",

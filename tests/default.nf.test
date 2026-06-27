@@ -179,7 +179,7 @@ nextflow_pipeline {
                     "Bowtie2 assembly alignment: ${bowtie2_assembly_logs.collect { log -> log.readLines().any { it.contains('overall alignment rate') } }.every()}",
                     "binning QUAST: ${binning_quast_logs.collect { log -> log.readLines().any { it.contains('Finished:') } }.every()}",
                     "BUSCO: ${busco_logs.collect { log -> log.readLines().any { it.contains('BUSCO analysis done.') } }.every()}",
-                    "SemiBin2: ${semibin2_logs.collect { log -> log.readLines().any { it.contains('Finished binning.') } }.every()}",
+                    "SemiBin2: ${semibin2_logs.collect { log -> log.readLines().any { it.contains('Binning finished') } }.every()}",
                     "Prokka: ${prokka_logs.collect { log -> log.readLines().any { it.contains('Annotation finished successfully.') } }.every()}",
                 ).match("log-checks") },
             )
