@@ -221,7 +221,6 @@
                 "GenomeBinning/bin_summary.tsv",
                 "GenomeBinning/contig_to_bin/contig_to_bin_map.tsv",
                 "GenomeBinning/depths/bins/bin_depths_summary.tsv",
-                "GenomeBinning/depths/bins/versions.yml",
                 "GenomeBinning/depths/contigs/MEGAHIT-group-0-depth.txt.gz"
             ],
             [
@@ -229,6 +228,7 @@
                 "MEGAHIT-MetaBAT2-group-0.2.fa.gz:md5,a5479825817e5ebe4735bbcd428345eb",
                 "MEGAHIT-MetaBAT2-group-0.lowDepth.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "MEGAHIT-MetaBAT2-group-0.tooShort.fa.gz:md5,90667cb1a77c0bc39e7e8441bfdf2305",
+                "MEGAHIT-MetaBAT2-group-0.unbinned.pooled.fa.gz:md5,5b3cbd9e81fa0c990cb19018f23b8151",
                 "MEGAHIT-MetaBAT2-group-0.unbinned.remaining.fa.gz:md5,e694b456ad5d1b3bc1b7af499090d0e6",
                 "refseq_db.faa:md5,0d53f0a1964cc202e99f4851839273a3",
                 "refseq_db.faa:md5,0d53f0a1964cc202e99f4851839273a3",
@@ -240,14 +240,13 @@
                 "tiara_summary.tsv:md5,4cbfb0fd90ba48dc33d75d10c1eddb17",
                 "bin_summary.tsv:md5,cf879345b96d29b5b8584795504b81cf",
                 "contig_to_bin_map.tsv:md5,2bea485185ed808e9b5568438f603e2a",
-                "bin_depths_summary.tsv:md5,a73f2fc180a2c52038c88fbbfa6a95c3",
-                "versions.yml:md5,553ee8a62e65d93ce1163bb16314da29"
+                "bin_depths_summary.tsv:md5,a73f2fc180a2c52038c88fbbfa6a95c3"
             ]
         ],
-        "timestamp": "2026-05-04T09:01:05.436317997",
+        "timestamp": "2026-06-27T02:52:55.941786883",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.0"
+            "nextflow": "26.04.4"
         }
     },
     "content-checks": {
