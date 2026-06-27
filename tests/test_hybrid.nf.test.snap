@@ -660,9 +660,10 @@
             "SemiBin2 bins non-empty: true",
             "Prokka GBK files contain LOCUS: true",
             "Prokka SQN files non-empty: true",
+            "Prokka TSV row counts: [SPAdesHybrid-MaxBin2-group-0.001.tsv=1015, SPAdesHybrid-MaxBin2-group-0.002.tsv=813, SPAdesHybrid-MetaBAT2-group-0.1.tsv=806, SPAdesHybrid-MetaBAT2-group-0.2.tsv=719, SPAdesHybrid-SemiBin2-group-0_0.tsv=1537]",
             "Bin summary row count matches bins: true"
         ],
-        "timestamp": "2026-06-26T15:16:41.84143552",
+        "timestamp": "2026-06-27T04:41:03.122422151",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"

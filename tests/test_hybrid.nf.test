@@ -108,6 +108,9 @@ nextflow_pipeline {
             def prokka_sqn = getAllFilesFromDir(
                 params.outdir, include: ['Annotation/Prokka/**/*.sqn']
             )
+            def prokka_tsv = getAllFilesFromDir(
+                params.outdir, include: ['Annotation/Prokka/**/*.tsv']
+            )
 
             // Output directory: multiqc
             def stable_name_multiqc = getAllFilesFromDir(
@@ -132,14 +135,15 @@ nextflow_pipeline {
 
                 { assert snapshot(
                     // FASTA content checks
-                    "MaxBin2 bins non-empty: ${maxbin2_bins.collect { file -> path("${file}").fasta.size() > 0 }.every()}",
-                    "MaxBin2 unbinned/discarded non-empty: ${maxbin2_unbins.collect { file -> path("${file}").fasta.size() >= 0 }.every()}",
-                    "MetaBAT2 bins non-empty: ${metabat2_bins.collect { file -> path("${file}").fasta.size() > 0 }.every()}",
-                    "MetaBAT2 unbinned/discarded non-empty: ${metabat2_unbins.collect { file -> path("${file}").fasta.size() >= 0 }.every()}",
-                    "SemiBin2 bins non-empty: ${semibin2_bins.collect { file -> path("${file}").fasta.size() > 0 }.every()}",
+                    "MaxBin2 bins non-empty: ${maxbin2_bins.collect { f -> path("${f}").fasta.size() > 0 }.every()}",
+                    "MaxBin2 unbinned/discarded non-empty: ${maxbin2_unbins.collect { f -> path("${f}").fasta.size() >= 0 }.every()}",
+                    "MetaBAT2 bins non-empty: ${metabat2_bins.collect { f -> path("${f}").fasta.size() > 0 }.every()}",
+                    "MetaBAT2 unbinned/discarded non-empty: ${metabat2_unbins.collect { f -> path("${f}").fasta.size() >= 0 }.every()}",
+                    "SemiBin2 bins non-empty: ${semibin2_bins.collect { f -> path("${f}").fasta.size() > 0 }.every()}",
                     // Prokka annotation file checks
-                    "Prokka GBK files contain LOCUS: ${prokka_gbk.collect { file -> path("${file}").text.contains('LOCUS') }.every()}",
-                    "Prokka SQN files non-empty: ${prokka_sqn.collect { file -> path("${file}").size() > 0 }.every()}",
+                    "Prokka GBK files contain LOCUS: ${prokka_gbk.collect { f -> path("${f}").text.contains('LOCUS') }.every()}",
+                    "Prokka SQN files non-empty: ${prokka_sqn.collect { f -> path("${f}").size() > 0 }.every()}",
+                    "Prokka TSV row counts: ${prokka_tsv.collect { f -> "${f.name}=${path("${f}").csv(sep: '\t').rowCount}" }.sort()}",
                     // Summary row count checks
                     "Bin summary row count matches bins: ${bin_summary.csv(sep: '\t').rowCount == maxbin2_bins.size() + metabat2_bins.size() + semibin2_bins.size()}",
                 ).match("content-checks") },
