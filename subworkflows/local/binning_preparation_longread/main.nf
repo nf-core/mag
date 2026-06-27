@@ -36,8 +36,27 @@ workflow LONGREAD_BINNING_PREPARATION {
 
     MINIMAP2_ASSEMBLY_ALIGN(ch_minimap2_input_reads, ch_minimap2_input_idx, true, 'bai', false, false)
 
-    ch_grouped_mappings_reads = MINIMAP2_ASSEMBLY_ALIGN.out.bam.groupTuple(by: 0)
-    ch_grouped_mappings_index = MINIMAP2_ASSEMBLY_ALIGN.out.index.groupTuple(by: 0)
+    // expected number of mappings (read sets) per assembly, resolved early from
+    // the alignment inputs so groupTuple can release each assembly's group as
+    // soon as it is complete instead of waiting for every MINIMAP2_ASSEMBLY_ALIGN
+    // task to finish
+    ch_mapping_counts = ch_minimap2_input
+        .map { meta_idx, _index, _meta_reads, _reads -> [[meta_idx.assembler, meta_idx.id], 1] }
+        .groupTuple()
+        .map { key, counts -> [key, counts.size()] }
+
+    ch_grouped_mappings_reads = MINIMAP2_ASSEMBLY_ALIGN.out.bam
+        .map { meta, bam -> [[meta.assembler, meta.id], meta, bam] }
+        .combine(ch_mapping_counts, by: 0)
+        .map { key, meta, bam, count -> [groupKey(key, count), meta, bam] }
+        .groupTuple()
+        .map { _key, metas, bams -> [metas[0], bams] }
+    ch_grouped_mappings_index = MINIMAP2_ASSEMBLY_ALIGN.out.index
+        .map { meta, bai -> [[meta.assembler, meta.id], meta, bai] }
+        .combine(ch_mapping_counts, by: 0)
+        .map { key, meta, bai, count -> [groupKey(key, count), meta, bai] }
+        .groupTuple()
+        .map { _key, metas, bais -> [metas[0], bais] }
     ch_grouped_mappings = ch_grouped_mappings_reads
         .combine(ch_grouped_mappings_index, by: 0)
         .combine(ch_assemblies, by: 0)
