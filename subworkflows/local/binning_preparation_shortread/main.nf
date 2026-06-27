@@ -47,10 +47,24 @@ workflow SHORTREAD_BINNING_PREPARATION {
     BOWTIE2_ASSEMBLY_ALIGN(ch_bowtie2_input)
     ch_versions = ch_versions.mix(BOWTIE2_ASSEMBLY_ALIGN.out.versions)
 
+    // expected number of mappings (read sets) per assembly, resolved early from
+    // the alignment inputs so groupTuple can release each assembly's group as
+    // soon as it is complete instead of waiting for every BOWTIE2_ASSEMBLY_ALIGN
+    // task to finish
+    ch_mapping_counts = ch_bowtie2_input
+        .map { assembly_meta, _assembly, _index, _reads_meta, _reads ->
+            [[assembly_meta.assembler, assembly_meta.id], 1]
+        }
+        .groupTuple()
+        .map { key, counts -> [key, counts.size()] }
+
     // group mappings for one assembly
     ch_grouped_mappings = BOWTIE2_ASSEMBLY_ALIGN.out.mappings
-        .groupTuple(by: 0)
-        .map { meta, assembly, bams, bais -> [meta, assembly.sort()[0], bams, bais] }
+        .map { meta, assembly, bam, bai -> [[meta.assembler, meta.id], meta, assembly, bam, bai] }
+        .combine(ch_mapping_counts, by: 0)
+        .map { key, meta, assembly, bam, bai, count -> [groupKey(key, count), meta, assembly, bam, bai] }
+        .groupTuple()
+        .map { _key, metas, assemblies, bams, bais -> [metas[0], assemblies.sort()[0], bams, bais] }
 
     emit:
     bowtie2_assembly_multiqc = BOWTIE2_ASSEMBLY_ALIGN.out.log.map { _assembly_meta, _reads_meta, log -> [log] }
