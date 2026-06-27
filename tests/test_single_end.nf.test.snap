@@ -1473,7 +1473,9 @@
                 "MEGAHIT-MetaBAT2-test_minigut.tooShort.fa.gz:md5,8ce2baf3b4f81a6f3331ce1b0c0d643f",
                 "MEGAHIT-MetaBAT2-test_minigut_sample2.lowDepth.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "MEGAHIT-MetaBAT2-test_minigut_sample2.tooShort.fa.gz:md5,38f8f37512946f14eee564fe77754577",
+                "MEGAHIT-MetaBAT2-test_minigut.unbinned.pooled.fa.gz:md5,5cd9bb6d7cf060ba7aa74eb2e4af6948",
                 "MEGAHIT-MetaBAT2-test_minigut.unbinned.remaining.fa.gz:md5,cfa7bab2966552185edb5f3174558765",
+                "MEGAHIT-MetaBAT2-test_minigut_sample2.unbinned.pooled.fa.gz:md5,327fd92572b692bff214c29d1cf09cde",
                 "MEGAHIT-MetaBAT2-test_minigut_sample2.unbinned.remaining.fa.gz:md5,aa4dac8443c4395c5bc1f4db0263dd07",
                 "MEGAHIT-CONCOCT-unclassified-unrefined-test_minigut_qa.txt:md5,7e659ca54d75c9242e6920727e4aaf26",
                 "MEGAHIT-CONCOCT-unclassified-unrefined-test_minigut_sample2_qa.txt:md5,04f52a788be4b721946d8c2a1879cdf6",
@@ -1806,7 +1808,7 @@
                 "bin_depths_summary.tsv:md5,bd54b32dc4c741cd4edd2bbba51f6552"
             ]
         ],
-        "timestamp": "2026-06-26T17:11:10.116501179",
+        "timestamp": "2026-06-27T02:53:58.111925518",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"

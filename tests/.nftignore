@@ -15,7 +15,6 @@ GenomeBinning/CONCOCT/stats/*.tsv
 GenomeBinning/DASTool/*.log
 GenomeBinning/depths/**/*-depth.txt.gz
 GenomeBinning/depths/bins/*.png
-GenomeBinning/MetaBAT2/unbinned/discarded/*.unbinned.pooled.fa.gz
 GenomeBinning/QC/busco_summary.tsv
 GenomeBinning/QC/BUSCO/**/.checkpoint
 GenomeBinning/QC/BUSCO/**/{logs,prodigal_output,busco_sequences,hmmer_output}/**

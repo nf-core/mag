@@ -392,7 +392,9 @@
                 "FLYE-MetaBAT2-minigut.tooShort.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "METAMDBG-MetaBAT2-minigut.lowDepth.fa.gz:md5,d670a2539f464a69b0a346b76b78b519",
                 "METAMDBG-MetaBAT2-minigut.tooShort.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "FLYE-MetaBAT2-minigut.unbinned.pooled.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "FLYE-MetaBAT2-minigut.unbinned.remaining.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "METAMDBG-MetaBAT2-minigut.unbinned.pooled.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "METAMDBG-MetaBAT2-minigut.unbinned.remaining.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "full_table.tsv:md5,d87b66603db9f528a6b0f729f47ee885",
                 "missing_busco_list.tsv:md5,3b69462a400a1b30df19ecf9a251a46b",
@@ -442,7 +444,7 @@
                 "bin_depths_summary.tsv:md5,b3efc921cfe1789a5a4763a12cfe50f8"
             ]
         ],
-        "timestamp": "2026-06-26T17:16:11.919967336",
+        "timestamp": "2026-06-27T02:58:44.699022739",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"

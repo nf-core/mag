@@ -583,6 +583,7 @@
                 "SPAdesHybrid-MetaBAT2-group-0.2.fa.gz:md5,90de2b36a2213fe8b90165619bca9a33",
                 "SPAdesHybrid-MetaBAT2-group-0.lowDepth.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "SPAdesHybrid-MetaBAT2-group-0.tooShort.fa.gz:md5,bb8e4f7c33b79803656726c5fb0cd9cc",
+                "SPAdesHybrid-MetaBAT2-group-0.unbinned.pooled.fa.gz:md5,646b952d9f6eba4df4e468a7e3ff2bac",
                 "SPAdesHybrid-MetaBAT2-group-0.unbinned.remaining.fa.gz:md5,f37eb74d2eb953771bbbce69b3d3e20c",
                 "full_table.tsv:md5,68d3cee29eefdbcba39e3aca2bd246a5",
                 "missing_busco_list.tsv:md5,ba1a75dd8193b92e6b8ea8b7426c2f53",
@@ -644,7 +645,7 @@
                 "bin_depths_summary.tsv:md5,1bb4397dfe72ad4cab619de32a3f36f8"
             ]
         ],
-        "timestamp": "2026-06-26T15:16:33.31572821",
+        "timestamp": "2026-06-27T02:57:03.609293665",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
