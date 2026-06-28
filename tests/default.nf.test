@@ -68,11 +68,17 @@ nextflow_pipeline {
             def maxbin2_unbins = getAllFilesFromDir(
                 params.outdir, include: ['GenomeBinning/MaxBin2/{discarded,unbinned/*}/*.fa.gz']
             )
+            def maxbin2_kept_unbins = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/MaxBin2/unbinned/*.fa.gz']
+            )
             def metabat2_bins = getAllFilesFromDir(
                 params.outdir, include: ['GenomeBinning/MetaBAT2/bins/*.fa.gz']
             )
             def metabat2_unbins = getAllFilesFromDir(
                 params.outdir, include: ['GenomeBinning/MetaBAT2/{discarded,unbinned/*}/*.fa.gz']
+            )
+            def metabat2_kept_unbins = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/MetaBAT2/unbinned/*.fa.gz']
             )
             def semibin2_bins = getAllFilesFromDir(
                 params.outdir, include: ['GenomeBinning/SemiBin2/bins/*.fa.gz']
@@ -160,7 +166,7 @@ nextflow_pipeline {
                     "Prokka TSV row counts: ${prokka_tsv.collect { f -> "${f.name}=${path("${f}").csv(sep: '\t').rowCount}" }.sort()}",
                     // Summary row count checks
                     "Bin summary non-empty: ${bin_summary.csv(sep: '\t').rowCount > 0}",
-                    "Bin summary row count matches bins: ${bin_summary.csv(sep: '\t').rowCount == maxbin2_bins.size() + metabat2_bins.size() + semibin2_bins.size()}",
+                    "Bin summary row count matches bins: ${bin_summary.csv(sep: '\t').rowCount == maxbin2_bins.size() + maxbin2_kept_unbins.size() + metabat2_bins.size() + metabat2_kept_unbins.size() + semibin2_bins.size()}",
                     "BUSCO summary non-empty: ${busco_summary.csv(sep: '\t').rowCount > 0}",
                     "QUAST bin summary non-empty: ${quast_bin_summary.csv(sep: '\t').rowCount > 0}",
                     "BAT summary non-empty: ${bat_summary.text.readLines().size() > 1}",
