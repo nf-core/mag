@@ -646,6 +646,10 @@
                     "type": "boolean",
                     "description": "Skip ALE"
                 },
+                "ale_per_base_output": {
+                    "type": "boolean",
+                    "description": "Enable ALE per-base output. This output can be very large (tens of GB)."
+                },
                 "skip_quast": {
                     "type": "boolean",
                     "description": "Skip metaQUAST."
