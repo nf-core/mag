@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1057](https://github.com/nf-core/mag/pull/1057) - Add skip_fastqc switch (by @jorondo1)
 - [#908](https://github.com/nf-core/mag/pull/908) - Add nf-test snapshot for `test_single_end` profile (by @dialvarezs)
 - [#1028](https://github.com/nf-core/mag/pull/1028) - Add nf-test snapshot for `test_longread_alternatives` profile (by @dialvarezs)
+- [#1029](https://github.com/nf-core/mag/pull/908) - Add nf-test snapshot for `test_hybrid` profile (by @dialvarezs)
 - [#1037](https://github.com/nf-core/mag/pull/1037) - Complement usage documentation with guidance on pipeline defaults, choices and alternatives (by @d4straub and @jfy133 )
 - [#1039](https://github.com/nf-core/mag/pull/1039) - Add nf-test snapshot for `test_longread` profile (started by @brovolia, finished by @dialvarezs)
 - [#1041](https://github.com/nf-core/mag/pull/1041) - Refined and corrected unclear section of metromap (by @jfy133)
@@ -27,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1044](https://github.com/nf-core/mag/pull/1044) - Updated GTDB-Tk to v2.7.2 / GTDB r232 (by @dialvarezs)
 - [#1059](https://github.com/nf-core/mag/pull/1059) - Changed the default long read filtering tool from `filtlong` to `chopper` (by @dialvarezs)
 - [#1060](https://github.com/nf-core/mag/pull/1060) - Updated module tags to make them more specific (by @dialvarezs)
+- [#1061](https://github.com/nf-core/mag/pull/1061) - Speed up binning by not waiting for all mapping jobs to finish before starting (by @dialvarezs)
 - [#1063](https://github.com/nf-core/mag/pull/1063) - Run ALE with `--metagenome` and disable its per-base output by default (by @dialvarezs)
 
 ### `Fixed`
