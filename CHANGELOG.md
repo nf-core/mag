@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1047](https://github.com/nf-core/mag/issues/1007) - Add `--gtdbtk_single_job` to run GTDB-Tk classification for all bins in a single job (requested by @sarah-shah-bioinf, by @dialvarezs)
 - [#1048](https://github.com/nf-core/mag/pull/1048) - Add optional PyPOLCA polishing for long-read assemblies via `--run_pypolca` (by @Harshita-sriv)
 - [#1059](https://github.com/nf-core/mag/pull/1059) - Add `--filtlong_filtering_by_shortreads` parameter to enable filtlong's short-read-based long read filtering (by @dialvarezs)
+- [#1063](https://github.com/nf-core/mag/pull/1063) - Add new `--ale_per_base_output` parameter to enable ALE per-base output (by @dialvarezs)
 
 ### `Changed`
 
@@ -28,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1059](https://github.com/nf-core/mag/pull/1059) - Changed the default long read filtering tool from `filtlong` to `chopper` (by @dialvarezs)
 - [#1060](https://github.com/nf-core/mag/pull/1060) - Updated module tags to make them more specific (by @dialvarezs)
 - [#1061](https://github.com/nf-core/mag/pull/1061) - Speed up binning by not waiting for all mapping jobs to finish before starting (by @dialvarezs)
+- [#1063](https://github.com/nf-core/mag/pull/1063) - Run ALE with `--metagenome` and disable its per-base output by default (by @dialvarezs)
 
 ### `Fixed`
 
