@@ -1821,7 +1821,6 @@
             "SemiBin2 bins non-empty: true",
             "Prokka GBK files contain LOCUS: true",
             "Prokka SQN files non-empty: true",
-            "Prokka TSV row counts: [MEGAHIT-MaxBin2-test_minigut.001.tsv=746, MEGAHIT-MaxBin2-test_minigut.002.tsv=770, MEGAHIT-MetaBAT2-test_minigut.1.tsv=716, MEGAHIT-MetaBAT2-test_minigut.2.tsv=627, MEGAHIT-MetaBAT2-test_minigut.unbinned.1.tsv=24, MEGAHIT-MetaBAT2-test_minigut.unbinned.2.tsv=25, MEGAHIT-MetaBAT2-test_minigut_sample2.unbinned.1.tsv=6, MEGAHIT-MetaBAT2-test_minigut_sample2.unbinned.2.tsv=5, MEGAHIT-SemiBin2-test_minigut_0.tsv=1503, SPAdes-MaxBin2-test_minigut.001.tsv=736, SPAdes-MaxBin2-test_minigut.002.tsv=827, SPAdes-MaxBin2-test_minigut_sample2.001.tsv=188, SPAdes-MaxBin2-test_minigut_sample2.noclass.1.tsv=5, SPAdes-MaxBin2-test_minigut_sample2.noclass.2.tsv=4, SPAdes-MetaBAT2-test_minigut.1.tsv=777, SPAdes-MetaBAT2-test_minigut.2.tsv=721, SPAdes-MetaBAT2-test_minigut.unbinned.1.tsv=14, SPAdes-MetaBAT2-test_minigut.unbinned.2.tsv=15, SPAdes-MetaBAT2-test_minigut_sample2.unbinned.1.tsv=13, SPAdes-MetaBAT2-test_minigut_sample2.unbinned.2.tsv=6, SPAdes-SemiBin2-test_minigut_0.tsv=721, SPAdes-SemiBin2-test_minigut_1.tsv=818]",
             "Bin summary non-empty: true",
             "Bin summary row count matches bins: true",
             "BUSCO summary non-empty: true",
@@ -1829,7 +1828,7 @@
             "BAT summary non-empty: true",
             "GTDB-Tk summary non-empty: true"
         ],
-        "timestamp": "2026-06-28T17:18:16.628800719",
+        "timestamp": "2026-06-30T11:49:59.812424533",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
@@ -2374,15 +2373,16 @@
             "nextflow": "26.04.4"
         }
     },
-    "summary-rows": {
+    "tsv-rows": {
         "content": [
             "bin_summary.tsv rows: 22",
             "busco_summary.tsv rows: 22",
             "quast_bin_summary.tsv rows: 22",
             "bat_summary.tsv rows: 12",
-            "gtdbtk_summary.tsv rows: 22"
+            "gtdbtk_summary.tsv rows: 22",
+            "prokka *.tsv rows: [MEGAHIT-MaxBin2-test_minigut.001.tsv=746, MEGAHIT-MaxBin2-test_minigut.002.tsv=770, MEGAHIT-MetaBAT2-test_minigut.1.tsv=716, MEGAHIT-MetaBAT2-test_minigut.2.tsv=627, MEGAHIT-MetaBAT2-test_minigut.unbinned.1.tsv=24, MEGAHIT-MetaBAT2-test_minigut.unbinned.2.tsv=25, MEGAHIT-MetaBAT2-test_minigut_sample2.unbinned.1.tsv=6, MEGAHIT-MetaBAT2-test_minigut_sample2.unbinned.2.tsv=5, MEGAHIT-SemiBin2-test_minigut_0.tsv=1503, SPAdes-MaxBin2-test_minigut.001.tsv=736, SPAdes-MaxBin2-test_minigut.002.tsv=827, SPAdes-MaxBin2-test_minigut_sample2.001.tsv=188, SPAdes-MaxBin2-test_minigut_sample2.noclass.1.tsv=5, SPAdes-MaxBin2-test_minigut_sample2.noclass.2.tsv=4, SPAdes-MetaBAT2-test_minigut.1.tsv=777, SPAdes-MetaBAT2-test_minigut.2.tsv=721, SPAdes-MetaBAT2-test_minigut.unbinned.1.tsv=14, SPAdes-MetaBAT2-test_minigut.unbinned.2.tsv=15, SPAdes-MetaBAT2-test_minigut_sample2.unbinned.1.tsv=13, SPAdes-MetaBAT2-test_minigut_sample2.unbinned.2.tsv=6, SPAdes-SemiBin2-test_minigut_0.tsv=721, SPAdes-SemiBin2-test_minigut_1.tsv=818]"
         ],
-        "timestamp": "2026-06-27T14:06:34.335343881",
+        "timestamp": "2026-06-30T11:49:59.9286071",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"

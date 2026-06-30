@@ -163,7 +163,6 @@ nextflow_pipeline {
                     // Prokka annotation file checks
                     "Prokka GBK files contain LOCUS: ${prokka_gbk.every { f -> path("${f}").text.contains('LOCUS') }}",
                     "Prokka SQN files non-empty: ${prokka_sqn.every { f -> path("${f}").size() > 0 }}",
-                    "Prokka TSV row counts: ${prokka_tsv.collect { f -> "${f.name}=${path("${f}").csv(sep: '\t').rowCount}" }.sort()}",
                     // Summary row count checks
                     "Bin summary non-empty: ${bin_summary.csv(sep: '\t').rowCount > 0}",
                     "Bin summary row count matches bins: ${bin_summary.csv(sep: '\t').rowCount == maxbin2_bins.size() + maxbin2_kept_unbins.size() + metabat2_bins.size() + metabat2_kept_unbins.size() + semibin2_bins.size()}",
@@ -179,7 +178,8 @@ nextflow_pipeline {
                     "quast_bin_summary.tsv rows: ${quast_bin_summary.csv(sep: '\t').rowCount}",
                     "bat_summary.tsv rows: ${bat_summary.text.readLines().size() - 1}",
                     "gtdbtk_summary.tsv rows: ${gtdbtk_summary.csv(sep: '\t').rowCount}",
-                ).match("summary-rows") },
+                    "prokka *.tsv rows: ${prokka_tsv.collect { f -> "${f.name}=${path("${f}").csv(sep: '\t').rowCount}" }.sort()}",
+                ).match("tsv-rows") },
 
                 { assert snapshot(
                     "remove_phix_logs match 'overall alignment rate': ${remove_phix_logs.every { log -> log.readLines().last() ==~ /[0-9.]+% overall alignment rate/ }}",
