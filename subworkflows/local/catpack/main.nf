@@ -10,7 +10,7 @@ include { CATPACK_PREPARE                               } from '../../../modules
 include { CATPACK_SUMMARISE as CATPACK_SUMMARISE_BINS   } from '../../../modules/nf-core/catpack/summarise/main'
 include { CATPACK_SUMMARISE as CATPACK_SUMMARISE_UNBINS } from '../../../modules/nf-core/catpack/summarise/main'
 include { FIND_CONCATENATE as CONCAT_UNBINS             } from '../../../modules/nf-core/find/concatenate/main'
-include { UNTAR as CAT_DB_UNTAR                         } from '../../../modules/nf-core/untar/main'
+include { UNTAR as CATPACK_DB_UNTAR                     } from '../../../modules/nf-core/untar/main'
 
 workflow CATPACK {
     take:
@@ -28,10 +28,10 @@ workflow CATPACK {
 
     if (params.cat_db) {
         if (params.cat_db.endsWith('.tar.gz')) {
-            CAT_DB_UNTAR([[id: 'cat_db'], file(params.cat_db, checkIfExists: true)])
-            ch_versions = ch_versions.mix(CAT_DB_UNTAR.out.versions)
+            CATPACK_DB_UNTAR([[id: 'cat_db'], file(params.cat_db, checkIfExists: true)])
+            ch_versions = ch_versions.mix(CATPACK_DB_UNTAR.out.versions)
 
-            ch_cat_db_dir = CAT_DB_UNTAR.out.untar
+            ch_cat_db_dir = CATPACK_DB_UNTAR.out.untar
         }
         else {
             ch_cat_db_dir = channel.fromPath(params.cat_db, checkIfExists: true, type: 'dir')

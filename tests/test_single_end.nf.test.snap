@@ -2048,11 +2048,11 @@
                 "CATPACK_BINS": {
                     "catpack": 6.0
                 },
+                "CATPACK_DB_UNTAR": {
+                    "untar": 1.34
+                },
                 "CATPACK_SUMMARISE_BINS": {
                     "catpack": 6.0
-                },
-                "CAT_DB_UNTAR": {
-                    "untar": 1.34
                 },
                 "CHECKM_LINEAGEWF": {
                     "checkm": "1.2.5"
@@ -2177,7 +2177,7 @@
                 }
             }
         ],
-        "timestamp": "2026-07-01T12:40:11.565195696",
+        "timestamp": "2026-07-01T14:11:17.330331246",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
