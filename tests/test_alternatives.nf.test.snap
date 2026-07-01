@@ -1,7 +1,7 @@
 {
     "-profile test_alternatives": {
         "content": [
-            34,
+            32,
             {
                 "BIN_SUMMARY": {
                     "pandas": "1.4.3",
@@ -47,9 +47,6 @@
                 },
                 "FASTQC_TRIMMED": {
                     "fastqc": "0.12.1"
-                },
-                "GUNZIP_BINS": {
-                    "gunzip": 1.13
                 },
                 "GUNZIP_SHORTREAD_ASSEMBLIES": {
                     "gunzip": 1.13
@@ -97,10 +94,10 @@
                 }
             }
         ],
-        "timestamp": "2026-05-04T09:01:04.93757437",
+        "timestamp": "2026-07-01T12:41:02.130441472",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.0"
+            "nextflow": "26.04.4"
         }
     },
     "qc": {

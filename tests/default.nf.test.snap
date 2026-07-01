@@ -73,13 +73,7 @@
                     "pandas": "1.4.3",
                     "python": "3.10.6"
                 },
-                "GUNZIP_BINS": {
-                    "gunzip": 1.13
-                },
                 "GUNZIP_SHORTREAD_ASSEMBLIES": {
-                    "gunzip": 1.13
-                },
-                "GUNZIP_UNBINS": {
                     "gunzip": 1.13
                 },
                 "MAG_DEPTHS": {
@@ -136,10 +130,10 @@
                 }
             }
         ],
-        "timestamp": "2026-05-27T09:38:57.61754217",
+        "timestamp": "2026-07-01T12:42:01.544744947",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.2"
+            "nextflow": "26.04.4"
         }
     },
     "multiqc": {
