@@ -48,7 +48,6 @@ workflow CATPACK {
         // download and build the database
         log.warn("[nf-core/mag]: Downloading CAT-nr database - this is very large and take a long time!")
         CATPACK_DOWNLOAD([[id: 'cat_db_nr'], 'nr'])
-        ch_versions = ch_versions.mix(CATPACK_DOWNLOAD.out.versions)
 
         CATPACK_PREPARE(
             CATPACK_DOWNLOAD.out.fasta,
@@ -56,7 +55,6 @@ workflow CATPACK {
             CATPACK_DOWNLOAD.out.nodes.map { _meta, nodes -> nodes },
             CATPACK_DOWNLOAD.out.acc2tax.map { _meta, acc2tax -> acc2tax },
         )
-        ch_versions = ch_versions.mix(CATPACK_PREPARE.out.versions)
 
         ch_cat_db = CATPACK_PREPARE.out
     }
@@ -75,10 +73,8 @@ workflow CATPACK {
         [[:], []],
         '.fa',
     )
-    ch_versions = ch_versions.mix(CATPACK_BINS.out.versions)
 
     CATPACK_ADDNAMES_BINS(CATPACK_BINS.out.bin2classification, ch_cat_db.taxonomy)
-    ch_versions = ch_versions.mix(CATPACK_ADDNAMES_BINS.out.versions)
 
     bin_summary = CATPACK_ADDNAMES_BINS.out.txt
         .map { _meta, summary -> summary }
@@ -91,7 +87,6 @@ workflow CATPACK {
 
     if (!params.cat_allow_unofficial_lineages) {
         CATPACK_SUMMARISE_BINS(CATPACK_ADDNAMES_BINS.out.txt, [[:], []])
-        ch_versions = ch_versions.mix(CATPACK_SUMMARISE_BINS.out.versions)
     }
 
     /*
@@ -110,10 +105,8 @@ workflow CATPACK {
             [[:], []],
             [[:], []],
         )
-        ch_versions = ch_versions.mix(CATPACK_UNBINS.out.versions)
 
         CATPACK_ADDNAMES_UNBINS(CATPACK_UNBINS.out.contig2classification, ch_cat_db.taxonomy)
-        ch_versions = ch_versions.mix(CATPACK_ADDNAMES_UNBINS.out.versions)
 
         if (!params.cat_allow_unofficial_lineages) {
             ch_unbin_classification = CATPACK_ADDNAMES_UNBINS.out.txt
@@ -124,7 +117,6 @@ workflow CATPACK {
                 }
 
             CATPACK_SUMMARISE_UNBINS(ch_unbin_classification.names, ch_unbin_classification.contigs)
-            ch_versions = ch_versions.mix(CATPACK_SUMMARISE_UNBINS.out.versions)
         }
     }
 
