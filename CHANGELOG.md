@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1060](https://github.com/nf-core/mag/pull/1060) - Updated module tags to make them more specific (by @dialvarezs)
 - [#1061](https://github.com/nf-core/mag/pull/1061) - Speed up binning by not waiting for all mapping jobs to finish before starting (by @dialvarezs)
 - [#1063](https://github.com/nf-core/mag/pull/1063) - Run ALE with `--metagenome` and disable its per-base output by default (by @dialvarezs)
+- [#1065](https://github.com/nf-core/mag/pull/1065) - Remove usage of GUNZIP module for bins and unbinned contigs, feeding downstream processes with uncompressed files (by @dialvarezs)
 
 ### `Fixed`
 
