@@ -11,8 +11,8 @@ process RENAME_POSTDASTOOL {
     tuple val(meta), path(bins)
 
     output:
-    tuple val(meta), path("${meta.assembler}-*Refined-${meta.id}.*.fa", includeInputs: true), optional: true, emit: refined_bins
-    tuple val(meta), path("${meta.assembler}-DASToolUnbinned-${meta.id}.fa"), optional: true, emit: refined_unbins
+    tuple val(meta), path("${meta.assembler}-*Refined-${meta.id}.*.fa.gz"), optional: true, emit: refined_bins
+    tuple val(meta), path("${meta.assembler}-DASToolUnbinned-${meta.id}.fa.gz"), optional: true, emit: refined_unbins
     path "versions.yml", emit: versions
 
     script:
@@ -20,6 +20,9 @@ process RENAME_POSTDASTOOL {
     if [[ -f unbinned.fa ]]; then
         mv unbinned.fa ${meta.assembler}-DASToolUnbinned-${meta.id}.fa
     fi
+
+    # re-compress bins to match the gzipped bins used across the rest of the pipeline
+    gzip -f *.fa
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

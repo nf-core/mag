@@ -66,29 +66,15 @@ workflow BINNING_REFINEMENT {
 
     // Prepare bins for downstream analysis (separate from unbins, add 'binner' info and group)
     // use DAS Tool as 'binner' info allowing according grouping of refined bin sets,
-    // while keeping information about original binning method in filenames and used binnames, e.g. "*-MaxBin2Refined-*.fa"
+    // while keeping information about original binning method in filenames and used binnames, e.g. "*-MaxBin2Refined-*.fa.gz"
     // (alternatively one could think of adding, for example, meta.orig_binner, if this would simplify code)
-    ch_dastool_bins_newmeta = DASTOOL_DASTOOL.out.bins
-        .transpose()
-        .map { meta, bin ->
-            if (bin.name != "unbinned.fa") {
-                def meta_new = meta + [binner: 'DASTool']
-                [meta_new, bin]
-            }
-        }
-        .groupTuple()
-        .map { meta, bin_list ->
-            def domain_class = params.bin_domain_classification ? 'prokarya' : 'unclassified'
-            def meta_new = meta + [refinement: 'dastool_refined', domain: domain_class]
-            [meta_new, bin_list]
-        }
-
     ch_input_for_renamedastool = DASTOOL_DASTOOL.out.bins.map { meta, bin_list ->
         def domain_class = params.bin_domain_classification ? 'prokarya' : 'unclassified'
         def meta_new = meta + [refinement: 'dastool_refined', binner: 'DASTool', domain: domain_class]
         [meta_new, bin_list]
     }
 
+    // RENAME_POSTDASTOOL renames the unbinned file and re-compresses all bins to .fa.gz
     RENAME_POSTDASTOOL(ch_input_for_renamedastool)
     ch_versions = ch_versions.mix(RENAME_POSTDASTOOL.out.versions)
 
@@ -98,7 +84,7 @@ workflow BINNING_REFINEMENT {
     }
 
     emit:
-    refined_bins   = ch_dastool_bins_newmeta
+    refined_bins   = RENAME_POSTDASTOOL.out.refined_bins
     refined_unbins = refined_unbins
     versions       = ch_versions
 }

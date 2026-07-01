@@ -455,7 +455,7 @@ workflow MAG {
         // then use collectFile to save this as a tsv file.
         ch_allcontig2binmap = ch_input_for_postbinning
             .transpose()
-            .map { meta, binfile -> [meta + [bin_id: binfile.name], binfile] }
+            .map { meta, binfile -> [meta + [bin_id: binfile.name - ~/\.gz$/], binfile] }
             .splitFasta(record: [header: true], elem: 1)
             .map { meta, contig_header ->
                 "assembly_id\tcontig_id\tbinner\tbin_id\n${meta['assembler']}-${meta['id']}\t${contig_header['header']}\t${meta['binner']}\t${meta['bin_id']}\n"
@@ -578,7 +578,7 @@ workflow MAG {
             ch_bins_for_prokka = ch_input_for_postbinning
                 .transpose()
                 .map { meta, bin ->
-                    def meta_new = meta + [id: bin.getBaseName()]
+                    def meta_new = meta + [id: bin.getName() - ~/\.fa(sta)?(\.gz)?$/]
                     [meta_new, bin]
                 }
                 .filter { meta, _bin ->
@@ -600,7 +600,7 @@ workflow MAG {
                     meta.domain in ["eukarya", "unclassified"]
                 }
                 .map { meta, bin ->
-                    def meta_new = meta + [id: bin.getBaseName()]
+                    def meta_new = meta + [id: bin.getName() - ~/\.fa(sta)?(\.gz)?$/]
                     [meta_new, bin]
                 }
 

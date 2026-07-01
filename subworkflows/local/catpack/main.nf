@@ -71,7 +71,7 @@ workflow CATPACK {
         ch_cat_db.taxonomy,
         [[:], []],
         [[:], []],
-        '.fa',
+        '.fa.gz',
     )
 
     CATPACK_ADDNAMES_BINS(CATPACK_BINS.out.bin2classification, ch_cat_db.taxonomy)

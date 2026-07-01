@@ -11,12 +11,12 @@ process TIARA_CLASSIFY {
     tuple val(meta), path(classification), path(contig2bin), path(bins)
 
     output:
-    tuple val(meta), path("eukarya/*.fa"),            emit: eukarya_bins, optional: true
-    tuple val(meta), path("prokarya/*.fa"),           emit: prokarya_bins, optional: true
-    tuple val(meta), path("bacteria/*.fa"),           emit: bacteria_bins, optional: true
-    tuple val(meta), path("archaea/*.fa"),            emit: archaea_bins, optional: true
-    tuple val(meta), path("organelle/*.fa"),          emit: organelle_bins, optional: true
-    tuple val(meta), path("unknown/*.fa"),            emit: unknown_bins, optional: true
+    tuple val(meta), path("eukarya/*.fa.gz"),         emit: eukarya_bins, optional: true
+    tuple val(meta), path("prokarya/*.fa.gz"),        emit: prokarya_bins, optional: true
+    tuple val(meta), path("bacteria/*.fa.gz"),        emit: bacteria_bins, optional: true
+    tuple val(meta), path("archaea/*.fa.gz"),         emit: archaea_bins, optional: true
+    tuple val(meta), path("organelle/*.fa.gz"),       emit: organelle_bins, optional: true
+    tuple val(meta), path("unknown/*.fa.gz"),         emit: unknown_bins, optional: true
     tuple val(meta), path("*.binclassification.tsv"), emit: bin_classifications
     path 'versions.yml',                              emit: versions
 
