@@ -873,6 +873,12 @@
                     "description": "Specify the longest length a bin should be to retain for downstream processing (in base pairs). By default no limit.",
                     "help_text": "This can speed up downstream processing by removing 'nonsense' bins (e.g. badly binned single short-contig bins, or unnaturally large bins). By default there is no upper limit on size of bins allowed to pass."
                 },
+                "bin_seqkit_stats_max_forks": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": "Limit the number of concurrent SEQKIT_STATS jobs used for bin size calculation.",
+                    "help_text": "Bins from each binner are sent to SEQKIT_STATS as soon as that binner finishes, which can spawn many short jobs (roughly samples * assemblers * binners). On schedulers that dislike large numbers of tiny jobs, set this to cap how many run at once."
+                },
                 "bin_concoct_chunksize": {
                     "type": "integer",
                     "default": 10000,

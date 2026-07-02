@@ -166,18 +166,12 @@ workflow BINNING {
         ch_bins_for_seqkit = ch_bins_for_seqkit.mix(ch_semibin_bins.transpose())
     }
 
-    // group bins into per-sample process and not flood clusters with thousands of seqkit jobs
-    ch_bins_for_seqkitstats = ch_bins_for_seqkit
-        .map { meta, bin ->
-            [[id: meta.id], bin]
-        }
-        .groupTuple(by: 0)
-
+    // Performance note: grouping seqkit jobs by sample across binners locks
+    // downstream bin QC until the slowest binner finishes.
     // extract max length of all entries in each bin, to allow filtering out of too small bins
-    SEQKIT_STATS(ch_bins_for_seqkitstats)
+    SEQKIT_STATS(ch_bins_for_seqkit)
     ch_versions = ch_versions.mix(SEQKIT_STATS.out.versions)
 
-    //
     ch_seqkitstats_results = SEQKIT_STATS.out.stats
         .splitCsv(sep: '\t', header: true, strip: true)
         .map { _meta, row ->

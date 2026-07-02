@@ -2001,7 +2001,7 @@
     },
     "-profile test_single_end": {
         "content": [
-            130,
+            155,
             {
                 "ADAPTERREMOVAL_SE": {
                     "adapterremoval": "2.3.2"
@@ -2177,7 +2177,7 @@
                 }
             }
         ],
-        "timestamp": "2026-07-01T14:11:17.330331246",
+        "timestamp": "2026-07-02T09:06:08.551830601",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
