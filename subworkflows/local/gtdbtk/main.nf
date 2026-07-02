@@ -50,7 +50,7 @@ workflow GTDBTK {
     // 3. Branch based on completeness/contamination
     ch_filtered_bins = ch_bins
         .transpose()
-        .map { meta, bin -> [bin.getName(), bin, meta] }
+        .map { meta, bin -> [bin.getName() - ~/\.gz$/, bin, meta] }
         .join(ch_bin_metrics)
         .map { bin_name, bin, meta, _bin_qc_tool, completeness, contamination ->
             [bin_name, meta, bin, completeness, contamination]

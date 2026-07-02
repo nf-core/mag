@@ -127,9 +127,6 @@
                 "GUNZIP_ASSEMBLYINPUT": {
                     "gunzip": 1.13
                 },
-                "GUNZIP_BINS": {
-                    "gunzip": 1.13
-                },
                 "MAG_DEPTHS": {
                     "pandas": "1.1.5",
                     "python": "3.6.7"
@@ -312,12 +309,12 @@
                 "GenomeBinning/DASTool/SPAdes-DASTool-test_minigut_DASTool_contig2bin.tsv",
                 "GenomeBinning/DASTool/SPAdes-DASTool-test_minigut_DASTool_summary.tsv",
                 "GenomeBinning/DASTool/SPAdes-DASTool-test_minigut_allBins.eval",
-                "GenomeBinning/DASTool/bins/MEGAHIT-MetaBAT2Refined-test_minigut.1.fa",
-                "GenomeBinning/DASTool/bins/MEGAHIT-MetaBAT2Refined-test_minigut.2.fa",
-                "GenomeBinning/DASTool/bins/SPAdes-CONCOCTRefined-test_minigut.7.fa",
-                "GenomeBinning/DASTool/bins/SPAdes-MaxBin2Refined-test_minigut.001_sub.fa",
-                "GenomeBinning/DASTool/unbinned/MEGAHIT-DASToolUnbinned-test_minigut.fa",
-                "GenomeBinning/DASTool/unbinned/SPAdes-DASToolUnbinned-test_minigut.fa",
+                "GenomeBinning/DASTool/bins/MEGAHIT-MetaBAT2Refined-test_minigut.1.fa.gz",
+                "GenomeBinning/DASTool/bins/MEGAHIT-MetaBAT2Refined-test_minigut.2.fa.gz",
+                "GenomeBinning/DASTool/bins/SPAdes-CONCOCTRefined-test_minigut.7.fa.gz",
+                "GenomeBinning/DASTool/bins/SPAdes-MaxBin2Refined-test_minigut.001_sub.fa.gz",
+                "GenomeBinning/DASTool/unbinned/MEGAHIT-DASToolUnbinned-test_minigut.fa.gz",
+                "GenomeBinning/DASTool/unbinned/SPAdes-DASToolUnbinned-test_minigut.fa.gz",
                 "GenomeBinning/MaxBin2/MEGAHIT-MaxBin2-test_minigut.abundance",
                 "GenomeBinning/MaxBin2/MEGAHIT-MaxBin2-test_minigut.summary",
                 "GenomeBinning/MaxBin2/SPAdes-MaxBin2-test_minigut.abundance",
@@ -504,12 +501,12 @@
                 "SPAdes-DASTool-test_minigut_DASTool_contig2bin.tsv:md5,07c1af95dd0da4c11de390c2f188fe6c",
                 "SPAdes-DASTool-test_minigut_DASTool_summary.tsv:md5,29dcb8c0665f0b129f6fd66a83112380",
                 "SPAdes-DASTool-test_minigut_allBins.eval:md5,966f10c283df77494d43ed7ce5106a03",
-                "MEGAHIT-MetaBAT2Refined-test_minigut.1.fa:md5,489a5f7ba3795477e09d2d396fe535c3",
-                "MEGAHIT-MetaBAT2Refined-test_minigut.2.fa:md5,1addf634bca82af85d36621585f93f52",
-                "SPAdes-CONCOCTRefined-test_minigut.7.fa:md5,4be1cc2c06f329e0102cb27b03e30624",
-                "SPAdes-MaxBin2Refined-test_minigut.001_sub.fa:md5,d1edb5fdd4a5edffd8366a9efd3471c1",
-                "MEGAHIT-DASToolUnbinned-test_minigut.fa:md5,5b68d8b2df39cb4ab46299d9a09f1243",
-                "SPAdes-DASToolUnbinned-test_minigut.fa:md5,4161096564c7f9328ad5f8aa425b2864",
+                "MEGAHIT-MetaBAT2Refined-test_minigut.1.fa.gz:md5,489a5f7ba3795477e09d2d396fe535c3",
+                "MEGAHIT-MetaBAT2Refined-test_minigut.2.fa.gz:md5,1addf634bca82af85d36621585f93f52",
+                "SPAdes-CONCOCTRefined-test_minigut.7.fa.gz:md5,4be1cc2c06f329e0102cb27b03e30624",
+                "SPAdes-MaxBin2Refined-test_minigut.001_sub.fa.gz:md5,d1edb5fdd4a5edffd8366a9efd3471c1",
+                "MEGAHIT-DASToolUnbinned-test_minigut.fa.gz:md5,5b68d8b2df39cb4ab46299d9a09f1243",
+                "SPAdes-DASToolUnbinned-test_minigut.fa.gz:md5,4161096564c7f9328ad5f8aa425b2864",
                 "MEGAHIT-MaxBin2-test_minigut.abundance:md5,435c92e8806d92755833204b4c105dd2",
                 "MEGAHIT-MaxBin2-test_minigut.summary:md5,5388c6b4b6f6f068d2345ea79cc4b06b",
                 "SPAdes-MaxBin2-test_minigut.abundance:md5,041d2a70c3dc9b51ba53c8c5732750d3",
@@ -560,7 +557,7 @@
                 "bin_depths_summary.tsv:md5,7153f759db72abb02e2ee3c2ab1b5e56"
             ]
         ],
-        "timestamp": "2026-06-27T02:51:38.572839428",
+        "timestamp": "2026-07-01T12:37:58.231232017",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"

@@ -152,7 +152,7 @@
     },
     "-profile longreadonly_alternatives": {
         "content": [
-            32,
+            30,
             {
                 "ADJUST_MAXBIN2_EXT": {
                     "coreutils": 9.5
@@ -190,9 +190,6 @@
                 },
                 "FLYE": {
                     "flye": "2.9.5-b1801"
-                },
-                "GUNZIP_BINS": {
-                    "gunzip": 1.13
                 },
                 "GUNZIP_LONGREAD_ASSEMBLIES": {
                     "gunzip": 1.13
@@ -251,10 +248,10 @@
                 }
             }
         ],
-        "timestamp": "2026-06-18T03:35:00.775314288",
+        "timestamp": "2026-07-01T12:39:06.679580102",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.3"
+            "nextflow": "26.04.4"
         }
     },
     "multiqc": {
