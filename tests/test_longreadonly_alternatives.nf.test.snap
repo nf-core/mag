@@ -152,7 +152,7 @@
     },
     "-profile longreadonly_alternatives": {
         "content": [
-            30,
+            31,
             {
                 "ADJUST_MAXBIN2_EXT": {
                     "coreutils": 9.5
@@ -248,7 +248,7 @@
                 }
             }
         ],
-        "timestamp": "2026-07-01T12:39:06.679580102",
+        "timestamp": "2026-07-02T09:05:50.025115976",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"

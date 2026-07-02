@@ -523,7 +523,7 @@
     },
     "-profile test": {
         "content": [
-            185,
+            195,
             {
                 "ADJUST_MAXBIN2_EXT": {
                     "coreutils": 9.5
@@ -667,7 +667,7 @@
                 }
             }
         ],
-        "timestamp": "2026-07-01T14:13:12.388545651",
+        "timestamp": "2026-07-02T09:06:43.547383072",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
