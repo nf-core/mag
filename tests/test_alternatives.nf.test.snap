@@ -1,7 +1,7 @@
 {
     "-profile test_alternatives": {
         "content": [
-            33,
+            32,
             {
                 "BIN_SUMMARY": {
                     "pandas": "1.4.3",
@@ -94,7 +94,7 @@
                 }
             }
         ],
-        "timestamp": "2026-07-02T09:08:00.14337692",
+        "timestamp": "2026-07-03T03:27:43.992492694",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"

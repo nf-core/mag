@@ -65,7 +65,7 @@
     },
     "-profile assembly_input": {
         "content": [
-            283,
+            194,
             {
                 "ADJUST_MAXBIN2_EXT": {
                     "coreutils": 9.5
@@ -169,7 +169,7 @@
                 }
             }
         ],
-        "timestamp": "2026-07-02T09:04:37.208948677",
+        "timestamp": "2026-07-03T03:23:47.433515064",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
