@@ -471,11 +471,11 @@ workflow MAG {
         * Bin QC subworkflows: for checking bin completeness with either BUSCO, CHECKM, CHECKM2, and/or GUNC
         */
 
-        ch_bin_qc_summary = channel.empty()
+        ch_bin_qc_metrics = channel.empty()
         if (!params.skip_binqc) {
             BIN_QC(ch_input_for_postbinning)
             ch_versions = ch_versions.mix(BIN_QC.out.versions)
-            ch_bin_qc_summary = BIN_QC.out.qc_summaries
+            ch_bin_qc_metrics = BIN_QC.out.qc_metrics
             ch_busco_summary = BIN_QC.out.busco_summary
             ch_checkm_summary = BIN_QC.out.checkm_summary
             ch_checkm2_summary = BIN_QC.out.checkm2_summary
@@ -528,7 +528,7 @@ workflow MAG {
 
                 GTDBTK(
                     ch_gtdb_bins,
-                    ch_bin_qc_summary,
+                    ch_bin_qc_metrics,
                     gtdb,
                 )
                 ch_versions = ch_versions.mix(GTDBTK.out.versions)
