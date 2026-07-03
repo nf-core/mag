@@ -21,11 +21,10 @@ include { UNTAR as CHECKM_UNTAR             } from '../../../modules/nf-core/unt
 
 workflow BIN_QC {
     take:
-    ch_bins // [val(meta), path(fasta)], input bins (mandatory)
+    ch_bins // [val(meta), [path(fasta)]], input bins (mandatory)
 
     main:
     ch_qc_metrics = channel.empty()
-    ch_input_bins_for_qc = ch_bins.transpose()
     ch_versions = channel.empty()
     ch_multiqc_files = channel.empty()
     ch_busco_final_summaries = channel.empty()
@@ -124,8 +123,7 @@ workflow BIN_QC {
         /*
          * CheckM
          */
-        ch_bins_for_checkmlineagewf = ch_input_bins_for_qc
-            .groupTuple()
+        ch_bins_for_checkmlineagewf = ch_bins
             .filter { meta, _bins ->
                 meta.domain != "eukarya"
             }
@@ -169,7 +167,7 @@ workflow BIN_QC {
         /*
          * CheckM2
          */
-        CHECKM2_PREDICT(ch_input_bins_for_qc.groupTuple(), ch_checkm2_db)
+        CHECKM2_PREDICT(ch_bins, ch_checkm2_db)
 
         ch_checkm2_summaries = CHECKM2_PREDICT.out.checkm2_tsv
             .map { _meta, summary -> [[id: 'checkm2'], summary] }
