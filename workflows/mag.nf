@@ -484,9 +484,8 @@ workflow MAG {
         ch_quast_bins_summary = channel.empty()
         if (!params.skip_quast) {
             ch_input_for_quast_bins = ch_input_for_postbinning
-                .groupTuple()
                 .map { meta, bins ->
-                    [meta, bins.flatten().sort { a, b -> a.getBaseName() <=> b.getBaseName() }]
+                    [meta, [bins].flatten().sort { a, b -> a.getBaseName() <=> b.getBaseName() }]
                 }
 
             QUAST_BINS(ch_input_for_quast_bins)
