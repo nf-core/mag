@@ -59,6 +59,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#908](https://github.com/nf-core/mag/pull/908) - Removed local `quast_bins_summary` in favor of `csvtk/concat` (by @dialvarezs)
 - [#1018](https://github.com/nf-core/mag/pull/1018) - Remove `mag_depths_plot` local module (by @dialvarezs)
 - [#1018](https://github.com/nf-core/mag/pull/1018) - Deprecated `--gtdbtk_skip_aniscreen` in favor of `--gtdbtk_place_species` (by @dialvarezs)
+- [#1067](https://github.com/nf-core/mag/pull/1066) - Deprecated `--skip_metaeuk` as it has no effect, MetaEuk is gated by `--metaeuk_db` / `--metaeuk_mmseqs_db` (by @dialvarezs)
 
 ## 5.4.2 Yellow Frog patch [2026-03-31]
 
