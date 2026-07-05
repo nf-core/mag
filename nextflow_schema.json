@@ -698,7 +698,7 @@
                 },
                 "skip_metaeuk": {
                     "type": "boolean",
-                    "description": "Skip MetaEuk gene prediction and annotation"
+                    "description": "[DEPRECATED] This parameter no longer has any effect and will be removed in a future release. MetaEuk only runs when `--metaeuk_db` or `--metaeuk_mmseqs_db` is supplied."
                 },
                 "metaeuk_mmseqs_db": {
                     "type": "string",

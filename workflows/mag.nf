@@ -122,7 +122,7 @@ workflow MAG {
         gtdb = []
     }
 
-    if (params.metaeuk_db && !params.skip_metaeuk) {
+    if (params.metaeuk_db) {
         ch_metaeuk_db = channel.value(file("${params.metaeuk_db}", checkIfExists: true))
     }
     else {
@@ -130,7 +130,7 @@ workflow MAG {
     }
 
     // Get mmseqs db for MetaEuk if requested
-    if (!params.skip_metaeuk && params.metaeuk_mmseqs_db) {
+    if (params.metaeuk_mmseqs_db) {
         MMSEQS_DATABASES(params.metaeuk_mmseqs_db)
         ch_versions = ch_versions.mix(MMSEQS_DATABASES.out.versions)
         ch_metaeuk_db = MMSEQS_DATABASES.out.database
@@ -593,7 +593,7 @@ workflow MAG {
             ch_versions = ch_versions.mix(PROKKA.out.versions)
         }
 
-        if (!params.skip_metaeuk && (params.metaeuk_db || params.metaeuk_mmseqs_db)) {
+        if (params.metaeuk_db || params.metaeuk_mmseqs_db) {
             ch_bins_for_metaeuk = ch_input_for_postbinning
                 .transpose()
                 .filter { meta, _bin ->
