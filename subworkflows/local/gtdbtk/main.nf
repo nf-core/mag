@@ -39,7 +39,7 @@ workflow GTDBTK {
     ch_filtered_bins = ch_bins
         .join(ch_group_metrics)
         .map { meta, bins, tool_summaries ->
-            // build per-bin metrics: bin name -> {completeness: [...], contamination: [...]}
+            // build per-bin metrics: bin name -> [ [completeness, contamination], ... ] (one reading per QC tool)
             def metrics = [:]
             tool_summaries.each { tool, summary ->
                 def cols = qc_columns[tool]
@@ -51,27 +51,23 @@ workflow GTDBTK {
                         def completeness = "${row[cols[1]]}".toDouble()
                         def contamination = "${row[cols[2]]}".toDouble()
 
-                        def entry = metrics.get(bin_name, [completeness: [], contamination: []])
-                        // a negative value means the tool could not assess the bin, so we drop it
+                        def readings = metrics.get(bin_name, [])
+                        // a negative value means the tool could not assess the bin, so we drop the whole reading
                         if (completeness >= 0 && contamination >= 0) {
-                            entry.completeness << completeness
-                            entry.contamination << contamination
+                            readings << [completeness: completeness, contamination: contamination]
                         }
-                        metrics[bin_name] = entry
+                        metrics[bin_name] = readings
                     }
             }
 
-            def passed = []
-            def discarded = []
-            bins
-                .each { bin ->
-                    def entry = metrics[bin.getName() - ~/\.gz$/]
-                    // no QC metric for this bin: mirror the previous inner-join drop
-                    if (entry == null) {
-                        return null
+            // drop bins with no QC metric, then split the rest:
+            // a bin passes if any single tool clears both thresholds together
+            def (passed, discarded) = bins
+                .findAll { bin -> metrics[bin.getName() - ~/\.gz$/] != null }
+                .split { bin ->
+                    metrics[bin.getName() - ~/\.gz$/].any { reading ->
+                        reading.completeness >= params.gtdbtk_min_completeness && reading.contamination <= params.gtdbtk_max_contamination
                     }
-                    def keep = (entry.completeness.any { value -> value >= params.gtdbtk_min_completeness } && entry.contamination.any { value -> value <= params.gtdbtk_max_contamination })
-                    (keep ? passed : discarded) << bin
                 }
 
             [meta, passed, discarded]
