@@ -76,15 +76,14 @@ workflow BINNING {
         }
     }
 
-    // per-bin channel for length filtering via seqkit stats
+    // per-binner-output channel for length filtering via seqkit stats
     ch_bins_for_seqkit = channel.empty()
 
     // MetaBAT2
     if (!params.skip_metabat2) {
         METABAT2_METABAT2(ch_metabat2_input)
 
-        // transpose to get one bin per element for per-bin seqkit stats
-        ch_bins_for_seqkit = ch_bins_for_seqkit.mix(METABAT2_METABAT2.out.fasta.transpose())
+        ch_bins_for_seqkit = ch_bins_for_seqkit.mix(METABAT2_METABAT2.out.fasta)
         ch_input_splitfasta = ch_input_splitfasta.mix(METABAT2_METABAT2.out.unbinned)
     }
 
@@ -96,7 +95,7 @@ workflow BINNING {
         ADJUST_MAXBIN2_EXT(MAXBIN2.out.binned_fastas)
         ch_versions = ch_versions.mix(ADJUST_MAXBIN2_EXT.out.versions)
 
-        ch_bins_for_seqkit = ch_bins_for_seqkit.mix(ADJUST_MAXBIN2_EXT.out.renamed_bins.transpose())
+        ch_bins_for_seqkit = ch_bins_for_seqkit.mix(ADJUST_MAXBIN2_EXT.out.renamed_bins)
         ch_input_splitfasta = ch_input_splitfasta.mix(MAXBIN2.out.unbinned_fasta)
     }
 
@@ -115,7 +114,7 @@ workflow BINNING {
 
         FASTA_BINNING_CONCOCT(ch_concoct_input.bins, ch_concoct_input.bams)
 
-        ch_bins_for_seqkit = ch_bins_for_seqkit.mix(FASTA_BINNING_CONCOCT.out.bins.transpose())
+        ch_bins_for_seqkit = ch_bins_for_seqkit.mix(FASTA_BINNING_CONCOCT.out.bins)
     }
 
     // COMEBin
@@ -128,7 +127,7 @@ workflow BINNING {
         COMEBIN_RUNCOMEBIN(ch_comebin_input)
         ch_versions = ch_versions.mix(COMEBIN_RUNCOMEBIN.out.versions)
 
-        ch_bins_for_seqkit = ch_bins_for_seqkit.mix(COMEBIN_RUNCOMEBIN.out.bins.transpose())
+        ch_bins_for_seqkit = ch_bins_for_seqkit.mix(COMEBIN_RUNCOMEBIN.out.bins)
     }
 
     // MetaBinner
@@ -141,7 +140,7 @@ workflow BINNING {
         )
         ch_versions = ch_versions.mix(BINNING_METABINNER.out.versions)
 
-        ch_bins_for_seqkit = ch_bins_for_seqkit.mix(BINNING_METABINNER.out.bins.transpose())
+        ch_bins_for_seqkit = ch_bins_for_seqkit.mix(BINNING_METABINNER.out.bins)
         ch_input_splitfasta = ch_input_splitfasta.mix(BINNING_METABINNER.out.unbinned)
     }
 
@@ -163,7 +162,7 @@ workflow BINNING {
             [meta_new, bins]
         }
 
-        ch_bins_for_seqkit = ch_bins_for_seqkit.mix(ch_semibin_bins.transpose())
+        ch_bins_for_seqkit = ch_bins_for_seqkit.mix(ch_semibin_bins)
     }
 
     // Performance note: grouping seqkit jobs by sample across binners locks
@@ -172,23 +171,18 @@ workflow BINNING {
     SEQKIT_STATS(ch_bins_for_seqkit)
     ch_versions = ch_versions.mix(SEQKIT_STATS.out.versions)
 
-    ch_seqkitstats_results = SEQKIT_STATS.out.stats
-        .splitCsv(sep: '\t', header: true, strip: true)
-        .map { _meta, row ->
-            [[filename: row.file], [bin_total_length: row.sum_len.toInteger()]]
-        }
-
     //
     // Logic: Gather all the bin lengths, then check if the number of bins after length
     //        filtering is 0. Error if so, but only if we had bins to begin with.
     //
-    ch_seqkitstats_results
-        .map { _meta, stats -> stats.bin_total_length }
+    SEQKIT_STATS.out.stats
+        .splitCsv(sep: '\t', header: true, strip: true)
+        .map { _meta, row -> row.sum_len.toInteger() }
         .collect()
         .ifEmpty([])
-        .subscribe { stats ->
-            def n_bins = stats.size()
-            def n_filtered_bins = stats
+        .subscribe { lengths ->
+            def n_bins = lengths.size()
+            def n_filtered_bins = lengths
                 .findAll { bin_size ->
                     bin_size >= val_bin_min_size && (val_bin_max_size ? bin_size <= val_bin_max_size : true)
                 }
@@ -200,22 +194,23 @@ workflow BINNING {
             }
         }
 
-    // filter out too-short/too-long bins by total length, then re-group per sample
+    // filter out too-short/too-long bins by total length within each binner output;
+    // joining per binner-sample keeps bin QC unblocked by the slowest binner
     ch_binning_results = ch_bins_for_seqkit
-        .map { meta, bin ->
-            [[filename: bin.name], meta, bin]
+        .join(SEQKIT_STATS.out.stats)
+        .map { meta, bins, stats ->
+            def lengths = stats
+                .splitCsv(sep: '\t', header: true, strip: true)
+                .collectEntries { row -> [(row.file): row.sum_len.toInteger()] }
+            def kept_bins = [bins]
+                .flatten()
+                .findAll { bin ->
+                    def bin_total_length = lengths[bin.name]
+                    bin_total_length >= val_bin_min_size && (val_bin_max_size ? bin_total_length <= val_bin_max_size : true)
+                }
+            [meta, kept_bins]
         }
-        .join(ch_seqkitstats_results)
-        .map { _key, meta, bin, stats ->
-            [meta + stats, bin]
-        }
-        .filter { meta, _bin ->
-            meta.bin_total_length >= val_bin_min_size && (val_bin_max_size ? meta.bin_total_length <= val_bin_max_size : true)
-        }
-        .map { meta, bin ->
-            [meta.minus([bin_total_length: meta.bin_total_length]), bin]
-        }
-        .groupTuple(by: 0)
+        .filter { _meta, bins -> bins }
 
     // remove too-short contigs from unbinned contigs
     SPLIT_FASTA(ch_input_splitfasta)

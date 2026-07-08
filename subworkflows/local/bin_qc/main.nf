@@ -21,11 +21,10 @@ include { UNTAR as CHECKM_UNTAR             } from '../../../modules/nf-core/unt
 
 workflow BIN_QC {
     take:
-    ch_bins // [val(meta), path(fasta)], input bins (mandatory)
+    ch_bins // [val(meta), [path(fasta)]], input bins (mandatory)
 
     main:
-    ch_qc_summaries = channel.empty()
-    ch_input_bins_for_qc = ch_bins.transpose()
+    ch_qc_metrics = channel.empty()
     ch_versions = channel.empty()
     ch_multiqc_files = channel.empty()
     ch_busco_final_summaries = channel.empty()
@@ -116,16 +115,15 @@ workflow BIN_QC {
         ch_busco_final_summaries = ch_busco_final_summaries.mix(
             CONCAT_BUSCO_TSV.out.csv.map { _meta, csv -> csv }
         )
-        ch_qc_summaries = ch_qc_summaries.mix(
-            CONCAT_BUSCO_TSV.out.csv.splitCsv(header: true, sep: '\t').map { _meta, summary -> [bin_qc_tool: 'busco'] + summary }
+        ch_qc_metrics = ch_qc_metrics.mix(
+            BUSCO_BUSCO.out.batch_summary.map { meta, summary -> [meta, 'busco', summary] }
         )
     }
     if (params.run_checkm) {
         /*
          * CheckM
          */
-        ch_bins_for_checkmlineagewf = ch_input_bins_for_qc
-            .groupTuple()
+        ch_bins_for_checkmlineagewf = ch_bins
             .filter { meta, _bins ->
                 meta.domain != "eukarya"
             }
@@ -161,15 +159,15 @@ workflow BIN_QC {
         ch_checkm_final_summaries = ch_checkm_final_summaries.mix(
             CONCAT_CHECKM_TSV.out.csv.map { _meta, csv -> csv }
         )
-        ch_qc_summaries = ch_qc_summaries.mix(
-            CONCAT_CHECKM_TSV.out.csv.splitCsv(header: true, sep: '\t').map { _meta, summary -> [bin_qc_tool: 'checkm'] + summary }
+        ch_qc_metrics = ch_qc_metrics.mix(
+            CHECKM_QA.out.output.map { meta, summary -> [meta, 'checkm', summary] }
         )
     }
     if (params.run_checkm2) {
         /*
          * CheckM2
          */
-        CHECKM2_PREDICT(ch_input_bins_for_qc.groupTuple(), ch_checkm2_db)
+        CHECKM2_PREDICT(ch_bins, ch_checkm2_db)
 
         ch_checkm2_summaries = CHECKM2_PREDICT.out.checkm2_tsv
             .map { _meta, summary -> [[id: 'checkm2'], summary] }
@@ -182,8 +180,8 @@ workflow BIN_QC {
         ch_checkm2_final_summaries = ch_checkm2_final_summaries.mix(
             CONCAT_CHECKM2_TSV.out.csv.map { _meta, csv -> csv }
         )
-        ch_qc_summaries = ch_qc_summaries.mix(
-            CONCAT_CHECKM2_TSV.out.csv.splitCsv(header: true, sep: '\t').map { _meta, summary -> [bin_qc_tool: 'checkm2'] + summary }
+        ch_qc_metrics = ch_qc_metrics.mix(
+            CHECKM2_PREDICT.out.checkm2_tsv.map { meta, summary -> [meta, 'checkm2', summary] }
         )
     }
 
@@ -226,7 +224,7 @@ workflow BIN_QC {
     }
 
     emit:
-    qc_summaries    = ch_qc_summaries
+    qc_metrics      = ch_qc_metrics
     busco_summary   = ch_busco_final_summaries
     checkm_summary  = ch_checkm_final_summaries
     checkm2_summary = ch_checkm2_final_summaries
