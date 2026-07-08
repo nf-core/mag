@@ -63,8 +63,7 @@ workflow GTDBTK {
 
             def passed = []
             def discarded = []
-            [bins]
-                .flatten()
+            bins
                 .each { bin ->
                     def entry = metrics[bin.getName() - ~/\.gz$/]
                     // no QC metric for this bin: mirror the previous inner-join drop
