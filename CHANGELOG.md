@@ -48,6 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1031](https://github.com/nf-core/mag/pull/1031) - Fix hybrid co-assembly with SPAdes (short & long reads with `--coassemble_group`) (fix by @d4straub)
 - [#1049](https://github.com/nf-core/mag/pull/1049) - Fix publishing issue with `gtdbtk/classifywf` (by @dialvarezs)
 - [#1058](https://github.com/nf-core/mag/pull/1058) - Make `create_metabinner_bins.py` save gzipped bin files to prevent NFS race condition (by @dialvarezs)
+- [#1069](https://github.com/nf-core/mag/pull/1069) - Exclude eukaryotic bins from CheckM2, which only supports bacterial and archaeal genomes (by @dialvarezs)
 
 ### `Dependencies`
 
