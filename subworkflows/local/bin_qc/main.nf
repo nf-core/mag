@@ -167,7 +167,11 @@ workflow BIN_QC {
         /*
          * CheckM2
          */
-        CHECKM2_PREDICT(ch_bins, ch_checkm2_db)
+        ch_bins_for_checkm2 = ch_bins.filter { meta, _bins ->
+            meta.domain != "eukarya"
+        }
+
+        CHECKM2_PREDICT(ch_bins_for_checkm2, ch_checkm2_db)
 
         ch_checkm2_summaries = CHECKM2_PREDICT.out.checkm2_tsv
             .map { _meta, summary -> [[id: 'checkm2'], summary] }
