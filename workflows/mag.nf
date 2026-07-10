@@ -122,7 +122,7 @@ workflow MAG {
         gtdb = []
     }
 
-    if (params.metaeuk_db && !params.skip_metaeuk) {
+    if (params.metaeuk_db) {
         ch_metaeuk_db = channel.value(file("${params.metaeuk_db}", checkIfExists: true))
     }
     else {
@@ -130,7 +130,7 @@ workflow MAG {
     }
 
     // Get mmseqs db for MetaEuk if requested
-    if (!params.skip_metaeuk && params.metaeuk_mmseqs_db) {
+    if (params.metaeuk_mmseqs_db) {
         MMSEQS_DATABASES(params.metaeuk_mmseqs_db)
         ch_versions = ch_versions.mix(MMSEQS_DATABASES.out.versions)
         ch_metaeuk_db = MMSEQS_DATABASES.out.database
@@ -471,11 +471,11 @@ workflow MAG {
         * Bin QC subworkflows: for checking bin completeness with either BUSCO, CHECKM, CHECKM2, and/or GUNC
         */
 
-        ch_bin_qc_summary = channel.empty()
+        ch_bin_qc_metrics = channel.empty()
         if (!params.skip_binqc) {
             BIN_QC(ch_input_for_postbinning)
             ch_versions = ch_versions.mix(BIN_QC.out.versions)
-            ch_bin_qc_summary = BIN_QC.out.qc_summaries
+            ch_bin_qc_metrics = BIN_QC.out.qc_metrics
             ch_busco_summary = BIN_QC.out.busco_summary
             ch_checkm_summary = BIN_QC.out.checkm_summary
             ch_checkm2_summary = BIN_QC.out.checkm2_summary
@@ -484,9 +484,8 @@ workflow MAG {
         ch_quast_bins_summary = channel.empty()
         if (!params.skip_quast) {
             ch_input_for_quast_bins = ch_input_for_postbinning
-                .groupTuple()
                 .map { meta, bins ->
-                    [meta, bins.flatten().sort { a, b -> a.getBaseName() <=> b.getBaseName() }]
+                    [meta, [bins].flatten().sort { a, b -> a.getBaseName() <=> b.getBaseName() }]
                 }
 
             QUAST_BINS(ch_input_for_quast_bins)
@@ -529,7 +528,7 @@ workflow MAG {
 
                 GTDBTK(
                     ch_gtdb_bins,
-                    ch_bin_qc_summary,
+                    ch_bin_qc_metrics,
                     gtdb,
                 )
                 ch_versions = ch_versions.mix(GTDBTK.out.versions)
@@ -593,7 +592,7 @@ workflow MAG {
             ch_versions = ch_versions.mix(PROKKA.out.versions)
         }
 
-        if (!params.skip_metaeuk && (params.metaeuk_db || params.metaeuk_mmseqs_db)) {
+        if (params.metaeuk_db || params.metaeuk_mmseqs_db) {
             ch_bins_for_metaeuk = ch_input_for_postbinning
                 .transpose()
                 .filter { meta, _bin ->

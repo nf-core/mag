@@ -9,65 +9,69 @@ include { GTDBTK_SUMMARY        } from '../../../modules/local/gtdbtk_summary/ma
 
 workflow GTDBTK {
     take:
-    ch_bins           // [val(meta), path(fasta)]
-    ch_bin_qc_summary // path
-    val_gtdb          // path
+    ch_bins // [val(meta), [path(fasta)]]  bins grouped per binner-sample
+    ch_qc_metrics // [val(meta), val(tool), path(summary)]  per-group, per-tool QC summary
+    val_gtdb // path
 
     main:
     ch_versions = channel.empty()
 
-    // Collect bin quality metrics
+    // QC summary columns per tool: [bin name, completeness, contamination/duplication]
     qc_columns = [
-        busco: ['bin_qc_tool', 'Input_file', 'Complete', 'Duplicated'],
-        checkm: ['bin_qc_tool', 'Bin Id', 'Completeness', 'Contamination'],
-        checkm2: ['bin_qc_tool', 'Name', 'Completeness', 'Contamination'],
+        busco: ['Input_file', 'Complete', 'Duplicated'],
+        checkm: ['Bin Id', 'Completeness', 'Contamination'],
+        checkm2: ['Name', 'Completeness', 'Contamination'],
     ]
 
-    // 1. Take the pre-split CSV, and select just the relevant columns
-    // 2. Reorder columns to: bin name, tool, completeness, contamination/duplication
-    // 3. Convert completeness/contamination to double for consistency
-    //4. add .fa back to bin name if missing
-    ch_bin_metrics = ch_bin_qc_summary
-        .map { row -> qc_columns[row.bin_qc_tool].collect { col -> row[col] } }
-        .map { row ->
-            // Initial order
-            // row[0] = bin_qc_tool
-            // row[1] = bin name
-            // row[2] = completeness
-            // row[3] = contamination (Checkm*)/duplication (busco)
-            def row_reordered = [row[1], row[0]] + row[2..3].collect { value -> "${value}".toDouble() }
-            // CheckM / CheckM2 removes the .fa extension from the bin name
-            if (row_reordered[1] in ['checkm', 'checkm2']) {
-                row_reordered[0] = row_reordered[0] + '.fa'
-            }
-            return row_reordered
-        }
+    // number of QC tools that emit one summary per bin group, used to release each
+    // group's metrics as soon as its own QC finishes instead of waiting for all groups
+    def n_qc_tools = [params.run_busco, params.run_checkm, params.run_checkm2].count { enabled -> enabled }
 
-    // Filter bins based on collected metrics: completeness, contamination
-    // 1. Generate key name from bin file name
-    // 2. Join with metrics (but drop bin_name)
-    // 3. Group all metrics files per bin (in case multiple QC tools were used)
-    // 3. Branch based on completeness/contamination
+    // gather the per-tool summaries for each bin group (non-blocking via groupKey)
+    // remainder: true flushes groups whose QC tool failed (fewer summaries than
+    // n_qc_tools) at channel close, so a surviving tool can still classify them
+    ch_group_metrics = ch_qc_metrics
+        .map { meta, tool, summary -> [groupKey(meta, n_qc_tools), meta, tool, summary] }
+        .groupTuple(by: 0, remainder: true)
+        .map { _key, metas, tools, summaries -> [metas[0], [tools, summaries].transpose()] }
+
+    // Filter bins within each group by completeness/contamination across QC tools.
     ch_filtered_bins = ch_bins
-        .transpose()
-        .map { meta, bin -> [bin.getName() - ~/\.gz$/, bin, meta] }
-        .join(ch_bin_metrics)
-        .map { bin_name, bin, meta, _bin_qc_tool, completeness, contamination ->
-            [bin_name, meta, bin, completeness, contamination]
+        .join(ch_group_metrics)
+        .map { meta, bins, tool_summaries ->
+            // build per-bin metrics: bin name -> [ [completeness, contamination], ... ] (one reading per QC tool)
+            def metrics = [:]
+            tool_summaries.each { tool, summary ->
+                def cols = qc_columns[tool]
+                summary
+                    .splitCsv(header: true, sep: '\t')
+                    .each { row ->
+                        // CheckM / CheckM2 strip the .fa extension from the bin name
+                        def bin_name = tool == 'busco' ? row[cols[0]] : row[cols[0]] + '.fa'
+                        def completeness = "${row[cols[1]]}".toDouble()
+                        def contamination = "${row[cols[2]]}".toDouble()
+
+                        def readings = metrics.get(bin_name, [])
+                        // a negative value means the tool could not assess the bin, so we drop the whole reading
+                        if (completeness >= 0 && contamination >= 0) {
+                            readings << [completeness: completeness, contamination: contamination]
+                        }
+                        metrics[bin_name] = readings
+                    }
+            }
+
+            // drop bins with no QC metric, then split the rest:
+            // a bin passes if any single tool clears both thresholds together
+            def (passed, discarded) = bins
+                .findAll { bin -> metrics[bin.getName() - ~/\.gz$/] != null }
+                .split { bin ->
+                    metrics[bin.getName() - ~/\.gz$/].any { reading ->
+                        reading.completeness >= params.gtdbtk_min_completeness && reading.contamination <= params.gtdbtk_max_contamination
+                    }
+                }
+
+            [meta, passed, discarded]
         }
-        .groupTuple(by: 0)
-        .branch { _bin_name, meta, bin, completeness, contamination ->
-            passed: (
-                completeness.any { bin_completeness -> bin_completeness != -1 } &&
-                completeness.any { bin_completeness -> bin_completeness >= params.gtdbtk_min_completeness } &&
-                contamination.any { bin_contamination -> bin_contamination != -1 } &&
-                contamination.any { bin_contamination -> bin_contamination <= params.gtdbtk_max_contamination }
-            )
-                return [meta[0], bin[0]]
-            discarded: true
-                return [meta[0], bin[0]]
-        }
-    // Note we have to call `meta[0], bin[0]` because of the groupTuple above
 
     if (val_gtdb.extension == 'gz') {
         // Expects to be tar.gz!
@@ -78,22 +82,38 @@ workflow GTDBTK {
         ch_db_for_gtdbtk = [val_gtdb.simpleName, val_gtdb]
     }
     else {
-        error("Unsupported object given to --gtdb, database must be supplied as either a directory or a .tar.gz file!")
+        error("Unsupported object given to --gtdb_db, database must be supplied as either a directory or a .tar.gz file!")
     }
 
     // Warn if no QC data was available (all QC tools likely failed)
-    ch_bin_qc_summary
+    ch_qc_metrics
         .count()
         .filter { count -> count == 0 }
         .subscribe { _count ->
             log.warn("[nf-core/mag] No bin QC results were available. Skipping GTDB-Tk classification.")
         }
 
+    ch_passed_bins = ch_filtered_bins
+        .map { meta, passed, _discarded -> [meta, passed] }
+        .filter { _meta, passed -> passed }
+    ch_passed_flat = ch_passed_bins.flatMap { _meta, passed -> passed }
+    ch_discarded_bins = ch_filtered_bins.flatMap { _meta, _passed, discarded -> discarded }
+
     // Optionally combine all bins into a single GTDB-Tk job, instead of one job
     // per bin group, which can be more efficient for very large bin counts
-    ch_bins_for_classifywf = params.gtdbtk_single_job
-        ? ch_filtered_bins.passed.map { _meta, bin -> [[id: 'all_bins', assembler: 'all', binner: 'all', domain: 'all', refinement: 'all'], bin] }.groupTuple()
-        : ch_filtered_bins.passed.groupTuple()
+    if (params.gtdbtk_single_job) {
+        ch_bins_for_classifywf = ch_passed_flat
+            .map { bin ->
+                [
+                    [id: 'all_bins', assembler: 'all', binner: 'all', domain: 'all', refinement: 'all'],
+                    bin,
+                ]
+            }
+            .groupTuple()
+    }
+    else {
+        ch_bins_for_classifywf = ch_passed_bins
+    }
 
     GTDBTK_CLASSIFYWF(
         ch_bins_for_classifywf,
@@ -102,9 +122,9 @@ workflow GTDBTK {
     )
 
     // Print warning why GTDB-TK summary empty if passed channel gets no files
-    ch_filtered_bins.passed
+    ch_passed_flat
         .count()
-        .combine(ch_filtered_bins.discarded.count())
+        .combine(ch_discarded_bins.count())
         .subscribe { passed, failed ->
             if ((passed + failed) > 0 && passed == 0) {
                 log.warn("[nf-core/mag] No contigs passed GTDB-TK min. completeness filters. GTDB-Tk will not be executed.")
@@ -112,7 +132,7 @@ workflow GTDBTK {
         }
 
     GTDBTK_SUMMARY(
-        ch_filtered_bins.discarded.map { _meta, bin -> bin }.collect().ifEmpty([]),
+        ch_discarded_bins.collect().ifEmpty([]),
         GTDBTK_CLASSIFYWF.out.summary.map { _meta, summary -> summary }.collect(),
         [],
         [],

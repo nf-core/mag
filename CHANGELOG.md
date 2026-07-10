@@ -34,6 +34,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1062](https://github.com/nf-core/mag/pull/1062) - Remove grouping to prevent bin QC blocking by waiting for all binners (by @dialvarezs)
 - [#1063](https://github.com/nf-core/mag/pull/1063) - Run ALE with `--metagenome` and disable its per-base output by default (by @dialvarezs)
 - [#1065](https://github.com/nf-core/mag/pull/1065) - Improved efficiency by removing usage of per-bin GUNZIP module for bins and unbinned contigs and allowing gzip support for all modules (by @dialvarezs)
+- [#1066](https://github.com/nf-core/mag/pull/1066) - Improved efficiency by removing channel "locks" on Seqkit, QUAST, and GTDB-Tk (by @dialvarezs)
+- [#1070](https://github.com/nf-core/mag/pull/1070) - Update BUSCO nf-core module (by @dialvarezs)
 
 ### `Fixed`
 
@@ -47,11 +49,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1031](https://github.com/nf-core/mag/pull/1031) - Fix hybrid co-assembly with SPAdes (short & long reads with `--coassemble_group`) (fix by @d4straub)
 - [#1049](https://github.com/nf-core/mag/pull/1049) - Fix publishing issue with `gtdbtk/classifywf` (by @dialvarezs)
 - [#1058](https://github.com/nf-core/mag/pull/1058) - Make `create_metabinner_bins.py` save gzipped bin files to prevent NFS race condition (by @dialvarezs)
+- [#1069](https://github.com/nf-core/mag/pull/1069) - Exclude eukaryotic bins from CheckM2, which only supports bacterial and archaeal genomes (by @dialvarezs)
 
 ### `Dependencies`
 
 | Tool    | Previous version | New version |
 | ------- | ---------------- | ----------- |
+| BUSCO   | 6.0.0            | 6.1.0       |
 | GTDB-Tk | 2.5.2            | 2.7.2       |
 
 ### `Deprecated`
@@ -59,6 +63,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#908](https://github.com/nf-core/mag/pull/908) - Removed local `quast_bins_summary` in favor of `csvtk/concat` (by @dialvarezs)
 - [#1018](https://github.com/nf-core/mag/pull/1018) - Remove `mag_depths_plot` local module (by @dialvarezs)
 - [#1018](https://github.com/nf-core/mag/pull/1018) - Deprecated `--gtdbtk_skip_aniscreen` in favor of `--gtdbtk_place_species` (by @dialvarezs)
+- [#1067](https://github.com/nf-core/mag/pull/1066) - Deprecated `--skip_metaeuk` as it has no effect, MetaEuk is gated by `--metaeuk_db` / `--metaeuk_mmseqs_db` (by @dialvarezs)
 
 ## 5.4.2 Yellow Frog patch [2026-03-31]
 

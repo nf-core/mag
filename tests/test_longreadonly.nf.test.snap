@@ -396,14 +396,14 @@
                 "FLYE-MetaBAT2-minigut.unbinned.remaining.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "METAMDBG-MetaBAT2-minigut.unbinned.pooled.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "METAMDBG-MetaBAT2-minigut.unbinned.remaining.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "full_table.tsv:md5,d87b66603db9f528a6b0f729f47ee885",
-                "missing_busco_list.tsv:md5,3b69462a400a1b30df19ecf9a251a46b",
-                "full_table.tsv:md5,575415c1bbf41eb516f28a72f9218281",
-                "missing_busco_list.tsv:md5,2bd36668a9230051a19fc245ed517c54",
-                "full_table.tsv:md5,ef137fcf4ca602162f2ebe67107ac52b",
-                "missing_busco_list.tsv:md5,7b07e76803705914da7614fb5536b77e",
-                "full_table.tsv:md5,9891ac5fe8b5f96b3cc509096921ad52",
-                "missing_busco_list.tsv:md5,62eecd25b892a5c2436cefff5556d116",
+                "full_table.tsv:md5,dfaa3f4652cbb4dba1c0967af4d7b5dd",
+                "missing_busco_list.tsv:md5,c487ac9197cd831790923398b9ba1ca3",
+                "full_table.tsv:md5,3dfdd70c8439284a94f5ecf2af6895ce",
+                "missing_busco_list.tsv:md5,7c33b39b8d698074258616a363a604af",
+                "full_table.tsv:md5,f52f6e5339a257397eaf367458f4916b",
+                "missing_busco_list.tsv:md5,4ee0edbb98b434ed3f7ba6dcd03b0c41",
+                "full_table.tsv:md5,29dcc7f222fdd09da5c688d760079c51",
+                "missing_busco_list.tsv:md5,ab22c19acea8807dfc25cc4f3927105c",
                 "FLYE-MaxBin2-minigut-001-fa-gz.rna.gff:md5,51da8b768a337c07b2f00bbc0614d962",
                 "barrnap.log:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "report.tex:md5,2473ac46f6e91bdfbf558ea435d07c35",
@@ -444,7 +444,7 @@
                 "bin_depths_summary.tsv:md5,b3efc921cfe1789a5a4763a12cfe50f8"
             ]
         ],
-        "timestamp": "2026-07-01T12:44:50.890457328",
+        "timestamp": "2026-07-09T14:26:55.431326038",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
@@ -476,7 +476,7 @@
     },
     "-profile longreadonly": {
         "content": [
-            55,
+            53,
             {
                 "ADJUST_MAXBIN2_EXT": {
                     "coreutils": 9.5
@@ -486,7 +486,7 @@
                     "python": "3.10.6"
                 },
                 "BUSCO_BUSCO": {
-                    "busco": "6.0.0"
+                    "busco": "6.1.0"
                 },
                 "BUSCO_UNTAR": {
                     "untar": 1.34
@@ -587,7 +587,7 @@
                 }
             }
         ],
-        "timestamp": "2026-07-02T09:11:08.744334968",
+        "timestamp": "2026-07-09T14:26:54.925811528",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"

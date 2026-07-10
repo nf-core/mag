@@ -65,7 +65,7 @@
     },
     "-profile assembly_input": {
         "content": [
-            283,
+            194,
             {
                 "ADJUST_MAXBIN2_EXT": {
                     "coreutils": 9.5
@@ -83,7 +83,7 @@
                     "bowtie2": "2.4.2"
                 },
                 "BUSCO_BUSCO": {
-                    "busco": "6.0.0"
+                    "busco": "6.1.0"
                 },
                 "BUSCO_UNTAR": {
                     "untar": 1.34
@@ -169,7 +169,7 @@
                 }
             }
         ],
-        "timestamp": "2026-07-02T09:04:37.208948677",
+        "timestamp": "2026-07-09T14:19:50.581085946",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
@@ -541,14 +541,14 @@
                 "SPAdes-MetaBAT2-test_minigut.unbinned.remaining.fa.gz:md5,b7d946b4e8fb2263d1e26ce46bd5ee63",
                 "SPAdes-MetaBAT2-test_minigut_sample2.unbinned.pooled.fa.gz:md5,915df8b60f271b647f784586cbdb1da8",
                 "SPAdes-MetaBAT2-test_minigut_sample2.unbinned.remaining.fa.gz:md5,df1dd296842bcf4e9420485a5dad8191",
-                "full_table.tsv:md5,599081c38cfceb1124999cc391a13140",
-                "missing_busco_list.tsv:md5,da2d1bf8d167eecc9ddc6adac9cd5d3d",
-                "full_table.tsv:md5,9c87b7683b335d8fc94617c7f5d195c2",
-                "missing_busco_list.tsv:md5,a51ce34d52c4635fefe5cf044feec954",
-                "full_table.tsv:md5,eff59a289564e1553d13099f8d16309e",
-                "missing_busco_list.tsv:md5,c6807925eff74c7de1c1a38d88069b08",
-                "full_table.tsv:md5,877e4dad881ca7079c8b6118b59a34d4",
-                "missing_busco_list.tsv:md5,c7ee1e582e010aab60a566da7fe304de",
+                "full_table.tsv:md5,16b9eb3d5cf6c30f88e43179fb3136d3",
+                "missing_busco_list.tsv:md5,9e64ba226da3fb5866c1e7d4578480bd",
+                "full_table.tsv:md5,2778872265deb14127b2d503a34ea5a9",
+                "missing_busco_list.tsv:md5,6d11e5011c188e38d37a6ac7a300709d",
+                "full_table.tsv:md5,737e9ed5783f4563a6a6648023f2824f",
+                "missing_busco_list.tsv:md5,9475255f6b53b5aea5af69ba8045e946",
+                "full_table.tsv:md5,2592a1fe3cce45bc02edb2b72699d8b7",
+                "missing_busco_list.tsv:md5,37a97e6cdafa9ff82a579465dd0f8ba8",
                 "GUNC.progenomes_2.1.maxCSS_level.tsv:md5,c3d611353770b42c99dd4fe9039ac10f",
                 "GUNC.progenomes_2.1.maxCSS_level.tsv:md5,02e72f9e57ed6defc4eb540453328c2e",
                 "gunc_summary.tsv:md5,86dda28c13307b08d362185700ab7ccb",
@@ -557,7 +557,7 @@
                 "bin_depths_summary.tsv:md5,7153f759db72abb02e2ee3c2ab1b5e56"
             ]
         ],
-        "timestamp": "2026-07-01T12:37:58.231232017",
+        "timestamp": "2026-07-09T14:19:50.913600634",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
