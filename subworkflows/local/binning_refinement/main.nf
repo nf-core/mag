@@ -35,10 +35,9 @@ workflow BINNING_REFINEMENT {
     // prepare bins
     RENAME_PREDASTOOL(ch_bins)
     ch_bins_for_fastatocontig2bin = RENAME_PREDASTOOL.out.renamed_bins
-        .transpose()
-        .multiMap { meta, bin ->
-            bins: [meta, bin]
-            ext: bin.extension
+        .multiMap { meta, bins ->
+            bins: [meta, bins]
+            ext: 'fa'
         }
     ch_versions = ch_versions.mix(RENAME_PREDASTOOL.out.versions)
 
