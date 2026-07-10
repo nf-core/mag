@@ -65,7 +65,7 @@
     },
     "-profile assembly_input": {
         "content": [
-            194,
+            105,
             {
                 "ADJUST_MAXBIN2_EXT": {
                     "coreutils": 9.5
@@ -169,7 +169,7 @@
                 }
             }
         ],
-        "timestamp": "2026-07-09T14:19:50.581085946",
+        "timestamp": "2026-07-10T01:50:53.792824455",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
@@ -495,12 +495,12 @@
                 "SPAdes-CONCOCT-test_minigut_sample2_clustering_gt1000.csv:md5,4bbba6a0ba80b107ef2b13b7089e2156",
                 "MEGAHIT-DASTool-test_minigut.seqlength:md5,f154f9ef4a4c0adb8d8f9ebb8163df93",
                 "MEGAHIT-DASTool-test_minigut_DASTool_contig2bin.tsv:md5,6add6f39f4fd9c31ff9f58df5f28fcdf",
-                "MEGAHIT-DASTool-test_minigut_DASTool_summary.tsv:md5,33aee7453e0ee3bd84b4d911e0419032",
-                "MEGAHIT-DASTool-test_minigut_allBins.eval:md5,48415e0a36f6cb05fc36ea64d9394b1f",
+                "MEGAHIT-DASTool-test_minigut_DASTool_summary.tsv:md5,05dd33082bed2dbab635ba2e32774d84",
+                "MEGAHIT-DASTool-test_minigut_allBins.eval:md5,1d74311761c9134be3d71ebe8d4da3b8",
                 "SPAdes-DASTool-test_minigut.seqlength:md5,4860a5cb7b0bf2e78e959111b5619006",
                 "SPAdes-DASTool-test_minigut_DASTool_contig2bin.tsv:md5,07c1af95dd0da4c11de390c2f188fe6c",
-                "SPAdes-DASTool-test_minigut_DASTool_summary.tsv:md5,29dcb8c0665f0b129f6fd66a83112380",
-                "SPAdes-DASTool-test_minigut_allBins.eval:md5,966f10c283df77494d43ed7ce5106a03",
+                "SPAdes-DASTool-test_minigut_DASTool_summary.tsv:md5,d25af93947d8690dc4979d42a6845151",
+                "SPAdes-DASTool-test_minigut_allBins.eval:md5,25311a65a614b4e2998bf8641c8d84e0",
                 "MEGAHIT-MetaBAT2Refined-test_minigut.1.fa.gz:md5,489a5f7ba3795477e09d2d396fe535c3",
                 "MEGAHIT-MetaBAT2Refined-test_minigut.2.fa.gz:md5,1addf634bca82af85d36621585f93f52",
                 "SPAdes-CONCOCTRefined-test_minigut.7.fa.gz:md5,4be1cc2c06f329e0102cb27b03e30624",
@@ -557,7 +557,7 @@
                 "bin_depths_summary.tsv:md5,7153f759db72abb02e2ee3c2ab1b5e56"
             ]
         ],
-        "timestamp": "2026-07-09T14:19:50.913600634",
+        "timestamp": "2026-07-10T01:50:53.97279516",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
