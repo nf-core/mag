@@ -46,26 +46,27 @@
     "assembly": {
         "content": [
             [
+                "Assembly/FLYE-pypolca/FLYE-minigut/FLYE-minigut.report",
+                "Assembly/FLYE-pypolca/FLYE-minigut/FLYE-minigut.vcf",
+                "Assembly/FLYE-pypolca/FLYE-minigut/FLYE-minigut_pypolca.fasta",
                 "Assembly/FLYE/FLYE-minigut.assembly.fasta.gz",
                 "Assembly/FLYE/FLYE-minigut.assembly_graph.gfa.gz",
                 "Assembly/FLYE/FLYE-minigut.assembly_info.txt",
-                "Assembly/FLYE/FLYE-minigut.flye.log",
-                "Assembly/PYPOLCA/minigut/FLYE-minigut/FLYE-minigut.report",
-                "Assembly/PYPOLCA/minigut/FLYE-minigut/FLYE-minigut.vcf",
-                "Assembly/PYPOLCA/minigut/FLYE-minigut/FLYE-minigut_pypolca.fasta"
+                "Assembly/FLYE/FLYE-minigut.flye.log"
             ],
             [
+                "FLYE-minigut.report:md5,56ea0f4e221dd083e45bcc5b3743532c",
+                "FLYE-minigut.vcf:md5,99e609cd027ae46f3557ee811339c273",
+                "FLYE-minigut_pypolca.fasta:md5,79c2c6b99d5808d1ea1fb3bc70427837",
                 "FLYE-minigut.assembly.fasta.gz:md5,f4fcf5e1c94901ef1fac2b335f4729f1",
                 "FLYE-minigut.assembly_graph.gfa.gz:md5,f23173732f3fdb68e26276438fc6bc9d",
-                "FLYE-minigut.assembly_info.txt:md5,8af4d61c811efe1796e8af7a4385bb26",
-                "FLYE-minigut.report:md5,56ea0f4e221dd083e45bcc5b3743532c",
-                "FLYE-minigut_pypolca.fasta:md5,79c2c6b99d5808d1ea1fb3bc70427837"
+                "FLYE-minigut.assembly_info.txt:md5,8af4d61c811efe1796e8af7a4385bb26"
             ]
         ],
-        "timestamp": "2026-06-18T07:33:06.473625252",
+        "timestamp": "2026-07-10T14:23:59.673536543",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.3"
+            "nextflow": "26.04.4"
         }
     },
     "binning": {
