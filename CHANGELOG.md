@@ -36,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1065](https://github.com/nf-core/mag/pull/1065) - Improved efficiency by removing usage of per-bin GUNZIP module for bins and unbinned contigs and allowing gzip support for all modules (by @dialvarezs)
 - [#1066](https://github.com/nf-core/mag/pull/1066) - Improved efficiency by removing channel "locks" on Seqkit, QUAST, and GTDB-Tk (by @dialvarezs)
 - [#1070](https://github.com/nf-core/mag/pull/1070) - Update BUSCO nf-core module (by @dialvarezs)
+- [#1071](https://github.com/nf-core/mag/pull/1071) - Improved efficiency by batching `DASTOOL_FASTATOCONTIG2BIN` per binner instead of per bin (by @dialvarezs)
 
 ### `Fixed`
 
