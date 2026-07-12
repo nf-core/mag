@@ -8,6 +8,9 @@ Assembly/*/*.log
 Assembly/*/QC/*/*.bowtie2.log
 Assembly/*/QC/*/QUAST/*.{pdf,html,log}
 Assembly/*/QC/*/QUAST/**/*.{pdf,html}
+Assembly/*/QC/*/DeepMAsED/**/*_predictions.tsv
+Assembly/*/QC/*/DeepMAsED/**/*_feature_file_paths.tsv
+Assembly/*/QC/*/DeepMAsED/**/*_feats.tsv
 Assembly/PYPOLCA/*/*/*.vcf
 Assembly/MEGAHIT/QC/*/*.bowtie2.log
 GenomeBinning/CONCOCT/stats/*_{original,PCA_components,PCA_transformed}_data_gt1000.csv

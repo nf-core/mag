@@ -667,8 +667,6 @@
             [
                 "MEGAHIT-test_minigut.contigs.fa.gz:md5,3a04593d030eea4bda21d1db4d1f7251",
                 "MEGAHIT-test_minigut_sample2.contigs.fa.gz:md5,e679c5d2f77f4e4b8a3c74a47625a509",
-                "MEGAHIT-test_minigut-test_minigut_feats.tsv:md5,b9a25d37519aa02ee9b88351857c89e1",
-                "test_minigut-MEGAHIT_feature_file_paths.tsv:md5,b24950a5e7e37ad00d1fbd05e782078b",
                 "test_minigut-MEGAHIT_predictions.tsv:md5,c8702bb1fb794b302c3c106bf9bd5512",
                 "MEGAHIT-test_minigut.rna.gff:md5,601e12e5b3d3d1efdaa27abdf7724460",
                 "barrnap.log:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -679,8 +677,6 @@
                 "transposed_report.tex:md5,945e1d3ee9aaf147fd6491819c5b718e",
                 "transposed_report.tsv:md5,b8fc3a3fa1f35ddc253ca4fee590b711",
                 "transposed_report.txt:md5,fd173586fa93f25d988b2773bbe4df55",
-                "MEGAHIT-test_minigut_sample2-test_minigut_sample2_feats.tsv:md5,9ec5c5c36d978086623604c8fb40760b",
-                "test_minigut_sample2-MEGAHIT_feature_file_paths.tsv:md5,0bdeeac4581ffc871c8683e5c9ee2bdc",
                 "test_minigut_sample2-MEGAHIT_predictions.tsv:md5,49ac28b4a1865b5d823c5680fa537397",
                 "MEGAHIT-test_minigut_sample2.rna.gff:md5,5fad704315c29d8c2b85b928e38a6ccc",
                 "barrnap.log:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -695,9 +691,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.3"
         },
-        "timestamp": "2026-06-19T12:03:06.717694215"
+        "timestamp": "2026-07-12T21:01:40.439550461"
     },
     "binning": {
         "content": [
@@ -1786,7 +1782,7 @@
                 "transposed_report.txt:md5,eadaec5cee85ad5aeb3d03c08985a234",
                 "MEGAHIT-MetaBAT2-unclassified-unrefined-test_minigut-quast_summary.tsv:md5,48efe7a2f8a145ddc4dc4934a3009104",
                 "checkm_summary.tsv:md5,0ba48ca4d6557e95a8acb5cfc50d8d16",
-                "pydamage_bins_summary.tsv:md5,088aefb5bd256c514423a4cd81645771",
+                "pydamage_bins_summary.tsv:md5,d0a80b2e54796eb8aadef974310dae2c",
                 "quast_bin_summary.tsv:md5,c977b46a6a46e27c7dbfbecdab80ec74",
                 "MEGAHIT-CONCOCT-test_minigut_0_pydamage_bin_results.tsv:md5,b6c4b20df43c161354da2376dc80ad05",
                 "MEGAHIT-CONCOCT-test_minigut_10_pydamage_bin_results.tsv:md5,4995ded0a43be727f4d2233001de0448",
@@ -1820,11 +1816,11 @@
                 "bin_depths_summary.tsv:md5,bd54b32dc4c741cd4edd2bbba51f6552"
             ]
         ],
-        "timestamp": "2026-07-01T12:40:11.839744958",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
-        }
+            "nf-test": "0.9.3",
+            "nextflow": "26.04.3"
+        },
+        "timestamp": "2026-07-12T21:01:40.867609635"
     },
     "viral": {
         "content": [
@@ -2005,15 +2001,15 @@
                 "gtdbtk_summary.tsv:md5,75c4048c09d6126dc7f1019d138d33fe"
             ]
         ],
-        "timestamp": "2026-07-01T12:40:11.972008847",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
-        }
+        },
+        "timestamp": "2026-07-01T12:40:11.972008847"
     },
     "-profile test_single_end": {
         "content": [
-            132,
+            136,
             {
                 "ADAPTERREMOVAL_SE": {
                     "adapterremoval": "2.3.2"
@@ -2197,11 +2193,11 @@
                 }
             }
         ],
-        "timestamp": "2026-07-03T03:26:49.465360928",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
-        }
+            "nf-test": "0.9.3",
+            "nextflow": "26.04.3"
+        },
+        "timestamp": "2026-07-12T21:01:40.091281669"
     },
     "multiqc": {
         "content": [

@@ -114,15 +114,15 @@
                 "SPAdesHybrid-SemiBin2-group-0_0.txt:md5,f3c9e5f7e2651fa893484ca9bb7c3114"
             ]
         ],
-        "timestamp": "2026-06-26T15:16:34.749652718",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
-        }
+        },
+        "timestamp": "2026-06-26T15:16:34.749652718"
     },
     "-profile hybrid": {
         "content": [
-            71,
+            73,
             {
                 "ADJUST_MAXBIN2_EXT": {
                     "coreutils": 9.5
@@ -273,11 +273,11 @@
                 }
             }
         ],
-        "timestamp": "2026-07-09T14:25:17.526507447",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
-        }
+            "nf-test": "0.9.3",
+            "nextflow": "26.04.3"
+        },
+        "timestamp": "2026-07-12T20:48:55.319169785"
     },
     "log-checks": {
         "content": [
@@ -289,11 +289,11 @@
             "bowtie2_logs contains 'overall alignment rate': true",
             "prokka_logs contains 'Annotation finished successfully.': true"
         ],
-        "timestamp": "2026-06-26T15:16:45.477590782",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
-        }
+        },
+        "timestamp": "2026-06-26T15:16:45.477590782"
     },
     "qc_longreads": {
         "content": [
@@ -346,15 +346,18 @@
                 "minigut_sample2_0.stats:md5,4a2f9b3bc3ba6351207acd63bd75d37c"
             ]
         ],
-        "timestamp": "2026-06-26T15:16:30.534515186",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
-        }
+        },
+        "timestamp": "2026-06-26T15:16:30.534515186"
     },
     "assembly": {
         "content": [
             [
+                "Assembly/SPAdesHybrid/QC/group-0/DeepMAsED/features/SPAdesHybrid-group-0-minigut_feats.tsv",
+                "Assembly/SPAdesHybrid/QC/group-0/DeepMAsED/features/group-0-SPAdesHybrid_feature_file_paths.tsv",
+                "Assembly/SPAdesHybrid/QC/group-0/DeepMAsED/group-0-SPAdesHybrid_predictions.tsv",
                 "Assembly/SPAdesHybrid/QC/group-0/QUAST/basic_stats/GC_content_plot.pdf",
                 "Assembly/SPAdesHybrid/QC/group-0/QUAST/basic_stats/Nx_plot.pdf",
                 "Assembly/SPAdesHybrid/QC/group-0/QUAST/basic_stats/SPAdesHybrid-group-0_GC_content_plot.pdf",
@@ -384,6 +387,7 @@
                 "Assembly/SPAdesHybrid/SPAdesHybrid-group-0.spades.log"
             ],
             [
+                "group-0-SPAdesHybrid_predictions.tsv:md5,b7958edae70eacf475ed88fcf320df91",
                 "SPAdesHybrid-group-0.rna.gff:md5,7c75e7285ddbdd34de7db9a5e0c8e2c0",
                 "barrnap.log:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "report.tex:md5,ad471d5662dd03c72bb60de697a210b0",
@@ -398,11 +402,11 @@
                 "SPAdesHybrid-group-0.scaffolds.fa.gz:md5,665f0ed8bdf0f2857aa713ce3e83f390"
             ]
         ],
-        "timestamp": "2026-06-26T15:16:31.903090397",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
-        }
+            "nf-test": "0.9.3",
+            "nextflow": "26.04.3"
+        },
+        "timestamp": "2026-07-12T20:48:56.761236127"
     },
     "binning": {
         "content": [
@@ -650,11 +654,11 @@
                 "bin_depths_summary.tsv:md5,1bb4397dfe72ad4cab619de32a3f36f8"
             ]
         ],
-        "timestamp": "2026-07-09T14:25:18.089294638",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
-        }
+        },
+        "timestamp": "2026-07-09T14:25:18.089294638"
     },
     "content-checks": {
         "content": [
@@ -668,11 +672,11 @@
             "Prokka TSV row counts: [SPAdesHybrid-MaxBin2-group-0.001.tsv=1015, SPAdesHybrid-MaxBin2-group-0.002.tsv=813, SPAdesHybrid-MetaBAT2-group-0.1.tsv=806, SPAdesHybrid-MetaBAT2-group-0.2.tsv=719, SPAdesHybrid-SemiBin2-group-0_0.tsv=1537]",
             "Bin summary row count matches bins: true"
         ],
-        "timestamp": "2026-06-27T04:41:03.122422151",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
-        }
+        },
+        "timestamp": "2026-06-27T04:41:03.122422151"
     },
     "qc_shortreads": {
         "content": [
@@ -701,11 +705,11 @@
                 "minigut_sample2_run0_host_removed.bowtie2.log:md5,fb967944891311058a2c8f2255cfe118"
             ]
         ],
-        "timestamp": "2026-06-26T15:16:30.510939826",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
-        }
+        },
+        "timestamp": "2026-06-26T15:16:30.510939826"
     },
     "multiqc": {
         "content": [
@@ -948,11 +952,11 @@
                 "quast_table.yaml:md5,2f5c8eae632ff937496491eb1facafd9"
             ]
         ],
-        "timestamp": "2026-06-26T15:16:36.706432235",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
-        }
+        },
+        "timestamp": "2026-06-26T15:16:36.706432235"
     },
     "summary-rows": {
         "content": [
@@ -960,10 +964,10 @@
             "quast_bin_summary.tsv rows: 5",
             "busco_summary.tsv rows: 5"
         ],
-        "timestamp": "2026-06-26T15:16:43.543930305",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
-        }
+        },
+        "timestamp": "2026-06-26T15:16:43.543930305"
     }
 }
