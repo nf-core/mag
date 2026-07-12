@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1042](https://github.com/nf-core/mag/pull/1042) - Add nf-test snapshot for `test_default` profile (by @dialvarezs)
 - [#1044](https://github.com/nf-core/mag/pull/1044) - Add new `--gtdbtk_place_species` parameter (by @dialvarezs)
 - [#1047](https://github.com/nf-core/mag/issues/1007) - Add `--gtdbtk_single_job` to run GTDB-Tk classification for all bins in a single job (requested by @sarah-shah-bioinf, by @dialvarezs)
-- [#1051](https://github.com/nf-core/mag/pull/PR_NUMBER) - Add DeepMAsED assembly error detection to the MAG workflow as two sequential steps (`features` and `predict`) for short-read assemblies (by @SkyLexS).
+- [#1051](https://github.com/nf-core/mag/pull/1051) - Add DeepMAsED assembly error detection to the MAG workflow as two sequential steps (`features` and `predict`) for short-read assemblies (by @SkyLexS).
 - [#1048](https://github.com/nf-core/mag/pull/1048) - Add optional PyPOLCA polishing for long-read assemblies via `--run_pypolca` (by @Harshita-sriv)
 - [#1059](https://github.com/nf-core/mag/pull/1059) - Add `--filtlong_filtering_by_shortreads` parameter to enable filtlong's short-read-based long read filtering (by @dialvarezs)
 - [#1063](https://github.com/nf-core/mag/pull/1063) - Add new `--ale_per_base_output` parameter to enable ALE per-base output (by @dialvarezs)
