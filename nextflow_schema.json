@@ -672,6 +672,7 @@
                     "type": "integer",
                     "default": 12,
                     "description": "Random seed for numpy in DeepMAsED predict. Set for reproducible results."
+                },
                 "ale_per_base_output": {
                     "type": "boolean",
                     "description": "Enable ALE per-base output. This output can be very large (tens of GB)."
@@ -1083,7 +1084,7 @@
                     "type": "string",
                     "default": "progenomes",
                     "description": "Specify which database to auto-download if not supplying own",
-                    "enum": ["progenomes", "gtdb", "test_data"]
+                    "enum": ["progenomes", "gtdb"]
                 },
                 "gunc_save_db": {
                     "type": "boolean",
