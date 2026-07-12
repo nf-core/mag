@@ -7,14 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
+- [#1057](https://github.com/nf-core/mag/pull/1057) - Add skip_fastqc switch (by @jorondo1)
 - [#908](https://github.com/nf-core/mag/pull/908) - Add nf-test snapshot for `test_single_end` profile (by @dialvarezs)
 - [#1028](https://github.com/nf-core/mag/pull/1028) - Add nf-test snapshot for `test_longread_alternatives` profile (by @dialvarezs)
+- [#1029](https://github.com/nf-core/mag/pull/908) - Add nf-test snapshot for `test_hybrid` profile (by @dialvarezs)
 - [#1037](https://github.com/nf-core/mag/pull/1037) - Complement usage documentation with guidance on pipeline defaults, choices and alternatives (by @d4straub and @jfy133 )
 - [#1039](https://github.com/nf-core/mag/pull/1039) - Add nf-test snapshot for `test_longread` profile (started by @brovolia, finished by @dialvarezs)
 - [#1041](https://github.com/nf-core/mag/pull/1041) - Refined and corrected unclear section of metromap (by @jfy133)
+- [#1042](https://github.com/nf-core/mag/pull/1042) - Add nf-test snapshot for `test_default` profile (by @dialvarezs)
 - [#1044](https://github.com/nf-core/mag/pull/1044) - Add new `--gtdbtk_place_species` parameter (by @dialvarezs)
 - [#1047](https://github.com/nf-core/mag/issues/1007) - Add `--gtdbtk_single_job` to run GTDB-Tk classification for all bins in a single job (requested by @sarah-shah-bioinf, by @dialvarezs)
 - [#1051](https://github.com/nf-core/mag/pull/PR_NUMBER) - Add DeepMAsED assembly error detection to the MAG workflow as two sequential steps (`features` and `predict`) for short-read assemblies (by @SkyLexS).
+- [#1048](https://github.com/nf-core/mag/pull/1048) - Add optional PyPOLCA polishing for long-read assemblies via `--run_pypolca` (by @Harshita-sriv)
+- [#1059](https://github.com/nf-core/mag/pull/1059) - Add `--filtlong_filtering_by_shortreads` parameter to enable filtlong's short-read-based long read filtering (by @dialvarezs)
+- [#1063](https://github.com/nf-core/mag/pull/1063) - Add new `--ale_per_base_output` parameter to enable ALE per-base output (by @dialvarezs)
+- [#1062](https://github.com/nf-core/mag/pull/1062) - Add `--bin_seqkit_stats_max_forks` parameter to cap concurrent bin-stats jobs (by @dialvarezs)
 
 ### `Changed`
 
@@ -22,6 +29,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1020](https://github.com/nf-core/mag/pull/1020) - Update CONCOCT subworkflow and modules (by @dialvarezs)
 - [#1030](https://github.com/nf-core/mag/pull/1030) - Updated to nf-core 4.0.2 template (by @dialvarezs)
 - [#1044](https://github.com/nf-core/mag/pull/1044) - Updated GTDB-Tk to v2.7.2 / GTDB r232 (by @dialvarezs)
+- [#1059](https://github.com/nf-core/mag/pull/1059) - Changed the default long read filtering tool from `filtlong` to `chopper` (by @dialvarezs)
+- [#1060](https://github.com/nf-core/mag/pull/1060) - Updated module tags to make them more specific (by @dialvarezs)
+- [#1061](https://github.com/nf-core/mag/pull/1061), [#1064](https://github.com/nf-core/mag/pull/1064) - Speed up binning by not waiting for all mapping jobs to finish before starting (by @dialvarezs)
+- [#1062](https://github.com/nf-core/mag/pull/1062) - Remove grouping to prevent bin QC blocking by waiting for all binners (by @dialvarezs)
+- [#1063](https://github.com/nf-core/mag/pull/1063) - Run ALE with `--metagenome` and disable its per-base output by default (by @dialvarezs)
+- [#1065](https://github.com/nf-core/mag/pull/1065) - Improved efficiency by removing usage of per-bin GUNZIP module for bins and unbinned contigs and allowing gzip support for all modules (by @dialvarezs)
+- [#1066](https://github.com/nf-core/mag/pull/1066) - Improved efficiency by removing channel "locks" on Seqkit, QUAST, and GTDB-Tk (by @dialvarezs)
+- [#1070](https://github.com/nf-core/mag/pull/1070) - Update BUSCO nf-core module (by @dialvarezs)
+- [#1071](https://github.com/nf-core/mag/pull/1071) - Improved efficiency by batching `DASTOOL_FASTATOCONTIG2BIN` per binner instead of per bin (by @dialvarezs)
 
 ### `Fixed`
 
@@ -34,11 +50,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1021](https://github.com/nf-core/mag/pull/1021) - Prevent execution of `gtdbtk/summary` when no bins pass QC (reported by @jfy133, fix by @dialvarezs)
 - [#1031](https://github.com/nf-core/mag/pull/1031) - Fix hybrid co-assembly with SPAdes (short & long reads with `--coassemble_group`) (fix by @d4straub)
 - [#1049](https://github.com/nf-core/mag/pull/1049) - Fix publishing issue with `gtdbtk/classifywf` (by @dialvarezs)
+- [#1058](https://github.com/nf-core/mag/pull/1058) - Make `create_metabinner_bins.py` save gzipped bin files to prevent NFS race condition (by @dialvarezs)
+- [#1069](https://github.com/nf-core/mag/pull/1069) - Exclude eukaryotic bins from CheckM2, which only supports bacterial and archaeal genomes (by @dialvarezs)
 
 ### `Dependencies`
 
 | Tool    | Previous version | New version |
 | ------- | ---------------- | ----------- |
+| BUSCO   | 6.0.0            | 6.1.0       |
 | GTDB-Tk | 2.5.2            | 2.7.2       |
 
 ### `Deprecated`
@@ -46,6 +65,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#908](https://github.com/nf-core/mag/pull/908) - Removed local `quast_bins_summary` in favor of `csvtk/concat` (by @dialvarezs)
 - [#1018](https://github.com/nf-core/mag/pull/1018) - Remove `mag_depths_plot` local module (by @dialvarezs)
 - [#1018](https://github.com/nf-core/mag/pull/1018) - Deprecated `--gtdbtk_skip_aniscreen` in favor of `--gtdbtk_place_species` (by @dialvarezs)
+- [#1067](https://github.com/nf-core/mag/pull/1066) - Deprecated `--skip_metaeuk` as it has no effect, MetaEuk is gated by `--metaeuk_db` / `--metaeuk_mmseqs_db` (by @dialvarezs)
 
 ## 5.4.2 Yellow Frog patch [2026-03-31]
 

@@ -5,6 +5,7 @@ Ancient_DNA/variant_calling/*/*.vcf.gz
 Annotation/Prokka/**/*.{err,gbk,log,sqn}
 Annotation/Prokka/**/*.tmp.*
 Assembly/*/*.log
+Assembly/*/QC/*/*.bowtie2.log
 Assembly/*/QC/*/QUAST/*.{pdf,html,log}
 Assembly/*/QC/*/QUAST/**/*.{pdf,html}
 Assembly/PYPOLCA/*/*/*.vcf
@@ -17,7 +18,6 @@ GenomeBinning/DeepMASED/**/*_predictions.tsv
 GenomeBinning/DeepMASED/**/*_feature_file_paths.tsv
 GenomeBinning/depths/**/*-depth.txt.gz
 GenomeBinning/depths/bins/*.png
-GenomeBinning/MetaBAT2/unbinned/discarded/*.unbinned.pooled.fa.gz
 GenomeBinning/QC/busco_summary.tsv
 GenomeBinning/QC/BUSCO/**/.checkpoint
 GenomeBinning/QC/BUSCO/**/{logs,prodigal_output,busco_sequences,hmmer_output}/**
@@ -46,6 +46,7 @@ multiqc/multiqc_report.html
 pipeline_info/*.{html,json,txt,yml}
 QC_longreads/NanoLyse/*.log
 QC_longreads/NanoPlot/**/*.{html,png}
+QC_shortreads/fastp/**/*.html
 QC_shortreads/fastqc/*_fastqc.{html,zip}
 QC_shortreads/remove_phix/*.log
 Taxonomy/CAT/**/*.log

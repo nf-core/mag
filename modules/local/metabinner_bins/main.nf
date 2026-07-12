@@ -25,17 +25,12 @@ process METABINNER_BINS {
     # unzip membership file
     zcat ${membership} > membership.tsv
 
-    # collect bins & un-binned fractions
     create_metabinner_bins.py \\
         membership.tsv \\
         ${fasta} \\
         ./bins \\
         ${prefix} \\
         ${min_contig_size}
-    find ./bins/ -name "*.fa" -type f | xargs -t -n 1 bgzip -@ ${task.cpus}
-
-    # zip contig fractions
-    find ./bins/ -name "*[tooShort,unbinned].fa.gz" -type f -exec mv {} . \\;
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
