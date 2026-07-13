@@ -24,13 +24,16 @@ workflow SHORTREAD_PREPROCESSING {
     ch_host_genome_index // path(fasta)                               (optional)
     ch_phix_db_file      // [val(meta), path(fasta)]                  (optional)
     val_skip_qc          // val(boolean)
+    val_skip_fastqc      // val(boolean)
 
     main:
     ch_versions = channel.empty()
     ch_multiqc_files = channel.empty()
 
-    FASTQC_RAW(ch_raw_short_reads)
-    ch_multiqc_files = ch_multiqc_files.mix(FASTQC_RAW.out.zip)
+    if (!val_skip_fastqc) {
+        FASTQC_RAW(ch_raw_short_reads)
+        ch_multiqc_files = ch_multiqc_files.mix(FASTQC_RAW.out.zip)
+    }
 
     if (!params.assembly_input) {
         if (!params.skip_clipping && !val_skip_qc) {
@@ -148,15 +151,18 @@ workflow SHORTREAD_PREPROCESSING {
 
         /**
          * Conditions for *not* running FASTQC_TRIMMED:
+         * - Skip fastqc (params.skip_fastqc)
          * - No host removal and skip_qc (params.skip_shortread_qc)
          * - No host removal and *both* --keep_phix --skip_clipping
          */
-        if (!(val_skip_qc && !(params.host_fasta || params.host_genome))) {
-            if (!(params.keep_phix && params.skip_clipping && !(params.host_genome || params.host_fasta))) {
-                FASTQC_TRIMMED(
-                    ch_short_reads_for_merge
-                )
-                ch_multiqc_files = ch_multiqc_files.mix(FASTQC_TRIMMED.out.zip)
+        if (!val_skip_fastqc) {
+            if (!(val_skip_qc && !(params.host_fasta || params.host_genome))) {
+                if (!(params.keep_phix && params.skip_clipping && !(params.host_genome || params.host_fasta))) {
+                    FASTQC_TRIMMED(
+                        ch_short_reads_for_merge
+                    )
+                    ch_multiqc_files = ch_multiqc_files.mix(FASTQC_TRIMMED.out.zip)
+                }
             }
         }
     }

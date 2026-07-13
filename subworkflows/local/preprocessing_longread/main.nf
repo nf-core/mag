@@ -75,15 +75,21 @@ workflow LONGREAD_PREPROCESSING {
         }
         if (!params.skip_longread_filtering && !val_skip_qc) {
             if (params.longread_filtering_tool == 'filtlong') {
-                // join long and short reads by sample name
-                ch_short_reads_tmp = ch_short_reads.map { meta, sr -> [meta.id, sr] }
+                if (params.filtlong_filtering_by_shortreads) {
+                    // join long and short reads by sample name
+                    ch_short_reads_tmp = ch_short_reads.map { meta, sr -> [meta.id, sr] }
 
-                ch_short_and_long_reads = ch_long_reads
-                    .map { meta, lr -> [meta.id, meta, lr] }
-                    .join(ch_short_reads_tmp, by: 0, remainder: true)
-                    .filter { row -> row[1] != null }  // filter out samples with no long reads
-                    .map { _id, meta_lr, lr, sr -> [meta_lr, sr ? sr : [], lr] }
-                // should not occur for single-end, since SPAdes (hybrid) does not support single-end
+                    ch_short_and_long_reads = ch_long_reads
+                        .map { meta, lr -> [meta.id, meta, lr] }
+                        .join(ch_short_reads_tmp, by: 0, remainder: true)
+                        .filter { row -> row[1] != null }  // filter out samples with no long reads
+                        .map { _id, meta_lr, lr, sr -> [meta_lr, sr ? sr : [], lr] }
+                    // should not occur for single-end, since SPAdes (hybrid) does not support single-end
+                }
+                else {
+                    // filter long reads on their own Phred scores, ignoring short reads
+                    ch_short_and_long_reads = ch_long_reads.map { meta, lr -> [meta, [], lr] }
+                }
 
                 FILTLONG(
                     ch_short_and_long_reads

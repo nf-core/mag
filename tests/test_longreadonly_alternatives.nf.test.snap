@@ -46,26 +46,26 @@
     "assembly": {
         "content": [
             [
+                "Assembly/FLYE-pypolca/FLYE-minigut/FLYE-minigut.report",
+                "Assembly/FLYE-pypolca/FLYE-minigut/FLYE-minigut.vcf",
+                "Assembly/FLYE-pypolca/FLYE-minigut/FLYE-minigut_pypolca.fasta",
                 "Assembly/FLYE/FLYE-minigut.assembly.fasta.gz",
                 "Assembly/FLYE/FLYE-minigut.assembly_graph.gfa.gz",
                 "Assembly/FLYE/FLYE-minigut.assembly_info.txt",
-                "Assembly/FLYE/FLYE-minigut.flye.log",
-                "Assembly/PYPOLCA/minigut/FLYE-minigut/FLYE-minigut.report",
-                "Assembly/PYPOLCA/minigut/FLYE-minigut/FLYE-minigut.vcf",
-                "Assembly/PYPOLCA/minigut/FLYE-minigut/FLYE-minigut_pypolca.fasta"
+                "Assembly/FLYE/FLYE-minigut.flye.log"
             ],
             [
+                "FLYE-minigut.report:md5,56ea0f4e221dd083e45bcc5b3743532c",
+                "FLYE-minigut_pypolca.fasta:md5,79c2c6b99d5808d1ea1fb3bc70427837",
                 "FLYE-minigut.assembly.fasta.gz:md5,f4fcf5e1c94901ef1fac2b335f4729f1",
                 "FLYE-minigut.assembly_graph.gfa.gz:md5,f23173732f3fdb68e26276438fc6bc9d",
-                "FLYE-minigut.assembly_info.txt:md5,8af4d61c811efe1796e8af7a4385bb26",
-                "FLYE-minigut.report:md5,56ea0f4e221dd083e45bcc5b3743532c",
-                "FLYE-minigut_pypolca.fasta:md5,79c2c6b99d5808d1ea1fb3bc70427837"
+                "FLYE-minigut.assembly_info.txt:md5,8af4d61c811efe1796e8af7a4385bb26"
             ]
         ],
-        "timestamp": "2026-06-18T07:33:06.473625252",
+        "timestamp": "2026-07-10T15:27:44.003057445",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.3"
+            "nextflow": "26.04.4"
         }
     },
     "binning": {
@@ -102,7 +102,6 @@
                 "GenomeBinning/bin_summary.tsv",
                 "GenomeBinning/contig_to_bin/contig_to_bin_map.tsv",
                 "GenomeBinning/depths/bins/bin_depths_summary.tsv",
-                "GenomeBinning/depths/bins/versions.yml",
                 "GenomeBinning/depths/contigs/FLYE-minigut-depth.txt.gz"
             ],
             [
@@ -114,21 +113,21 @@
                 "FLYE-MaxBin2-minigut.noclass.remaining.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "FLYE-MetaBAT2-minigut.lowDepth.fa.gz:md5,79c2c6b99d5808d1ea1fb3bc70427837",
                 "FLYE-MetaBAT2-minigut.tooShort.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "FLYE-MetaBAT2-minigut.unbinned.pooled.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "FLYE-MetaBAT2-minigut.unbinned.remaining.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "full_table.tsv:md5,e508daf6f2d78d865f843082b186f429",
-                "missing_busco_list.tsv:md5,e23067e29e590c11349ca5bd313d8a8a",
-                "full_table.tsv:md5,ce8d580d56c08972582f19b38bbd5378",
-                "missing_busco_list.tsv:md5,5e98b7bf4cca84833076ce2b97b1e236",
+                "full_table.tsv:md5,1175561d3fdddee99aa96b9a5abeafaa",
+                "missing_busco_list.tsv:md5,33bc1a05ef0fbc7c0b32ba59210134d2",
+                "full_table.tsv:md5,5e1aac8474a92cb0bb887403f7a1c0dd",
+                "missing_busco_list.tsv:md5,95935ce6db35fe1d24ea88582dec86c8",
                 "bin_summary.tsv:md5,6eed9ea4021e61af50ac5f1ce393edda",
                 "contig_to_bin_map.tsv:md5,6a781efcbb14d97f5c049c69c935c0da",
-                "bin_depths_summary.tsv:md5,985f843d43973cbfe5b49f0ad0628193",
-                "versions.yml:md5,553ee8a62e65d93ce1163bb16314da29"
+                "bin_depths_summary.tsv:md5,985f843d43973cbfe5b49f0ad0628193"
             ]
         ],
-        "timestamp": "2026-06-17T17:01:33.813434636",
+        "timestamp": "2026-07-09T14:21:36.985589485",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.3"
+            "nextflow": "26.04.4"
         }
     },
     "content-checks": {
@@ -153,7 +152,7 @@
     },
     "-profile longreadonly_alternatives": {
         "content": [
-            32,
+            30,
             {
                 "ADJUST_MAXBIN2_EXT": {
                     "coreutils": 9.5
@@ -169,7 +168,7 @@
                     "bowtie2": "2.4.2"
                 },
                 "BUSCO_BUSCO": {
-                    "busco": "6.0.0"
+                    "busco": "6.1.0"
                 },
                 "BUSCO_UNTAR": {
                     "untar": 1.34
@@ -191,9 +190,6 @@
                 },
                 "FLYE": {
                     "flye": "2.9.5-b1801"
-                },
-                "GUNZIP_BINS": {
-                    "gunzip": 1.13
                 },
                 "GUNZIP_LONGREAD_ASSEMBLIES": {
                     "gunzip": 1.13
@@ -252,10 +248,10 @@
                 }
             }
         ],
-        "timestamp": "2026-06-18T03:35:00.775314288",
+        "timestamp": "2026-07-09T14:21:36.894996084",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.3"
+            "nextflow": "26.04.4"
         }
     },
     "multiqc": {

@@ -84,6 +84,7 @@ workflow PIPELINE_INITIALISATION {
         before_text,
         after_text,
         command,
+        null,
     )
 
     //
@@ -377,6 +378,10 @@ def validateInputParameters(hybrid) {
 
     if (params.gtdbtk_skip_aniscreen) {
         log.warn("[nf-core/mag]: The parameter '--gtdbtk_skip_aniscreen' is deprecated and will be removed in a future release. Please use '--gtdbtk_place_species' instead.")
+    }
+
+    if (params.skip_metaeuk) {
+        log.warn("[nf-core/mag]: The parameter '--skip_metaeuk' is deprecated and will be removed in a future release. It no longer has any effect: MetaEuk only runs when '--metaeuk_db' or '--metaeuk_mmseqs_db' is supplied.")
     }
 
     if (!params.skip_gtdbtk) {

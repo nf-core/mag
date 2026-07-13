@@ -204,6 +204,9 @@ def main(args=None):
     df_failed.set_index("user_genome", inplace=True)
     df_final = df_final.append(df_failed, verify_integrity=True)
 
+    # normalise bin names to the un-gzipped extension used across the pipeline (e.g. X.fa.gz -> X.fa)
+    df_final.index = df_final.index.str.removesuffix(".gz")
+
     # write output
     df_final.reset_index().rename(columns={"index": "user_genome"}).sort_values("user_genome").to_csv(
         args.out, sep="\t", index=False

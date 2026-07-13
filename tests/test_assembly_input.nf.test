@@ -67,10 +67,10 @@ nextflow_pipeline {
                 params.outdir, include: ['GenomeBinning/MetaBAT2/{discarded,unbinned/*}/*.fa.gz']
             )
             def dastool_bins = getAllFilesFromDir(
-                params.outdir, include: ['GenomeBinning/DASTool/bins/*.fa']
+                params.outdir, include: ['GenomeBinning/DASTool/bins/*.fa.gz']
             )
             def dastool_unbins = getAllFilesFromDir(
-                params.outdir, include: ['GenomeBinning/DASTool/unbinned/*.fa']
+                params.outdir, include: ['GenomeBinning/DASTool/unbinned/*.fa.gz']
             )
             def busco_summary = "${params.outdir}/GenomeBinning/QC/busco_summary.tsv"
             def bin_summary = "${params.outdir}/GenomeBinning/bin_summary.tsv"

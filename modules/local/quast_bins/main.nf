@@ -1,5 +1,5 @@
 process QUAST_BINS {
-    tag "${meta.assembler}-${meta.binner}-${meta.domain}-${meta.refinement}-${meta.id}"
+    tag "${meta.assembler}-${meta.binner}-${meta.domain}-${meta.id}"
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?

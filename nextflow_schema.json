@@ -383,7 +383,12 @@
                 "skip_shortread_qc": {
                     "type": "boolean",
                     "description": "Skip all default QC steps for short reads (adapter trimming, phiX removal).",
-                    "help": "Skips clipping and removal of phiX sequences. Does not affect host sequence removal as this is opt in."
+                    "help": "Skips clipping and removal of phiX sequences. Does not affect host sequence removal as this is opt in. Does not prevent FastQC from running if host removal is enabled."
+                },
+                "skip_fastqc": {
+                    "type": "boolean",
+                    "description": "Skip running FastQC on short reads both before and after QC.",
+                    "help": "Skips running FastQC on short reads. Most metrics are redundant with reports from adapter clipping tools, but some metrics are not available from adapter clipping tools. This option is useful to save time and resources when running the pipeline."
                 },
                 "save_phixremoved_reads": {
                     "type": "boolean",
@@ -440,12 +445,12 @@
                 "longreads_keep_percent": {
                     "type": "integer",
                     "default": 90,
-                    "description": "Keep this percent of bases."
+                    "description": "Keep this percent of bases. Only used by filtlong."
                 },
                 "longreads_length_weight": {
                     "type": "integer",
                     "default": 10,
-                    "description": "The higher the more important is read length when choosing the best reads.",
+                    "description": "The higher the more important is read length when choosing the best reads. Only used by filtlong.",
                     "help_text": "The default value focuses on length instead of quality to improve assembly size.\nIn order to assign equal weights to read lengths and read qualities set this parameter to 1.\nThis might be useful, for example, to benefit indirectly from the removal of short host reads (causing lower qualities for reads not overlapping filtered short reads)."
                 },
                 "keep_lambda": {
@@ -480,8 +485,13 @@
                 "longread_filtering_tool": {
                     "type": "string",
                     "description": "Specify which long read filtering tool to use.",
-                    "enum": ["filtlong", "nanoq", "chopper"],
-                    "default": "filtlong"
+                    "enum": ["chopper", "filtlong", "nanoq"],
+                    "default": "chopper"
+                },
+                "filtlong_filtering_by_shortreads": {
+                    "type": "boolean",
+                    "description": "Filter long reads against short reads when using filtlong.",
+                    "help_text": "Only applies when `--longread_filtering_tool filtlong` and short reads are supplied. When enabled, filtlong derives long read quality from k-mer matches to the short reads instead of the Phred scores. This can discard long reads not overlapping the short reads, leading to data loss if short read coverage is poor or the metagenomes differ. Disabled by default."
                 }
             }
         },
@@ -636,6 +646,10 @@
                     "type": "boolean",
                     "description": "Skip ALE"
                 },
+                "ale_per_base_output": {
+                    "type": "boolean",
+                    "description": "Enable ALE per-base output. This output can be very large (tens of GB)."
+                },
                 "skip_quast": {
                     "type": "boolean",
                     "description": "Skip metaQUAST."
@@ -684,7 +698,7 @@
                 },
                 "skip_metaeuk": {
                     "type": "boolean",
-                    "description": "Skip MetaEuk gene prediction and annotation"
+                    "description": "[DEPRECATED] This parameter no longer has any effect and will be removed in a future release. MetaEuk only runs when `--metaeuk_db` or `--metaeuk_mmseqs_db` is supplied."
                 },
                 "metaeuk_mmseqs_db": {
                     "type": "string",
@@ -858,6 +872,12 @@
                     "type": "integer",
                     "description": "Specify the longest length a bin should be to retain for downstream processing (in base pairs). By default no limit.",
                     "help_text": "This can speed up downstream processing by removing 'nonsense' bins (e.g. badly binned single short-contig bins, or unnaturally large bins). By default there is no upper limit on size of bins allowed to pass."
+                },
+                "bin_seqkit_stats_max_forks": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": "Limit the number of concurrent SEQKIT_STATS jobs used for bin size calculation.",
+                    "help_text": "Bins from each binner are sent to SEQKIT_STATS as soon as that binner finishes, which can spawn many short jobs (roughly samples * assemblers * binners). On schedulers that dislike large numbers of tiny jobs, set this to cap how many run at once."
                 },
                 "bin_concoct_chunksize": {
                     "type": "integer",
