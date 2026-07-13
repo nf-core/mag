@@ -2,22 +2,22 @@
     "annotation": {
         "content": [
             [
-                "Annotation/MetaEuk/MEGAHIT/MEGAHIT-MetaBAT2Refined-test_minigut.1/MEGAHIT-MetaBAT2Refined-test_minigut.1.codon.fas",
-                "Annotation/MetaEuk/MEGAHIT/MEGAHIT-MetaBAT2Refined-test_minigut.1/MEGAHIT-MetaBAT2Refined-test_minigut.1.fas",
-                "Annotation/MetaEuk/MEGAHIT/MEGAHIT-MetaBAT2Refined-test_minigut.1/MEGAHIT-MetaBAT2Refined-test_minigut.1.gff",
-                "Annotation/MetaEuk/MEGAHIT/MEGAHIT-MetaBAT2Refined-test_minigut.1/MEGAHIT-MetaBAT2Refined-test_minigut.1.headersMap.tsv",
-                "Annotation/MetaEuk/MEGAHIT/MEGAHIT-MetaBAT2Refined-test_minigut.2/MEGAHIT-MetaBAT2Refined-test_minigut.2.codon.fas",
-                "Annotation/MetaEuk/MEGAHIT/MEGAHIT-MetaBAT2Refined-test_minigut.2/MEGAHIT-MetaBAT2Refined-test_minigut.2.fas",
-                "Annotation/MetaEuk/MEGAHIT/MEGAHIT-MetaBAT2Refined-test_minigut.2/MEGAHIT-MetaBAT2Refined-test_minigut.2.gff",
-                "Annotation/MetaEuk/MEGAHIT/MEGAHIT-MetaBAT2Refined-test_minigut.2/MEGAHIT-MetaBAT2Refined-test_minigut.2.headersMap.tsv",
-                "Annotation/MetaEuk/SPAdes/SPAdes-CONCOCTRefined-test_minigut.7/SPAdes-CONCOCTRefined-test_minigut.7.codon.fas",
-                "Annotation/MetaEuk/SPAdes/SPAdes-CONCOCTRefined-test_minigut.7/SPAdes-CONCOCTRefined-test_minigut.7.fas",
-                "Annotation/MetaEuk/SPAdes/SPAdes-CONCOCTRefined-test_minigut.7/SPAdes-CONCOCTRefined-test_minigut.7.gff",
-                "Annotation/MetaEuk/SPAdes/SPAdes-CONCOCTRefined-test_minigut.7/SPAdes-CONCOCTRefined-test_minigut.7.headersMap.tsv",
-                "Annotation/MetaEuk/SPAdes/SPAdes-MaxBin2Refined-test_minigut.001_sub/SPAdes-MaxBin2Refined-test_minigut.001_sub.codon.fas",
-                "Annotation/MetaEuk/SPAdes/SPAdes-MaxBin2Refined-test_minigut.001_sub/SPAdes-MaxBin2Refined-test_minigut.001_sub.fas",
-                "Annotation/MetaEuk/SPAdes/SPAdes-MaxBin2Refined-test_minigut.001_sub/SPAdes-MaxBin2Refined-test_minigut.001_sub.gff",
-                "Annotation/MetaEuk/SPAdes/SPAdes-MaxBin2Refined-test_minigut.001_sub/SPAdes-MaxBin2Refined-test_minigut.001_sub.headersMap.tsv"
+                "Annotation/MetaEuk/MEGAHIT/MEGAHIT-MetaBAT2Refined-test_minigut.1.codon.fas",
+                "Annotation/MetaEuk/MEGAHIT/MEGAHIT-MetaBAT2Refined-test_minigut.1.fas",
+                "Annotation/MetaEuk/MEGAHIT/MEGAHIT-MetaBAT2Refined-test_minigut.1.gff",
+                "Annotation/MetaEuk/MEGAHIT/MEGAHIT-MetaBAT2Refined-test_minigut.1.headersMap.tsv",
+                "Annotation/MetaEuk/MEGAHIT/MEGAHIT-MetaBAT2Refined-test_minigut.2.codon.fas",
+                "Annotation/MetaEuk/MEGAHIT/MEGAHIT-MetaBAT2Refined-test_minigut.2.fas",
+                "Annotation/MetaEuk/MEGAHIT/MEGAHIT-MetaBAT2Refined-test_minigut.2.gff",
+                "Annotation/MetaEuk/MEGAHIT/MEGAHIT-MetaBAT2Refined-test_minigut.2.headersMap.tsv",
+                "Annotation/MetaEuk/SPAdes/SPAdes-CONCOCTRefined-test_minigut.7.codon.fas",
+                "Annotation/MetaEuk/SPAdes/SPAdes-CONCOCTRefined-test_minigut.7.fas",
+                "Annotation/MetaEuk/SPAdes/SPAdes-CONCOCTRefined-test_minigut.7.gff",
+                "Annotation/MetaEuk/SPAdes/SPAdes-CONCOCTRefined-test_minigut.7.headersMap.tsv",
+                "Annotation/MetaEuk/SPAdes/SPAdes-MaxBin2Refined-test_minigut.001_sub.codon.fas",
+                "Annotation/MetaEuk/SPAdes/SPAdes-MaxBin2Refined-test_minigut.001_sub.fas",
+                "Annotation/MetaEuk/SPAdes/SPAdes-MaxBin2Refined-test_minigut.001_sub.gff",
+                "Annotation/MetaEuk/SPAdes/SPAdes-MaxBin2Refined-test_minigut.001_sub.headersMap.tsv"
             ],
             [
                 "MEGAHIT-MetaBAT2Refined-test_minigut.1.codon.fas:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -38,10 +38,10 @@
                 "SPAdes-MaxBin2Refined-test_minigut.001_sub.headersMap.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
-        "timestamp": "2026-01-20T13:11:51.860678532",
+        "timestamp": "2026-07-10T14:36:44.887443562",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.0"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.4"
         }
     },
     "assembly": {

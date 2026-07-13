@@ -7,7 +7,7 @@ Assembly/*/*.log
 Assembly/*/QC/*/*.bowtie2.log
 Assembly/*/QC/*/QUAST/*.{pdf,html,log}
 Assembly/*/QC/*/QUAST/**/*.{pdf,html}
-Assembly/PYPOLCA/*/*/*.vcf
+Assembly/*-pypolca/*/*.vcf
 Assembly/MEGAHIT/QC/*/*.bowtie2.log
 GenomeBinning/CONCOCT/stats/*_{original,PCA_components,PCA_transformed}_data_gt1000.csv
 GenomeBinning/CONCOCT/stats/*_log.txt
