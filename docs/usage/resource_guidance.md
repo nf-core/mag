@@ -31,8 +31,10 @@ Please also note the following:
 - Not all modules in this table will run in every pipeline run, nor will the tool necessarily _use_ the requested amount.
 - On certain module execution failures (such as out of memory), Nextflow will try and resubmit with increased resources with the equation `<resource value> * task.attempt`, up to a certain number of retries. See `conf/base.conf` for more information.
 - Some modules have a dedicate flag to fix the number of CPUs for reproducibility reasons (e.g. `--megahit_fix_cpu_1`). See the [parameters page](https://nf-co.re/mag/dev/parameters).
+- `METASPADES`, `METASPADESHYBRID`, `FILTLONG`, `METAMDBG_ASM` and `FLYE` grow memory and time exponentially with each retry (`<value> * 2 ** (task.attempt - 1)`); the table shows the first-attempt request.
+- `ALE` requests 18.GB by default, but 30.GB when `--coassemble_group` is set.
 
-The table is ordered first by 'memory', then 'Source' of defaults by specificity of definition, and then 'Module name' by alphabetical order.
+The table is ordered first by 'Source' of defaults by specificity of definition, then by 'memory', and then 'Module name' by alphabetical order.
 
 | Module Name                          | CPU | Memory | Time | Source                |
 | ------------------------------------ | --- | ------ | ---- | --------------------- |
@@ -41,26 +43,30 @@ The table is ordered first by 'memory', then 'Source' of defaults by specificity
 | FLYE                                 | 12  | 72.GB  | 24.h | Named customisation   |
 | METAMDBG_ASM                         | 12  | 72.GB  | 24.h | Named customisation   |
 | FILTLONG                             | 8   | 64.GB  | 24.h | Named customisation   |
+| METASPADES                           | 10  | 64.GB  | 24.h | Named customisation   |
+| METASPADESHYBRID                     | 10  | 64.GB  | 24.h | Named customisation   |
+| PORECHOP_ABI                         | 4   | 64.GB  | 8.h  | Named customisation   |
 | CATPACK_CONTIGS                      | 6   | 60.GB  | 8.h  | Named customisation   |
 | CHECKM_LINEAGEWF                     | 6   | 42.GB  | 8.h  | Named customisation   |
 | MEGAHIT                              | 8   | 40.GB  | 16.h | Named customisation   |
-| METASPADES                           | 10  | 40.GB  | 16.h | Named customisation   |
-| METASPADESHYBRID                     | 10  | 40.GB  | 16.h | Named customisation   |
 | PORECHOP_PORECHOP                    | 4   | 30.GB  | 4.h  | Named customisation   |
 | BOWTIE2_HOST_REMOVAL_BUILD           | 10  | 20.GB  | 4.h  | Named customisation   |
 | METABAT2_METABAT2                    | 8   | 20.GB  | 8.h  | Named customisation   |
+| ALE                                  | 1   | 18.GB  | 4.h  | Named customisation   |
 | MAG_DEPTHS                           | 1   | 16.GB  | 4.h  | Named customisation   |
 | BUSCO_BUSCO                          | 10  | 12.GB  | 8.h  | Named customisation   |
 | BOWTIE2_HOST_REMOVAL_ALIGN           | 10  | 10.GB  | 6.h  | Named customisation   |
 | NANOLYSE                             | 2   | 10.GB  | 3.h  | Named customisation   |
 | BOWTIE2_ASSEMBLY_ALIGN               | 2   | 8.GB   | 8.h  | Named customisation   |
-| BOWTIE2_PHIX_REMOVAL_ALIGN           | 4   | 8.GB   | 6.h  | Named customisation   |
-| BOWTIE2_ASSEMBLY_BUILD               | 1   | 7.GB   | 4.h  | Named customisation   |
+| BOWTIE2_PHIX_REMOVAL_ALIGN           | 4   | 4.GB   | 6.h  | Named customisation   |
 | CONCAT_BUSCO_TSV                     | 1   | 1.GB   | 4.h  | Named customisation   |
 | CONCAT_CHECKM_TSV                    | 1   | 1.GB   | 4.h  | Named customisation   |
 | CONCAT_CHECKM2_TSV                   | 1   | 1.GB   | 4.h  | Named customisation   |
 | CONCAT_GUNC_CHECKM_TSV               | 1   | 1.GB   | 4.h  | Named customisation   |
 | CONCAT_GUNC_TSV                      | 1   | 1.GB   | 4.h  | Named customisation   |
+| RENAME_POSTDASTOOL                   | 1   | 1.GB   | 4.h  | Named customisation   |
+| RENAME_PREDASTOOL                    | 1   | 1.GB   | 4.h  | Named customisation   |
+| SEQKIT_STATS                         | 1   | 1.GB   | 4.h  | Named customisation   |
 | COMEBIN_RUNCOMEBIN                   | 12  | 72.GB  | 16.h | Label: process_high   |
 | CONCOCT_CONCOCT                      | 12  | 72.GB  | 16.h | Label: process_high   |
 | GENOMAD_ENDTOEND                     | 12  | 72.GB  | 16.h | Label: process_high   |
@@ -80,7 +86,6 @@ The table is ordered first by 'memory', then 'Source' of defaults by specificity
 | METABINNER_METABINNER                | 6   | 36.GB  | 8.h  | Label: process_medium |
 | METAEUK_EASYPREDICT                  | 6   | 36.GB  | 8.h  | Label: process_medium |
 | MMSEQS_DATABASES                     | 6   | 36.GB  | 8.h  | Label: process_medium |
-| PORECHOP_ABI                         | 6   | 36.GB  | 8.h  | Label: process_medium |
 | PYDAMAGE_ANALYZE                     | 6   | 36.GB  | 8.h  | Label: process_medium |
 | SEMIBIN_SINGLEEASYBIN                | 6   | 36.GB  | 8.h  | Label: process_medium |
 | TIARA_TIARA                          | 6   | 36.GB  | 8.h  | Label: process_medium |
@@ -98,14 +103,10 @@ The table is ordered first by 'memory', then 'Source' of defaults by specificity
 | NANOQ                                | 2   | 12.GB  | 4.h  | Label: process_low    |
 | PROKKA                               | 2   | 12.GB  | 4.h  | Label: process_low    |
 | PYPOLCA_RUN                          | 2   | 12.GB  | 4.h  | Label: process_low    |
-| RENAME_POSTDASTOOL                   | 2   | 12.GB  | 4.h  | Label: process_low    |
-| RENAME_PREDASTOOL                    | 2   | 12.GB  | 4.h  | Label: process_low    |
 | SAMTOOLS_INDEX                       | 2   | 12.GB  | 4.h  | Label: process_low    |
 | SAMTOOLS_UNMAPPED                    | 2   | 12.GB  | 4.h  | Label: process_low    |
-| SEQKIT_STATS                         | 2   | 12.GB  | 4.h  | Label: process_low    |
 | SPLIT_FASTA                          | 2   | 12.GB  | 4.h  | Label: process_low    |
 | SUMMARISE_PYDAMAGEBINS               | 2   | 12.GB  | 4.h  | Label: process_low    |
-| ALE                                  | 1   | 6.GB   | 4.h  | Label: process_single |
 | CAT_FASTQ                            | 1   | 6.GB   | 4.h  | Label: process_single |
 | CATPACK_ADDNAMES                     | 1   | 6.GB   | 4.h  | Label: process_single |
 | CATPACK_DOWNLOAD                     | 1   | 6.GB   | 4.h  | Label: process_single |
@@ -131,6 +132,7 @@ The table is ordered first by 'memory', then 'Source' of defaults by specificity
 | TIARA_CLASSIFY                       | 1   | 6.GB   | 4.h  | Label: process_single |
 | UNTAR                                | 1   | 6.GB   | 4.h  | Label: process_single |
 | BIN_SUMMARY                          | 1   | 7.GB   | 4.h  | Default               |
+| BOWTIE2_ASSEMBLY_BUILD               | 1   | 7.GB   | 4.h  | Default               |
 | BOWTIE2_PHIX_REMOVAL_BUILD           | 1   | 7.GB   | 4.h  | Default               |
 | CONVERT_DEPTHS                       | 1   | 7.GB   | 4.h  | Default               |
 | GTDBTK_DB_PREPARATION                | 1   | 7.GB   | 4.h  | Default               |
