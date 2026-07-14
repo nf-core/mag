@@ -83,17 +83,6 @@
                 "GenomeBinning/MetaBAT2/unbinned/discarded/FLYE-MetaBAT2-minigut.unbinned.remaining.fa.gz",
                 "GenomeBinning/QC/BUSCO/FLYE-MaxBin2-unclassified-unrefined-minigut/minigut-bacteria_odb10-busco.batch_summary.txt",
                 "GenomeBinning/QC/BUSCO/FLYE-MaxBin2-unclassified-unrefined-minigut/minigut-bacteria_odb10-busco.log",
-                "GenomeBinning/QC/BUSCO/FLYE-MaxBin2-unclassified-unrefined-minigut/minigut-bacteria_odb10-busco/FLYE-MaxBin2-minigut.001.fa/run_bacteria_odb10/.bbtools_output/.checkpoint",
-                "GenomeBinning/QC/BUSCO/FLYE-MaxBin2-unclassified-unrefined-minigut/minigut-bacteria_odb10-busco/FLYE-MaxBin2-minigut.001.fa/run_bacteria_odb10/full_table.tsv",
-                "GenomeBinning/QC/BUSCO/FLYE-MaxBin2-unclassified-unrefined-minigut/minigut-bacteria_odb10-busco/FLYE-MaxBin2-minigut.001.fa/run_bacteria_odb10/missing_busco_list.tsv",
-                "GenomeBinning/QC/BUSCO/FLYE-MaxBin2-unclassified-unrefined-minigut/minigut-bacteria_odb10-busco/FLYE-MaxBin2-minigut.001.fa/run_bacteria_odb10/short_summary.json",
-                "GenomeBinning/QC/BUSCO/FLYE-MaxBin2-unclassified-unrefined-minigut/minigut-bacteria_odb10-busco/FLYE-MaxBin2-minigut.001.fa/run_bacteria_odb10/short_summary.txt",
-                "GenomeBinning/QC/BUSCO/FLYE-MaxBin2-unclassified-unrefined-minigut/minigut-bacteria_odb10-busco/FLYE-MaxBin2-minigut.002.fa/run_bacteria_odb10/.bbtools_output/.checkpoint",
-                "GenomeBinning/QC/BUSCO/FLYE-MaxBin2-unclassified-unrefined-minigut/minigut-bacteria_odb10-busco/FLYE-MaxBin2-minigut.002.fa/run_bacteria_odb10/full_table.tsv",
-                "GenomeBinning/QC/BUSCO/FLYE-MaxBin2-unclassified-unrefined-minigut/minigut-bacteria_odb10-busco/FLYE-MaxBin2-minigut.002.fa/run_bacteria_odb10/missing_busco_list.tsv",
-                "GenomeBinning/QC/BUSCO/FLYE-MaxBin2-unclassified-unrefined-minigut/minigut-bacteria_odb10-busco/FLYE-MaxBin2-minigut.002.fa/run_bacteria_odb10/short_summary.json",
-                "GenomeBinning/QC/BUSCO/FLYE-MaxBin2-unclassified-unrefined-minigut/minigut-bacteria_odb10-busco/FLYE-MaxBin2-minigut.002.fa/run_bacteria_odb10/short_summary.txt",
-                "GenomeBinning/QC/BUSCO/FLYE-MaxBin2-unclassified-unrefined-minigut/minigut-bacteria_odb10-busco/batch_summary.txt",
                 "GenomeBinning/QC/BUSCO/FLYE-MaxBin2-unclassified-unrefined-minigut/short_summary.specific.bacteria_odb10.FLYE-MaxBin2-minigut.001.fa.json",
                 "GenomeBinning/QC/BUSCO/FLYE-MaxBin2-unclassified-unrefined-minigut/short_summary.specific.bacteria_odb10.FLYE-MaxBin2-minigut.001.fa.txt",
                 "GenomeBinning/QC/BUSCO/FLYE-MaxBin2-unclassified-unrefined-minigut/short_summary.specific.bacteria_odb10.FLYE-MaxBin2-minigut.002.fa.json",
@@ -115,19 +104,15 @@
                 "FLYE-MetaBAT2-minigut.tooShort.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "FLYE-MetaBAT2-minigut.unbinned.pooled.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "FLYE-MetaBAT2-minigut.unbinned.remaining.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "full_table.tsv:md5,1175561d3fdddee99aa96b9a5abeafaa",
-                "missing_busco_list.tsv:md5,33bc1a05ef0fbc7c0b32ba59210134d2",
-                "full_table.tsv:md5,5e1aac8474a92cb0bb887403f7a1c0dd",
-                "missing_busco_list.tsv:md5,95935ce6db35fe1d24ea88582dec86c8",
                 "bin_summary.tsv:md5,6eed9ea4021e61af50ac5f1ce393edda",
                 "contig_to_bin_map.tsv:md5,6a781efcbb14d97f5c049c69c935c0da",
                 "bin_depths_summary.tsv:md5,985f843d43973cbfe5b49f0ad0628193"
             ]
         ],
-        "timestamp": "2026-07-09T14:21:36.985589485",
+        "timestamp": "2026-07-14T04:09:50.050451195",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nextflow": "26.04.6"
         }
     },
     "content-checks": {
