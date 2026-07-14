@@ -355,9 +355,6 @@
     "assembly": {
         "content": [
             [
-                "Assembly/SPAdesHybrid/QC/group-0/DeepMAsED/features/SPAdesHybrid-group-0-minigut_feats.tsv",
-                "Assembly/SPAdesHybrid/QC/group-0/DeepMAsED/features/group-0-SPAdesHybrid_feature_file_paths.tsv",
-                "Assembly/SPAdesHybrid/QC/group-0/DeepMAsED/group-0-SPAdesHybrid_predictions.tsv",
                 "Assembly/SPAdesHybrid/QC/group-0/QUAST/basic_stats/GC_content_plot.pdf",
                 "Assembly/SPAdesHybrid/QC/group-0/QUAST/basic_stats/Nx_plot.pdf",
                 "Assembly/SPAdesHybrid/QC/group-0/QUAST/basic_stats/SPAdesHybrid-group-0_GC_content_plot.pdf",
@@ -387,7 +384,7 @@
                 "Assembly/SPAdesHybrid/SPAdesHybrid-group-0.spades.log"
             ],
             [
-                "group-0-SPAdesHybrid_predictions.tsv:md5,b7958edae70eacf475ed88fcf320df91",
+                "group-0-SPAdesHybrid_predictions.tsv:md5,766a3f406dacf935f7310d18850ed3aa",
                 "SPAdesHybrid-group-0.rna.gff:md5,7c75e7285ddbdd34de7db9a5e0c8e2c0",
                 "barrnap.log:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "report.tex:md5,ad471d5662dd03c72bb60de697a210b0",
@@ -406,7 +403,7 @@
             "nf-test": "0.9.3",
             "nextflow": "26.04.3"
         },
-        "timestamp": "2026-07-12T20:48:56.761236127"
+        "timestamp": "2026-07-13T00:00:30.343251984"
     },
     "binning": {
         "content": [

@@ -156,9 +156,6 @@
             [
                 "Assembly/MEGAHIT/MEGAHIT-group-0.contigs.fa.gz",
                 "Assembly/MEGAHIT/MEGAHIT-group-0.log",
-                "Assembly/MEGAHIT/QC/group-0/DeepMAsED/features/MEGAHIT-group-0-test_minigut_sample2_feats.tsv",
-                "Assembly/MEGAHIT/QC/group-0/DeepMAsED/features/group-0-MEGAHIT_feature_file_paths.tsv",
-                "Assembly/MEGAHIT/QC/group-0/DeepMAsED/group-0-MEGAHIT_predictions.tsv",
                 "Assembly/MEGAHIT/QC/group-0/MEGAHIT-group-0-test_minigut.bowtie2.log",
                 "Assembly/MEGAHIT/QC/group-0/MEGAHIT-group-0-test_minigut_sample2.bowtie2.log"
             ],
@@ -171,7 +168,7 @@
             "nf-test": "0.9.3",
             "nextflow": "26.04.3"
         },
-        "timestamp": "2026-07-12T20:05:17.979453547"
+        "timestamp": "2026-07-12T23:39:26.553516998"
     },
     "binning": {
         "content": [

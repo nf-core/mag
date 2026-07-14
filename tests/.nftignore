@@ -17,10 +17,13 @@ GenomeBinning/CONCOCT/stats/*_{original,PCA_components,PCA_transformed}_data_gt1
 GenomeBinning/CONCOCT/stats/*_log.txt
 GenomeBinning/CONCOCT/stats/*.tsv
 GenomeBinning/DASTool/*.log
-GenomeBinning/DeepMASED/**/*_predictions.tsv
-GenomeBinning/DeepMASED/**/*_feature_file_paths.tsv
+GenomeBinning/DeepMAsED/**/*_predictions.tsv
+GenomeBinning/DeepMAsED/**/*_feature_file_paths.tsv
 GenomeBinning/depths/**/*-depth.txt.gz
 GenomeBinning/depths/bins/*.png
+GenomeBinning/**/*_pydamage_bin_results.tsv
+GenomeBinning/**/concatenated.pplacer.json
+GenomeBinning/**/*pplacer.json
 GenomeBinning/QC/busco_summary.tsv
 GenomeBinning/QC/BUSCO/**/.checkpoint
 GenomeBinning/QC/BUSCO/**/{logs,prodigal_output,busco_sequences,hmmer_output}/**
@@ -58,3 +61,4 @@ Taxonomy/GTDB-Tk/**/gtdbtk.json
 Taxonomy/GTDB-Tk/**/*pplacer.json
 Taxonomy/GTDB-Tk/**/concatenated.pplacer.json
 VirusIdentification/geNomad/**/*_aggregated_classification.tsv
+VirusIdentification/geNomad/**/*_virus_summary.tsv

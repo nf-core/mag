@@ -478,11 +478,11 @@
                 "SPAdes-SemiBin2-test_minigut_1.txt:md5,cf185bf4659b89175853fe4efdbd3b6e"
             ]
         ],
-        "timestamp": "2026-07-01T13:31:48.22423603",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
-        }
+        },
+        "timestamp": "2026-07-01T13:31:48.22423603"
     },
     "qc": {
         "content": [
@@ -515,15 +515,15 @@
                 "test_minigut_sample2_run0_fastp.fastp.json:md5,1034d3e91d332a925e8dad1ad002d526"
             ]
         ],
-        "timestamp": "2026-07-01T13:31:47.786971117",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
-        }
+        },
+        "timestamp": "2026-07-01T13:31:47.786971117"
     },
     "-profile test": {
         "content": [
-            190,
+            198,
             {
                 "ADJUST_MAXBIN2_EXT": {
                     "coreutils": 9.5
@@ -675,11 +675,11 @@
                 }
             }
         ],
-        "timestamp": "2026-07-09T14:22:11.515720736",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
-        }
+            "nf-test": "0.9.3",
+            "nextflow": "26.04.3"
+        },
+        "timestamp": "2026-07-12T23:31:17.005422949"
     },
     "log-checks": {
         "content": [
@@ -693,11 +693,11 @@
             "semibin2_logs contains 'Binning finished': true",
             "prokka_logs contains 'Annotation finished successfully.': true"
         ],
-        "timestamp": "2026-07-01T13:31:54.184151045",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
-        }
+        },
+        "timestamp": "2026-07-01T13:31:54.184151045"
     },
     "assembly": {
         "content": [
@@ -806,6 +806,7 @@
             [
                 "MEGAHIT-test_minigut.contigs.fa.gz:md5,f35393cdbcb64bdc7ae9db78a5601229",
                 "MEGAHIT-test_minigut_sample2.contigs.fa.gz:md5,2c0b7977b39fb2db31ee9b3adf75f8c6",
+                "test_minigut-MEGAHIT_predictions.tsv:md5,9e4db95f9672ef7cbca6f3418f05ed9e",
                 "MEGAHIT-test_minigut.rna.gff:md5,942835123dc5a757ca3ce3814574759c",
                 "barrnap.log:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "report.tex:md5,c9caf27dd1448a21a21f306da529dc5b",
@@ -815,6 +816,7 @@
                 "transposed_report.tex:md5,dc3e89d9df5e005d6e9ba8d6b9a6c570",
                 "transposed_report.tsv:md5,2fe52b2d363265a8866f990df7ea9be5",
                 "transposed_report.txt:md5,05b7b247b8bc3197e0eacf42023ebfa8",
+                "test_minigut_sample2-MEGAHIT_predictions.tsv:md5,ac53dfca75b9097c7453062442c10603",
                 "MEGAHIT-test_minigut_sample2.rna.gff:md5,061b53b3eca22c84920920dc4fcb49b7",
                 "barrnap.log:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "report.tex:md5,c777fc687b95d83c22c198899af63f8c",
@@ -824,6 +826,7 @@
                 "transposed_report.tex:md5,4a28984db2fd778a401972d849296665",
                 "transposed_report.tsv:md5,d1ed9fffeb02e71d22fa6f8d0b9ce554",
                 "transposed_report.txt:md5,59a86145e8175cafaa5017bb8be211c3",
+                "test_minigut-SPAdes_predictions.tsv:md5,d5128d985e645f6d8d40c6a86a9312be",
                 "SPAdes-test_minigut.rna.gff:md5,210804efa4c6c4ff922b1226c1307054",
                 "barrnap.log:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "report.tex:md5,0f4e06a5774eedb0cb7de5ca1d4c0e54",
@@ -833,6 +836,7 @@
                 "transposed_report.tex:md5,666ee1e6e8f2dc7fb1c8957073809fc8",
                 "transposed_report.tsv:md5,2a104ab86c68a7306a837e14730a245b",
                 "transposed_report.txt:md5,cdefba8d503ebcad5d0e864041dbbe67",
+                "test_minigut_sample2-SPAdes_predictions.tsv:md5,e09585f7211521df93c5ba960ed6b301",
                 "SPAdes-test_minigut_sample2.rna.gff:md5,ea7ffe0b93f20d92393d43b53cc6484b",
                 "barrnap.log:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "report.tex:md5,8a089b30659b5e8ac05f009eb256ed5e",
@@ -850,11 +854,11 @@
                 "SPAdes-test_minigut_sample2.scaffolds.fa.gz:md5,6e4bf6fb04dd8b2797445bb34bca663b"
             ]
         ],
-        "timestamp": "2026-07-01T13:31:47.802795921",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
-        }
+            "nf-test": "0.9.3",
+            "nextflow": "26.04.3"
+        },
+        "timestamp": "2026-07-12T23:31:17.634255981"
     },
     "binning": {
         "content": [
@@ -1820,11 +1824,11 @@
                 "bin_depths_summary.tsv:md5,3dacec5981315f96e7b9a7d1dadee766"
             ]
         ],
-        "timestamp": "2026-07-09T14:22:11.789406563",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
-        }
+        },
+        "timestamp": "2026-07-09T14:22:11.789406563"
     },
     "content-checks": {
         "content": [
@@ -1844,11 +1848,11 @@
             "BAT summary non-empty: true",
             "GTDB-Tk summary non-empty: true"
         ],
-        "timestamp": "2026-07-01T13:31:52.669362767",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
-        }
+        },
+        "timestamp": "2026-07-01T13:31:52.669362767"
     },
     "taxonomy": {
         "content": [
@@ -2208,11 +2212,11 @@
                 "gtdbtk_summary.tsv:md5,250168b49c7dac2e3bdb79518c0367d5"
             ]
         ],
-        "timestamp": "2026-07-01T14:13:12.804942102",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
-        }
+        },
+        "timestamp": "2026-07-01T14:13:12.804942102"
     },
     "multiqc": {
         "content": [
@@ -2458,11 +2462,11 @@
                 "quast_table.yaml:md5,2d53029b92bc2e3940ee2ae932fa2c9d"
             ]
         ],
-        "timestamp": "2026-07-01T13:31:49.625664675",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
-        }
+        },
+        "timestamp": "2026-07-01T13:31:49.625664675"
     },
     "tsv-rows": {
         "content": [
@@ -2473,10 +2477,10 @@
             "gtdbtk_summary.tsv rows: 22",
             "prokka *.tsv rows: [MEGAHIT-MaxBin2-test_minigut.001.tsv=746, MEGAHIT-MaxBin2-test_minigut.002.tsv=770, MEGAHIT-MetaBAT2-test_minigut.1.tsv=716, MEGAHIT-MetaBAT2-test_minigut.2.tsv=627, MEGAHIT-MetaBAT2-test_minigut.unbinned.1.tsv=24, MEGAHIT-MetaBAT2-test_minigut.unbinned.2.tsv=25, MEGAHIT-MetaBAT2-test_minigut_sample2.unbinned.1.tsv=6, MEGAHIT-MetaBAT2-test_minigut_sample2.unbinned.2.tsv=5, MEGAHIT-SemiBin2-test_minigut_0.tsv=1503, SPAdes-MaxBin2-test_minigut.001.tsv=736, SPAdes-MaxBin2-test_minigut.002.tsv=827, SPAdes-MaxBin2-test_minigut_sample2.001.tsv=188, SPAdes-MaxBin2-test_minigut_sample2.noclass.1.tsv=5, SPAdes-MaxBin2-test_minigut_sample2.noclass.2.tsv=4, SPAdes-MetaBAT2-test_minigut.1.tsv=777, SPAdes-MetaBAT2-test_minigut.2.tsv=721, SPAdes-MetaBAT2-test_minigut.unbinned.1.tsv=14, SPAdes-MetaBAT2-test_minigut.unbinned.2.tsv=15, SPAdes-MetaBAT2-test_minigut_sample2.unbinned.1.tsv=13, SPAdes-MetaBAT2-test_minigut_sample2.unbinned.2.tsv=6, SPAdes-SemiBin2-test_minigut_0.tsv=721, SPAdes-SemiBin2-test_minigut_1.tsv=818]"
         ],
-        "timestamp": "2026-07-01T13:31:53.429427634",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
-        }
+        },
+        "timestamp": "2026-07-01T13:31:53.429427634"
     }
 }
