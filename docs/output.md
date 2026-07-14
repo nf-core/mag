@@ -285,7 +285,7 @@ SPAdesHybrid is a part of the [SPAdes](http://cab.spbu.ru/software/spades/) soft
 <details markdown="1">
 <summary>Output files</summary>
 
-- `Assembly/PYPOLCA/[sample/group]/`
+- `Assembly/[assembler]-pypolca/`
   - `[assembler]-[sample/group]_pypolca.fasta`: Polished (error-corrected) assembly in fasta format
   - `[assembler]-[sample/group].report`: Polishing statistics, including the number of substitution and indel errors corrected
   - `[assembler]-[sample/group].vcf`: Variants called against the input assembly and used for correction
