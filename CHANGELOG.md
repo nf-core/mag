@@ -38,7 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1070](https://github.com/nf-core/mag/pull/1070) - Update BUSCO nf-core module (by @dialvarezs)
 - [#1071](https://github.com/nf-core/mag/pull/1071) - Improved efficiency by batching `DASTOOL_FASTATOCONTIG2BIN` per binner instead of per bin (by @dialvarezs)
 - [#1074](https://github.com/nf-core/mag/pull/1074) - Exclude BUSCO output directories to reduce storage usage in output dir (by @dialvarezs)
-- [#PRNUM](https://github.com/nf-core/mag/pull/PRNUM) - Update output documentation to reflect BUSCO complete directory no longer being published (by @dialvarezs)
+- [#1075](https://github.com/nf-core/mag/pull/1075) - Update output documentation to reflect BUSCO complete directory no longer being published (by @dialvarezs)
 
 ### `Fixed`
 
