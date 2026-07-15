@@ -806,7 +806,6 @@
             [
                 "MEGAHIT-test_minigut.contigs.fa.gz:md5,f35393cdbcb64bdc7ae9db78a5601229",
                 "MEGAHIT-test_minigut_sample2.contigs.fa.gz:md5,2c0b7977b39fb2db31ee9b3adf75f8c6",
-                "test_minigut-MEGAHIT_predictions.tsv:md5,9e4db95f9672ef7cbca6f3418f05ed9e",
                 "MEGAHIT-test_minigut.rna.gff:md5,942835123dc5a757ca3ce3814574759c",
                 "barrnap.log:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "report.tex:md5,c9caf27dd1448a21a21f306da529dc5b",
@@ -816,7 +815,6 @@
                 "transposed_report.tex:md5,dc3e89d9df5e005d6e9ba8d6b9a6c570",
                 "transposed_report.tsv:md5,2fe52b2d363265a8866f990df7ea9be5",
                 "transposed_report.txt:md5,05b7b247b8bc3197e0eacf42023ebfa8",
-                "test_minigut_sample2-MEGAHIT_predictions.tsv:md5,ac53dfca75b9097c7453062442c10603",
                 "MEGAHIT-test_minigut_sample2.rna.gff:md5,061b53b3eca22c84920920dc4fcb49b7",
                 "barrnap.log:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "report.tex:md5,c777fc687b95d83c22c198899af63f8c",
@@ -826,7 +824,6 @@
                 "transposed_report.tex:md5,4a28984db2fd778a401972d849296665",
                 "transposed_report.tsv:md5,d1ed9fffeb02e71d22fa6f8d0b9ce554",
                 "transposed_report.txt:md5,59a86145e8175cafaa5017bb8be211c3",
-                "test_minigut-SPAdes_predictions.tsv:md5,d5128d985e645f6d8d40c6a86a9312be",
                 "SPAdes-test_minigut.rna.gff:md5,210804efa4c6c4ff922b1226c1307054",
                 "barrnap.log:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "report.tex:md5,0f4e06a5774eedb0cb7de5ca1d4c0e54",
@@ -836,7 +833,6 @@
                 "transposed_report.tex:md5,666ee1e6e8f2dc7fb1c8957073809fc8",
                 "transposed_report.tsv:md5,2a104ab86c68a7306a837e14730a245b",
                 "transposed_report.txt:md5,cdefba8d503ebcad5d0e864041dbbe67",
-                "test_minigut_sample2-SPAdes_predictions.tsv:md5,e09585f7211521df93c5ba960ed6b301",
                 "SPAdes-test_minigut_sample2.rna.gff:md5,ea7ffe0b93f20d92393d43b53cc6484b",
                 "barrnap.log:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "report.tex:md5,8a089b30659b5e8ac05f009eb256ed5e",
@@ -858,7 +854,7 @@
             "nf-test": "0.9.3",
             "nextflow": "26.04.3"
         },
-        "timestamp": "2026-07-12T23:31:17.634255981"
+        "timestamp": "2026-07-14T18:44:32.884541717"
     },
     "binning": {
         "content": [
@@ -1819,16 +1815,15 @@
                 "MEGAHIT-SemiBin2-test_minigut_0.fa.gz:md5,f3505b2a132f217148936566c5c2300f",
                 "SPAdes-SemiBin2-test_minigut_0.fa.gz:md5,30b2d79961f225ed7d9e6156a4bdf482",
                 "SPAdes-SemiBin2-test_minigut_1.fa.gz:md5,40ec6d89351332f6f34a442441757ca7",
-                "bin_summary.tsv:md5,85c0b3a15c2494c730b1d7387172df68",
                 "contig_to_bin_map.tsv:md5,c5434e4d14baa4453dbafa41e858eaa3",
                 "bin_depths_summary.tsv:md5,3dacec5981315f96e7b9a7d1dadee766"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nf-test": "0.9.3",
+            "nextflow": "26.04.3"
         },
-        "timestamp": "2026-07-09T14:22:11.789406563"
+        "timestamp": "2026-07-14T18:44:34.119740532"
     },
     "content-checks": {
         "content": [
@@ -2136,87 +2131,33 @@
                 "SPAdes-SemiBin2-test_minigut-bins_bin2classification.names.txt:md5,dedb9199df302c607660a548e7e83ea1",
                 "SPAdes-SemiBin2-test_minigut-bins_summary.txt:md5,1666dbfcbf757029cc0e5b0bba712e00",
                 "bat_summary.tsv:md5,76a5177b83e5ccad2ca2d14f2dc7f5cc",
-                "MEGAHIT-MaxBin2-unclassified-unrefined-test_minigut.bac120.summary.tsv:md5,18b8156141c6b98440888d0df31747cf",
-                "MEGAHIT-MaxBin2-unclassified-unrefined-test_minigut.bac120.filtered.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "MEGAHIT-MaxBin2-unclassified-unrefined-test_minigut.bac120.msa.fasta.gz:md5,b82a626533ec83a2f79ef5841fc2639f",
                 "MEGAHIT-MaxBin2-unclassified-unrefined-test_minigut.bac120.user_msa.fasta.gz:md5,1993e89ed60a2503d06a73824ac3a6bd",
                 "MEGAHIT-MaxBin2-unclassified-unrefined-test_minigut.bac120.classify.tree:md5,54b7ef233a39f2d0c3e4512065d2391d",
-                "MEGAHIT-MaxBin2-unclassified-unrefined-test_minigut.bac120.summary.tsv:md5,18b8156141c6b98440888d0df31747cf",
-                "MEGAHIT-MaxBin2-unclassified-unrefined-test_minigut.bac120.ani_summary.tsv:md5,69d00235776a82f38a45f1388895eb2d",
-                "MEGAHIT-MaxBin2-unclassified-unrefined-test_minigut.ar53.markers_summary.tsv:md5,bb7175d648f81e813e79b426cb879ee4",
-                "MEGAHIT-MaxBin2-unclassified-unrefined-test_minigut.bac120.markers_summary.tsv:md5,2fa9e67f5cc6506abf55baa5419262e6",
-                "MEGAHIT-MaxBin2-unclassified-unrefined-test_minigut.failed_genomes.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "MEGAHIT-MaxBin2-unclassified-unrefined-test_minigut.translation_table_summary.tsv:md5,6b4ade2c532f9c1782345d7789987307",
-                "MEGAHIT-MetaBAT2-unclassified-unrefined-test_minigut.bac120.summary.tsv:md5,fd7d8d4a737e229ce7c9b4abcb921394",
-                "MEGAHIT-MetaBAT2-unclassified-unrefined-test_minigut.bac120.filtered.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "MEGAHIT-MetaBAT2-unclassified-unrefined-test_minigut.bac120.msa.fasta.gz:md5,1e26e2fba4c0c98bd46c963cc7c46028",
                 "MEGAHIT-MetaBAT2-unclassified-unrefined-test_minigut.bac120.user_msa.fasta.gz:md5,4002fc80ca42a9c714e499690445e4b0",
                 "MEGAHIT-MetaBAT2-unclassified-unrefined-test_minigut.bac120.classify.tree:md5,5cabdd4480737ad7b37f50b91fbd3891",
-                "MEGAHIT-MetaBAT2-unclassified-unrefined-test_minigut.bac120.summary.tsv:md5,fd7d8d4a737e229ce7c9b4abcb921394",
-                "MEGAHIT-MetaBAT2-unclassified-unrefined-test_minigut.bac120.ani_summary.tsv:md5,96bcf245e254d6e92e56b4630be6970f",
-                "MEGAHIT-MetaBAT2-unclassified-unrefined-test_minigut.ar53.markers_summary.tsv:md5,d2f0853e313f9a565bb709e88c470dd7",
-                "MEGAHIT-MetaBAT2-unclassified-unrefined-test_minigut.bac120.markers_summary.tsv:md5,da53e4bbe144c828d4d1bf0827a85970",
-                "MEGAHIT-MetaBAT2-unclassified-unrefined-test_minigut.failed_genomes.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "MEGAHIT-MetaBAT2-unclassified-unrefined-test_minigut.translation_table_summary.tsv:md5,93a5fcd6d623ea910bd15a1013db7e1f",
-                "MEGAHIT-SemiBin2-unclassified-unrefined-test_minigut.bac120.summary.tsv:md5,33f2bc37d822c85bac422cbce6d5125a",
-                "MEGAHIT-SemiBin2-unclassified-unrefined-test_minigut.bac120.filtered.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "MEGAHIT-SemiBin2-unclassified-unrefined-test_minigut.bac120.msa.fasta.gz:md5,a86defd7209d766d0cf0a12dea5062fb",
                 "MEGAHIT-SemiBin2-unclassified-unrefined-test_minigut.bac120.user_msa.fasta.gz:md5,3c583119cef874ae9835724a656c01b0",
                 "MEGAHIT-SemiBin2-unclassified-unrefined-test_minigut.bac120.classify.tree:md5,68f567516c156938369916a977b8e631",
-                "MEGAHIT-SemiBin2-unclassified-unrefined-test_minigut.bac120.summary.tsv:md5,33f2bc37d822c85bac422cbce6d5125a",
-                "MEGAHIT-SemiBin2-unclassified-unrefined-test_minigut.ar53.markers_summary.tsv:md5,d36ddee93c25f696fd28a98fa4e5e4b9",
-                "MEGAHIT-SemiBin2-unclassified-unrefined-test_minigut.bac120.markers_summary.tsv:md5,719349cfed0b1b78c8784ef59a535686",
-                "MEGAHIT-SemiBin2-unclassified-unrefined-test_minigut.failed_genomes.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "MEGAHIT-SemiBin2-unclassified-unrefined-test_minigut.translation_table_summary.tsv:md5,ebfd1920c9619b259e1099cae1cc2e1e",
-                "SPAdes-MaxBin2-unclassified-unrefined-test_minigut.bac120.summary.tsv:md5,5b8c040d56967c7f53f40b1545502299",
-                "SPAdes-MaxBin2-unclassified-unrefined-test_minigut.bac120.filtered.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "SPAdes-MaxBin2-unclassified-unrefined-test_minigut.bac120.msa.fasta.gz:md5,f0b0d815b74820516c6463e943d6d673",
                 "SPAdes-MaxBin2-unclassified-unrefined-test_minigut.bac120.user_msa.fasta.gz:md5,4cc6f4263587f97b225e48982429a2d5",
                 "SPAdes-MaxBin2-unclassified-unrefined-test_minigut.bac120.classify.tree:md5,fed4f8279507a68b2714dbd6fc8ea328",
-                "SPAdes-MaxBin2-unclassified-unrefined-test_minigut.bac120.summary.tsv:md5,5b8c040d56967c7f53f40b1545502299",
-                "SPAdes-MaxBin2-unclassified-unrefined-test_minigut.bac120.ani_summary.tsv:md5,7333b4ca643d2481e771868acf21ba1f",
-                "SPAdes-MaxBin2-unclassified-unrefined-test_minigut.ar53.markers_summary.tsv:md5,8cd9832c4d51971e61ff91bbeab12e44",
-                "SPAdes-MaxBin2-unclassified-unrefined-test_minigut.bac120.markers_summary.tsv:md5,0ebb0bbdfe4f0963251bd5ac1501dffe",
-                "SPAdes-MaxBin2-unclassified-unrefined-test_minigut.failed_genomes.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "SPAdes-MaxBin2-unclassified-unrefined-test_minigut.translation_table_summary.tsv:md5,a0c63ff98e8debef2eb181bad21dab79",
-                "SPAdes-MaxBin2-unclassified-unrefined-test_minigut_sample2.bac120.summary.tsv:md5,875b4ada217860cf8c78eb5fb434200e",
-                "SPAdes-MaxBin2-unclassified-unrefined-test_minigut_sample2.bac120.filtered.tsv:md5,d6804c41d06a6e4037293d050f7ec673",
                 "SPAdes-MaxBin2-unclassified-unrefined-test_minigut_sample2.bac120.msa.fasta.gz:md5,d9fe921d33d3343823d7c20f7307e45d",
-                "SPAdes-MaxBin2-unclassified-unrefined-test_minigut_sample2.bac120.summary.tsv:md5,875b4ada217860cf8c78eb5fb434200e",
-                "SPAdes-MaxBin2-unclassified-unrefined-test_minigut_sample2.ar53.markers_summary.tsv:md5,7ffab455fa10fe88f4e56430b692312b",
-                "SPAdes-MaxBin2-unclassified-unrefined-test_minigut_sample2.bac120.markers_summary.tsv:md5,64f430ca4e9d3f7b258020e926f6146b",
-                "SPAdes-MaxBin2-unclassified-unrefined-test_minigut_sample2.failed_genomes.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "SPAdes-MaxBin2-unclassified-unrefined-test_minigut_sample2.translation_table_summary.tsv:md5,d71a73378824cfcc083e70b0dc279c0d",
-                "SPAdes-MetaBAT2-unclassified-unrefined-test_minigut.bac120.summary.tsv:md5,b54acd7c6841cc908f99a09ea69506c3",
-                "SPAdes-MetaBAT2-unclassified-unrefined-test_minigut.bac120.filtered.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "SPAdes-MetaBAT2-unclassified-unrefined-test_minigut.bac120.msa.fasta.gz:md5,1ed57c8dccb03ff529f210cea9604dbc",
                 "SPAdes-MetaBAT2-unclassified-unrefined-test_minigut.bac120.user_msa.fasta.gz:md5,505440cd76a51f6e581749748730f1c3",
                 "SPAdes-MetaBAT2-unclassified-unrefined-test_minigut.bac120.classify.tree:md5,2e4fdd0c45f2a509c415503293e95f10",
-                "SPAdes-MetaBAT2-unclassified-unrefined-test_minigut.bac120.summary.tsv:md5,b54acd7c6841cc908f99a09ea69506c3",
-                "SPAdes-MetaBAT2-unclassified-unrefined-test_minigut.bac120.ani_summary.tsv:md5,bf8cabc6b13565a6f1a34b38739036e0",
-                "SPAdes-MetaBAT2-unclassified-unrefined-test_minigut.ar53.markers_summary.tsv:md5,e00f67702c386e274d8662fd76d1efbe",
-                "SPAdes-MetaBAT2-unclassified-unrefined-test_minigut.bac120.markers_summary.tsv:md5,aac7adf5ba590dcd9fc024550a369769",
-                "SPAdes-MetaBAT2-unclassified-unrefined-test_minigut.failed_genomes.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "SPAdes-MetaBAT2-unclassified-unrefined-test_minigut.translation_table_summary.tsv:md5,5b0b9eda61ed9c3a48c7e114b6583586",
-                "SPAdes-SemiBin2-unclassified-unrefined-test_minigut.bac120.summary.tsv:md5,299d7cf8d41360b943ad9730bcd890cd",
-                "SPAdes-SemiBin2-unclassified-unrefined-test_minigut.bac120.filtered.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "SPAdes-SemiBin2-unclassified-unrefined-test_minigut.bac120.msa.fasta.gz:md5,1f1520fdfa4e7c7e7fc2f3cd13c2dbb6",
                 "SPAdes-SemiBin2-unclassified-unrefined-test_minigut.bac120.user_msa.fasta.gz:md5,ddbd7e330870b8cb5f829aa2a481a8b3",
                 "SPAdes-SemiBin2-unclassified-unrefined-test_minigut.bac120.classify.tree:md5,c2ec48c7370660d1a178b5926ad0539e",
-                "SPAdes-SemiBin2-unclassified-unrefined-test_minigut.bac120.summary.tsv:md5,299d7cf8d41360b943ad9730bcd890cd",
-                "SPAdes-SemiBin2-unclassified-unrefined-test_minigut.bac120.ani_summary.tsv:md5,05a83ccc82e148dde283642ab26ce04c",
-                "SPAdes-SemiBin2-unclassified-unrefined-test_minigut.ar53.markers_summary.tsv:md5,45cb2f21c46bf58302de6bf47bb1a0cc",
-                "SPAdes-SemiBin2-unclassified-unrefined-test_minigut.bac120.markers_summary.tsv:md5,1c12559d07218083548b33c26770a836",
-                "SPAdes-SemiBin2-unclassified-unrefined-test_minigut.failed_genomes.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "SPAdes-SemiBin2-unclassified-unrefined-test_minigut.translation_table_summary.tsv:md5,209a1f7c37720ebffdd0be5362b6f84d",
                 "gtdbtk_summary.tsv:md5,250168b49c7dac2e3bdb79518c0367d5"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nf-test": "0.9.3",
+            "nextflow": "26.04.3"
         },
-        "timestamp": "2026-07-01T14:13:12.804942102"
+        "timestamp": "2026-07-15T01:30:50.467991786"
     },
     "multiqc": {
         "content": [

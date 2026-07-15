@@ -11,6 +11,10 @@ Assembly/*/QC/*/QUAST/**/*.{pdf,html}
 Assembly/*/QC/*/DeepMAsED/**/*_predictions.tsv
 Assembly/*/QC/*/DeepMAsED/**/*_feature_file_paths.tsv
 Assembly/*/QC/*/DeepMAsED/**/*_feats.tsv
+Assembly/*/QC/*/DeepMASED/**/*_predictions.tsv
+Assembly/*/QC/*/DeepMASED/**/*_feature_file_paths.tsv
+Assembly/*/QC/*/DeepMASED/**/*_feats.tsv
+Assembly/**/*_predictions.tsv
 Assembly/PYPOLCA/*/*/*.vcf
 Assembly/*-pypolca/*/*.vcf
 Assembly/MEGAHIT/QC/*/*.bowtie2.log
@@ -20,9 +24,14 @@ GenomeBinning/CONCOCT/stats/*.tsv
 GenomeBinning/DASTool/*.log
 GenomeBinning/DeepMAsED/**/*_predictions.tsv
 GenomeBinning/DeepMAsED/**/*_feature_file_paths.tsv
+GenomeBinning/DeepMASED/**/*_predictions.tsv
+GenomeBinning/DeepMASED/**/*_feature_file_paths.tsv
+GenomeBinning/**/*_predictions.tsv
 GenomeBinning/depths/**/*-depth.txt.gz
 GenomeBinning/depths/bins/*.png
 GenomeBinning/**/*_pydamage_bin_results.tsv
+GenomeBinning/QC/pydamage_bins_summary.tsv
+GenomeBinning/bin_summary.tsv
 GenomeBinning/**/concatenated.pplacer.json
 GenomeBinning/**/*pplacer.json
 GenomeBinning/QC/busco_summary.tsv
@@ -58,8 +67,8 @@ QC_shortreads/fastqc/*_fastqc.{html,zip}
 QC_shortreads/remove_phix/*.log
 Taxonomy/CAT/**/*.log
 Taxonomy/GTDB-Tk/**/*.log
-Taxonomy/GTDB-Tk/**/gtdbtk.json
+Taxonomy/GTDB-Tk/**/*.json
 Taxonomy/GTDB-Tk/**/*pplacer.json
-Taxonomy/GTDB-Tk/**/concatenated.pplacer.json
+Taxonomy/GTDB-Tk/**/*.tsv
 VirusIdentification/geNomad/**/*_aggregated_classification.tsv
 VirusIdentification/geNomad/**/*_virus_summary.tsv

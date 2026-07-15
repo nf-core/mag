@@ -384,7 +384,6 @@
                 "Assembly/SPAdesHybrid/SPAdesHybrid-group-0.spades.log"
             ],
             [
-                "group-0-SPAdesHybrid_predictions.tsv:md5,766a3f406dacf935f7310d18850ed3aa",
                 "SPAdesHybrid-group-0.rna.gff:md5,7c75e7285ddbdd34de7db9a5e0c8e2c0",
                 "barrnap.log:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "report.tex:md5,ad471d5662dd03c72bb60de697a210b0",
@@ -403,7 +402,7 @@
             "nf-test": "0.9.3",
             "nextflow": "26.04.3"
         },
-        "timestamp": "2026-07-13T00:00:30.343251984"
+        "timestamp": "2026-07-14T19:12:44.714720473"
     },
     "binning": {
         "content": [
@@ -646,16 +645,15 @@
                 "SPAdesHybrid-SemiBin2-unclassified-unrefined-group-0-quast_summary.tsv:md5,29a699a812b9cd62612dc81a4ff50f01",
                 "quast_bin_summary.tsv:md5,9b9c0321daed3d156d4388f3524da54c",
                 "SPAdesHybrid-SemiBin2-group-0_0.fa.gz:md5,2b30803aaf880a9d4c99d41e4754cb2b",
-                "bin_summary.tsv:md5,d994b2bf1b88e002fbac287b089bd5d5",
                 "contig_to_bin_map.tsv:md5,72e8419cccfbed712d40b72449333dca",
                 "bin_depths_summary.tsv:md5,1bb4397dfe72ad4cab619de32a3f36f8"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nf-test": "0.9.3",
+            "nextflow": "26.04.3"
         },
-        "timestamp": "2026-07-09T14:25:18.089294638"
+        "timestamp": "2026-07-14T19:12:45.091285572"
     },
     "content-checks": {
         "content": [

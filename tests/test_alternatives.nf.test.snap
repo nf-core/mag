@@ -160,15 +160,14 @@
                 "Assembly/MEGAHIT/QC/group-0/MEGAHIT-group-0-test_minigut_sample2.bowtie2.log"
             ],
             [
-                "MEGAHIT-group-0.contigs.fa.gz:md5,4b1c9360be95e596b87194b12a5db645",
-                "group-0-MEGAHIT_predictions.tsv:md5,a4d2cb954c0b4f8868b6da32c26e1218"
+                "MEGAHIT-group-0.contigs.fa.gz:md5,4b1c9360be95e596b87194b12a5db645"
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "26.04.3"
         },
-        "timestamp": "2026-07-12T23:39:26.553516998"
+        "timestamp": "2026-07-14T18:52:06.9332908"
     },
     "binning": {
         "content": [
@@ -331,7 +330,6 @@
                 "MEGAHIT-MetaBAT2-prokarya-unrefined-group-0_checkm2_report.tsv:md5,ec01903b7f8a7203856a35a7bd2d4c34",
                 "checkm2_summary.tsv:md5,ec01903b7f8a7203856a35a7bd2d4c34",
                 "tiara_summary.tsv:md5,4cbfb0fd90ba48dc33d75d10c1eddb17",
-                "bin_summary.tsv:md5,039c807dfb42819622aff14c7d484cbb",
                 "contig_to_bin_map.tsv:md5,2bea485185ed808e9b5568438f603e2a",
                 "bin_depths_summary.tsv:md5,a73f2fc180a2c52038c88fbbfa6a95c3"
             ]
@@ -340,7 +338,7 @@
             "nf-test": "0.9.3",
             "nextflow": "26.04.3"
         },
-        "timestamp": "2026-07-12T21:17:41.4264185"
+        "timestamp": "2026-07-14T18:52:07.169685483"
     },
     "content-checks": {
         "content": [

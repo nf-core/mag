@@ -661,7 +661,6 @@
             [
                 "MEGAHIT-test_minigut.contigs.fa.gz:md5,3a04593d030eea4bda21d1db4d1f7251",
                 "MEGAHIT-test_minigut_sample2.contigs.fa.gz:md5,e679c5d2f77f4e4b8a3c74a47625a509",
-                "test_minigut-MEGAHIT_predictions.tsv:md5,c8702bb1fb794b302c3c106bf9bd5512",
                 "MEGAHIT-test_minigut.rna.gff:md5,601e12e5b3d3d1efdaa27abdf7724460",
                 "barrnap.log:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "report.tex:md5,bf78597cef3a1321bc22f6b0fd1ee3cb",
@@ -671,7 +670,6 @@
                 "transposed_report.tex:md5,945e1d3ee9aaf147fd6491819c5b718e",
                 "transposed_report.tsv:md5,b8fc3a3fa1f35ddc253ca4fee590b711",
                 "transposed_report.txt:md5,fd173586fa93f25d988b2773bbe4df55",
-                "test_minigut_sample2-MEGAHIT_predictions.tsv:md5,49ac28b4a1865b5d823c5680fa537397",
                 "MEGAHIT-test_minigut_sample2.rna.gff:md5,5fad704315c29d8c2b85b928e38a6ccc",
                 "barrnap.log:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "report.tex:md5,1ff25f834d4a3da73cb6877d7043b113",
@@ -687,7 +685,7 @@
             "nf-test": "0.9.3",
             "nextflow": "26.04.3"
         },
-        "timestamp": "2026-07-13T00:10:13.087732871"
+        "timestamp": "2026-07-14T19:21:48.163763764"
     },
     "binning": {
         "content": [
@@ -1774,9 +1772,7 @@
                 "transposed_report.txt:md5,eadaec5cee85ad5aeb3d03c08985a234",
                 "MEGAHIT-MetaBAT2-unclassified-unrefined-test_minigut-quast_summary.tsv:md5,48efe7a2f8a145ddc4dc4934a3009104",
                 "checkm_summary.tsv:md5,0ba48ca4d6557e95a8acb5cfc50d8d16",
-                "pydamage_bins_summary.tsv:md5,d0a80b2e54796eb8aadef974310dae2c",
                 "quast_bin_summary.tsv:md5,c977b46a6a46e27c7dbfbecdab80ec74",
-                "bin_summary.tsv:md5,aa22f302e64f473a175b386844b42873",
                 "contig_to_bin_map.tsv:md5,9a146f6bd0eaf2fd9605cf1885dd37bc",
                 "bin_depths_summary.tsv:md5,bd54b32dc4c741cd4edd2bbba51f6552"
             ]
@@ -1785,7 +1781,7 @@
             "nf-test": "0.9.3",
             "nextflow": "26.04.3"
         },
-        "timestamp": "2026-07-13T00:10:13.423961466"
+        "timestamp": "2026-07-14T19:21:48.545228781"
     },
     "viral": {
         "content": [
@@ -1951,24 +1947,17 @@
                 "MEGAHIT-MetaBAT2-test_minigut-bins_bin2classification.names.txt:md5,ce1b6bae00995e88d70722462d9fcedb",
                 "MEGAHIT-MetaBAT2-test_minigut-bins_summary.txt:md5,c2986e27b93008b06709a59bb298e3ea",
                 "bat_summary.tsv:md5,ab01c0858ee334804fb97180d1ba321e",
-                "all-all-all-all-all_bins.bac120.filtered.tsv:md5,2bb6ca3daafbb6c1ed48f0f1985e1495",
                 "all-all-all-all-all_bins.bac120.msa.fasta.gz:md5,b38b041253c38da1631248c3e3d683db",
                 "all-all-all-all-all_bins.bac120.user_msa.fasta.gz:md5,58edfa33cc8b49056c9fb6e4a176a599",
-                "all-all-all-all-all_bins.bac120.summary.tsv:md5,b8727a444f3dcc2f1ee4afaf513ba067",
                 "all-all-all-all-all_bins.bac120.classify.tree:md5,14fd38cd74dcbe18ee5ecea438584b6e",
-                "all-all-all-all-all_bins.bac120.summary.tsv:md5,b8727a444f3dcc2f1ee4afaf513ba067",
-                "all-all-all-all-all_bins.ar53.markers_summary.tsv:md5,1e5635bfd5f8ce70982b6c6257c86cd9",
-                "all-all-all-all-all_bins.bac120.markers_summary.tsv:md5,ee6820163f90d4a29a24daec782d3461",
-                "all-all-all-all-all_bins.failed_genomes.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "all-all-all-all-all_bins.translation_table_summary.tsv:md5,7c9c15bf5cef03aac5ee6b1986b045e9",
                 "gtdbtk_summary.tsv:md5,75c4048c09d6126dc7f1019d138d33fe"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nf-test": "0.9.3",
+            "nextflow": "26.04.3"
         },
-        "timestamp": "2026-07-01T12:40:11.972008847"
+        "timestamp": "2026-07-15T02:31:10.603510936"
     },
     "-profile test_single_end": {
         "content": [
