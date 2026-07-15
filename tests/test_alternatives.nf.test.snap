@@ -178,12 +178,12 @@
                 "GenomeBinning/MetaBAT2/discarded/MEGAHIT-MetaBAT2-group-0.tooShort.fa.gz",
                 "GenomeBinning/MetaBAT2/unbinned/discarded/MEGAHIT-MetaBAT2-group-0.unbinned.pooled.fa.gz",
                 "GenomeBinning/MetaBAT2/unbinned/discarded/MEGAHIT-MetaBAT2-group-0.unbinned.remaining.fa.gz",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/group-0-auto-busco.batch_summary.txt",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/group-0-auto-busco.log",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/short_summary.specific.bacteria_odb12.2.MEGAHIT-MetaBAT2-group-0.1.fa.json",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/short_summary.specific.bacteria_odb12.2.MEGAHIT-MetaBAT2-group-0.1.fa.txt",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/short_summary.specific.bacteria_odb12.2.MEGAHIT-MetaBAT2-group-0.2.fa.json",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/short_summary.specific.bacteria_odb12.2.MEGAHIT-MetaBAT2-group-0.2.fa.txt",
+                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/group-0-bacteria_odb10-busco.batch_summary.txt",
+                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/group-0-bacteria_odb10-busco.log",
+                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/short_summary.specific.bacteria_odb10.MEGAHIT-MetaBAT2-group-0.1.fa.json",
+                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/short_summary.specific.bacteria_odb10.MEGAHIT-MetaBAT2-group-0.1.fa.txt",
+                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/short_summary.specific.bacteria_odb10.MEGAHIT-MetaBAT2-group-0.2.fa.json",
+                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/short_summary.specific.bacteria_odb10.MEGAHIT-MetaBAT2-group-0.2.fa.txt",
                 "GenomeBinning/QC/CheckM2/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/checkm2.log",
                 "GenomeBinning/QC/CheckM2/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/diamond_output/DIAMOND_RESULTS.tsv",
                 "GenomeBinning/QC/CheckM2/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/protein_files/MEGAHIT-MetaBAT2-group-0.1.faa",
@@ -205,10 +205,6 @@
                 "MEGAHIT-MetaBAT2-group-0.tooShort.fa.gz:md5,90667cb1a77c0bc39e7e8441bfdf2305",
                 "MEGAHIT-MetaBAT2-group-0.unbinned.pooled.fa.gz:md5,5b3cbd9e81fa0c990cb19018f23b8151",
                 "MEGAHIT-MetaBAT2-group-0.unbinned.remaining.fa.gz:md5,e694b456ad5d1b3bc1b7af499090d0e6",
-                "full_table.tsv:md5,19f91f5cefec6be29ad48d241c2a6b5e",
-                "missing_busco_list.tsv:md5,7d2a5567059355bd66bffc35b8cea530",
-                "full_table.tsv:md5,70d187cfdef1ef9777aec9ff391a2682",
-                "missing_busco_list.tsv:md5,6b5850146cf94d565e41d709825be20f",
                 "MEGAHIT-MetaBAT2-group-0.1.faa:md5,70451fa3e39837f5d25b8116e5d03500",
                 "MEGAHIT-MetaBAT2-group-0.2.faa:md5,903b0e2ed9a0ff98c1c9af09b16ae527",
                 "quality_report.tsv:md5,ec01903b7f8a7203856a35a7bd2d4c34",
@@ -219,11 +215,11 @@
                 "bin_depths_summary.tsv:md5,a73f2fc180a2c52038c88fbbfa6a95c3"
             ]
         ],
-        "timestamp": "2026-07-14T04:13:16.865839504",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
-        }
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.4"
+        },
+        "timestamp": "2026-07-15T10:09:01.269997247"
     },
     "content-checks": {
         "content": [
