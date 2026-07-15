@@ -164,6 +164,10 @@
 
   > Borry M, Hübner A, Rohrlach AB, Warinner C. 2021. PyDamage: automated ancient damage identification and estimation for contigs in ancient DNA de novo assembly. PeerJ 9:e11845 doi: 10.7717/peerj.11845
 
+- [pypolca](https://doi.org/10.1099/mgen.0.001254)
+
+  > Bouras, G., Judd, L. M., Edwards, R. A., Vreugde, S., Stinear, T. P., & Wick, R. R. (2024). How low can you go? Short-read polishing of Oxford Nanopore bacterial genome assemblies. Microbial Genomics, 10(6), 001254. doi: 10.1099/mgen.0.001254
+
 - [SAMtools](https://doi.org/10.1093/bioinformatics/btp352)
 
   > Li, H., Handsaker, B., Wysoker, A., Fennell, T., Ruan, J., Homer, N., … 1000 Genome Project Data Processing Subgroup. (2009). The Sequence Alignment/Map format and SAMtools. Bioinformatics , 25(16), 2078–2079. doi: 10.1093/bioinformatics/btp352.
