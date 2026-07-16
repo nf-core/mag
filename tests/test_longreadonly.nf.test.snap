@@ -102,11 +102,11 @@
                 "METAMDBG-MaxBin2-minigut.002.txt:md5,1860eeacfb5e6d985d4c176e577965c1"
             ]
         ],
-        "timestamp": "2026-06-25T18:07:33.114578889",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
-        }
+            "nf-test": "0.9.3",
+            "nextflow": "26.04.3"
+        },
+        "timestamp": "2026-07-15T19:53:53.797174075"
     },
     "qc": {
         "content": [
@@ -135,11 +135,11 @@
                 "minigut_0.stats:md5,e7ef22efc494097a3ad803e35d2b6469"
             ]
         ],
-        "timestamp": "2026-06-26T15:03:32.004652411",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
-        }
+        },
+        "timestamp": "2026-06-26T15:03:32.004652411"
     },
     "log-checks": {
         "content": [
@@ -151,11 +151,11 @@
             "Flye: true",
             "MetaMDBG: true"
         ],
-        "timestamp": "2026-05-21T17:15:28.427520218",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.1"
-        }
+        },
+        "timestamp": "2026-05-21T17:15:28.427520218"
     },
     "assembly": {
         "content": [
@@ -230,11 +230,11 @@
                 "transposed_report.txt:md5,e2b2a97b17b1c097d681388a96b3351f"
             ]
         ],
-        "timestamp": "2026-06-25T18:07:31.401097381",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
-        }
+            "nf-test": "0.9.3",
+            "nextflow": "26.04.3"
+        },
+        "timestamp": "2026-07-15T19:53:51.224980939"
     },
     "binning": {
         "content": [
@@ -409,16 +409,15 @@
                 "transposed_report.txt:md5,a74806130cbea850c5fc5d35ec33aaed",
                 "METAMDBG-MaxBin2-unclassified-unrefined-minigut-quast_summary.tsv:md5,8d413ba9b36e54bdc38ac1fcb73d22ba",
                 "quast_bin_summary.tsv:md5,e02d1e12339d934932baa5e8b48ed4b3",
-                "bin_summary.tsv:md5,305d69623ff4112163025ff92a70bccc",
                 "contig_to_bin_map.tsv:md5,ef14a8638a6f639add03ca38ff22e4b9",
                 "bin_depths_summary.tsv:md5,b3efc921cfe1789a5a4763a12cfe50f8"
             ]
         ],
-        "timestamp": "2026-07-14T04:15:08.498401069",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
-        }
+            "nf-test": "0.9.3",
+            "nextflow": "26.04.3"
+        },
+        "timestamp": "2026-07-15T19:53:51.82386838"
     },
     "content-checks": {
         "content": [
@@ -438,11 +437,11 @@
             "Bin depths summary non-empty: true",
             "QUAST bin summary non-empty: true"
         ],
-        "timestamp": "2026-05-21T16:21:19.480127695",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.1"
-        }
+        },
+        "timestamp": "2026-05-21T16:21:19.480127695"
     },
     "-profile longreadonly": {
         "content": [
@@ -557,11 +556,11 @@
                 }
             }
         ],
-        "timestamp": "2026-07-09T14:26:54.925811528",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
-        }
+            "nf-test": "0.9.3",
+            "nextflow": "26.04.3"
+        },
+        "timestamp": "2026-07-15T19:53:50.106754953"
     },
     "multiqc": {
         "content": [
@@ -610,11 +609,11 @@
                 
             ]
         ],
-        "timestamp": "2026-05-21T16:21:15.4461817",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "26.04.1"
-        }
+            "nf-test": "0.9.3",
+            "nextflow": "26.04.3"
+        },
+        "timestamp": "2026-07-15T19:53:56.09686428"
     },
     "summary-rows": {
         "content": [
@@ -623,10 +622,10 @@
             "Bin depths summary: 4",
             "QUAST bin summary: 4"
         ],
-        "timestamp": "2026-05-21T16:21:20.038026223",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.1"
-        }
+        },
+        "timestamp": "2026-05-21T16:21:20.038026223"
     }
 }
