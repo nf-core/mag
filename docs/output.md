@@ -636,17 +636,8 @@ If a lineage dataset is specified already with `--busco_db`, only results for th
   - `[sample/group]-[lineage]-busco.batch_summary.txt`: Summary table of the BUSCO results for the bins in the sample.
   - `short_summary.generic.[lineage].[assembler]-[bin].{txt,json}`: A detailed BUSCO summary for each bin, available in both plain text and JSON format.
   - `[sample/group]-[lineage]-busco.log`: Log file of the BUSCO run.
-  - `[assembler]-[bin]/`
-    - `prodigal_output/predicted_genes/predicted.{fna,faa}`: Predicted genes by Prodigal in FASTA format.
-    - `logs/`: Logs for each of the tools used by BUSCO.
-    - `run-[specific_lineage]:`
-      - `full_table.tsv`: A detailed table indicating the complete BUSCO gene list for the lineage, detailing their presence in the assembly.
-      - `missing_busco_list.tsv`: List of BUSCOs that were not found in the assembly.
-      - `busco_sequences/*/*.{fna,faa}`: Nucleotide and aminoacid sequences of all identified BUSCOs (single copy, multi copy and fragmented).
 
 </details>
-
-If the parameter `busco_clean` is set to `false`, the BUSCO directory will preserve additional files, including outputs from the tools BUSCO utilizes and the `auto_lineage/` directory. This directory contains results for each lineage tested during automated lineage selection.
 
 If the parameter `--save_busco_db` is set, additionally the used BUSCO lineage datasets are stored in the output directory.
 
