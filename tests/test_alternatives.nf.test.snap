@@ -1,7 +1,7 @@
 {
     "-profile test_alternatives": {
         "content": [
-            35,
+            34,
             {
                 "BIN_SUMMARY": {
                     "pandas": "1.4.3",
@@ -23,9 +23,6 @@
                 },
                 "BUSCO_BUSCO": {
                     "busco": "6.1.0"
-                },
-                "BUSCO_UNTAR": {
-                    "untar": 1.34
                 },
                 "CHECKM2_DATABASEDOWNLOAD": {
                     "aria2": "1.37.0"
@@ -105,11 +102,11 @@
                 }
             }
         ],
+        "timestamp": "2026-07-20T20:19:07.525828489",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "26.04.3"
-        },
-        "timestamp": "2026-07-12T21:17:41.171285967"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
     },
     "qc": {
         "content": [
@@ -132,11 +129,11 @@
                 "test_minigut_sample2_run0_trimmomatic_trim.log:md5,ea9f15adce3091c96ef7ba6285957676"
             ]
         ],
+        "timestamp": "2026-06-21T22:36:03.532077574",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-06-21T22:36:03.532077574"
+        }
     },
     "log-checks": {
         "content": [
@@ -145,11 +142,11 @@
             "Bowtie2 assembly alignment: true",
             "CheckM2: true"
         ],
+        "timestamp": "2026-04-22T08:27:57.789443458",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-04-22T08:27:57.789443458"
+        }
     },
     "assembly": {
         "content": [
@@ -163,11 +160,11 @@
                 "MEGAHIT-group-0.contigs.fa.gz:md5,4b1c9360be95e596b87194b12a5db645"
             ]
         ],
+        "timestamp": "2026-07-14T18:52:06.9332908",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "26.04.3"
-        },
-        "timestamp": "2026-07-14T18:52:06.9332908"
+        }
     },
     "binning": {
         "content": [
@@ -178,12 +175,12 @@
                 "GenomeBinning/MetaBAT2/discarded/MEGAHIT-MetaBAT2-group-0.tooShort.fa.gz",
                 "GenomeBinning/MetaBAT2/unbinned/discarded/MEGAHIT-MetaBAT2-group-0.unbinned.pooled.fa.gz",
                 "GenomeBinning/MetaBAT2/unbinned/discarded/MEGAHIT-MetaBAT2-group-0.unbinned.remaining.fa.gz",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/group-0-bacteria_odb10-busco.batch_summary.txt",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/group-0-bacteria_odb10-busco.log",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/short_summary.specific.bacteria_odb10.MEGAHIT-MetaBAT2-group-0.1.fa.json",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/short_summary.specific.bacteria_odb10.MEGAHIT-MetaBAT2-group-0.1.fa.txt",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/short_summary.specific.bacteria_odb10.MEGAHIT-MetaBAT2-group-0.2.fa.json",
-                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/short_summary.specific.bacteria_odb10.MEGAHIT-MetaBAT2-group-0.2.fa.txt",
+                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/group-0-auto-busco.batch_summary.txt",
+                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/group-0-auto-busco.log",
+                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/short_summary.specific.bacteria_odb12.2.MEGAHIT-MetaBAT2-group-0.1.fa.json",
+                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/short_summary.specific.bacteria_odb12.2.MEGAHIT-MetaBAT2-group-0.1.fa.txt",
+                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/short_summary.specific.bacteria_odb12.2.MEGAHIT-MetaBAT2-group-0.2.fa.json",
+                "GenomeBinning/QC/BUSCO/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/short_summary.specific.bacteria_odb12.2.MEGAHIT-MetaBAT2-group-0.2.fa.txt",
                 "GenomeBinning/QC/CheckM2/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/checkm2.log",
                 "GenomeBinning/QC/CheckM2/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/diamond_output/DIAMOND_RESULTS.tsv",
                 "GenomeBinning/QC/CheckM2/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/protein_files/MEGAHIT-MetaBAT2-group-0.1.faa",
@@ -211,15 +208,16 @@
                 "MEGAHIT-MetaBAT2-prokarya-unrefined-group-0_checkm2_report.tsv:md5,ec01903b7f8a7203856a35a7bd2d4c34",
                 "checkm2_summary.tsv:md5,ec01903b7f8a7203856a35a7bd2d4c34",
                 "tiara_summary.tsv:md5,4cbfb0fd90ba48dc33d75d10c1eddb17",
+                "bin_summary.tsv:md5,8121450e1df6f5ce89141d6b2044e1f3",
                 "contig_to_bin_map.tsv:md5,2bea485185ed808e9b5568438f603e2a",
                 "bin_depths_summary.tsv:md5,a73f2fc180a2c52038c88fbbfa6a95c3"
             ]
         ],
+        "timestamp": "2026-07-20T20:19:07.58773751",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-07-15T10:09:01.269997247"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
     },
     "content-checks": {
         "content": [
@@ -233,17 +231,17 @@
             "CheckM2 DIAMOND results non-empty: true",
             "Tiara summary non-empty: true"
         ],
+        "timestamp": "2026-04-22T08:27:57.756822178",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-04-22T08:27:57.756822178"
+        }
     },
     "multiqc": {
         "content": [
             [
                 "multiqc/multiqc_data/bowtie2_pe_plot.yaml",
-                "multiqc/multiqc_data/busco_plot_bacteria_odb10.yaml",
+                "multiqc/multiqc_data/busco_plot_bacteria_odb12_2.yaml",
                 "multiqc/multiqc_data/checkm2-first-table.yaml",
                 "multiqc/multiqc_data/fastqc-1-status-check-heatmap.yaml",
                 "multiqc/multiqc_data/fastqc-1_per_base_n_content_plot.yaml",
@@ -280,8 +278,8 @@
                 "multiqc/multiqc_data/trimmomatic_plot.yaml",
                 "multiqc/multiqc_plots/pdf/bowtie2_pe_plot-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/bowtie2_pe_plot-pct.pdf",
-                "multiqc/multiqc_plots/pdf/busco_plot_bacteria_odb10-cnt.pdf",
-                "multiqc/multiqc_plots/pdf/busco_plot_bacteria_odb10-pct.pdf",
+                "multiqc/multiqc_plots/pdf/busco_plot_bacteria_odb12_2-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/busco_plot_bacteria_odb12_2-pct.pdf",
                 "multiqc/multiqc_plots/pdf/checkm2-first-table.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc-1-status-check-heatmap.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc-1_per_base_n_content_plot.pdf",
@@ -306,8 +304,8 @@
                 "multiqc/multiqc_plots/pdf/trimmomatic_plot-pct.pdf",
                 "multiqc/multiqc_plots/png/bowtie2_pe_plot-cnt.png",
                 "multiqc/multiqc_plots/png/bowtie2_pe_plot-pct.png",
-                "multiqc/multiqc_plots/png/busco_plot_bacteria_odb10-cnt.png",
-                "multiqc/multiqc_plots/png/busco_plot_bacteria_odb10-pct.png",
+                "multiqc/multiqc_plots/png/busco_plot_bacteria_odb12_2-cnt.png",
+                "multiqc/multiqc_plots/png/busco_plot_bacteria_odb12_2-pct.png",
                 "multiqc/multiqc_plots/png/checkm2-first-table.png",
                 "multiqc/multiqc_plots/png/fastqc-1-status-check-heatmap.png",
                 "multiqc/multiqc_plots/png/fastqc-1_per_base_n_content_plot.png",
@@ -332,8 +330,8 @@
                 "multiqc/multiqc_plots/png/trimmomatic_plot-pct.png",
                 "multiqc/multiqc_plots/svg/bowtie2_pe_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/bowtie2_pe_plot-pct.svg",
-                "multiqc/multiqc_plots/svg/busco_plot_bacteria_odb10-cnt.svg",
-                "multiqc/multiqc_plots/svg/busco_plot_bacteria_odb10-pct.svg",
+                "multiqc/multiqc_plots/svg/busco_plot_bacteria_odb12_2-cnt.svg",
+                "multiqc/multiqc_plots/svg/busco_plot_bacteria_odb12_2-pct.svg",
                 "multiqc/multiqc_plots/svg/checkm2-first-table.svg",
                 "multiqc/multiqc_plots/svg/fastqc-1-status-check-heatmap.svg",
                 "multiqc/multiqc_plots/svg/fastqc-1_per_base_n_content_plot.svg",
@@ -360,7 +358,7 @@
             ],
             [
                 "bowtie2_pe_plot.yaml:md5,9fa09c02794c68558cc04fb9568cc8c4",
-                "busco_plot_bacteria_odb10.yaml:md5,ce68c564a09794859131fd6ba68af954",
+                "busco_plot_bacteria_odb12_2.yaml:md5,200b5e4c091a8481d931478f0029275c",
                 "checkm2-first-table.yaml:md5,0efa2d81e6b4dea3218aa0fbc12d853e",
                 "fastqc-1-status-check-heatmap.yaml:md5,30f0c0bbefd3e9c549116c8b7cc2ac25",
                 "fastqc-1_per_base_n_content_plot.yaml:md5,80a627bfce9e28c6597176a216d95350",
@@ -381,21 +379,21 @@
                 "fastqc_sequence_length_distribution_plot.yaml:md5,a39b46c991ab0b8589bace6a12c30bdd",
                 "multiqc_bowtie2.yaml:md5,6607915ea98168dbcad83cda2ec464dc",
                 "multiqc_bowtie2_bowtie2-2.yaml:md5,2a389e80ea3e2afb772fe4cd2779d0b2",
-                "multiqc_busco.yaml:md5,fd1ac12dd7701390b5a7b4b933002678",
+                "multiqc_busco.yaml:md5,62d093e7da3477c1b58c76b5e49f28da",
                 "multiqc_checkm2.yaml:md5,8f23880e10a57ad0df6434e2f479c85b",
                 "multiqc_citations.yaml:md5,50440bb766620557f852bbd53357a098",
                 "multiqc_fastqc.yaml:md5,f50da8bfd062b9399911ba19b34831db",
                 "multiqc_fastqc_fastqc-1.yaml:md5,4c2c5a5e7b370b0668c1360b7927d0a8",
-                "multiqc_general_stats.yaml:md5,f69757f2abaeba28c4acbd6e923d80f7",
+                "multiqc_general_stats.yaml:md5,e1bf0ca2bc3b26ca0a8b77c4e1b1029d",
                 "multiqc_trimmomatic.yaml:md5,d4aaff3725c28801ae0577d97c2f9b30",
                 "trimmomatic_plot.yaml:md5,9557cd587ace0a93912179cb0deafe3b"
             ]
         ],
+        "timestamp": "2026-07-20T20:19:07.636675152",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "26.04.3"
-        },
-        "timestamp": "2026-07-12T21:17:41.603029517"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
     },
     "summary-rows": {
         "content": [
@@ -405,10 +403,10 @@
             "CheckM2 DIAMOND results: [803]",
             "Tiara summary: 2"
         ],
+        "timestamp": "2026-04-22T08:27:57.772778533",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-04-22T08:27:57.772778533"
+        }
     }
 }

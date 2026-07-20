@@ -25,11 +25,11 @@
                 "minigut_run0_nanoq_filtered.stats:md5,00dfdbb0bfa701faf739b3339246a4d0"
             ]
         ],
+        "timestamp": "2026-05-04T09:01:09.14935308",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.0"
-        },
-        "timestamp": "2026-05-04T09:01:09.14935308"
+        }
     },
     "log-checks": {
         "content": [
@@ -37,11 +37,11 @@
             "NanoLyse: true",
             "BUSCO: true"
         ],
+        "timestamp": "2026-04-22T16:49:16.048959838",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-04-22T16:49:16.048959838"
+        }
     },
     "assembly": {
         "content": [
@@ -62,11 +62,11 @@
                 "FLYE-minigut.assembly_info.txt:md5,8af4d61c811efe1796e8af7a4385bb26"
             ]
         ],
+        "timestamp": "2026-07-10T15:27:44.003057445",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
-        },
-        "timestamp": "2026-07-10T15:27:44.003057445"
+        }
     },
     "binning": {
         "content": [
@@ -104,15 +104,16 @@
                 "FLYE-MetaBAT2-minigut.tooShort.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "FLYE-MetaBAT2-minigut.unbinned.pooled.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "FLYE-MetaBAT2-minigut.unbinned.remaining.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "bin_summary.tsv:md5,6eed9ea4021e61af50ac5f1ce393edda",
                 "contig_to_bin_map.tsv:md5,6a781efcbb14d97f5c049c69c935c0da",
                 "bin_depths_summary.tsv:md5,985f843d43973cbfe5b49f0ad0628193"
             ]
         ],
+        "timestamp": "2026-07-20T19:58:47.678613573",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "26.04.3"
-        },
-        "timestamp": "2026-07-15T16:39:48.058734806"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
     },
     "content-checks": {
         "content": [
@@ -128,11 +129,11 @@
             "Bin summary non-empty: true",
             "Bin summary row count matches bins: true"
         ],
+        "timestamp": "2026-04-22T16:49:15.976141599",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-04-22T16:49:15.976141599"
+        }
     },
     "-profile longreadonly_alternatives": {
         "content": [
@@ -232,11 +233,11 @@
                 }
             }
         ],
+        "timestamp": "2026-07-09T14:21:36.894996084",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
-        },
-        "timestamp": "2026-07-09T14:21:36.894996084"
+        }
     },
     "multiqc": {
         "content": [
@@ -448,11 +449,11 @@
                 "porechop.yaml:md5,828d96e2822bb4b4108ab706c00c4450"
             ]
         ],
+        "timestamp": "2026-06-17T17:01:34.016518547",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.3"
-        },
-        "timestamp": "2026-06-17T17:01:34.016518547"
+        }
     },
     "summary-rows": {
         "content": [
@@ -460,10 +461,10 @@
             "BUSCO summary: 2",
             "Bin depths summary: 2"
         ],
+        "timestamp": "2026-04-22T16:49:13.137323004",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-04-22T16:49:13.137323004"
+        }
     }
 }

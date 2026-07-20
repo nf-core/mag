@@ -114,11 +114,11 @@
                 "SPAdesHybrid-SemiBin2-group-0_0.txt:md5,f3c9e5f7e2651fa893484ca9bb7c3114"
             ]
         ],
+        "timestamp": "2026-06-26T15:16:34.749652718",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
-        },
-        "timestamp": "2026-06-26T15:16:34.749652718"
+        }
     },
     "-profile hybrid": {
         "content": [
@@ -273,11 +273,11 @@
                 }
             }
         ],
+        "timestamp": "2026-07-12T20:48:55.319169785",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "26.04.3"
-        },
-        "timestamp": "2026-07-12T20:48:55.319169785"
+        }
     },
     "log-checks": {
         "content": [
@@ -289,11 +289,11 @@
             "bowtie2_logs contains 'overall alignment rate': true",
             "prokka_logs contains 'Annotation finished successfully.': true"
         ],
+        "timestamp": "2026-06-26T15:16:45.477590782",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
-        },
-        "timestamp": "2026-06-26T15:16:45.477590782"
+        }
     },
     "qc_longreads": {
         "content": [
@@ -346,11 +346,11 @@
                 "minigut_sample2_0.stats:md5,4a2f9b3bc3ba6351207acd63bd75d37c"
             ]
         ],
+        "timestamp": "2026-06-26T15:16:30.534515186",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
-        },
-        "timestamp": "2026-06-26T15:16:30.534515186"
+        }
     },
     "assembly": {
         "content": [
@@ -398,11 +398,11 @@
                 "SPAdesHybrid-group-0.scaffolds.fa.gz:md5,665f0ed8bdf0f2857aa713ce3e83f390"
             ]
         ],
+        "timestamp": "2026-07-14T19:12:44.714720473",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "26.04.3"
-        },
-        "timestamp": "2026-07-14T19:12:44.714720473"
+        }
     },
     "binning": {
         "content": [
@@ -607,11 +607,12 @@
                 "SPAdesHybrid-SemiBin2-unclassified-unrefined-group-0-quast_summary.tsv:md5,29a699a812b9cd62612dc81a4ff50f01",
                 "quast_bin_summary.tsv:md5,9b9c0321daed3d156d4388f3524da54c",
                 "SPAdesHybrid-SemiBin2-group-0_0.fa.gz:md5,2b30803aaf880a9d4c99d41e4754cb2b",
+                "bin_summary.tsv:md5,d994b2bf1b88e002fbac287b089bd5d5",
                 "contig_to_bin_map.tsv:md5,72e8419cccfbed712d40b72449333dca",
                 "bin_depths_summary.tsv:md5,1bb4397dfe72ad4cab619de32a3f36f8"
             ]
         ],
-        "timestamp": "2026-07-14T04:13:35.758490941",
+        "timestamp": "2026-07-20T20:18:12.128850146",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
@@ -629,11 +630,11 @@
             "Prokka TSV row counts: [SPAdesHybrid-MaxBin2-group-0.001.tsv=1015, SPAdesHybrid-MaxBin2-group-0.002.tsv=813, SPAdesHybrid-MetaBAT2-group-0.1.tsv=806, SPAdesHybrid-MetaBAT2-group-0.2.tsv=719, SPAdesHybrid-SemiBin2-group-0_0.tsv=1537]",
             "Bin summary row count matches bins: true"
         ],
+        "timestamp": "2026-06-27T04:41:03.122422151",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
-        },
-        "timestamp": "2026-06-27T04:41:03.122422151"
+        }
     },
     "qc_shortreads": {
         "content": [
@@ -662,11 +663,11 @@
                 "minigut_sample2_run0_host_removed.bowtie2.log:md5,fb967944891311058a2c8f2255cfe118"
             ]
         ],
+        "timestamp": "2026-06-26T15:16:30.510939826",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
-        },
-        "timestamp": "2026-06-26T15:16:30.510939826"
+        }
     },
     "multiqc": {
         "content": [
@@ -909,11 +910,11 @@
                 "quast_table.yaml:md5,2f5c8eae632ff937496491eb1facafd9"
             ]
         ],
+        "timestamp": "2026-06-26T15:16:36.706432235",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
-        },
-        "timestamp": "2026-06-26T15:16:36.706432235"
+        }
     },
     "summary-rows": {
         "content": [
@@ -921,10 +922,10 @@
             "quast_bin_summary.tsv rows: 5",
             "busco_summary.tsv rows: 5"
         ],
+        "timestamp": "2026-06-26T15:16:43.543930305",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
-        },
-        "timestamp": "2026-06-26T15:16:43.543930305"
+        }
     }
 }

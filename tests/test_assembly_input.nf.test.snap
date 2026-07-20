@@ -38,11 +38,11 @@
                 "SPAdes-MaxBin2Refined-test_minigut.001_sub.headersMap.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
+        "timestamp": "2026-07-10T14:36:44.887443562",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
-        },
-        "timestamp": "2026-07-10T14:36:44.887443562"
+        }
     },
     "assembly": {
         "content": [
@@ -57,11 +57,11 @@
                 "Assembly/SPAdes/QC/test_minigut_sample2/SPAdes-test_minigut_sample2.bowtie2.log"
             ]
         ],
+        "timestamp": "2025-11-03T13:09:25.820313196",
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "25.10.0"
-        },
-        "timestamp": "2025-11-03T13:09:25.820313196"
+        }
     },
     "-profile assembly_input": {
         "content": [
@@ -169,11 +169,11 @@
                 }
             }
         ],
+        "timestamp": "2026-07-10T01:50:53.792824455",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
-        },
-        "timestamp": "2026-07-10T01:50:53.792824455"
+        }
     },
     "binning": {
         "content": [
@@ -526,26 +526,27 @@
                 "GUNC.progenomes_2.1.maxCSS_level.tsv:md5,c3d611353770b42c99dd4fe9039ac10f",
                 "GUNC.progenomes_2.1.maxCSS_level.tsv:md5,02e72f9e57ed6defc4eb540453328c2e",
                 "gunc_summary.tsv:md5,86dda28c13307b08d362185700ab7ccb",
+                "bin_summary.tsv:md5,60111a58bb0167ec1367f1e7463b7026",
                 "contig_to_bin_map.tsv:md5,4b640b728c3b42bfe65ea4a869708787",
                 "bin_depths_summary.tsv:md5,7153f759db72abb02e2ee3c2ab1b5e56"
             ]
         ],
+        "timestamp": "2026-07-20T19:57:17.99655344",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "26.04.3"
-        },
-        "timestamp": "2026-07-15T15:59:33.76912935"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
     },
     "csv-rows": {
         "content": [
             4,
             4
         ],
+        "timestamp": "2025-11-12T05:04:37.179720571",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
-        },
-        "timestamp": "2025-11-12T05:04:37.179720571"
+        }
     },
     "multiqc": {
         "content": [
@@ -630,10 +631,10 @@
                 "multiqc_general_stats.yaml:md5,74cbceac2d727ad5a62cfa1865765cb1"
             ]
         ],
+        "timestamp": "2026-05-04T10:26:00.002503421",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.0"
-        },
-        "timestamp": "2026-05-04T10:26:00.002503421"
+        }
     }
 }
