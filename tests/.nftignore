@@ -1,6 +1,5 @@
 .DS_Store
 Ancient_DNA/pydamage/analyze/*/*.csv
-Ancient_DNA/pydamage_bins_summary.tsv
 Ancient_DNA/variant_calling/*/*.vcf.gz
 Annotation/Prokka/**/*.{err,gbk,log,sqn}
 Annotation/Prokka/**/*.tmp.*
@@ -15,7 +14,6 @@ Assembly/*/QC/*/DeepMASED/**/*_predictions.tsv
 Assembly/*/QC/*/DeepMASED/**/*_feature_file_paths.tsv
 Assembly/*/QC/*/DeepMASED/**/*_feats.tsv
 Assembly/**/*_predictions.tsv
-Assembly/PYPOLCA/*/*/*.vcf
 Assembly/*-pypolca/*/*.vcf
 Assembly/MEGAHIT/QC/*/*.bowtie2.log
 GenomeBinning/CONCOCT/stats/*_{original,PCA_components,PCA_transformed}_data_gt1000.csv
@@ -29,11 +27,6 @@ GenomeBinning/DeepMASED/**/*_feature_file_paths.tsv
 GenomeBinning/**/*_predictions.tsv
 GenomeBinning/depths/**/*-depth.txt.gz
 GenomeBinning/depths/bins/*.png
-GenomeBinning/**/*_pydamage_bin_results.tsv
-GenomeBinning/QC/pydamage_bins_summary.tsv
-GenomeBinning/bin_summary.tsv
-GenomeBinning/**/concatenated.pplacer.json
-GenomeBinning/**/*pplacer.json
 GenomeBinning/QC/busco_summary.tsv
 GenomeBinning/QC/BUSCO/**/.checkpoint
 GenomeBinning/QC/BUSCO/**/{logs,prodigal_output,busco_sequences,hmmer_output}/**
@@ -67,8 +60,5 @@ QC_shortreads/fastqc/*_fastqc.{html,zip}
 QC_shortreads/remove_phix/*.log
 Taxonomy/CAT/**/*.log
 Taxonomy/GTDB-Tk/**/*.log
-Taxonomy/GTDB-Tk/**/*.json
-Taxonomy/GTDB-Tk/**/*pplacer.json
-Taxonomy/GTDB-Tk/**/*.tsv
+Taxonomy/GTDB-Tk/**/gtdbtk.json
 VirusIdentification/geNomad/**/*_aggregated_classification.tsv
-VirusIdentification/geNomad/**/*_virus_summary.tsv
