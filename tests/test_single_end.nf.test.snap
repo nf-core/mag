@@ -1980,7 +1980,7 @@
                 "MEGAHIT-MetaBAT2-test_minigut-bins_bin2classification.names.txt:md5,ce1b6bae00995e88d70722462d9fcedb",
                 "MEGAHIT-MetaBAT2-test_minigut-bins_summary.txt:md5,c2986e27b93008b06709a59bb298e3ea",
                 "bat_summary.tsv:md5,ab01c0858ee334804fb97180d1ba321e",
-                "all-all-all-all-all_bins.bac120.filtered.tsv:md5,1dd545069ddc62f4b006167208e8a9cf",
+                "all-all-all-all-all_bins.bac120.filtered.tsv:md5,2bb6ca3daafbb6c1ed48f0f1985e1495",
                 "all-all-all-all-all_bins.bac120.msa.fasta.gz:md5,b38b041253c38da1631248c3e3d683db",
                 "all-all-all-all-all_bins.bac120.user_msa.fasta.gz:md5,58edfa33cc8b49056c9fb6e4a176a599",
                 "all-all-all-all-all_bins.bac120.summary.tsv:md5,b8727a444f3dcc2f1ee4afaf513ba067",
@@ -1993,7 +1993,7 @@
                 "gtdbtk_summary.tsv:md5,75c4048c09d6126dc7f1019d138d33fe"
             ]
         ],
-        "timestamp": "2026-07-20T20:17:22.817722398",
+        "timestamp": "2026-07-21T07:13:26.328924621",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
