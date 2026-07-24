@@ -1,0 +1,47 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "longread_assembly"
+description: Long-read genome assembly using Flye and other long-read assemblers
+keywords:
+  - assembly
+  - long reads
+  - metagenomics
+  - flye
+  - nanopore
+  - pacbio
+components:
+  - flye
+  - metamdbg/asm
+input:
+  - ch_long_reads:
+      description: Grouped long-read data
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - fastq:
+            type: file
+            description: Long-read FASTQ files
+            pattern: "*.{fastq,fq}.gz"
+output:
+  - assembled_contigs:
+      description: Assembled contigs
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - fasta:
+            type: file
+            description: Assembled contigs in FASTA format
+            pattern: "*.fasta.gz"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@muabnezor"
+maintainers:
+  - "@jfy133"
+  - "@prototaxites"
+  - "@dialvarezs"
+  - "@d4straub"
+  - "@muabnezor"

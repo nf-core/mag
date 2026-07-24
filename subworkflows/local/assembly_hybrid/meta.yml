@@ -1,0 +1,62 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "hybrid_assembly"
+description: Hybrid genome assembly using both short and long reads with SPAdes
+keywords:
+  - assembly
+  - hybrid
+  - short reads
+  - long reads
+  - metagenomics
+  - spades
+components:
+  - spades
+input:
+  - ch_short_reads_spades:
+      description: Short-read data
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - fastq1:
+            type: file
+            description: First pair of short-read FASTQ files
+            pattern: "*.{fastq,fq}.gz"
+        - fastq2:
+            type: file
+            description: Second pair of short-read FASTQ files
+            pattern: "*.{fastq,fq}.gz"
+  - ch_long_reads_spades:
+      description: Long-read data
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - fastq:
+            type: file
+            description: Long-read FASTQ files
+            pattern: "*.{fastq,fq}.gz"
+output:
+  - assembled_contigs:
+      description: Assembled contigs
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - fasta:
+            type: file
+            description: Assembled contigs in FASTA format
+            pattern: "*.fasta.gz"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@HadrienG"
+  - "@skrakau"
+  - "@muabnezor"
+maintainers:
+  - "@jfy133"
+  - "@prototaxites"
+  - "@dialvarezs"
+  - "@d4straub"
+  - "@muabnezor"

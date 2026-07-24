@@ -1,0 +1,632 @@
+{
+    "annotation": {
+        "content": [
+            [
+                "Annotation/Prodigal/FLYE/minigut/FLYE-minigut_prodigal.faa.gz",
+                "Annotation/Prodigal/FLYE/minigut/FLYE-minigut_prodigal.fna.gz",
+                "Annotation/Prodigal/FLYE/minigut/FLYE-minigut_prodigal.gff.gz",
+                "Annotation/Prodigal/FLYE/minigut/FLYE-minigut_prodigal_all.txt.gz",
+                "Annotation/Prodigal/METAMDBG/minigut/METAMDBG-minigut_prodigal.faa.gz",
+                "Annotation/Prodigal/METAMDBG/minigut/METAMDBG-minigut_prodigal.fna.gz",
+                "Annotation/Prodigal/METAMDBG/minigut/METAMDBG-minigut_prodigal.gff.gz",
+                "Annotation/Prodigal/METAMDBG/minigut/METAMDBG-minigut_prodigal_all.txt.gz",
+                "Annotation/Prokka/FLYE/FLYE-MaxBin2-minigut.001/FLYE-MaxBin2-minigut.001.err",
+                "Annotation/Prokka/FLYE/FLYE-MaxBin2-minigut.001/FLYE-MaxBin2-minigut.001.faa",
+                "Annotation/Prokka/FLYE/FLYE-MaxBin2-minigut.001/FLYE-MaxBin2-minigut.001.ffn",
+                "Annotation/Prokka/FLYE/FLYE-MaxBin2-minigut.001/FLYE-MaxBin2-minigut.001.fna",
+                "Annotation/Prokka/FLYE/FLYE-MaxBin2-minigut.001/FLYE-MaxBin2-minigut.001.fsa",
+                "Annotation/Prokka/FLYE/FLYE-MaxBin2-minigut.001/FLYE-MaxBin2-minigut.001.gbk",
+                "Annotation/Prokka/FLYE/FLYE-MaxBin2-minigut.001/FLYE-MaxBin2-minigut.001.gff",
+                "Annotation/Prokka/FLYE/FLYE-MaxBin2-minigut.001/FLYE-MaxBin2-minigut.001.log",
+                "Annotation/Prokka/FLYE/FLYE-MaxBin2-minigut.001/FLYE-MaxBin2-minigut.001.sqn",
+                "Annotation/Prokka/FLYE/FLYE-MaxBin2-minigut.001/FLYE-MaxBin2-minigut.001.tbl",
+                "Annotation/Prokka/FLYE/FLYE-MaxBin2-minigut.001/FLYE-MaxBin2-minigut.001.tsv",
+                "Annotation/Prokka/FLYE/FLYE-MaxBin2-minigut.001/FLYE-MaxBin2-minigut.001.txt",
+                "Annotation/Prokka/FLYE/FLYE-MaxBin2-minigut.002/FLYE-MaxBin2-minigut.002.err",
+                "Annotation/Prokka/FLYE/FLYE-MaxBin2-minigut.002/FLYE-MaxBin2-minigut.002.faa",
+                "Annotation/Prokka/FLYE/FLYE-MaxBin2-minigut.002/FLYE-MaxBin2-minigut.002.ffn",
+                "Annotation/Prokka/FLYE/FLYE-MaxBin2-minigut.002/FLYE-MaxBin2-minigut.002.fna",
+                "Annotation/Prokka/FLYE/FLYE-MaxBin2-minigut.002/FLYE-MaxBin2-minigut.002.fsa",
+                "Annotation/Prokka/FLYE/FLYE-MaxBin2-minigut.002/FLYE-MaxBin2-minigut.002.gbk",
+                "Annotation/Prokka/FLYE/FLYE-MaxBin2-minigut.002/FLYE-MaxBin2-minigut.002.gff",
+                "Annotation/Prokka/FLYE/FLYE-MaxBin2-minigut.002/FLYE-MaxBin2-minigut.002.log",
+                "Annotation/Prokka/FLYE/FLYE-MaxBin2-minigut.002/FLYE-MaxBin2-minigut.002.sqn",
+                "Annotation/Prokka/FLYE/FLYE-MaxBin2-minigut.002/FLYE-MaxBin2-minigut.002.tbl",
+                "Annotation/Prokka/FLYE/FLYE-MaxBin2-minigut.002/FLYE-MaxBin2-minigut.002.tsv",
+                "Annotation/Prokka/FLYE/FLYE-MaxBin2-minigut.002/FLYE-MaxBin2-minigut.002.txt",
+                "Annotation/Prokka/METAMDBG/METAMDBG-MaxBin2-minigut.001/METAMDBG-MaxBin2-minigut.001.err",
+                "Annotation/Prokka/METAMDBG/METAMDBG-MaxBin2-minigut.001/METAMDBG-MaxBin2-minigut.001.faa",
+                "Annotation/Prokka/METAMDBG/METAMDBG-MaxBin2-minigut.001/METAMDBG-MaxBin2-minigut.001.ffn",
+                "Annotation/Prokka/METAMDBG/METAMDBG-MaxBin2-minigut.001/METAMDBG-MaxBin2-minigut.001.fna",
+                "Annotation/Prokka/METAMDBG/METAMDBG-MaxBin2-minigut.001/METAMDBG-MaxBin2-minigut.001.fsa",
+                "Annotation/Prokka/METAMDBG/METAMDBG-MaxBin2-minigut.001/METAMDBG-MaxBin2-minigut.001.gbk",
+                "Annotation/Prokka/METAMDBG/METAMDBG-MaxBin2-minigut.001/METAMDBG-MaxBin2-minigut.001.gff",
+                "Annotation/Prokka/METAMDBG/METAMDBG-MaxBin2-minigut.001/METAMDBG-MaxBin2-minigut.001.log",
+                "Annotation/Prokka/METAMDBG/METAMDBG-MaxBin2-minigut.001/METAMDBG-MaxBin2-minigut.001.sqn",
+                "Annotation/Prokka/METAMDBG/METAMDBG-MaxBin2-minigut.001/METAMDBG-MaxBin2-minigut.001.tbl",
+                "Annotation/Prokka/METAMDBG/METAMDBG-MaxBin2-minigut.001/METAMDBG-MaxBin2-minigut.001.tsv",
+                "Annotation/Prokka/METAMDBG/METAMDBG-MaxBin2-minigut.001/METAMDBG-MaxBin2-minigut.001.txt",
+                "Annotation/Prokka/METAMDBG/METAMDBG-MaxBin2-minigut.002/METAMDBG-MaxBin2-minigut.002.err",
+                "Annotation/Prokka/METAMDBG/METAMDBG-MaxBin2-minigut.002/METAMDBG-MaxBin2-minigut.002.faa",
+                "Annotation/Prokka/METAMDBG/METAMDBG-MaxBin2-minigut.002/METAMDBG-MaxBin2-minigut.002.ffn",
+                "Annotation/Prokka/METAMDBG/METAMDBG-MaxBin2-minigut.002/METAMDBG-MaxBin2-minigut.002.fna",
+                "Annotation/Prokka/METAMDBG/METAMDBG-MaxBin2-minigut.002/METAMDBG-MaxBin2-minigut.002.fsa",
+                "Annotation/Prokka/METAMDBG/METAMDBG-MaxBin2-minigut.002/METAMDBG-MaxBin2-minigut.002.gbk",
+                "Annotation/Prokka/METAMDBG/METAMDBG-MaxBin2-minigut.002/METAMDBG-MaxBin2-minigut.002.gff",
+                "Annotation/Prokka/METAMDBG/METAMDBG-MaxBin2-minigut.002/METAMDBG-MaxBin2-minigut.002.log",
+                "Annotation/Prokka/METAMDBG/METAMDBG-MaxBin2-minigut.002/METAMDBG-MaxBin2-minigut.002.sqn",
+                "Annotation/Prokka/METAMDBG/METAMDBG-MaxBin2-minigut.002/METAMDBG-MaxBin2-minigut.002.tbl",
+                "Annotation/Prokka/METAMDBG/METAMDBG-MaxBin2-minigut.002/METAMDBG-MaxBin2-minigut.002.tsv",
+                "Annotation/Prokka/METAMDBG/METAMDBG-MaxBin2-minigut.002/METAMDBG-MaxBin2-minigut.002.txt"
+            ],
+            [
+                "FLYE-minigut_prodigal.faa.gz:md5,2563b551d9ded5c5ca8516ad93087793",
+                "FLYE-minigut_prodigal.fna.gz:md5,43c242e2d3af7733626d2af657488677",
+                "FLYE-minigut_prodigal.gff.gz:md5,41cdee4e6e213347f11f245a6a6fb179",
+                "FLYE-minigut_prodigal_all.txt.gz:md5,69332a2cfd1e1823318dba82eddf60f4",
+                "METAMDBG-minigut_prodigal.faa.gz:md5,10175fb4dc7c2eea6b7a009030d2d48b",
+                "METAMDBG-minigut_prodigal.fna.gz:md5,255293cb9d3ba36c0b514c57db03b51f",
+                "METAMDBG-minigut_prodigal.gff.gz:md5,48f8a7c28e630acf33b42d34f9639817",
+                "METAMDBG-minigut_prodigal_all.txt.gz:md5,3a19cea597f7a3a9645161156c2bd0ea",
+                "FLYE-MaxBin2-minigut.001.faa:md5,2f9a987185ee86ae7018a166e5815bed",
+                "FLYE-MaxBin2-minigut.001.ffn:md5,2671c6a6dc4a405e482ee0c72b1f4562",
+                "FLYE-MaxBin2-minigut.001.fna:md5,e263c2ace91ca8bf93127a5d61fd0a35",
+                "FLYE-MaxBin2-minigut.001.fsa:md5,d9f03b16b6d2ca7faecd13a8282514ab",
+                "FLYE-MaxBin2-minigut.001.gff:md5,1592ed3cd2207b822c1cb70f729797bf",
+                "FLYE-MaxBin2-minigut.001.tbl:md5,605e8e3c514f0d7b77e3cf58b85bd6cf",
+                "FLYE-MaxBin2-minigut.001.tsv:md5,beccd5341cffb6da4337f749042a2e66",
+                "FLYE-MaxBin2-minigut.001.txt:md5,a9351e65ce154439fcee004d3bfe250a",
+                "FLYE-MaxBin2-minigut.002.faa:md5,9b536304bd89b1eeefc941dc3ddbb8d5",
+                "FLYE-MaxBin2-minigut.002.ffn:md5,5ad57c00893dba4879135a44401264c6",
+                "FLYE-MaxBin2-minigut.002.fna:md5,c4acf129ca6594077e31522ab5c375c7",
+                "FLYE-MaxBin2-minigut.002.fsa:md5,46cc2be492bda253b0f8649be6ab0391",
+                "FLYE-MaxBin2-minigut.002.gff:md5,361003af7f032568ece62e735110c3ee",
+                "FLYE-MaxBin2-minigut.002.tbl:md5,9cf79b1635ce6692bc4d53e6eebdbe91",
+                "FLYE-MaxBin2-minigut.002.tsv:md5,299efffb0c6feffd2406763356b9f508",
+                "FLYE-MaxBin2-minigut.002.txt:md5,8695b31bc8c743fa1f8da505913f1db8",
+                "METAMDBG-MaxBin2-minigut.001.faa:md5,29a5ca19d1c9eb9d5eb039bc971c7e2b",
+                "METAMDBG-MaxBin2-minigut.001.ffn:md5,0e334502d50a547f67a23f65af97548c",
+                "METAMDBG-MaxBin2-minigut.001.fna:md5,df4c9f3925fb4421679d9fe7e6703679",
+                "METAMDBG-MaxBin2-minigut.001.fsa:md5,bc46e0632f8c7b3e7ad26b5bb4f7cd2b",
+                "METAMDBG-MaxBin2-minigut.001.gff:md5,3be2228ed8c486deee31377cebf9cb74",
+                "METAMDBG-MaxBin2-minigut.001.tbl:md5,fbde5c6bc0a7fdc8e6e1779b14b1b71b",
+                "METAMDBG-MaxBin2-minigut.001.tsv:md5,5f3b2e4c5404dc57b56e8bc5c1e86383",
+                "METAMDBG-MaxBin2-minigut.001.txt:md5,6a04bd012aaca8c2e8b8e21dfead77a0",
+                "METAMDBG-MaxBin2-minigut.002.faa:md5,7fbedfb73744c6cb61cf2d47c14e8de2",
+                "METAMDBG-MaxBin2-minigut.002.ffn:md5,81ecfc8dbdf8e3a883b078516417276b",
+                "METAMDBG-MaxBin2-minigut.002.fna:md5,ad7b013bc1001a959a214e51115b7e5f",
+                "METAMDBG-MaxBin2-minigut.002.fsa:md5,a0ca1c7cda334b09484f898285e660da",
+                "METAMDBG-MaxBin2-minigut.002.gff:md5,19c0fa333c36210e1d741d7d082547a4",
+                "METAMDBG-MaxBin2-minigut.002.tbl:md5,35b865011a8b834b24a02cf19e812fb4",
+                "METAMDBG-MaxBin2-minigut.002.tsv:md5,3d73e5fa5ab9d5db5265d9f24e5ae4c3",
+                "METAMDBG-MaxBin2-minigut.002.txt:md5,1860eeacfb5e6d985d4c176e577965c1"
+            ]
+        ],
+        "timestamp": "2026-06-25T18:07:33.114578889",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.4"
+        }
+    },
+    "qc": {
+        "content": [
+            [
+                "QC_longreads/NanoPlot/minigut/filtered_NanoPlot-report.html",
+                "QC_longreads/NanoPlot/minigut/filtered_NanoStats.txt",
+                "QC_longreads/NanoPlot/minigut/filtered_Non_weightedHistogramReadlength.html",
+                "QC_longreads/NanoPlot/minigut/filtered_Non_weightedLogTransformed_HistogramReadlength.html",
+                "QC_longreads/NanoPlot/minigut/filtered_WeightedHistogramReadlength.html",
+                "QC_longreads/NanoPlot/minigut/filtered_WeightedLogTransformed_HistogramReadlength.html",
+                "QC_longreads/NanoPlot/minigut/filtered_Yield_By_Length.html",
+                "QC_longreads/NanoPlot/minigut/raw_NanoPlot-report.html",
+                "QC_longreads/NanoPlot/minigut/raw_NanoStats.txt",
+                "QC_longreads/NanoPlot/minigut/raw_Non_weightedHistogramReadlength.html",
+                "QC_longreads/NanoPlot/minigut/raw_Non_weightedLogTransformed_HistogramReadlength.html",
+                "QC_longreads/NanoPlot/minigut/raw_WeightedHistogramReadlength.html",
+                "QC_longreads/NanoPlot/minigut/raw_WeightedLogTransformed_HistogramReadlength.html",
+                "QC_longreads/NanoPlot/minigut/raw_Yield_By_Length.html",
+                "QC_longreads/minimap2/index/genome.hg38.chr21_10000bp_region.mmi",
+                "QC_longreads/samtools/stats/minigut_0.stats"
+            ],
+            [
+                "filtered_NanoStats.txt:md5,f88f0e39fb38c6106f3809fbd5745f78",
+                "raw_NanoStats.txt:md5,12f26e909ca384e5b71a391c39f1e287",
+                "genome.hg38.chr21_10000bp_region.mmi:md5,41d7183050e07736691ae550f3a736e5",
+                "minigut_0.stats:md5,e7ef22efc494097a3ad803e35d2b6469"
+            ]
+        ],
+        "timestamp": "2026-06-26T15:03:32.004652411",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.4"
+        }
+    },
+    "log-checks": {
+        "content": [
+            "assembly QUAST: true",
+            "binning QUAST: true",
+            "BUSCO: true",
+            "Prokka: true",
+            "NanoLyse: true",
+            "Flye: true",
+            "MetaMDBG: true"
+        ],
+        "timestamp": "2026-05-21T17:15:28.427520218",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.1"
+        }
+    },
+    "assembly": {
+        "content": [
+            [
+                "Assembly/FLYE/FLYE-minigut.assembly.fasta.gz",
+                "Assembly/FLYE/FLYE-minigut.assembly_graph.gfa.gz",
+                "Assembly/FLYE/FLYE-minigut.assembly_info.txt",
+                "Assembly/FLYE/FLYE-minigut.flye.log",
+                "Assembly/FLYE/QC/minigut/QUAST/basic_stats/FLYE-minigut_GC_content_plot.pdf",
+                "Assembly/FLYE/QC/minigut/QUAST/basic_stats/GC_content_plot.pdf",
+                "Assembly/FLYE/QC/minigut/QUAST/basic_stats/Nx_plot.pdf",
+                "Assembly/FLYE/QC/minigut/QUAST/basic_stats/cumulative_plot.pdf",
+                "Assembly/FLYE/QC/minigut/QUAST/icarus.html",
+                "Assembly/FLYE/QC/minigut/QUAST/icarus_viewers/contig_size_viewer.html",
+                "Assembly/FLYE/QC/minigut/QUAST/metaquast.log",
+                "Assembly/FLYE/QC/minigut/QUAST/predicted_genes/FLYE-minigut.rna.gff",
+                "Assembly/FLYE/QC/minigut/QUAST/predicted_genes/barrnap.log",
+                "Assembly/FLYE/QC/minigut/QUAST/quast.log",
+                "Assembly/FLYE/QC/minigut/QUAST/report.html",
+                "Assembly/FLYE/QC/minigut/QUAST/report.pdf",
+                "Assembly/FLYE/QC/minigut/QUAST/report.tex",
+                "Assembly/FLYE/QC/minigut/QUAST/report.tsv",
+                "Assembly/FLYE/QC/minigut/QUAST/report.txt",
+                "Assembly/FLYE/QC/minigut/QUAST/report_rawassemblies.tsv",
+                "Assembly/FLYE/QC/minigut/QUAST/transposed_report.tex",
+                "Assembly/FLYE/QC/minigut/QUAST/transposed_report.tsv",
+                "Assembly/FLYE/QC/minigut/QUAST/transposed_report.txt",
+                "Assembly/METAMDBG/METAMDBG-minigut.contigs.fasta.gz",
+                "Assembly/METAMDBG/METAMDBG-minigut.metaMDBG.log",
+                "Assembly/METAMDBG/QC/minigut/QUAST/basic_stats/GC_content_plot.pdf",
+                "Assembly/METAMDBG/QC/minigut/QUAST/basic_stats/METAMDBG-minigut_GC_content_plot.pdf",
+                "Assembly/METAMDBG/QC/minigut/QUAST/basic_stats/Nx_plot.pdf",
+                "Assembly/METAMDBG/QC/minigut/QUAST/basic_stats/cumulative_plot.pdf",
+                "Assembly/METAMDBG/QC/minigut/QUAST/icarus.html",
+                "Assembly/METAMDBG/QC/minigut/QUAST/icarus_viewers/contig_size_viewer.html",
+                "Assembly/METAMDBG/QC/minigut/QUAST/metaquast.log",
+                "Assembly/METAMDBG/QC/minigut/QUAST/predicted_genes/METAMDBG-minigut.rna.gff",
+                "Assembly/METAMDBG/QC/minigut/QUAST/predicted_genes/barrnap.log",
+                "Assembly/METAMDBG/QC/minigut/QUAST/quast.log",
+                "Assembly/METAMDBG/QC/minigut/QUAST/report.html",
+                "Assembly/METAMDBG/QC/minigut/QUAST/report.pdf",
+                "Assembly/METAMDBG/QC/minigut/QUAST/report.tex",
+                "Assembly/METAMDBG/QC/minigut/QUAST/report.tsv",
+                "Assembly/METAMDBG/QC/minigut/QUAST/report.txt",
+                "Assembly/METAMDBG/QC/minigut/QUAST/report_rawassemblies.tsv",
+                "Assembly/METAMDBG/QC/minigut/QUAST/transposed_report.tex",
+                "Assembly/METAMDBG/QC/minigut/QUAST/transposed_report.tsv",
+                "Assembly/METAMDBG/QC/minigut/QUAST/transposed_report.txt"
+            ],
+            [
+                "FLYE-minigut.assembly.fasta.gz:md5,26686f2ae214a52101d4c0f17a18a14f",
+                "FLYE-minigut.assembly_graph.gfa.gz:md5,b5bab9298d0ca351558255df888a98ef",
+                "FLYE-minigut.assembly_info.txt:md5,fa86b6b65e8d7a92ff7e90ba78d3ba96",
+                "FLYE-minigut.rna.gff:md5,4dbfa0992df39693e9a7dd594d7e7314",
+                "barrnap.log:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "report.tex:md5,24e577bbd3c7125f298731b231ed6130",
+                "report.tsv:md5,89da709ca0eb28fc7146dda1e912881d",
+                "report.txt:md5,fb86dc81d2da78dc7152e216b35d896d",
+                "report_rawassemblies.tsv:md5,89da709ca0eb28fc7146dda1e912881d",
+                "transposed_report.tex:md5,6b4e26327db2a5ece01f9f711da2a947",
+                "transposed_report.tsv:md5,5168ed765a5ac3bdf6f7994ee52e052a",
+                "transposed_report.txt:md5,b2d5587537d5c4e75a05f4702ee1c38e",
+                "METAMDBG-minigut.contigs.fasta.gz:md5,078873aa528082ac813565f77b283673",
+                "METAMDBG-minigut.rna.gff:md5,1a8c532106444b5b246929f8872b648f",
+                "barrnap.log:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "report.tex:md5,22f6990d680e040061dc53f7d017201d",
+                "report.tsv:md5,a8ebaf1f923ba99a18c5a8c46e3e965b",
+                "report.txt:md5,8dcb3ed784824934c6d80951a8c7063a",
+                "report_rawassemblies.tsv:md5,a8ebaf1f923ba99a18c5a8c46e3e965b",
+                "transposed_report.tex:md5,1b748dcd74e86f5229bc31ded2ec7e29",
+                "transposed_report.tsv:md5,84536863f9547ec6cf1a122c7d696a67",
+                "transposed_report.txt:md5,e2b2a97b17b1c097d681388a96b3351f"
+            ]
+        ],
+        "timestamp": "2026-06-25T18:07:31.401097381",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.4"
+        }
+    },
+    "binning": {
+        "content": [
+            [
+                "GenomeBinning/MaxBin2/FLYE-MaxBin2-minigut.summary",
+                "GenomeBinning/MaxBin2/METAMDBG-MaxBin2-minigut.summary",
+                "GenomeBinning/MaxBin2/bins/FLYE-MaxBin2-minigut.001.fa.gz",
+                "GenomeBinning/MaxBin2/bins/FLYE-MaxBin2-minigut.002.fa.gz",
+                "GenomeBinning/MaxBin2/bins/METAMDBG-MaxBin2-minigut.001.fa.gz",
+                "GenomeBinning/MaxBin2/bins/METAMDBG-MaxBin2-minigut.002.fa.gz",
+                "GenomeBinning/MaxBin2/discarded/FLYE-MaxBin2-minigut.tooshort.gz",
+                "GenomeBinning/MaxBin2/discarded/METAMDBG-MaxBin2-minigut.tooshort.gz",
+                "GenomeBinning/MaxBin2/unbinned/discarded/FLYE-MaxBin2-minigut.noclass.pooled.fa.gz",
+                "GenomeBinning/MaxBin2/unbinned/discarded/FLYE-MaxBin2-minigut.noclass.remaining.fa.gz",
+                "GenomeBinning/MaxBin2/unbinned/discarded/METAMDBG-MaxBin2-minigut.noclass.pooled.fa.gz",
+                "GenomeBinning/MaxBin2/unbinned/discarded/METAMDBG-MaxBin2-minigut.noclass.remaining.fa.gz",
+                "GenomeBinning/MetaBAT2/discarded/FLYE-MetaBAT2-minigut.lowDepth.fa.gz",
+                "GenomeBinning/MetaBAT2/discarded/FLYE-MetaBAT2-minigut.tooShort.fa.gz",
+                "GenomeBinning/MetaBAT2/discarded/METAMDBG-MetaBAT2-minigut.lowDepth.fa.gz",
+                "GenomeBinning/MetaBAT2/discarded/METAMDBG-MetaBAT2-minigut.tooShort.fa.gz",
+                "GenomeBinning/MetaBAT2/unbinned/discarded/FLYE-MetaBAT2-minigut.unbinned.pooled.fa.gz",
+                "GenomeBinning/MetaBAT2/unbinned/discarded/FLYE-MetaBAT2-minigut.unbinned.remaining.fa.gz",
+                "GenomeBinning/MetaBAT2/unbinned/discarded/METAMDBG-MetaBAT2-minigut.unbinned.pooled.fa.gz",
+                "GenomeBinning/MetaBAT2/unbinned/discarded/METAMDBG-MetaBAT2-minigut.unbinned.remaining.fa.gz",
+                "GenomeBinning/QC/BUSCO/FLYE-MaxBin2-unclassified-unrefined-minigut/minigut-bacteria_odb10-busco.batch_summary.txt",
+                "GenomeBinning/QC/BUSCO/FLYE-MaxBin2-unclassified-unrefined-minigut/minigut-bacteria_odb10-busco.log",
+                "GenomeBinning/QC/BUSCO/FLYE-MaxBin2-unclassified-unrefined-minigut/short_summary.specific.bacteria_odb10.FLYE-MaxBin2-minigut.001.fa.json",
+                "GenomeBinning/QC/BUSCO/FLYE-MaxBin2-unclassified-unrefined-minigut/short_summary.specific.bacteria_odb10.FLYE-MaxBin2-minigut.001.fa.txt",
+                "GenomeBinning/QC/BUSCO/FLYE-MaxBin2-unclassified-unrefined-minigut/short_summary.specific.bacteria_odb10.FLYE-MaxBin2-minigut.002.fa.json",
+                "GenomeBinning/QC/BUSCO/FLYE-MaxBin2-unclassified-unrefined-minigut/short_summary.specific.bacteria_odb10.FLYE-MaxBin2-minigut.002.fa.txt",
+                "GenomeBinning/QC/BUSCO/METAMDBG-MaxBin2-unclassified-unrefined-minigut/minigut-bacteria_odb10-busco.batch_summary.txt",
+                "GenomeBinning/QC/BUSCO/METAMDBG-MaxBin2-unclassified-unrefined-minigut/minigut-bacteria_odb10-busco.log",
+                "GenomeBinning/QC/BUSCO/METAMDBG-MaxBin2-unclassified-unrefined-minigut/short_summary.specific.bacteria_odb10.METAMDBG-MaxBin2-minigut.001.fa.json",
+                "GenomeBinning/QC/BUSCO/METAMDBG-MaxBin2-unclassified-unrefined-minigut/short_summary.specific.bacteria_odb10.METAMDBG-MaxBin2-minigut.001.fa.txt",
+                "GenomeBinning/QC/BUSCO/METAMDBG-MaxBin2-unclassified-unrefined-minigut/short_summary.specific.bacteria_odb10.METAMDBG-MaxBin2-minigut.002.fa.json",
+                "GenomeBinning/QC/BUSCO/METAMDBG-MaxBin2-unclassified-unrefined-minigut/short_summary.specific.bacteria_odb10.METAMDBG-MaxBin2-minigut.002.fa.txt",
+                "GenomeBinning/QC/QUAST/FLYE-MaxBin2-minigut.001.fa.gz/basic_stats/FLYE-MaxBin2-minigut.001.fa.gz_GC_content_plot.pdf",
+                "GenomeBinning/QC/QUAST/FLYE-MaxBin2-minigut.001.fa.gz/basic_stats/GC_content_plot.pdf",
+                "GenomeBinning/QC/QUAST/FLYE-MaxBin2-minigut.001.fa.gz/basic_stats/Nx_plot.pdf",
+                "GenomeBinning/QC/QUAST/FLYE-MaxBin2-minigut.001.fa.gz/basic_stats/cumulative_plot.pdf",
+                "GenomeBinning/QC/QUAST/FLYE-MaxBin2-minigut.001.fa.gz/icarus.html",
+                "GenomeBinning/QC/QUAST/FLYE-MaxBin2-minigut.001.fa.gz/icarus_viewers/contig_size_viewer.html",
+                "GenomeBinning/QC/QUAST/FLYE-MaxBin2-minigut.001.fa.gz/metaquast.log",
+                "GenomeBinning/QC/QUAST/FLYE-MaxBin2-minigut.001.fa.gz/predicted_genes/FLYE-MaxBin2-minigut-001-fa-gz.rna.gff",
+                "GenomeBinning/QC/QUAST/FLYE-MaxBin2-minigut.001.fa.gz/predicted_genes/barrnap.log",
+                "GenomeBinning/QC/QUAST/FLYE-MaxBin2-minigut.001.fa.gz/quast.log",
+                "GenomeBinning/QC/QUAST/FLYE-MaxBin2-minigut.001.fa.gz/report.html",
+                "GenomeBinning/QC/QUAST/FLYE-MaxBin2-minigut.001.fa.gz/report.pdf",
+                "GenomeBinning/QC/QUAST/FLYE-MaxBin2-minigut.001.fa.gz/report.tex",
+                "GenomeBinning/QC/QUAST/FLYE-MaxBin2-minigut.001.fa.gz/report.tsv",
+                "GenomeBinning/QC/QUAST/FLYE-MaxBin2-minigut.001.fa.gz/report.txt",
+                "GenomeBinning/QC/QUAST/FLYE-MaxBin2-minigut.001.fa.gz/transposed_report.tex",
+                "GenomeBinning/QC/QUAST/FLYE-MaxBin2-minigut.001.fa.gz/transposed_report.tsv",
+                "GenomeBinning/QC/QUAST/FLYE-MaxBin2-minigut.001.fa.gz/transposed_report.txt",
+                "GenomeBinning/QC/QUAST/FLYE-MaxBin2-minigut.002.fa.gz/basic_stats/FLYE-MaxBin2-minigut.002.fa.gz_GC_content_plot.pdf",
+                "GenomeBinning/QC/QUAST/FLYE-MaxBin2-minigut.002.fa.gz/basic_stats/GC_content_plot.pdf",
+                "GenomeBinning/QC/QUAST/FLYE-MaxBin2-minigut.002.fa.gz/basic_stats/Nx_plot.pdf",
+                "GenomeBinning/QC/QUAST/FLYE-MaxBin2-minigut.002.fa.gz/basic_stats/cumulative_plot.pdf",
+                "GenomeBinning/QC/QUAST/FLYE-MaxBin2-minigut.002.fa.gz/icarus.html",
+                "GenomeBinning/QC/QUAST/FLYE-MaxBin2-minigut.002.fa.gz/icarus_viewers/contig_size_viewer.html",
+                "GenomeBinning/QC/QUAST/FLYE-MaxBin2-minigut.002.fa.gz/metaquast.log",
+                "GenomeBinning/QC/QUAST/FLYE-MaxBin2-minigut.002.fa.gz/predicted_genes/FLYE-MaxBin2-minigut-002-fa-gz.rna.gff",
+                "GenomeBinning/QC/QUAST/FLYE-MaxBin2-minigut.002.fa.gz/predicted_genes/barrnap.log",
+                "GenomeBinning/QC/QUAST/FLYE-MaxBin2-minigut.002.fa.gz/quast.log",
+                "GenomeBinning/QC/QUAST/FLYE-MaxBin2-minigut.002.fa.gz/report.html",
+                "GenomeBinning/QC/QUAST/FLYE-MaxBin2-minigut.002.fa.gz/report.pdf",
+                "GenomeBinning/QC/QUAST/FLYE-MaxBin2-minigut.002.fa.gz/report.tex",
+                "GenomeBinning/QC/QUAST/FLYE-MaxBin2-minigut.002.fa.gz/report.tsv",
+                "GenomeBinning/QC/QUAST/FLYE-MaxBin2-minigut.002.fa.gz/report.txt",
+                "GenomeBinning/QC/QUAST/FLYE-MaxBin2-minigut.002.fa.gz/transposed_report.tex",
+                "GenomeBinning/QC/QUAST/FLYE-MaxBin2-minigut.002.fa.gz/transposed_report.tsv",
+                "GenomeBinning/QC/QUAST/FLYE-MaxBin2-minigut.002.fa.gz/transposed_report.txt",
+                "GenomeBinning/QC/QUAST/FLYE-MaxBin2-unclassified-unrefined-minigut-quast_summary.tsv",
+                "GenomeBinning/QC/QUAST/METAMDBG-MaxBin2-minigut.001.fa.gz/basic_stats/GC_content_plot.pdf",
+                "GenomeBinning/QC/QUAST/METAMDBG-MaxBin2-minigut.001.fa.gz/basic_stats/METAMDBG-MaxBin2-minigut.001.fa.gz_GC_content_plot.pdf",
+                "GenomeBinning/QC/QUAST/METAMDBG-MaxBin2-minigut.001.fa.gz/basic_stats/Nx_plot.pdf",
+                "GenomeBinning/QC/QUAST/METAMDBG-MaxBin2-minigut.001.fa.gz/basic_stats/cumulative_plot.pdf",
+                "GenomeBinning/QC/QUAST/METAMDBG-MaxBin2-minigut.001.fa.gz/icarus.html",
+                "GenomeBinning/QC/QUAST/METAMDBG-MaxBin2-minigut.001.fa.gz/icarus_viewers/contig_size_viewer.html",
+                "GenomeBinning/QC/QUAST/METAMDBG-MaxBin2-minigut.001.fa.gz/metaquast.log",
+                "GenomeBinning/QC/QUAST/METAMDBG-MaxBin2-minigut.001.fa.gz/predicted_genes/METAMDBG-MaxBin2-minigut-001-fa-gz.rna.gff",
+                "GenomeBinning/QC/QUAST/METAMDBG-MaxBin2-minigut.001.fa.gz/predicted_genes/barrnap.log",
+                "GenomeBinning/QC/QUAST/METAMDBG-MaxBin2-minigut.001.fa.gz/quast.log",
+                "GenomeBinning/QC/QUAST/METAMDBG-MaxBin2-minigut.001.fa.gz/report.html",
+                "GenomeBinning/QC/QUAST/METAMDBG-MaxBin2-minigut.001.fa.gz/report.pdf",
+                "GenomeBinning/QC/QUAST/METAMDBG-MaxBin2-minigut.001.fa.gz/report.tex",
+                "GenomeBinning/QC/QUAST/METAMDBG-MaxBin2-minigut.001.fa.gz/report.tsv",
+                "GenomeBinning/QC/QUAST/METAMDBG-MaxBin2-minigut.001.fa.gz/report.txt",
+                "GenomeBinning/QC/QUAST/METAMDBG-MaxBin2-minigut.001.fa.gz/transposed_report.tex",
+                "GenomeBinning/QC/QUAST/METAMDBG-MaxBin2-minigut.001.fa.gz/transposed_report.tsv",
+                "GenomeBinning/QC/QUAST/METAMDBG-MaxBin2-minigut.001.fa.gz/transposed_report.txt",
+                "GenomeBinning/QC/QUAST/METAMDBG-MaxBin2-minigut.002.fa.gz/basic_stats/GC_content_plot.pdf",
+                "GenomeBinning/QC/QUAST/METAMDBG-MaxBin2-minigut.002.fa.gz/basic_stats/METAMDBG-MaxBin2-minigut.002.fa.gz_GC_content_plot.pdf",
+                "GenomeBinning/QC/QUAST/METAMDBG-MaxBin2-minigut.002.fa.gz/basic_stats/Nx_plot.pdf",
+                "GenomeBinning/QC/QUAST/METAMDBG-MaxBin2-minigut.002.fa.gz/basic_stats/cumulative_plot.pdf",
+                "GenomeBinning/QC/QUAST/METAMDBG-MaxBin2-minigut.002.fa.gz/icarus.html",
+                "GenomeBinning/QC/QUAST/METAMDBG-MaxBin2-minigut.002.fa.gz/icarus_viewers/contig_size_viewer.html",
+                "GenomeBinning/QC/QUAST/METAMDBG-MaxBin2-minigut.002.fa.gz/metaquast.log",
+                "GenomeBinning/QC/QUAST/METAMDBG-MaxBin2-minigut.002.fa.gz/predicted_genes/METAMDBG-MaxBin2-minigut-002-fa-gz.rna.gff",
+                "GenomeBinning/QC/QUAST/METAMDBG-MaxBin2-minigut.002.fa.gz/predicted_genes/barrnap.log",
+                "GenomeBinning/QC/QUAST/METAMDBG-MaxBin2-minigut.002.fa.gz/quast.log",
+                "GenomeBinning/QC/QUAST/METAMDBG-MaxBin2-minigut.002.fa.gz/report.html",
+                "GenomeBinning/QC/QUAST/METAMDBG-MaxBin2-minigut.002.fa.gz/report.pdf",
+                "GenomeBinning/QC/QUAST/METAMDBG-MaxBin2-minigut.002.fa.gz/report.tex",
+                "GenomeBinning/QC/QUAST/METAMDBG-MaxBin2-minigut.002.fa.gz/report.tsv",
+                "GenomeBinning/QC/QUAST/METAMDBG-MaxBin2-minigut.002.fa.gz/report.txt",
+                "GenomeBinning/QC/QUAST/METAMDBG-MaxBin2-minigut.002.fa.gz/transposed_report.tex",
+                "GenomeBinning/QC/QUAST/METAMDBG-MaxBin2-minigut.002.fa.gz/transposed_report.tsv",
+                "GenomeBinning/QC/QUAST/METAMDBG-MaxBin2-minigut.002.fa.gz/transposed_report.txt",
+                "GenomeBinning/QC/QUAST/METAMDBG-MaxBin2-unclassified-unrefined-minigut-quast_summary.tsv",
+                "GenomeBinning/QC/busco_summary.tsv",
+                "GenomeBinning/QC/quast_bin_summary.tsv",
+                "GenomeBinning/bin_summary.tsv",
+                "GenomeBinning/contig_to_bin/contig_to_bin_map.tsv",
+                "GenomeBinning/depths/bins/bin_depths_summary.tsv",
+                "GenomeBinning/depths/contigs/FLYE-minigut-depth.txt.gz",
+                "GenomeBinning/depths/contigs/METAMDBG-minigut-depth.txt.gz"
+            ],
+            [
+                "FLYE-MaxBin2-minigut.summary:md5,282c14c30597244dfcfd75b4b722defa",
+                "METAMDBG-MaxBin2-minigut.summary:md5,ec342b01c49514a30127933f0f54857f",
+                "FLYE-MaxBin2-minigut.001.fa.gz:md5,8b3ba8ff9c2371775dd0cd9278cca079",
+                "FLYE-MaxBin2-minigut.002.fa.gz:md5,40b9e5b4afd35b423935d540022f2ee2",
+                "METAMDBG-MaxBin2-minigut.001.fa.gz:md5,9bc2e306fb0d44487c610b15817a01fb",
+                "METAMDBG-MaxBin2-minigut.002.fa.gz:md5,3e3ba8a74ec2db00590f8d567618cd42",
+                "FLYE-MaxBin2-minigut.tooshort.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "METAMDBG-MaxBin2-minigut.tooshort.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "FLYE-MaxBin2-minigut.noclass.pooled.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "FLYE-MaxBin2-minigut.noclass.remaining.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "METAMDBG-MaxBin2-minigut.noclass.pooled.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "METAMDBG-MaxBin2-minigut.noclass.remaining.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "FLYE-MetaBAT2-minigut.lowDepth.fa.gz:md5,26686f2ae214a52101d4c0f17a18a14f",
+                "FLYE-MetaBAT2-minigut.tooShort.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "METAMDBG-MetaBAT2-minigut.lowDepth.fa.gz:md5,d670a2539f464a69b0a346b76b78b519",
+                "METAMDBG-MetaBAT2-minigut.tooShort.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "FLYE-MetaBAT2-minigut.unbinned.pooled.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "FLYE-MetaBAT2-minigut.unbinned.remaining.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "METAMDBG-MetaBAT2-minigut.unbinned.pooled.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "METAMDBG-MetaBAT2-minigut.unbinned.remaining.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "FLYE-MaxBin2-minigut-001-fa-gz.rna.gff:md5,51da8b768a337c07b2f00bbc0614d962",
+                "barrnap.log:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "report.tex:md5,2473ac46f6e91bdfbf558ea435d07c35",
+                "report.tsv:md5,989bd2943424b24f2ece6c9be29a4799",
+                "report.txt:md5,0a67ca6ef68c4dd632a3f90233e6ab34",
+                "transposed_report.tex:md5,0968babfc7d4cb217b5614fe97fc2a09",
+                "transposed_report.tsv:md5,6480b426521d13890cf88a86e1431d65",
+                "transposed_report.txt:md5,6d40b694664e404ba02a1b8e022ac65f",
+                "FLYE-MaxBin2-minigut-002-fa-gz.rna.gff:md5,df19e1b84ba6f691d20c72b397c88abf",
+                "barrnap.log:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "report.tex:md5,d6639bcda6bb679cd82252b7cbce0dfa",
+                "report.tsv:md5,ab00b03272e5755d0ff34524f9635d3e",
+                "report.txt:md5,65be7484ce9e55872fde5813fa6b9175",
+                "transposed_report.tex:md5,0ce41aa1597b3472a76b4f3421bfd49a",
+                "transposed_report.tsv:md5,de9df11883f90ab318f96aa20842751e",
+                "transposed_report.txt:md5,e20334f72976505e092b91586d0b8540",
+                "FLYE-MaxBin2-unclassified-unrefined-minigut-quast_summary.tsv:md5,78845062b6caa137b599bfc651f3e00d",
+                "METAMDBG-MaxBin2-minigut-001-fa-gz.rna.gff:md5,5d6465f894bf71c1618c824f955e7271",
+                "barrnap.log:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "report.tex:md5,6f1adeed0a8c101954c9896e8581ef47",
+                "report.tsv:md5,bd5e686bfa6ae526bb1e45dda80d340d",
+                "report.txt:md5,b7a304575ee5414b792c3014f888e9f5",
+                "transposed_report.tex:md5,73cfacfc164582edd3b65c976006f123",
+                "transposed_report.tsv:md5,b0262539561d337a4e25d61bdb76208f",
+                "transposed_report.txt:md5,cdf1ae8158f77c4552e5445247c0b17e",
+                "METAMDBG-MaxBin2-minigut-002-fa-gz.rna.gff:md5,df19e1b84ba6f691d20c72b397c88abf",
+                "barrnap.log:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "report.tex:md5,94d28d8c6b082c9863b823a2b0ab64fd",
+                "report.tsv:md5,244b7584fa98edb8cb77a8558e6a836d",
+                "report.txt:md5,728d009c9b0d695274473ce1e95faf61",
+                "transposed_report.tex:md5,5e90e5b6a95e4028a3791e7663fd1f9d",
+                "transposed_report.tsv:md5,a99660a7324b14d58c06e1492e8e3e58",
+                "transposed_report.txt:md5,a74806130cbea850c5fc5d35ec33aaed",
+                "METAMDBG-MaxBin2-unclassified-unrefined-minigut-quast_summary.tsv:md5,8d413ba9b36e54bdc38ac1fcb73d22ba",
+                "quast_bin_summary.tsv:md5,e02d1e12339d934932baa5e8b48ed4b3",
+                "bin_summary.tsv:md5,305d69623ff4112163025ff92a70bccc",
+                "contig_to_bin_map.tsv:md5,ef14a8638a6f639add03ca38ff22e4b9",
+                "bin_depths_summary.tsv:md5,b3efc921cfe1789a5a4763a12cfe50f8"
+            ]
+        ],
+        "timestamp": "2026-07-14T04:15:08.498401069",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
+    },
+    "content-checks": {
+        "content": [
+            "Flye assemblies non-empty: true",
+            "MetaMDBG assemblies non-empty: true",
+            "MaxBin2 bins non-empty: true",
+            "MetaBAT2 bins non-empty when present: true",
+            "Prokka GBK files contain LOCUS: true",
+            "Prokka SQN files non-empty: true",
+            "NanoPlot stats non-empty: true",
+            "NanoPlot stats contain summaries: true",
+            "MaxBin2 produced unbinned/discarded output: true",
+            "MetaBAT2 produced classified or unclassified output: true",
+            "Bin summary non-empty: true",
+            "Bin summary row count matches bins: true",
+            "BUSCO summary non-empty: true",
+            "Bin depths summary non-empty: true",
+            "QUAST bin summary non-empty: true"
+        ],
+        "timestamp": "2026-05-21T16:21:19.480127695",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.1"
+        }
+    },
+    "-profile longreadonly": {
+        "content": [
+            53,
+            {
+                "ADJUST_MAXBIN2_EXT": {
+                    "coreutils": 9.5
+                },
+                "BIN_SUMMARY": {
+                    "pandas": "1.4.3",
+                    "python": "3.10.6"
+                },
+                "BUSCO_BUSCO": {
+                    "busco": "6.1.0"
+                },
+                "BUSCO_UNTAR": {
+                    "untar": 1.34
+                },
+                "CHOPPER": {
+                    "chopper": "0.8.0"
+                },
+                "CONCAT_BUSCO_TSV": {
+                    "qsv": "5.1.0"
+                },
+                "CONCAT_QUAST_SUMMARY": {
+                    "qsv": "5.1.0"
+                },
+                "CONVERT_DEPTHS": {
+                    "bioawk": 20110810
+                },
+                "FLYE": {
+                    "flye": "2.9.5-b1801"
+                },
+                "GUNZIP_LONGREAD_ASSEMBLIES": {
+                    "gunzip": 1.13
+                },
+                "MAG_DEPTHS": {
+                    "pandas": "1.1.5",
+                    "python": "3.6.7"
+                },
+                "MAG_DEPTHS_SUMMARY": {
+                    "pandas": "1.4.3",
+                    "python": "3.10.6"
+                },
+                "MAXBIN2": {
+                    "maxbin2": "2.2.7"
+                },
+                "METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_LONGREAD": {
+                    "metabat2": 2.15
+                },
+                "METABAT2_METABAT2": {
+                    "metabat2": 2.17
+                },
+                "METAMDBG_ASM": {
+                    "metamdbg": 1.2
+                },
+                "MINIMAP2_ASSEMBLY_ALIGN": {
+                    "minimap2": "2.29-r1283"
+                },
+                "MINIMAP2_ASSEMBLY_INDEX": {
+                    "minimap2": "2.29-r1283"
+                },
+                "MINIMAP2_HOST_ALIGN": {
+                    "minimap2": "2.29-r1283"
+                },
+                "MINIMAP2_HOST_INDEX": {
+                    "minimap2": "2.29-r1283"
+                },
+                "NANOPLOT_FILTERED": {
+                    "nanoplot": "1.46.1"
+                },
+                "NANOPLOT_RAW": {
+                    "nanoplot": "1.46.1"
+                },
+                "PORECHOP_ABI": {
+                    "porechop_abi": "0.5.0"
+                },
+                "PRODIGAL": {
+                    "pigz": 2.6,
+                    "prodigal": "2.6.3"
+                },
+                "PROKKA": {
+                    "prokka": "1.14.6"
+                },
+                "QUAST": {
+                    "metaquast": "5.0.2",
+                    "python": "3.7.6"
+                },
+                "QUAST_BINS": {
+                    "metaquast": "5.0.2",
+                    "python": "3.7.6"
+                },
+                "SAMTOOLS_HOSTREMOVED_INDEX": {
+                    "samtools": "1.22.1"
+                },
+                "SAMTOOLS_HOSTREMOVED_STATS": {
+                    "samtools": "1.22.1"
+                },
+                "SAMTOOLS_HOSTREMOVED_UNMAPPED": {
+                    "samtools": 1.21
+                },
+                "SEQKIT_STATS": {
+                    "seqkit": "2.9.0"
+                },
+                "SPLIT_FASTA": {
+                    "biopython": "1.74",
+                    "pandas": "1.1.5",
+                    "python": "3.6.7"
+                },
+                "Workflow": {
+                    "nf-core/mag": "v5.5.0dev"
+                }
+            }
+        ],
+        "timestamp": "2026-07-09T14:26:54.925811528",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.4"
+        }
+    },
+    "multiqc": {
+        "content": [
+            [
+                "multiqc/multiqc_data/busco_plot_bacteria_odb10.yaml",
+                "multiqc/multiqc_data/llms-full.txt",
+                "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc.parquet",
+                "multiqc/multiqc_data/multiqc_busco.yaml",
+                "multiqc/multiqc_data/multiqc_citations.yaml",
+                "multiqc/multiqc_data/multiqc_data.json",
+                "multiqc/multiqc_data/multiqc_general_stats.yaml",
+                "multiqc/multiqc_data/multiqc_prokka.yaml",
+                "multiqc/multiqc_data/multiqc_quast.yaml",
+                "multiqc/multiqc_data/multiqc_quast_quast-1.yaml",
+                "multiqc/multiqc_data/multiqc_software_versions.yaml",
+                "multiqc/multiqc_data/multiqc_sources.yaml",
+                "multiqc/multiqc_data/porechop.yaml",
+                "multiqc/multiqc_data/prokka_plot.yaml",
+                "multiqc/multiqc_data/quast_num_contigs.yaml",
+                "multiqc/multiqc_data/quast_table.yaml",
+                "multiqc/multiqc_plots/pdf/busco_plot_bacteria_odb10-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/busco_plot_bacteria_odb10-pct.pdf",
+                "multiqc/multiqc_plots/pdf/prokka_plot-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/prokka_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/quast_num_contigs-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/quast_num_contigs-pct.pdf",
+                "multiqc/multiqc_plots/pdf/quast_table.pdf",
+                "multiqc/multiqc_plots/png/busco_plot_bacteria_odb10-cnt.png",
+                "multiqc/multiqc_plots/png/busco_plot_bacteria_odb10-pct.png",
+                "multiqc/multiqc_plots/png/prokka_plot-cnt.png",
+                "multiqc/multiqc_plots/png/prokka_plot-pct.png",
+                "multiqc/multiqc_plots/png/quast_num_contigs-cnt.png",
+                "multiqc/multiqc_plots/png/quast_num_contigs-pct.png",
+                "multiqc/multiqc_plots/png/quast_table.png",
+                "multiqc/multiqc_plots/svg/busco_plot_bacteria_odb10-cnt.svg",
+                "multiqc/multiqc_plots/svg/busco_plot_bacteria_odb10-pct.svg",
+                "multiqc/multiqc_plots/svg/prokka_plot-cnt.svg",
+                "multiqc/multiqc_plots/svg/prokka_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/quast_num_contigs-cnt.svg",
+                "multiqc/multiqc_plots/svg/quast_num_contigs-pct.svg",
+                "multiqc/multiqc_plots/svg/quast_table.svg",
+                "multiqc/multiqc_report.html"
+            ],
+            [
+                
+            ]
+        ],
+        "timestamp": "2026-05-21T16:21:15.4461817",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.1"
+        }
+    },
+    "summary-rows": {
+        "content": [
+            "Bin summary: 4",
+            "BUSCO summary: 4",
+            "Bin depths summary: 4",
+            "QUAST bin summary: 4"
+        ],
+        "timestamp": "2026-05-21T16:21:20.038026223",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.1"
+        }
+    }
+}

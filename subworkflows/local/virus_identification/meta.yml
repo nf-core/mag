@@ -1,0 +1,50 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "virus_identification"
+description: Identification and classification of viral sequences in metagenomic data
+keywords:
+  - virus identification
+  - metagenomics
+  - viral sequences
+  - classification
+components:
+  - genomad/download
+  - genomad/endtoend
+  - untar
+input:
+  - ch_assemblies:
+      description: Assembled contigs
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - fasta:
+            type: file
+            description: Assembled contigs in FASTA format
+            pattern: "*.{fasta,fa}"
+  - ch_genomad_db:
+      type: file
+      description: Presupplied geNomad database (optional)
+      pattern: "*"
+output:
+  - identified_viruses:
+      description: Identified viral sequences
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - fasta:
+            type: file
+            description: Viral sequences in FASTA format
+            pattern: "*.{fasta,fa}"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@CarsonJM"
+maintainers:
+  - "@jfy133"
+  - "@prototaxites"
+  - "@dialvarezs"
+  - "@d4straub"
+  - "@muabnezor"
