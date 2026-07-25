@@ -506,6 +506,8 @@ def toolCitationText() {
     ].findAll { tool -> tool != '' }
     def text_assembly_qc = "Assembly quality was assessed with ${assembly_qc_tools.join(', ')}."
 
+    def text_polishing = "Short-read polishing of long-read assemblies was performed with pypolca (Bouras et al. 2024)."
+
     def gene_prediction_tools = [
         !params.skip_prodigal ? "Prodigal (Hyatt et al. 2010)" : "",
         !params.skip_prokka ? "Prokka (Seemann 2014)" : "",
@@ -553,6 +555,7 @@ def toolCitationText() {
         params.bbnorm ? text_bbnorm : "",
         assembly_tools ? text_assembly : "",
         assembly_qc_tools ? text_assembly_qc : "",
+        params.run_pypolca ? text_polishing : "",
         gene_prediction_tools ? text_gene_prediction : "",
         params.run_virus_identification ? text_virus_id : "",
         params.bin_domain_classification_tool == "tiara" ? text_tiara : "",
@@ -632,6 +635,9 @@ def toolBibliographyText() {
     }
     if (!params.skip_ale) {
         references << "<li>Clark, S. C., Egan, R., Frazier, P. I., & Wang, Z. (2013). ALE: a generic assembly likelihood evaluation framework for assessing the accuracy of genome and metagenome assemblies. Bioinformatics, 29(4), 435-443. doi: 10.1093/bioinformatics/bts723</li>"
+    }
+    if (params.run_pypolca) {
+        references << "<li>Bouras, G., Judd, L. M., Edwards, R. A., Vreugde, S., Stinear, T. P., & Wick, R. R. (2024). How low can you go? Short-read polishing of Oxford Nanopore bacterial genome assemblies. Microbial Genomics, 10(6), 001254. doi: 10.1099/mgen.0.001254</li>"
     }
     if (!params.skip_prodigal) {
         references << "<li>Hyatt, D., Chen, G. L., Locascio, P. F., Land, M. L., Larimer, F. W., & Hauser, L. J. (2010). Prodigal: prokaryotic gene recognition and translation initiation site identification. BMC Bioinformatics, 11, 119. doi: 10.1186/1471-2105-11-119</li>"

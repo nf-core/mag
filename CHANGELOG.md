@@ -38,9 +38,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1066](https://github.com/nf-core/mag/pull/1066) - Improved efficiency by removing channel "locks" on Seqkit, QUAST, and GTDB-Tk (by @dialvarezs)
 - [#1070](https://github.com/nf-core/mag/pull/1070) - Update BUSCO nf-core module (by @dialvarezs)
 - [#1071](https://github.com/nf-core/mag/pull/1071) - Improved efficiency by batching `DASTOOL_FASTATOCONTIG2BIN` per binner instead of per bin (by @dialvarezs)
+- [#1074](https://github.com/nf-core/mag/pull/1074) - Exclude BUSCO output directories to reduce storage usage in output dir (by @dialvarezs)
+- [#1079](https://github.com/nf-core/mag/pull/1079) - Add exit code 247 to the MEGAHIT retry error strategy (by @dialvarezs)
+- [#1075](https://github.com/nf-core/mag/pull/1075) - Update output documentation to reflect BUSCO complete directory no longer being published (by @dialvarezs)
+- [#1080](https://github.com/nf-core/mag/pull/1080) - Updated to nf-core 4.0.3 `TEMPLATE` (by @dialvarezs)
+- [#1081](https://github.com/nf-core/mag/pull/1081) - Use subset database for geNomad (by @dialvarezs)
 
 ### `Fixed`
 
+- [#1076](https://github.com/nf-core/mag/pull/1076) - Add missing PyPOLCA citations to README, `CITATIONS.md` and the pipeline citation/bibliography text (by @dialvarezs)
 - [#1011](https://github.com/nf-core/mag/pull/1011) - Fix issue making CheckM2 running only for one sample per run (by @dialvarezs)
 - [#1012](https://github.com/nf-core/mag/pull/1012) - Prevent adapter trimming with Porechop on PacBio reads (by @dialvarezs)
 - [#1016](https://github.com/nf-core/mag/pull/1016) - Merge input reads on assembly input to prevent repeated filenames on multi-run samples (reported by @erikrikarddaniel, fix by @dialvarezs)
@@ -52,6 +58,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1049](https://github.com/nf-core/mag/pull/1049) - Fix publishing issue with `gtdbtk/classifywf` (by @dialvarezs)
 - [#1058](https://github.com/nf-core/mag/pull/1058) - Make `create_metabinner_bins.py` save gzipped bin files to prevent NFS race condition (by @dialvarezs)
 - [#1069](https://github.com/nf-core/mag/pull/1069) - Exclude eukaryotic bins from CheckM2, which only supports bacterial and archaeal genomes (by @dialvarezs)
+- [#1078](https://github.com/nf-core/mag/pull/1078) - Sort bins before GTDB-Tk classification so order-sensitive outputs are reproducible across environments (by @dialvarezs)
 
 ### `Dependencies`
 
@@ -59,6 +66,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | --------- | ---------------- | ----------- |
 | BUSCO     | 6.0.0            | 6.1.0       |
 | GTDB-Tk   | 2.5.2            | 2.7.2       |
+| nf-core   | 3.5.1            | 4.0.3       |
 | nf-schema | 2.5.1            | 2.7.2       |
 
 ### `Deprecated`

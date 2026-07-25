@@ -8,7 +8,7 @@
 <!-- Meta data and citations badges -->
 
 [![Nextflow](https://img.shields.io/badge/version-%E2%89%A525.10.4-green?style=flat&logo=nextflow&logoColor=white&color=%230DC09D&link=https%3A%2F%2Fnextflow.io)](https://www.nextflow.io/)
-[![nf-core template version](https://img.shields.io/badge/nf--core_template-4.0.2-green?style=flat&logo=nfcore&logoColor=white&color=%2324B064&link=https%3A%2F%2Fnf-co.re)](https://github.com/nf-core/tools/releases/tag/4.0.2)
+[![nf-core template version](https://img.shields.io/badge/nf--core_template-4.0.3-green?style=flat&logo=nfcore&logoColor=white&color=%2324B064&link=https%3A%2F%2Fnf-co.re)](https://github.com/nf-core/tools/releases/tag/4.0.3)
 [![Cite Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.3589527-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.3589527)
 [![Cite Publication](https://img.shields.io/badge/cite%20-Publication-orange)](https://doi.org/10.1093/nargab/lqac007)
 ![HiRSE Code Promo Badge](https://img.shields.io/badge/Promo-8db427?label=HiRSE&labelColor=005aa0&link=go.fzj.de/CodePromo) [![Static Badge](https://img.shields.io/badge/%F0%9F%8D%94%20%20BIgMAG-compatible-%2324B064)](https://github.com/jeffe107/BIgMAG)
@@ -47,6 +47,7 @@ By default, the pipeline currently performs the following: it supports both shor
 The pipeline then:
 
 - performs assembly using [MEGAHIT](https://github.com/voutcn/megahit) and [SPAdes](http://cab.spbu.ru/software/spades/), and checks their quality using [Quast](http://quast.sourceforge.net/quast) and [ALE](https://github.com/sc932/ALE) (if short read data is used)
+- (optionally) polishes long-read assemblies with short reads using [pypolca](https://github.com/gbouras13/pypolca)
 - (optionally) performs ancient DNA assembly validation using [PyDamage](https://github.com/maxibor/pydamage) and contig consensus sequence recalling with [Freebayes](https://github.com/freebayes/freebayes) and [BCFtools](http://samtools.github.io/bcftools/bcftools.html)
 - predicts protein-coding genes for the assemblies using [Prodigal](https://github.com/hyattpd/Prodigal), and bins with [Prokka](https://github.com/tseemann/prokka) and optionally [MetaEuk](https://www.google.com/search?channel=fs&client=ubuntu-sn&q=MetaEuk)
 - performs metagenome binning using [MetaBAT2](https://bitbucket.org/berkeleylab/metabat/src/master/), [MaxBin2](https://sourceforge.net/projects/maxbin2/), [CONCOCT](https://github.com/BinPro/CONCOCT), [COMEBin](https://github.com/ziyewang/COMEBin), [MetaBinner](https://github.com/ziyewang/MetaBinner), and/or [SemiBin2](https://github.com/BigDataBiology/SemiBin)
