@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1044](https://github.com/nf-core/mag/pull/1044) - Add new `--gtdbtk_place_species` parameter (by @dialvarezs)
 - [#1047](https://github.com/nf-core/mag/issues/1007) - Add `--gtdbtk_single_job` to run GTDB-Tk classification for all bins in a single job (requested by @sarah-shah-bioinf, by @dialvarezs)
 - [#1048](https://github.com/nf-core/mag/pull/1048) - Add optional PyPOLCA polishing for long-read assemblies via `--run_pypolca` (by @Harshita-sriv)
+- [#1055](https://github.com/nf-core/mag/pull/1055) - Add dedicated page describing resource usage (by @jfy133)
 - [#1059](https://github.com/nf-core/mag/pull/1059) - Add `--filtlong_filtering_by_shortreads` parameter to enable filtlong's short-read-based long read filtering (by @dialvarezs)
 - [#1063](https://github.com/nf-core/mag/pull/1063) - Add new `--ale_per_base_output` parameter to enable ALE per-base output (by @dialvarezs)
 - [#1062](https://github.com/nf-core/mag/pull/1062) - Add `--bin_seqkit_stats_max_forks` parameter to cap concurrent bin-stats jobs (by @dialvarezs)
@@ -61,11 +62,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Dependencies`
 
-| Tool    | Previous version | New version |
-| ------- | ---------------- | ----------- |
-| BUSCO   | 6.0.0            | 6.1.0       |
-| GTDB-Tk | 2.5.2            | 2.7.2       |
-| nf-core | 3.5.1            | 4.0.3       |
+| Tool      | Previous version | New version |
+| --------- | ---------------- | ----------- |
+| BUSCO     | 6.0.0            | 6.1.0       |
+| GTDB-Tk   | 2.5.2            | 2.7.2       |
+| nf-core   | 3.5.1            | 4.0.3       |
+| nf-schema | 2.5.1            | 2.7.2       |
 
 ### `Deprecated`
 

@@ -11,6 +11,7 @@
 In addition to this page, you can find additional usage information on the following pages:
 
 - [New to mag?](usage/new_to_mag.md)
+- [Resource guidance](usage/resource_guidance.md)
 
 ## Input specifications
 
