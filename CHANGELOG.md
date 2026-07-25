@@ -59,6 +59,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1069](https://github.com/nf-core/mag/pull/1069) - Exclude eukaryotic bins from CheckM2, which only supports bacterial and archaeal genomes (by @dialvarezs)
 - [#1076](https://github.com/nf-core/mag/pull/1076) - Add missing PyPOLCA citations to README, `CITATIONS.md` and the pipeline citation/bibliography text (by @dialvarezs)
 - [#1078](https://github.com/nf-core/mag/pull/1078) - Sort bins before GTDB-Tk classification so order-sensitive outputs are reproducible across environments (by @dialvarezs)
+- [#1084](https://github.com/nf-core/mag/pull/1084) - Update Prokka nf-core module, which pins GNU parallel to fix Prokka failures with Conda (by @dialvarezs)
+- [#1084](https://github.com/nf-core/mag/pull/1084) - Disable NanoPlot static plot export in the nf-test config, as it only works where a Chrome installation is available and made outputs differ between profiles (by @dialvarezs)
 
 ### `Dependencies`
 
