@@ -41,6 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1079](https://github.com/nf-core/mag/pull/1079) - Add exit code 247 to the MEGAHIT retry error strategy (by @dialvarezs)
 - [#1075](https://github.com/nf-core/mag/pull/1075) - Update output documentation to reflect BUSCO complete directory no longer being published (by @dialvarezs)
 - [#1080](https://github.com/nf-core/mag/pull/1080) - Updated to nf-core 4.0.3 `TEMPLATE` (by @dialvarezs)
+- [#1081](https://github.com/nf-core/mag/pull/1081) - Use subset database for geNomad (by @dialvarezs)
 
 ### `Fixed`
 

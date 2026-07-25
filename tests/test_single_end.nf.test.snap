@@ -589,10 +589,10 @@
                 "test_minigut_sample2_run0_host_removed.bowtie2.log:md5,ce114382b98cd86beeea13aeeeee2bbd"
             ]
         ],
-        "timestamp": "2026-05-04T09:02:43.582739149",
+        "timestamp": "2026-07-24T19:50:01.346189746",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.0"
+            "nextflow": "26.04.6"
         }
     },
     "log-checks": {
@@ -1808,10 +1808,10 @@
                 "bin_depths_summary.tsv:md5,bd54b32dc4c741cd4edd2bbba51f6552"
             ]
         ],
-        "timestamp": "2026-07-01T12:40:11.839744958",
+        "timestamp": "2026-07-24T19:21:57.781946147",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nextflow": "26.04.6"
         }
     },
     "viral": {
@@ -1843,15 +1843,15 @@
                 "VirusIdentification/geNomad/test_minigut_sample2/MEGAHIT-test_minigut_sample2.contigs_summary/MEGAHIT-test_minigut_sample2.contigs_virus_summary.tsv"
             ],
             [
-                "MEGAHIT-test_minigut.contigs_taxonomy.tsv:md5,3b1fc1e7fb2457859b1c5ca82ef5ddac",
+                "MEGAHIT-test_minigut.contigs_taxonomy.tsv:md5,fdfd96319cc75bc2cec7cfb89e9dd244",
                 "MEGAHIT-test_minigut.contigs_provirus.tsv:md5,93a6bca59b0bf7f57c0b9b60d2e57082",
-                "MEGAHIT-test_minigut.contigs_marker_classification.tsv:md5,49625280a666cd6cb61d6a2166a0627d",
+                "MEGAHIT-test_minigut.contigs_marker_classification.tsv:md5,ecac2c7b199b1e65a26125cda411b969",
                 "MEGAHIT-test_minigut.contigs_plasmid.fna.gz:md5,3a80a30dee715b6b6b8db5c54573074c",
-                "MEGAHIT-test_minigut.contigs_plasmid_genes.tsv:md5,14d5fcbb1745eedb3d416256e747ed0e",
+                "MEGAHIT-test_minigut.contigs_plasmid_genes.tsv:md5,3e48a3cc1a09e8c7087270b719a22f0e",
                 "MEGAHIT-test_minigut.contigs_plasmid_proteins.faa.gz:md5,8c289a7f53e1785e071cef39915582f2",
                 "MEGAHIT-test_minigut.contigs_plasmid_summary.tsv:md5,dfe1b71b447172f96186113ff3ec71e4",
                 "MEGAHIT-test_minigut.contigs_virus.fna.gz:md5,c8d42683f5e62c3e44eb5d2d8fb7b84f",
-                "MEGAHIT-test_minigut.contigs_virus_genes.tsv:md5,51c2dc60b3a1834c0811552af3f205b2",
+                "MEGAHIT-test_minigut.contigs_virus_genes.tsv:md5,13969976b1aebec67c0ffd18f51af683",
                 "MEGAHIT-test_minigut.contigs_virus_proteins.faa.gz:md5,2e14bd6ae9e2043a3b6f407c425e13e1",
                 "MEGAHIT-test_minigut.contigs_virus_summary.tsv:md5,d22f74f27a69c252c173c987c0339c5d",
                 "MEGAHIT-test_minigut_sample2.contigs_taxonomy.tsv:md5,5c9174470b250dfbe1e0d7d2da143617",
@@ -1862,15 +1862,15 @@
                 "MEGAHIT-test_minigut_sample2.contigs_plasmid_proteins.faa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "MEGAHIT-test_minigut_sample2.contigs_plasmid_summary.tsv:md5,8c4ddaa8a90da779c11537be0fddb799",
                 "MEGAHIT-test_minigut_sample2.contigs_virus.fna.gz:md5,fd99ba7b3d7b4e247444abe3173d0a61",
-                "MEGAHIT-test_minigut_sample2.contigs_virus_genes.tsv:md5,69d9fb20e1b3595da1d136edc42c2776",
+                "MEGAHIT-test_minigut_sample2.contigs_virus_genes.tsv:md5,d17fcd1f396b6d5a8bbd8d815e5715e6",
                 "MEGAHIT-test_minigut_sample2.contigs_virus_proteins.faa.gz:md5,79089b17750dec52668b2f0fdf7d638b",
                 "MEGAHIT-test_minigut_sample2.contigs_virus_summary.tsv:md5,2d9c0006336752f4a41253e6570119a1"
             ]
         ],
-        "timestamp": "2026-05-04T09:02:43.840239525",
+        "timestamp": "2026-07-24T19:21:58.235088091",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.0"
+            "nextflow": "26.04.6"
         }
     },
     "content-checks": {
@@ -2099,11 +2099,11 @@
                 "FREEBAYES": {
                     "freebayes": "1.3.10"
                 },
-                "GENOMAD_DOWNLOAD": {
-                    "genomad": "1.11.2"
-                },
                 "GENOMAD_ENDTOEND": {
                     "genomad": "1.11.2"
+                },
+                "GENOMAD_UNTAR": {
+                    "untar": 1.34
                 },
                 "GTDBTK_CLASSIFYWF": {
                     "gtdb_db": "r232",
@@ -2177,10 +2177,10 @@
                 }
             }
         ],
-        "timestamp": "2026-07-03T03:26:49.465360928",
+        "timestamp": "2026-07-24T19:50:00.959462676",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nextflow": "26.04.6"
         }
     },
     "multiqc": {
@@ -2376,10 +2376,10 @@
                 "quast_table.yaml:md5,55ee8b4825b107d592cfeb16928f3487"
             ]
         ],
-        "timestamp": "2026-06-02T06:28:57.250315083",
+        "timestamp": "2026-07-24T19:50:01.274494455",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.3"
+            "nextflow": "26.04.6"
         }
     },
     "ancient": {
