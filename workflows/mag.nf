@@ -589,7 +589,6 @@ workflow MAG {
                 [],
                 [],
             )
-            ch_versions = ch_versions.mix(PROKKA.out.versions)
         }
 
         if (params.metaeuk_db || params.metaeuk_mmseqs_db) {
