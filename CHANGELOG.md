@@ -43,6 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1079](https://github.com/nf-core/mag/pull/1079) - Add exit code 247 to the MEGAHIT retry error strategy (by @dialvarezs)
 - [#1080](https://github.com/nf-core/mag/pull/1080) - Updated to nf-core 4.0.3 `TEMPLATE` (by @dialvarezs)
 - [#1081](https://github.com/nf-core/mag/pull/1081) - Use subset database for geNomad (by @dialvarezs)
+- [#1084](https://github.com/nf-core/mag/pull/1084) - Disable NanoPlot static plot image files by default, since it depends on Chrome installed (by @dialvarezs)
 
 ### `Fixed`
 
@@ -59,6 +60,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1069](https://github.com/nf-core/mag/pull/1069) - Exclude eukaryotic bins from CheckM2, which only supports bacterial and archaeal genomes (by @dialvarezs)
 - [#1076](https://github.com/nf-core/mag/pull/1076) - Add missing PyPOLCA citations to README, `CITATIONS.md` and the pipeline citation/bibliography text (by @dialvarezs)
 - [#1078](https://github.com/nf-core/mag/pull/1078) - Sort bins before GTDB-Tk classification so order-sensitive outputs are reproducible across environments (by @dialvarezs)
+- [#1084](https://github.com/nf-core/mag/pull/1084) - Update Prokka nf-core module, which pins GNU parallel to fix Prokka failures with Conda (by @dialvarezs)
 
 ### `Dependencies`
 
