@@ -21,13 +21,15 @@ process ADJUST_MAXBIN2_EXT {
         for file in ${bins}; do
             [[ \${file} =~ (.*).fasta.gz ]];
             bin="\${BASH_REMATCH[1]}"
-            mv \${file} \${bin}.fa.gz
+            # dereference with -L: staged inputs are symlinks, and renaming one would
+            # emit a dangling link instead of the bin contents on remote filesystems
+            cp -L \${file} \${bin}.fa.gz
         done
     fi
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        coreutils: \$(echo \$(mv --version 2>&1) | sed 's/^.*(GNU coreutils) //; s/ Copyright.*\$//')
+        coreutils: \$(echo \$(cp --version 2>&1) | sed 's/^.*(GNU coreutils) //; s/ Copyright.*\$//')
     END_VERSIONS
     """
 }
