@@ -65,11 +65,8 @@
     },
     "-profile assembly_input": {
         "content": [
-            105,
+            103,
             {
-                "ADJUST_MAXBIN2_EXT": {
-                    "coreutils": 9.5
-                },
                 "BIN_SUMMARY": {
                     "pandas": "1.4.3",
                     "python": "3.10.6"

@@ -2001,13 +2001,10 @@
     },
     "-profile test_single_end": {
         "content": [
-            132,
+            131,
             {
                 "ADAPTERREMOVAL_SE": {
                     "adapterremoval": "2.3.2"
-                },
-                "ADJUST_MAXBIN2_EXT": {
-                    "coreutils": 9.5
                 },
                 "BCFTOOLS_CONSENSUS": {
                     "bcftools": 1.22
