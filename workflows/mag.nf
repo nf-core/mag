@@ -222,10 +222,10 @@ workflow MAG {
                     ]
 
                     if (assemble_as_single) {
-                        [meta, reads.sort { files -> files[0].getName() }.flatten()]
+                        [meta, reads.toSorted { files -> files[0].getName() }.flatten()]
                     }
                     else {
-                        [meta, reads.sort { files -> files[0].getName() }.transpose().flatten()]
+                        [meta, reads.toSorted { files -> files[0].getName() }.transpose().flatten()]
                     }
                 }
         }
@@ -322,7 +322,7 @@ workflow MAG {
                 // Try to find the BAM where reads came from the same sample as the assembly (co-binning may include multiple BAMs)
                 // If none matches (coassembly), take the first one after sorting for determinism
                 def own_bam = bams.find { bam -> bam.name.endsWith("-${meta.id}.bam") }
-                def bam = own_bam ?: bams.sort()[0]
+                def bam = own_bam ?: bams.toSorted()[0]
 
                 [meta, assembly, bam]
             }
@@ -485,7 +485,7 @@ workflow MAG {
         if (!params.skip_quast) {
             ch_input_for_quast_bins = ch_input_for_postbinning
                 .map { meta, bins ->
-                    [meta, [bins].flatten().sort { a, b -> a.getBaseName() <=> b.getBaseName() }]
+                    [meta, [bins].flatten().toSorted { a, b -> a.getBaseName() <=> b.getBaseName() }]
                 }
 
             QUAST_BINS(ch_input_for_quast_bins)
@@ -493,7 +493,7 @@ workflow MAG {
 
             ch_quast_bin_summaries = QUAST_BINS.out.quast_bin_summaries
                 .collect { _meta, summary -> summary }
-                .map { summaries -> [[id: 'quast_bin_summary'], summaries.sort { a, b -> a.getBaseName() <=> b.getBaseName() }] }
+                .map { summaries -> [[id: 'quast_bin_summary'], summaries.toSorted { a, b -> a.getBaseName() <=> b.getBaseName() }] }
 
             CONCAT_QUAST_SUMMARY(ch_quast_bin_summaries, 'rowskey', 'tsv', true)
 

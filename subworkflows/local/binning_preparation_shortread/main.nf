@@ -58,7 +58,7 @@ workflow SHORTREAD_BINNING_PREPARATION {
         .combine(ch_mapping_counts, by: 0)
         .map { key, meta, assembly, bam, bai, count -> [groupKey(key, count), meta, assembly, bam, bai] }
         .groupTuple()
-        .map { _key, metas, assemblies, bams, bais -> [metas[0], assemblies.sort()[0], bams, bais] }
+        .map { _key, metas, assemblies, bams, bais -> [metas[0], assemblies.toSorted()[0], bams, bais] }
 
     emit:
     bowtie2_assembly_multiqc = BOWTIE2_ASSEMBLY_ALIGN.out.log.map { _assembly_meta, _reads_meta, log -> [log] }

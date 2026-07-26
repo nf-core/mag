@@ -219,7 +219,7 @@ workflow PIPELINE_INITIALISATION {
             .concat(ch_assembly_ids)
             .collect(flat: false)
             .map { ids1, ids2 ->
-                if (ids1.sort() != ids2.sort()) {
+                if (ids1.toSorted() != ids2.toSorted()) {
                     exit(1, "[nf-core/mag] ERROR: supplied IDs or Groups in read and assembly CSV files do not match!")
                 }
             }

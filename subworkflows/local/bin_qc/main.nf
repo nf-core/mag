@@ -128,7 +128,7 @@ workflow BIN_QC {
                 meta.domain != "eukarya"
             }
             .map { meta, bins ->
-                [meta, bins.sort { a, b -> a.getBaseName() <=> b.getBaseName() }]
+                [meta, bins.toSorted { a, b -> a.getBaseName() <=> b.getBaseName() }]
             }
             .multiMap { meta, fa ->
                 reads: [meta, fa]
@@ -149,7 +149,7 @@ workflow BIN_QC {
             .map { _meta, summary -> [[id: 'checkm'], summary] }
             .groupTuple()
             .map { meta, summaries ->
-                [meta, summaries.sort { a, b -> a.getBaseName() <=> b.getBaseName() }]
+                [meta, summaries.toSorted { a, b -> a.getBaseName() <=> b.getBaseName() }]
             }
         ch_multiqc_files = ch_multiqc_files.mix(
             CHECKM_QA.out.output.map { _meta, summary -> summary }.flatten()
