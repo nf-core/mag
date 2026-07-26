@@ -38,10 +38,7 @@ process TIARA_CLASSIFY {
     mkdir unknown
 
     while IFS=\$"\t" read bin domain; do
-        # dereference with -L: staged inputs are symlinks, and moving one would
-        # emit a dangling link instead of the bin contents on remote filesystems.
-        # match the extension exactly, otherwise e.g. bin .1 also picks up .10
-        find -L . -maxdepth 1 -name "\${bin}.fa.gz" -exec cp -L {} \${domain}/ \\;
+        find -L . -maxdepth 1 -name "\${bin}.fa.gz" -exec cp {} \${domain}/ \\;
     done < bin2classification.tsv
 
     cat <<-END_VERSIONS > versions.yml

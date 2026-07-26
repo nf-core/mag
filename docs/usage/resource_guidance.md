@@ -90,7 +90,6 @@ The table is ordered first by 'Source' of defaults by specificity of definition,
 | SEMIBIN_SINGLEEASYBIN                | 6   | 36.GB  | 8.h  | Label: process_medium |
 | TIARA_TIARA                          | 6   | 36.GB  | 8.h  | Label: process_medium |
 | TRIMMOMATIC                          | 6   | 36.GB  | 8.h  | Label: process_medium |
-| ADJUST_MAXBIN2_EXT                   | 2   | 12.GB  | 4.h  | Label: process_low    |
 | BCFTOOLS_INDEX                       | 2   | 12.GB  | 4.h  | Label: process_low    |
 | CHECKM_QA                            | 2   | 12.GB  | 4.h  | Label: process_low    |
 | FASTQC                               | 2   | 12.GB  | 4.h  | Label: process_low    |

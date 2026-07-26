@@ -14,7 +14,6 @@ include { SEMIBIN_SINGLEEASYBIN                                                 
 include { SEQKIT_STATS                                                                           } from '../../../modules/nf-core/seqkit/stats/main'
 
 include { CONVERT_DEPTHS                                                                         } from '../../../modules/local/mag_depths_convert/main'
-include { ADJUST_MAXBIN2_EXT                                                                     } from '../../../modules/local/adjust_maxbin2_ext/main'
 include { SPLIT_FASTA                                                                            } from '../../../modules/local/split_fasta/main'
 
 workflow BINNING {
@@ -92,10 +91,7 @@ workflow BINNING {
         MAXBIN2(ch_maxbin2_input)
         ch_versions = ch_versions.mix(MAXBIN2.out.versions)
 
-        ADJUST_MAXBIN2_EXT(MAXBIN2.out.binned_fastas)
-        ch_versions = ch_versions.mix(ADJUST_MAXBIN2_EXT.out.versions)
-
-        ch_bins_for_seqkit = ch_bins_for_seqkit.mix(ADJUST_MAXBIN2_EXT.out.renamed_bins)
+        ch_bins_for_seqkit = ch_bins_for_seqkit.mix(MAXBIN2.out.binned_fastas)
         ch_input_splitfasta = ch_input_splitfasta.mix(MAXBIN2.out.unbinned_fasta)
     }
 
