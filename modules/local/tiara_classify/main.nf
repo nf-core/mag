@@ -38,7 +38,7 @@ process TIARA_CLASSIFY {
     mkdir unknown
 
     while IFS=\$"\t" read bin domain; do
-        find -L . -name "\${bin}*" -exec mv {} \${domain}/ \\;
+        find -L . -maxdepth 1 -name "\${bin}.fa.gz" -exec cp {} \${domain}/ \\;
     done < bin2classification.tsv
 
     cat <<-END_VERSIONS > versions.yml
