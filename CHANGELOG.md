@@ -62,7 +62,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1078](https://github.com/nf-core/mag/pull/1078) - Sort bins before GTDB-Tk classification so order-sensitive outputs are reproducible across environments (by @dialvarezs)
 - [#1084](https://github.com/nf-core/mag/pull/1084) - Update Prokka nf-core module, which pins GNU parallel to fix Prokka failures with Conda (by @dialvarezs)
 - [#1086](https://github.com/nf-core/mag/pull/1086) - Rename MaxBin2 bins inside the `MAXBIN2` module via a patch instead of the `ADJUST_MAXBIN2_EXT` local module, which emitted dangling symlinks rather than bin contents on remote filesystems (by @dialvarezs)
-- [#1086](https://github.com/nf-core/mag/pull/1086) - Copy instead of move staged bins in `ADJUST_MAXBIN2_EXT` and `TIARA_CLASSIFY`, which emitted dangling symlinks rather than bin contents on remote filesystems (by @dialvarezs)
+- [#1086](https://github.com/nf-core/mag/pull/1086) - Copy instead of move staged bins in `TIARA_CLASSIFY`, which emitted dangling symlinks rather than bin contents on remote filesystems (by @dialvarezs)
 - [#1086](https://github.com/nf-core/mag/pull/1086) - Match bin filenames exactly in `TIARA_CLASSIFY` so that e.g. bin `.1` no longer also picks up bin `.10` (by @dialvarezs)
 
 ### `Dependencies`
