@@ -41,8 +41,8 @@ The table is ordered first by 'Source' of defaults by specificity of definition,
 | GTDBTK_CLASSIFYWF                    | 10  | 140.GB | 12.h | Named customisation   |
 | CATPACK_BINS                         | 6   | 120.GB | 8.h  | Named customisation   |
 | FLYE                                 | 12  | 72.GB  | 24.h | Named customisation   |
-| METAMDBG_ASM                         | 12  | 72.GB  | 24.h | Named customisation   |
 | FILTLONG                             | 8   | 64.GB  | 24.h | Named customisation   |
+| METAMDBG_ASM                         | 12  | 64.GB  | 24.h | Named customisation   |
 | METASPADES                           | 10  | 64.GB  | 24.h | Named customisation   |
 | METASPADESHYBRID                     | 10  | 64.GB  | 24.h | Named customisation   |
 | PORECHOP_ABI                         | 4   | 64.GB  | 8.h  | Named customisation   |
@@ -50,15 +50,23 @@ The table is ordered first by 'Source' of defaults by specificity of definition,
 | CHECKM_LINEAGEWF                     | 6   | 42.GB  | 8.h  | Named customisation   |
 | MEGAHIT                              | 8   | 40.GB  | 16.h | Named customisation   |
 | PORECHOP_PORECHOP                    | 4   | 30.GB  | 4.h  | Named customisation   |
+| CONCOCT_CONCOCT                      | 12  | 24.GB  | 16.h | Named customisation   |
+| MINIMAP2_ASSEMBLY_ALIGN              | 8   | 24.GB  | 16.h | Named customisation   |
 | BOWTIE2_HOST_REMOVAL_BUILD           | 10  | 20.GB  | 4.h  | Named customisation   |
 | METABAT2_METABAT2                    | 8   | 20.GB  | 8.h  | Named customisation   |
 | ALE                                  | 1   | 18.GB  | 4.h  | Named customisation   |
+| BUSCO_BUSCO                          | 6   | 16.GB  | 12.h | Named customisation   |
 | MAG_DEPTHS                           | 1   | 16.GB  | 4.h  | Named customisation   |
-| BUSCO_BUSCO                          | 10  | 12.GB  | 8.h  | Named customisation   |
+| PYPOLCA_RUN                          | 2   | 12.GB  | 8.h  | Named customisation   |
 | BOWTIE2_HOST_REMOVAL_ALIGN           | 10  | 10.GB  | 6.h  | Named customisation   |
 | NANOLYSE                             | 2   | 10.GB  | 3.h  | Named customisation   |
-| BOWTIE2_ASSEMBLY_ALIGN               | 2   | 8.GB   | 8.h  | Named customisation   |
-| BOWTIE2_PHIX_REMOVAL_ALIGN           | 4   | 4.GB   | 6.h  | Named customisation   |
+| BOWTIE2_ASSEMBLY_ALIGN               | 8   | 8.GB   | 8.h  | Named customisation   |
+| FASTP                                | 6   | 8.GB   | 8.h  | Named customisation   |
+| CHOPPER                              | 2   | 4.GB   | 8.h  | Named customisation   |
+| PRODIGAL                             | 1   | 4.GB   | 4.h  | Named customisation   |
+| PROKKA                               | 2   | 4.GB   | 4.h  | Named customisation   |
+| BOWTIE2_PHIX_REMOVAL_ALIGN           | 8   | 2.GB   | 6.h  | Named customisation   |
+| QUAST_BINS                           | 1   | 2.GB   | 4.h  | Named customisation   |
 | CONCAT_BUSCO_TSV                     | 1   | 1.GB   | 4.h  | Named customisation   |
 | CONCAT_CHECKM_TSV                    | 1   | 1.GB   | 4.h  | Named customisation   |
 | CONCAT_CHECKM2_TSV                   | 1   | 1.GB   | 4.h  | Named customisation   |
@@ -68,18 +76,15 @@ The table is ordered first by 'Source' of defaults by specificity of definition,
 | RENAME_PREDASTOOL                    | 1   | 1.GB   | 4.h  | Named customisation   |
 | SEQKIT_STATS                         | 1   | 1.GB   | 4.h  | Named customisation   |
 | COMEBIN_RUNCOMEBIN                   | 12  | 72.GB  | 16.h | Label: process_high   |
-| CONCOCT_CONCOCT                      | 12  | 72.GB  | 16.h | Label: process_high   |
 | GENOMAD_ENDTOEND                     | 12  | 72.GB  | 16.h | Label: process_high   |
-| MINIMAP2_ALIGN                       | 12  | 72.GB  | 16.h | Label: process_high   |
+| MINIMAP2_HOST_ALIGN                  | 12  | 72.GB  | 16.h | Label: process_high   |
 | ADAPTERREMOVAL                       | 6   | 36.GB  | 8.h  | Label: process_medium |
 | BBMAP_BBNORM                         | 6   | 36.GB  | 8.h  | Label: process_medium |
 | BCFTOOLS_CONSENSUS                   | 6   | 36.GB  | 8.h  | Label: process_medium |
 | BCFTOOLS_VIEW                        | 6   | 36.GB  | 8.h  | Label: process_medium |
 | CATPACK_PREPARE                      | 6   | 36.GB  | 8.h  | Label: process_medium |
 | CHECKM2_PREDICT                      | 6   | 36.GB  | 8.h  | Label: process_medium |
-| CHOPPER                              | 6   | 36.GB  | 8.h  | Label: process_medium |
 | DASTOOL_DASTOOL                      | 6   | 36.GB  | 8.h  | Label: process_medium |
-| FASTP                                | 6   | 36.GB  | 8.h  | Label: process_medium |
 | GUNC_RUN                             | 6   | 36.GB  | 8.h  | Label: process_medium |
 | MAXBIN2                              | 6   | 36.GB  | 8.h  | Label: process_medium |
 | METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS | 6   | 36.GB  | 8.h  | Label: process_medium |
@@ -100,8 +105,6 @@ The table is ordered first by 'Source' of defaults by specificity of definition,
 | MINIMAP2_INDEX                       | 2   | 12.GB  | 4.h  | Label: process_low    |
 | NANOPLOT                             | 2   | 12.GB  | 4.h  | Label: process_low    |
 | NANOQ                                | 2   | 12.GB  | 4.h  | Label: process_low    |
-| PROKKA                               | 2   | 12.GB  | 4.h  | Label: process_low    |
-| PYPOLCA_RUN                          | 2   | 12.GB  | 4.h  | Label: process_low    |
 | SAMTOOLS_INDEX                       | 2   | 12.GB  | 4.h  | Label: process_low    |
 | SAMTOOLS_UNMAPPED                    | 2   | 12.GB  | 4.h  | Label: process_low    |
 | SPLIT_FASTA                          | 2   | 12.GB  | 4.h  | Label: process_low    |
@@ -122,7 +125,6 @@ The table is ordered first by 'Source' of defaults by specificity of definition,
 | GUNC_MERGECHECKM                     | 1   | 6.GB   | 4.h  | Label: process_single |
 | GUNZIP                               | 1   | 6.GB   | 4.h  | Label: process_single |
 | MULTIQC                              | 1   | 6.GB   | 4.h  | Label: process_single |
-| PRODIGAL                             | 1   | 6.GB   | 4.h  | Label: process_single |
 | PYDAMAGE_FILTER                      | 1   | 6.GB   | 4.h  | Label: process_single |
 | QSV_CAT                              | 1   | 6.GB   | 4.h  | Label: process_single |
 | SAMTOOLS_FAIDX                       | 1   | 6.GB   | 4.h  | Label: process_single |
@@ -139,7 +141,6 @@ The table is ordered first by 'Source' of defaults by specificity of definition,
 | MAG_DEPTHS_SUMMARY                   | 1   | 7.GB   | 4.h  | Default               |
 | PREPARE_BIGMAG_SUMMARY               | 1   | 7.GB   | 4.h  | Default               |
 | QUAST                                | 1   | 7.GB   | 4.h  | Default               |
-| QUAST_BINS                           | 1   | 7.GB   | 4.h  | Default               |
 
 _Table generated for nf-core/mag v5.5, using Claude Haiku 4.5, and corrected for accuracy by a human._
 
