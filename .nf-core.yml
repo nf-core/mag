@@ -2,11 +2,15 @@ lint:
   files_unchanged:
     - lib/NfcoreTemplate.groovy
     - .github/PULL_REQUEST_TEMPLATE.md
+    - .github/workflows/branch.yml
+    - .github/workflows/linting.yml
   nextflow_config:
     - config_defaults:
         - params.phix_reference
         - params.lambda_reference
-nf_core_version: 4.0.3
+  files_exist:
+    - .github/workflows/linting_comment.yml
+nf_core_version: 3.5.2
 repository_type: pipeline
 template:
   author: "Hadrien Gourlé, Daniel Straub, Sabrina Krakau, James A. Fellows Yates, Maxime Borry"
