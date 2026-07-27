@@ -44,6 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1080](https://github.com/nf-core/mag/pull/1080) - Updated to nf-core 4.0.3 `TEMPLATE` (by @dialvarezs)
 - [#1081](https://github.com/nf-core/mag/pull/1081) - Use subset database for geNomad (by @dialvarezs)
 - [#1084](https://github.com/nf-core/mag/pull/1084) - Disable NanoPlot static plot image files by default, since it depends on Chrome installed (by @dialvarezs)
+- [#1088](https://github.com/nf-core/mag/pull/1088) - Update Prokka (to v1.15.6) and Prodigal modules, fixing conda/container output mismatches (by @dialvarezs)
 
 ### `Fixed`
 
@@ -74,6 +75,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | GTDB-Tk   | 2.5.2            | 2.7.2       |
 | nf-core   | 3.5.1            | 4.0.3       |
 | nf-schema | 2.5.1            | 2.7.2       |
+| Prokka    | 1.14.6           | 1.15.6      |
 
 ### `Deprecated`
 

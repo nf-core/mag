@@ -268,7 +268,6 @@ workflow MAG {
             ch_assemblies,
             'gff',
         )
-        ch_versions = ch_versions.mix(PRODIGAL.out.versions)
     }
 
     /*
