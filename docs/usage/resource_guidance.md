@@ -51,7 +51,7 @@ The table is ordered first by 'Source' of defaults by specificity of definition,
 | MEGAHIT                              | 8   | 40.GB  | 16.h | Named customisation   |
 | PORECHOP_PORECHOP                    | 4   | 30.GB  | 4.h  | Named customisation   |
 | CONCOCT_CONCOCT                      | 12  | 24.GB  | 16.h | Named customisation   |
-| MINIMAP2_ASSEMBLY_ALIGN              | 8   | 24.GB  | 16.h | Named customisation   |
+| MINIMAP2_ASSEMBLY_ALIGN              | 8   | 32.GB  | 16.h | Named customisation   |
 | BOWTIE2_HOST_REMOVAL_BUILD           | 10  | 20.GB  | 4.h  | Named customisation   |
 | METABAT2_METABAT2                    | 8   | 20.GB  | 8.h  | Named customisation   |
 | ALE                                  | 1   | 18.GB  | 4.h  | Named customisation   |
