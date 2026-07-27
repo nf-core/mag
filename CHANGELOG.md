@@ -45,6 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1081](https://github.com/nf-core/mag/pull/1081) - Use subset database for geNomad (by @dialvarezs)
 - [#1084](https://github.com/nf-core/mag/pull/1084) - Disable NanoPlot static plot image files by default, since it depends on Chrome installed (by @dialvarezs)
 - [#1088](https://github.com/nf-core/mag/pull/1088) - Update Prokka (to v1.15.6), Prodigal and PyDamage modules, fixing conda/container output mismatches (by @dialvarezs)
+- [#1088](https://github.com/nf-core/mag/pull/1088) - Run GTDB-Tk with a single CPU on the `test_single_end` profile, so its outputs no longer depend on the machine running the test (by @dialvarezs)
 
 ### `Fixed`
 

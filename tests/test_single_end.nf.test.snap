@@ -1533,7 +1533,7 @@
                 "genes.gff:md5,c5d5fc7b3ca5a1868d932a8cf853dabc",
                 "PF11987.3.masked.faa:md5,4dddf2d3ac51209f8797f2063b06c388",
                 "concatenated.fasta:md5,1b77332f066e985aee5c65abf2475841",
-                "concatenated.pplacer.json:md5,c79ee75835bd0b2b0aaddbaefdd840bb",
+                "concatenated.pplacer.json:md5,8824e69ea834dda12acceed2b25ccf2a",
                 "concatenated.tre:md5,94ec7e122759243633fa2c60733fea20",
                 "pplacer.out:md5,a5a5bba7d768027f4b2fe7fbc317957f",
                 "MEGAHIT-MaxBin2-unclassified-unrefined-test_minigut_qa.txt:md5,ce8d6ec038cf6dda5d40eb4da854cee7",
@@ -1544,7 +1544,7 @@
                 "genes.gff:md5,57ab4b2d99fe09a52908cbb6f5cf3832",
                 "PF11987.3.masked.faa:md5,6d0358fd0f3b98dcd40587ca0854107c",
                 "concatenated.fasta:md5,91780ae7701bcdd54adb0289b15ed8d2",
-                "concatenated.pplacer.json:md5,c79ee75835bd0b2b0aaddbaefdd840bb",
+                "concatenated.pplacer.json:md5,8824e69ea834dda12acceed2b25ccf2a",
                 "concatenated.tre:md5,e96d85201ac943a178f0823b17f2706c",
                 "pplacer.out:md5,471ad484cc26a5a63dc47fc637c6cde0",
                 "MEGAHIT-MetaBAT2-unclassified-unrefined-test_minigut_qa.txt:md5,f34a4f8dea80a9015f99110d4929e66f",
@@ -1980,7 +1980,7 @@
                 "MEGAHIT-MetaBAT2-test_minigut-bins_bin2classification.names.txt:md5,ce1b6bae00995e88d70722462d9fcedb",
                 "MEGAHIT-MetaBAT2-test_minigut-bins_summary.txt:md5,c2986e27b93008b06709a59bb298e3ea",
                 "bat_summary.tsv:md5,ab01c0858ee334804fb97180d1ba321e",
-                "all-all-all-all-all_bins.bac120.filtered.tsv:md5,2bb6ca3daafbb6c1ed48f0f1985e1495",
+                "all-all-all-all-all_bins.bac120.filtered.tsv:md5,1dd545069ddc62f4b006167208e8a9cf",
                 "all-all-all-all-all_bins.bac120.msa.fasta.gz:md5,b38b041253c38da1631248c3e3d683db",
                 "all-all-all-all-all_bins.bac120.user_msa.fasta.gz:md5,58edfa33cc8b49056c9fb6e4a176a599",
                 "all-all-all-all-all_bins.bac120.summary.tsv:md5,b8727a444f3dcc2f1ee4afaf513ba067",
@@ -1993,7 +1993,7 @@
                 "gtdbtk_summary.tsv:md5,75c4048c09d6126dc7f1019d138d33fe"
             ]
         ],
-        "timestamp": "2026-07-27T01:13:15.676576139",
+        "timestamp": "2026-07-27T06:26:40.225363117",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
