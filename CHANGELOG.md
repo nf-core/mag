@@ -78,6 +78,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | nf-core         | 3.5.1            | 4.0.3       |
 | nf-schema       | 2.5.1            | 2.7.2       |
 | Prokka          | 1.14.6           | 1.15.6      |
+| pypolca         |                  | 0.4.0       |
 
 ### `Deprecated`
 
