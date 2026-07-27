@@ -186,3 +186,15 @@ If you update images or graphics, follow the nf-core [style guidelines](https://
 
 nf-core/mag processes short-read, long-read, and hybrid data, and not every tool is valid for every read type.
 When you add or modify a step, decide which read types it applies to and gate it accordingly (for example, ALE is not run on long reads, Porechop adapter trimming is skipped for PacBio reads, and short- vs long-read alignment uses Bowtie2 vs minimap2).
+
+### Keep the default resources table up to date
+
+[`docs/usage/resource_guidance.md`](usage/resource_guidance.md) documents the CPU, memory and time that Nextflow requests for every module on its first execution attempt.
+This table is written by hand and is easy to forget, so update it whenever you:
+
+- add a new module, or remove an existing one;
+- change a `withName` resource customisation in [`conf/base.config`](../conf/base.config) or [`conf/modules.config`](../conf/modules.config);
+- change a process label, or bump a module whose upstream labels changed.
+
+Keep the existing ordering (by 'Source' specificity, then memory, then module name alphabetically), and mention any conditional behaviour in the bullet list above the table rather than in the table itself (as is done for `ALE` with `--coassemble_group`, for example).
+If a module's requests grow on retry, note that too, since the table only shows the first attempt.

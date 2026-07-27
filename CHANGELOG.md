@@ -70,13 +70,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Dependencies`
 
-| Tool      | Previous version | New version |
-| --------- | ---------------- | ----------- |
-| BUSCO     | 6.0.0            | 6.1.0       |
-| GTDB-Tk   | 2.5.2            | 2.7.2       |
-| nf-core   | 3.5.1            | 4.0.3       |
-| nf-schema | 2.5.1            | 2.7.2       |
-| Prokka    | 1.14.6           | 1.15.6      |
+| Tool            | Previous version | New version |
+| --------------- | ---------------- | ----------- |
+| BUSCO           | 6.0.0            | 6.1.0       |
+| GTDB (database) | r226             | r232        |
+| GTDB-Tk         | 2.5.2            | 2.7.2       |
+| nf-core         | 3.5.1            | 4.0.3       |
+| nf-schema       | 2.5.1            | 2.7.2       |
+| Prokka          | 1.14.6           | 1.15.6      |
 
 ### `Deprecated`
 

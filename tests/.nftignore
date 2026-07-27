@@ -6,7 +6,7 @@ Annotation/Prokka/**/*.tmp.*
 Assembly/*/*.log
 Assembly/*/QC/*/*.bowtie2.log
 Assembly/*/QC/*/QUAST/*.{pdf,html,log}
-Assembly/*/QC/*/QUAST/**/*.{pdf,html}
+Assembly/*/QC/*/QUAST/**/*.{pdf,html,log}
 Assembly/*-pypolca/*/*.vcf
 Assembly/MEGAHIT/QC/*/*.bowtie2.log
 GenomeBinning/CONCOCT/stats/*_{original,PCA_components,PCA_transformed}_data_gt1000.csv
@@ -27,7 +27,7 @@ GenomeBinning/QC/CheckM/*/storage/*
 GenomeBinning/QC/CheckM2/**/DIAMOND_RESULTS.tsv
 GenomeBinning/QC/CheckM2/*/checkm2.log
 GenomeBinning/QC/QUAST/*/*.{pdf,html,log}
-GenomeBinning/QC/QUAST/*/**/*.{pdf,html}
+GenomeBinning/QC/QUAST/*/**/*.{pdf,html,log}
 GenomeBinning/SemiBin2/log/*.log
 multiqc/multiqc_data/fastqc_top_overrepresented_sequences_table.txt
 multiqc/multiqc_data/llms-full.txt
