@@ -60,52 +60,52 @@
                 "Annotation/Prokka/METAMDBG/METAMDBG-MaxBin2-minigut.002/METAMDBG-MaxBin2-minigut.002.txt"
             ],
             [
-                "FLYE-minigut_prodigal.faa.gz:md5,2563b551d9ded5c5ca8516ad93087793",
-                "FLYE-minigut_prodigal.fna.gz:md5,43c242e2d3af7733626d2af657488677",
-                "FLYE-minigut_prodigal.gff.gz:md5,41cdee4e6e213347f11f245a6a6fb179",
-                "FLYE-minigut_prodigal_all.txt.gz:md5,69332a2cfd1e1823318dba82eddf60f4",
-                "METAMDBG-minigut_prodigal.faa.gz:md5,10175fb4dc7c2eea6b7a009030d2d48b",
-                "METAMDBG-minigut_prodigal.fna.gz:md5,255293cb9d3ba36c0b514c57db03b51f",
-                "METAMDBG-minigut_prodigal.gff.gz:md5,48f8a7c28e630acf33b42d34f9639817",
-                "METAMDBG-minigut_prodigal_all.txt.gz:md5,3a19cea597f7a3a9645161156c2bd0ea",
-                "FLYE-MaxBin2-minigut.001.faa:md5,2f9a987185ee86ae7018a166e5815bed",
-                "FLYE-MaxBin2-minigut.001.ffn:md5,2671c6a6dc4a405e482ee0c72b1f4562",
+                "FLYE-minigut_prodigal.faa.gz:md5,220e2f100394d28bd62b03048f99ac19",
+                "FLYE-minigut_prodigal.fna.gz:md5,b97e36840fd59232bcf3d3743750cdca",
+                "FLYE-minigut_prodigal.gff.gz:md5,1bbcf7e9de2eecdeea4e7a14c8172bbe",
+                "FLYE-minigut_prodigal_all.txt.gz:md5,5121823c179df60d37daeab69bf07372",
+                "METAMDBG-minigut_prodigal.faa.gz:md5,b26e421d5e291bc2ede7119ae839b198",
+                "METAMDBG-minigut_prodigal.fna.gz:md5,8e034e16fc5c8c24a5e806fe22fa7d85",
+                "METAMDBG-minigut_prodigal.gff.gz:md5,e75ac6b481af0c56ea70c83cf39b4b5c",
+                "METAMDBG-minigut_prodigal_all.txt.gz:md5,662ac219912050f212e79ddc97dc1c1c",
+                "FLYE-MaxBin2-minigut.001.faa:md5,29593996c01477c0b9bce2e54ae2e127",
+                "FLYE-MaxBin2-minigut.001.ffn:md5,95b9596b38083abf803d808b8a68de13",
                 "FLYE-MaxBin2-minigut.001.fna:md5,e263c2ace91ca8bf93127a5d61fd0a35",
                 "FLYE-MaxBin2-minigut.001.fsa:md5,d9f03b16b6d2ca7faecd13a8282514ab",
-                "FLYE-MaxBin2-minigut.001.gff:md5,1592ed3cd2207b822c1cb70f729797bf",
-                "FLYE-MaxBin2-minigut.001.tbl:md5,605e8e3c514f0d7b77e3cf58b85bd6cf",
-                "FLYE-MaxBin2-minigut.001.tsv:md5,beccd5341cffb6da4337f749042a2e66",
-                "FLYE-MaxBin2-minigut.001.txt:md5,a9351e65ce154439fcee004d3bfe250a",
-                "FLYE-MaxBin2-minigut.002.faa:md5,9b536304bd89b1eeefc941dc3ddbb8d5",
-                "FLYE-MaxBin2-minigut.002.ffn:md5,5ad57c00893dba4879135a44401264c6",
+                "FLYE-MaxBin2-minigut.001.gff:md5,bd34629085ee8fe27dfd193a58b0a676",
+                "FLYE-MaxBin2-minigut.001.tbl:md5,1e2f45dbe5a12dcd856d22da7946082f",
+                "FLYE-MaxBin2-minigut.001.tsv:md5,7a31e26db293e581d24841cc387c473d",
+                "FLYE-MaxBin2-minigut.001.txt:md5,0340fb47a3094804941ff835f2de397e",
+                "FLYE-MaxBin2-minigut.002.faa:md5,7a0cdd47f1ffa92b640234925d3c0dbf",
+                "FLYE-MaxBin2-minigut.002.ffn:md5,d7a67186736b42a55fa4841c076cbaf3",
                 "FLYE-MaxBin2-minigut.002.fna:md5,c4acf129ca6594077e31522ab5c375c7",
                 "FLYE-MaxBin2-minigut.002.fsa:md5,46cc2be492bda253b0f8649be6ab0391",
-                "FLYE-MaxBin2-minigut.002.gff:md5,361003af7f032568ece62e735110c3ee",
-                "FLYE-MaxBin2-minigut.002.tbl:md5,9cf79b1635ce6692bc4d53e6eebdbe91",
-                "FLYE-MaxBin2-minigut.002.tsv:md5,299efffb0c6feffd2406763356b9f508",
-                "FLYE-MaxBin2-minigut.002.txt:md5,8695b31bc8c743fa1f8da505913f1db8",
-                "METAMDBG-MaxBin2-minigut.001.faa:md5,29a5ca19d1c9eb9d5eb039bc971c7e2b",
-                "METAMDBG-MaxBin2-minigut.001.ffn:md5,0e334502d50a547f67a23f65af97548c",
+                "FLYE-MaxBin2-minigut.002.gff:md5,2c141beff431d7c9b2a96b4703fbc3fa",
+                "FLYE-MaxBin2-minigut.002.tbl:md5,01f122661f0849e998e946b7cdcd701e",
+                "FLYE-MaxBin2-minigut.002.tsv:md5,b56543e18de0bb30b7ef12700c5a2cbd",
+                "FLYE-MaxBin2-minigut.002.txt:md5,c45f3c01d587af318878d572a3f96008",
+                "METAMDBG-MaxBin2-minigut.001.faa:md5,dcecc7459c1d0df956ea72e4a23421de",
+                "METAMDBG-MaxBin2-minigut.001.ffn:md5,9284830c31e5a2fa2b183e2d52eb39e7",
                 "METAMDBG-MaxBin2-minigut.001.fna:md5,df4c9f3925fb4421679d9fe7e6703679",
                 "METAMDBG-MaxBin2-minigut.001.fsa:md5,bc46e0632f8c7b3e7ad26b5bb4f7cd2b",
-                "METAMDBG-MaxBin2-minigut.001.gff:md5,3be2228ed8c486deee31377cebf9cb74",
-                "METAMDBG-MaxBin2-minigut.001.tbl:md5,fbde5c6bc0a7fdc8e6e1779b14b1b71b",
-                "METAMDBG-MaxBin2-minigut.001.tsv:md5,5f3b2e4c5404dc57b56e8bc5c1e86383",
-                "METAMDBG-MaxBin2-minigut.001.txt:md5,6a04bd012aaca8c2e8b8e21dfead77a0",
-                "METAMDBG-MaxBin2-minigut.002.faa:md5,7fbedfb73744c6cb61cf2d47c14e8de2",
-                "METAMDBG-MaxBin2-minigut.002.ffn:md5,81ecfc8dbdf8e3a883b078516417276b",
+                "METAMDBG-MaxBin2-minigut.001.gff:md5,2892c07ef4433a2d0a4e22f326740736",
+                "METAMDBG-MaxBin2-minigut.001.tbl:md5,b9cfbb2c61f9724666b83e5354ec04e6",
+                "METAMDBG-MaxBin2-minigut.001.tsv:md5,9ebe7ccd6dd69d560572435688483177",
+                "METAMDBG-MaxBin2-minigut.001.txt:md5,1768e1210d630c653c62f14037492c5e",
+                "METAMDBG-MaxBin2-minigut.002.faa:md5,e61138b07c936bf6260cbc3223eb1235",
+                "METAMDBG-MaxBin2-minigut.002.ffn:md5,d46d6dc4b5d16acda55cdbaf619d9f18",
                 "METAMDBG-MaxBin2-minigut.002.fna:md5,ad7b013bc1001a959a214e51115b7e5f",
                 "METAMDBG-MaxBin2-minigut.002.fsa:md5,a0ca1c7cda334b09484f898285e660da",
-                "METAMDBG-MaxBin2-minigut.002.gff:md5,19c0fa333c36210e1d741d7d082547a4",
-                "METAMDBG-MaxBin2-minigut.002.tbl:md5,35b865011a8b834b24a02cf19e812fb4",
-                "METAMDBG-MaxBin2-minigut.002.tsv:md5,3d73e5fa5ab9d5db5265d9f24e5ae4c3",
-                "METAMDBG-MaxBin2-minigut.002.txt:md5,1860eeacfb5e6d985d4c176e577965c1"
+                "METAMDBG-MaxBin2-minigut.002.gff:md5,424db4961c4740e198b8d069077ebaa9",
+                "METAMDBG-MaxBin2-minigut.002.tbl:md5,0d4d95c1d95815957a49fc4c1fff0347",
+                "METAMDBG-MaxBin2-minigut.002.tsv:md5,92b285db74f5ebb01380d63b6d1e6af4",
+                "METAMDBG-MaxBin2-minigut.002.txt:md5,6a3b8ff37f997bb0d47788ed20ef2bdf"
             ]
         ],
-        "timestamp": "2026-06-25T18:07:33.114578889",
+        "timestamp": "2026-07-27T00:46:32.599154361",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nextflow": "25.10.4"
         }
     },
     "qc": {
@@ -135,10 +135,10 @@
                 "minigut_0.stats:md5,e7ef22efc494097a3ad803e35d2b6469"
             ]
         ],
-        "timestamp": "2026-06-26T15:03:32.004652411",
+        "timestamp": "2026-07-27T00:46:29.75503188",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nextflow": "25.10.4"
         }
     },
     "log-checks": {
@@ -230,10 +230,10 @@
                 "transposed_report.txt:md5,e2b2a97b17b1c097d681388a96b3351f"
             ]
         ],
-        "timestamp": "2026-06-25T18:07:31.401097381",
+        "timestamp": "2026-07-27T00:46:30.433281935",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nextflow": "25.10.4"
         }
     },
     "binning": {
@@ -414,10 +414,10 @@
                 "bin_depths_summary.tsv:md5,b3efc921cfe1789a5a4763a12cfe50f8"
             ]
         ],
-        "timestamp": "2026-07-14T04:15:08.498401069",
+        "timestamp": "2026-07-27T00:46:31.287797884",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
+            "nextflow": "25.10.4"
         }
     },
     "content-checks": {
@@ -518,11 +518,10 @@
                     "porechop_abi": "0.5.0"
                 },
                 "PRODIGAL": {
-                    "pigz": 2.6,
                     "prodigal": "2.6.3"
                 },
                 "PROKKA": {
-                    "prokka": "1.14.6"
+                    "prokka": "1.15.6"
                 },
                 "QUAST": {
                     "metaquast": "5.0.2",
@@ -554,10 +553,10 @@
                 }
             }
         ],
-        "timestamp": "2026-07-09T14:26:54.925811528",
+        "timestamp": "2026-07-27T00:46:29.250447886",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nextflow": "25.10.4"
         }
     },
     "multiqc": {
@@ -607,10 +606,10 @@
                 
             ]
         ],
-        "timestamp": "2026-05-21T16:21:15.4461817",
+        "timestamp": "2026-07-27T00:46:34.028424471",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.1"
+            "nextflow": "25.10.4"
         }
     },
     "summary-rows": {

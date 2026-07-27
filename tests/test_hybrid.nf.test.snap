@@ -68,56 +68,56 @@
                 "Annotation/Prokka/SPAdesHybrid/SPAdesHybrid-SemiBin2-group-0_0/SPAdesHybrid-SemiBin2-group-0_0.txt"
             ],
             [
-                "SPAdesHybrid-group-0_prodigal.faa.gz:md5,f86c01d84214677bb270751eb17b4443",
-                "SPAdesHybrid-group-0_prodigal.fna.gz:md5,13b30dc7a8749eab1834f1cd211990cd",
-                "SPAdesHybrid-group-0_prodigal.gff.gz:md5,18dae9df6c9dab2d2b0a87a1b798a799",
-                "SPAdesHybrid-group-0_prodigal_all.txt.gz:md5,97caa0729533d4fc98fdaba7dcf084e5",
-                "SPAdesHybrid-MaxBin2-group-0.001.faa:md5,06feb956c68d4f68a2af2745bef8fbe2",
-                "SPAdesHybrid-MaxBin2-group-0.001.ffn:md5,bc0288c30c8e92922025e76f713c3cb8",
+                "SPAdesHybrid-group-0_prodigal.faa.gz:md5,6e64a5ce33bb5f9c6d8ffcd3af1e1404",
+                "SPAdesHybrid-group-0_prodigal.fna.gz:md5,0d19659ea13c2b5aab09d446f5b9d98d",
+                "SPAdesHybrid-group-0_prodigal.gff.gz:md5,964d2fbc1655db777a8d81d04c07c1d0",
+                "SPAdesHybrid-group-0_prodigal_all.txt.gz:md5,dd68b31c71c0b6cdcbefe26cc9ebd51c",
+                "SPAdesHybrid-MaxBin2-group-0.001.faa:md5,520df90361394e699f8e58dc68a90618",
+                "SPAdesHybrid-MaxBin2-group-0.001.ffn:md5,034b37e717275ade7d78e02d6fb6d076",
                 "SPAdesHybrid-MaxBin2-group-0.001.fna:md5,8ec571278c310b30bd3bb6752e811091",
                 "SPAdesHybrid-MaxBin2-group-0.001.fsa:md5,a74fbfe1e933eb26809bf693a7d96693",
-                "SPAdesHybrid-MaxBin2-group-0.001.gff:md5,37430f9edccd81ef79d65483d800bb0f",
-                "SPAdesHybrid-MaxBin2-group-0.001.tbl:md5,bed38e734a6c5c7dc994ae6ca5807e62",
-                "SPAdesHybrid-MaxBin2-group-0.001.tsv:md5,0a89d453d190e9030e240557fb06b89b",
-                "SPAdesHybrid-MaxBin2-group-0.001.txt:md5,50d64cace0a2c4ab5bd4e3edfa242005",
-                "SPAdesHybrid-MaxBin2-group-0.002.faa:md5,7ef3264768cceec40f67b8f788946097",
-                "SPAdesHybrid-MaxBin2-group-0.002.ffn:md5,f4af520270301df8ebde59a9df2f7549",
+                "SPAdesHybrid-MaxBin2-group-0.001.gff:md5,48faec710772ad0268a878eedd317789",
+                "SPAdesHybrid-MaxBin2-group-0.001.tbl:md5,007525feba58de2c2b307da6726ec922",
+                "SPAdesHybrid-MaxBin2-group-0.001.tsv:md5,e0c87e2e80296985ae18804aaeb66280",
+                "SPAdesHybrid-MaxBin2-group-0.001.txt:md5,fc3a5b45cc2770bdc5f4075133958143",
+                "SPAdesHybrid-MaxBin2-group-0.002.faa:md5,9e617e443828f0a778adbd5ec1324bfd",
+                "SPAdesHybrid-MaxBin2-group-0.002.ffn:md5,4b6b841e65228f3294efd4bc638e7149",
                 "SPAdesHybrid-MaxBin2-group-0.002.fna:md5,f3e5992f008b484bc6a13cde105d40a3",
                 "SPAdesHybrid-MaxBin2-group-0.002.fsa:md5,ee031ab359e43c8f7875643289d7308c",
-                "SPAdesHybrid-MaxBin2-group-0.002.gff:md5,5dbc945e6ade3d807fa616ab6779a6ff",
-                "SPAdesHybrid-MaxBin2-group-0.002.tbl:md5,00636612077dc9fdae5e00d2afa3eb30",
-                "SPAdesHybrid-MaxBin2-group-0.002.tsv:md5,8c7d1a9f293d75a82e5c57a6a217f0ec",
-                "SPAdesHybrid-MaxBin2-group-0.002.txt:md5,49daadd903a209acedeb982d1e242c8d",
-                "SPAdesHybrid-MetaBAT2-group-0.1.faa:md5,c37f9653effe36a69fe86d0d14391d1b",
-                "SPAdesHybrid-MetaBAT2-group-0.1.ffn:md5,e8c3b8a30a6fea214380a6c30afe5d64",
+                "SPAdesHybrid-MaxBin2-group-0.002.gff:md5,3e78d28c6059cee4e6b7d8c9f6341ce3",
+                "SPAdesHybrid-MaxBin2-group-0.002.tbl:md5,ecb28e698608fc82c71f1b76c6b7cc94",
+                "SPAdesHybrid-MaxBin2-group-0.002.tsv:md5,c3f3a0e33bb5bd74b6ca09646861b9f1",
+                "SPAdesHybrid-MaxBin2-group-0.002.txt:md5,4a1ca5347e5d640f7bbf2106d7db35f3",
+                "SPAdesHybrid-MetaBAT2-group-0.1.faa:md5,3a2c2cb6240295accc5473ff1a2bb53d",
+                "SPAdesHybrid-MetaBAT2-group-0.1.ffn:md5,9b9f7fd765835c388c41972778cb767b",
                 "SPAdesHybrid-MetaBAT2-group-0.1.fna:md5,34155300864c5daf4fab060e4a1ae5c0",
                 "SPAdesHybrid-MetaBAT2-group-0.1.fsa:md5,fa60ad232385c17291127bda5c220ad8",
-                "SPAdesHybrid-MetaBAT2-group-0.1.gff:md5,aeda4f63162db148215209f2f6ef6187",
-                "SPAdesHybrid-MetaBAT2-group-0.1.tbl:md5,f6012e1550fb53ad169be4605e575034",
-                "SPAdesHybrid-MetaBAT2-group-0.1.tsv:md5,db5577da68739b96c7b8b6fa3563017c",
-                "SPAdesHybrid-MetaBAT2-group-0.1.txt:md5,e8ef51d97d87bcd03053488ac350e1fe",
-                "SPAdesHybrid-MetaBAT2-group-0.2.faa:md5,4d667a25d8b2d915fc66ae5ac1389735",
-                "SPAdesHybrid-MetaBAT2-group-0.2.ffn:md5,ec7a38d47042de2907542bf2c281a4da",
+                "SPAdesHybrid-MetaBAT2-group-0.1.gff:md5,fff7799eab245fa05077475fddca4596",
+                "SPAdesHybrid-MetaBAT2-group-0.1.tbl:md5,188ebe792e8b200ec19aeea075d0766e",
+                "SPAdesHybrid-MetaBAT2-group-0.1.tsv:md5,a8c881331002f18768ab69c27adf2932",
+                "SPAdesHybrid-MetaBAT2-group-0.1.txt:md5,79914a8a37cdb8d03e27019f6ae6ae5c",
+                "SPAdesHybrid-MetaBAT2-group-0.2.faa:md5,b1f945d849775866388b43c882b6671e",
+                "SPAdesHybrid-MetaBAT2-group-0.2.ffn:md5,55daa1e30df3a877672fa0ad385c9f12",
                 "SPAdesHybrid-MetaBAT2-group-0.2.fna:md5,90de2b36a2213fe8b90165619bca9a33",
                 "SPAdesHybrid-MetaBAT2-group-0.2.fsa:md5,9beb896bdf247cc2a03675e44fdcb7d8",
-                "SPAdesHybrid-MetaBAT2-group-0.2.gff:md5,6977292eb6e638d6df5a1d3fff526b34",
-                "SPAdesHybrid-MetaBAT2-group-0.2.tbl:md5,f38668b460d5c3d0095cb4c6c2802981",
-                "SPAdesHybrid-MetaBAT2-group-0.2.tsv:md5,c408a58670e2d8ddd63a6f3cfc15eafa",
-                "SPAdesHybrid-MetaBAT2-group-0.2.txt:md5,cf5705c9b84ee4a9f5b3c3960ef8befa",
-                "SPAdesHybrid-SemiBin2-group-0_0.faa:md5,7e63428bbc2c1c666a6b34928a3057b1",
-                "SPAdesHybrid-SemiBin2-group-0_0.ffn:md5,225171401d3d91f3cb601b900eba4063",
+                "SPAdesHybrid-MetaBAT2-group-0.2.gff:md5,134186d4c9d38ac0a16f5ed99f9cf3a8",
+                "SPAdesHybrid-MetaBAT2-group-0.2.tbl:md5,7275b4c459fd73f1b6afe50d88464be2",
+                "SPAdesHybrid-MetaBAT2-group-0.2.tsv:md5,7a79bf64ce978b74e0ea592a72ef9b38",
+                "SPAdesHybrid-MetaBAT2-group-0.2.txt:md5,a5a65e95458a6be0903cab4c2dee40c0",
+                "SPAdesHybrid-SemiBin2-group-0_0.faa:md5,e6f4af7f9a4425f17f9b8031b8701306",
+                "SPAdesHybrid-SemiBin2-group-0_0.ffn:md5,f310864d278470ae7fbb820484ddd626",
                 "SPAdesHybrid-SemiBin2-group-0_0.fna:md5,e0a97da936aed4c2793500ca04c7152b",
                 "SPAdesHybrid-SemiBin2-group-0_0.fsa:md5,0b4a9d479ab565a75652fd1d17778b66",
-                "SPAdesHybrid-SemiBin2-group-0_0.gff:md5,eccaaf4f597533e153626eedbbb55bde",
-                "SPAdesHybrid-SemiBin2-group-0_0.tbl:md5,9a00bcab5428974163f9769748aef8f6",
-                "SPAdesHybrid-SemiBin2-group-0_0.tsv:md5,99822d05e7320252768e1eb5dce9a4a0",
+                "SPAdesHybrid-SemiBin2-group-0_0.gff:md5,3423e0f90be3bd7d4d33db79a794447d",
+                "SPAdesHybrid-SemiBin2-group-0_0.tbl:md5,923387f9f3cb19deefce42ebbc69110d",
+                "SPAdesHybrid-SemiBin2-group-0_0.tsv:md5,77260d7de421f9699fff94457a6f013d",
                 "SPAdesHybrid-SemiBin2-group-0_0.txt:md5,f3c9e5f7e2651fa893484ca9bb7c3114"
             ]
         ],
-        "timestamp": "2026-06-26T15:16:34.749652718",
+        "timestamp": "2026-07-27T00:37:07.598453748",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nextflow": "25.10.4"
         }
     },
     "-profile hybrid": {
@@ -223,11 +223,10 @@
                     "porechop_abi": "0.5.0"
                 },
                 "PRODIGAL": {
-                    "pigz": 2.6,
                     "prodigal": "2.6.3"
                 },
                 "PROKKA": {
-                    "prokka": "1.14.6"
+                    "prokka": "1.15.6"
                 },
                 "QUAST": {
                     "metaquast": "5.0.2",
@@ -262,10 +261,10 @@
                 }
             }
         ],
-        "timestamp": "2026-07-09T14:25:17.526507447",
+        "timestamp": "2026-07-27T00:37:00.361340644",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nextflow": "25.10.4"
         }
     },
     "log-checks": {
@@ -335,10 +334,10 @@
                 "minigut_sample2_0.stats:md5,4a2f9b3bc3ba6351207acd63bd75d37c"
             ]
         ],
-        "timestamp": "2026-06-26T15:16:30.534515186",
+        "timestamp": "2026-07-27T00:37:01.688775927",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nextflow": "25.10.4"
         }
     },
     "assembly": {
@@ -387,10 +386,10 @@
                 "SPAdesHybrid-group-0.scaffolds.fa.gz:md5,665f0ed8bdf0f2857aa713ce3e83f390"
             ]
         ],
-        "timestamp": "2026-06-26T15:16:31.903090397",
+        "timestamp": "2026-07-27T00:37:03.43851536",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nextflow": "25.10.4"
         }
     },
     "binning": {
@@ -601,10 +600,10 @@
                 "bin_depths_summary.tsv:md5,1bb4397dfe72ad4cab619de32a3f36f8"
             ]
         ],
-        "timestamp": "2026-07-14T04:13:35.758490941",
+        "timestamp": "2026-07-27T00:37:05.349341288",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
+            "nextflow": "25.10.4"
         }
     },
     "content-checks": {
@@ -616,13 +615,13 @@
             "SemiBin2 bins non-empty: true",
             "Prokka GBK files contain LOCUS: true",
             "Prokka SQN files non-empty: true",
-            "Prokka TSV row counts: [SPAdesHybrid-MaxBin2-group-0.001.tsv=1015, SPAdesHybrid-MaxBin2-group-0.002.tsv=813, SPAdesHybrid-MetaBAT2-group-0.1.tsv=806, SPAdesHybrid-MetaBAT2-group-0.2.tsv=719, SPAdesHybrid-SemiBin2-group-0_0.tsv=1537]",
+            "Prokka TSV row counts: [SPAdesHybrid-MaxBin2-group-0.001.tsv=1018, SPAdesHybrid-MaxBin2-group-0.002.tsv=811, SPAdesHybrid-MetaBAT2-group-0.1.tsv=802, SPAdesHybrid-MetaBAT2-group-0.2.tsv=721, SPAdesHybrid-SemiBin2-group-0_0.tsv=1537]",
             "Bin summary row count matches bins: true"
         ],
-        "timestamp": "2026-06-27T04:41:03.122422151",
+        "timestamp": "2026-07-27T00:37:17.252029688",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nextflow": "25.10.4"
         }
     },
     "qc_shortreads": {
@@ -652,10 +651,10 @@
                 "minigut_sample2_run0_host_removed.bowtie2.log:md5,fb967944891311058a2c8f2255cfe118"
             ]
         ],
-        "timestamp": "2026-06-26T15:16:30.510939826",
+        "timestamp": "2026-07-27T00:37:00.405989214",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nextflow": "25.10.4"
         }
     },
     "multiqc": {
@@ -889,20 +888,20 @@
                 "multiqc_fastp.yaml:md5,ff4fe8f96e7c304ea399605accc49309",
                 "multiqc_fastqc.yaml:md5,73d757b21a60f2dc068857b6fc6c4ff9",
                 "multiqc_fastqc_fastqc-1.yaml:md5,db2e5e4e0b16c4ef7cd8cbbff06c40eb",
-                "multiqc_general_stats.yaml:md5,be0fdd1517b753b66a62a9003ae2ee4a",
-                "multiqc_prokka.yaml:md5,91e11ec9f804296f1e8624fd5156d722",
+                "multiqc_general_stats.yaml:md5,97c4c7e3ff68acd23a8efbf76c0dda6a",
+                "multiqc_prokka.yaml:md5,42a28b0c79bddc86b17c4c9a63f92bf0",
                 "multiqc_quast.yaml:md5,66d2f53da8458959128af916f7cab015",
                 "multiqc_quast_quast-1.yaml:md5,685fa1aa9a07f62a36cb5e8658533a02",
                 "porechop.yaml:md5,828d96e2822bb4b4108ab706c00c4450",
-                "prokka_plot.yaml:md5,02f19c53db6c78462f6d98f5e1f664ec",
+                "prokka_plot.yaml:md5,4d1a47dc4fdd5db528bb76b7ba372f89",
                 "quast_num_contigs.yaml:md5,89690bc82ff198928557f8d896106a55",
                 "quast_table.yaml:md5,2f5c8eae632ff937496491eb1facafd9"
             ]
         ],
-        "timestamp": "2026-06-26T15:16:36.706432235",
+        "timestamp": "2026-07-27T00:37:09.97122623",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nextflow": "25.10.4"
         }
     },
     "summary-rows": {
