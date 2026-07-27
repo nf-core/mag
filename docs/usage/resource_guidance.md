@@ -43,8 +43,8 @@ The table is ordered first by 'Source' of defaults by specificity of definition,
 | FLYE                                 | 12  | 72.GB  | 24.h | Named customisation   |
 | FILTLONG                             | 8   | 64.GB  | 24.h | Named customisation   |
 | METAMDBG_ASM                         | 12  | 64.GB  | 24.h | Named customisation   |
-| METASPADES                           | 10  | 64.GB  | 24.h | Named customisation   |
-| METASPADESHYBRID                     | 10  | 64.GB  | 24.h | Named customisation   |
+| METASPADES                           | 10  | 72.GB  | 24.h | Named customisation   |
+| METASPADESHYBRID                     | 10  | 72.GB  | 24.h | Named customisation   |
 | PORECHOP_ABI                         | 4   | 64.GB  | 8.h  | Named customisation   |
 | CATPACK_CONTIGS                      | 6   | 60.GB  | 8.h  | Named customisation   |
 | CHECKM_LINEAGEWF                     | 6   | 42.GB  | 8.h  | Named customisation   |
@@ -57,6 +57,7 @@ The table is ordered first by 'Source' of defaults by specificity of definition,
 | ALE                                  | 1   | 18.GB  | 4.h  | Named customisation   |
 | BUSCO_BUSCO                          | 6   | 16.GB  | 12.h | Named customisation   |
 | MAG_DEPTHS                           | 1   | 16.GB  | 4.h  | Named customisation   |
+| MULTIQC                              | 1   | 16.GB  | 8.h  | Named customisation   |
 | PYPOLCA_RUN                          | 2   | 12.GB  | 8.h  | Named customisation   |
 | BOWTIE2_HOST_REMOVAL_ALIGN           | 10  | 10.GB  | 6.h  | Named customisation   |
 | NANOLYSE                             | 2   | 10.GB  | 3.h  | Named customisation   |
@@ -124,7 +125,6 @@ The table is ordered first by 'Source' of defaults by specificity of definition,
 | GUNC_DOWNLOADDB                      | 1   | 6.GB   | 4.h  | Label: process_single |
 | GUNC_MERGECHECKM                     | 1   | 6.GB   | 4.h  | Label: process_single |
 | GUNZIP                               | 1   | 6.GB   | 4.h  | Label: process_single |
-| MULTIQC                              | 1   | 6.GB   | 4.h  | Label: process_single |
 | PYDAMAGE_FILTER                      | 1   | 6.GB   | 4.h  | Label: process_single |
 | QSV_CAT                              | 1   | 6.GB   | 4.h  | Label: process_single |
 | SAMTOOLS_FAIDX                       | 1   | 6.GB   | 4.h  | Label: process_single |
