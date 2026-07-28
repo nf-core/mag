@@ -68,7 +68,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1086](https://github.com/nf-core/mag/pull/1086) - Copy instead of move staged bins in `TIARA_CLASSIFY`, which emitted dangling symlinks rather than bin contents on remote filesystems (by @dialvarezs)
 - [#1086](https://github.com/nf-core/mag/pull/1086) - Match bin filenames exactly in `TIARA_CLASSIFY` so that e.g. bin `.1` no longer also picks up bin `.10` (by @dialvarezs)
 - [#1087](https://github.com/nf-core/mag/pull/1087) - Use non-mutating `toSorted` instead of in-place `sort` on shared channel items, which could cause `ConcurrentModificationException` failures (by @dialvarezs)
-- [#1089](https://github.com/nf-core/mag/pull/1089) - Give `CONVERT_DEPTHS` 2 GB instead of 1 GB in the full-size test config (by @dialvarezs)
+- [#1092](https://github.com/nf-core/mag/pull/1092) - Convert depths in a single streaming pass, so `CONVERT_DEPTHS` no longer writes a decompressed copy of the depth file to the work directory and re-reads it once per read set, which stalled short-read assemblies for hours on object-backed work directories (by @dialvarezs)
 - [#1093](https://github.com/nf-core/mag/pull/1093) - Ignore CheckM `storage/` subdirectories in nf-test snapshots, whose contents vary between runs and machines (by @dialvarezs)
 
 ### `Dependencies`
