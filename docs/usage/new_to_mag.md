@@ -49,7 +49,7 @@ A run of nf-core/mag without any customisation or additional parameters will:
 
 - Preprocess input reads to
   - Remove adapters (short reads: `fastp`, long reads: `porechop_ABI`)
-  - FASTQ-level quality filtering (long reads: `Filtlong`)
+  - FASTQ-level quality filtering (long reads: `Chopper`)
   - Remove Phi X (short-read) or lambda (long-read) sequences
   - Quality control reads (short reads: FastQC, long reads: `Nanoplot`)
 - Assemble reads into contigs with
