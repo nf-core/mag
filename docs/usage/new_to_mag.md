@@ -30,7 +30,7 @@ This page is split into four specific sections:
 > - **Already have assemblies?** Use the `--assembly_input` flag to start from binning
 > - **Assemble or co-assemble?** It's complicated! Check our advice below.
 > - **Which assembler to use?** Use as many as you can.
-> - **Can I polish my assemblies?** No, but it is being considered.
+> - **Can I polish my assemblies?** Long-read assemblies can be short-read polished with `--run_pypolca`, but check our advice below.
 > - **Which binner to use?** Use as many as you can.
 > - **Should I refine my bins?** It depends on your context.
 > - **Which bin QC tool to use?** CheckM/CheckM2 for prokaryote only projects, BUSCO for projects with wider taxonomic targets.
@@ -184,11 +184,13 @@ Short-read-first assembly performs better with high-depth short reads or low-qua
 
 Polishing of long-read assemblies involves using high-quality short reads to 'repair' mistakes in lower-quality long reads.
 
-Polishing of assemblies with short or long reads is _not_ currently implemented in the pipeline.
+Short-read polishing of long-read assemblies is available with `--run_pypolca`, which runs `Pypolca` on each long-read assembly using the short reads of the same sample (or the same group, when co-assembling).
+It is turned off by default, and long-read assemblies of samples without short reads are passed on unpolished.
+Long-read polishing (for example, with `Medaka`) is _not_ implemented in the pipeline.
 
 For metagenomes, polishing can harm assembly quality by erroneously modifying low-abundance genomes using high-abundance data.
-High-quality Nanopore data (10.4) may not benefit substantially from long-read polishing (for example, with `Medaka`).
-Polishing long-read assemblies with short-read data might be beneficial but remains debated and is not currently available in the pipeline (for example, `Polypolish` and `Pypolca`).
+High-quality Nanopore data (10.4) may not benefit substantially from long-read polishing.
+Polishing long-read assemblies with short-read data might be beneficial but remains debated, so evaluate the results (for example, with `QUAST`) before relying on them.
 
 ### What binning tool should I select?
 
