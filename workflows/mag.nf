@@ -233,20 +233,32 @@ workflow MAG {
             ch_short_reads_pypolca = ch_short_reads
         }
 
-        // Join reads and assemblies by sample id so PYPOLCA pairs them correctly
-        ch_pypolca_input = ch_longread_raw_assemblies
-            .map { meta, assembly -> [meta.id, meta, assembly] }
-            .combine(
-                ch_short_reads_pypolca.map { meta, reads -> [meta.id, reads] },
-                by: 0
-            )
-            .map { _id, assembly_meta, assembly, reads ->
-                [assembly_meta, assembly, reads]
+        // Collect short reads in a map keyed by id, so assemblies can be paired with
+        // the corresponding reads without dropping the ones that have no short reads
+        ch_short_reads_pypolca_by_id = ch_short_reads_pypolca
+            .toList()
+            .map { short_reads ->
+                short_reads.collectEntries { meta, reads ->
+                    [(meta.id): reads]
+                }
             }
 
-        PYPOLCA_RUN(ch_pypolca_input)
-        ch_longread_assemblies = PYPOLCA_RUN.out.polished
-    } else {
+        // Split long read assemblies depending on whether they can be polished
+        ch_longread_assemblies_branched = ch_longread_raw_assemblies
+            .combine(ch_short_reads_pypolca_by_id)
+            .branch { meta, assembly, short_reads_by_id ->
+                polish: short_reads_by_id.containsKey(meta.id)
+                return [meta, assembly, short_reads_by_id[meta.id]]
+                no_short_reads: true
+                log.warn("[nf-core/mag]: No short reads found for '${meta.id}', skipping PYPOLCA polishing of its ${meta.assembler} assembly.")
+                return [meta, assembly]
+            }
+
+        PYPOLCA_RUN(ch_longread_assemblies_branched.polish)
+
+        ch_longread_assemblies = PYPOLCA_RUN.out.polished.mix(ch_longread_assemblies_branched.no_short_reads)
+    }
+    else {
         ch_longread_assemblies = ch_longread_raw_assemblies
     }
 
@@ -482,10 +494,9 @@ workflow MAG {
 
         ch_quast_bins_summary = channel.empty()
         if (!params.skip_quast) {
-            ch_input_for_quast_bins = ch_input_for_postbinning
-                .map { meta, bins ->
-                    [meta, [bins].flatten().toSorted { a, b -> a.getBaseName() <=> b.getBaseName() }]
-                }
+            ch_input_for_quast_bins = ch_input_for_postbinning.map { meta, bins ->
+                [meta, [bins].flatten().toSorted { a, b -> a.getBaseName() <=> b.getBaseName() }]
+            }
 
             QUAST_BINS(ch_input_for_quast_bins)
             ch_versions = ch_versions.mix(QUAST_BINS.out.versions)
