@@ -9,8 +9,8 @@ include { CATPACK_DOWNLOAD                              } from '../../../modules
 include { CATPACK_PREPARE                               } from '../../../modules/nf-core/catpack/prepare/main'
 include { CATPACK_SUMMARISE as CATPACK_SUMMARISE_BINS   } from '../../../modules/nf-core/catpack/summarise/main'
 include { CATPACK_SUMMARISE as CATPACK_SUMMARISE_UNBINS } from '../../../modules/nf-core/catpack/summarise/main'
-include { UNTAR as CAT_DB_UNTAR                         } from '../../../modules/nf-core/untar/main'
-
+include { FIND_CONCATENATE as CONCAT_UNBINS             } from '../../../modules/nf-core/find/concatenate/main'
+include { UNTAR as CATPACK_DB_UNTAR                     } from '../../../modules/nf-core/untar/main'
 
 workflow CATPACK {
     take:
@@ -28,10 +28,10 @@ workflow CATPACK {
 
     if (params.cat_db) {
         if (params.cat_db.endsWith('.tar.gz')) {
-            CAT_DB_UNTAR([[id: 'cat_db'], file(params.cat_db, checkIfExists: true)])
-            ch_versions = ch_versions.mix(CAT_DB_UNTAR.out.versions)
+            CATPACK_DB_UNTAR([[id: 'cat_db'], file(params.cat_db, checkIfExists: true)])
+            ch_versions = ch_versions.mix(CATPACK_DB_UNTAR.out.versions)
 
-            ch_cat_db_dir = CAT_DB_UNTAR.out.untar
+            ch_cat_db_dir = CATPACK_DB_UNTAR.out.untar
         }
         else {
             ch_cat_db_dir = channel.fromPath(params.cat_db, checkIfExists: true, type: 'dir')
@@ -48,7 +48,6 @@ workflow CATPACK {
         // download and build the database
         log.warn("[nf-core/mag]: Downloading CAT-nr database - this is very large and take a long time!")
         CATPACK_DOWNLOAD([[id: 'cat_db_nr'], 'nr'])
-        ch_versions = ch_versions.mix(CATPACK_DOWNLOAD.out.versions)
 
         CATPACK_PREPARE(
             CATPACK_DOWNLOAD.out.fasta,
@@ -56,7 +55,6 @@ workflow CATPACK {
             CATPACK_DOWNLOAD.out.nodes.map { _meta, nodes -> nodes },
             CATPACK_DOWNLOAD.out.acc2tax.map { _meta, acc2tax -> acc2tax },
         )
-        ch_versions = ch_versions.mix(CATPACK_PREPARE.out.versions)
 
         ch_cat_db = CATPACK_PREPARE.out
     }
@@ -73,12 +71,10 @@ workflow CATPACK {
         ch_cat_db.taxonomy,
         [[:], []],
         [[:], []],
-        '.fa',
+        '.fa.gz',
     )
-    ch_versions = ch_versions.mix(CATPACK_BINS.out.versions)
 
     CATPACK_ADDNAMES_BINS(CATPACK_BINS.out.bin2classification, ch_cat_db.taxonomy)
-    ch_versions = ch_versions.mix(CATPACK_ADDNAMES_BINS.out.versions)
 
     bin_summary = CATPACK_ADDNAMES_BINS.out.txt
         .map { _meta, summary -> summary }
@@ -86,11 +82,11 @@ workflow CATPACK {
             name: 'bat_summary.tsv',
             storeDir: "${params.outdir}/Taxonomy/CAT/",
             keepHeader: true,
+            sort: 'deep',
         )
 
     if (!params.cat_allow_unofficial_lineages) {
         CATPACK_SUMMARISE_BINS(CATPACK_ADDNAMES_BINS.out.txt, [[:], []])
-        ch_versions = ch_versions.mix(CATPACK_SUMMARISE_BINS.out.versions)
     }
 
     /*
@@ -100,28 +96,27 @@ workflow CATPACK {
      */
 
     if (params.cat_classify_unbinned) {
+        CONCAT_UNBINS(ch_unbins)
+
         CATPACK_UNBINS(
-            ch_unbins,
+            CONCAT_UNBINS.out.file_out,
             ch_cat_db.db,
             ch_cat_db.taxonomy,
             [[:], []],
             [[:], []],
         )
-        ch_versions = ch_versions.mix(CATPACK_UNBINS.out.versions)
 
         CATPACK_ADDNAMES_UNBINS(CATPACK_UNBINS.out.contig2classification, ch_cat_db.taxonomy)
-        ch_versions = ch_versions.mix(CATPACK_ADDNAMES_UNBINS.out.versions)
 
         if (!params.cat_allow_unofficial_lineages) {
             ch_unbin_classification = CATPACK_ADDNAMES_UNBINS.out.txt
-                .join(ch_unbins)
+                .join(CONCAT_UNBINS.out.file_out)
                 .multiMap { meta, names, contigs ->
                     names: [meta, names]
                     contigs: [meta, contigs]
                 }
 
             CATPACK_SUMMARISE_UNBINS(ch_unbin_classification.names, ch_unbin_classification.contigs)
-            ch_versions = ch_versions.mix(CATPACK_SUMMARISE_UNBINS.out.versions)
         }
     }
 

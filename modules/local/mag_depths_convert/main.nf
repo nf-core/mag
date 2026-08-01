@@ -16,21 +16,25 @@ process CONVERT_DEPTHS {
 
     script:
     """
-    gunzip -f ${depth}
-
-    # Determine the number of abundance columns
-    n_abund=\$(awk 'NR==1 {print int((NF-3)/2)}' ${depth.toString() - '.gz'})
-
-    # Get column names
-    read -r header<${depth.toString() - '.gz'}
-    header=(\$header)
-
-    # Generate abundance files for each read set
-    for i in \$(seq 1 \$n_abund); do
-        col=\$((i*2+2))
-        name=\$( echo \${header[\$col-1]} | sed s/\\.bam\$// )
-        bioawk -t '{if (NR > 1) {print \$1, \$'"\$col"'}}' ${depth.toString() - '.gz'} > \${name}.abund
-    done
+    # Write one abundance file per read set in a single streaming pass. The depth
+    # file is never decompressed to disk: on shared/object-backed work dirs the
+    # plaintext copy and one full read per column are prohibitively slow.
+    gzip -cd ${depth} | bioawk -t '
+        NR == 1 {
+            n_abund = int((NF - 3) / 2)
+            for (i = 1; i <= n_abund; i++) {
+                name = \$(i * 2 + 2)
+                sub(/\\.bam\$/, "", name)
+                abund[i] = name ".abund"
+            }
+            next
+        }
+        {
+            for (i = 1; i <= n_abund; i++) {
+                print \$1, \$(i * 2 + 2) > (abund[i])
+            }
+        }
+    '
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

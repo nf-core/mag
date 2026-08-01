@@ -11,22 +11,18 @@ workflow BINNING_METABINNER {
     main:
     ch_versions = channel.empty()
 
+    ch_assembly = ch_input.map { meta, assembly, _depths -> [meta, assembly] }
+
     // produce k-mer composition table
     METABINNER_KMER(
-        ch_input
-            .map { meta, assembly, _depths ->
-                [meta, assembly]
-            },
+        ch_assembly,
         params.min_contig_size
     )
     ch_versions = ch_versions.mix(METABINNER_KMER.out.versions)
 
     // extract contigs over length threshold
     METABINNER_TOOSHORT(
-        ch_input
-            .map { meta, assembly, _depths ->
-                [meta, assembly]
-            },
+        ch_assembly,
         params.min_contig_size
     )
     ch_versions = ch_versions.mix(METABINNER_TOOSHORT.out.versions)
@@ -41,8 +37,7 @@ workflow BINNING_METABINNER {
 
     // extract bin sequences
     METABINNER_BINS(
-        ch_input.map { meta, assembly, _depths -> [meta, assembly] }
-            .join(METABINNER_METABINNER.out.membership),
+        ch_assembly.join(METABINNER_METABINNER.out.membership),
         params.min_contig_size
     )
     ch_versions = ch_versions.mix(METABINNER_BINS.out.versions)

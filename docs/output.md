@@ -138,7 +138,10 @@ The pipeline uses porechop_abi or porechop to perform adapter trimming of the lo
 
 ### Long read filtering
 
-The pipeline uses filtlong, chopper, or nanoq for quality filtering of long reads, specified with `--longread_filtering_tool <filtlong|chopper|nanoq>`. Only filtlong is capable of filtering long reads against short reads, and is therefore currently recommended in the hybrid mode. If chopper is selected as long read filtering tool, Lambda Phage removal will be performed with chopper as well, instead of nanolyse.
+The pipeline uses chopper, filtlong, or nanoq for quality filtering of long reads, specified with `--longread_filtering_tool <chopper|filtlong|nanoq>`.
+The default is chopper, which performs length/quality filtering and (unless `--keep_lambda` is set) Lambda Phage removal in a single step.
+Filtlong can filter long reads against short reads (opt-in via `--filtlong_filtering_by_shortreads`, see the [note on long read filtering](usage.md#a-note-on-long-read-filtering)).
+The `--longreads_keep_percent` and `--longreads_length_weight` parameters only apply to filtlong.
 
 <details markdown="1">
 <summary>Output files</summary>
@@ -148,14 +151,13 @@ The pipeline uses filtlong, chopper, or nanoq for quality filtering of long read
 - `QC_longreads/Nanoq/`
   - `[sample]_[run]_nanoq_filtered.fastq.gz`: The length and quality filtered reads in FASTQ from Nanoq
 - `QC_longreads/Chopper/`
-  - `[sample]_[run]_nanoq_chopper.fastq.gz`: The length and quality filtered, optionally phage lambda removed reads in FASTQ from Chopper
+  - `[sample]_[run]_chopper.fastq.gz`: The length and quality filtered, optionally phage lambda removed reads in FASTQ from Chopper
 
 </details>
 
 Trimmed and filtered FASTQ output directories and files will only exist if `--save_porechop_reads` and/or `--save_filtered_longreads` (respectively) are provided to the run command.
 
 No direct host read removal is performed for long reads.
-However, since within this pipeline filtlong uses a read quality based on k-mer matches to the already filtered short reads, reads not overlapping those short reads might be discarded. Note that this only applies when using filtlong as long read filtering tool.
 The lower the parameter `--longreads_length_weight`, the higher the impact of the read qualities for filtering.
 For further documentation see the [filtlong online documentation](https://github.com/rrwick/Filtlong).
 
@@ -167,8 +169,8 @@ NanoPlot is used to calculate various metrics and plots about the quality and le
 <summary>Output files</summary>
 
 - `QC_longreads/NanoPlot/[sample]/`
-  - `raw_*.[png/html/txt]`: Plots and reports for raw data
-  - `filtered_*.[png/html/txt]`: Plots and reports for filtered data
+  - `raw_*.[html/txt]`: Plots and reports for raw data
+  - `filtered_*.[html/txt]`: Plots and reports for filtered data
 
 </details>
 
@@ -273,6 +275,20 @@ SPAdesHybrid is a part of the [SPAdes](http://cab.spbu.ru/software/spades/) soft
   - `[sample/group].contigs.fa.gz`: Compressed assembled contigs in fasta format
   - `[sample/group].metaMDBG.log`: Log file
   - `QC/[sample/group]/`: Directory containing QUAST files
+
+</details>
+
+### Assembly polishing with PyPOLCA
+
+[PyPOLCA](https://github.com/gbouras13/pypolca) is a Python reimplementation of the POLCA polisher (from MaSuRCA). It uses accurate short reads to correct base-level errors (substitutions and small indels) in long-read assemblies, such as those produced by Flye and metaMDBG. Polishing is run before binning when `--run_pypolca` is set and short reads are available for the assembly.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `Assembly/[assembler]-pypolca/`
+  - `[assembler]-[sample/group]_pypolca.fasta`: Polished (error-corrected) assembly in fasta format
+  - `[assembler]-[sample/group].report`: Polishing statistics, including the number of substitution and indel errors corrected
+  - `[assembler]-[sample/group].vcf`: Variants called against the input assembly and used for correction
 
 </details>
 
@@ -565,7 +581,6 @@ For each bin or refined bin the median sequencing depth is computed based on the
 - `GenomeBinning/depths/bins/`
   - `bin_depths_summary.tsv`: Summary of bin sequencing depths for all samples. Depths are available for samples mapped against the corresponding assembly, i.e. according to the mapping strategy specified with `--binning_map_mode`. Only for short reads.
   - `bin_refined_depths_summary.tsv`: Summary of sequencing depths for refined bins for all samples, if refinement was performed. Depths are available for samples mapped against the corresponding assembly, i.e. according to the mapping strategy specified with `--binning_map_mode`. Only for short reads.
-  - `[assembler]-[binner]-[sample/group]-binDepths.heatmap.png`: Clustered heatmap showing bin abundances of the assembly across samples. Bin depths are transformed to centered log-ratios and bins as well as samples are clustered by Euclidean distance. Again, sample depths are available according to the mapping strategy specified with `--binning_map_mode`. If a sample produces only a single bin, a heatmap will not be provided.
 
 </details>
 
@@ -601,7 +616,7 @@ The pipeline also generates a 'contig to bin map' to help users explore track wh
   - `predicted_genes/barrnap.log`: Barrnap log file (ribosomal RNA predictor)
 - `GenomeBinning/QC/`
   - `[assembler]-[binner]-[domain]-[refinement]-[sample/group]-quast_summary.tsv`: QUAST output summarized per sample/condition.
-  - `quast_summary.tsv`: QUAST output for all bins summarized
+  - `quast_bin_summary.tsv`: QUAST output for all bins summarized
 
 </details>
 
@@ -621,17 +636,8 @@ If a lineage dataset is specified already with `--busco_db`, only results for th
   - `[sample/group]-[lineage]-busco.batch_summary.txt`: Summary table of the BUSCO results for the bins in the sample.
   - `short_summary.generic.[lineage].[assembler]-[bin].{txt,json}`: A detailed BUSCO summary for each bin, available in both plain text and JSON format.
   - `[sample/group]-[lineage]-busco.log`: Log file of the BUSCO run.
-  - `[assembler]-[bin]/`
-    - `prodigal_output/predicted_genes/predicted.{fna,faa}`: Predicted genes by Prodigal in FASTA format.
-    - `logs/`: Logs for each of the tools used by BUSCO.
-    - `run-[specific_lineage]:`
-      - `full_table.tsv`: A detailed table indicating the complete BUSCO gene list for the lineage, detailing their presence in the assembly.
-      - `missing_busco_list.tsv`: List of BUSCOs that were not found in the assembly.
-      - `busco_sequences/*/*.{fna,faa}`: Nucleotide and aminoacid sequences of all identified BUSCOs (single copy, multi copy and fragmented).
 
 </details>
-
-If the parameter `busco_clean` is set to `false`, the BUSCO directory will preserve additional files, including outputs from the tools BUSCO utilizes and the `auto_lineage/` directory. This directory contains results for each lineage tested during automated lineage selection.
 
 If the parameter `--save_busco_db` is set, additionally the used BUSCO lineage datasets are stored in the output directory.
 

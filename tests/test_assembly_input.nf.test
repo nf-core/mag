@@ -67,10 +67,10 @@ nextflow_pipeline {
                 params.outdir, include: ['GenomeBinning/MetaBAT2/{discarded,unbinned/*}/*.fa.gz']
             )
             def dastool_bins = getAllFilesFromDir(
-                params.outdir, include: ['GenomeBinning/DASTool/bins/*.fa']
+                params.outdir, include: ['GenomeBinning/DASTool/bins/*.fa.gz']
             )
             def dastool_unbins = getAllFilesFromDir(
-                params.outdir, include: ['GenomeBinning/DASTool/unbinned/*.fa']
+                params.outdir, include: ['GenomeBinning/DASTool/unbinned/*.fa.gz']
             )
             def busco_summary = "${params.outdir}/GenomeBinning/QC/busco_summary.tsv"
             def bin_summary = "${params.outdir}/GenomeBinning/bin_summary.tsv"
@@ -89,10 +89,10 @@ nextflow_pipeline {
                     workflow.trace.succeeded().size(),
                     removeNextflowVersion("${outputDir}/pipeline_info/nf_core_mag_software_mqc_versions.yml"),
                 ).match() },
-                { assert snapshot(stable_name_assembly).match('assembly') },
+                { assert snapshot(stable_name_assembly                          ).match('assembly') },
                 { assert snapshot(stable_name_annotation, stable_path_annotation).match('annotation') },
-                { assert snapshot(stable_name_binning,  stable_path_binning ).match('binning') },
-                { assert snapshot(stable_name_multiqc, stable_path_multiqc).match('multiqc') },
+                { assert snapshot(stable_name_binning,    stable_path_binning   ).match('binning') },
+                { assert snapshot(stable_name_multiqc,    stable_path_multiqc   ).match('multiqc') },
 
                 // FASTA checks
                 { assert concoct_bins.collect { file -> path("${file}").fasta.size() > 0 }.every() },

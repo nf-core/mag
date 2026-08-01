@@ -88,6 +88,8 @@ def main(args=None):
                             all_depths[sample].append(contig_depths[sample])
 
             binname = os.path.basename(file)
+            if binname.endswith(".gz"):
+                binname = binname[: -len(".gz")]
 
             writer.writerow(
                 [binname, *[statistics.median(all_depths[sample]) for sample in sample_names]],

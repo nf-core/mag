@@ -36,8 +36,8 @@
                     "exists": true,
                     "schema": "assets/schema_assembly_input.json",
                     "pattern": "^\\S+\\.csv$",
-                    "description": "Additional input CSV samplesheet containing information about pre-computed assemblies. When set, both read pre-processing and assembly are skipped and the pipeline begins at the binning stage.",
-                    "help_text": "If you have pre-computed assemblies from another source, it is possible to jump straight to the binning stage of the pipeline by supplying these assemblies in a CSV file. This CSV file must contain the required columns `id,group,assembler,fasta` (including `group` for single assemblies). Short reads must still be supplied to `--input` in CSV format. See [usage docs](https://nf-co.re/mag/usage#input-specifications) for further details.",
+                    "description": "Additional input CSV samplesheet containing information about pre-computed assemblies. When set, assembly is skipped and the supplied assemblies are used for downstream analysis.",
+                    "help_text": "If you have pre-computed assemblies from another source, you can skip the assembly step by supplying these assemblies in a CSV file. This CSV file must contain the required columns `id,group,assembler,fasta` (including `group` for single assemblies). Short reads must still be supplied to `--input` in CSV format for downstream steps such as QC and binning. See [usage docs](https://nf-co.re/mag/usage#input-specifications) for further details.",
                     "fa_icon": "fas fa-file-csv"
                 },
                 "outdir": {
@@ -76,7 +76,6 @@
                 },
                 "igenomes_base": {
                     "type": "string",
-                    "format": "directory-path",
                     "description": "The base path to the igenomes reference files",
                     "fa_icon": "fas fa-ban",
                     "hidden": true,
@@ -155,11 +154,6 @@
                     "enum": ["symlink", "rellink", "link", "copy", "copyNoFollow", "move"],
                     "hidden": true
                 },
-                "monochrome_logs": {
-                    "type": "boolean",
-                    "description": "Use monochrome_logs",
-                    "hidden": true
-                },
                 "email_on_fail": {
                     "type": "string",
                     "description": "Email address for completion summary, only when pipeline fails.",
@@ -182,11 +176,10 @@
                     "fa_icon": "fas fa-file-upload",
                     "hidden": true
                 },
-                "hook_url": {
-                    "type": "string",
-                    "description": "Incoming hook URL for messaging service",
-                    "fa_icon": "fas fa-people-group",
-                    "help_text": "Incoming hook URL for messaging service. Currently, MS Teams and Slack are supported.",
+                "monochrome_logs": {
+                    "type": "boolean",
+                    "description": "Do not use coloured log outputs.",
+                    "fa_icon": "fas fa-palette",
                     "hidden": true
                 },
                 "multiqc_config": {
@@ -390,7 +383,12 @@
                 "skip_shortread_qc": {
                     "type": "boolean",
                     "description": "Skip all default QC steps for short reads (adapter trimming, phiX removal).",
-                    "help": "Skips clipping and removal of phiX sequences. Does not affect host sequence removal as this is opt in."
+                    "help": "Skips clipping and removal of phiX sequences. Does not affect host sequence removal as this is opt in. Does not prevent FastQC from running if host removal is enabled."
+                },
+                "skip_fastqc": {
+                    "type": "boolean",
+                    "description": "Skip running FastQC on short reads both before and after QC.",
+                    "help": "Skips running FastQC on short reads. Most metrics are redundant with reports from adapter clipping tools, but some metrics are not available from adapter clipping tools. This option is useful to save time and resources when running the pipeline."
                 },
                 "save_phixremoved_reads": {
                     "type": "boolean",
@@ -447,12 +445,12 @@
                 "longreads_keep_percent": {
                     "type": "integer",
                     "default": 90,
-                    "description": "Keep this percent of bases."
+                    "description": "Keep this percent of bases. Only used by filtlong."
                 },
                 "longreads_length_weight": {
                     "type": "integer",
                     "default": 10,
-                    "description": "The higher the more important is read length when choosing the best reads.",
+                    "description": "The higher the more important is read length when choosing the best reads. Only used by filtlong.",
                     "help_text": "The default value focuses on length instead of quality to improve assembly size.\nIn order to assign equal weights to read lengths and read qualities set this parameter to 1.\nThis might be useful, for example, to benefit indirectly from the removal of short host reads (causing lower qualities for reads not overlapping filtered short reads)."
                 },
                 "keep_lambda": {
@@ -487,8 +485,13 @@
                 "longread_filtering_tool": {
                     "type": "string",
                     "description": "Specify which long read filtering tool to use.",
-                    "enum": ["filtlong", "nanoq", "chopper"],
-                    "default": "filtlong"
+                    "enum": ["chopper", "filtlong", "nanoq"],
+                    "default": "chopper"
+                },
+                "filtlong_filtering_by_shortreads": {
+                    "type": "boolean",
+                    "description": "Filter long reads against short reads when using filtlong.",
+                    "help_text": "Only applies when `--longread_filtering_tool filtlong` and short reads are supplied. When enabled, filtlong derives long read quality from k-mer matches to the short reads instead of the Phred scores. This can discard long reads not overlapping the short reads, leading to data loss if short read coverage is poor or the metagenomes differ."
                 }
             }
         },
@@ -536,12 +539,12 @@
                 "gtdb_db": {
                     "type": "string",
                     "description": "Specify the location of a GTDBTK database. Can be either an uncompressed directory or a `.tar.gz` archive. If not specified will be downloaded for you when GTDBTK or binning QC is not skipped.",
-                    "default": "https://data.gtdb.aau.ecogenomic.org/releases/release226/226.0/auxillary_files/gtdbtk_package/full_package/gtdbtk_r226_data.tar.gz",
+                    "default": "https://data.gtdb.aau.ecogenomic.org/releases/release232/232.0/auxillary_files/gtdbtk_package/full_package/gtdbtk_r232_data.tar.gz",
                     "format": "path"
                 },
                 "gtdbtk_min_completeness": {
                     "type": "number",
-                    "default": 50,
+                    "default": 50.0,
                     "description": "Min. bin completeness (in %) required to apply GTDB-tk classification.",
                     "help_text": "Completeness assessed with any of the bin QC tools (BUSCO, CheckM, CheckM2). A bin passes if at least one QC tool reports completeness at or above the threshold. Must be greater than 0 (min. 0.01) to avoid GTDB-tk errors. If too low, GTDB-tk classification results can be impaired due to not enough marker genes!",
                     "minimum": 0.01,
@@ -549,7 +552,7 @@
                 },
                 "gtdbtk_max_contamination": {
                     "type": "number",
-                    "default": 10,
+                    "default": 10.0,
                     "description": "Max. bin contamination (in %) allowed to apply GTDB-tk classification.",
                     "help_text": "Contamination assessed with any of the bin QC tools (BUSCO, CheckM, CheckM2). A bin passes if at least one QC tool reports contamination at or below the threshold. If too high, GTDB-tk classification results can be impaired due to contamination!",
                     "minimum": 0,
@@ -557,7 +560,7 @@
                 },
                 "gtdbtk_min_perc_aa": {
                     "type": "number",
-                    "default": 10,
+                    "default": 10.0,
                     "description": "Min. fraction of AA (in %) in the MSA for bins to be kept.",
                     "minimum": 0,
                     "maximum": 100
@@ -584,9 +587,19 @@
                     "type": "boolean",
                     "description": "Specify to have GTDBTk to use the full bacterial tree rather than the split tree (requires more memory!)"
                 },
-                "gtdbtk_skip_aniscreen": {
+                "gtdbtk_place_species": {
                     "type": "boolean",
                     "description": "Specify to disable fast classification of genomes by ANI using skani in GTDB-Tk."
+                },
+                "gtdbtk_skip_aniscreen": {
+                    "type": "boolean",
+                    "description": "[DEPRECATED] Use `--gtdbtk_place_species` instead. Specify to disable fast classification of genomes by ANI using skani in GTDB-Tk.",
+                    "hidden": true
+                },
+                "gtdbtk_single_job": {
+                    "type": "boolean",
+                    "description": "Run GTDB-Tk classification for all bins in a single job, rather than one job per sample/assembler/binner group.",
+                    "help_text": "By default nf-core/mag submits a separate GTDBTK_CLASSIFYWF job per group of bins. When classifying very large numbers of bins, it can be more efficient to run all bins together in one job, as steps such as skani and pplacer are then performed once over the whole dataset instead of being repeated per job."
                 }
             }
         },
@@ -633,6 +646,10 @@
                     "type": "boolean",
                     "description": "Skip ALE"
                 },
+                "ale_per_base_output": {
+                    "type": "boolean",
+                    "description": "Enable ALE per-base output. This output can be very large (tens of GB)."
+                },
                 "skip_quast": {
                     "type": "boolean",
                     "description": "Skip metaQUAST."
@@ -644,6 +661,10 @@
                 "skip_flye": {
                     "type": "boolean",
                     "description": "Skip Flye assembly."
+                },
+                "run_pypolca": {
+                    "type": "boolean",
+                    "description": "Run PyPOLCA polishing on long-read assemblies before binning."
                 }
             }
         },
@@ -677,7 +698,7 @@
                 },
                 "skip_metaeuk": {
                     "type": "boolean",
-                    "description": "Skip MetaEuk gene prediction and annotation"
+                    "description": "[DEPRECATED] This parameter no longer has any effect and will be removed in a future release. MetaEuk only runs when `--metaeuk_db` or `--metaeuk_mmseqs_db` is supplied."
                 },
                 "metaeuk_mmseqs_db": {
                     "type": "string",
@@ -852,6 +873,12 @@
                     "description": "Specify the longest length a bin should be to retain for downstream processing (in base pairs). By default no limit.",
                     "help_text": "This can speed up downstream processing by removing 'nonsense' bins (e.g. badly binned single short-contig bins, or unnaturally large bins). By default there is no upper limit on size of bins allowed to pass."
                 },
+                "bin_seqkit_stats_max_forks": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": "Limit the number of concurrent SEQKIT_STATS jobs used for bin size calculation.",
+                    "help_text": "Bins from each binner are sent to SEQKIT_STATS as soon as that binner finishes, which can spawn many short jobs (roughly samples * assemblers * binners). On schedulers that dislike large numbers of tiny jobs, set this to cap how many run at once."
+                },
                 "bin_concoct_chunksize": {
                     "type": "integer",
                     "default": 10000,
@@ -922,7 +949,8 @@
                 },
                 "run_busco": {
                     "type": "boolean",
-                    "description": "Enable running BUSCO during bin QC."
+                    "description": "Enable running BUSCO during bin QC.",
+                    "default": true
                 },
                 "run_checkm": {
                     "type": "boolean",

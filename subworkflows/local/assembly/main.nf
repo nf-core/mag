@@ -39,10 +39,10 @@ workflow ASSEMBLY {
                     sr_platform: metas.sr_platform[0]
                 ]
                 if (assemble_as_single) {
-                    [meta, reads.sort { files -> files[0].getName() }, []]
+                    [meta, reads.toSorted { files -> files[0].getName() }, []]
                 }
                 else {
-                    [meta] + reads.sort { files -> files[0].getName() }.transpose()
+                    [meta] + reads.toSorted { files -> files[0].getName() }.transpose()
                 }
             }
 
@@ -63,6 +63,7 @@ workflow ASSEMBLY {
                 meta.id = "group-${group}"
                 meta.group = group
                 meta.lr_platform = metas.lr_platform[0]
+                meta.single_end = true
                 [meta, reads]
             }
     }

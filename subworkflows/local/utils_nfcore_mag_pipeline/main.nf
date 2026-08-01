@@ -7,15 +7,13 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { UTILS_NFSCHEMA_PLUGIN   } from '../../nf-core/utils_nfschema_plugin'
-include { paramsSummaryMap        } from 'plugin/nf-schema'
-include { samplesheetToList       } from 'plugin/nf-schema'
-include { paramsHelp              } from 'plugin/nf-schema'
-include { completionEmail         } from '../../nf-core/utils_nfcore_pipeline'
-include { completionSummary       } from '../../nf-core/utils_nfcore_pipeline'
-include { imNotification          } from '../../nf-core/utils_nfcore_pipeline'
-include { UTILS_NFCORE_PIPELINE   } from '../../nf-core/utils_nfcore_pipeline'
-include { UTILS_NEXTFLOW_PIPELINE } from '../../nf-core/utils_nextflow_pipeline'
+include { UTILS_NFSCHEMA_PLUGIN     } from '../../nf-core/utils_nfschema_plugin'
+include { paramsSummaryMap          } from 'plugin/nf-schema'
+include { samplesheetToList         } from 'plugin/nf-schema'
+include { completionEmail           } from '../../nf-core/utils_nfcore_pipeline'
+include { completionSummary         } from '../../nf-core/utils_nfcore_pipeline'
+include { UTILS_NFCORE_PIPELINE     } from '../../nf-core/utils_nfcore_pipeline'
+include { UTILS_NEXTFLOW_PIPELINE   } from '../../nf-core/utils_nextflow_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -27,7 +25,7 @@ workflow PIPELINE_INITIALISATION {
     take:
     version // boolean: Display version and exit
     validate_params // boolean: Boolean whether to validate parameters against the schema at runtime
-    _monochrome_logs // boolean: Do not use coloured log outputs
+    monochrome_logs // boolean: Do not use coloured log outputs
     nextflow_cli_args //   array: List of positional nextflow CLI args
     outdir //  string: The output directory where the results will be saved
     input //  string: Path to input samplesheet
@@ -52,7 +50,8 @@ workflow PIPELINE_INITIALISATION {
     //
     // Validate parameters and generate parameter summary to stdout
     //
-    before_text = """
+
+    def before_text = """
 -\033[2m----------------------------------------------------\033[0m-
                                         \033[0;32m,--.\033[0;30m/\033[0;32m,-.\033[0m
 \033[0;34m        ___     __   __   __   ___     \033[0;32m/,-._.--~\'\033[0m
@@ -69,6 +68,10 @@ workflow PIPELINE_INITIALISATION {
 * Software dependencies
     https://github.com/nf-core/mag/blob/main/CITATIONS.md
 """
+    if (monochrome_logs) {
+        before_text = before_text.replaceAll(/\033\[[0-9;]*m/, '')
+    }
+
     command = "nextflow run ${workflow.manifest.name} -profile <docker/singularity/.../institute> --input samplesheet.csv --outdir <OUTDIR>"
 
     UTILS_NFSCHEMA_PLUGIN(
@@ -81,6 +84,7 @@ workflow PIPELINE_INITIALISATION {
         before_text,
         after_text,
         command,
+        null,
     )
 
     //
@@ -215,7 +219,7 @@ workflow PIPELINE_INITIALISATION {
             .concat(ch_assembly_ids)
             .collect(flat: false)
             .map { ids1, ids2 ->
-                if (ids1.sort() != ids2.sort()) {
+                if (ids1.toSorted() != ids2.toSorted()) {
                     exit(1, "[nf-core/mag] ERROR: supplied IDs or Groups in read and assembly CSV files do not match!")
                 }
             }
@@ -241,8 +245,7 @@ workflow PIPELINE_COMPLETION {
     plaintext_email // boolean: Send plain-text email instead of HTML
     outdir //    path: Path to output directory where results will be published
     monochrome_logs // boolean: Disable ANSI colour codes in log output
-    hook_url //  string: hook URL for notifications
-    multiqc_report //  string: Path to MultiQC report
+    multiqc_report  //  string: Path to MultiQC report
 
     main:
     summary_params = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
@@ -265,13 +268,11 @@ workflow PIPELINE_COMPLETION {
         }
 
         completionSummary(monochrome_logs)
-        if (hook_url) {
-            imNotification(summary_params, hook_url)
-        }
+
     }
 
     workflow.onError {
-        log.error("Pipeline failed. Please refer to troubleshooting docs: https://nf-co.re/docs/usage/troubleshooting")
+        log.error "Pipeline failed. Please refer to troubleshooting docs for common issues: https://nf-co.re/docs/running/troubleshooting"
     }
 }
 
@@ -373,6 +374,14 @@ def validateInputParameters(hybrid) {
         if (params.busco_db && file(params.busco_db).isDirectory() && !file(params.busco_db).listFiles().any { file -> file.toString().contains('lineages') }) {
             error("[nf-core/mag] ERROR: Directory supplied to `--busco_db` must contain a `lineages/` subdirectory that itself contains one or more BUSCO lineage files! Check: --busco_db ${params.busco_db}")
         }
+    }
+
+    if (params.gtdbtk_skip_aniscreen) {
+        log.warn("[nf-core/mag]: The parameter '--gtdbtk_skip_aniscreen' is deprecated and will be removed in a future release. Please use '--gtdbtk_place_species' instead.")
+    }
+
+    if (params.skip_metaeuk) {
+        log.warn("[nf-core/mag]: The parameter '--skip_metaeuk' is deprecated and will be removed in a future release. It no longer has any effect: MetaEuk only runs when '--metaeuk_db' or '--metaeuk_mmseqs_db' is supplied.")
     }
 
     if (!params.skip_gtdbtk) {
@@ -497,6 +506,8 @@ def toolCitationText() {
     ].findAll { tool -> tool != '' }
     def text_assembly_qc = "Assembly quality was assessed with ${assembly_qc_tools.join(', ')}."
 
+    def text_polishing = "Short-read polishing of long-read assemblies was performed with pypolca (Bouras et al. 2024)."
+
     def gene_prediction_tools = [
         !params.skip_prodigal ? "Prodigal (Hyatt et al. 2010)" : "",
         !params.skip_prokka ? "Prokka (Seemann 2014)" : "",
@@ -544,9 +555,10 @@ def toolCitationText() {
         params.bbnorm ? text_bbnorm : "",
         assembly_tools ? text_assembly : "",
         assembly_qc_tools ? text_assembly_qc : "",
+        params.run_pypolca ? text_polishing : "",
         gene_prediction_tools ? text_gene_prediction : "",
         params.run_virus_identification ? text_virus_id : "",
-        !params.skip_tiara ? text_tiara : "",
+        params.bin_domain_classification_tool == "tiara" ? text_tiara : "",
         (!params.skip_binning && binning_tools) ? text_binning : "",
         (!params.skip_binqc && params.refine_bins_dastool) ? text_bin_refinement : "",
         (!params.skip_binqc && binqc_tools) ? text_binqc : "",
@@ -624,6 +636,9 @@ def toolBibliographyText() {
     if (!params.skip_ale) {
         references << "<li>Clark, S. C., Egan, R., Frazier, P. I., & Wang, Z. (2013). ALE: a generic assembly likelihood evaluation framework for assessing the accuracy of genome and metagenome assemblies. Bioinformatics, 29(4), 435-443. doi: 10.1093/bioinformatics/bts723</li>"
     }
+    if (params.run_pypolca) {
+        references << "<li>Bouras, G., Judd, L. M., Edwards, R. A., Vreugde, S., Stinear, T. P., & Wick, R. R. (2024). How low can you go? Short-read polishing of Oxford Nanopore bacterial genome assemblies. Microbial Genomics, 10(6), 001254. doi: 10.1099/mgen.0.001254</li>"
+    }
     if (!params.skip_prodigal) {
         references << "<li>Hyatt, D., Chen, G. L., Locascio, P. F., Land, M. L., Larimer, F. W., & Hauser, L. J. (2010). Prodigal: prokaryotic gene recognition and translation initiation site identification. BMC Bioinformatics, 11, 119. doi: 10.1186/1471-2105-11-119</li>"
     }
@@ -637,7 +652,7 @@ def toolBibliographyText() {
     if (params.run_virus_identification) {
         references << "<li>Camargo, A. P., et al. (2023). Identification of mobile genetic elements with geNomad. Nature Biotechnology 42, 1303–1312. doi: 10.1038/s41587-023-01953-y</li>"
     }
-    if (!params.skip_tiara) {
+    if (params.bin_domain_classification_tool == "tiara") {
         references << "<li>Karlicki, M., Antonowicz, S., & Karnkowska, A. (2022). Tiara: deep learning-based classification system for eukaryotic sequences. Bioinformatics, 38(2), 344–350. doi: 10.1093/bioinformatics/btab672</li>"
     }
     if (!params.skip_binning) {

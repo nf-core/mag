@@ -3,8 +3,7 @@
  */
 
 include { BUSCO_BUSCO                       } from '../../../modules/nf-core/busco/busco/main'
-// 2016-01-19: Temporarily diabling Checkm2 database downloading due to Zenodo blocking Aria2 downloads
-//include { CHECKM2_DATABASEDOWNLOAD      } from '../../../modules/nf-core/checkm2/databasedownload/main'
+include { CHECKM2_DATABASEDOWNLOAD          } from '../../../modules/nf-core/checkm2/databasedownload/main'
 include { CHECKM_QA                         } from '../../../modules/nf-core/checkm/qa/main'
 include { CHECKM_LINEAGEWF                  } from '../../../modules/nf-core/checkm/lineagewf/main'
 include { CHECKM2_PREDICT                   } from '../../../modules/nf-core/checkm2/predict/main'
@@ -18,16 +17,14 @@ include { GUNC_RUN                          } from '../../../modules/nf-core/gun
 include { GUNC_MERGECHECKM                  } from '../../../modules/nf-core/gunc/mergecheckm/main'
 include { UNTAR as BUSCO_UNTAR              } from '../../../modules/nf-core/untar/main'
 include { UNTAR as CHECKM_UNTAR             } from '../../../modules/nf-core/untar/main'
-include { UNTAR as CHECKM2_UNTAR            } from '../../../modules/nf-core/untar/main'
 
 
 workflow BIN_QC {
     take:
-    ch_bins // [val(meta), path(fasta)], input bins (mandatory)
+    ch_bins // [val(meta), [path(fasta)]], input bins (mandatory)
 
     main:
-    ch_qc_summaries = channel.empty()
-    ch_input_bins_for_qc = ch_bins.transpose()
+    ch_qc_metrics = channel.empty()
     ch_versions = channel.empty()
     ch_multiqc_files = channel.empty()
     ch_busco_final_summaries = channel.empty()
@@ -67,14 +64,8 @@ workflow BIN_QC {
         ch_checkm2_db = [[:], file(params.checkm2_db, checkIfExists: true)]
     }
     else if (params.run_checkm2) {
-        // 2016-01-19: Temporarily diabling Checkm2 database downloading due to Zenodo blocking Aria2 downloads
-        //CHECKM2_DATABASEDOWNLOAD(params.checkm2_db_version)
-        //ch_versions = ch_versions.mix(CHECKM2_DATABASEDOWNLOAD.out.versions)
-        ch_checkm2_tar = channel.fromPath("https://zenodo.org/records/${params.checkm2_db_version}/files/checkm2_database.tar.gz", checkIfExists: true)
-            .map { db_tar -> [[id: 'checkm2_db', version: params.checkm2_db_version], db_tar] }
-        CHECKM2_UNTAR(ch_checkm2_tar)
-        ch_checkm2_db = CHECKM2_UNTAR.out.untar
-        ch_versions = ch_versions.mix(CHECKM2_UNTAR.out.versions)
+        CHECKM2_DATABASEDOWNLOAD(params.checkm2_db_version)
+        ch_checkm2_db = CHECKM2_DATABASEDOWNLOAD.out.database
     }
     else {
         ch_checkm2_db = []
@@ -124,18 +115,20 @@ workflow BIN_QC {
         ch_busco_final_summaries = ch_busco_final_summaries.mix(
             CONCAT_BUSCO_TSV.out.csv.map { _meta, csv -> csv }
         )
-        ch_qc_summaries = ch_qc_summaries.mix(
-            CONCAT_BUSCO_TSV.out.csv.splitCsv(header: true, sep: '\t').map { _meta, summary -> [bin_qc_tool: 'busco'] + summary }
+        ch_qc_metrics = ch_qc_metrics.mix(
+            BUSCO_BUSCO.out.batch_summary.map { meta, summary -> [meta, 'busco', summary] }
         )
     }
     if (params.run_checkm) {
         /*
          * CheckM
          */
-        ch_bins_for_checkmlineagewf = ch_input_bins_for_qc
-            .groupTuple()
+        ch_bins_for_checkmlineagewf = ch_bins
             .filter { meta, _bins ->
                 meta.domain != "eukarya"
+            }
+            .map { meta, bins ->
+                [meta, bins.toSorted { a, b -> a.getBaseName() <=> b.getBaseName() }]
             }
             .multiMap { meta, fa ->
                 reads: [meta, fa]
@@ -155,6 +148,9 @@ workflow BIN_QC {
         ch_checkm_summaries = CHECKM_QA.out.output
             .map { _meta, summary -> [[id: 'checkm'], summary] }
             .groupTuple()
+            .map { meta, summaries ->
+                [meta, summaries.toSorted { a, b -> a.getBaseName() <=> b.getBaseName() }]
+            }
         ch_multiqc_files = ch_multiqc_files.mix(
             CHECKM_QA.out.output.map { _meta, summary -> summary }.flatten()
         )
@@ -163,16 +159,19 @@ workflow BIN_QC {
         ch_checkm_final_summaries = ch_checkm_final_summaries.mix(
             CONCAT_CHECKM_TSV.out.csv.map { _meta, csv -> csv }
         )
-        ch_qc_summaries = ch_qc_summaries.mix(
-            CONCAT_CHECKM_TSV.out.csv.splitCsv(header: true, sep: '\t').map { _meta, summary -> [bin_qc_tool: 'checkm'] + summary }
+        ch_qc_metrics = ch_qc_metrics.mix(
+            CHECKM_QA.out.output.map { meta, summary -> [meta, 'checkm', summary] }
         )
     }
     if (params.run_checkm2) {
         /*
          * CheckM2
          */
-        CHECKM2_PREDICT(ch_input_bins_for_qc.groupTuple(), ch_checkm2_db)
-        ch_versions = ch_versions.mix(CHECKM2_PREDICT.out.versions)
+        ch_bins_for_checkm2 = ch_bins.filter { meta, _bins ->
+            meta.domain != "eukarya"
+        }
+
+        CHECKM2_PREDICT(ch_bins_for_checkm2, ch_checkm2_db)
 
         ch_checkm2_summaries = CHECKM2_PREDICT.out.checkm2_tsv
             .map { _meta, summary -> [[id: 'checkm2'], summary] }
@@ -185,8 +184,8 @@ workflow BIN_QC {
         ch_checkm2_final_summaries = ch_checkm2_final_summaries.mix(
             CONCAT_CHECKM2_TSV.out.csv.map { _meta, csv -> csv }
         )
-        ch_qc_summaries = ch_qc_summaries.mix(
-            CONCAT_CHECKM2_TSV.out.csv.splitCsv(header: true, sep: '\t').map { _meta, summary -> [bin_qc_tool: 'checkm2'] + summary }
+        ch_qc_metrics = ch_qc_metrics.mix(
+            CHECKM2_PREDICT.out.checkm2_tsv.map { meta, summary -> [meta, 'checkm2', summary] }
         )
     }
 
@@ -229,7 +228,7 @@ workflow BIN_QC {
     }
 
     emit:
-    qc_summaries    = ch_qc_summaries
+    qc_metrics      = ch_qc_metrics
     busco_summary   = ch_busco_final_summaries
     checkm_summary  = ch_checkm_final_summaries
     checkm2_summary = ch_checkm2_final_summaries

@@ -230,6 +230,8 @@ def main(args=None):
 
     if args.quast_summary:
         quast_results = pd.read_csv(args.quast_summary, sep="\t")
+        # QUAST reports bins by their (gzipped) filename; normalise to match the depths key
+        quast_results["Assembly"] = quast_results["Assembly"].str.removesuffix(".gz")
         if not bins.equals(
             quast_results["Assembly"].sort_values().reset_index(drop=True)
         ):

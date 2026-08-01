@@ -1,6 +1,6 @@
 process RENAME_PREDASTOOL {
     tag "${meta.assembler}-${meta.binner}-${meta.id}"
-    label 'process_low'
+    label 'process_single'
 
     conda "${moduleDir}/environment.yml"
     container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
@@ -19,6 +19,11 @@ process RENAME_PREDASTOOL {
     if [ -n "${bins}" ]
     then
         for bin in ${bins}; do
+            # DAS Tool works on uncompressed fasta, so decompress gzipped bins first
+            if [[ \${bin} == *.gz ]]; then
+                gunzip -f \${bin}
+                bin=\${bin%.gz}
+            fi
             if [[ \${bin} =~ ${meta.assembler}-${meta.binner}-${meta.id}.([_[:alnum:]]+).fa ]]; then
                 num=\${BASH_REMATCH[1]}
                 mv \${bin} ${meta.assembler}-${meta.binner}Refined-${meta.id}.\${num}.fa
