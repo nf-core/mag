@@ -20,4 +20,4 @@ template:
   name: mag
   org: nf-core
   outdir: .
-  version: 5.5.0
+  version: 5.6.0dev
