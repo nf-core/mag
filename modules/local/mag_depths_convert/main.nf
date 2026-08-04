@@ -3,8 +3,8 @@ process CONVERT_DEPTHS {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/bioawk:1.0--hed695b0_5' :
-        'biocontainers/bioawk:1.0--hed695b0_5' }"
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/82/8266909aff235d1f423ca76029d89a7b470f17c634e001aa388b85713d71dd16/data' :
+        'community.wave.seqera.io/library/bioawk:1.0--9a4151b4c4cbe47a' }"
 
     input:
     tuple val(meta), path(fasta), path(depth)
