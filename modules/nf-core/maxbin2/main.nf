@@ -11,7 +11,7 @@ process MAXBIN2 {
     tuple val(meta), path(contigs), path(reads), path(abund)
 
     output:
-    tuple val(meta), path("*.fasta.gz")   , emit: binned_fastas
+    tuple val(meta), path("*.fa.gz")      , emit: binned_fastas
     tuple val(meta), path("*.summary")    , emit: summary
     tuple val(meta), path("*.abundance")  , emit: abundance   , optional: true
     tuple val(meta), path("*.log.gz")     , emit: log
@@ -51,6 +51,11 @@ process MAXBIN2 {
 
     gzip *.fasta *.noclass *.tooshort *log *.marker
 
+    # use the .fa extension for the bins
+    for file in *.fasta.gz; do
+        mv \${file} \${file%.fasta.gz}.fa.gz
+    done
+
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         maxbin2: \$( run_MaxBin.pl -v | head -n 1 | sed 's/MaxBin //' )
@@ -67,7 +72,7 @@ process MAXBIN2 {
     echo "" | gzip > ${prefix}.noclass.gz
     touch ${prefix}.summary
     echo "" | gzip > ${prefix}.tooshort.gz
-    echo "" | gzip > ${prefix}.001.fasta.gz
+    echo "" | gzip > ${prefix}.001.fa.gz
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

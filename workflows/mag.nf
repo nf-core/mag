@@ -224,10 +224,10 @@ workflow MAG {
                     ]
 
                     if (assemble_as_single) {
-                        [meta, reads.sort { files -> files[0].getName() }.flatten()]
+                        [meta, reads.toSorted { files -> files[0].getName() }.flatten()]
                     }
                     else {
-                        [meta, reads.sort { files -> files[0].getName() }.transpose().flatten()]
+                        [meta, reads.toSorted { files -> files[0].getName() }.transpose().flatten()]
                     }
                 }
         }
@@ -235,20 +235,32 @@ workflow MAG {
             ch_short_reads_pypolca = ch_short_reads
         }
 
-        // Join reads and assemblies by sample id so PYPOLCA pairs them correctly
-        ch_pypolca_input = ch_longread_raw_assemblies
-            .map { meta, assembly -> [meta.id, meta, assembly] }
-            .combine(
-                ch_short_reads_pypolca.map { meta, reads -> [meta.id, reads] },
-                by: 0
-            )
-            .map { _id, assembly_meta, assembly, reads ->
-                [assembly_meta, assembly, reads]
+        // Collect short reads in a map keyed by id, so assemblies can be paired with
+        // the corresponding reads without dropping the ones that have no short reads
+        ch_short_reads_pypolca_by_id = ch_short_reads_pypolca
+            .toList()
+            .map { short_reads ->
+                short_reads.collectEntries { meta, reads ->
+                    [(meta.id): reads]
+                }
             }
 
-        PYPOLCA_RUN(ch_pypolca_input)
-        ch_longread_assemblies = PYPOLCA_RUN.out.polished
-    } else {
+        // Split long read assemblies depending on whether they can be polished
+        ch_longread_assemblies_branched = ch_longread_raw_assemblies
+            .combine(ch_short_reads_pypolca_by_id)
+            .branch { meta, assembly, short_reads_by_id ->
+                polish: short_reads_by_id.containsKey(meta.id)
+                return [meta, assembly, short_reads_by_id[meta.id]]
+                no_short_reads: true
+                log.warn("[nf-core/mag]: No short reads found for '${meta.id}', skipping PYPOLCA polishing of its ${meta.assembler} assembly.")
+                return [meta, assembly]
+            }
+
+        PYPOLCA_RUN(ch_longread_assemblies_branched.polish)
+
+        ch_longread_assemblies = PYPOLCA_RUN.out.polished.mix(ch_longread_assemblies_branched.no_short_reads)
+    }
+    else {
         ch_longread_assemblies = ch_longread_raw_assemblies
     }
 
@@ -270,7 +282,6 @@ workflow MAG {
             ch_assemblies,
             'gff',
         )
-        ch_versions = ch_versions.mix(PRODIGAL.out.versions)
     }
 
     /*
@@ -324,7 +335,7 @@ workflow MAG {
                 // Try to find the BAM where reads came from the same sample as the assembly (co-binning may include multiple BAMs)
                 // If none matches (coassembly), take the first one after sorting for determinism
                 def own_bam = bams.find { bam -> bam.name.endsWith("-${meta.id}.bam") }
-                def bam = own_bam ?: bams.sort()[0]
+                def bam = own_bam ?: bams.toSorted()[0]
 
                 [meta, assembly, bam]
             }
@@ -515,17 +526,16 @@ workflow MAG {
 
         ch_quast_bins_summary = channel.empty()
         if (!params.skip_quast) {
-            ch_input_for_quast_bins = ch_input_for_postbinning
-                .map { meta, bins ->
-                    [meta, [bins].flatten().sort { a, b -> a.getBaseName() <=> b.getBaseName() }]
-                }
+            ch_input_for_quast_bins = ch_input_for_postbinning.map { meta, bins ->
+                [meta, [bins].flatten().toSorted { a, b -> a.getBaseName() <=> b.getBaseName() }]
+            }
 
             QUAST_BINS(ch_input_for_quast_bins)
             ch_versions = ch_versions.mix(QUAST_BINS.out.versions)
 
             ch_quast_bin_summaries = QUAST_BINS.out.quast_bin_summaries
                 .collect { _meta, summary -> summary }
-                .map { summaries -> [[id: 'quast_bin_summary'], summaries.sort { a, b -> a.getBaseName() <=> b.getBaseName() }] }
+                .map { summaries -> [[id: 'quast_bin_summary'], summaries.toSorted { a, b -> a.getBaseName() <=> b.getBaseName() }] }
 
             CONCAT_QUAST_SUMMARY(ch_quast_bin_summaries, 'rowskey', 'tsv', true)
 
@@ -621,7 +631,6 @@ workflow MAG {
                 [],
                 [],
             )
-            ch_versions = ch_versions.mix(PROKKA.out.versions)
         }
 
         if (params.metaeuk_db || params.metaeuk_mmseqs_db) {

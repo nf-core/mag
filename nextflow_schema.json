@@ -491,7 +491,7 @@
                 "filtlong_filtering_by_shortreads": {
                     "type": "boolean",
                     "description": "Filter long reads against short reads when using filtlong.",
-                    "help_text": "Only applies when `--longread_filtering_tool filtlong` and short reads are supplied. When enabled, filtlong derives long read quality from k-mer matches to the short reads instead of the Phred scores. This can discard long reads not overlapping the short reads, leading to data loss if short read coverage is poor or the metagenomes differ. Disabled by default."
+                    "help_text": "Only applies when `--longread_filtering_tool filtlong` and short reads are supplied. When enabled, filtlong derives long read quality from k-mer matches to the short reads instead of the Phred scores. This can discard long reads not overlapping the short reads, leading to data loss if short read coverage is poor or the metagenomes differ."
                 }
             }
         },

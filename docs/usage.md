@@ -11,6 +11,7 @@
 In addition to this page, you can find additional usage information on the following pages:
 
 - [New to mag?](usage/new_to_mag.md)
+- [Resource guidance](usage/resource_guidance.md)
 
 ## Input specifications
 
@@ -103,7 +104,9 @@ If you'd like to also _assemble_ your samples in a pooled fashion (co-assembly),
 
 ### Supplying pre-computed assemblies
 
-It is also possible to run nf-core/mag on pre-computed assemblies, by supplying a CSV file to the parameter `--assembly_input` in addition to the raw reads supplied to `--input`. Supplying assembly input skips the assembly step and uses the provided assemblies for downstream analysis. The raw reads are still used for quality control and binning-related mapping.
+It is also possible to run nf-core/mag on pre-computed assemblies, by supplying a CSV file to the parameter `--assembly_input` in addition to the raw reads supplied to `--input`. Supplying assembly input skips the assembly step and uses the provided assemblies for downstream analysis. The reads are still required, as they are used for binning-related mapping and depth calculation.
+
+Note that in this mode the pipeline does not preprocess the reads: adapter clipping, host and PhiX removal, long read filtering and normalisation are all skipped, since the assemblies already exist. Only read statistics (FastQC, NanoPlot) and run- or lane-wise concatenation are performed. You should therefore supply the same reads that were used to generate the assemblies, already preprocessed if that was the case.
 
 The assembly CSV file should contain the following columns:
 

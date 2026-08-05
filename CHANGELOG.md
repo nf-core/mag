@@ -7,7 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
-- [#1057](https://github.com/nf-core/mag/pull/1057) - Add skip_fastqc switch (by @jorondo1)
+### `Changed`
+
+### `Fixed`
+
+### `Dependencies`
+
+| Tool | Previous version | New version |
+| ---- | ---------------- | ----------- |
+|      |                  |             |
+
+### `Deprecated`
+
+## v5.5.0 - Purple Penguin [2026-08-01]
+
+### `Added`
+
 - [#908](https://github.com/nf-core/mag/pull/908) - Add nf-test snapshot for `test_single_end` profile (by @dialvarezs)
 - [#1028](https://github.com/nf-core/mag/pull/1028) - Add nf-test snapshot for `test_longread_alternatives` profile (by @dialvarezs)
 - [#1029](https://github.com/nf-core/mag/pull/908) - Add nf-test snapshot for `test_hybrid` profile (by @dialvarezs)
@@ -19,9 +34,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1047](https://github.com/nf-core/mag/issues/1007) - Add `--gtdbtk_single_job` to run GTDB-Tk classification for all bins in a single job (requested by @sarah-shah-bioinf, by @dialvarezs)
 - [#1051](https://github.com/nf-core/mag/pull/1051) - Add DeepMAsED assembly error detection to the MAG workflow as two sequential steps (`features` and `predict`) for short-read assemblies (by @SkyLexS).
 - [#1048](https://github.com/nf-core/mag/pull/1048) - Add optional PyPOLCA polishing for long-read assemblies via `--run_pypolca` (by @Harshita-sriv)
+- [#1055](https://github.com/nf-core/mag/pull/1055) - Add dedicated page describing resource usage (by @jfy133)
+- [#1057](https://github.com/nf-core/mag/pull/1057) - Add skip_fastqc switch (by @jorondo1)
 - [#1059](https://github.com/nf-core/mag/pull/1059) - Add `--filtlong_filtering_by_shortreads` parameter to enable filtlong's short-read-based long read filtering (by @dialvarezs)
-- [#1063](https://github.com/nf-core/mag/pull/1063) - Add new `--ale_per_base_output` parameter to enable ALE per-base output (by @dialvarezs)
 - [#1062](https://github.com/nf-core/mag/pull/1062) - Add `--bin_seqkit_stats_max_forks` parameter to cap concurrent bin-stats jobs (by @dialvarezs)
+- [#1063](https://github.com/nf-core/mag/pull/1063) - Add new `--ale_per_base_output` parameter to enable ALE per-base output (by @dialvarezs)
 
 ### `Changed`
 
@@ -39,12 +56,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1070](https://github.com/nf-core/mag/pull/1070) - Update BUSCO nf-core module (by @dialvarezs)
 - [#1071](https://github.com/nf-core/mag/pull/1071) - Improved efficiency by batching `DASTOOL_FASTATOCONTIG2BIN` per binner instead of per bin (by @dialvarezs)
 - [#1074](https://github.com/nf-core/mag/pull/1074) - Exclude BUSCO output directories to reduce storage usage in output dir (by @dialvarezs)
-- [#1079](https://github.com/nf-core/mag/pull/1079) - Add exit code 247 to the MEGAHIT retry error strategy (by @dialvarezs)
 - [#1075](https://github.com/nf-core/mag/pull/1075) - Update output documentation to reflect BUSCO complete directory no longer being published (by @dialvarezs)
+- [#1079](https://github.com/nf-core/mag/pull/1079) - Add exit code 247 to the MEGAHIT retry error strategy (by @dialvarezs)
+- [#1080](https://github.com/nf-core/mag/pull/1080) - Updated to nf-core 4.0.3 `TEMPLATE` (by @dialvarezs)
+- [#1081](https://github.com/nf-core/mag/pull/1081) - Use subset database for geNomad (by @dialvarezs)
+- [#1084](https://github.com/nf-core/mag/pull/1084) - Disable NanoPlot static plot image files by default, since it depends on Chrome installed (by @dialvarezs)
+- [#1088](https://github.com/nf-core/mag/pull/1088) - Update Prokka (to v1.15.6), Prodigal and PyDamage modules, fixing conda/container output mismatches (by @dialvarezs)
+- [#1088](https://github.com/nf-core/mag/pull/1088) - Run GTDB-Tk with a single CPU on the `test_single_end` profile, so its outputs no longer depend on the machine running the test (by @dialvarezs)
+- [#1091](https://github.com/nf-core/mag/pull/1091) - Optimize process resource configs (by @dialvarezs)
 
 ### `Fixed`
 
-- [#1076](https://github.com/nf-core/mag/pull/1076) - Add missing PyPOLCA citations to README, `CITATIONS.md` and the pipeline citation/bibliography text (by @dialvarezs)
 - [#1011](https://github.com/nf-core/mag/pull/1011) - Fix issue making CheckM2 running only for one sample per run (by @dialvarezs)
 - [#1012](https://github.com/nf-core/mag/pull/1012) - Prevent adapter trimming with Porechop on PacBio reads (by @dialvarezs)
 - [#1016](https://github.com/nf-core/mag/pull/1016) - Merge input reads on assembly input to prevent repeated filenames on multi-run samples (reported by @erikrikarddaniel, fix by @dialvarezs)
@@ -56,14 +78,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1049](https://github.com/nf-core/mag/pull/1049) - Fix publishing issue with `gtdbtk/classifywf` (by @dialvarezs)
 - [#1058](https://github.com/nf-core/mag/pull/1058) - Make `create_metabinner_bins.py` save gzipped bin files to prevent NFS race condition (by @dialvarezs)
 - [#1069](https://github.com/nf-core/mag/pull/1069) - Exclude eukaryotic bins from CheckM2, which only supports bacterial and archaeal genomes (by @dialvarezs)
+- [#1076](https://github.com/nf-core/mag/pull/1076) - Add missing PyPOLCA citations to README, `CITATIONS.md` and the pipeline citation/bibliography text (by @dialvarezs)
 - [#1078](https://github.com/nf-core/mag/pull/1078) - Sort bins before GTDB-Tk classification so order-sensitive outputs are reproducible across environments (by @dialvarezs)
+- [#1084](https://github.com/nf-core/mag/pull/1084) - Update Prokka nf-core module, which pins GNU parallel to fix Prokka failures with Conda (by @dialvarezs)
+- [#1086](https://github.com/nf-core/mag/pull/1086) - Rename MaxBin2 bins inside the `MAXBIN2` module via a patch instead of the `ADJUST_MAXBIN2_EXT` local module, which emitted dangling symlinks rather than bin contents on remote filesystems (by @dialvarezs)
+- [#1086](https://github.com/nf-core/mag/pull/1086) - Copy instead of move staged bins in `TIARA_CLASSIFY`, which emitted dangling symlinks rather than bin contents on remote filesystems (by @dialvarezs)
+- [#1086](https://github.com/nf-core/mag/pull/1086) - Match bin filenames exactly in `TIARA_CLASSIFY` so that e.g. bin `.1` no longer also picks up bin `.10` (by @dialvarezs)
+- [#1087](https://github.com/nf-core/mag/pull/1087) - Use non-mutating `toSorted` instead of in-place `sort` on shared channel items, which could cause `ConcurrentModificationException` failures (by @dialvarezs)
+- [#1093](https://github.com/nf-core/mag/pull/1093) - Ignore CheckM `storage/` subdirectories in nf-test snapshots, whose contents vary between runs and machines (by @dialvarezs)
+- [#1094](https://github.com/nf-core/mag/pull/1094) - Convert depths in a single streaming pass, so `CONVERT_DEPTHS` no longer writes a decompressed copy of the depth file to the work directory and re-reads it once per read set, which stalled short-read assemblies for hours on object-backed work directories (by @dialvarezs)
 
 ### `Dependencies`
 
-| Tool    | Previous version | New version |
-| ------- | ---------------- | ----------- |
-| BUSCO   | 6.0.0            | 6.1.0       |
-| GTDB-Tk | 2.5.2            | 2.7.2       |
+| Tool            | Previous version | New version |
+| --------------- | ---------------- | ----------- |
+| BUSCO           | 6.0.0            | 6.1.0       |
+| GTDB (database) | r226             | r232        |
+| GTDB-Tk         | 2.5.2            | 2.7.2       |
+| MultiQC         | 1.31             | 1.34        |
+| Nextflow        | 25.10.4          | 26.04.0     |
+| nf-core         | 3.5.1            | 4.0.3       |
+| nf-schema       | 2.5.1            | 2.7.2       |
+| Prokka          | 1.14.6           | 1.15.6      |
+| pypolca         |                  | 0.4.0       |
 
 ### `Deprecated`
 
@@ -71,6 +108,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1018](https://github.com/nf-core/mag/pull/1018) - Remove `mag_depths_plot` local module (by @dialvarezs)
 - [#1018](https://github.com/nf-core/mag/pull/1018) - Deprecated `--gtdbtk_skip_aniscreen` in favor of `--gtdbtk_place_species` (by @dialvarezs)
 - [#1067](https://github.com/nf-core/mag/pull/1066) - Deprecated `--skip_metaeuk` as it has no effect, MetaEuk is gated by `--metaeuk_db` / `--metaeuk_mmseqs_db` (by @dialvarezs)
+- [#1086](https://github.com/nf-core/mag/pull/1086) - Removed `adjust_maxbin2_ext` local module, replaced by a patch on the `MAXBIN2` nf-core module (by @dialvarezs)
 
 ## 5.4.2 Yellow Frog patch [2026-03-31]
 

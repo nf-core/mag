@@ -169,8 +169,8 @@ NanoPlot is used to calculate various metrics and plots about the quality and le
 <summary>Output files</summary>
 
 - `QC_longreads/NanoPlot/[sample]/`
-  - `raw_*.[png/html/txt]`: Plots and reports for raw data
-  - `filtered_*.[png/html/txt]`: Plots and reports for filtered data
+  - `raw_*.[html/txt]`: Plots and reports for raw data
+  - `filtered_*.[html/txt]`: Plots and reports for filtered data
 
 </details>
 

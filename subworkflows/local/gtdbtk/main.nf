@@ -94,7 +94,7 @@ workflow GTDBTK {
         }
 
     ch_passed_bins = ch_filtered_bins
-        .map { meta, passed, _discarded -> [meta, passed.sort { bin -> bin.name }] }
+        .map { meta, passed, _discarded -> [meta, passed.toSorted { bin -> bin.name }] }
         .filter { _meta, passed -> passed }
     ch_passed_flat = ch_passed_bins.flatMap { _meta, passed -> passed }
     ch_discarded_bins = ch_filtered_bins.flatMap { _meta, _passed, discarded -> discarded }
@@ -111,7 +111,7 @@ workflow GTDBTK {
             }
             .groupTuple()
             // Sort bins by name so GTDB-Tk receives a deterministic input order.
-            .map { meta, bins -> [meta, bins.sort { bin -> bin.name }] }
+            .map { meta, bins -> [meta, bins.toSorted { bin -> bin.name }] }
     }
     else {
         ch_bins_for_classifywf = ch_passed_bins
