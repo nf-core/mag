@@ -586,13 +586,12 @@ If you require taxonomic profiling of raw reads, we recommend using [nf-core/tax
 
 ## A note on DeepMAsED assembly error detection
 
-When enabled, DeepMAsED performs per-contig assembly error detection on short-read assemblies (MEGAHIT and SPAdes).
+When enabled, DeepMAsED performs per-contig assembly error detection on short-read assemblies (MEGAHIT and SPAdes). It is disabled by default, as it is noticeably more resource-intensive than the other assembly QC tools (e.g. ALE, which runs by default).
 
 Useful parameters:
 
-- `--skip_deepmased` to skip DeepMAsED entirely.
-- `--skip_deepmased_predict` to run only feature extraction.
-- `--deepmased_cpu_only` to force CPU-only inference.
+- `--skip_deepmased false` to enable DeepMAsED (it is skipped by default).
+- DeepMAsED prediction is run in CPU-only mode in this pipeline.
 
 ## BIgMAG compatibility
 

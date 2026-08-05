@@ -1958,7 +1958,11 @@
     },
     "-profile test_single_end": {
         "content": [
+<<<<<<< HEAD
             131,
+=======
+            132,
+>>>>>>> f0a16cff (updating files)
             {
                 "ADAPTERREMOVAL_SE": {
                     "adapterremoval": "2.3.2"
@@ -2040,14 +2044,6 @@
                 },
                 "CONVERT_DEPTHS": {
                     "bioawk": 20110810
-                },
-                "DEEPMASED_FEATURES": {
-                    "deepmased": "0.3.1",
-                    "setuptools": 78.1
-                },
-                "DEEPMASED_PREDICT": {
-                    "deepmased": "0.3.1",
-                    "setuptools": 78.1
                 },
                 "FAIDX": {
                     "samtools": "1.22.1"
@@ -2140,9 +2136,16 @@
         ],
         "timestamp": "2026-07-27T01:13:13.676008565",
         "meta": {
+<<<<<<< HEAD
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
         }
+=======
+            "nf-test": "0.9.3",
+            "nextflow": "26.04.3"
+        },
+        "timestamp": "2026-08-05T02:47:39.135313588"
+>>>>>>> f0a16cff (updating files)
     },
     "multiqc": {
         "content": [

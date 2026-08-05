@@ -523,7 +523,11 @@
     },
     "-profile test": {
         "content": [
+<<<<<<< HEAD
             187,
+=======
+            190,
+>>>>>>> f0a16cff (updating files)
             {
                 "BIN_SUMMARY": {
                     "pandas": "1.4.3",
@@ -586,14 +590,6 @@
                 },
                 "CONVERT_DEPTHS": {
                     "bioawk": 20110810
-                },
-                "DEEPMASED_FEATURES": {
-                    "deepmased": "0.3.1",
-                    "setuptools": 78.1
-                },
-                "DEEPMASED_PREDICT": {
-                    "deepmased": "0.3.1",
-                    "setuptools": 78.1
                 },
                 "FASTP": {
                     "fastp": "1.0.1"
@@ -673,9 +669,16 @@
         ],
         "timestamp": "2026-07-27T00:24:30.860922577",
         "meta": {
+<<<<<<< HEAD
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
         }
+=======
+            "nf-test": "0.9.3",
+            "nextflow": "26.04.3"
+        },
+        "timestamp": "2026-08-05T01:23:15.836749694"
+>>>>>>> f0a16cff (updating files)
     },
     "log-checks": {
         "content": [
@@ -1646,11 +1649,19 @@
                 "bin_depths_summary.tsv:md5,3dacec5981315f96e7b9a7d1dadee766"
             ]
         ],
+<<<<<<< HEAD
         "timestamp": "2026-07-27T00:24:31.393679224",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
         }
+=======
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        },
+        "timestamp": "2026-07-14T04:10:40.804681288"
+>>>>>>> f0a16cff (updating files)
     },
     "content-checks": {
         "content": [

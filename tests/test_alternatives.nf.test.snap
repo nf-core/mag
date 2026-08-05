@@ -1,7 +1,7 @@
 {
     "-profile test_alternatives": {
         "content": [
-            34,
+            33,
             {
                 "BIN_SUMMARY": {
                     "pandas": "1.4.3",
@@ -41,14 +41,6 @@
                 },
                 "DASTOOL_FASTATOCONTIG2BIN_TIARA": {
                     "dastool": "1.1.7"
-                },
-                "DEEPMASED_FEATURES": {
-                    "deepmased": "0.3.1",
-                    "setuptools": 78.1
-                },
-                "DEEPMASED_PREDICT": {
-                    "deepmased": "0.3.1",
-                    "setuptools": 78.1
                 },
                 "FASTQC_RAW": {
                     "fastqc": "0.12.1"
@@ -104,9 +96,10 @@
         ],
         "timestamp": "2026-07-20T20:19:07.525828489",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
-        }
+            "nf-test": "0.9.3",
+            "nextflow": "26.04.3"
+        },
+        "timestamp": "2026-08-05T01:30:28.925723587"
     },
     "qc": {
         "content": [
