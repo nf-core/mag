@@ -36,6 +36,7 @@ process DEEPMASED_FEATURES {
         -o . \\
         -n ${prefix}_feature_file_paths.tsv \\
         ${args}
+
     """
 
     stub:
