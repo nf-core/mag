@@ -141,6 +141,16 @@
                         "git_sha": "e753770db613ce014b3c4bc94f6cba443427b726",
                         "installed_by": ["modules"]
                     },
+                    "deepmased/features": {
+                        "branch": "master",
+                        "git_sha": "9ec0c1b5f6621757449ce2b47c991d5056dfb88a",
+                        "installed_by": ["modules"]
+                    },
+                    "deepmased/predict": {
+                        "branch": "master",
+                        "git_sha": "9ec0c1b5f6621757449ce2b47c991d5056dfb88a",
+                        "installed_by": ["modules"]
+                    },
                     "fastp": {
                         "branch": "master",
                         "git_sha": "d9ec4ef289ad39b8a662a7a12be50409b11df84b",

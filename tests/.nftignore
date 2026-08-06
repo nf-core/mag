@@ -13,6 +13,11 @@ GenomeBinning/CONCOCT/stats/*_{original,PCA_components,PCA_transformed}_data_gt1
 GenomeBinning/CONCOCT/stats/*_log.txt
 GenomeBinning/CONCOCT/stats/*.tsv
 GenomeBinning/DASTool/*.log
+GenomeBinning/DeepMAsED/**/*_predictions.tsv
+GenomeBinning/DeepMAsED/**/*_feature_file_paths.tsv
+GenomeBinning/DeepMASED/**/*_predictions.tsv
+GenomeBinning/DeepMASED/**/*_feature_file_paths.tsv
+GenomeBinning/**/*_predictions.tsv
 GenomeBinning/depths/**/*-depth.txt.gz
 GenomeBinning/depths/bins/*.png
 GenomeBinning/QC/busco_summary.tsv

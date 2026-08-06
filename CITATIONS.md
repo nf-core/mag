@@ -68,6 +68,10 @@
 
   > Sieber, C. M. K., et al. 2018. "Recovery of Genomes from Metagenomes via a Dereplication, Aggregation and Scoring Strategy." Nature Microbiology 3 (7): 836-43. doi: 10.1038/s41564-018-0171-1
 
+- [DeepMAsED](https://doi.org/10.1371/journal.pcbi.1009993)
+
+  > Athreya, A., Diment, J., Poroyko, V., & Treangen, T. J. (2022). DeepMAsED: Evaluating the quality of metagenomic assemblies using deep learning. PLoS Computational Biology, 18(5), e1009993. doi: 10.1371/journal.pcbi.1009993
+
 - [FastP](https://doi.org/10.1093/bioinformatics/bty560)
 
   > Chen, S., Zhou, Y., Chen, Y., & Gu, J. (2018). fastp: an ultra-fast all-in-one FASTQ preprocessor. Bioinformatics , 34(17), i884–i890. doi: 10.1093/bioinformatics/bty560.

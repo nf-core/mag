@@ -420,6 +420,11 @@ def validateInputParameters(hybrid) {
         error('[nf-core/mag] ERROR: To generate the BIgMAG file you need to include the parameters `--run_checkm2` and `--run_gunc`, and you cannot skip BINQC, GTDB-TK, QUAST nor BUSCO.')
     }
 
+    // Check DeepMAsED parameter combinations
+    if (!params.skip_deepmased && params.skip_deepmased_features && !params.skip_deepmased_predict) {
+        error("[nf-core/mag] ERROR: '--skip_deepmased_features true' cannot be used without '--skip_deepmased_predict true'. DEEPMASED_PREDICT requires the feature tables produced by DEEPMASED_FEATURES as input. Either run both steps (default) or skip DeepMAsED entirely with '--skip_deepmased'.")
+    }
+
     // Check ancient DNA damage parameters
     if (params.ancient_dna && params.binning_map_mode != 'own') {
         log.warn("[nf-core/mag] WARNING: Running in --binning_map_mode ${params.binning_map_mode} will result in unstable pyDamage output files. You might not receive pyDamage results for all bins in bin_summary.tsv, and `-resume` may not work; `--binning_map_mode own` is recommended!")

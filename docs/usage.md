@@ -584,6 +584,15 @@ This feature was removed in version 5.0.0 to strengthen the pipeline's focus on 
 
 If you require taxonomic profiling of raw reads, we recommend using [nf-core/taxprofiler](https://nf-co.re/taxprofiler/), which is specifically designed for taxonomic profiling of raw reads and supports a wide range of tools for this purpose.
 
+## A note on DeepMAsED assembly error detection
+
+When enabled, DeepMAsED performs per-contig assembly error detection on short-read assemblies (MEGAHIT and SPAdes). It is disabled by default, as it is noticeably more resource-intensive than the other assembly QC tools (e.g. ALE, which runs by default).
+
+Useful parameters:
+
+- `--skip_deepmased false` to enable DeepMAsED (it is skipped by default).
+- DeepMAsED prediction is run in CPU-only mode in this pipeline.
+
 ## BIgMAG compatibility
 
 With the parameter `--generate_bigmag_file` a module will be triggered to generate a file that contains the output from all of the bin-quality tools that can be uploaded to the [BIgMAG](https://github.com/jeffe107/BIgMAG) dashboard for visualising and evaluating MAGs.
