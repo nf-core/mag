@@ -1055,9 +1055,9 @@
                 },
                 "gunc_database_type": {
                     "type": "string",
-                    "default": "progenomes",
+                    "default": "progenomes_2.1",
                     "description": "Specify which database to auto-download if not supplying own",
-                    "enum": ["progenomes", "gtdb", "test_data"]
+                    "enum": ["progenomes_2.1", "progenomes_3", "gtdb_95", "gtdb_214", "test_data"]
                 },
                 "gunc_save_db": {
                     "type": "boolean",
