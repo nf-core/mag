@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
+- [#1098](https://github.com/nf-core/mag/issues/1098) - Fix invalid `--gunc_database_type` options to match the values accepted by `gunc download_db` (reported by @cdiener, fix by @dialvarezs)
+
 ### `Dependencies`
 
 | Tool | Previous version | New version |
