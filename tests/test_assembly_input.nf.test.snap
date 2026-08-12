@@ -47,25 +47,37 @@
     "assembly": {
         "content": [
             [
+                "Assembly/MEGAHIT/QC/test_minigut/DeepMAsED/features/MEGAHIT-test_minigut-test_minigut_feats.tsv",
+                "Assembly/MEGAHIT/QC/test_minigut/DeepMAsED/features/test_minigut-MEGAHIT_feature_file_paths.tsv",
+                "Assembly/MEGAHIT/QC/test_minigut/DeepMAsED/test_minigut-MEGAHIT_predictions.tsv",
                 "Assembly/MEGAHIT/QC/test_minigut/MEGAHIT-test_minigut-test_minigut_sample2.bowtie2.log",
                 "Assembly/MEGAHIT/QC/test_minigut/MEGAHIT-test_minigut.bowtie2.log",
+                "Assembly/MEGAHIT/QC/test_minigut_sample2/DeepMAsED/features/MEGAHIT-test_minigut_sample2-test_minigut_sample2_feats.tsv",
+                "Assembly/MEGAHIT/QC/test_minigut_sample2/DeepMAsED/features/test_minigut_sample2-MEGAHIT_feature_file_paths.tsv",
+                "Assembly/MEGAHIT/QC/test_minigut_sample2/DeepMAsED/test_minigut_sample2-MEGAHIT_predictions.tsv",
                 "Assembly/MEGAHIT/QC/test_minigut_sample2/MEGAHIT-test_minigut_sample2-test_minigut.bowtie2.log",
                 "Assembly/MEGAHIT/QC/test_minigut_sample2/MEGAHIT-test_minigut_sample2.bowtie2.log",
+                "Assembly/SPAdes/QC/test_minigut/DeepMAsED/features/SPAdes-test_minigut-test_minigut_feats.tsv",
+                "Assembly/SPAdes/QC/test_minigut/DeepMAsED/features/test_minigut-SPAdes_feature_file_paths.tsv",
+                "Assembly/SPAdes/QC/test_minigut/DeepMAsED/test_minigut-SPAdes_predictions.tsv",
                 "Assembly/SPAdes/QC/test_minigut/SPAdes-test_minigut-test_minigut_sample2.bowtie2.log",
                 "Assembly/SPAdes/QC/test_minigut/SPAdes-test_minigut.bowtie2.log",
+                "Assembly/SPAdes/QC/test_minigut_sample2/DeepMAsED/features/SPAdes-test_minigut_sample2-test_minigut_sample2_feats.tsv",
+                "Assembly/SPAdes/QC/test_minigut_sample2/DeepMAsED/features/test_minigut_sample2-SPAdes_feature_file_paths.tsv",
+                "Assembly/SPAdes/QC/test_minigut_sample2/DeepMAsED/test_minigut_sample2-SPAdes_predictions.tsv",
                 "Assembly/SPAdes/QC/test_minigut_sample2/SPAdes-test_minigut_sample2-test_minigut.bowtie2.log",
                 "Assembly/SPAdes/QC/test_minigut_sample2/SPAdes-test_minigut_sample2.bowtie2.log"
             ]
         ],
-        "timestamp": "2025-11-03T13:09:25.820313196",
+        "timestamp": "2026-08-12T09:42:43.100669027",
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.10.0"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
         }
     },
     "-profile assembly_input": {
         "content": [
-            103,
+            111,
             {
                 "BIN_SUMMARY": {
                     "pandas": "1.4.3",
@@ -114,6 +126,14 @@
                 },
                 "DASTOOL_FASTATOCONTIG2BIN": {
                     "dastool": "1.1.7"
+                },
+                "DEEPMASED_FEATURES": {
+                    "deepmased": "0.3.1",
+                    "setuptools": 78.1
+                },
+                "DEEPMASED_PREDICT": {
+                    "deepmased": "0.3.1",
+                    "setuptools": 78.1
                 },
                 "FASTQC_RAW": {
                     "fastqc": "0.12.1"
@@ -166,10 +186,10 @@
                 }
             }
         ],
-        "timestamp": "2026-07-10T01:50:53.792824455",
+        "timestamp": "2026-08-12T09:42:43.074572353",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nextflow": "26.04.6"
         }
     },
     "binning": {
