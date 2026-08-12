@@ -648,6 +648,7 @@
                 },
                 "skip_deepmased": {
                     "type": "boolean",
+                    "default": true,
                     "description": "Skip DeepMAsED assembly error detection (skips both features and predict)"
                 },
                 "deepmased_features_gzip": {

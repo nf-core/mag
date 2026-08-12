@@ -347,7 +347,7 @@ DeepMAsED prediction is run in CPU-only mode.
   - `[sample]-[assembler]_feature_file_paths.tsv`: Index file listing all generated feature table files
   - `[sample]-[assembler]*_feats.tsv{,.gz}`: Per-contig feature tables (one per parallel processing bin); gzipped if `--deepmased_features_gzip` is set
 - `Assembly/[assembler]/QC/[sample/group]/DeepMAsED/`
-  - `[sample]-[assembler]_deepmased_predictions.tsv`: Per-contig misassembly scores. Score of 0 indicates a correctly assembled contig; score of 1 indicates a likely misassembly.
+  - `[sample]-[assembler]_predictions.tsv`: Per-contig misassembly scores. Score of 0 indicates a correctly assembled contig; score of 1 indicates a likely misassembly.
 
 </details>
 
