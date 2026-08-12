@@ -37,6 +37,8 @@ include { MMSEQS_DATABASES                } from '../modules/nf-core/mmseqs/data
 include { METAEUK_EASYPREDICT             } from '../modules/nf-core/metaeuk/easypredict/main'
 include { QSV_CAT as CONCAT_QUAST_SUMMARY } from '../modules/nf-core/qsv/cat/main'
 include { ALE                             } from '../modules/nf-core/ale/main'
+include { DEEPMASED_FEATURES              } from '../modules/nf-core/deepmased/features/main'
+include { DEEPMASED_PREDICT               } from '../modules/nf-core/deepmased/predict/main'
 
 //
 // MODULE: Local to the pipeline
@@ -299,7 +301,7 @@ workflow MAG {
     ================================================================================
     */
 
-    if (!params.skip_binning || params.ancient_dna || !params.skip_ale) {
+    if (!params.skip_binning || params.ancient_dna || !params.skip_ale || !params.skip_deepmased) {
         BINNING_PREPARATION(
             ch_shortread_assemblies,
             ch_short_reads,
@@ -340,6 +342,33 @@ workflow MAG {
 
         ALE(ch_ale_input)
         ch_versions = ch_versions.mix(ALE.out.versions)
+    }
+
+    /*
+    ================================================================================
+                                    DeepMAsED
+    ================================================================================
+    */
+
+    if (!params.skip_deepmased) {
+        // DeepMAsED's pre-trained model was only validated on short-read (MEGAHIT/SPAdes) assemblies;
+        // long-read (Flye/metaMDBG) and hybrid (SPAdesHybrid) assemblies are excluded, unlike ALE.
+        ch_shortread_assemblies_for_deepmased = ch_assemblies.filter { meta, _assembly ->
+            meta.assembler.toUpperCase() in ['MEGAHIT', 'SPADES']
+        }
+
+        ch_deepmased_input = BINNING_PREPARATION.out.grouped_mappings
+            .join(ch_shortread_assemblies_for_deepmased, by: 0)
+            .map { meta, _contigs, bams, bais, assembly ->
+                // Match BAM to the same sample; fall back to sorted first BAM for co-assemblies
+                def own_bam = bams.find { bam -> bam.name.endsWith("-${meta.id}.bam") }
+                def bam = own_bam ?: bams.sort()[0]
+                def bai = bais.find { bai -> bai.name.startsWith(bam.name) } ?: bais.sort()[0]
+                [meta, bam, bai, assembly]
+            }
+
+        DEEPMASED_FEATURES(ch_deepmased_input)
+        DEEPMASED_PREDICT(DEEPMASED_FEATURES.out.feature_table.join(DEEPMASED_FEATURES.out.feature_files, by: 0))
     }
 
     /*

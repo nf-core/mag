@@ -114,11 +114,11 @@
                 "SPAdesHybrid-SemiBin2-group-0_0.txt:md5,f3c9e5f7e2651fa893484ca9bb7c3114"
             ]
         ],
-        "timestamp": "2026-07-27T00:37:07.598453748",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
-        }
+        },
+        "timestamp": "2026-07-27T00:37:07.598453748"
     },
     "-profile hybrid": {
         "content": [
@@ -261,11 +261,11 @@
                 }
             }
         ],
-        "timestamp": "2026-07-27T00:37:00.361340644",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
-        }
+            "nf-test": "0.9.3",
+            "nextflow": "26.04.3"
+        },
+        "timestamp": "2026-08-06T01:55:19.147516199"
     },
     "log-checks": {
         "content": [
@@ -277,11 +277,11 @@
             "bowtie2_logs contains 'overall alignment rate': true",
             "prokka_logs contains 'Annotation finished successfully.': true"
         ],
-        "timestamp": "2026-06-26T15:16:45.477590782",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
-        }
+        },
+        "timestamp": "2026-06-26T15:16:45.477590782"
     },
     "qc_longreads": {
         "content": [
@@ -334,11 +334,11 @@
                 "minigut_sample2_0.stats:md5,4a2f9b3bc3ba6351207acd63bd75d37c"
             ]
         ],
-        "timestamp": "2026-07-27T00:37:01.688775927",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
-        }
+        },
+        "timestamp": "2026-07-27T00:37:01.688775927"
     },
     "assembly": {
         "content": [
@@ -385,11 +385,11 @@
                 "SPAdesHybrid-group-0.scaffolds.fa.gz:md5,665f0ed8bdf0f2857aa713ce3e83f390"
             ]
         ],
-        "timestamp": "2026-07-27T00:37:03.43851536",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
-        }
+        },
+        "timestamp": "2026-07-27T00:37:03.43851536"
     },
     "binning": {
         "content": [
@@ -594,11 +594,11 @@
                 "bin_depths_summary.tsv:md5,1bb4397dfe72ad4cab619de32a3f36f8"
             ]
         ],
-        "timestamp": "2026-07-27T00:37:05.349341288",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
-        }
+            "nextflow": "26.04.6"
+        },
+        "timestamp": "2026-07-14T04:13:35.758490941"
     },
     "content-checks": {
         "content": [
@@ -612,11 +612,11 @@
             "Prokka TSV row counts: [SPAdesHybrid-MaxBin2-group-0.001.tsv=1018, SPAdesHybrid-MaxBin2-group-0.002.tsv=811, SPAdesHybrid-MetaBAT2-group-0.1.tsv=802, SPAdesHybrid-MetaBAT2-group-0.2.tsv=721, SPAdesHybrid-SemiBin2-group-0_0.tsv=1537]",
             "Bin summary row count matches bins: true"
         ],
-        "timestamp": "2026-07-27T00:37:17.252029688",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
-        }
+        },
+        "timestamp": "2026-07-27T00:37:17.252029688"
     },
     "qc_shortreads": {
         "content": [
@@ -645,11 +645,11 @@
                 "minigut_sample2_run0_host_removed.bowtie2.log:md5,fb967944891311058a2c8f2255cfe118"
             ]
         ],
-        "timestamp": "2026-07-27T00:37:00.405989214",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
-        }
+        },
+        "timestamp": "2026-07-27T00:37:00.405989214"
     },
     "multiqc": {
         "content": [
@@ -892,11 +892,11 @@
                 "quast_table.yaml:md5,2f5c8eae632ff937496491eb1facafd9"
             ]
         ],
-        "timestamp": "2026-07-27T00:37:09.97122623",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
-        }
+        },
+        "timestamp": "2026-07-27T00:37:09.97122623"
     },
     "summary-rows": {
         "content": [
@@ -904,10 +904,10 @@
             "quast_bin_summary.tsv rows: 5",
             "busco_summary.tsv rows: 5"
         ],
-        "timestamp": "2026-06-26T15:16:43.543930305",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
-        }
+        },
+        "timestamp": "2026-06-26T15:16:43.543930305"
     }
 }

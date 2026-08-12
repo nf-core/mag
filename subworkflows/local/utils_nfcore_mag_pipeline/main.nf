@@ -503,6 +503,7 @@ def toolCitationText() {
     def assembly_qc_tools = [
         !params.skip_quast ? "metaQUAST (Mikheenko et al. 2016)" : "",
         !params.skip_ale ? "ALE (Clark et al. 2013)" : "",
+        !params.skip_deepmased ? "DeepMAsED (Mineeva et al. 2020)" : "",
     ].findAll { tool -> tool != '' }
     def text_assembly_qc = "Assembly quality was assessed with ${assembly_qc_tools.join(', ')}."
 
@@ -635,6 +636,9 @@ def toolBibliographyText() {
     }
     if (!params.skip_ale) {
         references << "<li>Clark, S. C., Egan, R., Frazier, P. I., & Wang, Z. (2013). ALE: a generic assembly likelihood evaluation framework for assessing the accuracy of genome and metagenome assemblies. Bioinformatics, 29(4), 435-443. doi: 10.1093/bioinformatics/bts723</li>"
+    }
+    if (!params.skip_deepmased) {
+        references << "<li>Mineeva, O., Rojas-Carulla, M., Ley, R. E., Schölkopf, B., & Youngblut, N. D. (2020). DeepMAsED: evaluating the quality of metagenomic assemblies. Bioinformatics, 36(10), 3011-3017. doi: 10.1093/bioinformatics/btaa124</li>"
     }
     if (params.run_pypolca) {
         references << "<li>Bouras, G., Judd, L. M., Edwards, R. A., Vreugde, S., Stinear, T. P., & Wick, R. R. (2024). How low can you go? Short-read polishing of Oxford Nanopore bacterial genome assemblies. Microbial Genomics, 10(6), 001254. doi: 10.1099/mgen.0.001254</li>"

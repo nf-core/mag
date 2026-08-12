@@ -478,10 +478,10 @@
                 "SPAdes-SemiBin2-test_minigut_1.txt:md5,5f60f0e4e9254dd2438966215a8392a5"
             ]
         ],
-        "timestamp": "2026-07-27T00:24:32.159588311",
+        "timestamp": "2026-08-12T08:27:50.047338784",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.6"
         }
     },
     "qc": {
@@ -663,10 +663,10 @@
                 }
             }
         ],
-        "timestamp": "2026-07-27T00:24:30.860922577",
+        "timestamp": "2026-08-12T08:27:48.994156449",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.6"
         }
     },
     "log-checks": {
@@ -834,10 +834,10 @@
                 "SPAdes-test_minigut_sample2.scaffolds.fa.gz:md5,6e4bf6fb04dd8b2797445bb34bca663b"
             ]
         ],
-        "timestamp": "2026-07-27T00:24:31.0398731",
+        "timestamp": "2026-08-12T08:27:49.124959226",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.6"
         }
     },
     "binning": {
@@ -1638,10 +1638,10 @@
                 "bin_depths_summary.tsv:md5,3dacec5981315f96e7b9a7d1dadee766"
             ]
         ],
-        "timestamp": "2026-07-27T00:24:31.393679224",
+        "timestamp": "2026-08-12T08:27:49.410937318",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.6"
         }
     },
     "content-checks": {
@@ -2026,10 +2026,10 @@
                 "gtdbtk_summary.tsv:md5,250168b49c7dac2e3bdb79518c0367d5"
             ]
         ],
-        "timestamp": "2026-07-27T00:24:33.104150073",
+        "timestamp": "2026-08-12T08:27:50.810186373",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.6"
         }
     },
     "multiqc": {
@@ -2276,10 +2276,10 @@
                 "quast_table.yaml:md5,2d53029b92bc2e3940ee2ae932fa2c9d"
             ]
         ],
-        "timestamp": "2026-07-27T00:24:34.032662218",
+        "timestamp": "2026-08-12T08:27:51.5483608",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.6"
         }
     },
     "tsv-rows": {

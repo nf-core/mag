@@ -562,10 +562,10 @@
                 "MEGAHIT-MetaBAT2-test_minigut.1.txt:md5,8e3a1a9ae89afe966484b9eb5e47266b"
             ]
         ],
-        "timestamp": "2026-07-27T01:13:13.959419893",
+        "timestamp": "2026-08-12T08:30:24.982492015",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.6"
         }
     },
     "qc": {
@@ -1765,10 +1765,10 @@
                 "bin_depths_summary.tsv:md5,bd54b32dc4c741cd4edd2bbba51f6552"
             ]
         ],
-        "timestamp": "2026-07-27T06:20:16.302638946",
+        "timestamp": "2026-08-12T08:30:25.203594055",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.6"
         }
     },
     "viral": {
@@ -1824,7 +1824,7 @@
                 "MEGAHIT-test_minigut_sample2.contigs_virus_summary.tsv:md5,2d9c0006336752f4a41253e6570119a1"
             ]
         ],
-        "timestamp": "2026-07-24T19:21:58.235088091",
+        "timestamp": "2026-08-12T08:30:25.573898469",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
@@ -1950,10 +1950,10 @@
                 "gtdbtk_summary.tsv:md5,75c4048c09d6126dc7f1019d138d33fe"
             ]
         ],
-        "timestamp": "2026-07-27T06:26:40.225363117",
+        "timestamp": "2026-08-12T08:30:25.75670769",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.6"
         }
     },
     "-profile test_single_end": {
@@ -2130,10 +2130,10 @@
                 }
             }
         ],
-        "timestamp": "2026-07-27T01:13:13.676008565",
+        "timestamp": "2026-08-12T08:30:24.815766566",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.6"
         }
     },
     "multiqc": {
@@ -2329,10 +2329,10 @@
                 "quast_table.yaml:md5,55ee8b4825b107d592cfeb16928f3487"
             ]
         ],
-        "timestamp": "2026-07-27T01:13:14.97541201",
+        "timestamp": "2026-08-12T08:30:25.396503296",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.6"
         }
     },
     "ancient": {
@@ -2356,10 +2356,10 @@
                 "MEGAHIT-test_minigut_sample2.fa:md5,f76f599c3048c8794ade2a8f3bfdb205"
             ]
         ],
-        "timestamp": "2026-07-27T01:13:13.718205039",
+        "timestamp": "2026-08-12T08:30:24.849242636",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.6"
         }
     },
     "summary-rows": {

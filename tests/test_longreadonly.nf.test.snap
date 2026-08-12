@@ -102,10 +102,10 @@
                 "METAMDBG-MaxBin2-minigut.002.txt:md5,6a3b8ff37f997bb0d47788ed20ef2bdf"
             ]
         ],
-        "timestamp": "2026-07-27T00:46:32.599154361",
+        "timestamp": "2026-08-12T08:32:51.659878299",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.6"
         }
     },
     "qc": {
@@ -228,10 +228,10 @@
                 "transposed_report.txt:md5,e2b2a97b17b1c097d681388a96b3351f"
             ]
         ],
-        "timestamp": "2026-07-27T00:46:30.433281935",
+        "timestamp": "2026-08-12T08:32:50.906295237",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.6"
         }
     },
     "binning": {
@@ -408,10 +408,10 @@
                 "bin_depths_summary.tsv:md5,b3efc921cfe1789a5a4763a12cfe50f8"
             ]
         ],
-        "timestamp": "2026-07-27T00:46:31.287797884",
+        "timestamp": "2026-08-12T08:32:51.11326828",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.6"
         }
     },
     "content-checks": {
@@ -547,10 +547,10 @@
                 }
             }
         ],
-        "timestamp": "2026-07-27T00:46:29.250447886",
+        "timestamp": "2026-08-12T08:32:50.582846141",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.6"
         }
     },
     "multiqc": {
@@ -600,10 +600,10 @@
                 
             ]
         ],
-        "timestamp": "2026-07-27T00:46:34.028424471",
+        "timestamp": "2026-08-12T08:32:52.318223817",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.6"
         }
     },
     "summary-rows": {

@@ -47,6 +47,7 @@ By default, the pipeline currently performs the following: it supports both shor
 The pipeline then:
 
 - performs assembly using [MEGAHIT](https://github.com/voutcn/megahit) and [SPAdes](http://cab.spbu.ru/software/spades/), and checks their quality using [Quast](http://quast.sourceforge.net/quast) and [ALE](https://github.com/sc932/ALE) (if short read data is used)
+- performs per-contig assembly error detection for short-read assemblies using [DeepMAsED](https://github.com/leylabmpi/DeepMAsED)
 - (optionally) polishes long-read assemblies with short reads using [pypolca](https://github.com/gbouras13/pypolca)
 - (optionally) performs ancient DNA assembly validation using [PyDamage](https://github.com/maxibor/pydamage) and contig consensus sequence recalling with [Freebayes](https://github.com/freebayes/freebayes) and [BCFtools](http://samtools.github.io/bcftools/bcftools.html)
 - predicts protein-coding genes for the assemblies using [Prodigal](https://github.com/hyattpd/Prodigal), and bins with [Prokka](https://github.com/tseemann/prokka) and optionally [MetaEuk](https://www.google.com/search?channel=fs&client=ubuntu-sn&q=MetaEuk)
