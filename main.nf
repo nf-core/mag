@@ -9,8 +9,6 @@
 ----------------------------------------------------------------------------------------
 */
 
-nextflow.enable.dsl = 2
-
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     IMPORT FUNCTIONS / MODULES / SUBWORKFLOWS / WORKFLOWS
@@ -20,7 +18,6 @@ nextflow.enable.dsl = 2
 include { MAG  } from './workflows/mag'
 include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_mag_pipeline'
 include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_mag_pipeline'
-
 include { getGenomeAttribute      } from './subworkflows/local/utils_nfcore_mag_pipeline'
 
 /*
@@ -54,12 +51,14 @@ workflow NFCORE_MAG {
     // WORKFLOW: Run pipeline
     //
     MAG (
-        samplesheet
+        samplesheet,
+        params.multiqc_config,
+        params.multiqc_logo,
+        params.multiqc_methods_description,
+        params.outdir,
     )
-
     emit:
     multiqc_report = MAG.out.multiqc_report // channel: /path/to/multiqc_report.html
-
 }
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -70,18 +69,19 @@ workflow NFCORE_MAG {
 workflow {
 
     main:
-
     //
     // SUBWORKFLOW: Run initialisation tasks
     //
     PIPELINE_INITIALISATION (
         params.version,
-        params.help,
         params.validate_params,
         params.monochrome_logs,
         args,
         params.outdir,
-        params.input
+        params.input,
+        params.help,
+        params.help_full,
+        params.show_hidden
     )
 
     //
@@ -90,7 +90,6 @@ workflow {
     NFCORE_MAG (
         PIPELINE_INITIALISATION.out.samplesheet
     )
-
     //
     // SUBWORKFLOW: Run completion tasks
     //
@@ -100,7 +99,6 @@ workflow {
         params.plaintext_email,
         params.outdir,
         params.monochrome_logs,
-        params.hook_url,
         NFCORE_MAG.out.multiqc_report
     )
 }
