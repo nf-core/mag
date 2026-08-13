@@ -40,12 +40,12 @@ The nf-core stance on the use of AI and LLMs is that humans are still ultimately
 
 If you’re using AI tools, try to stick by these guidelines:
 
-- Keep PRs as small and focussed as possible
+- Keep PRs as small and focused as possible
 - Avoid any unnecessary changes, such as moving or refactoring code (unless that is the explicit intention of the PR)
 - Review all generated code yourself before opening a PR, and ensure that you understand it
 - Engage with the community review process and expect to make revisions
 
-For more detail, see the the [blog post](https://nf-co.re/blog/2026/statement-on-ai) for a statement from the nf-core/core team.
+For more detail, see the [blog post](https://nf-co.re/blog/2026/statement-on-ai) for a statement from the nf-core/core team.
 
 ### Getting help
 
@@ -128,7 +128,7 @@ Please also refer to the [pipeline-specific contribution guidelines](#pipeline-s
 - [ ] Perform local tests to validate that the new code works as expected.
   - [ ] If applicable, add a new test in the `tests` directory.
 - [ ] Update `usage.md`, `output.md`, and `citation.md` as appropriate.
-- [ ] [Lint](lint) the code with nf-core/tools.
+- [ ] [Lint](#lint-tests) the code with nf-core/tools.
 - [ ] Update any diagrams or pipeline images as necessary.
 - [ ] Update MultiQC config `assets/multiqc_config.yml` so relevant suffixes, file name cleanup, and module plots are in the appropriate order.
 - [ ] If applicable, create a [MultiQC](https://seqera.io/multiqc/) module.
@@ -166,7 +166,7 @@ Specify these with generic `withLabel:` selectors, so they can be shared across 
 nf-core provides a set of standard labels that you should follow where possible, as seen in the [nf-core pipeline template](https://github.com/nf-core/tools/blob/main/nf_core/pipeline-template/conf/base.config).
 These labels define resource defaults for single-core processes, modules that require a GPU, and different levels of multi-core configurations with increasing memory requirements.
 
-Values assigned within these labels can be dynamically passed to a tool using the the `${task.cpus}` and `${task.memory}` Nextflow variables in the `script:` block of a module (see an example in the [modules repository](https://github.com/nf-core/modules/blob/bd1b6a40f55933d94b8c9ca94ec8c1ea0eaf4b82/modules/nf-core/samtools/bam2fq/main.nf#L30)).
+Values assigned within these labels can be dynamically passed to a tool using the `${task.cpus}` and `${task.memory}` Nextflow variables in the `script:` block of a module (see an example in the [modules repository](https://github.com/nf-core/modules/blob/bd1b6a40f55933d94b8c9ca94ec8c1ea0eaf4b82/modules/nf-core/samtools/bam2fq/main.nf#L30)).
 
 #### Nextflow version bumping
 
@@ -182,19 +182,4 @@ If you update images or graphics, follow the nf-core [style guidelines](https://
 
 ## Pipeline specific contribution guidelines
 
-### Gate tools by read type
-
-nf-core/mag processes short-read, long-read, and hybrid data, and not every tool is valid for every read type.
-When you add or modify a step, decide which read types it applies to and gate it accordingly (for example, ALE is not run on long reads, Porechop adapter trimming is skipped for PacBio reads, and short- vs long-read alignment uses Bowtie2 vs minimap2).
-
-### Keep the default resources table up to date
-
-[`docs/usage/resource_guidance.md`](usage/resource_guidance.md) documents the CPU, memory and time that Nextflow requests for every module on its first execution attempt.
-This table is written by hand and is easy to forget, so update it whenever you:
-
-- add a new module, or remove an existing one;
-- change a `withName` resource customisation in [`conf/base.config`](../conf/base.config) or [`conf/modules.config`](../conf/modules.config);
-- change a process label, or bump a module whose upstream labels changed.
-
-Keep the existing ordering (by 'Source' specificity, then memory, then module name alphabetically), and mention any conditional behaviour in the bullet list above the table rather than in the table itself (as is done for `ALE` with `--coassemble_group`, for example).
-If a module's requests grow on retry, note that too, since the table only shows the first attempt.
+<!-- TODO nf-core: Add any pipeline specific contribution guidelines here, such as coding styles, procedures, checklists etc. -->
