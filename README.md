@@ -129,7 +129,7 @@ For further information or help, don't hesitate to get in touch on the [Slack `#
 
 ## Citations
 
-If you use nf-core/mag for your analysis, please cite the preprint as follows:
+If you use nf-core/mag for your analysis, please cite the paper as follows:
 
 > **nf-core/mag: a best-practice pipeline for metagenome hybrid assembly and binning**
 >
@@ -137,7 +137,15 @@ If you use nf-core/mag for your analysis, please cite the preprint as follows:
 >
 > NAR Genom Bioinform. 2022 Feb 2;4(1):lqac007. doi: [10.1093/nargab/lqac007](https://doi.org/10.1093/nargab/lqac007).
 
-Additionally you can cite the pipeline directly with the following doi: [10.5281/zenodo.3589527](https://doi.org/10.5281/zenodo.3589527)
+If you use the nf-core/mag `--ancient_dna` mode, please cite the paper as follows:
+
+> **De novo assembly and authentication of ancient DNA metagenomes with nf-core/mag.**
+>
+> Fellows Yates, J. A., Hübner, A., Borry, M., nf-core community, & Warinner, C. 
+>
+> PLoS Computational Biology. 2026 22(8):e1014591 doi: [https://doi.org/10.1371/journal.pcbi.1014591](e1014591. https://doi.org/10.1371/journal.pcbi.1014591)
+
+Additionally you can cite the specific version of the pipeline directly with the following doi: [10.5281/zenodo.3589527](https://doi.org/10.5281/zenodo.3589527)
 
 An extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.
 

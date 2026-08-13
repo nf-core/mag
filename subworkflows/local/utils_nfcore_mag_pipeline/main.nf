@@ -468,6 +468,13 @@ def genomeExistsError() {
 // Generate methods description for MultiQC
 //
 def toolCitationText() {
+
+    def specific_options = [
+        params.ancient_dna ? "with `--ancient_dna` mode (Fellows Yates et al. 2026)" : ""
+    ]
+    def paper_citation = "Data was assembled with nf-core/mag (Krakau et al. 2022) ${specific_options.join(' ')}."
+
+
     def text_seq_qc = "Sequencing quality control was performed with FastQC (Andrews 2010)."
 
     def shortread_qc_tools = [
@@ -548,6 +555,7 @@ def toolCitationText() {
     ]
 
     def citation_text = [
+        paper_citation,
         "Tools used in the workflow included:",
         text_seq_qc,
         (!params.skip_shortread_qc && !params.skip_clipping) ? text_shortread_qc : "",
@@ -573,9 +581,14 @@ def toolCitationText() {
 
 def toolBibliographyText() {
     def references = [
+        "<li>Krakau, S., Straub, D., Gourlé, H., Gabernet, G., & Nahnsen, S. (2022). nf-core/mag: a best-practice pipeline for metagenome hybrid assembly and binning. NAR Genomics and Bioinformatics, 4(1). https://doi.org/10.1093/nargab/lqac007</li>",
         "<li>Andrews, S. (2010). FastQC: A Quality Control Tool for High Throughput Sequence Data [Online]. URL: https://www.bioinformatics.babraham.ac.uk/projects/fastqc/</li>",
         "<li>Ewels, P., Magnusson, M., Lundin, S., & Käller, M. (2016). MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics, 32(19), 3047-3048. doi: 10.1093/bioinformatics/btw354</li>",
     ]
+    
+    if (params.ancient_dna) {
+        references << "<li>Fellows Yates, J. A., Hübner, A., Borry, M., nf-core community, & Warinner, C. (2026). De novo assembly and authentication of ancient DNA metagenomes with nf-core/mag. PLoS Computational Biology, 22(8), e1014591. https://doi.org/10.1371/journal.pcbi.1014591</li>"
+    }
 
     if (!params.skip_shortread_qc && !params.skip_clipping) {
         if (params.clip_tool == 'fastp') {
