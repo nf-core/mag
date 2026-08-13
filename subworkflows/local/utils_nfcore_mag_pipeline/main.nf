@@ -585,7 +585,7 @@ def toolBibliographyText() {
         "<li>Andrews, S. (2010). FastQC: A Quality Control Tool for High Throughput Sequence Data [Online]. URL: https://www.bioinformatics.babraham.ac.uk/projects/fastqc/</li>",
         "<li>Ewels, P., Magnusson, M., Lundin, S., & Käller, M. (2016). MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics, 32(19), 3047-3048. doi: 10.1093/bioinformatics/btw354</li>",
     ]
-    
+
     if (params.ancient_dna) {
         references << "<li>Fellows Yates, J. A., Hübner, A., Borry, M., nf-core community, & Warinner, C. (2026). De novo assembly and authentication of ancient DNA metagenomes with nf-core/mag. PLoS Computational Biology, 22(8), e1014591. https://doi.org/10.1371/journal.pcbi.1014591</li>"
     }

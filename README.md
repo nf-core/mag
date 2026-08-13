@@ -141,7 +141,7 @@ If you use the nf-core/mag `--ancient_dna` mode, please cite the paper as follow
 
 > **De novo assembly and authentication of ancient DNA metagenomes with nf-core/mag.**
 >
-> Fellows Yates, J. A., Hübner, A., Borry, M., nf-core community, & Warinner, C. 
+> Fellows Yates, J. A., Hübner, A., Borry, M., nf-core community, & Warinner, C.
 >
 > PLoS Computational Biology. 2026 22(8):e1014591 doi: [https://doi.org/10.1371/journal.pcbi.1014591](e1014591. https://doi.org/10.1371/journal.pcbi.1014591)
 
