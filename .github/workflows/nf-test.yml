@@ -9,7 +9,7 @@ on:
       - "**/*.svg"
   release:
     types: [published]
-  workflow_dispatch: null
+  workflow_dispatch:
 
 # Cancel if a newer run is started
 concurrency:
@@ -40,7 +40,7 @@ jobs:
           rm -rf ./* || true
           rm -rf ./.??* || true
           ls -la ./
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
 
@@ -79,14 +79,14 @@ jobs:
           - isMain: false
             profile: "singularity"
         NXF_VER:
-          - 26.04.0
-          - latest-everything
+          - "26.04.0"
+          - "latest-everything"
     env:
       NXF_ANSI_LOG: false
       TOTAL_SHARDS: ${{ needs.nf-test-changes.outputs.total_shards }}
 
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
 
