@@ -11,15 +11,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
+- [#1104](https://github.com/nf-core/mag/pull/1104) - Updated to nf-core 4.1.0 template (by @dialvarezs)
+
 ### `Fixed`
 
 - [#1098](https://github.com/nf-core/mag/issues/1098) - Fix invalid `--gunc_database_type` options to match the values accepted by `gunc download_db` (reported by @cdiener, fix by @dialvarezs)
+- [#1105](https://github.com/nf-core/mag/pull/1105) - Fix corrupted bin paths when a process emits a single file: `java.nio.file.Path` is `Iterable` over its path segments, so list operations on an unwrapped output silently iterated the path components (by @dialvarezs)
 
 ### `Dependencies`
 
-| Tool | Previous version | New version |
-| ---- | ---------------- | ----------- |
-|      |                  |             |
+| Tool    | Previous version | New version |
+| ------- | ---------------- | ----------- |
+| nf-core | 4.0.3            | 4.1.0       |
 
 ### `Deprecated`
 
