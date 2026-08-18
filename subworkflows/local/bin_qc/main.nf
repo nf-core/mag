@@ -128,7 +128,7 @@ workflow BIN_QC {
                 meta.domain != "eukarya"
             }
             .map { meta, bins ->
-                [meta, bins.toSorted { a, b -> a.getBaseName() <=> b.getBaseName() }]
+                [meta, [bins].flatten().toSorted { a, b -> a.getBaseName() <=> b.getBaseName() }]
             }
             .multiMap { meta, fa ->
                 reads: [meta, fa]

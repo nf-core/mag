@@ -224,10 +224,10 @@ workflow MAG {
                     ]
 
                     if (assemble_as_single) {
-                        [meta, reads.toSorted { files -> files[0].getName() }.flatten()]
+                        [meta, reads.toSorted { files -> [files].flatten()[0].getName() }.flatten()]
                     }
                     else {
-                        [meta, reads.toSorted { files -> files[0].getName() }.transpose().flatten()]
+                        [meta, reads.toSorted { files -> [files].flatten()[0].getName() }.transpose().flatten()]
                     }
                 }
         }

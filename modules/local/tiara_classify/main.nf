@@ -11,14 +11,14 @@ process TIARA_CLASSIFY {
     tuple val(meta), path(classification), path(contig2bin), path(bins)
 
     output:
-    tuple val(meta), path("eukarya/*.fa.gz"),         emit: eukarya_bins, optional: true
-    tuple val(meta), path("prokarya/*.fa.gz"),        emit: prokarya_bins, optional: true
-    tuple val(meta), path("bacteria/*.fa.gz"),        emit: bacteria_bins, optional: true
-    tuple val(meta), path("archaea/*.fa.gz"),         emit: archaea_bins, optional: true
-    tuple val(meta), path("organelle/*.fa.gz"),       emit: organelle_bins, optional: true
-    tuple val(meta), path("unknown/*.fa.gz"),         emit: unknown_bins, optional: true
-    tuple val(meta), path("*.binclassification.tsv"), emit: bin_classifications
-    path 'versions.yml',                              emit: versions
+    tuple val(meta), path("eukarya/*.fa.gz", arity: '0..*'),   emit: eukarya_bins, optional: true
+    tuple val(meta), path("prokarya/*.fa.gz", arity: '0..*'),  emit: prokarya_bins, optional: true
+    tuple val(meta), path("bacteria/*.fa.gz", arity: '0..*'),  emit: bacteria_bins, optional: true
+    tuple val(meta), path("archaea/*.fa.gz", arity: '0..*'),   emit: archaea_bins, optional: true
+    tuple val(meta), path("organelle/*.fa.gz", arity: '0..*'), emit: organelle_bins, optional: true
+    tuple val(meta), path("unknown/*.fa.gz", arity: '0..*'),   emit: unknown_bins, optional: true
+    tuple val(meta), path("*.binclassification.tsv"),          emit: bin_classifications
+    path 'versions.yml',                                       emit: versions
 
     script:
     def args = task.ext.args ?: ""
