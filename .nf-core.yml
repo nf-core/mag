@@ -6,10 +6,71 @@ lint:
     - .github/PULL_REQUEST_TEMPLATE.md
     - .github/workflows/branch.yml
     - .github/workflows/linting.yml
+  # Parameter defaults live in the typed `params` block in main.nf, which
+  # `nextflow config` does not expose, so nf-core tools cannot see them yet.
+  # Tracked in https://github.com/nf-core/tools/issues/3777.
+  schema_params: false
   nextflow_config:
     - config_defaults:
         - params.phix_reference
         - params.lambda_reference
+        - params.max_multiqc_email_size
+        - params.validate_params
+        - params.spades_fix_cpus
+        - params.spadeshybrid_fix_cpus
+        - params.metabat_rng_seed
+        - params.clip_tool
+        - params.reads_minlength
+        - params.fastp_qualified_quality
+        - params.fastp_cut_mean_quality
+        - params.adapterremoval_minquality
+        - params.adapterremoval_adapter1
+        - params.adapterremoval_adapter2
+        - params.bbnorm_target
+        - params.bbnorm_min
+        - params.longreads_min_length
+        - params.longreads_keep_percent
+        - params.longreads_length_weight
+        - params.longread_adaptertrimming_tool
+        - params.longread_filtering_tool
+        - params.gtdb_db
+        - params.gtdbtk_min_completeness
+        - params.gtdbtk_max_contamination
+        - params.gtdbtk_min_perc_aa
+        - params.gtdbtk_min_af
+        - params.gtdbtk_pplacer_cpus
+        - params.spades_downstreaminput
+        - params.skip_deepmased
+        - params.deepmased_features_gzip
+        - params.deepmased_predict_seed
+        - params.genomad_min_score
+        - params.genomad_splits
+        - params.binning_map_mode
+        - params.bin_metabinner_scale
+        - params.semibin_rng_seed
+        - params.semibin_environment
+        - params.min_contig_size
+        - params.min_length_unbinned_contigs
+        - params.max_unbinned_contigs
+        - params.bin_min_size
+        - params.bin_concoct_chunksize
+        - params.bin_concoct_overlap
+        - params.bin_domain_classification_tool
+        - params.tiara_min_length
+        - params.run_busco
+        - params.busco_db_lineage
+        - params.checkm_download_url
+        - params.checkm2_db_version
+        - params.refine_bins_dastool_threshold
+        - params.postbinning_input
+        - params.gunc_database_type
+        - params.pydamage_accuracy
+        - params.freebayes_ploidy
+        - params.freebayes_min_basequality
+        - params.freebayes_minallelefreq
+        - params.bcftools_view_high_variant_quality
+        - params.bcftools_view_medium_variant_quality
+        - params.bcftools_view_minimal_allelesupport
 nf_core_version: 4.1.0
 repository_type: pipeline
 template:

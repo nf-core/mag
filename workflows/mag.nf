@@ -76,10 +76,10 @@ workflow MAG {
         ch_host_bowtie2index = channel.fromPath("${host_bowtie2index}", checkIfExists: true).first()
     }
     else if (params.host_fasta) {
-        ch_host_fasta = channel.fromPath("${params.host_fasta}", checkIfExists: true).first() ?: false
+        ch_host_fasta = channel.fromPath(params.host_fasta, checkIfExists: true).first() ?: false
 
         if (params.host_fasta_bowtie2index) {
-            ch_host_bowtie2index = channel.fromPath("${params.host_fasta_bowtie2index}", checkIfExists: true).first()
+            ch_host_bowtie2index = channel.fromPath(params.host_fasta_bowtie2index, checkIfExists: true).first()
         }
         else {
             ch_host_bowtie2index = channel.empty()
@@ -92,7 +92,7 @@ workflow MAG {
 
     if (!params.keep_phix) {
         ch_phix_db_file = params.phix_reference
-            ? channel.value(file("${params.phix_reference}", checkIfExists: true))
+            ? channel.value(file(params.phix_reference, checkIfExists: true))
             : channel.value(file("${projectDir}/assets/data/GCA_002596845.1_ASM259684v1_genomic.fna.gz", checkIfExists: true))
     }
     else {
@@ -101,7 +101,7 @@ workflow MAG {
 
     if (!params.keep_lambda) {
         ch_lambda_db = params.lambda_reference
-            ? channel.value(file("${params.lambda_reference}", checkIfExists: true))
+            ? channel.value(file(params.lambda_reference, checkIfExists: true))
             : channel.value(file("${projectDir}/assets/data/GCA_000840245.1_ViralProj14204_genomic.fna.gz", checkIfExists: true))
     }
     else {
@@ -125,7 +125,7 @@ workflow MAG {
     }
 
     if (params.metaeuk_db) {
-        ch_metaeuk_db = channel.value(file("${params.metaeuk_db}", checkIfExists: true))
+        ch_metaeuk_db = channel.value(file(params.metaeuk_db, checkIfExists: true))
     }
     else {
         ch_metaeuk_db = channel.empty()
