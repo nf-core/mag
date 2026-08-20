@@ -6,9 +6,6 @@ lint:
     - .github/PULL_REQUEST_TEMPLATE.md
     - .github/workflows/branch.yml
     - .github/workflows/linting.yml
-  # Parameter defaults live in the typed `params` block in main.nf, which
-  # `nextflow config` does not expose, so nf-core tools cannot see them yet.
-  # Tracked in https://github.com/nf-core/tools/issues/3777.
   nextflow_config: false # TODO: Remove when tools supports parameter types
   schema_params: false # TODO: Remove when tools supports parameter types
 nf_core_version: 4.1.0
