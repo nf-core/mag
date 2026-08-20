@@ -52,7 +52,8 @@ params {
     skip_fastqc: Boolean
 
     // Long read preprocessing options
-    skip_adapter_trimming: Boolean  // TODO: add longred to desambiguate
+    // TODO: add longread to desambiguate
+    skip_adapter_trimming: Boolean
     skip_longread_filtering: Boolean
     skip_longread_qc: Boolean
     longreads_min_length: Integer = 1000
@@ -98,7 +99,8 @@ params {
 
     // Assembly QC and polishing options
     skip_ale: Boolean
-    skip_deepmased: Boolean = true  // TODO: flip this
+    // TODO: flip this
+    skip_deepmased: Boolean = true
     skip_quast: Boolean
     ale_per_base_output: Boolean
     deepmased_features_gzip: Boolean
