@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Changed`
 
 - [#1104](https://github.com/nf-core/mag/pull/1104) - Updated to nf-core 4.1.0 template (by @dialvarezs)
+- [#1103](https://github.com/nf-core/mag/pull/1103) - Support parameter types (by @dialvarezs)
 
 ### `Fixed`
 
