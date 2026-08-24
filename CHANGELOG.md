@@ -28,6 +28,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Deprecated`
 
+- [#1106](https://github.com/nf-core/mag/pull/1106) - Deprecate `--skip_adapter_trimming` in favor of `--skip_longread_adapter_trimming` (by @dialvarezs)
+
 ## v5.5.0 - Purple Penguin [2026-08-01]
 
 ### `Added`
