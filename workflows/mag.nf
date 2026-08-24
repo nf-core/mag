@@ -108,8 +108,6 @@ workflow MAG {
         ch_lambda_db = channel.value([])
     }
 
-    genomad_db = params.genomad_db
-
     gtdb = params.skip_binqc || params.skip_gtdbtk ? false : params.gtdb_db
 
     if (gtdb) {
@@ -286,7 +284,7 @@ workflow MAG {
     */
 
     if (params.run_virus_identification) {
-        VIRUS_IDENTIFICATION(ch_assemblies, genomad_db)
+        VIRUS_IDENTIFICATION(ch_assemblies, params.genomad_db)
         ch_versions = ch_versions.mix(VIRUS_IDENTIFICATION.out.versions)
     }
 
