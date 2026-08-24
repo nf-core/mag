@@ -380,6 +380,10 @@ def validateInputParameters(hybrid) {
         log.warn("[nf-core/mag]: The parameter '--gtdbtk_skip_aniscreen' is deprecated and will be removed in a future release. Please use '--gtdbtk_place_species' instead.")
     }
 
+    if (params.skip_adapter_trimming) {
+        log.warn("[nf-core/mag]: The parameter '--skip_adapter_trimming' is deprecated and will be removed in a future release. Please use '--skip_longread_adapter_trimming' instead.")
+    }
+
     if (params.skip_metaeuk) {
         log.warn("[nf-core/mag]: The parameter '--skip_metaeuk' is deprecated and will be removed in a future release. It no longer has any effect: MetaEuk only runs when '--metaeuk_db' or '--metaeuk_mmseqs_db' is supplied.")
     }
@@ -480,9 +484,10 @@ def toolCitationText() {
     // Note: we don't have a simple way to determine if short or long reads are present, so we add a cite for both Bowtie2 and Minimap2 with a notice to suggest deletion when appropiate.
     def text_mapping = "Read alignment against assemblies was performed with Bowtie2 (Langmead and Salzberg 2012) for short-reads and minimap2 for long-reads (Li 2018) [DELETE AS APPROPRIATE]."
 
+    def skip_longread_adapter_trimming = params.skip_longread_adapter_trimming || params.skip_adapter_trimming
     def longread_qc_tools = [
-        !params.skip_adapter_trimming && params.longread_adaptertrimming_tool == 'porechop' ? "Porechop (Wick et al. 2017)" : "",
-        !params.skip_adapter_trimming && params.longread_adaptertrimming_tool == 'porechop_abi' ? "Porechop ABI (Bonenfant et al. 2022)" : "",
+        !skip_longread_adapter_trimming && params.longread_adaptertrimming_tool == 'porechop' ? "Porechop (Wick et al. 2017)" : "",
+        !skip_longread_adapter_trimming && params.longread_adaptertrimming_tool == 'porechop_abi' ? "Porechop ABI (Bonenfant et al. 2022)" : "",
         !params.skip_longread_filtering && params.longread_filtering_tool == 'filtlong' ? "Filtlong (Wick 2019)" : "",
         !params.skip_longread_filtering && params.longread_filtering_tool == 'nanoq' ? "Nanoq (Steinig et al. 2022)" : "",
         !params.skip_longread_filtering && params.longread_filtering_tool == 'chopper' ? "Chopper (De Coster et al. 2018)" : "",
@@ -503,7 +508,7 @@ def toolCitationText() {
     def assembly_qc_tools = [
         !params.skip_quast ? "metaQUAST (Mikheenko et al. 2016)" : "",
         !params.skip_ale ? "ALE (Clark et al. 2013)" : "",
-        !params.skip_deepmased ? "DeepMAsED (Mineeva et al. 2020)" : "",
+        params.run_deepmased ? "DeepMAsED (Mineeva et al. 2020)" : "",
     ].findAll { tool -> tool != '' }
     def text_assembly_qc = "Assembly quality was assessed with ${assembly_qc_tools.join(', ')}."
 
@@ -593,7 +598,7 @@ def toolBibliographyText() {
         // Note: we don't have a simple way to determine if long reads are present, so we add minimap2 at the same time as Bowtie2
         references << "<li>Li, H. (2018). Minimap2: pairwise alignment for nucleotide sequences. Bioinformatics , 34(18), 3094–3100. doi: 10.1093/bioinformatics/bty191</li>"
     }
-    if (!params.skip_longread_qc && !params.skip_adapter_trimming) {
+    if (!params.skip_longread_qc && !(params.skip_longread_adapter_trimming || params.skip_adapter_trimming)) {
         if (params.longread_adaptertrimming_tool == 'porechop') {
             references << "<li>Wick RR. (2017). Porechop. URL: https://github.com/rrwick/Porechop</li>"
         }
@@ -637,7 +642,7 @@ def toolBibliographyText() {
     if (!params.skip_ale) {
         references << "<li>Clark, S. C., Egan, R., Frazier, P. I., & Wang, Z. (2013). ALE: a generic assembly likelihood evaluation framework for assessing the accuracy of genome and metagenome assemblies. Bioinformatics, 29(4), 435-443. doi: 10.1093/bioinformatics/bts723</li>"
     }
-    if (!params.skip_deepmased) {
+    if (params.run_deepmased) {
         references << "<li>Mineeva, O., Rojas-Carulla, M., Ley, R. E., Schölkopf, B., & Youngblut, N. D. (2020). DeepMAsED: evaluating the quality of metagenomic assemblies. Bioinformatics, 36(10), 3011-3017. doi: 10.1093/bioinformatics/btaa124</li>"
     }
     if (params.run_pypolca) {

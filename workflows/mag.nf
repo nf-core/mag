@@ -294,7 +294,7 @@ workflow MAG {
     ================================================================================
     */
 
-    if (!params.skip_binning || params.ancient_dna || !params.skip_ale || !params.skip_deepmased) {
+    if (!params.skip_binning || params.ancient_dna || !params.skip_ale || params.run_deepmased) {
         BINNING_PREPARATION(
             ch_shortread_assemblies,
             ch_short_reads,
@@ -343,7 +343,7 @@ workflow MAG {
     ================================================================================
     */
 
-    if (!params.skip_deepmased) {
+    if (params.run_deepmased) {
         // DeepMAsED's pre-trained model was only validated on short-read (MEGAHIT/SPAdes) assemblies;
         // long-read (Flye/metaMDBG) and hybrid (SPAdesHybrid) assemblies are excluded, unlike ALE.
         ch_shortread_assemblies_for_deepmased = ch_assemblies.filter { meta, _assembly ->

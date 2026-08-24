@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#1104](https://github.com/nf-core/mag/pull/1104) - Updated to nf-core 4.1.0 template (by @dialvarezs)
 - [#1103](https://github.com/nf-core/mag/pull/1103) - Support parameter types (by @dialvarezs)
+- [#1106](https://github.com/nf-core/mag/pull/1106) - Renamed `--skip_adapter_trimming` to `--skip_longread_adapter_trimming` (old name deprecated) and replaced `--skip_deepmased` with `--run_deepmased` (by @dialvarezs)
 
 ### `Fixed`
 
@@ -26,6 +27,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | nf-core | 4.0.3            | 4.1.0       |
 
 ### `Deprecated`
+
+- [#1106](https://github.com/nf-core/mag/pull/1106) - Deprecate `--skip_adapter_trimming` in favor of `--skip_longread_adapter_trimming` (by @dialvarezs)
 
 ## v5.5.0 - Purple Penguin [2026-08-01]
 

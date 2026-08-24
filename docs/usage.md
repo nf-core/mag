@@ -590,7 +590,7 @@ When enabled, DeepMAsED performs per-contig assembly error detection on short-re
 
 Useful parameters:
 
-- `--skip_deepmased false` to enable DeepMAsED (it is skipped by default).
+- `--run_deepmased` to enable DeepMAsED (it is not run by default).
 - DeepMAsED prediction is run in CPU-only mode in this pipeline.
 
 ## BIgMAG compatibility
