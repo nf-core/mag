@@ -53,7 +53,7 @@ params {
 
     // Long read preprocessing options
     skip_longread_adapter_trimming: Boolean
-    // [DEPRECATED] Use `--skip_longread_adapter_trimming` instead. Skip removing adapter sequences from long reads.
+    // [DEPRECATED] Use `--skip_longread_adapter_trimming` instead.
     skip_adapter_trimming: Boolean
     skip_longread_filtering: Boolean
     skip_longread_qc: Boolean
