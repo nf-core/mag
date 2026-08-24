@@ -143,7 +143,7 @@ params {
     refine_bins_dastool_threshold: Float = 0.5
     refine_bins_dastool_savecontig2bin: Boolean
 
-    // Bin QC optins
+    // Bin QC options
     skip_binqc: Boolean
     run_busco: Boolean = true
     busco_db: Path?
