@@ -420,9 +420,14 @@
             "description": "",
             "default": "",
             "properties": {
-                "skip_adapter_trimming": {
+                "skip_longread_adapter_trimming": {
                     "type": "boolean",
                     "description": "Skip removing adapter sequences from long reads."
+                },
+                "skip_adapter_trimming": {
+                    "type": "boolean",
+                    "description": "[DEPRECATED] Use `--skip_longread_adapter_trimming` instead. Skip removing adapter sequences from long reads.",
+                    "hidden": true
                 },
                 "skip_longread_filtering": {
                     "type": "boolean",
@@ -646,10 +651,9 @@
                     "type": "boolean",
                     "description": "Skip ALE"
                 },
-                "skip_deepmased": {
+                "run_deepmased": {
                     "type": "boolean",
-                    "default": true,
-                    "description": "Skip DeepMAsED assembly error detection (skips both features and predict)"
+                    "description": "Run DeepMAsED assembly error detection (runs both features and predict)"
                 },
                 "deepmased_features_gzip": {
                     "type": "boolean",
