@@ -2266,7 +2266,7 @@
                 "multiqc_fastp.yaml:md5,51ec2abfc64be1bc93c4c3f7298da1e1",
                 "multiqc_fastqc.yaml:md5,c856302b60a6c3c3fd5f273ed1a7c967",
                 "multiqc_fastqc_fastqc-1.yaml:md5,b090818c369a65b9218bae720078035c",
-                "multiqc_general_stats.yaml:md5,7379a549353cf9ce120795842e400ae1",
+                "multiqc_general_stats.yaml:md5,39ee488fac0c99a80c17e628d7c8282d",
                 "multiqc_gtdbtk.yaml:md5,19e1814e0e8c7170b2aa6417b0afb32a",
                 "multiqc_prokka.yaml:md5,50a8da124c412389282dbd8f18e1c8f0",
                 "multiqc_quast.yaml:md5,1be7cc2def0a960cbc3c19bdc4504c78",

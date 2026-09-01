@@ -442,7 +442,7 @@
                 "multiqc_fastp.yaml:md5,29b2500f793b0c444ee7c6535d406b09",
                 "multiqc_fastqc.yaml:md5,0d11a6d30d0d1a430e58d44b57ac6e87",
                 "multiqc_fastqc_fastqc-1.yaml:md5,0b8c8b4edb4f3e70409f30bcdda54397",
-                "multiqc_general_stats.yaml:md5,82c9ce517451beb68a4ba348ac4401d7",
+                "multiqc_general_stats.yaml:md5,872d4d7f0b643efee89cf5a7716caa2f",
                 "porechop.yaml:md5,828d96e2822bb4b4108ab706c00c4450"
             ]
         ],

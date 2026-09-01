@@ -882,7 +882,7 @@
                 "multiqc_fastp.yaml:md5,ff4fe8f96e7c304ea399605accc49309",
                 "multiqc_fastqc.yaml:md5,73d757b21a60f2dc068857b6fc6c4ff9",
                 "multiqc_fastqc_fastqc-1.yaml:md5,db2e5e4e0b16c4ef7cd8cbbff06c40eb",
-                "multiqc_general_stats.yaml:md5,97c4c7e3ff68acd23a8efbf76c0dda6a",
+                "multiqc_general_stats.yaml:md5,868f0ce2b7286bb4309d92e4b1f7dc1e",
                 "multiqc_prokka.yaml:md5,42a28b0c79bddc86b17c4c9a63f92bf0",
                 "multiqc_quast.yaml:md5,66d2f53da8458959128af916f7cab015",
                 "multiqc_quast_quast-1.yaml:md5,685fa1aa9a07f62a36cb5e8658533a02",
