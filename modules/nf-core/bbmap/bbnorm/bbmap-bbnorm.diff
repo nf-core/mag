@@ -1,0 +1,20 @@
+Changes in component 'nf-core/bbmap/bbnorm'
+'modules/nf-core/bbmap/bbnorm/meta.yml' is unchanged
+Changes in 'bbmap/bbnorm/main.nf':
+--- modules/nf-core/bbmap/bbnorm/main.nf
++++ modules/nf-core/bbmap/bbnorm/main.nf
+@@ -29,7 +29,7 @@
+     if ( ! task.memory ) {
+         log.info '[BBNorm]: Available memory not known, defaulting to 3 GB. Specify process memory requirements to change this.'
+     } else {
+-        memory = "-Xmx${Math.round(Math.max(1, Math.floor(task.memory.toGiga() * 0.95)))}g"
++        memory = "-Xmx${Math.round(Math.max(1, Math.floor(task.memory.toGiga() * 0.8)))}g"
+     }
+ 
+     """
+
+'modules/nf-core/bbmap/bbnorm/environment.yml' is unchanged
+'modules/nf-core/bbmap/bbnorm/tests/nextflow.config' is unchanged
+'modules/nf-core/bbmap/bbnorm/tests/main.nf.test.snap' is unchanged
+'modules/nf-core/bbmap/bbnorm/tests/main.nf.test' is unchanged
+************************************************************

@@ -1,0 +1,64 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "depths"
+description: Calculate sequencing depth and coverage statistics for assembled contigs
+keywords:
+  - coverage
+  - depth
+  - mapping
+  - metagenomics
+  - contigs
+components:
+  - mag/depths
+  - mag/depths/plot
+  - mag/depths/summary
+input:
+  - ch_bins_unbins:
+      description: Metagenomic bins and unbinned contigs
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - bins:
+            type: file
+            description: Bins in FASTA format
+            pattern: "*.{fasta,fa}"
+  - ch_depths:
+      description: Depth files with bin/contig information
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - depths:
+            type: file
+            description: Depth files
+            pattern: "*.txt"
+  - ch_reads:
+      description: Sequencing reads
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - reads:
+            type: file
+            description: Sequencing reads
+            pattern: "*.{fastq,fq}.gz"
+output:
+  - depths_summary:
+      description: Summary of depth statistics across all samples
+      structure:
+        - summary:
+            type: file
+            description: Depth summary file
+            pattern: "*.txt"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@prototaxites"
+maintainers:
+  - "@jfy133"
+  - "@prototaxites"
+  - "@dialvarezs"
+  - "@d4straub"
+  - "@muabnezor"

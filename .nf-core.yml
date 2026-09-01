@@ -6,13 +6,12 @@ lint:
     - .github/PULL_REQUEST_TEMPLATE.md
     - .github/workflows/branch.yml
     - .github/workflows/linting.yml
-  nextflow_config: false
-  schema_params: false
+  nextflow_config: false # TODO: Remove when tools supports parameter types
+  schema_params: false # TODO: Remove when tools supports parameter types
 nf_core_version: 4.1.0
 repository_type: pipeline
 template:
-  author: "Hadrien Gourl\xE9, Daniel Straub, Sabrina Krakau, James A. Fellows Yates,\
-    \ Maxime Borry"
+  author: "Hadrien Gourlé, Daniel Straub, Sabrina Krakau, James A. Fellows Yates, Maxime Borry"
   description: Assembly, binning and annotation of metagenomes
   force: false
   is_nfcore: true

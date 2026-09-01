@@ -1,0 +1,100 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "shortread_preprocessing"
+description: Quality control and preprocessing of short-read sequencing data
+keywords:
+  - preprocessing
+  - quality control
+  - short reads
+  - trimming
+  - adapter removal
+components:
+  - fastqc
+  - fastp
+  - trimmomatic
+  - adapterremoval
+  - cat/fastq
+  - seqtk/mergepe
+  - bbmap/bbnorm
+  - bowtie2/removal/build
+  - bowtie2/removal/align
+input:
+  - ch_raw_short_reads:
+      description: Raw short-read sequencing data
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - fastq1:
+            type: file
+            description: First pair of raw short-read FASTQ files
+            pattern: "*.{fastq,fq}.gz"
+        - fastq2:
+            type: file
+            description: Second pair of raw short-read FASTQ files
+            pattern: "*.{fastq,fq}.gz"
+  - ch_host_fasta:
+      type: file
+      description: Host genome reference for contamination removal (optional)
+      pattern: "*.{fasta,fa,fna}"
+  - ch_host_genome_index:
+      type: file
+      description: Pre-built host genome index for contamination removal (optional)
+      pattern: "*"
+  - ch_phix_db_file:
+      type: file
+      description: PhiX reference for spike-in removal (optional)
+      pattern: "*.{fasta,fa,fna}"
+  - val_skip_qc:
+      type: val
+      description: Boolean flag to skip quality control steps
+output:
+  - short_reads:
+      description: Quality-controlled and preprocessed short reads
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - fastq1:
+            type: file
+            description: First pair of preprocessed short-read FASTQ files
+            pattern: "*.{fastq,fq}.gz"
+        - fastq2:
+            type: file
+            description: Second pair of preprocessed short-read FASTQ files
+            pattern: "*.{fastq,fq}.gz"
+  - short_reads_assembly:
+      description: Short reads prepared for assembly
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - fastq1:
+            type: file
+            description: First pair of assembly-ready short-read FASTQ files
+            pattern: "*.{fastq,fq}.gz"
+        - fastq2:
+            type: file
+            description: Second pair of assembly-ready short-read FASTQ files
+            pattern: "*.{fastq,fq}.gz"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+  - multiqc_files:
+      description: MultiQC files for preprocessing statistics
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - "*":
+            type: file
+            description: MultiQC report files
+            pattern: "*"
+authors:
+  - "@muabnezor"
+maintainers:
+  - "@jfy133"
+  - "@prototaxites"
+  - "@dialvarezs"
+  - "@d4straub"
+  - "@muabnezor"
