@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Tool    | Previous version | New version |
 | ------- | ---------------- | ----------- |
+| MultiQC | 1.34             | 1.35        |
 | nf-core | 4.0.3            | 4.1.0       |
 
 ### `Deprecated`

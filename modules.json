@@ -264,7 +264,7 @@
                     },
                     "multiqc": {
                         "branch": "master",
-                        "git_sha": "008f9d3e61209bf995edac3ba531f54e269e1215",
+                        "git_sha": "98403d15b0e50edae1f3fec5eae5e24982f1fade",
                         "installed_by": ["modules"]
                     },
                     "nanolyse": {
