@@ -305,6 +305,13 @@ def main(args=None):
             header=None,
             names=["dereplication_representative", "member"],
         )
+        # Galah's cluster definition keeps the full staged filename
+        # (including any .gz compression suffix), but bin depths summary's
+        # "bin" key -- like every other tool's summary here -- does not.
+        derep_results["dereplication_representative"] = derep_results[
+            "dereplication_representative"
+        ].str.removesuffix(".gz")
+        derep_results["member"] = derep_results["member"].str.removesuffix(".gz")
         if len(set(derep_results["member"].to_list()).difference(set(bins))) > 0:
             sys.exit(
                 "Bins in dereplication summary do not match bins in bin depths summary!"
