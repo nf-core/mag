@@ -12,6 +12,7 @@ keywords:
   - bins
   - mags
 components:
+  - gawk
   - galah
 input:
   - ch_bins:

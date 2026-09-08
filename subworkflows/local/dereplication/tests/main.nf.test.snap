@@ -11,7 +11,7 @@
                             "domain": "prokarya",
                             "refinement": "unrefined"
                         },
-                        "/nf-core/test-datasets/raw/refs/heads/magmap/testdata/GCA_002688505.1_ASM268850v1_genomic.fna.gz"
+                        "SPAdes-MetaBAT2-sample1.fa.gz:md5,fe93f30498a00395d0aa61ff51346df0"
                     ],
                     [
                         {
@@ -21,7 +21,7 @@
                             "domain": "prokarya",
                             "refinement": "unrefined"
                         },
-                        "/nf-core/test-datasets/raw/refs/heads/magmap/testdata/GCF_004296495.1_ASM429649v1_genomic.fna.gz"
+                        "SPAdes-MetaBAT2-sample2.fa.gz:md5,d2b13175217b96d0ed2881ccdb510357"
                     ]
                 ],
                 "1": [
@@ -29,7 +29,7 @@
                         {
                             "id": "study"
                         },
-                        "dereplicated_bins.tsv:md5,d2f8a621bfa5794467f4fdd759e2bce7"
+                        "dereplicated_bins.tsv:md5,e4eee6bbc3e7186884ebf829f468b4c0"
                     ]
                 ],
                 "cluster_tsv": [
@@ -37,7 +37,7 @@
                         {
                             "id": "study"
                         },
-                        "dereplicated_bins.tsv:md5,d2f8a621bfa5794467f4fdd759e2bce7"
+                        "dereplicated_bins.tsv:md5,e4eee6bbc3e7186884ebf829f468b4c0"
                     ]
                 ],
                 "dereplicated_bins": [
@@ -49,7 +49,7 @@
                             "domain": "prokarya",
                             "refinement": "unrefined"
                         },
-                        "/nf-core/test-datasets/raw/refs/heads/magmap/testdata/GCA_002688505.1_ASM268850v1_genomic.fna.gz"
+                        "SPAdes-MetaBAT2-sample1.fa.gz:md5,fe93f30498a00395d0aa61ff51346df0"
                     ],
                     [
                         {
@@ -59,12 +59,12 @@
                             "domain": "prokarya",
                             "refinement": "unrefined"
                         },
-                        "/nf-core/test-datasets/raw/refs/heads/magmap/testdata/GCF_004296495.1_ASM429649v1_genomic.fna.gz"
+                        "SPAdes-MetaBAT2-sample2.fa.gz:md5,d2b13175217b96d0ed2881ccdb510357"
                     ]
                 ]
             }
         ],
-        "timestamp": "2026-09-08T17:25:23.080063206",
+        "timestamp": "2026-09-08T21:17:02.174860204",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"

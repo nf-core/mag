@@ -9,6 +9,7 @@
 // collapses everything into a single, unkeyed collection.
 //
 
+include { GAWK  } from '../../../modules/nf-core/gawk/main'
 include { GALAH } from '../../../modules/nf-core/galah/main'
 
 workflow DEREPLICATION {
@@ -28,8 +29,20 @@ workflow DEREPLICATION {
             .collect()
             .map { bins -> [[id: 'study'], bins] }
 
+        // CheckM2's real Name column is the bare bin stem with no extension
+        // at all, but Galah looks entries up by the bin's original extension
+        // (with any .gz compression suffix stripped) -- the same mismatch
+        // nf-core/modules' own galah module test works around with a GAWK
+        // rewrite step, and for the same reason.
+        GAWK(
+            ch_checkm2_summary.map { tsv -> [[id: 'checkm2'], tsv] },
+            [],
+            false,
+        )
+        ch_checkm2_for_galah = GAWK.out.output.map { _meta, tsv -> tsv }
+
         ch_galah_input = ch_bins_for_galah
-            .combine(ch_checkm2_summary)
+            .combine(ch_checkm2_for_galah)
             .map { meta, bins, qc -> [meta, bins, qc, 'checkm2'] }
 
         GALAH(ch_galah_input)

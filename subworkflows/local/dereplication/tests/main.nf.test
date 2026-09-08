@@ -8,47 +8,64 @@ nextflow_workflow {
     tag "subworkflows_"
     tag "subworkflows/dereplication"
     tag "galah"
+    tag "gawk"
 
     // The two real genomes below are the same pair used by the upstream
     // nf-core/modules galah test; at Galah's default 95% ANI they do NOT
     // cluster together, so this test does not exercise an actual multi-member
     // cluster collapse. What it does verify: each representative genome is
     // correctly rejoined to its own original per-sample metadata (not, say,
-    // the other sample's), and that eukaryotic bins never reach Galah at all.
+    // the other sample's), that eukaryotic bins never reach Galah at all,
+    // and that the real CheckM2 report format (bare bin stem, no extension,
+    // as CheckM2 actually emits it -- confirmed the hard way against a real
+    // pipeline run, not just assumed) is correctly matched up by GAWK before
+    // reaching Galah, which looks entries up by the bin's original extension
+    // (with any .gz compression suffix stripped).
     test("two prokaryotic bins, one eukaryotic bin filtered out") {
 
         when {
             workflow {
                 """
+                // Bin files are named like the real pipeline's binner output
+                // (<assembler>-<binner>-<sample>.fa.gz), not just reused as
+                // downloaded, since GAWK's .fa suffix (conf/modules.config)
+                // is hardcoded to match that real naming convention.
+                def stagingDir = File.createTempDir()
+
+                def binSample1 = new File(stagingDir, 'SPAdes-MetaBAT2-sample1.fa.gz')
+                file('https://github.com/nf-core/test-datasets/raw/refs/heads/magmap/testdata/GCA_002688505.1_ASM268850v1_genomic.fna.gz', checkIfExists: true).copyTo(binSample1.toPath())
+
+                def binSample2 = new File(stagingDir, 'SPAdes-MetaBAT2-sample2.fa.gz')
+                file('https://github.com/nf-core/test-datasets/raw/refs/heads/magmap/testdata/GCF_004296495.1_ASM429649v1_genomic.fna.gz', checkIfExists: true).copyTo(binSample2.toPath())
+
+                def binSample3 = new File(stagingDir, 'SPAdes-MetaBAT2-sample3.fa.gz')
+                file('https://github.com/nf-core/test-datasets/raw/refs/heads/magmap/testdata/GCA_002688505.1_ASM268850v1_genomic.fna.gz', checkIfExists: true).copyTo(binSample3.toPath())
+
                 input[0] = Channel.of(
                     [
                         [id: 'sample1', assembler: 'SPAdes', binner: 'MetaBAT2', domain: 'prokarya', refinement: 'unrefined'],
-                        [file('https://github.com/nf-core/test-datasets/raw/refs/heads/magmap/testdata/GCA_002688505.1_ASM268850v1_genomic.fna.gz', checkIfExists: true)],
+                        [file(binSample1)],
                     ],
                     [
                         [id: 'sample2', assembler: 'SPAdes', binner: 'MetaBAT2', domain: 'prokarya', refinement: 'unrefined'],
-                        [file('https://github.com/nf-core/test-datasets/raw/refs/heads/magmap/testdata/GCF_004296495.1_ASM429649v1_genomic.fna.gz', checkIfExists: true)],
+                        [file(binSample2)],
                     ],
                     [
                         // never reaches Galah: filtered out by domain before collection
                         [id: 'sample3', assembler: 'SPAdes', binner: 'MetaBAT2', domain: 'eukarya', refinement: 'unrefined'],
-                        [file('https://github.com/nf-core/test-datasets/raw/refs/heads/magmap/testdata/GCA_002688505.1_ASM268850v1_genomic.fna.gz', checkIfExists: true)],
+                        [file(binSample3)],
                     ],
                 )
-                // Galah's Rust CheckM2-report parser expects the exact real CheckM2
-                // column set (not just Name/Completeness/Contamination), and looks
-                // rows up by genome name with the .gz compression suffix stripped
-                // (Name gets '.fna', not '.fna.gz', even though the staged bin is
-                // '.fna.gz') -- confirmed against the GAWK program the upstream
-                // nf-core/modules galah test itself uses to prep this exact report
-                // (modules/nf-core/galah/tests/nextflow.config, GAWK ext.args2). These
-                // are that same real report's rows
+
+                // Real CheckM2 quality_report.tsv rows for these two genomes
                 // (https://github.com/nf-core/test-datasets/blob/modules/data/delete_me/galah/checkm2_report.tsv),
-                // with '.fna' appended to Name the same way.
+                // Name column exactly as CheckM2 actually emits it: the bare
+                // bin stem, no extension at all. DEREPLICATION's own GAWK
+                // step (not this test) is what appends '.fa' to match.
                 def checkm2Report = File.createTempFile('checkm2_report', '.tsv')
                 checkm2Report.text = "Name\\tCompleteness\\tContamination\\tCompleteness_Model_Used\\tTranslation_Table_Used\\tCoding_Density\\tContig_N50\\tAverage_Gene_Length\\tGenome_Size\\tGC_Content\\tTotal_Coding_Sequences\\tTotal_Contigs\\tMax_Contig_Length\\tAdditional_Notes\\n" +
-                    "GCA_002688505.1_ASM268850v1_genomic.fna\\t96.38\\t0.18\\tNeural Network (Specific Model)\\t4\\t0.896\\t271175\\t315.7548638132296\\t271175\\t0.15\\t257\\t1\\t271175\\tNone\\n" +
-                    "GCF_004296495.1_ASM429649v1_genomic.fna\\t74.65\\t0.12\\tNeural Network (Specific Model)\\t11\\t0.931\\t200316\\t315.12626262626264\\t200316\\t0.15\\t198\\t1\\t200316\\tNone\\n"
+                    "SPAdes-MetaBAT2-sample1\\t96.38\\t0.18\\tNeural Network (Specific Model)\\t4\\t0.896\\t271175\\t315.7548638132296\\t271175\\t0.15\\t257\\t1\\t271175\\tNone\\n" +
+                    "SPAdes-MetaBAT2-sample2\\t74.65\\t0.12\\tNeural Network (Specific Model)\\t11\\t0.931\\t200316\\t315.12626262626264\\t200316\\t0.15\\t198\\t1\\t200316\\tNone\\n"
 
                 // Bare path channel, no meta -- matches BIN_QC.out.checkm2_summary's
                 // actual shape (workflows/mag.nf passes it straight through).
