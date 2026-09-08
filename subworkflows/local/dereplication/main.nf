@@ -15,7 +15,7 @@ workflow DEREPLICATION {
 
     take:
     ch_bins            // channel: [ val(meta), [ path(bin) ] ], per-sample bins (mandatory)
-    ch_checkm2_summary // channel: [ val(meta), path(tsv) ], single study-wide CheckM2 summary from BIN_QC
+    ch_checkm2_summary // channel: path(tsv), single study-wide CheckM2 summary from BIN_QC.out.checkm2_summary (bare path, no meta)
 
     main:
     ch_bins_flat = ch_bins
@@ -28,10 +28,8 @@ workflow DEREPLICATION {
             .collect()
             .map { bins -> [[id: 'study'], bins] }
 
-        ch_qc_for_galah = ch_checkm2_summary.map { _meta, tsv -> tsv }
-
         ch_galah_input = ch_bins_for_galah
-            .combine(ch_qc_for_galah)
+            .combine(ch_checkm2_summary)
             .map { meta, bins, qc -> [meta, bins, qc, 'checkm2'] }
 
         GALAH(ch_galah_input)

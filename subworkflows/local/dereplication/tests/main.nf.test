@@ -50,12 +50,9 @@ nextflow_workflow {
                     "GCA_002688505.1_ASM268850v1_genomic.fna\\t96.38\\t0.18\\tNeural Network (Specific Model)\\t4\\t0.896\\t271175\\t315.7548638132296\\t271175\\t0.15\\t257\\t1\\t271175\\tNone\\n" +
                     "GCF_004296495.1_ASM429649v1_genomic.fna\\t74.65\\t0.12\\tNeural Network (Specific Model)\\t11\\t0.931\\t200316\\t315.12626262626264\\t200316\\t0.15\\t198\\t1\\t200316\\tNone\\n"
 
-                input[1] = Channel.of(
-                    [
-                        [id: 'checkm2'],
-                        file(checkm2Report.path),
-                    ]
-                )
+                // Bare path channel, no meta -- matches BIN_QC.out.checkm2_summary's
+                // actual shape (workflows/mag.nf passes it straight through).
+                input[1] = Channel.of(file(checkm2Report.path))
                 """
             }
         }
