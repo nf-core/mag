@@ -424,6 +424,11 @@ def validateInputParameters(hybrid) {
         error('[nf-core/mag] ERROR: To generate the BIgMAG file you need to include the parameters `--run_checkm2` and `--run_gunc`, and you cannot skip BINQC, GTDB-TK, QUAST nor BUSCO.')
     }
 
+    // Check dereplication parameters
+    if (params.dereplicate && (params.skip_binqc || !params.run_checkm2)) {
+        error('[nf-core/mag] ERROR: To dereplicate bins with Galah you need to include the parameter `--run_checkm2`, and you cannot skip BINQC.')
+    }
+
     // Check ancient DNA damage parameters
     if (params.ancient_dna && params.binning_map_mode != 'own') {
         log.warn("[nf-core/mag] WARNING: Running in --binning_map_mode ${params.binning_map_mode} will result in unstable pyDamage output files. You might not receive pyDamage results for all bins in bin_summary.tsv, and `-resume` may not work; `--binning_map_mode own` is recommended!")

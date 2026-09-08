@@ -41,6 +41,12 @@ def parse_args(args=None):
         metavar="FILE",
         help="pyDamage bins summary file from `summarise_pydamagebins.py`.",
     )
+    parser.add_argument(
+        "-r",
+        "--dereplication_summary",
+        metavar="FILE",
+        help="Dereplication cluster definition file (representative<TAB>member, no header).",
+    )
 
     parser.add_argument(
         "-o",
@@ -289,6 +295,68 @@ def main(args=None):
             right_on="bin_id_pydamagebins",
             how="outer",
         )
+
+    ## DEREPLICATION PROCESSING
+
+    if args.dereplication_summary:
+        derep_results = pd.read_csv(
+            args.dereplication_summary,
+            sep="\t",
+            header=None,
+            names=["dereplication_representative", "member"],
+        )
+        if len(set(derep_results["member"].to_list()).difference(set(bins))) > 0:
+            sys.exit(
+                "Bins in dereplication summary do not match bins in bin depths summary!"
+            )
+        derep_results["dereplication_is_representative"] = (
+            derep_results["dereplication_representative"] == derep_results["member"]
+        )
+        results = pd.merge(
+            results,
+            derep_results,
+            left_on="bin",
+            right_on="member",
+            how="outer",
+        )
+        results.drop(columns=["member"], inplace=True)
+
+        ## Propagate the representative's taxonomic assignment to the rest of its
+        ## cluster (same ANI cluster => same species, within the caveats of the
+        ## chosen ANI threshold), rather than leaving those columns blank for the
+        ## majority of genomes in a well-sampled study. Columns get an explicit
+        ## "_propagated" flag so a propagated assignment is never mistaken for one
+        ## independently determined for that specific genome.
+        taxonomy_columns = []
+        if args.gtdbtk_summary:
+            taxonomy_columns.append("classification_gtdbtk")
+        if args.cat_summary:
+            taxonomy_columns.append("CAT_rank_catpack")
+
+        representatives = results.set_index("bin")
+        for taxonomy_column in taxonomy_columns:
+            if taxonomy_column not in results.columns:
+                continue
+            propagated_column = f"{taxonomy_column}_propagated"
+            results[propagated_column] = False
+            for idx, row in results.iterrows():
+                # only fill in for genuine, non-representative cluster members
+                # (dereplication_is_representative is NaN for bins that were not
+                # part of dereplication at all, e.g. eukaryotic or below Galah's
+                # quality threshold) that don't already have their own value
+                if row["dereplication_is_representative"] is not False:
+                    continue
+                if pd.notna(row[taxonomy_column]):
+                    continue
+                representative_bin = row["dereplication_representative"]
+                if pd.isna(representative_bin) or representative_bin not in representatives.index:
+                    continue
+                representative_value = representatives.loc[
+                    representative_bin, taxonomy_column
+                ]
+                if pd.notna(representative_value):
+                    results.at[idx, taxonomy_column] = representative_value
+                    results.at[idx, propagated_column] = True
 
     results.sort_values("bin").to_csv(args.out, sep="\t", index=False)
 

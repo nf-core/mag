@@ -777,6 +777,24 @@ GUNC will be run if specified with `--run_gunc` as a standalone, unless CheckM i
 
 If `--gunc_save_db` is specified, the output directory will also contain the requested database (progenomes, or GTDB) in DIAMOND format.
 
+### Dereplication
+
+[Galah](https://github.com/wwood/galah) clusters prokaryotic bins across the _whole study_ by average nucleotide identity (ANI) and picks one representative genome per cluster, so that near-identical genomes recovered independently from multiple samples aren't redundantly taxonomically classified or annotated multiple times. This is a different kind of deduplication than [DAS Tool](#das-tool): DAS Tool picks the best bin definition among multiple binners for the _same_ sample/assembly, while dereplication clusters bins _across_ samples that likely represent the same organism.
+
+Only bins passing a minimum completeness/contamination threshold are dereplicated, since ANI estimates on poor-quality bins aren't trustworthy; bins below that threshold are excluded from clustering entirely rather than being force-assigned to a cluster.
+
+Dereplication is off by default. Enable it with `--dereplicate` (requires `--run_checkm2` and cannot be combined with `--skip_binqc`, since Galah picks representatives using CheckM2 quality estimates). When enabled, GTDB-Tk and the CAT/BAT bin-classification step run on cluster representatives only, and their taxonomic assignment is copied to the rest of each cluster in `bin_summary.tsv` (see [below](#additional-summary-for-binned-genomes)) rather than left blank. Prokka annotation also runs on representatives only by default; set `--dereplicate_annotate_all` to annotate every bin regardless of cluster membership, e.g. for pan-genome analyses that need per-strain gene content. MetaEuk (eukaryotic bins) and the CAT/BAT unbinned-contig classification leg are unaffected by dereplication, since neither of those operates on the set of bins being dereplicated.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `GenomeBinning/Dereplication/`
+  - `dereplicated_bins/`
+    - `[bin].fa`: One representative genome fasta per cluster, named exactly as its original bin file.
+  - `dereplicated_bins.tsv`: Galah's cluster definition table (`representative<TAB>member`, one row per input genome that passed the quality threshold).
+
+</details>
+
 ## Taxonomic classification of binned genomes
 
 ### CAT
@@ -884,7 +902,7 @@ In cases where eukaryotic genomes are recovered in binning, [MetaEuk](https://gi
 <details markdown="1">
 <summary>Output files</summary>
 
-- `GenomeBinning/bin_summary.tsv`: Summary of bin sequencing depths together with any BUSCO, CheckM, CheckM2, QUAST, CAT, GTDB-Tk, pyDamage results, when any activated.
+- `GenomeBinning/bin_summary.tsv`: Summary of bin sequencing depths together with any BUSCO, CheckM, CheckM2, QUAST, CAT, GTDB-Tk, pyDamage, [dereplication](#dereplication) results, when any activated.
 
 </details>
 
@@ -894,6 +912,13 @@ This will also include rows for refined bins if `--refine_bins_dastool` binning 
 Note that in contrast to the other tools, for CheckM the bin name given in the column "Bin Id" does not contain the ".fa" extension.
 
 All columns other than the primary `bin` key column, and the `Depth <sample name>` columns, will include a suffix specifying from which bin QC tool the column is derived from to distinguish identically named columns from different tools.
+
+When `--dereplicate` is enabled, every bin (not just cluster representatives) still gets a row, with two additional columns:
+
+- `dereplication_representative`: which bin is this cluster's representative (self-referencing for representatives themselves).
+- `dereplication_is_representative`: `True`/`False`. Blank for bins that were excluded from dereplication entirely (eukaryotic bins, or bins below Galah's completeness/contamination threshold).
+
+For non-representative bins, the `classification_gtdbtk` and `CAT_rank_catpack` columns (when those tools are active) are filled in with their cluster representative's assignment rather than left blank, each with a corresponding `..._propagated` boolean column so a propagated assignment is never mistaken for one independently determined for that specific genome. This is a `>ANI threshold ⇒ same species` shortcut: Galah clusters at its own default ANI (95%, species-level) unless overridden, and if that threshold is coarser than species level, propagated taxonomy may not be accurate for every cluster member — use a finer threshold, or turn dereplication off, if per-genome taxonomic accuracy matters more than the compute saving.
 
 ## Summary file to be used as input for BIgMAG
 

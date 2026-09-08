@@ -1,0 +1,74 @@
+nextflow_workflow {
+
+    name "Test Subworkflow DEREPLICATION"
+    script "../main.nf"
+    workflow "DEREPLICATION"
+
+    tag "subworkflows"
+    tag "subworkflows_"
+    tag "subworkflows/dereplication"
+    tag "galah"
+
+    // The two real genomes below are the same pair used by the upstream
+    // nf-core/modules galah test; at Galah's default 95% ANI they do NOT
+    // cluster together, so this test does not exercise an actual multi-member
+    // cluster collapse. What it does verify: each representative genome is
+    // correctly rejoined to its own original per-sample metadata (not, say,
+    // the other sample's), and that eukaryotic bins never reach Galah at all.
+    test("two prokaryotic bins, one eukaryotic bin filtered out") {
+
+        when {
+            workflow {
+                """
+                input[0] = Channel.of(
+                    [
+                        [id: 'sample1', assembler: 'SPAdes', binner: 'MetaBAT2', domain: 'prokarya', refinement: 'unrefined'],
+                        [file('https://github.com/nf-core/test-datasets/raw/refs/heads/magmap/testdata/GCA_002688505.1_ASM268850v1_genomic.fna.gz', checkIfExists: true)],
+                    ],
+                    [
+                        [id: 'sample2', assembler: 'SPAdes', binner: 'MetaBAT2', domain: 'prokarya', refinement: 'unrefined'],
+                        [file('https://github.com/nf-core/test-datasets/raw/refs/heads/magmap/testdata/GCF_004296495.1_ASM429649v1_genomic.fna.gz', checkIfExists: true)],
+                    ],
+                    [
+                        // never reaches Galah: filtered out by domain before collection
+                        [id: 'sample3', assembler: 'SPAdes', binner: 'MetaBAT2', domain: 'eukarya', refinement: 'unrefined'],
+                        [file('https://github.com/nf-core/test-datasets/raw/refs/heads/magmap/testdata/GCA_002688505.1_ASM268850v1_genomic.fna.gz', checkIfExists: true)],
+                    ],
+                )
+                // Galah's Rust CheckM2-report parser expects the exact real CheckM2
+                // column set (not just Name/Completeness/Contamination), and looks
+                // rows up by genome name with the .gz compression suffix stripped
+                // (Name gets '.fna', not '.fna.gz', even though the staged bin is
+                // '.fna.gz') -- confirmed against the GAWK program the upstream
+                // nf-core/modules galah test itself uses to prep this exact report
+                // (modules/nf-core/galah/tests/nextflow.config, GAWK ext.args2). These
+                // are that same real report's rows
+                // (https://github.com/nf-core/test-datasets/blob/modules/data/delete_me/galah/checkm2_report.tsv),
+                // with '.fna' appended to Name the same way.
+                def checkm2Report = File.createTempFile('checkm2_report', '.tsv')
+                checkm2Report.text = "Name\\tCompleteness\\tContamination\\tCompleteness_Model_Used\\tTranslation_Table_Used\\tCoding_Density\\tContig_N50\\tAverage_Gene_Length\\tGenome_Size\\tGC_Content\\tTotal_Coding_Sequences\\tTotal_Contigs\\tMax_Contig_Length\\tAdditional_Notes\\n" +
+                    "GCA_002688505.1_ASM268850v1_genomic.fna\\t96.38\\t0.18\\tNeural Network (Specific Model)\\t4\\t0.896\\t271175\\t315.7548638132296\\t271175\\t0.15\\t257\\t1\\t271175\\tNone\\n" +
+                    "GCF_004296495.1_ASM429649v1_genomic.fna\\t74.65\\t0.12\\tNeural Network (Specific Model)\\t11\\t0.931\\t200316\\t315.12626262626264\\t200316\\t0.15\\t198\\t1\\t200316\\tNone\\n"
+
+                input[1] = Channel.of(
+                    [
+                        [id: 'checkm2'],
+                        file(checkm2Report.path),
+                    ]
+                )
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assertAll(
+                { assert workflow.out.dereplicated_bins.size() == 2 },
+                { assert workflow.out.dereplicated_bins.collect { it[0].id }.sort() == ['sample1', 'sample2'] },
+                { assert workflow.out.dereplicated_bins.every { it[0].assembler == 'SPAdes' && it[0].binner == 'MetaBAT2' && it[0].domain == 'prokarya' } },
+                { assert workflow.out.cluster_tsv.size() == 1 },
+                { assert snapshot(workflow.out).match() },
+            )
+        }
+    }
+}

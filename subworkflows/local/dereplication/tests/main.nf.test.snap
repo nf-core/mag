@@ -1,0 +1,73 @@
+{
+    "two prokaryotic bins, one eukaryotic bin filtered out": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "sample1",
+                            "assembler": "SPAdes",
+                            "binner": "MetaBAT2",
+                            "domain": "prokarya",
+                            "refinement": "unrefined"
+                        },
+                        "/nf-core/test-datasets/raw/refs/heads/magmap/testdata/GCA_002688505.1_ASM268850v1_genomic.fna.gz"
+                    ],
+                    [
+                        {
+                            "id": "sample2",
+                            "assembler": "SPAdes",
+                            "binner": "MetaBAT2",
+                            "domain": "prokarya",
+                            "refinement": "unrefined"
+                        },
+                        "/nf-core/test-datasets/raw/refs/heads/magmap/testdata/GCF_004296495.1_ASM429649v1_genomic.fna.gz"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "study"
+                        },
+                        "dereplicated_bins.tsv:md5,d2f8a621bfa5794467f4fdd759e2bce7"
+                    ]
+                ],
+                "cluster_tsv": [
+                    [
+                        {
+                            "id": "study"
+                        },
+                        "dereplicated_bins.tsv:md5,d2f8a621bfa5794467f4fdd759e2bce7"
+                    ]
+                ],
+                "dereplicated_bins": [
+                    [
+                        {
+                            "id": "sample1",
+                            "assembler": "SPAdes",
+                            "binner": "MetaBAT2",
+                            "domain": "prokarya",
+                            "refinement": "unrefined"
+                        },
+                        "/nf-core/test-datasets/raw/refs/heads/magmap/testdata/GCA_002688505.1_ASM268850v1_genomic.fna.gz"
+                    ],
+                    [
+                        {
+                            "id": "sample2",
+                            "assembler": "SPAdes",
+                            "binner": "MetaBAT2",
+                            "domain": "prokarya",
+                            "refinement": "unrefined"
+                        },
+                        "/nf-core/test-datasets/raw/refs/heads/magmap/testdata/GCF_004296495.1_ASM429649v1_genomic.fna.gz"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-09-08T17:25:23.080063206",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
+    }
+}

@@ -1086,6 +1086,22 @@
                     "type": "boolean",
                     "description": "Make a BIgMAG input file including GUNC results.",
                     "help_text": "It requires --run_gunc and --run_checkm2 to be executed. BINQC, GTDB-TK, QUAST nor BUSCO can't be skipped."
+                },
+                "dereplicate": {
+                    "type": "boolean",
+                    "description": "Turn on study-wide bin dereplication.",
+                    "help_text": "Clusters bins across the whole study by ANI and picks one representative genome per cluster, using CheckM2 quality estimates to choose the representative. Requires `--run_checkm2` and cannot be combined with `--skip_binqc`. GTDB-Tk (and, when a CAT/BAT database is configured, the CAT/BAT bin-classification leg) run on representatives only when this is enabled; Prokka annotation does too unless `--dereplicate_annotate_all` is also set."
+                },
+                "dereplication_tool": {
+                    "type": "string",
+                    "default": "galah",
+                    "description": "Specify which tool to use for bin dereplication. Currently only 'galah' is implemented.",
+                    "hidden": true
+                },
+                "dereplicate_annotate_all": {
+                    "type": "boolean",
+                    "description": "Annotate every bin with Prokka, not just dereplication representatives.",
+                    "help_text": "Only has an effect when `--dereplicate` is set. By default, once dereplication is on, Prokka only annotates cluster representatives to avoid redundant work on near-identical genomes. Set this to annotate every bin regardless of cluster membership, e.g. for pan-genome analyses that need per-strain gene content."
                 }
             }
         },
