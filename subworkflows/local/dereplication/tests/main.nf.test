@@ -16,12 +16,19 @@ nextflow_workflow {
     // cluster collapse. What it does verify: each representative genome is
     // correctly rejoined to its own original per-sample metadata (not, say,
     // the other sample's), that eukaryotic bins never reach Galah at all,
-    // and that the real CheckM2 report format (bare bin stem, no extension,
-    // as CheckM2 actually emits it -- confirmed the hard way against a real
+    // that the real CheckM2 report format (bare bin stem, no extension, as
+    // CheckM2 actually emits it -- confirmed the hard way against a real
     // pipeline run, not just assumed) is correctly matched up by GAWK before
-    // reaching Galah, which looks entries up by the bin's original extension
-    // (with any .gz compression suffix stripped).
-    test("two prokaryotic bins, one eukaryotic bin filtered out") {
+    // reaching Galah (which looks entries up by the bin's original extension
+    // with any .gz compression suffix stripped), and that leftover
+    // unbinned-contig pseudo-bins (meta.refinement ending in "unbinned")
+    // never reach Galah either -- also confirmed against a real run, where
+    // CheckM2 didn't reliably produce QC for them and Galah panicked
+    // outright on the mismatch rather than warning. sample4 below has no
+    // corresponding CheckM2 report row at all, deliberately: if the
+    // unbinned exclusion regresses, Galah would panic on it exactly like
+    // the real bug, not just silently do the wrong thing.
+    test("two prokaryotic bins, one eukaryotic and one unbinned-pseudo-bin filtered out") {
 
         when {
             workflow {
@@ -41,6 +48,9 @@ nextflow_workflow {
                 def binSample3 = new File(stagingDir, 'SPAdes-MetaBAT2-sample3.fa.gz')
                 file('https://github.com/nf-core/test-datasets/raw/refs/heads/magmap/testdata/GCA_002688505.1_ASM268850v1_genomic.fna.gz', checkIfExists: true).copyTo(binSample3.toPath())
 
+                def binSample4 = new File(stagingDir, 'SPAdes-MetaBAT2-sample4.unbinned.1.fa.gz')
+                file('https://github.com/nf-core/test-datasets/raw/refs/heads/magmap/testdata/GCF_004296495.1_ASM429649v1_genomic.fna.gz', checkIfExists: true).copyTo(binSample4.toPath())
+
                 input[0] = Channel.of(
                     [
                         [id: 'sample1', assembler: 'SPAdes', binner: 'MetaBAT2', domain: 'prokarya', refinement: 'unrefined'],
@@ -54,6 +64,12 @@ nextflow_workflow {
                         // never reaches Galah: filtered out by domain before collection
                         [id: 'sample3', assembler: 'SPAdes', binner: 'MetaBAT2', domain: 'eukarya', refinement: 'unrefined'],
                         [file(binSample3)],
+                    ],
+                    [
+                        // never reaches Galah: filtered out as a leftover unbinned-contig
+                        // pseudo-bin, not a real curated genome
+                        [id: 'sample4', assembler: 'SPAdes', binner: 'MetaBAT2', domain: 'prokarya', refinement: 'unrefined_unbinned'],
+                        [file(binSample4)],
                     ],
                 )
 

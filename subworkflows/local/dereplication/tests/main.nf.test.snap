@@ -1,5 +1,5 @@
 {
-    "two prokaryotic bins, one eukaryotic bin filtered out": {
+    "two prokaryotic bins, one eukaryotic and one unbinned-pseudo-bin filtered out": {
         "content": [
             {
                 "0": [
@@ -64,7 +64,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-09-08T21:17:02.174860204",
+        "timestamp": "2026-09-08T22:22:16.784064386",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"

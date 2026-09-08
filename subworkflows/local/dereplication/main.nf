@@ -19,8 +19,15 @@ workflow DEREPLICATION {
     ch_checkm2_summary // channel: path(tsv), single study-wide CheckM2 summary from BIN_QC.out.checkm2_summary (bare path, no meta)
 
     main:
+    // Leftover unbinned-contig pseudo-bins (meta.refinement ends in
+    // "unbinned": 'unrefined_unbinned' or 'dastool_refined_unbinned') flow
+    // into ch_input_for_postbinning alongside real curated bins, but aren't
+    // real genomes -- CheckM2 doesn't reliably produce QC for them, and
+    // Galah panics outright (rather than warning) on any bin missing from
+    // its QC report, so they're excluded here rather than just being an
+    // occasional dereplication no-op.
     ch_bins_flat = ch_bins
-        .filter { meta, _bins -> meta.domain != "eukarya" }
+        .filter { meta, _bins -> meta.domain != "eukarya" && !meta.refinement.endsWith("unbinned") }
         .transpose()
 
     if (params.dereplication_tool == "galah") {
