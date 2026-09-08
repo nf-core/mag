@@ -101,4 +101,59 @@ nextflow_workflow {
             )
         }
     }
+
+    // Galah 0.4.2 panics (index out of bounds) rather than erroring cleanly
+    // when zero genomes pass its quality thresholds
+    // (https://github.com/wwood/galah/issues/75). Confirmed for real against
+    // nf-core/mag's own test_minigut CI dataset, where every recovered bin
+    // happens to fall below the default 50% completeness threshold. This
+    // test reuses the same two real genomes as above, but with completeness
+    // values that fail the (default) threshold, to confirm DEREPLICATION
+    // works around the crash by skipping Galah gracefully rather than
+    // invoking it at all.
+    test("all bins below quality threshold: Galah skipped, no crash") {
+
+        when {
+            workflow {
+                """
+                def stagingDir = File.createTempDir()
+
+                def binSample1 = new File(stagingDir, 'SPAdes-MetaBAT2-sample1.fa.gz')
+                file('https://github.com/nf-core/test-datasets/raw/refs/heads/magmap/testdata/GCA_002688505.1_ASM268850v1_genomic.fna.gz', checkIfExists: true).copyTo(binSample1.toPath())
+
+                def binSample2 = new File(stagingDir, 'SPAdes-MetaBAT2-sample2.fa.gz')
+                file('https://github.com/nf-core/test-datasets/raw/refs/heads/magmap/testdata/GCF_004296495.1_ASM429649v1_genomic.fna.gz', checkIfExists: true).copyTo(binSample2.toPath())
+
+                input[0] = Channel.of(
+                    [
+                        [id: 'sample1', assembler: 'SPAdes', binner: 'MetaBAT2', domain: 'prokarya', refinement: 'unrefined'],
+                        [file(binSample1)],
+                    ],
+                    [
+                        [id: 'sample2', assembler: 'SPAdes', binner: 'MetaBAT2', domain: 'prokarya', refinement: 'unrefined'],
+                        [file(binSample2)],
+                    ],
+                )
+
+                // Same two real genomes' real CheckM2 rows, but with
+                // Completeness dropped well below the default
+                // --dereplicate_min_completeness (50): neither qualifies.
+                def checkm2Report = File.createTempFile('checkm2_report', '.tsv')
+                checkm2Report.text = "Name\\tCompleteness\\tContamination\\tCompleteness_Model_Used\\tTranslation_Table_Used\\tCoding_Density\\tContig_N50\\tAverage_Gene_Length\\tGenome_Size\\tGC_Content\\tTotal_Coding_Sequences\\tTotal_Contigs\\tMax_Contig_Length\\tAdditional_Notes\\n" +
+                    "SPAdes-MetaBAT2-sample1\\t9.6\\t0.18\\tNeural Network (Specific Model)\\t4\\t0.896\\t271175\\t315.7548638132296\\t271175\\t0.15\\t257\\t1\\t271175\\tNone\\n" +
+                    "SPAdes-MetaBAT2-sample2\\t7.4\\t0.12\\tNeural Network (Specific Model)\\t11\\t0.931\\t200316\\t315.12626262626264\\t200316\\t0.15\\t198\\t1\\t200316\\tNone\\n"
+
+                input[1] = Channel.of(file(checkm2Report.path))
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assertAll(
+                { assert workflow.out.dereplicated_bins.size() == 0 },
+                { assert workflow.out.cluster_tsv.size() == 0 },
+            )
+        }
+    }
 }

@@ -52,7 +52,32 @@ workflow DEREPLICATION {
             .combine(ch_checkm2_for_galah)
             .map { meta, bins, qc -> [meta, bins, qc, 'checkm2'] }
 
-        GALAH(ch_galah_input)
+        // Galah panics (index out of bounds) instead of erroring cleanly or
+        // just emitting an empty result when zero genomes pass its quality
+        // thresholds -- reported upstream: https://github.com/wwood/galah/issues/75.
+        // Count qualifying genomes ourselves first so a study where every
+        // bin happens to fail the threshold doesn't crash the whole
+        // pipeline; skip Galah gracefully instead, with a clear warning.
+        ch_qualifying_count = ch_checkm2_for_galah.map { tsv ->
+            tsv.splitCsv(header: true, sep: '\t').count { row ->
+                (row.Completeness as Double) >= params.dereplicate_min_completeness && (row.Contamination as Double) <= params.dereplicate_max_contamination
+            }
+        }
+
+        ch_galah_routed = ch_galah_input
+            .combine(ch_qualifying_count)
+            .branch { meta, bins, qc, format, count ->
+                cluster: count > 0
+                    return [meta, bins, qc, format]
+                skip: true
+                    return count
+            }
+
+        ch_galah_routed.skip.subscribe {
+            log.warn("[nf-core/mag] Dereplication: no bins passed --dereplicate_min_completeness ${params.dereplicate_min_completeness} / --dereplicate_max_contamination ${params.dereplicate_max_contamination}; skipping Galah for this run (works around a Galah crash on zero qualifying genomes, see https://github.com/wwood/galah/issues/75).")
+        }
+
+        GALAH(ch_galah_routed.cluster)
 
         ch_representative_files = GALAH.out.dereplicated_bins
         ch_cluster_tsv = GALAH.out.tsv
