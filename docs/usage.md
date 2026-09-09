@@ -483,6 +483,16 @@ In this case, DAS Tool has not necessarily failed but was unable to complete the
 
 If you are regularly getting such errors, you can try reducing the `--refine_bins_dastool_threshold` value, which will modify the scoring threshold defined in the [DAS Tool publication](https://www.nature.com/articles/s41564-018-0171-1).
 
+## A note on bin dereplication
+
+With `--dereplicate`, [Galah](https://github.com/wwood/galah) clusters bins by average nucleotide identity (ANI) across the _whole study_ and picks one representative genome per cluster, using CheckM2 quality estimates to choose the representative (`--run_checkm2` is required, and `--skip_binqc` must not be set). This is different from DAS Tool's bin refinement above: DAS Tool picks the best bin definition among multiple binners for the _same_ sample/assembly, while dereplication clusters bins _across_ samples that likely represent the same organism, so GTDB-Tk, the CAT/BAT bin-classification leg, and Prokka annotation aren't run redundantly on near-identical genomes recovered independently from multiple samples.
+
+Only bins passing `--dereplicate_min_completeness` (default 50%) and `--dereplicate_max_contamination` (default 10%) are dereplicated; bins below/above those are excluded from clustering entirely rather than being force-assigned to a cluster, since ANI estimates on poor-quality bins aren't trustworthy. If every bin in a study happens to fail that threshold, dereplication is skipped for that run with a warning rather than failing the pipeline.
+
+The ANI clustering threshold itself is `--dereplicate_ani` (default 95%, species-level). Prokka annotation runs on cluster representatives only by default; set `--dereplicate_annotate_all` to annotate every bin regardless of cluster membership, e.g. for pan-genome analyses that need per-strain gene content.
+
+See [the output documentation](output.md#dereplication) for the resulting output files and the new `bin_summary.tsv` columns.
+
 ## A note on bin filtering
 
 The pipeline offers the ability to filter out bins that fall outside of a certain size in base pairs (`--bin_max_size`, `--bin_min_size`).
