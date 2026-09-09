@@ -95,6 +95,7 @@ nextflow_workflow {
                 // Bare path channel, no meta -- matches BIN_QC.out.checkm2_summary's
                 // actual shape (workflows/mag.nf passes it straight through).
                 input[1] = Channel.of(file(checkm2Report.path))
+                input[2] = 'checkm2'
                 """
             }
         }
@@ -107,6 +108,67 @@ nextflow_workflow {
                 { assert workflow.out.dereplicated_bins.every { it[0].assembler == 'SPAdes' && it[0].binner == 'MetaBAT2' && it[0].domain == 'prokarya' } },
                 { assert workflow.out.cluster_tsv.size() == 1 },
                 { assert snapshot(workflow.out).match() },
+            )
+        }
+    }
+
+    // Same two real genomes as above, but with a CheckM (not CheckM2)
+    // --tab_table report, to prove the qc_format='checkm' path -- reused by
+    // anyone who runs --run_checkm instead of --run_checkm2 -- is actually
+    // exercised, not just plausible from reading the code. Column layout and
+    // count (14 columns, 0-indexed Completeness/Contamination/Strain
+    // heterogeneity at 11/12/13) match CheckM's real `-o 2 --tab_table`
+    // output (conf/modules.config's CHECKM_QA ext.args), which is also what
+    // Galah's own checkm-rs dependency expects.
+    test("CheckM (not CheckM2) quality report is also accepted") {
+
+        when {
+            params {
+                dereplication_tool             = 'galah'
+                dereplicate_min_completeness   = 50
+                dereplicate_max_contamination  = 10
+                dereplicate_ani                = 95
+            }
+            workflow {
+                """
+                def stagingDir = File.createTempDir()
+
+                def binSample1 = new File(stagingDir, 'SPAdes-MetaBAT2-sample1.fa.gz')
+                file('https://github.com/nf-core/test-datasets/raw/refs/heads/magmap/testdata/GCA_002688505.1_ASM268850v1_genomic.fna.gz', checkIfExists: true).copyTo(binSample1.toPath())
+
+                def binSample2 = new File(stagingDir, 'SPAdes-MetaBAT2-sample2.fa.gz')
+                file('https://github.com/nf-core/test-datasets/raw/refs/heads/magmap/testdata/GCF_004296495.1_ASM429649v1_genomic.fna.gz', checkIfExists: true).copyTo(binSample2.toPath())
+
+                input[0] = Channel.of(
+                    [
+                        [id: 'sample1', assembler: 'SPAdes', binner: 'MetaBAT2', domain: 'prokarya', refinement: 'unrefined'],
+                        [file(binSample1)],
+                    ],
+                    [
+                        [id: 'sample2', assembler: 'SPAdes', binner: 'MetaBAT2', domain: 'prokarya', refinement: 'unrefined'],
+                        [file(binSample2)],
+                    ],
+                )
+
+                def checkmReport = File.createTempFile('checkm_report', '.tsv')
+                checkmReport.text = "Bin Id\\tMarker lineage\\t# genomes\\t# markers\\t# marker sets\\t0\\t1\\t2\\t3\\t4\\t5+\\tCompleteness\\tContamination\\tStrain heterogeneity\\n" +
+                    "SPAdes-MetaBAT2-sample1\\tk__Bacteria\\t1\\t104\\t58\\t2\\t95\\t7\\t0\\t0\\t0\\t96.38\\t0.18\\t0.0\\n" +
+                    "SPAdes-MetaBAT2-sample2\\tk__Bacteria\\t1\\t104\\t58\\t9\\t92\\t3\\t0\\t0\\t0\\t74.65\\t0.12\\t0.0\\n"
+
+                // Bare path channel, no meta -- matches BIN_QC.out.checkm_summary's
+                // actual shape (workflows/mag.nf passes it straight through).
+                input[1] = Channel.of(file(checkmReport.path))
+                input[2] = 'checkm'
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assertAll(
+                { assert workflow.out.dereplicated_bins.size() == 2 },
+                { assert workflow.out.dereplicated_bins.collect { it[0].id }.sort() == ['sample1', 'sample2'] },
+                { assert workflow.out.cluster_tsv.size() == 1 },
             )
         }
     }
@@ -162,6 +224,7 @@ nextflow_workflow {
                     "SPAdes-MetaBAT2-sample2\\t7.4\\t0.12\\tNeural Network (Specific Model)\\t11\\t0.931\\t200316\\t315.12626262626264\\t200316\\t0.15\\t198\\t1\\t200316\\tNone\\n"
 
                 input[1] = Channel.of(file(checkm2Report.path))
+                input[2] = 'checkm2'
                 """
             }
         }

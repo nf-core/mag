@@ -522,7 +522,11 @@ workflow MAG {
         ch_dereplicated_bins = channel.empty()
         ch_dereplication_cluster_tsv = channel.empty()
         if (params.dereplicate) {
-            DEREPLICATION(ch_input_for_postbinning, ch_checkm2_summary)
+            // CheckM2 is preferred when both are enabled -- it's the more
+            // actively developed of the two and the one used in this
+            // feature's own validation, but either works.
+            ch_dereplication_qc_summary = params.run_checkm2 ? ch_checkm2_summary : ch_checkm_summary
+            DEREPLICATION(ch_input_for_postbinning, ch_dereplication_qc_summary, params.run_checkm2 ? 'checkm2' : 'checkm')
             ch_dereplicated_bins = DEREPLICATION.out.dereplicated_bins
             ch_dereplication_cluster_tsv = DEREPLICATION.out.cluster_tsv.map { _meta, tsv -> tsv }
         }
