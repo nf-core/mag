@@ -345,25 +345,17 @@ def main(args=None):
             if taxonomy_column not in results.columns:
                 continue
             propagated_column = f"{taxonomy_column}_propagated"
-            results[propagated_column] = False
-            for idx, row in results.iterrows():
-                # only fill in for genuine, non-representative cluster members
-                # (dereplication_is_representative is NaN for bins that were not
-                # part of dereplication at all, e.g. eukaryotic or below Galah's
-                # quality threshold) that don't already have their own value
-                if row["dereplication_is_representative"] is not False:
-                    continue
-                if pd.notna(row[taxonomy_column]):
-                    continue
-                representative_bin = row["dereplication_representative"]
-                if pd.isna(representative_bin) or representative_bin not in representatives.index:
-                    continue
-                representative_value = representatives.loc[
-                    representative_bin, taxonomy_column
-                ]
-                if pd.notna(representative_value):
-                    results.at[idx, taxonomy_column] = representative_value
-                    results.at[idx, propagated_column] = True
+            # Look up each row's representative's value, if any (NaN for bins
+            # that aren't in results at all, e.g. one dropped by an outer
+            # merge upstream). "== False" (rather than "is False") correctly
+            # excludes NaN rows too -- bins not part of dereplication at all
+            # (eukaryotic, or below Galah's quality threshold) -- the same
+            # way "is not False: continue" did in the row-at-a-time version.
+            representative_value = results["dereplication_representative"].map(representatives[taxonomy_column])
+            propagate = (results["dereplication_is_representative"] == False) & results[taxonomy_column].isna() & representative_value.notna()  # noqa: E712
+
+            results[propagated_column] = propagate
+            results.loc[propagate, taxonomy_column] = representative_value[propagate]
 
     results.sort_values("bin").to_csv(args.out, sep="\t", index=False)
 

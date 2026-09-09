@@ -30,6 +30,12 @@ workflow DEREPLICATION {
         .filter { meta, _bins -> meta.domain != "eukarya" && !meta.refinement.endsWith("unbinned") }
         .transpose()
 
+    // Declared here rather than inside the `if` below for the same reason
+    // documented further down for GALAH.out.* -- a variable first assigned
+    // inside an `if` isn't reliably visible outside it under Nextflow's
+    // strict-syntax parser.
+    ch_fallback_bins = channel.empty()
+
     if (params.dereplication_tool == "galah") {
         ch_bins_for_galah = ch_bins_flat
             .map { _meta, bin -> bin }
@@ -74,10 +80,21 @@ workflow DEREPLICATION {
             }
 
         ch_galah_routed.skip.subscribe {
-            log.warn("[nf-core/mag] Dereplication: no bins passed --dereplicate_min_completeness ${params.dereplicate_min_completeness} / --dereplicate_max_contamination ${params.dereplicate_max_contamination}; skipping Galah for this run (works around a Galah crash on zero qualifying genomes, see https://github.com/wwood/galah/issues/75).")
+            log.warn("[nf-core/mag] Dereplication: no bins passed --dereplicate_min_completeness ${params.dereplicate_min_completeness} / --dereplicate_max_contamination ${params.dereplicate_max_contamination}; skipping Galah for this run (works around a Galah crash on zero qualifying genomes, see https://github.com/wwood/galah/issues/75). Every bin is passed through downstream unclustered, as if --dereplicate had not been set, rather than dropped.")
         }
 
         GALAH(ch_galah_routed.cluster)
+
+        // When Galah is skipped above, GALAH.out is never populated, so
+        // treat dereplication as a no-op for this run instead of silently
+        // starving GTDB-Tk/CAT-BAT/Prokka of any input: every bin becomes
+        // its own "representative". ch_galah_routed.skip carries exactly
+        // one item (the study-wide qualifying count) only when the skip
+        // branch fired, so this combine() broadcasts it across every bin
+        // and produces nothing at all when Galah actually ran instead.
+        ch_fallback_bins = ch_galah_routed.skip
+            .combine(ch_bins_flat)
+            .map { _count, meta, bin -> [meta, bin] }
     }
 
     // Recover each representative's original per-sample metadata by
@@ -97,6 +114,7 @@ workflow DEREPLICATION {
     ch_dereplicated_bins = ch_representative_keys
         .join(ch_bins_keyed)
         .map { _name, _representative_bin, meta, bin -> [meta, bin] }
+        .mix(ch_fallback_bins)
 
     // Galah emits its version only via the pipeline-wide versions topic
     // channel, so there's no per-subworkflow versions channel to emit here.

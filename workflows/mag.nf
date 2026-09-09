@@ -554,8 +554,12 @@ workflow MAG {
             // benefits from dereplication the same way; its separate unbins leg
             // classifies leftover unbinned contigs, which dereplication never touches,
             // so that one always gets the full set regardless of --dereplicate.
+            // Unlike GTDB-Tk, CATPACK also classifies eukaryotic bins -- DEREPLICATION
+            // excludes those from clustering entirely (see its own domain filter), so
+            // they have to be added back here or they'd silently vanish from CATPACK
+            // whenever --dereplicate is on, instead of just skipping dereplication.
             ch_bins_for_catpack = params.dereplicate
-                ? ch_dereplicated_bins.groupTuple()
+                ? ch_dereplicated_bins.groupTuple().mix(ch_input_for_postbinning_bins.filter { meta, _bins -> meta.domain == "eukarya" })
                 : ch_input_for_postbinning_bins
 
             CATPACK(

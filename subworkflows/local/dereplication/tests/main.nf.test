@@ -120,7 +120,7 @@ nextflow_workflow {
     // values that fail the (default) threshold, to confirm DEREPLICATION
     // works around the crash by skipping Galah gracefully rather than
     // invoking it at all.
-    test("all bins below quality threshold: Galah skipped, no crash") {
+    test("all bins below quality threshold: Galah skipped, bins passed through unclustered") {
 
         when {
             // Defaults normally supplied by main.nf's typed params block,
@@ -169,7 +169,10 @@ nextflow_workflow {
         then {
             assert workflow.success
             assertAll(
-                { assert workflow.out.dereplicated_bins.size() == 0 },
+                // No clustering happened (Galah never ran), but both bins
+                // are still passed through -- as if --dereplicate weren't
+                // set at all -- rather than dropped from the run entirely.
+                { assert workflow.out.dereplicated_bins.size() == 2 },
                 { assert workflow.out.cluster_tsv.size() == 0 },
             )
         }

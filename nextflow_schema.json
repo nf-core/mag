@@ -1096,6 +1096,7 @@
                     "type": "string",
                     "default": "galah",
                     "description": "Specify which tool to use for bin dereplication. Currently only 'galah' is implemented.",
+                    "enum": ["galah"],
                     "hidden": true
                 },
                 "dereplicate_annotate_all": {
