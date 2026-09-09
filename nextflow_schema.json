@@ -1114,6 +1114,12 @@
                     "default": 10,
                     "description": "Maximum CheckM2 contamination (%) for a bin to be included in dereplication.",
                     "help_text": "Bins above this threshold are excluded from ANI clustering entirely, rather than being force-assigned to a cluster: ANI estimates on poor-quality bins aren't trustworthy. Matches GTDB-Tk's own recommended minimum and the Bowers et al. 2017 medium-quality genome standard."
+                },
+                "dereplicate_ani": {
+                    "type": "number",
+                    "default": 95,
+                    "description": "ANI (%) threshold to cluster bins at during dereplication.",
+                    "help_text": "Matches Galah's own default (95%, species-level). A coarser (lower) threshold clusters more aggressively but makes the taxonomy propagated to non-representative cluster members in `bin_summary.tsv` less reliable, since genomes spanning more than one actual species could end up in the same cluster."
                 }
             }
         },
