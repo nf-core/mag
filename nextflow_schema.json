@@ -1006,7 +1006,6 @@
                 "checkm_download_url": {
                     "type": "string",
                     "format": "file-path",
-                    "exists": true,
                     "default": "https://zenodo.org/records/7401545/files/checkm_data_2015_01_16.tar.gz",
                     "hidden": true,
                     "description": "URL pointing to checkM database for auto download, if local path not supplied.",
