@@ -31,6 +31,15 @@ nextflow_workflow {
     test("two prokaryotic bins, one eukaryotic and one unbinned-pseudo-bin filtered out") {
 
         when {
+            // Defaults normally supplied by main.nf's typed params block,
+            // which isn't loaded when nf-test invokes this subworkflow
+            // directly.
+            params {
+                dereplication_tool             = 'galah'
+                dereplicate_min_completeness   = 50
+                dereplicate_max_contamination  = 10
+                dereplicate_ani                = 95
+            }
             workflow {
                 """
                 // Bin files are named like the real pipeline's binner output
@@ -114,6 +123,15 @@ nextflow_workflow {
     test("all bins below quality threshold: Galah skipped, no crash") {
 
         when {
+            // Defaults normally supplied by main.nf's typed params block,
+            // which isn't loaded when nf-test invokes this subworkflow
+            // directly.
+            params {
+                dereplication_tool             = 'galah'
+                dereplicate_min_completeness   = 50
+                dereplicate_max_contamination  = 10
+                dereplicate_ani                = 95
+            }
             workflow {
                 """
                 def stagingDir = File.createTempDir()

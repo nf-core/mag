@@ -78,16 +78,19 @@ workflow DEREPLICATION {
         }
 
         GALAH(ch_galah_routed.cluster)
-
-        ch_representative_files = GALAH.out.dereplicated_bins
-        ch_cluster_tsv = GALAH.out.tsv
     }
 
     // Recover each representative's original per-sample metadata by
     // joining back on filename against the pre-collection flat channel.
+    // Referencing GALAH.out.* directly here (rather than assigning it to an
+    // intermediate variable inside the `if` block above) is deliberate: a
+    // variable first assigned inside an `if` isn't reliably visible outside
+    // it under Nextflow's strict-syntax parser, even though it always would
+    // be at runtime while "galah" is the only dereplication_tool value --
+    // same pattern DOMAIN_CLASSIFICATION already uses for TIARA.out.* .
     ch_bins_keyed = ch_bins_flat.map { meta, bin -> [bin.name, meta, bin] }
 
-    ch_representative_keys = ch_representative_files
+    ch_representative_keys = GALAH.out.dereplicated_bins
         .transpose()
         .map { _meta, bin -> [bin.name, bin] }
 
@@ -99,5 +102,5 @@ workflow DEREPLICATION {
     // channel, so there's no per-subworkflow versions channel to emit here.
     emit:
     dereplicated_bins = ch_dereplicated_bins // channel: [ val(meta), path(bin) ], one representative genome per cluster, original metadata preserved
-    cluster_tsv       = ch_cluster_tsv // channel: [ val(meta), path(tsv) ], representative <TAB> member cluster definition
+    cluster_tsv       = GALAH.out.tsv // channel: [ val(meta), path(tsv) ], representative <TAB> member cluster definition
 }
