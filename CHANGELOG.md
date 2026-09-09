@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Added`
 
 - [#1051](https://github.com/nf-core/mag/pull/1051) - Add DeepMAsED assembly error detection to the MAG workflow as two sequential steps (`features` and `predict`) for short-read assemblies (by @SkyLexS).
-- [#NN](https://github.com/nf-core/mag/pull/NN) - Add optional study-wide bin dereplication with [Galah](https://github.com/wwood/galah) (`--dereplicate`): clusters bins across the whole study by ANI and picks one representative genome per cluster, so GTDB-Tk, the CAT/BAT bin-classification leg, and Prokka aren't run redundantly on near-identical genomes recovered from multiple samples; representative taxonomy is propagated to cluster members in `bin_summary.tsv` (by @erikrikarddaniel).
+- [#1110](https://github.com/nf-core/mag/pull/1110) - Add optional study-wide bin dereplication with [Galah](https://github.com/wwood/galah) (`--dereplicate`): clusters bins across the whole study by ANI and picks one representative genome per cluster, so GTDB-Tk, the CAT/BAT bin-classification leg, and Prokka aren't run redundantly on near-identical genomes recovered from multiple samples; representative taxonomy is propagated to cluster members in `bin_summary.tsv` (by @erikrikarddaniel).
 
 ### `Changed`
 
