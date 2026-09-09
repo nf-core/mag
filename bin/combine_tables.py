@@ -328,12 +328,9 @@ def main(args=None):
         )
         results.drop(columns=["member"], inplace=True)
 
-        ## Propagate the representative's taxonomic assignment to the rest of its
-        ## cluster (same ANI cluster => same species, within the caveats of the
-        ## chosen ANI threshold), rather than leaving those columns blank for the
-        ## majority of genomes in a well-sampled study. Columns get an explicit
-        ## "_propagated" flag so a propagated assignment is never mistaken for one
-        ## independently determined for that specific genome.
+        ## Propagate the representative's taxonomic assignment to the rest of
+        ## its cluster, flagged via an explicit "_propagated" column so it's
+        ## never mistaken for one independently determined for that genome.
         taxonomy_columns = []
         if args.gtdbtk_summary:
             taxonomy_columns.append("classification_gtdbtk")
@@ -345,12 +342,8 @@ def main(args=None):
             if taxonomy_column not in results.columns:
                 continue
             propagated_column = f"{taxonomy_column}_propagated"
-            # Look up each row's representative's value, if any (NaN for bins
-            # that aren't in results at all, e.g. one dropped by an outer
-            # merge upstream). "== False" (rather than "is False") correctly
-            # excludes NaN rows too -- bins not part of dereplication at all
-            # (eukaryotic, or below Galah's quality threshold) -- the same
-            # way "is not False: continue" did in the row-at-a-time version.
+            # "== False" (not "is False") also excludes NaN rows -- bins not
+            # part of dereplication at all (eukaryotic, or below threshold).
             representative_value = results["dereplication_representative"].map(representatives[taxonomy_column])
             propagate = (results["dereplication_is_representative"] == False) & results[taxonomy_column].isna() & representative_value.notna()  # noqa: E712
 
