@@ -8,8 +8,6 @@ lint:
     - .github/workflows/linting.yml
   nextflow_config: false # TODO: Remove when tools supports parameter types
   schema_params: false # TODO: Remove when tools supports parameter types
-  nf_test_content:
-    - tests/test_checkm_download_url_validation.nf.test # uses -preview, which runs no process at all, so there's no versions.yml to snapshot
 nf_core_version: 4.1.0
 repository_type: pipeline
 template:
