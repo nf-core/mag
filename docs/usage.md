@@ -483,9 +483,22 @@ In this case, DAS Tool has not necessarily failed but was unable to complete the
 
 If you are regularly getting such errors, you can try reducing the `--refine_bins_dastool_threshold` value, which will modify the scoring threshold defined in the [DAS Tool publication](https://www.nature.com/articles/s41564-018-0171-1).
 
+### Reducing downstream runtime with `--postbinning_input`
+
+By default (`--postbinning_input raw_bins_only`), the raw output of every enabled binner is sent on to bin quality control (CheckM2/BUSCO).
+With more than one binner enabled, this means several likely redundant versions of the same underlying genome each pay the full CheckM2/BUSCO cost.
+Setting `--postbinning_input refined_bins_only` restricts this to DAS Tool's refined bins instead, which can substantially cut this cost whenever more than one binner is enabled; `both` runs it on both sets, useful for comparing raw vs. refined bins but paying the cost of both.
+
+Taxonomic classification (GTDB-Tk, CAT/BAT) and Prokka annotation are affected differently, and it depends on whether `--dereplicate` is also set.
+Without dereplication, they too run directly on whatever `--postbinning_input` selects, so `refined_bins_only` reduces their cost the same way it does for CheckM2/BUSCO.
+With dereplication, they instead run only on Galah's cluster representatives, regardless of `--postbinning_input` -- so that parameter no longer directly bounds their cost.
+What it changes in that case is the pool Galah dereplicates from: `raw_bins_only` hands Galah every binner's bins together, so it ends up deduplicating across binners as well as across samples, while `refined_bins_only` gives Galah DAS Tool's already per-sample-deduplicated bins, a smaller and cleaner pool that's cheaper for Galah itself and less likely to cluster near-duplicate same-sample bins for uninteresting reasons.
+
 ## A note on bin dereplication
 
 With `--dereplicate`, [Galah](https://github.com/wwood/galah) clusters bins by average nucleotide identity (ANI) across the _whole study_ and picks one representative genome per cluster, using CheckM2 quality estimates to choose the representative (`--run_checkm2` is required, and `--skip_binqc` must not be set). This is different from DAS Tool's bin refinement above: DAS Tool picks the best bin definition among multiple binners for the _same_ sample/assembly, while dereplication clusters bins _across_ samples that likely represent the same organism, so GTDB-Tk, the CAT/BAT bin-classification leg, and Prokka annotation aren't run redundantly on near-identical genomes recovered independently from multiple samples.
+
+This is most worth enabling for multi-sample studies where the same organism is likely to be recovered independently in several samples; for single-sample runs, or studies where samples are unlikely to share organisms, dereplication has little to cluster and can safely be left off.
 
 Only bins passing `--dereplicate_min_completeness` (default 50%) and `--dereplicate_max_contamination` (default 10%) are dereplicated; bins below/above those are excluded from clustering entirely rather than being force-assigned to a cluster, since ANI estimates on poor-quality bins aren't trustworthy. If every bin in a study happens to fail that threshold, dereplication is skipped for that run with a warning rather than failing the pipeline.
 
