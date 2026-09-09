@@ -1,0 +1,178 @@
+{
+    "-profile test_dereplicate": {
+        "content": [
+            190,
+            {
+                "BIN_SUMMARY": {
+                    "pandas": "1.4.3",
+                    "python": "3.10.6"
+                },
+                "BOWTIE2_ASSEMBLY_ALIGN": {
+                    "bowtie2": "2.4.2",
+                    "pigz": "2.3.4",
+                    "samtools": 1.11
+                },
+                "BOWTIE2_ASSEMBLY_BUILD": {
+                    "bowtie2": "2.4.2"
+                },
+                "BOWTIE2_PHIX_REMOVAL_ALIGN": {
+                    "bowtie2": "2.4.2"
+                },
+                "BOWTIE2_PHIX_REMOVAL_BUILD": {
+                    "bowtie2": "2.4.2"
+                },
+                "BUSCO_BUSCO": {
+                    "busco": "6.1.0"
+                },
+                "BUSCO_UNTAR": {
+                    "untar": 1.34
+                },
+                "CATPACK_ADDNAMES_BINS": {
+                    "catpack": 6.0
+                },
+                "CATPACK_ADDNAMES_UNBINS": {
+                    "catpack": 6.0
+                },
+                "CATPACK_BINS": {
+                    "catpack": 6.0
+                },
+                "CATPACK_DB_UNTAR": {
+                    "untar": 1.34
+                },
+                "CATPACK_SUMMARISE_BINS": {
+                    "catpack": 6.0
+                },
+                "CATPACK_SUMMARISE_UNBINS": {
+                    "catpack": 6.0
+                },
+                "CATPACK_UNBINS": {
+                    "catpack": 6.0
+                },
+                "CAT_FASTQ": {
+                    "cat": 9.5
+                },
+                "CHECKM2_DATABASEDOWNLOAD": {
+                    "aria2": "1.37.0"
+                },
+                "CHECKM2_PREDICT": {
+                    "checkm2": "1.1.0"
+                },
+                "CONCAT_BUSCO_TSV": {
+                    "qsv": "5.1.0"
+                },
+                "CONCAT_CHECKM2_TSV": {
+                    "qsv": "5.1.0"
+                },
+                "CONCAT_QUAST_SUMMARY": {
+                    "qsv": "5.1.0"
+                },
+                "CONCAT_UNBINS": {
+                    "coreutils": 9.4,
+                    "find": "4.6.0",
+                    "pigz": 2.8
+                },
+                "CONVERT_DEPTHS": {
+                    "bioawk": 20110810
+                },
+                "FASTP": {
+                    "fastp": "1.0.1"
+                },
+                "FASTQC_RAW": {
+                    "fastqc": "0.12.1"
+                },
+                "FASTQC_TRIMMED": {
+                    "fastqc": "0.12.1"
+                },
+                "GAWK": {
+                    "gawk": "5.3.1"
+                },
+                "GTDBTK_CLASSIFYWF": {
+                    "gtdb_db": "r232",
+                    "gtdbtk": "2.7.2"
+                },
+                "GTDBTK_DB_PREPARATION": {
+                    "tar": 1.34
+                },
+                "GTDBTK_SUMMARY": {
+                    "pandas": "1.4.3",
+                    "python": "3.10.6"
+                },
+                "GUNZIP_SHORTREAD_ASSEMBLIES": {
+                    "gunzip": 1.13
+                },
+                "MAG_DEPTHS": {
+                    "pandas": "1.1.5",
+                    "python": "3.6.7"
+                },
+                "MAG_DEPTHS_SUMMARY": {
+                    "pandas": "1.4.3",
+                    "python": "3.10.6"
+                },
+                "MAXBIN2": {
+                    "maxbin2": "2.2.7"
+                },
+                "MEGAHIT": {
+                    "megahit": "1.2.9"
+                },
+                "METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS_SHORTREAD": {
+                    "metabat2": 2.15
+                },
+                "METABAT2_METABAT2": {
+                    "metabat2": 2.17
+                },
+                "METASPADES": {
+                    "spades": "4.1.0"
+                },
+                "PRODIGAL": {
+                    "prodigal": "2.6.3"
+                },
+                "PROKKA": {
+                    "prokka": "1.15.6"
+                },
+                "QUAST": {
+                    "metaquast": "5.0.2",
+                    "python": "3.7.6"
+                },
+                "QUAST_BINS": {
+                    "metaquast": "5.0.2",
+                    "python": "3.7.6"
+                },
+                "SEMIBIN_SINGLEEASYBIN": {
+                    "SemiBin": "2.2.0"
+                },
+                "SEQKIT_STATS": {
+                    "seqkit": "2.9.0"
+                },
+                "SPLIT_FASTA": {
+                    "biopython": "1.74",
+                    "pandas": "1.1.5",
+                    "python": "3.6.7"
+                },
+                "Workflow": {
+                    "nf-core/mag": "v5.6.0dev"
+                }
+            }
+        ],
+        "timestamp": "2026-09-09T17:18:20.140284982",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
+    },
+    "dereplicate-fallback-checks": {
+        "content": [
+            "Galah never ran, so no dereplicated_bins output: true",
+            "bin_summary.tsv has no dereplication columns (nothing was clustered): true",
+            "GTDB-Tk summary non-empty: true",
+            "BAT summary non-empty: true",
+            "Prokka produced .faa output: true",
+            "Prokka .faa files non-empty: true",
+            "Bin summary row count matches GTDB-Tk row count: true"
+        ],
+        "timestamp": "2026-09-09T17:18:20.763101873",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
+    }
+}

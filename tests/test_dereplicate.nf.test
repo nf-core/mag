@@ -1,0 +1,52 @@
+nextflow_pipeline {
+
+    name "Test pipeline with test_dereplicate profile"
+    script "../main.nf"
+    tag "pipeline"
+    tag "test_dereplicate"
+    profile "test_dereplicate"
+
+    test("-profile test_dereplicate") {
+
+        when {
+            params {
+                outdir = "${outputDir}"
+            }
+        }
+
+        then {
+
+            def bin_summary    = path("${params.outdir}/GenomeBinning/bin_summary.tsv")
+            def bat_summary    = path("${params.outdir}/Taxonomy/CAT/bat_summary.tsv")
+            def gtdbtk_summary = path("${params.outdir}/Taxonomy/GTDB-Tk/gtdbtk_summary.tsv")
+            def prokka_faa     = getAllFilesFromDir(
+                params.outdir, include: ['Annotation/Prokka/**/*.faa']
+            )
+
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    // Number of successful tasks
+                    workflow.trace.succeeded().size(),
+                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we test pipelines on multiple Nextflow versions
+                    removeNextflowVersion("${params.outdir}/pipeline_info/nf_core_mag_software_mqc_versions.yml"),
+                ).match() },
+                { assert snapshot(
+                    // Every bin in this dataset fails --dereplicate_min_completeness, so
+                    // DEREPLICATION falls back to passing bins through unclustered rather
+                    // than starving downstream tools of any input (the regression this
+                    // profile exists to catch -- see subworkflows/local/dereplication for
+                    // the corresponding unit-level test of the same fallback).
+                    "Galah never ran, so no dereplicated_bins output: ${!file("${params.outdir}/GenomeBinning/Dereplication").exists()}",
+                    "bin_summary.tsv has no dereplication columns (nothing was clustered): ${!bin_summary.text.readLines().first().contains('dereplication')}",
+                    // GTDB-Tk/CAT-BAT/Prokka still ran on the full, unclustered bin set
+                    "GTDB-Tk summary non-empty: ${gtdbtk_summary.csv(sep: '\t').rowCount > 0}",
+                    "BAT summary non-empty: ${bat_summary.text.readLines().size() > 1}",
+                    "Prokka produced .faa output: ${prokka_faa.size() > 0}",
+                    "Prokka .faa files non-empty: ${prokka_faa.every { f -> path("${f}").fasta.size() > 0 }}",
+                    "Bin summary row count matches GTDB-Tk row count: ${bin_summary.csv(sep: '\t').rowCount >= gtdbtk_summary.csv(sep: '\t').rowCount}",
+                ).match("dereplicate-fallback-checks") },
+            )
+        }
+    }
+}
