@@ -27,7 +27,7 @@ workflow CATPACK {
      */
 
     if (params.cat_db) {
-        if (params.cat_db.endsWith('.tar.gz')) {
+        if (params.cat_db.name.endsWith('.tar.gz')) {
             CATPACK_DB_UNTAR([[id: 'cat_db'], file(params.cat_db, checkIfExists: true)])
             ch_versions = ch_versions.mix(CATPACK_DB_UNTAR.out.versions)
 

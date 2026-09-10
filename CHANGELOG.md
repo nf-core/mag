@@ -13,17 +13,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
+- [#1104](https://github.com/nf-core/mag/pull/1104) - Updated to nf-core 4.1.0 template (by @dialvarezs)
+- [#1103](https://github.com/nf-core/mag/pull/1103) - Support parameter types (by @dialvarezs)
+- [#1106](https://github.com/nf-core/mag/pull/1106) - Renamed `--skip_adapter_trimming` to `--skip_longread_adapter_trimming` (old name deprecated) and replaced `--skip_deepmased` with `--run_deepmased` (by @dialvarezs)
+
 ### `Fixed`
 
 - [#1098](https://github.com/nf-core/mag/issues/1098) - Fix invalid `--gunc_database_type` options to match the values accepted by `gunc download_db` (reported by @cdiener, fix by @dialvarezs)
+- [#1105](https://github.com/nf-core/mag/pull/1105) - Fix corrupted bin paths when a process emits a single file: `java.nio.file.Path` is `Iterable` over its path segments, so list operations on an unwrapped output silently iterated the path components (by @dialvarezs)
+- [#1109](https://github.com/nf-core/mag/pull/1109) - Fix `--checkm_download_url` blocking parameter validation for every run (even with `--run_checkm` off) whenever Zenodo isn't reachable, by dropping its unconditional `exists` schema check (by @erikrikarddaniel)
 
 ### `Dependencies`
 
-| Tool | Previous version | New version |
-| ---- | ---------------- | ----------- |
-|      |                  |             |
+| Tool    | Previous version | New version |
+| ------- | ---------------- | ----------- |
+| MultiQC | 1.34             | 1.35        |
+| nf-core | 4.0.3            | 4.1.0       |
 
 ### `Deprecated`
+
+- [#1106](https://github.com/nf-core/mag/pull/1106) - Deprecate `--skip_adapter_trimming` in favor of `--skip_longread_adapter_trimming` (by @dialvarezs)
 
 ## v5.5.0 - Purple Penguin [2026-08-01]
 

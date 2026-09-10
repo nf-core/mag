@@ -33,7 +33,7 @@ workflow LONGREAD_PREPROCESSING {
     ch_versions = ch_versions.mix(NANOPLOT_RAW.out.versions)
 
     if (!params.assembly_input) {
-        if (!params.skip_adapter_trimming && !val_skip_qc) {
+        if (!(params.skip_longread_adapter_trimming || params.skip_adapter_trimming) && !val_skip_qc) {
             ch_long_reads_by_platform = ch_raw_long_reads.branch { meta, _reads ->
                 ont: meta.lr_platform in ['OXFORD_NANOPORE', 'OXFORD_NANOPORE_HQ']
                 pb: meta.lr_platform in ['PACBIO_CLR', 'PACBIO_HIFI']
@@ -131,10 +131,10 @@ workflow LONGREAD_PREPROCESSING {
         /**
          * Conditions for *not* running NANOPLOT_FILTERED:
          * - No host removal and skip_qc (params.skip_longread_qc)
-         * - No host removal and *all* --keep_lambda, --skip_adapter_trimming, --skip_longread_filtering
+         * - No host removal and *all* --keep_lambda, --skip_longread_adapter_trimming, --skip_longread_filtering
          */
         if (!(val_skip_qc && !(params.host_fasta || params.host_genome))) {
-            if (!(params.skip_adapter_trimming && params.skip_longread_filtering && params.keep_lambda && !(params.host_fasta || params.host_genome))) {
+            if (!((params.skip_longread_adapter_trimming || params.skip_adapter_trimming) && params.skip_longread_filtering && params.keep_lambda && !(params.host_fasta || params.host_genome))) {
                 NANOPLOT_FILTERED(ch_long_reads)
                 ch_versions = ch_versions.mix(NANOPLOT_FILTERED.out.versions)
             }

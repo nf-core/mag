@@ -62,7 +62,8 @@ workflow GTDBTK {
 
             // drop bins with no QC metric, then split the rest:
             // a bin passes if any single tool clears both thresholds together
-            def (passed, discarded) = bins
+            def (passed, discarded) = [bins]
+                .flatten()
                 .findAll { bin -> metrics[bin.getName() - ~/\.gz$/] != null }
                 .split { bin ->
                     metrics[bin.getName() - ~/\.gz$/].any { reading ->

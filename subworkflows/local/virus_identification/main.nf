@@ -9,18 +9,18 @@ include { UNTAR as GENOMAD_UNTAR } from '../../../modules/nf-core/untar/main'
 workflow VIRUS_IDENTIFICATION {
     take:
     ch_assemblies // [val(meta), path(fasta)] input scaffolds (mandatory)
-    ch_genomad_db // [path(db)]               presupplied geNomad database (optional)
+    genomad_db    // path(db)                 presupplied geNomad database (optional)
 
     main:
     ch_versions = channel.empty()
 
-    if (params.genomad_db && ch_genomad_db.extension == 'gz') {
-        GENOMAD_UNTAR([[id: 'db'], ch_genomad_db])
+    if (genomad_db?.extension == 'gz') {
+        GENOMAD_UNTAR([[id: 'db'], genomad_db])
         ch_versions = ch_versions.mix(GENOMAD_UNTAR.out.versions)
         ch_db_for_genomad = GENOMAD_UNTAR.out.untar.map { _meta, db -> [db] }
     }
-    else if (params.genomad_db) {
-        ch_db_for_genomad = ch_genomad_db
+    else if (genomad_db) {
+        ch_db_for_genomad = genomad_db
     }
     else {
         ch_db_for_genomad = GENOMAD_DOWNLOAD().genomad_db
