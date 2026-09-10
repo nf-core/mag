@@ -186,11 +186,6 @@
                         "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
-                    "gawk": {
-                        "branch": "master",
-                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
-                        "installed_by": ["modules"]
-                    },
                     "genomad/download": {
                         "branch": "master",
                         "git_sha": "775256e10789e0f61ba57068b7256b23417f9772",

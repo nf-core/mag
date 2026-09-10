@@ -1090,14 +1090,7 @@
                 "dereplicate": {
                     "type": "boolean",
                     "description": "Turn on study-wide bin dereplication.",
-                    "help_text": "Clusters bins across the whole study by ANI and picks one representative genome per cluster, using CheckM or CheckM2 quality estimates to choose the representative (CheckM2 is preferred when both are enabled). Requires `--run_checkm2` and/or `--run_checkm`, and cannot be combined with `--skip_binqc`. GTDB-Tk (and, when a CAT/BAT database is configured, the CAT/BAT bin-classification leg) run on representatives only when this is enabled; Prokka annotation does too unless `--dereplicate_annotate_all` is also set."
-                },
-                "dereplication_tool": {
-                    "type": "string",
-                    "default": "galah",
-                    "description": "Specify which tool to use for bin dereplication. Currently only 'galah' is implemented.",
-                    "enum": ["galah"],
-                    "hidden": true
+                    "help_text": "Clusters bins across the whole study by ANI and picks one representative genome per cluster, using each bin's best-available completeness/contamination estimate to choose the representative (CheckM2 is preferred over CheckM over BUSCO when more than one ran for the same bin). Requires `--run_checkm2`, `--run_checkm` and/or `--run_busco`, and cannot be combined with `--skip_binqc`. GTDB-Tk (and, when a CAT/BAT database is configured, the CAT/BAT bin-classification leg) run on representatives only when this is enabled; Prokka annotation does too unless `--dereplicate_annotate_all` is also set."
                 },
                 "dereplicate_annotate_all": {
                     "type": "boolean",

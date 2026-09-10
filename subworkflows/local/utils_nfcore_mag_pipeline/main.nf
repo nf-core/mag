@@ -425,11 +425,8 @@ def validateInputParameters(hybrid) {
     }
 
     // Check dereplication parameters
-    if (params.dereplicate && (params.skip_binqc || (!params.run_checkm2 && !params.run_checkm))) {
-        error('[nf-core/mag] ERROR: To dereplicate bins with Galah you need to include the parameter `--run_checkm2` and/or `--run_checkm`, and you cannot skip BINQC.')
-    }
-    if (params.dereplicate && params.dereplication_tool != 'galah') {
-        error("[nf-core/mag] ERROR: '${params.dereplication_tool}' is not a supported value for --dereplication_tool; only 'galah' is currently implemented.")
+    if (params.dereplicate && (params.skip_binqc || (!params.run_checkm2 && !params.run_checkm && !params.run_busco))) {
+        error('[nf-core/mag] ERROR: To dereplicate bins with Galah you need to include the parameter `--run_checkm2`, `--run_checkm` and/or `--run_busco`, and you cannot skip BINQC.')
     }
 
     // Check ancient DNA damage parameters

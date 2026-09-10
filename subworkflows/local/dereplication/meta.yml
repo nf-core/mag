@@ -1,8 +1,9 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
 name: "dereplication"
 description: |
-  Dereplicate a study-wide set of prokaryotic bins with Galah, using CheckM
-  or CheckM2 quality estimates to pick one representative genome per ANI
+  Dereplicate a study-wide set of prokaryotic bins with Galah, using each
+  bin's best-available completeness/contamination estimate (from whichever of
+  BUSCO/CheckM/CheckM2 ran) to pick one representative genome per ANI
   cluster. Recovers each representative's original per-sample metadata by
   filename after the study-wide clustering call.
 keywords:
@@ -12,7 +13,6 @@ keywords:
   - bins
   - mags
 components:
-  - gawk
   - galah
 input:
   - ch_bins:
@@ -21,18 +21,14 @@ input:
         Per-sample bins, filtered internally to non-eukaryotic domains.
         Structure: [ val(meta), [ path(bin) ] ]
       pattern: "*.{fa,fasta}{,.gz}"
-  - ch_qc_summary:
+  - ch_genome_info:
       type: file
       description: |
-        Single study-wide CheckM or CheckM2 summary TSV, as emitted by the
-        BIN_QC subworkflow's checkm_summary/checkm2_summary output (a bare
-        path channel, no meta).
-        Structure: path(tsv)
-      pattern: "*.tsv"
-  - val_qc_format:
-      type: string
-      description: |
-        Which format ch_qc_summary is in: 'checkm' or 'checkm2'.
+        Single study-wide "genome,completeness,contamination" table (dRep's
+        genome_info format), as emitted by the BIN_QC subworkflow's
+        genome_info output (a bare path channel, no meta).
+        Structure: path(csv)
+      pattern: "*.csv"
 output:
   - dereplicated_bins:
       type: file

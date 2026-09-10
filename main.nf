@@ -224,7 +224,6 @@ params {
     multiqc_methods_description: Path?
     generate_bigmag_file: Boolean
     dereplicate: Boolean
-    dereplication_tool: String = 'galah'
     dereplicate_annotate_all: Boolean
     dereplicate_min_completeness: Float = 50
     dereplicate_max_contamination: Float = 10

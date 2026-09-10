@@ -8,26 +8,18 @@ nextflow_workflow {
     tag "subworkflows_"
     tag "subworkflows/dereplication"
     tag "galah"
-    tag "gawk"
 
     // The two real genomes below are the same pair used by the upstream
     // nf-core/modules galah test; at Galah's default 95% ANI they do NOT
     // cluster together, so this test does not exercise an actual multi-member
     // cluster collapse. What it does verify: each representative genome is
-    // correctly rejoined to its own original per-sample metadata (not, say,
-    // the other sample's), that eukaryotic bins never reach Galah at all,
-    // that the real CheckM2 report format (bare bin stem, no extension, as
-    // CheckM2 actually emits it -- confirmed the hard way against a real
-    // pipeline run, not just assumed) is correctly matched up by GAWK before
-    // reaching Galah (which looks entries up by the bin's original extension
-    // with any .gz compression suffix stripped), and that leftover
-    // unbinned-contig pseudo-bins (meta.refinement ending in "unbinned")
-    // never reach Galah either -- also confirmed against a real run, where
-    // CheckM2 didn't reliably produce QC for them and Galah panicked
-    // outright on the mismatch rather than warning. sample4 below has no
-    // corresponding CheckM2 report row at all, deliberately: if the
-    // unbinned exclusion regresses, Galah would panic on it exactly like
-    // the real bug, not just silently do the wrong thing.
+    // correctly rejoined to its own original per-sample metadata, eukaryotic
+    // and leftover unbinned-contig pseudo-bins never reach Galah, and the
+    // genome_info CSV format BIN_QC now produces (see subworkflows/local/
+    // bin_qc) is correctly consumed. sample4 has no corresponding genome_info
+    // row at all, deliberately: if the unbinned exclusion regresses, Galah
+    // would panic on it (confirmed against a real run) rather than silently
+    // doing the wrong thing.
     test("two prokaryotic bins, one eukaryotic and one unbinned-pseudo-bin filtered out") {
 
         when {
@@ -35,17 +27,12 @@ nextflow_workflow {
             // which isn't loaded when nf-test invokes this subworkflow
             // directly.
             params {
-                dereplication_tool             = 'galah'
                 dereplicate_min_completeness   = 50
                 dereplicate_max_contamination  = 10
                 dereplicate_ani                = 95
             }
             workflow {
                 """
-                // Bin files are named like the real pipeline's binner output
-                // (<assembler>-<binner>-<sample>.fa.gz), not just reused as
-                // downloaded, since GAWK's .fa suffix (conf/modules.config)
-                // is hardcoded to match that real naming convention.
                 def stagingDir = File.createTempDir()
 
                 def binSample1 = new File(stagingDir, 'SPAdes-MetaBAT2-sample1.fa.gz')
@@ -82,20 +69,14 @@ nextflow_workflow {
                     ],
                 )
 
-                // Real CheckM2 quality_report.tsv rows for these two genomes
-                // (https://github.com/nf-core/test-datasets/blob/modules/data/delete_me/galah/checkm2_report.tsv),
-                // Name column exactly as CheckM2 actually emits it: the bare
-                // bin stem, no extension at all. DEREPLICATION's own GAWK
-                // step (not this test) is what appends '.fa' to match.
-                def checkm2Report = File.createTempFile('checkm2_report', '.tsv')
-                checkm2Report.text = "Name\\tCompleteness\\tContamination\\tCompleteness_Model_Used\\tTranslation_Table_Used\\tCoding_Density\\tContig_N50\\tAverage_Gene_Length\\tGenome_Size\\tGC_Content\\tTotal_Coding_Sequences\\tTotal_Contigs\\tMax_Contig_Length\\tAdditional_Notes\\n" +
-                    "SPAdes-MetaBAT2-sample1\\t96.38\\t0.18\\tNeural Network (Specific Model)\\t4\\t0.896\\t271175\\t315.7548638132296\\t271175\\t0.15\\t257\\t1\\t271175\\tNone\\n" +
-                    "SPAdes-MetaBAT2-sample2\\t74.65\\t0.12\\tNeural Network (Specific Model)\\t11\\t0.931\\t200316\\t315.12626262626264\\t200316\\t0.15\\t198\\t1\\t200316\\tNone\\n"
+                // Real CheckM2 completeness/contamination values for these two
+                // genomes, translated into BIN_QC's genome_info output format.
+                def genomeInfo = File.createTempFile('genome_info', '.csv')
+                genomeInfo.text = "genome,completeness,contamination\\n" +
+                    "SPAdes-MetaBAT2-sample1.fa,96.38,0.18\\n" +
+                    "SPAdes-MetaBAT2-sample2.fa,74.65,0.12\\n"
 
-                // Bare path channel, no meta -- matches BIN_QC.out.checkm2_summary's
-                // actual shape (workflows/mag.nf passes it straight through).
-                input[1] = Channel.of(file(checkm2Report.path))
-                input[2] = 'checkm2'
+                input[1] = Channel.of(file(genomeInfo.path))
                 """
             }
         }
@@ -112,67 +93,6 @@ nextflow_workflow {
         }
     }
 
-    // Same two real genomes as above, but with a CheckM (not CheckM2)
-    // --tab_table report, to prove the qc_format='checkm' path -- reused by
-    // anyone who runs --run_checkm instead of --run_checkm2 -- is actually
-    // exercised, not just plausible from reading the code. Column layout and
-    // count (14 columns, 0-indexed Completeness/Contamination/Strain
-    // heterogeneity at 11/12/13) match CheckM's real `-o 2 --tab_table`
-    // output (conf/modules.config's CHECKM_QA ext.args), which is also what
-    // Galah's own checkm-rs dependency expects.
-    test("CheckM (not CheckM2) quality report is also accepted") {
-
-        when {
-            params {
-                dereplication_tool             = 'galah'
-                dereplicate_min_completeness   = 50
-                dereplicate_max_contamination  = 10
-                dereplicate_ani                = 95
-            }
-            workflow {
-                """
-                def stagingDir = File.createTempDir()
-
-                def binSample1 = new File(stagingDir, 'SPAdes-MetaBAT2-sample1.fa.gz')
-                file('https://github.com/nf-core/test-datasets/raw/refs/heads/magmap/testdata/GCA_002688505.1_ASM268850v1_genomic.fna.gz', checkIfExists: true).copyTo(binSample1.toPath())
-
-                def binSample2 = new File(stagingDir, 'SPAdes-MetaBAT2-sample2.fa.gz')
-                file('https://github.com/nf-core/test-datasets/raw/refs/heads/magmap/testdata/GCF_004296495.1_ASM429649v1_genomic.fna.gz', checkIfExists: true).copyTo(binSample2.toPath())
-
-                input[0] = Channel.of(
-                    [
-                        [id: 'sample1', assembler: 'SPAdes', binner: 'MetaBAT2', domain: 'prokarya', refinement: 'unrefined'],
-                        [file(binSample1)],
-                    ],
-                    [
-                        [id: 'sample2', assembler: 'SPAdes', binner: 'MetaBAT2', domain: 'prokarya', refinement: 'unrefined'],
-                        [file(binSample2)],
-                    ],
-                )
-
-                def checkmReport = File.createTempFile('checkm_report', '.tsv')
-                checkmReport.text = "Bin Id\\tMarker lineage\\t# genomes\\t# markers\\t# marker sets\\t0\\t1\\t2\\t3\\t4\\t5+\\tCompleteness\\tContamination\\tStrain heterogeneity\\n" +
-                    "SPAdes-MetaBAT2-sample1\\tk__Bacteria\\t1\\t104\\t58\\t2\\t95\\t7\\t0\\t0\\t0\\t96.38\\t0.18\\t0.0\\n" +
-                    "SPAdes-MetaBAT2-sample2\\tk__Bacteria\\t1\\t104\\t58\\t9\\t92\\t3\\t0\\t0\\t0\\t74.65\\t0.12\\t0.0\\n"
-
-                // Bare path channel, no meta -- matches BIN_QC.out.checkm_summary's
-                // actual shape (workflows/mag.nf passes it straight through).
-                input[1] = Channel.of(file(checkmReport.path))
-                input[2] = 'checkm'
-                """
-            }
-        }
-
-        then {
-            assert workflow.success
-            assertAll(
-                { assert workflow.out.dereplicated_bins.size() == 2 },
-                { assert workflow.out.dereplicated_bins.collect { it[0].id }.sort() == ['sample1', 'sample2'] },
-                { assert workflow.out.cluster_tsv.size() == 1 },
-            )
-        }
-    }
-
     // Galah 0.4.2 panics (index out of bounds) rather than erroring cleanly
     // when zero genomes pass its quality thresholds
     // (https://github.com/wwood/galah/issues/75). Confirmed for real against
@@ -185,11 +105,7 @@ nextflow_workflow {
     test("all bins below quality threshold: Galah skipped, bins passed through unclustered") {
 
         when {
-            // Defaults normally supplied by main.nf's typed params block,
-            // which isn't loaded when nf-test invokes this subworkflow
-            // directly.
             params {
-                dereplication_tool             = 'galah'
                 dereplicate_min_completeness   = 50
                 dereplicate_max_contamination  = 10
                 dereplicate_ani                = 95
@@ -215,16 +131,15 @@ nextflow_workflow {
                     ],
                 )
 
-                // Same two real genomes' real CheckM2 rows, but with
-                // Completeness dropped well below the default
-                // --dereplicate_min_completeness (50): neither qualifies.
-                def checkm2Report = File.createTempFile('checkm2_report', '.tsv')
-                checkm2Report.text = "Name\\tCompleteness\\tContamination\\tCompleteness_Model_Used\\tTranslation_Table_Used\\tCoding_Density\\tContig_N50\\tAverage_Gene_Length\\tGenome_Size\\tGC_Content\\tTotal_Coding_Sequences\\tTotal_Contigs\\tMax_Contig_Length\\tAdditional_Notes\\n" +
-                    "SPAdes-MetaBAT2-sample1\\t9.6\\t0.18\\tNeural Network (Specific Model)\\t4\\t0.896\\t271175\\t315.7548638132296\\t271175\\t0.15\\t257\\t1\\t271175\\tNone\\n" +
-                    "SPAdes-MetaBAT2-sample2\\t7.4\\t0.12\\tNeural Network (Specific Model)\\t11\\t0.931\\t200316\\t315.12626262626264\\t200316\\t0.15\\t198\\t1\\t200316\\tNone\\n"
+                // Same two real genomes, but with completeness dropped well
+                // below the default --dereplicate_min_completeness (50):
+                // neither qualifies.
+                def genomeInfo = File.createTempFile('genome_info', '.csv')
+                genomeInfo.text = "genome,completeness,contamination\\n" +
+                    "SPAdes-MetaBAT2-sample1.fa,9.6,0.18\\n" +
+                    "SPAdes-MetaBAT2-sample2.fa,7.4,0.12\\n"
 
-                input[1] = Channel.of(file(checkm2Report.path))
-                input[2] = 'checkm2'
+                input[1] = Channel.of(file(genomeInfo.path))
                 """
             }
         }

@@ -513,6 +513,7 @@ workflow MAG {
             ch_busco_summary = BIN_QC.out.busco_summary
             ch_checkm_summary = BIN_QC.out.checkm_summary
             ch_checkm2_summary = BIN_QC.out.checkm2_summary
+            ch_genome_info = BIN_QC.out.genome_info
         }
 
         /*
@@ -522,11 +523,7 @@ workflow MAG {
         ch_dereplicated_bins = channel.empty()
         ch_dereplication_cluster_tsv = channel.empty()
         if (params.dereplicate) {
-            // CheckM2 is preferred when both are enabled -- it's the more
-            // actively developed of the two and the one used in this
-            // feature's own validation, but either works.
-            ch_dereplication_qc_summary = params.run_checkm2 ? ch_checkm2_summary : ch_checkm_summary
-            DEREPLICATION(ch_input_for_postbinning, ch_dereplication_qc_summary, params.run_checkm2 ? 'checkm2' : 'checkm')
+            DEREPLICATION(ch_input_for_postbinning, ch_genome_info)
             ch_dereplicated_bins = DEREPLICATION.out.dereplicated_bins
             ch_dereplication_cluster_tsv = DEREPLICATION.out.cluster_tsv.map { _meta, tsv -> tsv }
         }
