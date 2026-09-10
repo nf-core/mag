@@ -10,7 +10,7 @@
 [![Nextflow](https://img.shields.io/badge/version-%E2%89%A526.04.0-green?style=flat&logo=nextflow&logoColor=white&color=%230DC09D&link=https%3A%2F%2Fnextflow.io)](https://www.nextflow.io/)
 [![nf-core template version](https://img.shields.io/badge/nf--core_template-4.0.3-green?style=flat&logo=nfcore&logoColor=white&color=%2324B064&link=https%3A%2F%2Fnf-co.re)](https://github.com/nf-core/tools/releases/tag/4.0.3)
 [![Cite Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.3589527-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.3589527)
-[![Cite Publication](https://img.shields.io/badge/cite%20-Publication-orange)](https://doi.org/10.1093/nargab/lqac007)
+[![Cite Publication](https://img.shields.io/badge/cite%20-Publication-orange)](https://doi.org/10.1093/bioinformatics/btag628)
 ![HiRSE Code Promo Badge](https://img.shields.io/badge/Promo-8db427?label=HiRSE&labelColor=005aa0&link=go.fzj.de/CodePromo) [![Static Badge](https://img.shields.io/badge/%F0%9F%8D%94%20%20BIgMAG-compatible-%2324B064)](https://github.com/jeffe107/BIgMAG)
 
 <!-- Documentation and launch -->
@@ -130,6 +130,14 @@ For further information or help, don't hesitate to get in touch on the [Slack `#
 ## Citations
 
 If you use nf-core/mag for your analysis, please cite the paper as follows:
+
+> **Community-driven updates for comprehensive long-read metagenomics and enhanced binning in nf-core/mag v5**
+>
+> Diego Alvarez Saravia, Adam Rosenbaum, Daniel Straub, Jim Downie, Maxime Borry, Greg Fedewa, Alexander Hübner, Daniel Lundin, Jeferyd Yepes-García, James McDonald, Sven Nahnsen, Linda Köhn, Roberto Uribe-Paredes, Marcelo A Navarrete, Christina Warinner, nf-core community, James A Fellows Yates.
+>
+> Bioinformatics. 2026 42(9):btag628 doi: [10.1093/bioinformatics/btag628](https://doi.org/10.1093/bioinformatics/btag628).
+
+As well as the original nf-core/mag publication:
 
 > **nf-core/mag: a best-practice pipeline for metagenome hybrid assembly and binning**
 >

@@ -12,6 +12,10 @@
 
 If you use nf-core/mag please cite:
 
+- Current nf-core/mag publication
+
+  > Alvarez Saravia, D., Rosenbaum, A., Straub, D., Downie, J., Borry, M., Fedewa, G., Hübner, A., Lundin, D., Yepes-García, J., McDonald, J., Nahnsen, S., Köhn, L., Uribe-Paredes, R., Navarrete, M. A., Warinner, C., nf-core community, & Fellows Yates, J. A. (2026). Community-driven updates for comprehensive long-read metagenomics and enhanced binning in nf-core/mag v5. Bioinformatics, 42(9), btag628. [https://doi.org/10.1093/bioinformatics/btag628](https://doi.org/10.1093/bioinformatics/btag628)
+
 - Original nf-core/mag publication
 
   > Krakau, S., Straub, D., Gourlé, H., Gabernet, G., & Nahnsen, S. (2022). nf-core/mag: a best-practice pipeline for metagenome hybrid assembly and binning. NAR Genomics and Bioinformatics, 4(1). [https://doi.org/10.1093/nargab/lqac007](https://doi.org/10.1093/nargab/lqac007)

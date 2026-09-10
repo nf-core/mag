@@ -472,7 +472,7 @@ def toolCitationText() {
     def specific_options = [
         params.ancient_dna ? "with `--ancient_dna` mode (Fellows Yates et al. 2026)" : ""
     ]
-    def paper_citation = "Data was assembled with nf-core/mag (Krakau et al. 2022) ${specific_options.join(' ')}."
+    def paper_citation = "Data was assembled with nf-core/mag (Alvarez Saravia et al. 2026; Krakau et al. 2022) ${specific_options.join(' ')}."
 
 
     def text_seq_qc = "Sequencing quality control was performed with FastQC (Andrews 2010)."
@@ -581,6 +581,7 @@ def toolCitationText() {
 
 def toolBibliographyText() {
     def references = [
+        "<li>Alvarez Saravia, D., Rosenbaum, A., Straub, D., Downie, J., Borry, M., Fedewa, G., Hübner, A., Lundin, D., Yepes-García, J., McDonald, J., Nahnsen, S., Köhn, L., Uribe-Paredes, R., Navarrete, M. A., Warinner, C., nf-core community, & Fellows Yates, J. A. (2026). Community-driven updates for comprehensive long-read metagenomics and enhanced binning in nf-core/mag v5. Bioinformatics, 42(9), btag628. https://doi.org/10.1093/bioinformatics/btag628</li>",
         "<li>Krakau, S., Straub, D., Gourlé, H., Gabernet, G., & Nahnsen, S. (2022). nf-core/mag: a best-practice pipeline for metagenome hybrid assembly and binning. NAR Genomics and Bioinformatics, 4(1). https://doi.org/10.1093/nargab/lqac007</li>",
         "<li>Andrews, S. (2010). FastQC: A Quality Control Tool for High Throughput Sequence Data [Online]. URL: https://www.bioinformatics.babraham.ac.uk/projects/fastqc/</li>",
         "<li>Ewels, P., Magnusson, M., Lundin, S., & Käller, M. (2016). MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics, 32(19), 3047-3048. doi: 10.1093/bioinformatics/btw354</li>",
