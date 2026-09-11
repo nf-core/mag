@@ -1086,6 +1086,34 @@
                     "type": "boolean",
                     "description": "Make a BIgMAG input file including GUNC results.",
                     "help_text": "It requires --run_gunc and --run_checkm2 to be executed. BINQC, GTDB-TK, QUAST nor BUSCO can't be skipped."
+                },
+                "dereplicate": {
+                    "type": "boolean",
+                    "description": "Turn on study-wide bin dereplication.",
+                    "help_text": "Clusters bins across the whole study by ANI and picks one representative genome per cluster, using each bin's best-available completeness/contamination estimate to choose the representative (CheckM2 is preferred over CheckM over BUSCO when more than one ran for the same bin). Requires `--run_checkm2`, `--run_checkm` and/or `--run_busco`, and cannot be combined with `--skip_binqc`. GTDB-Tk (and, when a CAT/BAT database is configured, the CAT/BAT bin-classification leg) run on representatives only when this is enabled; Prokka annotation does too unless `--dereplicate_annotate_all` is also set."
+                },
+                "dereplicate_annotate_all": {
+                    "type": "boolean",
+                    "description": "Annotate every bin with Prokka, not just dereplication representatives.",
+                    "help_text": "Only has an effect when `--dereplicate` is set. By default, once dereplication is on, Prokka only annotates cluster representatives to avoid redundant work on near-identical genomes. Set this to annotate every bin regardless of cluster membership, e.g. for pan-genome analyses that need per-strain gene content."
+                },
+                "dereplicate_min_completeness": {
+                    "type": "number",
+                    "default": 50,
+                    "description": "Minimum CheckM2 completeness (%) for a bin to be included in dereplication.",
+                    "help_text": "Bins below this threshold are excluded from ANI clustering entirely, rather than being force-assigned to a cluster: ANI estimates on poor-quality bins aren't trustworthy. Matches GTDB-Tk's own recommended minimum and the Bowers et al. 2017 medium-quality genome standard."
+                },
+                "dereplicate_max_contamination": {
+                    "type": "number",
+                    "default": 10,
+                    "description": "Maximum CheckM2 contamination (%) for a bin to be included in dereplication.",
+                    "help_text": "Bins above this threshold are excluded from ANI clustering entirely, rather than being force-assigned to a cluster: ANI estimates on poor-quality bins aren't trustworthy. Matches GTDB-Tk's own recommended minimum and the Bowers et al. 2017 medium-quality genome standard."
+                },
+                "dereplicate_ani": {
+                    "type": "number",
+                    "default": 95,
+                    "description": "ANI (%) threshold to cluster bins at during dereplication.",
+                    "help_text": "Matches Galah's own default (95%, species-level). A coarser (lower) threshold clusters more aggressively but makes the taxonomy propagated to non-representative cluster members in `bin_summary.tsv` less reliable, since genomes spanning more than one actual species could end up in the same cluster."
                 }
             }
         },

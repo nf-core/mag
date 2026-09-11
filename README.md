@@ -55,6 +55,7 @@ The pipeline then:
 - checks the quality of the genome bins using [Busco](https://busco.ezlab.org/), [CheckM](https://ecogenomics.github.io/CheckM/), or [CheckM2](https://github.com/chklovski/CheckM2) and optionally [GUNC](https://grp-bork.embl-community.io/gunc/)
 - Performs ancient DNA validation and repair with [pyDamage](https://github.com/maxibor/pydamage) and [freebayes](https://github.com/freebayes/freebayes)
 - optionally refines bins with [DAS Tool](https://github.com/cmks/DAS_Tool)
+- optionally dereplicates bins study-wide by average nucleotide identity with [Galah](https://github.com/wwood/galah)
 - assigns taxonomy to bins using [GTDB-Tk](https://github.com/Ecogenomics/GTDBTk) and/or [CAT](https://github.com/dutilh/CAT) and optionally identifies viruses in assemblies using [geNomad](https://github.com/apcamargo/genomad), or Eukaryotes with [Tiara](https://github.com/ibe-uw/tiara)
 
 Furthermore, the pipeline creates various reports in the results directory specified, including a [MultiQC](https://multiqc.info/) report summarizing some of the findings and software versions.

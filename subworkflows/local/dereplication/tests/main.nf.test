@@ -1,0 +1,158 @@
+nextflow_workflow {
+
+    name "Test Subworkflow DEREPLICATION"
+    script "../main.nf"
+    workflow "DEREPLICATION"
+
+    tag "subworkflows"
+    tag "subworkflows_"
+    tag "subworkflows/dereplication"
+    tag "galah"
+
+    // The two real genomes below are the same pair used by the upstream
+    // nf-core/modules galah test; at Galah's default 95% ANI they do NOT
+    // cluster together, so this test does not exercise an actual multi-member
+    // cluster collapse. What it does verify: each representative genome is
+    // correctly rejoined to its own original per-sample metadata, eukaryotic
+    // and leftover unbinned-contig pseudo-bins never reach Galah, and the
+    // genome_info CSV format BIN_QC now produces (see subworkflows/local/
+    // bin_qc) is correctly consumed. sample4 has no corresponding genome_info
+    // row at all, deliberately: if the unbinned exclusion regresses, Galah
+    // would panic on it (confirmed against a real run) rather than silently
+    // doing the wrong thing.
+    test("two prokaryotic bins, one eukaryotic and one unbinned-pseudo-bin filtered out") {
+
+        when {
+            // Defaults normally supplied by main.nf's typed params block,
+            // which isn't loaded when nf-test invokes this subworkflow
+            // directly.
+            params {
+                dereplicate_min_completeness   = 50
+                dereplicate_max_contamination  = 10
+                dereplicate_ani                = 95
+            }
+            workflow {
+                """
+                def stagingDir = File.createTempDir()
+
+                def binSample1 = new File(stagingDir, 'SPAdes-MetaBAT2-sample1.fa.gz')
+                file('https://github.com/nf-core/test-datasets/raw/refs/heads/magmap/testdata/GCA_002688505.1_ASM268850v1_genomic.fna.gz', checkIfExists: true).copyTo(binSample1.toPath())
+
+                def binSample2 = new File(stagingDir, 'SPAdes-MetaBAT2-sample2.fa.gz')
+                file('https://github.com/nf-core/test-datasets/raw/refs/heads/magmap/testdata/GCF_004296495.1_ASM429649v1_genomic.fna.gz', checkIfExists: true).copyTo(binSample2.toPath())
+
+                def binSample3 = new File(stagingDir, 'SPAdes-MetaBAT2-sample3.fa.gz')
+                file('https://github.com/nf-core/test-datasets/raw/refs/heads/magmap/testdata/GCA_002688505.1_ASM268850v1_genomic.fna.gz', checkIfExists: true).copyTo(binSample3.toPath())
+
+                def binSample4 = new File(stagingDir, 'SPAdes-MetaBAT2-sample4.unbinned.1.fa.gz')
+                file('https://github.com/nf-core/test-datasets/raw/refs/heads/magmap/testdata/GCF_004296495.1_ASM429649v1_genomic.fna.gz', checkIfExists: true).copyTo(binSample4.toPath())
+
+                input[0] = Channel.of(
+                    [
+                        [id: 'sample1', assembler: 'SPAdes', binner: 'MetaBAT2', domain: 'prokarya', refinement: 'unrefined'],
+                        [file(binSample1)],
+                    ],
+                    [
+                        [id: 'sample2', assembler: 'SPAdes', binner: 'MetaBAT2', domain: 'prokarya', refinement: 'unrefined'],
+                        [file(binSample2)],
+                    ],
+                    [
+                        // never reaches Galah: filtered out by domain before collection
+                        [id: 'sample3', assembler: 'SPAdes', binner: 'MetaBAT2', domain: 'eukarya', refinement: 'unrefined'],
+                        [file(binSample3)],
+                    ],
+                    [
+                        // never reaches Galah: filtered out as a leftover unbinned-contig
+                        // pseudo-bin, not a real curated genome
+                        [id: 'sample4', assembler: 'SPAdes', binner: 'MetaBAT2', domain: 'prokarya', refinement: 'unrefined_unbinned'],
+                        [file(binSample4)],
+                    ],
+                )
+
+                // Real CheckM2 completeness/contamination values for these two
+                // genomes, translated into BIN_QC's genome_info output format.
+                def genomeInfo = File.createTempFile('genome_info', '.csv')
+                genomeInfo.text = "genome,completeness,contamination\\n" +
+                    "SPAdes-MetaBAT2-sample1.fa,96.38,0.18\\n" +
+                    "SPAdes-MetaBAT2-sample2.fa,74.65,0.12\\n"
+
+                input[1] = Channel.of(file(genomeInfo.path))
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assertAll(
+                { assert workflow.out.dereplicated_bins.size() == 2 },
+                { assert workflow.out.dereplicated_bins.collect { it[0].id }.sort() == ['sample1', 'sample2'] },
+                { assert workflow.out.dereplicated_bins.every { it[0].assembler == 'SPAdes' && it[0].binner == 'MetaBAT2' && it[0].domain == 'prokarya' } },
+                { assert workflow.out.cluster_tsv.size() == 1 },
+                { assert snapshot(workflow.out).match() },
+            )
+        }
+    }
+
+    // Galah 0.4.2 panics (index out of bounds) rather than erroring cleanly
+    // when zero genomes pass its quality thresholds
+    // (https://github.com/wwood/galah/issues/75). Confirmed for real against
+    // nf-core/mag's own test_minigut CI dataset, where every recovered bin
+    // happens to fall below the default 50% completeness threshold. This
+    // test reuses the same two real genomes as above, but with completeness
+    // values that fail the (default) threshold, to confirm DEREPLICATION
+    // works around the crash by skipping Galah gracefully rather than
+    // invoking it at all.
+    test("all bins below quality threshold: Galah skipped, bins passed through unclustered") {
+
+        when {
+            params {
+                dereplicate_min_completeness   = 50
+                dereplicate_max_contamination  = 10
+                dereplicate_ani                = 95
+            }
+            workflow {
+                """
+                def stagingDir = File.createTempDir()
+
+                def binSample1 = new File(stagingDir, 'SPAdes-MetaBAT2-sample1.fa.gz')
+                file('https://github.com/nf-core/test-datasets/raw/refs/heads/magmap/testdata/GCA_002688505.1_ASM268850v1_genomic.fna.gz', checkIfExists: true).copyTo(binSample1.toPath())
+
+                def binSample2 = new File(stagingDir, 'SPAdes-MetaBAT2-sample2.fa.gz')
+                file('https://github.com/nf-core/test-datasets/raw/refs/heads/magmap/testdata/GCF_004296495.1_ASM429649v1_genomic.fna.gz', checkIfExists: true).copyTo(binSample2.toPath())
+
+                input[0] = Channel.of(
+                    [
+                        [id: 'sample1', assembler: 'SPAdes', binner: 'MetaBAT2', domain: 'prokarya', refinement: 'unrefined'],
+                        [file(binSample1)],
+                    ],
+                    [
+                        [id: 'sample2', assembler: 'SPAdes', binner: 'MetaBAT2', domain: 'prokarya', refinement: 'unrefined'],
+                        [file(binSample2)],
+                    ],
+                )
+
+                // Same two real genomes, but with completeness dropped well
+                // below the default --dereplicate_min_completeness (50):
+                // neither qualifies.
+                def genomeInfo = File.createTempFile('genome_info', '.csv')
+                genomeInfo.text = "genome,completeness,contamination\\n" +
+                    "SPAdes-MetaBAT2-sample1.fa,9.6,0.18\\n" +
+                    "SPAdes-MetaBAT2-sample2.fa,7.4,0.12\\n"
+
+                input[1] = Channel.of(file(genomeInfo.path))
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assertAll(
+                // No clustering happened (Galah never ran), but both bins
+                // are still passed through -- as if --dereplicate weren't
+                // set at all -- rather than dropped from the run entirely.
+                { assert workflow.out.dereplicated_bins.size() == 2 },
+                { assert workflow.out.cluster_tsv.size() == 0 },
+            )
+        }
+    }
+}

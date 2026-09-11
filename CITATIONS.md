@@ -90,6 +90,10 @@
 
   > Garrison E, Marth G. Haplotype-based variant detection from short-read sequencing. arXiv preprint arXiv:1207.3907 [q-bio.GN] 2012
 
+- [Galah](https://doi.org/10.5281/zenodo.13637856)
+
+  > Aroney, S. T. N., Camargo, A. P., Tyson, G. W., & Woodcroft, B. J. (2024). Galah: More scalable dereplication for metagenome assembled genomes. Zenodo. doi: 10.5281/zenodo.13637856
+
 - [geNomad](https://doi.org/10.1038/s41587-023-01953-y)
 
   > Camargo, A. P., et al. (2023). Identification of mobile genetic elements with geNomad. Nature Biotechnology 42, 1303–1312. doi: 10.1038/s41587-023-01953-y

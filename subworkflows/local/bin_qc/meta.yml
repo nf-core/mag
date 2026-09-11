@@ -42,6 +42,17 @@ output:
             type: file
             description: Quality assessment summary in TSV format
             pattern: "*.tsv"
+  - genome_info:
+      description: |
+        Study-wide "genome,completeness,contamination" table (dRep's
+        genome_info format) built from whichever of BUSCO/CheckM/CheckM2 ran,
+        for use as Galah's dereplication input. CheckM2 is preferred over
+        CheckM over BUSCO when more than one tool assessed the same bin.
+      structure:
+        - csv:
+            type: file
+            description: genome_info table
+            pattern: "*.csv"
   - versions:
       type: file
       description: File containing software versions

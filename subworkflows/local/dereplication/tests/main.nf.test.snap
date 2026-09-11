@@ -1,0 +1,73 @@
+{
+    "two prokaryotic bins, one eukaryotic and one unbinned-pseudo-bin filtered out": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "sample1",
+                            "assembler": "SPAdes",
+                            "binner": "MetaBAT2",
+                            "domain": "prokarya",
+                            "refinement": "unrefined"
+                        },
+                        "SPAdes-MetaBAT2-sample1.fa.gz:md5,fe93f30498a00395d0aa61ff51346df0"
+                    ],
+                    [
+                        {
+                            "id": "sample2",
+                            "assembler": "SPAdes",
+                            "binner": "MetaBAT2",
+                            "domain": "prokarya",
+                            "refinement": "unrefined"
+                        },
+                        "SPAdes-MetaBAT2-sample2.fa.gz:md5,d2b13175217b96d0ed2881ccdb510357"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "study"
+                        },
+                        "dereplicated_bins.tsv:md5,e4eee6bbc3e7186884ebf829f468b4c0"
+                    ]
+                ],
+                "cluster_tsv": [
+                    [
+                        {
+                            "id": "study"
+                        },
+                        "dereplicated_bins.tsv:md5,e4eee6bbc3e7186884ebf829f468b4c0"
+                    ]
+                ],
+                "dereplicated_bins": [
+                    [
+                        {
+                            "id": "sample1",
+                            "assembler": "SPAdes",
+                            "binner": "MetaBAT2",
+                            "domain": "prokarya",
+                            "refinement": "unrefined"
+                        },
+                        "SPAdes-MetaBAT2-sample1.fa.gz:md5,fe93f30498a00395d0aa61ff51346df0"
+                    ],
+                    [
+                        {
+                            "id": "sample2",
+                            "assembler": "SPAdes",
+                            "binner": "MetaBAT2",
+                            "domain": "prokarya",
+                            "refinement": "unrefined"
+                        },
+                        "SPAdes-MetaBAT2-sample2.fa.gz:md5,d2b13175217b96d0ed2881ccdb510357"
+                    ]
+                ]
+            }
+        ],
+        "timestamp": "2026-09-10T11:04:40.109512271",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
+    }
+}

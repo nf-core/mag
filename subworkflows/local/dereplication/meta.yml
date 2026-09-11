@@ -1,0 +1,50 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "dereplication"
+description: |
+  Dereplicate a study-wide set of prokaryotic bins with Galah, using each
+  bin's best-available completeness/contamination estimate (from whichever of
+  BUSCO/CheckM/CheckM2 ran) to pick one representative genome per ANI
+  cluster. Recovers each representative's original per-sample metadata by
+  filename after the study-wide clustering call.
+keywords:
+  - dereplication
+  - ani
+  - galah
+  - bins
+  - mags
+components:
+  - galah
+input:
+  - ch_bins:
+      type: file
+      description: |
+        Per-sample bins, filtered internally to non-eukaryotic domains.
+        Structure: [ val(meta), [ path(bin) ] ]
+      pattern: "*.{fa,fasta}{,.gz}"
+  - ch_genome_info:
+      type: file
+      description: |
+        Single study-wide "genome,completeness,contamination" table (dRep's
+        genome_info format), as emitted by the BIN_QC subworkflow's
+        genome_info output (a bare path channel, no meta).
+        Structure: path(csv)
+      pattern: "*.csv"
+output:
+  - dereplicated_bins:
+      type: file
+      description: |
+        One representative genome per cluster, with the original per-sample
+        metadata (assembler, id, binner, domain, refinement) preserved.
+        Structure: [ val(meta), path(bin) ]
+      pattern: "*.{fa,fasta}{,.gz}"
+  - cluster_tsv:
+      type: file
+      description: |
+        Galah's cluster definition table (representative <TAB> member, one
+        row per input genome).
+        Structure: [ val(meta), path(tsv) ]
+      pattern: "*.tsv"
+authors:
+  - "@erikrikarddaniel"
+maintainers:
+  - "@erikrikarddaniel"

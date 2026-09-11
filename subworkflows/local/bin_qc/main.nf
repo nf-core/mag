@@ -227,11 +227,56 @@ workflow BIN_QC {
         }
     }
 
+    /*
+    ================================
+     * Unified completeness/contamination table for dereplication
+    ================================
+     */
+
+    // QC summary columns per tool: [bin ID column, completeness column, contamination column]
+    // Same mapping GTDBTK uses to filter bins -- see that subworkflow for why
+    // BUSCO's Complete/Duplicated stand in for completeness/contamination.
+    qc_columns = [
+        checkm2: ['Name', 'Completeness', 'Contamination'],
+        checkm: ['Bin Id', 'Completeness', 'Contamination'],
+        busco: ['Input_file', 'Complete', 'Duplicated'],
+    ]
+
+    // Study-wide "genome,completeness,contamination" table (dRep's genome_info
+    // format, also read natively by Galah) for dereplication, built from
+    // whichever QC tool(s) are enabled. Preference order (later entries win on a
+    // shared bin) is CheckM2 > CheckM > BUSCO, reflecting each tool's estimate
+    // quality; a bin only ends up on BUSCO here if neither CheckM tool assessed
+    // it, e.g. --run_busco alone.
+    ch_genome_info = ch_qc_metrics
+        .toList()
+        .map { entries ->
+            def by_tool = entries.groupBy { _meta, tool, _summary -> tool }
+            def quality = [:] // bin filename (.gz stripped) -> [completeness, contamination]
+            ['busco', 'checkm', 'checkm2'].each { tool ->
+                (by_tool[tool] ?: []).each { _meta, _tool, summary ->
+                    def cols = qc_columns[tool]
+                    summary.splitCsv(header: true, sep: '\t').each { row ->
+                        def bin_name = tool == 'busco' ? row[cols[0]] : "${row[cols[0]]}.fa"
+                        def completeness = "${row[cols[1]]}".toDouble()
+                        def contamination = "${row[cols[2]]}".toDouble()
+                        // a negative value means the tool could not assess the bin
+                        if (completeness >= 0 && contamination >= 0) {
+                            quality[bin_name] = [completeness, contamination]
+                        }
+                    }
+                }
+            }
+            (['genome,completeness,contamination'] + quality.collect { bin, cc -> "${bin},${cc[0]},${cc[1]}" }).join('\n')
+        }
+        .collectFile(name: 'genome_info.csv')
+
     emit:
     qc_metrics      = ch_qc_metrics
     busco_summary   = ch_busco_final_summaries
     checkm_summary  = ch_checkm_final_summaries
     checkm2_summary = ch_checkm2_final_summaries
+    genome_info     = ch_genome_info
     gunc_summary    = ch_gunc_summary
     multiqc_files   = ch_multiqc_files
     versions        = ch_versions
