@@ -507,7 +507,7 @@ workflow MAG {
 
         ch_bin_qc_metrics = channel.empty()
         if (!params.skip_binqc) {
-            BIN_QC(ch_input_for_postbinning)
+            BIN_QC(ch_input_for_postbinning, params.dereplicate_min_completeness, params.dereplicate_max_contamination)
             ch_versions = ch_versions.mix(BIN_QC.out.versions)
             ch_bin_qc_metrics = BIN_QC.out.qc_metrics
             ch_busco_summary = BIN_QC.out.busco_summary

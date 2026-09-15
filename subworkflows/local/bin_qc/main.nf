@@ -18,10 +18,55 @@ include { GUNC_MERGECHECKM                  } from '../../../modules/nf-core/gun
 include { UNTAR as BUSCO_UNTAR              } from '../../../modules/nf-core/untar/main'
 include { UNTAR as CHECKM_UNTAR             } from '../../../modules/nf-core/untar/main'
 
+// Study-wide "genome,completeness,contamination" table (dRep's genome_info
+// format, also read natively by Galah), built from a list of [meta, tool,
+// summary] entries, one per bin group per QC tool that ran. When more than
+// one tool assessed the same bin, whichever tool's own reading clears the
+// dereplication thresholds is preferred -- mirrors GTDB-Tk's own
+// any-tool-passes bin filter, so the two subworkflows agree on which bins
+// are good enough -- falling back to CheckM2 > CheckM > BUSCO priority when
+// none of the readings pass, or to break a tie among readings that all pass.
+def buildGenomeInfo(List entries, double min_completeness, double max_contamination) {
+    // QC summary columns per tool: [bin ID column, completeness column, contamination column]
+    // Same mapping GTDBTK uses to filter bins -- see that subworkflow for why
+    // BUSCO's Complete/Duplicated stand in for completeness/contamination.
+    def qc_columns = [
+        checkm2: ['Name', 'Completeness', 'Contamination'],
+        checkm: ['Bin Id', 'Completeness', 'Contamination'],
+        busco: ['Input_file', 'Complete', 'Duplicated'],
+    ]
+    def priority = ['checkm2', 'checkm', 'busco']
+
+    def by_tool = entries.groupBy { _meta, tool, _summary -> tool }
+    def readings = [:] // bin filename (.gz stripped) -> tool -> [completeness, contamination]
+    by_tool.each { tool, tool_entries ->
+        def cols = qc_columns[tool]
+        tool_entries.each { _meta, _tool, summary ->
+            summary.splitCsv(header: true, sep: '\t').each { row ->
+                def bin_name = tool == 'busco' ? row[cols[0]] : "${row[cols[0]]}.fa"
+                def completeness = "${row[cols[1]]}".toDouble()
+                def contamination = "${row[cols[2]]}".toDouble()
+                // a negative value means the tool could not assess the bin
+                if (completeness >= 0 && contamination >= 0) {
+                    readings[bin_name] = (readings[bin_name] ?: [:]) + [(tool): [completeness, contamination]]
+                }
+            }
+        }
+    }
+    def quality = readings.collectEntries { bin_name, by_tool_readings ->
+        def candidates = priority.collect { tool -> by_tool_readings[tool] }.findAll { reading -> reading }
+        def passing = candidates.find { cc -> cc[0] >= min_completeness && cc[1] <= max_contamination }
+        [(bin_name): passing ?: candidates[0]]
+    }
+    (['genome,completeness,contamination'] + quality.collect { bin, cc -> "${bin},${cc[0]},${cc[1]}" }).join('\n')
+}
+
 
 workflow BIN_QC {
     take:
-    ch_bins // [val(meta), [path(fasta)]], input bins (mandatory)
+    ch_bins           // [val(meta), [path(fasta)]], input bins (mandatory)
+    min_completeness  // value: minimum completeness (%) a tool's reading must clear for a bin to be preferred for dereplication
+    max_contamination // value: maximum contamination (%) a tool's reading must clear for a bin to be preferred for dereplication
 
     main:
     ch_qc_metrics = channel.empty()
@@ -233,39 +278,9 @@ workflow BIN_QC {
     ================================
      */
 
-    // QC summary columns per tool: [bin ID column, completeness column, contamination column]
-    // Same mapping GTDBTK uses to filter bins -- see that subworkflow for why
-    // BUSCO's Complete/Duplicated stand in for completeness/contamination.
-    qc_columns = [
-        checkm2: ['Name', 'Completeness', 'Contamination'],
-        checkm: ['Bin Id', 'Completeness', 'Contamination'],
-        busco: ['Input_file', 'Complete', 'Duplicated'],
-    ]
-
-    // Study-wide "genome,completeness,contamination" table (dRep's genome_info
-    // format, also read natively by Galah). Preference order on a shared bin is
-    // CheckM2 > CheckM > BUSCO.
     ch_genome_info = ch_qc_metrics
         .toSortedList { entry -> "${entry[1]}|${entry[2]}" }
-        .map { entries ->
-            def by_tool = entries.groupBy { _meta, tool, _summary -> tool }
-            def quality = [:] // bin filename (.gz stripped) -> [completeness, contamination]
-            ['busco', 'checkm', 'checkm2'].each { tool ->
-                (by_tool[tool] ?: []).each { _meta, _tool, summary ->
-                    def cols = qc_columns[tool]
-                    summary.splitCsv(header: true, sep: '\t').each { row ->
-                        def bin_name = tool == 'busco' ? row[cols[0]] : "${row[cols[0]]}.fa"
-                        def completeness = "${row[cols[1]]}".toDouble()
-                        def contamination = "${row[cols[2]]}".toDouble()
-                        // a negative value means the tool could not assess the bin
-                        if (completeness >= 0 && contamination >= 0) {
-                            quality[bin_name] = [completeness, contamination]
-                        }
-                    }
-                }
-            }
-            (['genome,completeness,contamination'] + quality.collect { bin, cc -> "${bin},${cc[0]},${cc[1]}" }).join('\n')
-        }
+        .map { entries -> buildGenomeInfo(entries, min_completeness, max_contamination) }
         .collectFile(name: 'genome_info.csv')
 
     emit:

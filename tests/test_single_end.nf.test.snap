@@ -958,12 +958,12 @@
                 "MEGAHIT-CONCOCT-test_minigut_sample2_6.fa.gz:md5,1fdc6c4227ccb6b0d1bc5a03410c41b1",
                 "MEGAHIT-CONCOCT-test_minigut_sample2_7.fa.gz:md5,eafebaa3a00a7cb17e3b6b205105b326",
                 "MEGAHIT-CONCOCT-test_minigut.csv:md5,8560d22664726d5b6198c7d65d42d50e",
-                "MEGAHIT-CONCOCT-test_minigut_args.txt:md5,f447f7834b8e5bab73502e6ecf482a66",
+                "MEGAHIT-CONCOCT-test_minigut_args.txt:md5,9622daf5bbb31d30b3f9977a646e02ee",
                 "MEGAHIT-CONCOCT-test_minigut_clustering_gt1000.csv:md5,88148fc7969f1685e56c8d9638b02004",
                 "MEGAHIT-CONCOCT-test_minigut_sample2.csv:md5,aa10e9b5712188653ac9f65de7290414",
-                "MEGAHIT-CONCOCT-test_minigut_sample2_args.txt:md5,663042906344d19ad919e8081ada9cfb",
+                "MEGAHIT-CONCOCT-test_minigut_sample2_args.txt:md5,ca17736519c5ba415eb5ab1892e7975c",
                 "MEGAHIT-CONCOCT-test_minigut_sample2_clustering_gt1000.csv:md5,5ef34d40f93428cc2198faa96ec0d8ae",
-                "dereplicated_bins.tsv:md5,6872b739358ede38270542bb80b6241e",
+                "dereplicated_bins.tsv:md5,ffd50cf9e3989c01bcb8be066673d9b0",
                 "MEGAHIT-CONCOCT-test_minigut_3.fa.gz:md5,041ede51e5351b1b469bf0ea2cee667a",
                 "MEGAHIT-MetaBAT2-test_minigut.1.fa.gz:md5,3e647b1f5d9d4155ae5e34527bbcf260",
                 "MEGAHIT-MaxBin2-test_minigut.summary:md5,572e7676beb5ece5e1522d80900d48d7",
@@ -1271,7 +1271,7 @@
                 "bin_depths_summary.tsv:md5,bd54b32dc4c741cd4edd2bbba51f6552"
             ]
         ],
-        "timestamp": "2026-09-15T09:01:45.319776814",
+        "timestamp": "2026-09-15T17:35:35.724183024",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
