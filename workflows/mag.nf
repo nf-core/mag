@@ -523,7 +523,7 @@ workflow MAG {
         ch_dereplicated_bins = channel.empty()
         ch_dereplication_cluster_tsv = channel.empty()
         if (params.dereplicate) {
-            DEREPLICATION(ch_input_for_postbinning, ch_genome_info)
+            DEREPLICATION(ch_input_for_postbinning, ch_genome_info, params.dereplicate_min_completeness, params.dereplicate_max_contamination)
             ch_dereplicated_bins = DEREPLICATION.out.dereplicated_bins
             ch_dereplication_cluster_tsv = DEREPLICATION.out.cluster_tsv.map { _meta, tsv -> tsv }
         }

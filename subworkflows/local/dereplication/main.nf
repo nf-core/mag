@@ -12,8 +12,10 @@ include { GALAH } from '../../../modules/nf-core/galah/main'
 workflow DEREPLICATION {
 
     take:
-    ch_bins        // channel: [ val(meta), [ path(bin) ] ], per-sample bins (mandatory)
-    ch_genome_info // channel: path(csv), single study-wide "genome,completeness,contamination" table from BIN_QC.out.genome_info (bare path, no meta)
+    ch_bins         // channel: [ val(meta), [ path(bin) ] ], per-sample bins (mandatory)
+    ch_genome_info  // channel: path(csv), single study-wide "genome,completeness,contamination" table from BIN_QC.out.genome_info (bare path, no meta)
+    min_completeness // value: minimum completeness (%) for a bin to be dereplicated
+    max_contamination // value: maximum contamination (%) for a bin to be dereplicated
 
     main:
     // Unbinned-contig pseudo-bins aren't real genomes -- QC tools don't
@@ -23,9 +25,28 @@ workflow DEREPLICATION {
         .filter { meta, _bins -> meta.domain != "eukarya" && !meta.refinement.endsWith("unbinned") }
         .transpose()
 
-    ch_bins_for_galah = ch_bins_flat
+    // A bin with no genome_info row at all (every enabled QC tool either
+    // failed on it or gave a negative/unusable value) crashes Galah outright
+    // rather than being handled gracefully, so exclude it here too, the same
+    // as bins failing the quality threshold.
+    ch_genome_info_names = ch_genome_info.map { csv -> csv.splitCsv(header: true).collect { row -> row.genome } as Set }
+
+    ch_bins_flat_by_coverage = ch_bins_flat
+        .combine(ch_genome_info_names)
+        .branch { meta, bin, covered_names ->
+            assessed: covered_names.contains(bin.name - '.gz')
+                return [meta, bin]
+            unassessed: true
+                return bin
+        }
+
+    ch_bins_flat_by_coverage.unassessed.subscribe { bin ->
+        log.warn("[nf-core/mag] Dereplication: ${bin.name} has no completeness/contamination estimate from any enabled QC tool, so Galah can't consider it; excluded from clustering.")
+    }
+
+    ch_bins_for_galah = ch_bins_flat_by_coverage.assessed
         .map { _meta, bin -> bin }
-        .collect()
+        .toSortedList { bin -> bin.name }
         .map { bins -> [[id: 'study'], bins] }
 
     ch_galah_input = ch_bins_for_galah
@@ -37,7 +58,7 @@ workflow DEREPLICATION {
     // first and skip Galah gracefully instead.
     ch_qualifying_count = ch_genome_info.map { csv ->
         csv.splitCsv(header: true).count { row ->
-            (row.completeness as Double) >= params.dereplicate_min_completeness && (row.contamination as Double) <= params.dereplicate_max_contamination
+            (row.completeness as Double) >= min_completeness && (row.contamination as Double) <= max_contamination
         }
     }
 
@@ -51,7 +72,7 @@ workflow DEREPLICATION {
         }
 
     ch_galah_routed.skip.subscribe {
-        log.warn("[nf-core/mag] Dereplication: no bins passed --dereplicate_min_completeness ${params.dereplicate_min_completeness} / --dereplicate_max_contamination ${params.dereplicate_max_contamination}; skipping Galah for this run (works around a Galah crash on zero qualifying genomes, see https://github.com/wwood/galah/issues/75). Every bin is passed through downstream unclustered, as if --dereplicate had not been set, rather than dropped.")
+        log.warn("[nf-core/mag] Dereplication: no bins passed --dereplicate_min_completeness ${min_completeness} / --dereplicate_max_contamination ${max_contamination}; skipping Galah for this run (works around a Galah crash on zero qualifying genomes, see https://github.com/wwood/galah/issues/75). Every bin is passed through downstream unclustered, as if --dereplicate had not been set, rather than dropped.")
     }
 
     GALAH(ch_galah_routed.cluster)

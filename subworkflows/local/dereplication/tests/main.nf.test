@@ -16,20 +16,19 @@ nextflow_workflow {
     // correctly rejoined to its own original per-sample metadata, eukaryotic
     // and leftover unbinned-contig pseudo-bins never reach Galah, and the
     // genome_info CSV format BIN_QC now produces (see subworkflows/local/
-    // bin_qc) is correctly consumed. sample4 has no corresponding genome_info
-    // row at all, deliberately: if the unbinned exclusion regresses, Galah
-    // would panic on it (confirmed against a real run) rather than silently
-    // doing the wrong thing.
-    test("two prokaryotic bins, one eukaryotic and one unbinned-pseudo-bin filtered out") {
+    // bin_qc) is correctly consumed. sample5 is a normal prokaryotic bin with
+    // no genome_info row (every QC tool failed/skipped it): Galah panics
+    // (confirmed against a real run) if handed a genome missing from its QC
+    // report, so it must be excluded before reaching Galah, same as sample3/4.
+    test("two prokaryotic bins, one eukaryotic, one unbinned-pseudo-bin and one QC-uncovered bin filtered out") {
 
         when {
-            // Defaults normally supplied by main.nf's typed params block,
-            // which isn't loaded when nf-test invokes this subworkflow
-            // directly.
+            // conf/modules.config's GALAH ext.args reads these directly from
+            // params, independent of this subworkflow's own take: inputs below.
             params {
-                dereplicate_min_completeness   = 50
-                dereplicate_max_contamination  = 10
-                dereplicate_ani                = 95
+                dereplicate_min_completeness  = 50
+                dereplicate_max_contamination = 10
+                dereplicate_ani               = 95
             }
             workflow {
                 """
@@ -46,6 +45,9 @@ nextflow_workflow {
 
                 def binSample4 = new File(stagingDir, 'SPAdes-MetaBAT2-sample4.unbinned.1.fa.gz')
                 file('https://github.com/nf-core/test-datasets/raw/refs/heads/magmap/testdata/GCF_004296495.1_ASM429649v1_genomic.fna.gz', checkIfExists: true).copyTo(binSample4.toPath())
+
+                def binSample5 = new File(stagingDir, 'SPAdes-MetaBAT2-sample5.fa.gz')
+                file('https://github.com/nf-core/test-datasets/raw/refs/heads/magmap/testdata/GCA_002688505.1_ASM268850v1_genomic.fna.gz', checkIfExists: true).copyTo(binSample5.toPath())
 
                 input[0] = Channel.of(
                     [
@@ -67,16 +69,25 @@ nextflow_workflow {
                         [id: 'sample4', assembler: 'SPAdes', binner: 'MetaBAT2', domain: 'prokarya', refinement: 'unrefined_unbinned'],
                         [file(binSample4)],
                     ],
+                    [
+                        // a normal bin, but no QC tool produced a usable row for it below --
+                        // excluded from Galah's input rather than crashing it
+                        [id: 'sample5', assembler: 'SPAdes', binner: 'MetaBAT2', domain: 'prokarya', refinement: 'unrefined'],
+                        [file(binSample5)],
+                    ],
                 )
 
                 // Real CheckM2 completeness/contamination values for these two
                 // genomes, translated into BIN_QC's genome_info output format.
+                // sample5 deliberately has no row.
                 def genomeInfo = File.createTempFile('genome_info', '.csv')
                 genomeInfo.text = "genome,completeness,contamination\\n" +
                     "SPAdes-MetaBAT2-sample1.fa,96.38,0.18\\n" +
                     "SPAdes-MetaBAT2-sample2.fa,74.65,0.12\\n"
 
                 input[1] = Channel.of(file(genomeInfo.path))
+                input[2] = 50
+                input[3] = 10
                 """
             }
         }
@@ -105,11 +116,6 @@ nextflow_workflow {
     test("all bins below quality threshold: Galah skipped, bins passed through unclustered") {
 
         when {
-            params {
-                dereplicate_min_completeness   = 50
-                dereplicate_max_contamination  = 10
-                dereplicate_ani                = 95
-            }
             workflow {
                 """
                 def stagingDir = File.createTempDir()
@@ -140,6 +146,8 @@ nextflow_workflow {
                     "SPAdes-MetaBAT2-sample2.fa,7.4,0.12\\n"
 
                 input[1] = Channel.of(file(genomeInfo.path))
+                input[2] = 50
+                input[3] = 10
                 """
             }
         }

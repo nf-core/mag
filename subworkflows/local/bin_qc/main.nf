@@ -243,13 +243,10 @@ workflow BIN_QC {
     ]
 
     // Study-wide "genome,completeness,contamination" table (dRep's genome_info
-    // format, also read natively by Galah) for dereplication, built from
-    // whichever QC tool(s) are enabled. Preference order (later entries win on a
-    // shared bin) is CheckM2 > CheckM > BUSCO, reflecting each tool's estimate
-    // quality; a bin only ends up on BUSCO here if neither CheckM tool assessed
-    // it, e.g. --run_busco alone.
+    // format, also read natively by Galah). Preference order on a shared bin is
+    // CheckM2 > CheckM > BUSCO.
     ch_genome_info = ch_qc_metrics
-        .toList()
+        .toSortedList { entry -> "${entry[1]}|${entry[2]}" }
         .map { entries ->
             def by_tool = entries.groupBy { _meta, tool, _summary -> tool }
             def quality = [:] // bin filename (.gz stripped) -> [completeness, contamination]

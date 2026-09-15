@@ -29,6 +29,12 @@ input:
         genome_info output (a bare path channel, no meta).
         Structure: path(csv)
       pattern: "*.csv"
+  - min_completeness:
+      type: value
+      description: Minimum completeness (%) for a bin to be dereplicated.
+  - max_contamination:
+      type: value
+      description: Maximum contamination (%) for a bin to be dereplicated.
 output:
   - dereplicated_bins:
       type: file
