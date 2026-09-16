@@ -1271,7 +1271,7 @@
                 "bin_depths_summary.tsv:md5,bd54b32dc4c741cd4edd2bbba51f6552"
             ]
         ],
-        "timestamp": "2026-09-15T17:35:35.724183024",
+        "timestamp": "2026-09-16T08:00:38.231338096",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
