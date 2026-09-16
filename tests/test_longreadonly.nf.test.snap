@@ -403,7 +403,6 @@
                 "transposed_report.txt:md5,a74806130cbea850c5fc5d35ec33aaed",
                 "METAMDBG-MaxBin2-unclassified-unrefined-minigut-quast_summary.tsv:md5,8d413ba9b36e54bdc38ac1fcb73d22ba",
                 "quast_bin_summary.tsv:md5,e02d1e12339d934932baa5e8b48ed4b3",
-                "bin_summary.tsv:md5,305d69623ff4112163025ff92a70bccc",
                 "contig_to_bin_map.tsv:md5,ef14a8638a6f639add03ca38ff22e4b9",
                 "bin_depths_summary.tsv:md5,b3efc921cfe1789a5a4763a12cfe50f8"
             ]
@@ -596,9 +595,7 @@
                 "multiqc/multiqc_plots/svg/quast_table.svg",
                 "multiqc/multiqc_report.html"
             ],
-            [
-                
-            ]
+            []
         ],
         "timestamp": "2026-08-12T08:32:52.318223817",
         "meta": {
