@@ -79,6 +79,10 @@ nextflow_pipeline {
             def bin_summary = path("${params.outdir}/GenomeBinning/bin_summary.tsv")
             def checkm_summary = path("${params.outdir}/GenomeBinning/QC/checkm_summary.tsv")
             def quast_bin_summary = path("${params.outdir}/GenomeBinning/QC/quast_bin_summary.tsv")
+            def pydamage_bins_summary = path("${params.outdir}/GenomeBinning/QC/pydamage_bins_summary.tsv")
+            def pydamage_bin_results = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/QC/summarise_pydamagebins/*_pydamage_bin_results.tsv']
+            )
 
             // Output dir: Annotation
             def stable_name_annotation = getAllFilesFromDir(
@@ -132,6 +136,9 @@ nextflow_pipeline {
             def genomad_results = getAllFilesFromDir(
                 params.outdir, include: ['VirusIdentification/geNomad/**/*_aggregated_classification.tsv']
             )
+            def virus_summaries = getAllFilesFromDir(
+                params.outdir, include: ['VirusIdentification/geNomad/**/*_virus_summary.tsv']
+            )
 
             // Output directory: multiqc
             def stable_name_multiqc = getAllFilesFromDir(
@@ -177,8 +184,14 @@ nextflow_pipeline {
                     // Ancient DNA result checks
                     "pydamage results non-empty: ${pydamage_results.collect { file -> path("${file}").csv(sep: ',').rowCount > 0 }.every()}",
                     "ancient DNA VCF files have variants: ${vcf_files.collect { file -> path("${file}").vcf.variantCount > 0 }.every()}",
+                    // Per-bin pydamage result checks (binning composition isn't bit-reproducible across
+                    // machines, see conf/test_single_end.config, so these are checked by content, not snapshot hash)
+                    // One summary row (median stats) per bin, one *_pydamage_bin_results.tsv (per-contig rows) per bin -- see bin/summarise_pydamagebins.py
+                    "pydamage bins summary row count matches per-bin result files: ${pydamage_bins_summary.csv(sep: '\t').rowCount == pydamage_bin_results.size()}",
+                    "pydamage bin results non-empty: ${pydamage_bin_results.collect { file -> path("${file}").csv(sep: '\t').rowCount > 0 }.every()}",
                     // Virus identification result checks
                     "geNomad classification results non-empty: ${genomad_results.collect { file -> path("${file}").csv(sep: '\t').rowCount > 0 }.every()}",
+                    "geNomad virus summaries non-empty: ${virus_summaries.collect { file -> path("${file}").csv(sep: '\t').rowCount > 0 }.every()}",
                 ).match("content-checks") },
 
                 { assert snapshot(

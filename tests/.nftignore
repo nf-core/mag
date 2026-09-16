@@ -12,10 +12,13 @@ Assembly/MEGAHIT/QC/*/*.bowtie2.log
 GenomeBinning/CONCOCT/stats/*_{original,PCA_components,PCA_transformed}_data_gt1000.csv
 GenomeBinning/CONCOCT/stats/*_log.txt
 GenomeBinning/CONCOCT/stats/*.tsv
+GenomeBinning/bin_summary.tsv
 GenomeBinning/DASTool/*.log
 GenomeBinning/depths/**/*-depth.txt.gz
 GenomeBinning/depths/bins/*.png
 GenomeBinning/QC/busco_summary.tsv
+GenomeBinning/QC/pydamage_bins_summary.tsv
+GenomeBinning/QC/summarise_pydamagebins/*_pydamage_bin_results.tsv
 GenomeBinning/QC/BUSCO/**/.checkpoint
 GenomeBinning/QC/BUSCO/**/{logs,prodigal_output,busco_sequences,hmmer_output}/**
 GenomeBinning/QC/BUSCO/**/*.{json,log,txt}
@@ -50,3 +53,4 @@ Taxonomy/CAT/**/*.log
 Taxonomy/GTDB-Tk/**/*.log
 Taxonomy/GTDB-Tk/**/gtdbtk.json
 VirusIdentification/geNomad/**/*_aggregated_classification.tsv
+VirusIdentification/geNomad/**/*_virus_summary.tsv
