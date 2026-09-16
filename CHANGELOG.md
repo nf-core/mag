@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
+- [#NN](https://github.com/nf-core/mag/pull/NN) - Pin `CONCOCT_CONCOCT` and `MAXBIN2` to a single thread in the `test_single_end` profile: both tools' clustering/binning results vary with thread count, which was cascading into flaky downstream snapshot diffs (by @erikrikarddaniel)
 - [#1098](https://github.com/nf-core/mag/issues/1098) - Fix invalid `--gunc_database_type` options to match the values accepted by `gunc download_db` (reported by @cdiener, fix by @dialvarezs)
 - [#1105](https://github.com/nf-core/mag/pull/1105) - Fix corrupted bin paths when a process emits a single file: `java.nio.file.Path` is `Iterable` over its path segments, so list operations on an unwrapped output silently iterated the path components (by @dialvarezs)
 - [#1109](https://github.com/nf-core/mag/pull/1109) - Fix `--checkm_download_url` blocking parameter validation for every run (even with `--run_checkm` off) whenever Zenodo isn't reachable, by dropping its unconditional `exists` schema check (by @erikrikarddaniel)
