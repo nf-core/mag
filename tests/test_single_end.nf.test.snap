@@ -1237,41 +1237,12 @@
                 "transposed_report.txt:md5,eadaec5cee85ad5aeb3d03c08985a234",
                 "MEGAHIT-MetaBAT2-unclassified-unrefined-test_minigut-quast_summary.tsv:md5,48efe7a2f8a145ddc4dc4934a3009104",
                 "checkm_summary.tsv:md5,0ba48ca4d6557e95a8acb5cfc50d8d16",
-                "pydamage_bins_summary.tsv:md5,9379182cfb4fa73eae52ee6ae85fb0cd",
                 "quast_bin_summary.tsv:md5,c977b46a6a46e27c7dbfbecdab80ec74",
-                "MEGAHIT-CONCOCT-test_minigut_0_pydamage_bin_results.tsv:md5,b6c4b20df43c161354da2376dc80ad05",
-                "MEGAHIT-CONCOCT-test_minigut_10_pydamage_bin_results.tsv:md5,4995ded0a43be727f4d2233001de0448",
-                "MEGAHIT-CONCOCT-test_minigut_11_pydamage_bin_results.tsv:md5,c40982d12f98e6412125f5b7af0b17ac",
-                "MEGAHIT-CONCOCT-test_minigut_12_pydamage_bin_results.tsv:md5,24226c5731ce84db677e1b7b71334959",
-                "MEGAHIT-CONCOCT-test_minigut_13_pydamage_bin_results.tsv:md5,0c89666fa9ec1c5e65157909d3669b96",
-                "MEGAHIT-CONCOCT-test_minigut_14_pydamage_bin_results.tsv:md5,e6e328dc2e1ee7978767d8f8fce94fbf",
-                "MEGAHIT-CONCOCT-test_minigut_15_pydamage_bin_results.tsv:md5,1989602160dde279116af8c05457801c",
-                "MEGAHIT-CONCOCT-test_minigut_1_pydamage_bin_results.tsv:md5,60f54a3f42bbdeaa00d455ab7cee0f61",
-                "MEGAHIT-CONCOCT-test_minigut_2_pydamage_bin_results.tsv:md5,3745b90df536fefe69b9cb854eb2d960",
-                "MEGAHIT-CONCOCT-test_minigut_3_pydamage_bin_results.tsv:md5,024c58ba88d26ad6df47f87164447e04",
-                "MEGAHIT-CONCOCT-test_minigut_4_pydamage_bin_results.tsv:md5,e10318da7feb2cf806dacdb71de59952",
-                "MEGAHIT-CONCOCT-test_minigut_5_pydamage_bin_results.tsv:md5,c6836d187851f8368a43cea4e73f317f",
-                "MEGAHIT-CONCOCT-test_minigut_6_pydamage_bin_results.tsv:md5,1098fd2fa7d66b9ad61d9c492c84ea83",
-                "MEGAHIT-CONCOCT-test_minigut_7_pydamage_bin_results.tsv:md5,3be55b4bbd4944e4c1c4611895d3f0fb",
-                "MEGAHIT-CONCOCT-test_minigut_8_pydamage_bin_results.tsv:md5,8bc8a1a6525abd99f08883176f6f757d",
-                "MEGAHIT-CONCOCT-test_minigut_9_pydamage_bin_results.tsv:md5,7a71a1caa47561ff4553c59d2e2c0dec",
-                "MEGAHIT-CONCOCT-test_minigut_sample2_0_pydamage_bin_results.tsv:md5,bab6ba3d2f133c1a2c19428d3267f812",
-                "MEGAHIT-CONCOCT-test_minigut_sample2_1_pydamage_bin_results.tsv:md5,4fd1b0d0c9046c0f0e20990a4a2d8e0f",
-                "MEGAHIT-CONCOCT-test_minigut_sample2_2_pydamage_bin_results.tsv:md5,180bf5f53fb81eaad6b6deda7b9a9b21",
-                "MEGAHIT-CONCOCT-test_minigut_sample2_3_pydamage_bin_results.tsv:md5,b8d387efbbac429e2763040eaab821d7",
-                "MEGAHIT-CONCOCT-test_minigut_sample2_4_pydamage_bin_results.tsv:md5,bd1c4cfc4bd80be24ea8897bf8ebab3c",
-                "MEGAHIT-CONCOCT-test_minigut_sample2_5_pydamage_bin_results.tsv:md5,04ce4e0b56f842ca731ac6a937c9ace2",
-                "MEGAHIT-CONCOCT-test_minigut_sample2_6_pydamage_bin_results.tsv:md5,3be4281b7c83b57029ac8135b0c5044f",
-                "MEGAHIT-CONCOCT-test_minigut_sample2_7_pydamage_bin_results.tsv:md5,19389a972ae2cc622ad74336ca89843e",
-                "MEGAHIT-MaxBin2-test_minigut.001_pydamage_bin_results.tsv:md5,43a098d187dfa7a0d87cecbb44a6c6dc",
-                "MEGAHIT-MaxBin2-test_minigut.002_pydamage_bin_results.tsv:md5,e5706bd2445c04e9f3988162aefbc1e5",
-                "MEGAHIT-MetaBAT2-test_minigut.1_pydamage_bin_results.tsv:md5,cbe0ec5a9f82e361c82d34baee0fd7ea",
-                "bin_summary.tsv:md5,72354a6b1000fde5aeed56b84644aaec",
                 "contig_to_bin_map.tsv:md5,9a146f6bd0eaf2fd9605cf1885dd37bc",
                 "bin_depths_summary.tsv:md5,bd54b32dc4c741cd4edd2bbba51f6552"
             ]
         ],
-        "timestamp": "2026-09-16T08:00:38.231338096",
+        "timestamp": "2026-09-16T09:59:15.942629491",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
@@ -1316,7 +1287,6 @@
                 "MEGAHIT-test_minigut.contigs_virus.fna.gz:md5,c8d42683f5e62c3e44eb5d2d8fb7b84f",
                 "MEGAHIT-test_minigut.contigs_virus_genes.tsv:md5,13969976b1aebec67c0ffd18f51af683",
                 "MEGAHIT-test_minigut.contigs_virus_proteins.faa.gz:md5,2e14bd6ae9e2043a3b6f407c425e13e1",
-                "MEGAHIT-test_minigut.contigs_virus_summary.tsv:md5,d22f74f27a69c252c173c987c0339c5d",
                 "MEGAHIT-test_minigut_sample2.contigs_taxonomy.tsv:md5,5c9174470b250dfbe1e0d7d2da143617",
                 "MEGAHIT-test_minigut_sample2.contigs_provirus.tsv:md5,93a6bca59b0bf7f57c0b9b60d2e57082",
                 "MEGAHIT-test_minigut_sample2.contigs_marker_classification.tsv:md5,0fb58b89eea2ac71ca4cc2d960e1f42c",
@@ -1326,11 +1296,10 @@
                 "MEGAHIT-test_minigut_sample2.contigs_plasmid_summary.tsv:md5,8c4ddaa8a90da779c11537be0fddb799",
                 "MEGAHIT-test_minigut_sample2.contigs_virus.fna.gz:md5,fd99ba7b3d7b4e247444abe3173d0a61",
                 "MEGAHIT-test_minigut_sample2.contigs_virus_genes.tsv:md5,d17fcd1f396b6d5a8bbd8d815e5715e6",
-                "MEGAHIT-test_minigut_sample2.contigs_virus_proteins.faa.gz:md5,79089b17750dec52668b2f0fdf7d638b",
-                "MEGAHIT-test_minigut_sample2.contigs_virus_summary.tsv:md5,995d4441830ca0222490f36acf62ae3f"
+                "MEGAHIT-test_minigut_sample2.contigs_virus_proteins.faa.gz:md5,79089b17750dec52668b2f0fdf7d638b"
             ]
         ],
-        "timestamp": "2026-09-15T09:01:46.173267493",
+        "timestamp": "2026-09-16T09:51:09.03666262",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
@@ -1358,9 +1327,12 @@
             "Bin summary row count matches GTDB-Tk row count: true",
             "pydamage results non-empty: true",
             "ancient DNA VCF files have variants: true",
-            "geNomad classification results non-empty: true"
+            "pydamage bins summary row count matches per-bin result files: true",
+            "pydamage bin results non-empty: true",
+            "geNomad classification results non-empty: true",
+            "geNomad virus summaries non-empty: true"
         ],
-        "timestamp": "2026-09-15T09:01:47.749178545",
+        "timestamp": "2026-09-16T09:59:17.332402404",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
