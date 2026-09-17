@@ -12,7 +12,6 @@ Assembly/MEGAHIT/QC/*/*.bowtie2.log
 GenomeBinning/CONCOCT/stats/*_{original,PCA_components,PCA_transformed}_data_gt1000.csv
 GenomeBinning/CONCOCT/stats/*_log.txt
 GenomeBinning/CONCOCT/stats/*.tsv
-GenomeBinning/bin_summary.tsv
 GenomeBinning/DASTool/*.log
 GenomeBinning/depths/**/*-depth.txt.gz
 GenomeBinning/depths/bins/*.png

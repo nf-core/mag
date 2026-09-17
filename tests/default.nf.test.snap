@@ -1633,6 +1633,7 @@
                 "MEGAHIT-SemiBin2-test_minigut_0.fa.gz:md5,f3505b2a132f217148936566c5c2300f",
                 "SPAdes-SemiBin2-test_minigut_0.fa.gz:md5,30b2d79961f225ed7d9e6156a4bdf482",
                 "SPAdes-SemiBin2-test_minigut_1.fa.gz:md5,40ec6d89351332f6f34a442441757ca7",
+                "bin_summary.tsv:md5,85c0b3a15c2494c730b1d7387172df68",
                 "contig_to_bin_map.tsv:md5,c5434e4d14baa4453dbafa41e858eaa3",
                 "bin_depths_summary.tsv:md5,3dacec5981315f96e7b9a7d1dadee766"
             ]

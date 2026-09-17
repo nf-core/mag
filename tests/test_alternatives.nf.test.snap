@@ -200,6 +200,7 @@
                 "MEGAHIT-MetaBAT2-prokarya-unrefined-group-0_checkm2_report.tsv:md5,ec01903b7f8a7203856a35a7bd2d4c34",
                 "checkm2_summary.tsv:md5,ec01903b7f8a7203856a35a7bd2d4c34",
                 "tiara_summary.tsv:md5,4cbfb0fd90ba48dc33d75d10c1eddb17",
+                "bin_summary.tsv:md5,8121450e1df6f5ce89141d6b2044e1f3",
                 "contig_to_bin_map.tsv:md5,2bea485185ed808e9b5568438f603e2a",
                 "bin_depths_summary.tsv:md5,a73f2fc180a2c52038c88fbbfa6a95c3"
             ]

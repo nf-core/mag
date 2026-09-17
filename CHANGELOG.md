@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
-- [#NN](https://github.com/nf-core/mag/pull/NN) - Fix `test_single_end` snapshot flakiness: exclude floating-point-derived per-bin/QC files (pydamage stats, `bin_summary.tsv`, geNomad's virus summary) from exact-hash comparison and replace with content assertions, since these vary by CI runner CPU regardless of thread count (by @erikrikarddaniel)
+- [#1114](https://github.com/nf-core/mag/pull/1114) - Fix `test_single_end` snapshot flakiness caused by CPU-dependent floating-point output from PyDamage and geNomad, by content-checking those files instead of hashing them (by @erikrikarddaniel)
 - [#1098](https://github.com/nf-core/mag/issues/1098) - Fix invalid `--gunc_database_type` options to match the values accepted by `gunc download_db` (reported by @cdiener, fix by @dialvarezs)
 - [#1105](https://github.com/nf-core/mag/pull/1105) - Fix corrupted bin paths when a process emits a single file: `java.nio.file.Path` is `Iterable` over its path segments, so list operations on an unwrapped output silently iterated the path components (by @dialvarezs)
 - [#1109](https://github.com/nf-core/mag/pull/1109) - Fix `--checkm_download_url` blocking parameter validation for every run (even with `--run_checkm` off) whenever Zenodo isn't reachable, by dropping its unconditional `exists` schema check (by @erikrikarddaniel)

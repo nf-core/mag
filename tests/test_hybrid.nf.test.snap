@@ -589,6 +589,7 @@
                 "SPAdesHybrid-SemiBin2-unclassified-unrefined-group-0-quast_summary.tsv:md5,29a699a812b9cd62612dc81a4ff50f01",
                 "quast_bin_summary.tsv:md5,9b9c0321daed3d156d4388f3524da54c",
                 "SPAdesHybrid-SemiBin2-group-0_0.fa.gz:md5,2b30803aaf880a9d4c99d41e4754cb2b",
+                "bin_summary.tsv:md5,d994b2bf1b88e002fbac287b089bd5d5",
                 "contig_to_bin_map.tsv:md5,72e8419cccfbed712d40b72449333dca",
                 "bin_depths_summary.tsv:md5,1bb4397dfe72ad4cab619de32a3f36f8"
             ]

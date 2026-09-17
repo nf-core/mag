@@ -53,7 +53,10 @@ nextflow_pipeline {
                 params.outdir, include: ['GenomeBinning/**'], relative: true, includeDir: false
             )
             def stable_path_binning = getAllFilesFromDir(
-                params.outdir, include: ['GenomeBinning/**'], ignoreFile: 'tests/.nftignore'
+                params.outdir,
+                include: ['GenomeBinning/**'],
+                ignore: ['GenomeBinning/bin_summary.tsv'],
+                ignoreFile: 'tests/.nftignore'
             )
             def checkm_logs = getAllFilesFromDir(
                 params.outdir, include: ['GenomeBinning/QC/CheckM/*/checkm.log']
