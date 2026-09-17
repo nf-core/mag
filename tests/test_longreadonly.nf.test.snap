@@ -596,9 +596,7 @@
                 "multiqc/multiqc_plots/svg/quast_table.svg",
                 "multiqc/multiqc_report.html"
             ],
-            [
-                
-            ]
+            []
         ],
         "timestamp": "2026-08-12T08:32:52.318223817",
         "meta": {
