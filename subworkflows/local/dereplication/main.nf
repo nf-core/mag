@@ -1,10 +1,8 @@
 //
 // Dereplicate bins study-wide with Galah, using each bin's best-available
-// completeness/contamination estimate (from whichever of BUSCO/CheckM/CheckM2
-// ran) to pick a representative genome per cluster.
-//
-// Bin filenames are prefixed per-sample/binner upstream, so they're unique
-// study-wide and safe to use as the join key back to per-sample metadata.
+// completeness/contamination estimate to pick a representative genome per cluster.
+// Bin filenames are unique study-wide, so they double as the join key back to
+// per-sample metadata.
 //
 
 include { GALAH } from '../../../modules/nf-core/galah/main'
@@ -18,17 +16,14 @@ workflow DEREPLICATION {
     max_contamination // value: maximum contamination (%) for a bin to be dereplicated
 
     main:
-    // Unbinned-contig pseudo-bins aren't real genomes -- QC tools don't
-    // reliably assess them, and Galah panics on any bin missing from its
-    // QC report -- so exclude them here rather than crashing downstream.
+    // Unbinned-contig pseudo-bins aren't real genomes; Galah panics on any bin
+    // missing from its QC report, so exclude them before they reach it.
     ch_bins_flat = ch_bins
         .filter { meta, _bins -> meta.domain != "eukarya" && !meta.refinement.endsWith("unbinned") }
         .transpose()
 
-    // A bin with no genome_info row at all (every enabled QC tool either
-    // failed on it or gave a negative/unusable value) crashes Galah outright
-    // rather than being handled gracefully, so exclude it here too, the same
-    // as bins failing the quality threshold.
+    // A bin with no genome_info row (every QC tool failed or gave an unusable
+    // value) also crashes Galah outright, so exclude it too.
     ch_genome_info_names = ch_genome_info.map { csv -> csv.splitCsv(header: true).collect { row -> row.genome } as Set }
 
     ch_bins_flat_by_coverage = ch_bins_flat
@@ -54,8 +49,7 @@ workflow DEREPLICATION {
         .map { meta, bins, qc -> [meta, bins, qc, 'genome-info'] }
 
     // Galah panics on zero qualifying genomes instead of erroring cleanly
-    // (https://github.com/wwood/galah/issues/75), so count them ourselves
-    // first and skip Galah gracefully instead.
+    // (https://github.com/wwood/galah/issues/75); count them first and skip Galah instead.
     ch_qualifying_count = ch_genome_info.map { csv ->
         csv.splitCsv(header: true).count { row ->
             (row.completeness as Double) >= min_completeness && (row.contamination as Double) <= max_contamination
@@ -77,14 +71,12 @@ workflow DEREPLICATION {
 
     GALAH(ch_galah_routed.cluster)
 
-    // Pass every bin through unclustered rather than starving
-    // GTDB-Tk/CAT-BAT/Prokka when Galah was skipped.
+    // Pass every bin through unclustered rather than starving downstream tools.
     ch_fallback_bins = ch_galah_routed.skip
         .combine(ch_bins_flat)
         .map { _count, meta, bin -> [meta, bin] }
 
-    // Recover each representative's original per-sample metadata by joining
-    // back on filename.
+    // Recover each representative's original per-sample metadata by joining on filename.
     ch_bins_keyed = ch_bins_flat.map { meta, bin -> [bin.name, meta, bin] }
 
     ch_representative_keys = GALAH.out.dereplicated_bins

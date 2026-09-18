@@ -551,9 +551,8 @@ workflow MAG {
          */
         ch_catpack_summary = channel.empty()
         if (params.cat_db || params.cat_db_generate) {
-            // Unlike GTDB-Tk, CATPACK also classifies eukaryotic bins, which
-            // DEREPLICATION excludes from clustering -- add them back so they
-            // don't silently vanish from CATPACK when --dereplicate is on.
+            // Unlike GTDB-Tk, CATPACK also classifies eukaryotic bins, which DEREPLICATION
+            // excludes from clustering -- add them back so they aren't silently dropped.
             ch_bins_for_catpack = params.dereplicate
                 ? ch_dereplicated_bins.groupTuple().mix(ch_input_for_postbinning_bins.filter { meta, _bins -> meta.domain == "eukarya" })
                 : ch_input_for_postbinning_bins
@@ -575,10 +574,8 @@ workflow MAG {
             ch_gtdbtk_summary = channel.empty()
             if (gtdb) {
 
-                // GTDBTK expects bins grouped per original binner-sample group (it
-                // re-joins against ch_bin_qc_metrics by that same group), so bins
-                // recovered from dereplication (flat, one representative per tuple)
-                // need regrouping by their original metadata first.
+                // GTDBTK re-joins against ch_bin_qc_metrics by binner-sample group, so
+                // dereplicated bins (flat, one representative per tuple) need regrouping.
                 ch_gtdb_bins = params.dereplicate
                     ? ch_dereplicated_bins.groupTuple()
                     : ch_input_for_postbinning.filter { meta, _bins ->

@@ -305,9 +305,7 @@ def main(args=None):
             header=None,
             names=["dereplication_representative", "member"],
         )
-        # Galah's cluster definition keeps the full staged filename
-        # (including any .gz compression suffix), but bin depths summary's
-        # "bin" key -- like every other tool's summary here -- does not.
+        # Galah's cluster definition keeps the .gz suffix; the "bin" key here doesn't.
         derep_results["dereplication_representative"] = derep_results[
             "dereplication_representative"
         ].str.removesuffix(".gz")
@@ -328,9 +326,8 @@ def main(args=None):
         )
         results.drop(columns=["member"], inplace=True)
 
-        ## Propagate the representative's taxonomic assignment to the rest of
-        ## its cluster, flagged via an explicit "_propagated" column so it's
-        ## never mistaken for one independently determined for that genome.
+        ## Propagate representative's taxonomy to rest of its cluster, flagged
+        ## via "_propagated" so it's not mistaken for an independent call.
         taxonomy_columns = []
         if args.gtdbtk_summary:
             taxonomy_columns.append("classification_gtdbtk")
@@ -342,8 +339,7 @@ def main(args=None):
             if taxonomy_column not in results.columns:
                 continue
             propagated_column = f"{taxonomy_column}_propagated"
-            # "== False" (not "is False") also excludes NaN rows -- bins not
-            # part of dereplication at all (eukaryotic, or below threshold).
+            # "== False" (not "is False") also excludes NaN rows: bins skipped by dereplication entirely.
             representative_value = results["dereplication_representative"].map(representatives[taxonomy_column])
             propagate = (results["dereplication_is_representative"] == False) & results[taxonomy_column].isna() & representative_value.notna()  # noqa: E712
 

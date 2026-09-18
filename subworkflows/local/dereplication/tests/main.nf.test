@@ -9,22 +9,13 @@ nextflow_workflow {
     tag "subworkflows/dereplication"
     tag "galah"
 
-    // The two real genomes below are the same pair used by the upstream
-    // nf-core/modules galah test; at Galah's default 95% ANI they do NOT
-    // cluster together, so this test does not exercise an actual multi-member
-    // cluster collapse. What it does verify: each representative genome is
-    // correctly rejoined to its own original per-sample metadata, eukaryotic
-    // and leftover unbinned-contig pseudo-bins never reach Galah, and the
-    // genome_info CSV format BIN_QC now produces (see subworkflows/local/
-    // bin_qc) is correctly consumed. sample5 is a normal prokaryotic bin with
-    // no genome_info row (every QC tool failed/skipped it): Galah panics
-    // (confirmed against a real run) if handed a genome missing from its QC
-    // report, so it must be excluded before reaching Galah, same as sample3/4.
+    // These two genomes don't cluster at Galah's default 95% ANI, so this doesn't
+    // exercise a real multi-member collapse; it verifies representatives rejoin their
+    // own metadata, and eukaryotic/unbinned/QC-uncovered bins never reach Galah.
     test("two prokaryotic bins, one eukaryotic, one unbinned-pseudo-bin and one QC-uncovered bin filtered out") {
 
         when {
-            // conf/modules.config's GALAH ext.args reads these directly from
-            // params, independent of this subworkflow's own take: inputs below.
+            // conf/modules.config's GALAH ext.args reads these directly from params.
             params {
                 dereplicate_min_completeness  = 50
                 dereplicate_max_contamination = 10
@@ -59,27 +50,23 @@ nextflow_workflow {
                         [file(binSample2)],
                     ],
                     [
-                        // never reaches Galah: filtered out by domain before collection
+                        // never reaches Galah: filtered out by domain
                         [id: 'sample3', assembler: 'SPAdes', binner: 'MetaBAT2', domain: 'eukarya', refinement: 'unrefined'],
                         [file(binSample3)],
                     ],
                     [
-                        // never reaches Galah: filtered out as a leftover unbinned-contig
-                        // pseudo-bin, not a real curated genome
+                        // never reaches Galah: leftover unbinned-contig pseudo-bin
                         [id: 'sample4', assembler: 'SPAdes', binner: 'MetaBAT2', domain: 'prokarya', refinement: 'unrefined_unbinned'],
                         [file(binSample4)],
                     ],
                     [
-                        // a normal bin, but no QC tool produced a usable row for it below --
-                        // excluded from Galah's input rather than crashing it
+                        // no genome_info row below: excluded rather than crashing Galah
                         [id: 'sample5', assembler: 'SPAdes', binner: 'MetaBAT2', domain: 'prokarya', refinement: 'unrefined'],
                         [file(binSample5)],
                     ],
                 )
 
-                // Real CheckM2 completeness/contamination values for these two
-                // genomes, translated into BIN_QC's genome_info output format.
-                // sample5 deliberately has no row.
+                // Real CheckM2 values in BIN_QC's genome_info format; sample5 has no row.
                 def genomeInfo = File.createTempFile('genome_info', '.csv')
                 genomeInfo.text = "genome,completeness,contamination\\n" +
                     "SPAdes-MetaBAT2-sample1.fa,96.38,0.18\\n" +
@@ -104,15 +91,9 @@ nextflow_workflow {
         }
     }
 
-    // Galah 0.4.2 panics (index out of bounds) rather than erroring cleanly
-    // when zero genomes pass its quality thresholds
-    // (https://github.com/wwood/galah/issues/75). Confirmed for real against
-    // nf-core/mag's own test_minigut CI dataset, where every recovered bin
-    // happens to fall below the default 50% completeness threshold. This
-    // test reuses the same two real genomes as above, but with completeness
-    // values that fail the (default) threshold, to confirm DEREPLICATION
-    // works around the crash by skipping Galah gracefully rather than
-    // invoking it at all.
+    // Galah 0.4.2 panics on zero qualifying genomes (github.com/wwood/galah/issues/75);
+    // confirmed against test_minigut, whose recovered bins all fall below the default
+    // threshold. Reuses the genomes above with completeness dropped to fail it.
     test("all bins below quality threshold: Galah skipped, bins passed through unclustered") {
 
         when {
@@ -137,9 +118,7 @@ nextflow_workflow {
                     ],
                 )
 
-                // Same two real genomes, but with completeness dropped well
-                // below the default --dereplicate_min_completeness (50):
-                // neither qualifies.
+                // Completeness dropped well below default --dereplicate_min_completeness (50).
                 def genomeInfo = File.createTempFile('genome_info', '.csv')
                 genomeInfo.text = "genome,completeness,contamination\\n" +
                     "SPAdes-MetaBAT2-sample1.fa,9.6,0.18\\n" +
@@ -155,9 +134,7 @@ nextflow_workflow {
         then {
             assert workflow.success
             assertAll(
-                // No clustering happened (Galah never ran), but both bins
-                // are still passed through -- as if --dereplicate weren't
-                // set at all -- rather than dropped from the run entirely.
+                // Galah never ran, but both bins still pass through unclustered.
                 { assert workflow.out.dereplicated_bins.size() == 2 },
                 { assert workflow.out.cluster_tsv.size() == 0 },
             )

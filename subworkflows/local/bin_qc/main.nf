@@ -18,18 +18,12 @@ include { GUNC_MERGECHECKM                  } from '../../../modules/nf-core/gun
 include { UNTAR as BUSCO_UNTAR              } from '../../../modules/nf-core/untar/main'
 include { UNTAR as CHECKM_UNTAR             } from '../../../modules/nf-core/untar/main'
 
-// Study-wide "genome,completeness,contamination" table (dRep's genome_info
-// format, also read natively by Galah), built from a list of [meta, tool,
-// summary] entries, one per bin group per QC tool that ran. When more than
-// one tool assessed the same bin, whichever tool's own reading clears the
-// dereplication thresholds is preferred -- mirrors GTDB-Tk's own
-// any-tool-passes bin filter, so the two subworkflows agree on which bins
-// are good enough -- falling back to CheckM2 > CheckM > BUSCO priority when
-// none of the readings pass, or to break a tie among readings that all pass.
+// Study-wide dRep genome_info table (also read natively by Galah). Per bin, prefers
+// whichever tool's reading clears the dereplication thresholds -- matching GTDB-Tk's
+// any-tool-passes filter -- falling back to CheckM2 > CheckM > BUSCO priority.
 def buildGenomeInfo(List entries, double min_completeness, double max_contamination) {
-    // QC summary columns per tool: [bin ID column, completeness column, contamination column]
-    // Same mapping GTDBTK uses to filter bins -- see that subworkflow for why
-    // BUSCO's Complete/Duplicated stand in for completeness/contamination.
+    // [bin ID column, completeness column, contamination column] per tool; same
+    // mapping GTDBTK uses, incl. BUSCO's Complete/Duplicated standing in for both.
     def qc_columns = [
         checkm2: ['Name', 'Completeness', 'Contamination'],
         checkm: ['Bin Id', 'Completeness', 'Contamination'],
