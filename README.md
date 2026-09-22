@@ -151,7 +151,7 @@ If you use the nf-core/mag `--ancient_dna` mode, please cite the paper as follow
 >
 > Fellows Yates, J. A., Hübner, A., Borry, M., nf-core community, & Warinner, C.
 >
-> PLoS Computational Biology. 2026 22(8):e1014591 doi: [https://doi.org/10.1371/journal.pcbi.1014591](e1014591. https://doi.org/10.1371/journal.pcbi.1014591)
+> PLoS Computational Biology. 2026 22(8):e1014591 doi: [10.1371/journal.pcbi.1014591](https://doi.org/10.1371/journal.pcbi.1014591)
 
 Additionally you can cite the specific version of the pipeline directly with the following doi: [10.5281/zenodo.3589527](https://doi.org/10.5281/zenodo.3589527)
 

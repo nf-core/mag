@@ -24,7 +24,7 @@ If you are limited in the number of references, cite according to the version yo
 
 - If you use 'ancient DNA' mode (`--ancient_dna`)
 
-  > Fellows Yates, J. A., Hübner, A., Borry, M., nf-core community, & Warinner, C. (2026). De novo assembly and authentication of ancient DNA metagenomes with nf-core/mag. PLoS Computational Biology, 22(8), [e1014591. https://doi.org/10.1371/journal.pcbi.1014591](e1014591. https://doi.org/10.1371/journal.pcbi.1014591)
+  > Fellows Yates, J. A., Hübner, A., Borry, M., nf-core community, & Warinner, C. (2026). De novo assembly and authentication of ancient DNA metagenomes with nf-core/mag. PLoS Computational Biology, 22(8), e1014591. [https://doi.org/10.1371/journal.pcbi.1014591](https://doi.org/10.1371/journal.pcbi.1014591)
 
 ## Pipeline tools
 
