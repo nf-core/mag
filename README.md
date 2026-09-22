@@ -129,7 +129,7 @@ For further information or help, don't hesitate to get in touch on the [Slack `#
 
 ## Citations
 
-If you use nf-core/mag for your analysis, please cite the paper as follows:
+If you use nf-core/mag, please cite both nf-core/mag publications:
 
 > **Community-driven updates for comprehensive long-read metagenomics and enhanced binning in nf-core/mag v5**
 >
@@ -137,13 +137,13 @@ If you use nf-core/mag for your analysis, please cite the paper as follows:
 >
 > Bioinformatics. 2026 42(9):btag628 doi: [10.1093/bioinformatics/btag628](https://doi.org/10.1093/bioinformatics/btag628).
 
-As well as the original nf-core/mag publication:
-
 > **nf-core/mag: a best-practice pipeline for metagenome hybrid assembly and binning**
 >
 > Sabrina Krakau, Daniel Straub, Hadrien Gourlé, Gisela Gabernet, Sven Nahnsen.
 >
 > NAR Genom Bioinform. 2022 Feb 2;4(1):lqac007. doi: [10.1093/nargab/lqac007](https://doi.org/10.1093/nargab/lqac007).
+
+If you are limited in the number of references, cite according to the version you used: v5 onwards -> Alvarez Saravia et al. 2026, up to v4 -> Krakau et al. 2022.
 
 If you use the nf-core/mag `--ancient_dna` mode, please cite the paper as follows:
 
