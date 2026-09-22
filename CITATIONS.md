@@ -10,7 +10,9 @@
 
 ## Pipeline
 
-If you use nf-core/mag please cite:
+If you use nf-core/mag, please cite both nf-core/mag publications.
+
+If you are limited in the number of references, cite according to the version you used: v5 onwards -> Alvarez Saravia et al. 2026, up to v4 -> Krakau et al. 2022.
 
 - Current nf-core/mag publication
 
