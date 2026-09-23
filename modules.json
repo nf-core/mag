@@ -93,7 +93,7 @@
                     },
                     "checkm2/predict": {
                         "branch": "master",
-                        "git_sha": "81470b59ebadb3d01dcfcd37d44f88eb890f4851",
+                        "git_sha": "deb8254027c27a9e505befc68ab449db1f3dadef",
                         "installed_by": ["modules"]
                     },
                     "chopper": {
