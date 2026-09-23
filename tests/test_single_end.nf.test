@@ -82,6 +82,9 @@ nextflow_pipeline {
             def bin_summary = path("${params.outdir}/GenomeBinning/bin_summary.tsv")
             def checkm_summary = path("${params.outdir}/GenomeBinning/QC/checkm_summary.tsv")
             def quast_bin_summary = path("${params.outdir}/GenomeBinning/QC/quast_bin_summary.tsv")
+            def dereplicated_bins = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/Dereplication/dereplicated_bins/*.fa.gz']
+            )
             def pydamage_bins_summary = path("${params.outdir}/GenomeBinning/QC/pydamage_bins_summary.tsv")
             def pydamage_bin_results = getAllFilesFromDir(
                 params.outdir, include: ['GenomeBinning/QC/summarise_pydamagebins/*_pydamage_bin_results.tsv']
@@ -184,6 +187,11 @@ nextflow_pipeline {
                     "QUAST bin summary non-empty: ${quast_bin_summary.csv(sep: '\t').rowCount > 0}",
                     "BAT summary non-empty: ${bat_summary.text.readLines().size() > 1}",
                     "GTDB-Tk summary non-empty: ${gtdbtk_summary.csv(sep: '\t').rowCount > 0}",
+                    // Dereplication result checks
+                    "Dereplication produced representative bins: ${dereplicated_bins.size() > 0}",
+                    "Dereplication collapsed the bin set: ${dereplicated_bins.size() < concoct_bins.size() + maxbin2_bins.size() + metabat2_bins.size()}",
+                    "bin_summary.tsv has dereplication columns: ${bin_summary.text.readLines().first().contains('dereplication')}",
+                    "Bin summary row count matches GTDB-Tk row count: ${bin_summary.csv(sep: '\t').rowCount >= gtdbtk_summary.csv(sep: '\t').rowCount}",
                     // Ancient DNA result checks
                     "pydamage results non-empty: ${pydamage_results.collect { file -> path("${file}").csv(sep: ',').rowCount > 0 }.every()}",
                     "ancient DNA VCF files have variants: ${vcf_files.collect { file -> path("${file}").vcf.variantCount > 0 }.every()}",
@@ -202,7 +210,8 @@ nextflow_pipeline {
                     "CheckM summary: ${checkm_summary.csv(sep: '\t').rowCount}",
                     "QUAST bin summary: ${quast_bin_summary.csv(sep: '\t').rowCount}",
                     "BAT summary: ${bat_summary.text.readLines().size() - 1}",  // CAT output is not a proper TSV
-                    "GTDB-Tk summary: ${gtdbtk_summary.csv(sep: '\t').rowCount}"
+                    "GTDB-Tk summary: ${gtdbtk_summary.csv(sep: '\t').rowCount}",
+                    "Dereplicated bins: ${dereplicated_bins.size()}",
                 ).match("summary-rows") },
 
                 { assert snapshot(

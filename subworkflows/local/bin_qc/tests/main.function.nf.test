@@ -1,0 +1,156 @@
+nextflow_function {
+
+    name "Test Function buildGenomeInfo"
+    script "../main.nf"
+
+    tag "subworkflows"
+    tag "subworkflows_"
+    tag "subworkflows/bin_qc"
+
+    test("single tool, passing reading is used") {
+
+        function "buildGenomeInfo"
+
+        when {
+            function {
+                """
+                def checkm2Tsv = file(File.createTempFile('checkm2', '.tsv').path)
+                checkm2Tsv.text = "Name\tCompleteness\tContamination\\nbin1\t90\t2\\n"
+
+                input[0] = [
+                    [[id: 'g'], 'checkm2', checkm2Tsv],
+                ]
+                input[1] = 50
+                input[2] = 10
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert function.result == 'genome,completeness,contamination\nbin1.fa,90.0,2.0' },
+            )
+        }
+    }
+
+    test("single tool, failing reading is still included") {
+
+        function "buildGenomeInfo"
+
+        when {
+            function {
+                """
+                def checkmTsv = file(File.createTempFile('checkm', '.tsv').path)
+                checkmTsv.text = "Bin Id\tCompleteness\tContamination\\nbin1\t20\t50\\n"
+
+                input[0] = [
+                    [[id: 'g'], 'checkm', checkmTsv],
+                ]
+                input[1] = 50
+                input[2] = 10
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert function.result == 'genome,completeness,contamination\nbin1.fa,20.0,50.0' },
+            )
+        }
+    }
+
+    test("a lower-priority tool's passing reading is preferred over a failing higher-priority reading") {
+
+        function "buildGenomeInfo"
+
+        when {
+            function {
+                """
+                def checkm2Tsv = file(File.createTempFile('checkm2', '.tsv').path)
+                checkm2Tsv.text = "Name\tCompleteness\tContamination\\nbin1\t40\t5\\n"
+
+                def buscoTsv = file(File.createTempFile('busco', '.tsv').path)
+                buscoTsv.text = "Input_file\tComplete\tDuplicated\\nbin1.fa\t65\t3\\n"
+
+                input[0] = [
+                    [[id: 'g'], 'checkm2', checkm2Tsv],
+                    [[id: 'g'], 'busco', buscoTsv],
+                ]
+                input[1] = 50
+                input[2] = 10
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert function.result == 'genome,completeness,contamination\nbin1.fa,65.0,3.0' },
+            )
+        }
+    }
+
+    test("higher-priority tool wins a tie among readings that all pass") {
+
+        function "buildGenomeInfo"
+
+        when {
+            function {
+                """
+                def checkm2Tsv = file(File.createTempFile('checkm2', '.tsv').path)
+                checkm2Tsv.text = "Name\tCompleteness\tContamination\\nbin1\t90\t2\\n"
+
+                def buscoTsv = file(File.createTempFile('busco', '.tsv').path)
+                buscoTsv.text = "Input_file\tComplete\tDuplicated\\nbin1.fa\t95\t1\\n"
+
+                input[0] = [
+                    [[id: 'g'], 'checkm2', checkm2Tsv],
+                    [[id: 'g'], 'busco', buscoTsv],
+                ]
+                input[1] = 50
+                input[2] = 10
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert function.result == 'genome,completeness,contamination\nbin1.fa,90.0,2.0' },
+            )
+        }
+    }
+
+    test("a tool's negative (unassessable) reading falls through to another tool's reading") {
+
+        function "buildGenomeInfo"
+
+        when {
+            function {
+                """
+                def checkm2Tsv = file(File.createTempFile('checkm2', '.tsv').path)
+                checkm2Tsv.text = "Name\tCompleteness\tContamination\\nbin1\t-1\t-1\\n"
+
+                def checkmTsv = file(File.createTempFile('checkm', '.tsv').path)
+                checkmTsv.text = "Bin Id\tCompleteness\tContamination\\nbin1\t55\t8\\n"
+
+                input[0] = [
+                    [[id: 'g'], 'checkm2', checkm2Tsv],
+                    [[id: 'g'], 'checkm', checkmTsv],
+                ]
+                input[1] = 50
+                input[2] = 10
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert function.result == 'genome,completeness,contamination\nbin1.fa,55.0,8.0' },
+            )
+        }
+    }
+}

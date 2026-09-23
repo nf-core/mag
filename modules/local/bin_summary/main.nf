@@ -14,6 +14,7 @@ process BIN_SUMMARY {
     path checkm_sum
     path checkm2_sum
     path pydamagebins_sum
+    path dereplication_sum
 
     output:
     path "bin_summary.tsv", emit: summary
@@ -27,6 +28,7 @@ process BIN_SUMMARY {
     def checkm_summary = checkm_sum.sort().size() > 0 ? "--checkm_summary ${checkm_sum}" : ""
     def checkm2_summary = checkm2_sum.sort().size() > 0 ? "--checkm2_summary ${checkm2_sum}" : ""
     def pydamagebins_summary = pydamagebins_sum.sort().size() > 0 ? "--pydamagebins_summary ${pydamagebins_sum}" : ""
+    def dereplication_summary = dereplication_sum.sort().size() > 0 ? "--dereplication_summary ${dereplication_sum}" : ""
     """
     combine_tables.py \
         --depths_summary ${bin_depths} \
@@ -37,6 +39,7 @@ process BIN_SUMMARY {
         ${checkm_summary} \
         ${checkm2_summary} \
         ${pydamagebins_summary} \
+        ${dereplication_summary} \
         --out bin_summary.tsv
 
     cat <<-END_VERSIONS > versions.yml

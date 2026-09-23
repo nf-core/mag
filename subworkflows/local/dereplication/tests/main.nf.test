@@ -1,0 +1,143 @@
+nextflow_workflow {
+
+    name "Test Subworkflow DEREPLICATION"
+    script "../main.nf"
+    workflow "DEREPLICATION"
+
+    tag "subworkflows"
+    tag "subworkflows_"
+    tag "subworkflows/dereplication"
+    tag "galah"
+
+    // These two genomes don't cluster at Galah's default 95% ANI, so this doesn't
+    // exercise a real multi-member collapse; it verifies representatives rejoin their
+    // own metadata, and eukaryotic/unbinned/QC-uncovered bins never reach Galah.
+    test("two prokaryotic bins, one eukaryotic, one unbinned-pseudo-bin and one QC-uncovered bin filtered out") {
+
+        when {
+            // conf/modules.config's GALAH ext.args reads these directly from params.
+            params {
+                dereplicate_min_completeness  = 50
+                dereplicate_max_contamination = 10
+                dereplicate_ani               = 95
+            }
+            workflow {
+                """
+                def stagingDir = File.createTempDir()
+
+                def binSample1 = new File(stagingDir, 'SPAdes-MetaBAT2-sample1.fa.gz')
+                file('https://github.com/nf-core/test-datasets/raw/refs/heads/magmap/testdata/GCA_002688505.1_ASM268850v1_genomic.fna.gz', checkIfExists: true).copyTo(binSample1.toPath())
+
+                def binSample2 = new File(stagingDir, 'SPAdes-MetaBAT2-sample2.fa.gz')
+                file('https://github.com/nf-core/test-datasets/raw/refs/heads/magmap/testdata/GCF_004296495.1_ASM429649v1_genomic.fna.gz', checkIfExists: true).copyTo(binSample2.toPath())
+
+                def binSample3 = new File(stagingDir, 'SPAdes-MetaBAT2-sample3.fa.gz')
+                file('https://github.com/nf-core/test-datasets/raw/refs/heads/magmap/testdata/GCA_002688505.1_ASM268850v1_genomic.fna.gz', checkIfExists: true).copyTo(binSample3.toPath())
+
+                def binSample4 = new File(stagingDir, 'SPAdes-MetaBAT2-sample4.unbinned.1.fa.gz')
+                file('https://github.com/nf-core/test-datasets/raw/refs/heads/magmap/testdata/GCF_004296495.1_ASM429649v1_genomic.fna.gz', checkIfExists: true).copyTo(binSample4.toPath())
+
+                def binSample5 = new File(stagingDir, 'SPAdes-MetaBAT2-sample5.fa.gz')
+                file('https://github.com/nf-core/test-datasets/raw/refs/heads/magmap/testdata/GCA_002688505.1_ASM268850v1_genomic.fna.gz', checkIfExists: true).copyTo(binSample5.toPath())
+
+                input[0] = Channel.of(
+                    [
+                        [id: 'sample1', assembler: 'SPAdes', binner: 'MetaBAT2', domain: 'prokarya', refinement: 'unrefined'],
+                        [file(binSample1)],
+                    ],
+                    [
+                        [id: 'sample2', assembler: 'SPAdes', binner: 'MetaBAT2', domain: 'prokarya', refinement: 'unrefined'],
+                        [file(binSample2)],
+                    ],
+                    [
+                        // never reaches Galah: filtered out by domain
+                        [id: 'sample3', assembler: 'SPAdes', binner: 'MetaBAT2', domain: 'eukarya', refinement: 'unrefined'],
+                        [file(binSample3)],
+                    ],
+                    [
+                        // never reaches Galah: leftover unbinned-contig pseudo-bin
+                        [id: 'sample4', assembler: 'SPAdes', binner: 'MetaBAT2', domain: 'prokarya', refinement: 'unrefined_unbinned'],
+                        [file(binSample4)],
+                    ],
+                    [
+                        // no genome_info row below: excluded rather than crashing Galah
+                        [id: 'sample5', assembler: 'SPAdes', binner: 'MetaBAT2', domain: 'prokarya', refinement: 'unrefined'],
+                        [file(binSample5)],
+                    ],
+                )
+
+                // Real CheckM2 values in BIN_QC's genome_info format; sample5 has no row.
+                def genomeInfo = File.createTempFile('genome_info', '.csv')
+                genomeInfo.text = "genome,completeness,contamination\\n" +
+                    "SPAdes-MetaBAT2-sample1.fa,96.38,0.18\\n" +
+                    "SPAdes-MetaBAT2-sample2.fa,74.65,0.12\\n"
+
+                input[1] = Channel.of(file(genomeInfo.path))
+                input[2] = 50
+                input[3] = 10
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assertAll(
+                { assert workflow.out.dereplicated_bins.size() == 2 },
+                { assert workflow.out.dereplicated_bins.collect { it[0].id }.sort() == ['sample1', 'sample2'] },
+                { assert workflow.out.dereplicated_bins.every { it[0].assembler == 'SPAdes' && it[0].binner == 'MetaBAT2' && it[0].domain == 'prokarya' } },
+                { assert workflow.out.cluster_tsv.size() == 1 },
+                { assert snapshot(workflow.out).match() },
+            )
+        }
+    }
+
+    // Galah 0.4.2 panics on zero qualifying genomes (github.com/wwood/galah/issues/75);
+    // confirmed against test_minigut, whose recovered bins all fall below the default
+    // threshold. Reuses the genomes above with completeness dropped to fail it.
+    test("all bins below quality threshold: Galah skipped, bins passed through unclustered") {
+
+        when {
+            workflow {
+                """
+                def stagingDir = File.createTempDir()
+
+                def binSample1 = new File(stagingDir, 'SPAdes-MetaBAT2-sample1.fa.gz')
+                file('https://github.com/nf-core/test-datasets/raw/refs/heads/magmap/testdata/GCA_002688505.1_ASM268850v1_genomic.fna.gz', checkIfExists: true).copyTo(binSample1.toPath())
+
+                def binSample2 = new File(stagingDir, 'SPAdes-MetaBAT2-sample2.fa.gz')
+                file('https://github.com/nf-core/test-datasets/raw/refs/heads/magmap/testdata/GCF_004296495.1_ASM429649v1_genomic.fna.gz', checkIfExists: true).copyTo(binSample2.toPath())
+
+                input[0] = Channel.of(
+                    [
+                        [id: 'sample1', assembler: 'SPAdes', binner: 'MetaBAT2', domain: 'prokarya', refinement: 'unrefined'],
+                        [file(binSample1)],
+                    ],
+                    [
+                        [id: 'sample2', assembler: 'SPAdes', binner: 'MetaBAT2', domain: 'prokarya', refinement: 'unrefined'],
+                        [file(binSample2)],
+                    ],
+                )
+
+                // Completeness dropped well below default --dereplicate_min_completeness (50).
+                def genomeInfo = File.createTempFile('genome_info', '.csv')
+                genomeInfo.text = "genome,completeness,contamination\\n" +
+                    "SPAdes-MetaBAT2-sample1.fa,9.6,0.18\\n" +
+                    "SPAdes-MetaBAT2-sample2.fa,7.4,0.12\\n"
+
+                input[1] = Channel.of(file(genomeInfo.path))
+                input[2] = 50
+                input[3] = 10
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assertAll(
+                // Galah never ran, but both bins still pass through unclustered.
+                { assert workflow.out.dereplicated_bins.size() == 2 },
+                { assert workflow.out.cluster_tsv.size() == 0 },
+            )
+        }
+    }
+}

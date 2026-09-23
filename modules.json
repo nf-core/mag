@@ -181,6 +181,11 @@
                         "git_sha": "d04951ee68e3e8b875ebf5ddb7ba6e05233624c1",
                         "installed_by": ["modules"]
                     },
+                    "galah": {
+                        "branch": "master",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
+                        "installed_by": ["modules"]
+                    },
                     "genomad/download": {
                         "branch": "master",
                         "git_sha": "775256e10789e0f61ba57068b7256b23417f9772",

@@ -16,6 +16,7 @@ include { BINNING_PREPARATION             } from '../subworkflows/local/binning_
 include { BINNING                         } from '../subworkflows/local/binning/main'
 include { BIN_QC                          } from '../subworkflows/local/bin_qc/main'
 include { BINNING_REFINEMENT              } from '../subworkflows/local/binning_refinement/main'
+include { DEREPLICATION                    } from '../subworkflows/local/dereplication/main'
 include { VIRUS_IDENTIFICATION            } from '../subworkflows/local/virus_identification/main'
 include { GTDBTK                          } from '../subworkflows/local/gtdbtk/main'
 include { ANCIENT_DNA_ASSEMBLY_VALIDATION } from '../subworkflows/local/ancient_dna/main'
@@ -506,12 +507,25 @@ workflow MAG {
 
         ch_bin_qc_metrics = channel.empty()
         if (!params.skip_binqc) {
-            BIN_QC(ch_input_for_postbinning)
+            BIN_QC(ch_input_for_postbinning, params.dereplicate_min_completeness, params.dereplicate_max_contamination)
             ch_versions = ch_versions.mix(BIN_QC.out.versions)
             ch_bin_qc_metrics = BIN_QC.out.qc_metrics
             ch_busco_summary = BIN_QC.out.busco_summary
             ch_checkm_summary = BIN_QC.out.checkm_summary
             ch_checkm2_summary = BIN_QC.out.checkm2_summary
+            ch_genome_info = BIN_QC.out.genome_info
+        }
+
+        /*
+        * Dereplication: study-wide bin dereplication with Galah
+        */
+
+        ch_dereplicated_bins = channel.empty()
+        ch_dereplication_cluster_tsv = channel.empty()
+        if (params.dereplicate) {
+            DEREPLICATION(ch_input_for_postbinning, ch_genome_info, params.dereplicate_min_completeness, params.dereplicate_max_contamination)
+            ch_dereplicated_bins = DEREPLICATION.out.dereplicated_bins
+            ch_dereplication_cluster_tsv = DEREPLICATION.out.cluster_tsv.map { _meta, tsv -> tsv }
         }
 
         ch_quast_bins_summary = channel.empty()
@@ -537,8 +551,14 @@ workflow MAG {
          */
         ch_catpack_summary = channel.empty()
         if (params.cat_db || params.cat_db_generate) {
+            // Unlike GTDB-Tk, CATPACK also classifies eukaryotic bins, which DEREPLICATION
+            // excludes from clustering -- add them back so they aren't silently dropped.
+            ch_bins_for_catpack = params.dereplicate
+                ? ch_dereplicated_bins.groupTuple().mix(ch_input_for_postbinning_bins.filter { meta, _bins -> meta.domain == "eukarya" })
+                : ch_input_for_postbinning_bins
+
             CATPACK(
-                ch_input_for_postbinning_bins,
+                ch_bins_for_catpack,
                 ch_input_for_postbinning_unbins,
             )
             ch_versions = ch_versions.mix(CATPACK.out.versions)
@@ -554,9 +574,13 @@ workflow MAG {
             ch_gtdbtk_summary = channel.empty()
             if (gtdb) {
 
-                ch_gtdb_bins = ch_input_for_postbinning.filter { meta, _bins ->
-                    meta.domain != "eukarya"
-                }
+                // GTDBTK re-joins against ch_bin_qc_metrics by binner-sample group, so
+                // dereplicated bins (flat, one representative per tuple) need regrouping.
+                ch_gtdb_bins = params.dereplicate
+                    ? ch_dereplicated_bins.groupTuple()
+                    : ch_input_for_postbinning.filter { meta, _bins ->
+                        meta.domain != "eukarya"
+                    }
 
                 GTDBTK(
                     ch_gtdb_bins,
@@ -590,6 +614,7 @@ workflow MAG {
                 ch_checkm_summary.ifEmpty([]),
                 ch_checkm2_summary.ifEmpty([]),
                 ch_summarisepydamage.ifEmpty([]),
+                ch_dereplication_cluster_tsv.ifEmpty([]),
             )
             ch_versions = ch_versions.mix(BIN_SUMMARY.out.versions)
         }
@@ -606,15 +631,23 @@ workflow MAG {
          */
 
         if (!params.skip_prokka) {
-            ch_bins_for_prokka = ch_input_for_postbinning
-                .transpose()
-                .map { meta, bin ->
+            if (params.dereplicate && !params.dereplicate_annotate_all) {
+                ch_bins_for_prokka = ch_dereplicated_bins.map { meta, bin ->
                     def meta_new = meta + [id: bin.getName() - ~/\.fa(sta)?(\.gz)?$/]
                     [meta_new, bin]
                 }
-                .filter { meta, _bin ->
-                    meta.domain != "eukarya"
-                }
+            }
+            else {
+                ch_bins_for_prokka = ch_input_for_postbinning
+                    .transpose()
+                    .map { meta, bin ->
+                        def meta_new = meta + [id: bin.getName() - ~/\.fa(sta)?(\.gz)?$/]
+                        [meta_new, bin]
+                    }
+                    .filter { meta, _bin ->
+                        meta.domain != "eukarya"
+                    }
+            }
 
             PROKKA(
                 ch_bins_for_prokka,

@@ -31,6 +31,12 @@ input:
             type: file
             description: Metagenomic bins in FASTA format
             pattern: "*.{fasta,fa}"
+  - min_completeness:
+      type: value
+      description: Minimum completeness (%) a tool's reading must clear for a bin to be preferred for dereplication.
+  - max_contamination:
+      type: value
+      description: Maximum contamination (%) a tool's reading must clear for a bin to be preferred for dereplication.
 output:
   - qc_summary:
       description: Combined quality assessment summary
@@ -42,6 +48,20 @@ output:
             type: file
             description: Quality assessment summary in TSV format
             pattern: "*.tsv"
+  - genome_info:
+      description: |
+        Study-wide "genome,completeness,contamination" table (dRep's
+        genome_info format) built from whichever of BUSCO/CheckM/CheckM2 ran,
+        for use as Galah's dereplication input. When more than one tool
+        assessed a bin, whichever tool's own reading clears the dereplication
+        thresholds is preferred (mirrors GTDB-Tk's any-tool-passes bin
+        filter); CheckM2 > CheckM > BUSCO priority only breaks a tie among
+        passing readings, or applies when none of them pass.
+      structure:
+        - csv:
+            type: file
+            description: genome_info table
+            pattern: "*.csv"
   - versions:
       type: file
       description: File containing software versions
