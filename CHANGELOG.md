@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1104](https://github.com/nf-core/mag/pull/1104) - Updated to nf-core 4.1.0 template (by @dialvarezs)
 - [#1103](https://github.com/nf-core/mag/pull/1103) - Support parameter types (by @dialvarezs)
 - [#1106](https://github.com/nf-core/mag/pull/1106) - Renamed `--skip_adapter_trimming` to `--skip_longread_adapter_trimming` (old name deprecated) and replaced `--skip_deepmased` with `--run_deepmased` (by @dialvarezs)
+- [#1116](https://github.com/nf-core/mag/pull/1116) - Use a small CheckM2 database in `test_alternatives` instead of downloading the full one, by updating `checkm2/predict` to pass the database via `CHECKM2DB` (by @dialvarezs)
 
 ### `Fixed`
 
