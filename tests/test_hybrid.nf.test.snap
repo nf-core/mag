@@ -403,13 +403,11 @@
                 "GenomeBinning/MaxBin2/bins/SPAdesHybrid-MaxBin2-group-0.002.fa.gz",
                 "GenomeBinning/MaxBin2/discarded/SPAdesHybrid-MaxBin2-group-0.tooshort.gz",
                 "GenomeBinning/MaxBin2/unbinned/discarded/SPAdesHybrid-MaxBin2-group-0.noclass.pooled.fa.gz",
-                "GenomeBinning/MaxBin2/unbinned/discarded/SPAdesHybrid-MaxBin2-group-0.noclass.remaining.fa.gz",
                 "GenomeBinning/MetaBAT2/bins/SPAdesHybrid-MetaBAT2-group-0.1.fa.gz",
                 "GenomeBinning/MetaBAT2/bins/SPAdesHybrid-MetaBAT2-group-0.2.fa.gz",
                 "GenomeBinning/MetaBAT2/discarded/SPAdesHybrid-MetaBAT2-group-0.lowDepth.fa.gz",
                 "GenomeBinning/MetaBAT2/discarded/SPAdesHybrid-MetaBAT2-group-0.tooShort.fa.gz",
                 "GenomeBinning/MetaBAT2/unbinned/discarded/SPAdesHybrid-MetaBAT2-group-0.unbinned.pooled.fa.gz",
-                "GenomeBinning/MetaBAT2/unbinned/discarded/SPAdesHybrid-MetaBAT2-group-0.unbinned.remaining.fa.gz",
                 "GenomeBinning/QC/BUSCO/SPAdesHybrid-MaxBin2-unclassified-unrefined-group-0/group-0-bacteria_odb10-busco.batch_summary.txt",
                 "GenomeBinning/QC/BUSCO/SPAdesHybrid-MaxBin2-unclassified-unrefined-group-0/group-0-bacteria_odb10-busco.log",
                 "GenomeBinning/QC/BUSCO/SPAdesHybrid-MaxBin2-unclassified-unrefined-group-0/short_summary.specific.bacteria_odb10.SPAdesHybrid-MaxBin2-group-0.001.fa.json",
@@ -545,13 +543,11 @@
                 "SPAdesHybrid-MaxBin2-group-0.002.fa.gz:md5,e8e835b15a6f021648e7d04f4a47ea37",
                 "SPAdesHybrid-MaxBin2-group-0.tooshort.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "SPAdesHybrid-MaxBin2-group-0.noclass.pooled.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "SPAdesHybrid-MaxBin2-group-0.noclass.remaining.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "SPAdesHybrid-MetaBAT2-group-0.1.fa.gz:md5,34155300864c5daf4fab060e4a1ae5c0",
                 "SPAdesHybrid-MetaBAT2-group-0.2.fa.gz:md5,90de2b36a2213fe8b90165619bca9a33",
                 "SPAdesHybrid-MetaBAT2-group-0.lowDepth.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "SPAdesHybrid-MetaBAT2-group-0.tooShort.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "SPAdesHybrid-MetaBAT2-group-0.unbinned.pooled.fa.gz:md5,646b952d9f6eba4df4e468a7e3ff2bac",
-                "SPAdesHybrid-MetaBAT2-group-0.unbinned.remaining.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "SPAdesHybrid-MaxBin2-group-0-001-fa-gz.rna.gff:md5,43b0792ddf8e8da1c0a75cd2aebcc6b8",
                 "report.tex:md5,331850852ab6dbd15edfae75fca83dcc",
                 "report.tsv:md5,57d962cab742922aac4663c6d0eb06a0",
@@ -597,7 +593,7 @@
                 "bin_depths_summary.tsv:md5,3b7f08abc34d47952d239ff10c01085e"
             ]
         ],
-        "timestamp": "2026-09-28T01:44:35.081029941",
+        "timestamp": "2026-09-28T18:21:10.566453313",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
