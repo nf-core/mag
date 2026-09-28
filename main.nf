@@ -223,6 +223,11 @@ params {
     max_multiqc_email_size: String = '25.MB'
     multiqc_methods_description: Path?
     generate_bigmag_file: Boolean
+    dereplicate: Boolean
+    dereplicate_annotate_all: Boolean
+    dereplicate_min_completeness: Float = 50
+    dereplicate_max_contamination: Float = 10
+    dereplicate_ani: Float = 95
 
     // Reference genome options
     igenomes_ignore: Boolean

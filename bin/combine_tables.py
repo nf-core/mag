@@ -41,6 +41,12 @@ def parse_args(args=None):
         metavar="FILE",
         help="pyDamage bins summary file from `summarise_pydamagebins.py`.",
     )
+    parser.add_argument(
+        "-r",
+        "--dereplication_summary",
+        metavar="FILE",
+        help="Dereplication cluster definition file (representative<TAB>member, no header).",
+    )
 
     parser.add_argument(
         "-o",
@@ -289,6 +295,56 @@ def main(args=None):
             right_on="bin_id_pydamagebins",
             how="outer",
         )
+
+    ## DEREPLICATION PROCESSING
+
+    if args.dereplication_summary:
+        derep_results = pd.read_csv(
+            args.dereplication_summary,
+            sep="\t",
+            header=None,
+            names=["dereplication_representative", "member"],
+        )
+        # Galah's cluster definition keeps the .gz suffix; the "bin" key here doesn't.
+        derep_results["dereplication_representative"] = derep_results[
+            "dereplication_representative"
+        ].str.removesuffix(".gz")
+        derep_results["member"] = derep_results["member"].str.removesuffix(".gz")
+        if len(set(derep_results["member"].to_list()).difference(set(bins))) > 0:
+            sys.exit(
+                "Bins in dereplication summary do not match bins in bin depths summary!"
+            )
+        derep_results["dereplication_is_representative"] = (
+            derep_results["dereplication_representative"] == derep_results["member"]
+        )
+        results = pd.merge(
+            results,
+            derep_results,
+            left_on="bin",
+            right_on="member",
+            how="outer",
+        )
+        results.drop(columns=["member"], inplace=True)
+
+        ## Propagate representative's taxonomy to rest of its cluster, flagged
+        ## via "_propagated" so it's not mistaken for an independent call.
+        taxonomy_columns = []
+        if args.gtdbtk_summary:
+            taxonomy_columns.append("classification_gtdbtk")
+        if args.cat_summary:
+            taxonomy_columns.append("CAT_rank_catpack")
+
+        representatives = results.set_index("bin")
+        for taxonomy_column in taxonomy_columns:
+            if taxonomy_column not in results.columns:
+                continue
+            propagated_column = f"{taxonomy_column}_propagated"
+            # "== False" (not "is False") also excludes NaN rows: bins skipped by dereplication entirely.
+            representative_value = results["dereplication_representative"].map(representatives[taxonomy_column])
+            propagate = (results["dereplication_is_representative"] == False) & results[taxonomy_column].isna() & representative_value.notna()  # noqa: E712
+
+            results[propagated_column] = propagate
+            results.loc[propagate, taxonomy_column] = representative_value[propagate]
 
     results.sort_values("bin").to_csv(args.out, sep="\t", index=False)
 

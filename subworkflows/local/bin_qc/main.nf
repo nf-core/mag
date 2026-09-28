@@ -18,7 +18,6 @@ include { GUNC_MERGECHECKM                  } from '../../../modules/nf-core/gun
 include { UNTAR as BUSCO_UNTAR              } from '../../../modules/nf-core/untar/main'
 include { UNTAR as CHECKM_UNTAR             } from '../../../modules/nf-core/untar/main'
 
-
 workflow BIN_QC {
     take:
     ch_bins // [val(meta), [path(fasta)]], input bins (mandatory)
