@@ -586,7 +586,7 @@ If you require taxonomic profiling of raw reads, we recommend using [nf-core/tax
 
 ## A note on contig length filtering and read mapping
 
-Assemblies are filtered to contigs of at least `--min_contig_size` bp (default: 1500) before reads are mapped back for binning, so the binners work on the same set of contigs and no compute is spent on contigs that would be discarded anyway. Note that MetaBAT2 and COMEBin have fixed internal minimums (1500 bp and 1000 bp, respectively), so with a lower `--min_contig_size` they still ignore contigs below those lengths.
+Assemblies are filtered to contigs of at least `--min_contig_size` bp (default: 1500) before reads are mapped back for binning, so the binners work on the same set of contigs and no compute is spent on contigs that would be discarded anyway. Note that MetaBAT2, CONCOCT and COMEBin have fixed internal minimums (1500 bp, 1000 bp and 1000 bp, respectively), so with a lower `--min_contig_size` they still ignore contigs below those lengths.
 
 ALE, DeepMAsED and the ancient DNA validation (`--ancient_dna`) evaluate the full, unfiltered assembly instead. When any of them is enabled, reads are mapped a second time against the unfiltered assemblies, which increases runtime and, with `--save_assembly_mapped_reads`, disk usage. These mappings are published in a `full_assembly/` subdirectory next to the binning mappings.
 
