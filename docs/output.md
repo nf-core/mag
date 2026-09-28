@@ -439,7 +439,6 @@ All other files that were discarded by the tool, or from the low-quality unbinne
   - `*.tooShort.fa.gz`: Too short contigs that are filtered by MetaBAT2
 - `GenomeBinning/MetaBAT2/unbinned/discarded/`
   - `*.unbinned.pooled.fa.gz`: Pooled unbinned contigs equal or above `--min_contig_size`, by default 1500 bp.
-  - `*.unbinned.remaining.fa.gz`: Remaining unbinned contigs below `--min_contig_size`, by default 1500 bp, but not in any other file.
 
 </details>
 
@@ -469,7 +468,6 @@ All the files and contigs in these folders will be assessed by QUAST and BUSCO.
   - `*.tooshort.gz`: Too short contigs that are filtered by MaxBin2
 - `GenomeBinning/MaxBin2/unbinned/discarded/`
   - `*.noclass.pooled.fa.gz`: Pooled unbinned contigs equal or above `--min_contig_size`, by default 1500 bp.
-  - `*.noclass.remaining.fa.gz`: Remaining unbinned contigs below `--min_contig_size`, by default 1500 bp, but not in any other file.
 
 </details>
 
