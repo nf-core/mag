@@ -5,7 +5,7 @@ nextflow_function {
 
     tag "subworkflows"
     tag "subworkflows_"
-    tag "subworkflows/bin_qc"
+    tag "subworkflows/dereplication"
 
     test("single tool, passing reading is used") {
 

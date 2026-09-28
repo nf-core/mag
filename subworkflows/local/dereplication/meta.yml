@@ -21,14 +21,15 @@ input:
         Per-sample bins, filtered internally to non-eukaryotic domains.
         Structure: [ val(meta), [ path(bin) ] ]
       pattern: "*.{fa,fasta}{,.gz}"
-  - ch_genome_info:
+  - ch_qc_metrics:
       type: file
       description: |
-        Single study-wide "genome,completeness,contamination" table (dRep's
-        genome_info format), as emitted by the BIN_QC subworkflow's
-        genome_info output (a bare path channel, no meta).
-        Structure: path(csv)
-      pattern: "*.csv"
+        Per-tool QC summaries, as emitted by the BIN_QC subworkflow's
+        qc_metrics output. Used to build a study-wide
+        "genome,completeness,contamination" table (dRep's genome_info
+        format) internally.
+        Structure: [ val(meta), val(tool), path(summary) ]
+      pattern: "*.tsv"
   - min_completeness:
       type: value
       description: Minimum completeness (%) for a bin to be dereplicated.

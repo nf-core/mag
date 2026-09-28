@@ -66,13 +66,13 @@ nextflow_workflow {
                     ],
                 )
 
-                // Real CheckM2 values in BIN_QC's genome_info format; sample5 has no row.
-                def genomeInfo = File.createTempFile('genome_info', '.csv')
-                genomeInfo.text = "genome,completeness,contamination\\n" +
-                    "SPAdes-MetaBAT2-sample1.fa,96.38,0.18\\n" +
-                    "SPAdes-MetaBAT2-sample2.fa,74.65,0.12\\n"
+                // Real CheckM2 values; sample5 has no row.
+                def checkm2Tsv = File.createTempFile('checkm2', '.tsv')
+                checkm2Tsv.text = "Name\\tCompleteness\\tContamination\\n" +
+                    "SPAdes-MetaBAT2-sample1\\t96.38\\t0.18\\n" +
+                    "SPAdes-MetaBAT2-sample2\\t74.65\\t0.12\\n"
 
-                input[1] = Channel.of(file(genomeInfo.path))
+                input[1] = Channel.of([[id: 'checkm2'], 'checkm2', file(checkm2Tsv.path)])
                 input[2] = 50
                 input[3] = 10
                 """
@@ -119,12 +119,12 @@ nextflow_workflow {
                 )
 
                 // Completeness dropped well below default --dereplicate_min_completeness (50).
-                def genomeInfo = File.createTempFile('genome_info', '.csv')
-                genomeInfo.text = "genome,completeness,contamination\\n" +
-                    "SPAdes-MetaBAT2-sample1.fa,9.6,0.18\\n" +
-                    "SPAdes-MetaBAT2-sample2.fa,7.4,0.12\\n"
+                def checkm2Tsv = File.createTempFile('checkm2', '.tsv')
+                checkm2Tsv.text = "Name\\tCompleteness\\tContamination\\n" +
+                    "SPAdes-MetaBAT2-sample1\\t9.6\\t0.18\\n" +
+                    "SPAdes-MetaBAT2-sample2\\t7.4\\t0.12\\n"
 
-                input[1] = Channel.of(file(genomeInfo.path))
+                input[1] = Channel.of([[id: 'checkm2'], 'checkm2', file(checkm2Tsv.path)])
                 input[2] = 50
                 input[3] = 10
                 """

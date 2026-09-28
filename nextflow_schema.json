@@ -1107,7 +1107,7 @@
                     "type": "number",
                     "default": 10,
                     "description": "Maximum contamination (%) for a bin to be included in dereplication.",
-                    "help_text": "Bins above this threshold are excluded from ANI clustering entirely, rather than being force-assigned to a cluster: ANI estimates on poor-quality bins aren't trustworthy. Matches GTDB-Tk's own recommended minimum and the Bowers et al. 2017 medium-quality genome standard."
+                    "help_text": "Bins above this threshold are excluded from ANI clustering entirely, rather than being force-assigned to a cluster: ANI estimates on poor-quality bins aren't trustworthy. Matches GTDB-Tk's own recommended maximum and the Bowers et al. 2017 medium-quality genome standard."
                 },
                 "dereplicate_ani": {
                     "type": "number",

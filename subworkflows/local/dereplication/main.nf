@@ -7,12 +7,49 @@
 
 include { GALAH } from '../../../modules/nf-core/galah/main'
 
+// Study-wide dRep genome_info table (also read natively by Galah). Per bin, prefers
+// whichever tool's reading clears the dereplication thresholds -- matching GTDB-Tk's
+// any-tool-passes filter -- falling back to CheckM2 > CheckM > BUSCO priority.
+def buildGenomeInfo(List entries, double min_completeness, double max_contamination) {
+    // [bin ID column, completeness column, contamination column] per tool; same
+    // mapping GTDBTK uses, incl. BUSCO's Complete/Duplicated standing in for both.
+    def qc_columns = [
+        checkm2: ['Name', 'Completeness', 'Contamination'],
+        checkm: ['Bin Id', 'Completeness', 'Contamination'],
+        busco: ['Input_file', 'Complete', 'Duplicated'],
+    ]
+    def priority = ['checkm2', 'checkm', 'busco']
+
+    def by_tool = entries.groupBy { _meta, tool, _summary -> tool }
+    def readings = [:] // bin filename (.gz stripped) -> tool -> [completeness, contamination]
+    by_tool.each { tool, tool_entries ->
+        def cols = qc_columns[tool]
+        tool_entries.each { _meta, _tool, summary ->
+            summary.splitCsv(header: true, sep: '\t').each { row ->
+                def bin_name = tool == 'busco' ? row[cols[0]] : "${row[cols[0]]}.fa"
+                def completeness = "${row[cols[1]]}".toDouble()
+                def contamination = "${row[cols[2]]}".toDouble()
+                // a negative value means the tool could not assess the bin
+                if (completeness >= 0 && contamination >= 0) {
+                    readings[bin_name] = (readings[bin_name] ?: [:]) + [(tool): [completeness, contamination]]
+                }
+            }
+        }
+    }
+    def quality = readings.collectEntries { bin_name, by_tool_readings ->
+        def candidates = priority.collect { tool -> by_tool_readings[tool] }.findAll { reading -> reading }
+        def passing = candidates.find { cc -> cc[0] >= min_completeness && cc[1] <= max_contamination }
+        [(bin_name): passing ?: candidates[0]]
+    }
+    (['genome,completeness,contamination'] + quality.collect { bin, cc -> "${bin},${cc[0]},${cc[1]}" }).join('\n')
+}
+
 workflow DEREPLICATION {
 
     take:
-    ch_bins         // channel: [ val(meta), [ path(bin) ] ], per-sample bins (mandatory)
-    ch_genome_info  // channel: path(csv), single study-wide "genome,completeness,contamination" table from BIN_QC.out.genome_info (bare path, no meta)
-    min_completeness // value: minimum completeness (%) for a bin to be dereplicated
+    ch_bins           // channel: [ val(meta), [ path(bin) ] ], per-sample bins (mandatory)
+    ch_qc_metrics     // channel: [ val(meta), val(tool), path(summary) ], per-tool QC summaries from BIN_QC.out.qc_metrics
+    min_completeness  // value: minimum completeness (%) for a bin to be dereplicated
     max_contamination // value: maximum contamination (%) for a bin to be dereplicated
 
     main:
@@ -21,6 +58,11 @@ workflow DEREPLICATION {
     ch_bins_flat = ch_bins
         .filter { meta, _bins -> meta.domain != "eukarya" && !meta.refinement.endsWith("unbinned") }
         .transpose()
+
+    ch_genome_info = ch_qc_metrics
+        .toSortedList { entry -> "${entry[1]}|${entry[2]}" }
+        .map { entries -> buildGenomeInfo(entries, min_completeness, max_contamination) }
+        .collectFile(name: 'genome_info.csv')
 
     // A bin with no genome_info row (every QC tool failed or gave an unusable
     // value) also crashes Galah outright, so exclude it too.
