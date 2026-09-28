@@ -273,7 +273,7 @@ To further assist in reproducibility, you can use share and reuse [parameter fil
 Additionally, to enable also reproducible results from the individual assembly tools this pipeline provides extra parameters. SPAdes is designed to be deterministic for a given number of threads. To generate reproducible results set the number of cpus with `--spades_fix_cpus` or `--spadeshybrid_fix_cpus`. This will overwrite the number of cpus specified in the `base.config` file and additionally ensure that it is not increased in case of retries for individual samples. MEGAHIT only generates reproducible results when run single-threaded.
 You can fix this by using the parameter `--megahit_fix_cpu_1`. In both cases, do not specify the number of cpus for these processes in additional custom config files, this would result in an error.
 
-Assembly quality is assessed using [ALE](https://github.com/sc932/ALE) for short-read assemblies only (MEGAHIT, SPAdes); long-read assemblies are excluded, and hybrid assemblies use only the short-read component for scoring.
+When enabled with `--run_ale`, assembly quality is additionally assessed using [ALE](https://github.com/sc932/ALE) for short-read assemblies only (MEGAHIT, SPAdes); long-read assemblies are excluded, and hybrid assemblies use only the short-read component for scoring.
 
 MetaBAT2 is run by default with a fixed seed within this pipeline, thus producing reproducible results.
 
@@ -584,9 +584,15 @@ This feature was removed in version 5.0.0 to strengthen the pipeline's focus on 
 
 If you require taxonomic profiling of raw reads, we recommend using [nf-core/taxprofiler](https://nf-co.re/taxprofiler/), which is specifically designed for taxonomic profiling of raw reads and supports a wide range of tools for this purpose.
 
+## A note on contig length filtering and read mapping
+
+Assemblies are filtered to contigs of at least `--min_contig_size` bp (default: 1500) before reads are mapped back for binning, so every binner works on the same set of contigs and no compute is spent on contigs that would be discarded anyway.
+
+ALE, DeepMAsED and the ancient DNA validation (`--ancient_dna`) evaluate the full, unfiltered assembly instead. When any of them is enabled, reads are mapped a second time against the unfiltered assemblies, which increases runtime and, with `--save_assembly_mapped_reads`, disk usage. These mappings are published in a `full_assembly/` subdirectory next to the binning mappings.
+
 ## A note on DeepMAsED assembly error detection
 
-When enabled, DeepMAsED performs per-contig assembly error detection on short-read assemblies (MEGAHIT and SPAdes). It is disabled by default, as it is noticeably more resource-intensive than the other assembly QC tools (e.g. ALE, which runs by default).
+When enabled, DeepMAsED performs per-contig assembly error detection on short-read assemblies (MEGAHIT and SPAdes). It is disabled by default, as it is noticeably more resource-intensive than the other assembly QC tools (e.g. ALE).
 
 Useful parameters:
 

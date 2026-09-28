@@ -514,7 +514,7 @@ def toolCitationText() {
 
     def assembly_qc_tools = [
         !params.skip_quast ? "metaQUAST (Mikheenko et al. 2016)" : "",
-        !params.skip_ale ? "ALE (Clark et al. 2013)" : "",
+        params.run_ale ? "ALE (Clark et al. 2013)" : "",
         params.run_deepmased ? "DeepMAsED (Mineeva et al. 2020)" : "",
     ].findAll { tool -> tool != '' }
     def text_assembly_qc = "Assembly quality was assessed with ${assembly_qc_tools.join(', ')}."
@@ -564,7 +564,7 @@ def toolCitationText() {
         "Tools used in the workflow included:",
         text_seq_qc,
         (!params.skip_shortread_qc && !params.skip_clipping) ? text_shortread_qc : "",
-        (params.host_fasta || params.host_genome || !params.skip_binning || params.ancient_dna || !params.skip_ale) ? text_mapping : "",
+        (params.host_fasta || params.host_genome || !params.skip_binning || params.ancient_dna || params.run_ale || params.run_deepmased) ? text_mapping : "",
         (!params.skip_longread_qc && longread_qc_tools) ? text_longread_qc : "",
         params.bbnorm ? text_bbnorm : "",
         assembly_tools ? text_assembly : "",
@@ -607,7 +607,7 @@ def toolBibliographyText() {
             references << "<li>Bolger, A. M., Lohse, M., & Usadel, B. (2014). Trimmomatic: a flexible trimmer for Illumina sequence data. Bioinformatics, 30(15), 2114-2120. doi: 10.1093/bioinformatics/btu170</li>"
         }
     }
-    if (params.host_fasta || params.host_genome || !params.skip_binning || params.ancient_dna || !params.skip_ale) {
+    if (params.host_fasta || params.host_genome || !params.skip_binning || params.ancient_dna || params.run_ale || params.run_deepmased) {
         references << "<li>Langmead, B. and Salzberg, S. L. 2012 Fast gapped-read alignment with Bowtie 2. Nature methods, 9(4), p. 357–359. doi: 10.1038/nmeth.1923.</li>"
         // Note: we don't have a simple way to determine if long reads are present, so we add minimap2 at the same time as Bowtie2
         references << "<li>Li, H. (2018). Minimap2: pairwise alignment for nucleotide sequences. Bioinformatics , 34(18), 3094–3100. doi: 10.1093/bioinformatics/bty191</li>"
@@ -653,7 +653,7 @@ def toolBibliographyText() {
     if (!params.skip_quast) {
         references << "<li>Mikheenko, A., Saveliev, V., & Gurevich, A. (2016). MetaQUAST: evaluation of metagenome assemblies. Bioinformatics, 32(7), 1088-1090. doi: 10.1093/bioinformatics/btv697</li>"
     }
-    if (!params.skip_ale) {
+    if (params.run_ale) {
         references << "<li>Clark, S. C., Egan, R., Frazier, P. I., & Wang, Z. (2013). ALE: a generic assembly likelihood evaluation framework for assessing the accuracy of genome and metagenome assemblies. Bioinformatics, 29(4), 435-443. doi: 10.1093/bioinformatics/bts723</li>"
     }
     if (params.run_deepmased) {

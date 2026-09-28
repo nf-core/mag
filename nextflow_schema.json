@@ -647,9 +647,10 @@
                     "type": "boolean",
                     "description": "Skip MEGAHIT assembly."
                 },
-                "skip_ale": {
+                "run_ale": {
                     "type": "boolean",
-                    "description": "Skip ALE"
+                    "description": "Run ALE assembly likelihood evaluation on short-read assemblies.",
+                    "help_text": "ALE evaluates the full assembly (before `--min_contig_size` filtering), so enabling it adds an extra read mapping against the unfiltered assemblies."
                 },
                 "run_deepmased": {
                     "type": "boolean",
@@ -866,7 +867,7 @@
                     "type": "integer",
                     "default": 1500,
                     "description": "Minimum contig size to be considered for binning and for bin quality check.",
-                    "help_text": "For forwarding into downstream analysis, i.e. QUAST and BUSCO, and reporting."
+                    "help_text": "Assemblies are filtered to contigs of at least this length before read mapping for binning, so all binners see the same contigs. Assembly QC (ALE, DeepMAsED) and ancient DNA validation use a separate mapping against the unfiltered assemblies."
                 },
                 "min_length_unbinned_contigs": {
                     "type": "integer",

@@ -57,7 +57,7 @@ A run of nf-core/mag without any customisation or additional parameters will:
   - `SPAdesHybrid` if short and long reads are provided
   - `Flye` and `metaMDBG` if long reads are provided
 - Post-assembly tasks
-  - Quality control by `QUAST` and `ALE`
+  - Quality control by `QUAST` and optionally `ALE`
   - Annotate assemblies with `prodigal`
 - Group contigs
   - By binning with `MetaBat2`, `MaxBin2`, `CONCOCT`, `COMEBin`, `MetaBinner` and `SemiBin2`

@@ -99,7 +99,7 @@ params {
     coassemble_group: Boolean
 
     // Assembly QC and polishing options
-    skip_ale: Boolean
+    run_ale: Boolean
     run_deepmased: Boolean
     skip_quast: Boolean
     ale_per_base_output: Boolean
