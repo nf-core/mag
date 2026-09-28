@@ -100,6 +100,7 @@ params {
 
     // Assembly QC and polishing options
     run_ale: Boolean
+    skip_ale: Boolean
     run_deepmased: Boolean
     skip_quast: Boolean
     ale_per_base_output: Boolean

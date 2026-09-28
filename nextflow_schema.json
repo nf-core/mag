@@ -652,6 +652,11 @@
                     "description": "Run ALE assembly likelihood evaluation on short-read assemblies.",
                     "help_text": "ALE evaluates the full assembly (before `--min_contig_size` filtering), so enabling it adds an extra read mapping against the unfiltered assemblies."
                 },
+                "skip_ale": {
+                    "type": "boolean",
+                    "description": "[DEPRECATED] ALE is now disabled by default, use `--run_ale` to enable it.",
+                    "hidden": true
+                },
                 "run_deepmased": {
                     "type": "boolean",
                     "description": "Run DeepMAsED assembly error detection (runs both features and predict)"

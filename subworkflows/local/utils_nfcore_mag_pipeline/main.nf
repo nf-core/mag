@@ -379,6 +379,10 @@ def validateInputParameters(hybrid) {
         log.warn("[nf-core/mag]: The parameter '--gtdbtk_skip_aniscreen' is deprecated and will be removed in a future release. Please use '--gtdbtk_place_species' instead.")
     }
 
+    if (params.skip_ale) {
+        log.warn("[nf-core/mag]: The parameter '--skip_ale' is deprecated and will be removed in a future release. ALE is now disabled by default, use '--run_ale' to enable it.")
+    }
+
     if (params.skip_adapter_trimming) {
         log.warn("[nf-core/mag]: The parameter '--skip_adapter_trimming' is deprecated and will be removed in a future release. Please use '--skip_longread_adapter_trimming' instead.")
     }
