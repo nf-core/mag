@@ -8,14 +8,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Added`
 
 - [#1051](https://github.com/nf-core/mag/pull/1051) - Add DeepMAsED assembly error detection to the MAG workflow as two sequential steps (`features` and `predict`) for short-read assemblies (by @SkyLexS).
+- [#1102](https://github.com/nf-core/mag/pull/1102) - Add new nf-core/mag ancient DNA mode publication citations (by @jfy133)
+- [#1102](https://github.com/nf-core/mag/pull/1102) - Add nf-core/mag v5 long-read and binning update publication citations (by @dialvarezs)
 - [#1110](https://github.com/nf-core/mag/pull/1110) - Add optional study-wide bin dereplication with [Galah](https://github.com/wwood/galah) (`--dereplicate`); see [usage docs](https://nf-co.re/mag/docs/usage#a-note-on-bin-dereplication) for details (by @erikrikarddaniel).
 
 ### `Changed`
 
-- [#1110](https://github.com/nf-core/mag/pull/1110) - Documented the interplay between `--postbinning_input` and `--dereplicate`, and when GTDB-Tk/CAT-BAT/Prokka cost is actually bounded by which (by @erikrikarddaniel).
 - [#1104](https://github.com/nf-core/mag/pull/1104) - Updated to nf-core 4.1.0 template (by @dialvarezs)
 - [#1103](https://github.com/nf-core/mag/pull/1103) - Support parameter types (by @dialvarezs)
 - [#1106](https://github.com/nf-core/mag/pull/1106) - Renamed `--skip_adapter_trimming` to `--skip_longread_adapter_trimming` (old name deprecated) and replaced `--skip_deepmased` with `--run_deepmased` (by @dialvarezs)
+- [#1110](https://github.com/nf-core/mag/pull/1110) - Documented the interplay between `--postbinning_input` and `--dereplicate`, and when GTDB-Tk/CAT-BAT/Prokka cost is actually bounded by which (by @erikrikarddaniel).
+- [#1116](https://github.com/nf-core/mag/pull/1116) - Use a small CheckM2 database in `test_alternatives` instead of downloading the full one, by updating `checkm2/predict` to pass the database via `CHECKM2DB` (by @dialvarezs)
 
 ### `Fixed`
 
