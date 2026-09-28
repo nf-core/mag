@@ -1272,7 +1272,6 @@
                 "MEGAHIT-MetaBAT2-test_minigut-bins_bin2classification.names.txt:md5,ce1b6bae00995e88d70722462d9fcedb",
                 "MEGAHIT-MetaBAT2-test_minigut-bins_summary.txt:md5,c2986e27b93008b06709a59bb298e3ea",
                 "bat_summary.tsv:md5,de5e7484cfa08b23c1ddb8c11235f50f",
-                "all-all-all-all-all_bins.bac120.filtered.tsv:md5,b477d4b0640718b9d33597d77d45e71e",
                 "all-all-all-all-all_bins.bac120.msa.fasta.gz:md5,d9fe921d33d3343823d7c20f7307e45d",
                 "all-all-all-all-all_bins.bac120.summary.tsv:md5,c075633830e31fe04ecb196bec078602",
                 "all-all-all-all-all_bins.bac120.summary.tsv:md5,c075633830e31fe04ecb196bec078602",
