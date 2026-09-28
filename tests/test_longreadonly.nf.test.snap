@@ -440,7 +440,7 @@
     },
     "-profile longreadonly": {
         "content": [
-            51,
+            53,
             {
                 "BIN_SUMMARY": {
                     "pandas": "1.4.3",
@@ -534,6 +534,9 @@
                 "SAMTOOLS_HOSTREMOVED_UNMAPPED": {
                     "samtools": 1.21
                 },
+                "SEQKIT_SEQ_MINCONTIGSIZE": {
+                    "seqkit": "2.13.0"
+                },
                 "SEQKIT_STATS": {
                     "seqkit": "2.9.0"
                 },
@@ -547,7 +550,7 @@
                 }
             }
         ],
-        "timestamp": "2026-08-12T08:32:50.582846141",
+        "timestamp": "2026-09-28T01:46:32.581143979",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
@@ -596,7 +599,9 @@
                 "multiqc/multiqc_plots/svg/quast_table.svg",
                 "multiqc/multiqc_report.html"
             ],
-            []
+            [
+                
+            ]
         ],
         "timestamp": "2026-08-12T08:32:52.318223817",
         "meta": {
