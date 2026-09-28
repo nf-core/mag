@@ -313,15 +313,19 @@ workflow MAG {
     if (!params.skip_binning) {
         SEQKIT_SEQ_MINCONTIGSIZE(ch_assemblies)
 
-        ch_filtered_assemblies = SEQKIT_SEQ_MINCONTIGSIZE.out.fastx.branch { meta, _assembly ->
-            longread: meta.assembler.toUpperCase() in ['FLYE', 'METAMDBG']
-            shortread: true
+        // assemblies without any contig >= --min_contig_size cannot be mapped against
+        ch_filtered_assemblies = SEQKIT_SEQ_MINCONTIGSIZE.out.fastx.filter { meta, assembly ->
+            if (assembly.size() == 0) {
+                log.warn("[nf-core/mag]: No contigs >= --min_contig_size (${params.min_contig_size}) in ${meta.assembler} assembly of '${meta.id}', skipping its binning.")
+                return false
+            }
+            return true
         }
 
         BINNING_PREPARATION(
-            ch_filtered_assemblies.shortread,
+            ch_shortread_assemblies.join(ch_filtered_assemblies).map { meta, _assembly, filtered -> [meta, filtered] },
             ch_short_reads,
-            ch_filtered_assemblies.longread,
+            ch_longread_assemblies.join(ch_filtered_assemblies).map { meta, _assembly, filtered -> [meta, filtered] },
             ch_long_reads,
         )
         ch_versions = ch_versions.mix(BINNING_PREPARATION.out.versions)
@@ -399,35 +403,24 @@ workflow MAG {
         if (params.ancient_dna && !params.skip_ancient_damagecorrection) {
             // consensus calling keeps only SNPs/MNPs, so lengths are unchanged and the same contigs pass the filter
             SEQKIT_SEQ_MINCONTIGSIZE_CORRECTED(ANCIENT_DNA_ASSEMBLY_VALIDATION.out.contigs_recalled)
-
-            BINNING(
-                BINNING_PREPARATION.out.grouped_mappings.join(SEQKIT_SEQ_MINCONTIGSIZE_CORRECTED.out.fastx).map { meta, _contigs, bams, bais, corrected_contigs ->
-                    [meta, corrected_contigs, bams, bais]
-                },
-                params.bin_min_size,
-                params.bin_max_size,
-            )
+            ch_binning_contigs = SEQKIT_SEQ_MINCONTIGSIZE_CORRECTED.out.fastx
         }
         else {
-            BINNING(
-                BINNING_PREPARATION.out.grouped_mappings,
-                params.bin_min_size,
-                params.bin_max_size,
-            )
+            ch_binning_contigs = BINNING_PREPARATION.out.grouped_mappings.map { meta, contigs, _bams, _bais -> [meta, contigs] }
         }
+
+        BINNING(
+            BINNING_PREPARATION.out.grouped_mappings.join(ch_binning_contigs).map { meta, _contigs, bams, bais, contigs ->
+                [meta, contigs, bams, bais]
+            },
+            params.bin_min_size,
+            params.bin_max_size,
+        )
         ch_versions = ch_versions.mix(BINNING.out.versions)
 
         if (params.bin_domain_classification) {
 
-            // Make sure if running aDNA subworkflow to use the damage-corrected contigs for higher accuracy
-            if (params.ancient_dna && !params.skip_ancient_damagecorrection) {
-                ch_assemblies_for_domainclassification = ANCIENT_DNA_ASSEMBLY_VALIDATION.out.contigs_recalled
-            }
-            else {
-                ch_assemblies_for_domainclassification = ch_assemblies
-            }
-
-            DOMAIN_CLASSIFICATION(ch_assemblies_for_domainclassification, BINNING.out.bins, BINNING.out.unbinned)
+            DOMAIN_CLASSIFICATION(ch_binning_contigs, BINNING.out.bins, BINNING.out.unbinned)
             ch_versions = ch_versions.mix(DOMAIN_CLASSIFICATION.out.versions)
 
             ch_binning_results_bins = DOMAIN_CLASSIFICATION.out.classified_bins
@@ -464,14 +457,7 @@ workflow MAG {
                 meta.domain != "eukarya"
             }
 
-            if (params.ancient_dna) {
-                ch_contigs_for_binrefinement = ANCIENT_DNA_ASSEMBLY_VALIDATION.out.contigs_recalled
-            }
-            else {
-                ch_contigs_for_binrefinement = BINNING_PREPARATION.out.grouped_mappings.map { meta, contigs, _bam, _bai -> [meta, contigs] }
-            }
-
-            BINNING_REFINEMENT(ch_contigs_for_binrefinement, ch_prokarya_bins_dastool)
+            BINNING_REFINEMENT(ch_binning_contigs, ch_prokarya_bins_dastool)
             ch_versions = ch_versions.mix(BINNING_REFINEMENT.out.versions)
 
             ch_refined_bins = BINNING_REFINEMENT.out.refined_bins
@@ -706,8 +692,12 @@ workflow MAG {
         }
     }
 
-    if (!params.skip_binning || params.ancient_dna) {
+    // both mappings write identically named logs, so report only one of them
+    if (!params.skip_binning) {
         ch_multiqc_files = ch_multiqc_files.mix(BINNING_PREPARATION.out.multiqc_files.collect().ifEmpty([]))
+    }
+    else if (params.ancient_dna || params.run_ale || params.run_deepmased) {
+        ch_multiqc_files = ch_multiqc_files.mix(BINNING_PREPARATION_FULL.out.multiqc_files.collect().ifEmpty([]))
     }
 
     if (!params.skip_binning) {
