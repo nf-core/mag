@@ -3,54 +3,54 @@
     IMPORT MODULES / SUBWORKFLOWS / FUNCTIONS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-include { MULTIQC } from '../modules/nf-core/multiqc/main'
-include { paramsSummaryMap } from 'plugin/nf-schema'
-include { paramsSummaryMultiqc } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_mag_pipeline'
+include { MULTIQC                                          } from '../modules/nf-core/multiqc/main'
+include { paramsSummaryMap                                 } from 'plugin/nf-schema'
+include { paramsSummaryMultiqc                             } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { softwareVersionsToYAML                           } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { methodsDescriptionText                           } from '../subworkflows/local/utils_nfcore_mag_pipeline'
 
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { BINNING_PREPARATION } from '../subworkflows/local/binning_preparation/main'
-include { BINNING_PREPARATION as BINNING_PREPARATION_FULL } from '../subworkflows/local/binning_preparation/main'
-include { BINNING } from '../subworkflows/local/binning/main'
-include { BIN_QC } from '../subworkflows/local/bin_qc/main'
-include { BINNING_REFINEMENT } from '../subworkflows/local/binning_refinement/main'
-include { VIRUS_IDENTIFICATION } from '../subworkflows/local/virus_identification/main'
-include { GTDBTK } from '../subworkflows/local/gtdbtk/main'
-include { ANCIENT_DNA_ASSEMBLY_VALIDATION } from '../subworkflows/local/ancient_dna/main'
-include { DOMAIN_CLASSIFICATION } from '../subworkflows/local/domain_classification/main'
-include { DEPTHS } from '../subworkflows/local/depths/main'
-include { LONGREAD_PREPROCESSING } from '../subworkflows/local/preprocessing_longread/main'
-include { SHORTREAD_PREPROCESSING } from '../subworkflows/local/preprocessing_shortread/main'
-include { ASSEMBLY } from '../subworkflows/local/assembly/main'
-include { CATPACK } from '../subworkflows/local/catpack/main'
-include { BINNING_PYDAMAGE } from '../subworkflows/local/binning_pydamage/main'
+include { BINNING_PREPARATION                              } from '../subworkflows/local/binning_preparation/main'
+include { BINNING_PREPARATION as BINNING_PREPARATION_FULL  } from '../subworkflows/local/binning_preparation/main'
+include { BINNING                                          } from '../subworkflows/local/binning/main'
+include { BIN_QC                                           } from '../subworkflows/local/bin_qc/main'
+include { BINNING_REFINEMENT                               } from '../subworkflows/local/binning_refinement/main'
+include { VIRUS_IDENTIFICATION                             } from '../subworkflows/local/virus_identification/main'
+include { GTDBTK                                           } from '../subworkflows/local/gtdbtk/main'
+include { ANCIENT_DNA_ASSEMBLY_VALIDATION                  } from '../subworkflows/local/ancient_dna/main'
+include { DOMAIN_CLASSIFICATION                            } from '../subworkflows/local/domain_classification/main'
+include { DEPTHS                                           } from '../subworkflows/local/depths/main'
+include { LONGREAD_PREPROCESSING                           } from '../subworkflows/local/preprocessing_longread/main'
+include { SHORTREAD_PREPROCESSING                          } from '../subworkflows/local/preprocessing_shortread/main'
+include { ASSEMBLY                                         } from '../subworkflows/local/assembly/main'
+include { CATPACK                                          } from '../subworkflows/local/catpack/main'
+include { BINNING_PYDAMAGE                                 } from '../subworkflows/local/binning_pydamage/main'
 
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { GUNZIP as GUNZIP_ASSEMBLYINPUT } from '../modules/nf-core/gunzip'
-include { PRODIGAL } from '../modules/nf-core/prodigal/main'
-include { PROKKA } from '../modules/nf-core/prokka/main'
-include { MMSEQS_DATABASES } from '../modules/nf-core/mmseqs/databases/main'
-include { METAEUK_EASYPREDICT } from '../modules/nf-core/metaeuk/easypredict/main'
-include { QSV_CAT as CONCAT_QUAST_SUMMARY } from '../modules/nf-core/qsv/cat/main'
-include { ALE } from '../modules/nf-core/ale/main'
-include { SEQKIT_SEQ as SEQKIT_SEQ_MINCONTIGSIZE } from '../modules/nf-core/seqkit/seq/main'
+include { GUNZIP as GUNZIP_ASSEMBLYINPUT                   } from '../modules/nf-core/gunzip'
+include { PRODIGAL                                         } from '../modules/nf-core/prodigal/main'
+include { PROKKA                                           } from '../modules/nf-core/prokka/main'
+include { MMSEQS_DATABASES                                 } from '../modules/nf-core/mmseqs/databases/main'
+include { METAEUK_EASYPREDICT                              } from '../modules/nf-core/metaeuk/easypredict/main'
+include { QSV_CAT as CONCAT_QUAST_SUMMARY                  } from '../modules/nf-core/qsv/cat/main'
+include { ALE                                              } from '../modules/nf-core/ale/main'
+include { SEQKIT_SEQ as SEQKIT_SEQ_MINCONTIGSIZE           } from '../modules/nf-core/seqkit/seq/main'
 include { SEQKIT_SEQ as SEQKIT_SEQ_MINCONTIGSIZE_CORRECTED } from '../modules/nf-core/seqkit/seq/main'
-include { DEEPMASED_FEATURES } from '../modules/nf-core/deepmased/features/main'
-include { DEEPMASED_PREDICT } from '../modules/nf-core/deepmased/predict/main'
+include { DEEPMASED_FEATURES                               } from '../modules/nf-core/deepmased/features/main'
+include { DEEPMASED_PREDICT                                } from '../modules/nf-core/deepmased/predict/main'
 
 //
 // MODULE: Local to the pipeline
 //
-include { QUAST } from '../modules/local/quast_run/main'
-include { QUAST_BINS } from '../modules/local/quast_bins/main'
-include { BIN_SUMMARY } from '../modules/local/bin_summary/main'
-include { PREPARE_BIGMAG_SUMMARY } from '../modules/local/bigmag_summary/main'
-include { PYPOLCA_RUN } from '../modules/nf-core/pypolca/run/main'
+include { QUAST                                            } from '../modules/local/quast_run/main'
+include { QUAST_BINS                                       } from '../modules/local/quast_bins/main'
+include { BIN_SUMMARY                                      } from '../modules/local/bin_summary/main'
+include { PREPARE_BIGMAG_SUMMARY                           } from '../modules/local/bigmag_summary/main'
+include { PYPOLCA_RUN                                      } from '../modules/nf-core/pypolca/run/main'
 
 
 workflow MAG {
@@ -749,5 +749,5 @@ workflow MAG {
 
     emit:
     multiqc_report = MULTIQC.out.report.map { _meta, report -> [report] }.toList() // channel: /path/to/multiqc_report.html
-    versions = ch_versions // channel: [ path(versions.yml) ]
+    versions       = ch_versions // channel: [ path(versions.yml) ]
 }
