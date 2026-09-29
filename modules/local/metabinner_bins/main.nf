@@ -10,17 +10,14 @@ process METABINNER_BINS {
 
     input:
     tuple val(meta), path(fasta), path(membership)
-    val val_min_contig_size
 
     output:
-    tuple val(meta), path("*.tooShort.fa.gz"),            emit: tooshort, optional: true
     tuple val(meta), path("*.unbinned.fa.gz"),            emit: unbinned, optional: true
     tuple val(meta), path("bins/*.fa.gz", arity: '1..*'), emit: bins
     path "versions.yml",                                  emit: versions
 
     script:
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def min_contig_size = val_min_contig_size ?: "1000"
     """
     # unzip membership file
     zcat ${membership} > membership.tsv
@@ -29,8 +26,7 @@ process METABINNER_BINS {
         membership.tsv \\
         ${fasta} \\
         ./bins \\
-        ${prefix} \\
-        ${min_contig_size}
+        ${prefix}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

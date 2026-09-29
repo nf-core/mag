@@ -14,17 +14,14 @@ from Bio import SeqIO
 
 def main():
     # Argument parsing
-    if len(sys.argv) != 6:
-        print(
-            "Usage: python create_metabinner_bins.py <binning_file> <fasta_file> <output_path> <prefix> <length_threshold>"
-        )
+    if len(sys.argv) != 5:
+        print("Usage: python create_metabinner_bins.py <binning_file> <fasta_file> <output_path> <prefix>")
         sys.exit(1)
 
     binning = sys.argv[1]
     fasta = sys.argv[2]
     path = sys.argv[3]
     prefix = sys.argv[4]
-    length = int(sys.argv[5])
 
     root = os.path.dirname(os.path.normpath(path)) or "."
     os.makedirs(path, exist_ok=True)
@@ -47,9 +44,7 @@ def main():
 
     with open(fasta) as handle:
         for record in SeqIO.parse(handle, "fasta"):
-            if len(record) <= length:
-                out = get_handle(root, prefix + ".tooShort.fa")
-            elif record.id not in metabinner_bins:
+            if record.id not in metabinner_bins:
                 out = get_handle(root, prefix + ".unbinned.fa")
             else:
                 out = get_handle(path, prefix + "." + metabinner_bins[record.id] + ".fa")
