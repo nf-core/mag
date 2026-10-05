@@ -21,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
-- [#1118](https://github.com/nf-core/mag/pull/1118) - Fix `--min_contig_size` not being applied by all binners ([#1100](https://github.com/nf-core/mag/issues/1100)): assemblies are now filtered before the binning read mapping, while ALE, DeepMAsED and ancient DNA validation use a separate mapping against the unfiltered assemblies (reported by @cdiener, fix by @dialvarezs)
+- [#1118](https://github.com/nf-core/mag/pull/1118) - Fix `--min_contig_size` not being applied by all binners ([#1100](https://github.com/nf-core/mag/issues/1100)): assemblies are now filtered before the binning read mapping, while ALE, DeepMAsED and ancient DNA validation use a separate mapping of each assembly's own reads against the unfiltered assemblies (reported by @cdiener, fix by @dialvarezs)
 - [#1118](https://github.com/nf-core/mag/pull/1118) - Fix DAS Tool never running with `--ancient_dna --skip_ancient_damagecorrection`, as it received an empty contigs channel (by @dialvarezs)
 - [#1114](https://github.com/nf-core/mag/pull/1114) - Fix `test_single_end` snapshot flakiness caused by CPU-dependent floating-point output from PyDamage and geNomad, by content-checking those files instead of hashing them (by @erikrikarddaniel)
 - [#1099](https://github.com/nf-core/mag/pull/1099) - Fix invalid `--gunc_database_type` options to match the values accepted by `gunc download_db` ([#1098](https://github.com/nf-core/mag/issues/1098), reported by @cdiener, fix by @dialvarezs)

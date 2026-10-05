@@ -298,13 +298,15 @@ workflow MAG {
     */
 
     // Full-assembly QC (ALE, DeepMAsED) and aDNA validation need reads mapped to all contigs;
-    // ALE and DeepMAsED only use short-read assemblies
+    // ALE and DeepMAsED only use short-read assemblies. They only need the reads each assembly
+    // was built from, so map own reads (or the group's for co-assemblies) regardless of --binning_map_mode
     if (params.ancient_dna || params.run_ale || params.run_deepmased) {
         BINNING_PREPARATION_FULL(
             ch_shortread_assemblies,
             ch_short_reads,
             params.ancient_dna ? ch_longread_assemblies : channel.empty(),
             ch_long_reads,
+            params.coassemble_group ? 'group' : 'own',
         )
         ch_versions = ch_versions.mix(BINNING_PREPARATION_FULL.out.versions)
     }
@@ -327,6 +329,7 @@ workflow MAG {
             ch_short_reads,
             ch_longread_assemblies.join(ch_filtered_assemblies).map { meta, _assembly, filtered -> [meta, filtered] },
             ch_long_reads,
+            params.binning_map_mode,
         )
         ch_versions = ch_versions.mix(BINNING_PREPARATION.out.versions)
     }

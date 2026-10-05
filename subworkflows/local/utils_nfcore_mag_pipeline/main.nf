@@ -428,8 +428,9 @@ def validateInputParameters(hybrid) {
     }
 
     // Check ancient DNA damage parameters
-    if (params.ancient_dna && params.binning_map_mode != 'own') {
-        log.warn("[nf-core/mag] WARNING: Running in --binning_map_mode ${params.binning_map_mode} will result in unstable pyDamage output files. You might not receive pyDamage results for all bins in bin_summary.tsv, and `-resume` may not work; `--binning_map_mode own` is recommended!")
+    // PyDamage uses a single mapping, which is only well defined when each assembly comes from one sample
+    if (params.ancient_dna && params.coassemble_group) {
+        log.warn("[nf-core/mag] WARNING: Running --ancient_dna with --coassemble_group will result in unstable pyDamage output files. You might not receive pyDamage results for all bins in bin_summary.tsv, and `-resume` may not work.")
     }
 }
 
