@@ -16,28 +16,6 @@ include { SEQKIT_STATS                                                          
 include { CONVERT_DEPTHS                                                                         } from '../../../modules/local/mag_depths_convert/main'
 include { SPLIT_FASTA                                                                            } from '../../../modules/local/split_fasta/main'
 
-// CONCOCT exits with an error when fewer than two contigs reach its internal 1000 bp threshold.
-// Reads the assembly only until two such contigs are found.
-def hasEnoughContigsForConcoct(fasta) {
-    def n_long = 0
-    def length = 0
-    def enough = fasta.withReader { reader ->
-        reader
-            .lines()
-            .anyMatch { line ->
-                if (line.startsWith('>')) {
-                    n_long += length >= 1000 ? 1 : 0
-                    length = 0
-                }
-                else {
-                    length += line.trim().length()
-                }
-                return n_long >= 2
-            }
-    }
-    return enough || n_long + (length >= 1000 ? 1 : 0) >= 2
-}
-
 workflow BINNING {
     take:
     ch_assemblies // [val(meta), path(assembly), path(bams), path(bais)]
@@ -120,10 +98,11 @@ workflow BINNING {
     // CONCOCT
     if (!params.skip_concoct) {
 
+        // CONCOCT fails with fewer than two contigs; countFasta stops reading after the second one
         ch_concoct_input = ch_assemblies
             .filter { meta, assembly, _bams, _bais ->
-                if (!hasEnoughContigsForConcoct(assembly)) {
-                    log.warn("[nf-core/mag]: Fewer than two contigs >= 1000 bp in ${meta.assembler} assembly of '${meta.id}', skipping CONCOCT.")
+                if (assembly.countFasta(limit: 2) < 2) {
+                    log.warn("[nf-core/mag]: Fewer than two contigs in ${meta.assembler} assembly of '${meta.id}', skipping CONCOCT.")
                     return false
                 }
                 return true
