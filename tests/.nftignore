@@ -51,5 +51,6 @@ QC_shortreads/remove_phix/*.log
 Taxonomy/CAT/**/*.log
 Taxonomy/GTDB-Tk/**/*.log
 Taxonomy/GTDB-Tk/**/gtdbtk.json
+Taxonomy/GTDB-Tk/**/*.filtered.tsv
 VirusIdentification/geNomad/**/*_aggregated_classification.tsv
 VirusIdentification/geNomad/**/*_virus_summary.tsv

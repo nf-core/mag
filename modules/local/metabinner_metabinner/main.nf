@@ -10,7 +10,6 @@ process METABINNER_METABINNER {
 
     input:
     tuple val(meta), path(fasta), path(kmer), path(depth)
-    val val_min_contig_size
 
     output:
     tuple val(meta), path("*.tsv.gz") , emit: membership
@@ -20,14 +19,13 @@ process METABINNER_METABINNER {
     script:
     def args   = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def min_contig_size = val_min_contig_size ?: "1000"
     def VERSION = '1.4.4-0' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
     """
     # unzip kmer file
     zcat $kmer > kmer_profile.csv
 
     # create coverage profile in Metabinner format
-    zcat ${depth} | awk '{if (\$2>${min_contig_size}) print \$0 }' | cut -f -1,4- > coverage_profile.tsv
+    zcat ${depth} | cut -f -1,4- > coverage_profile.tsv
 
     # requires absolute paths
     wd=\$(pwd)

@@ -5,11 +5,11 @@
 include { BOWTIE2_ASSEMBLY_BUILD } from '../../../modules/local/bowtie2_assembly_build/main'
 include { BOWTIE2_ASSEMBLY_ALIGN } from '../../../modules/local/bowtie2_assembly_align/main'
 
-def mappingKey(meta) {
-    if (params.binning_map_mode == 'group') {
+def mappingKey(meta, map_mode) {
+    if (map_mode == 'group') {
         return meta.group
     }
-    if (params.binning_map_mode == 'own') {
+    if (map_mode == 'own') {
         return meta.id
     }
     return 'all'
@@ -18,7 +18,8 @@ def mappingKey(meta) {
 workflow SHORTREAD_BINNING_PREPARATION {
     take:
     ch_assemblies // [val(meta), path(assembly)]
-    ch_reads      // [val(meta), path(reads)]
+    ch_reads // [val(meta), path(reads)]
+    val_map_mode // val(string): 'own', 'group' or 'all'
 
     main:
 
@@ -28,9 +29,9 @@ workflow SHORTREAD_BINNING_PREPARATION {
     ch_versions = ch_versions.mix(BOWTIE2_ASSEMBLY_BUILD.out.versions)
 
     // combine assemblies with sample reads depending on mapping mode
-    ch_reads_bowtie2 = ch_reads.map { meta, sample_reads -> [mappingKey(meta), meta, sample_reads] }
+    ch_reads_bowtie2 = ch_reads.map { meta, sample_reads -> [mappingKey(meta, val_map_mode), meta, sample_reads] }
     ch_bowtie2_input = BOWTIE2_ASSEMBLY_BUILD.out.assembly_index
-        .map { meta, assembly, index -> [mappingKey(meta), meta, assembly, index] }
+        .map { meta, assembly, index -> [mappingKey(meta, val_map_mode), meta, assembly, index] }
         .combine(ch_reads_bowtie2, by: 0)
         .map { _key, assembly_meta, assembly, index, reads_meta, sample_reads ->
             [assembly_meta, assembly, index, reads_meta, sample_reads]
@@ -43,12 +44,12 @@ workflow SHORTREAD_BINNING_PREPARATION {
     // release each assembly as soon as its own alignments finish instead of
     // waiting for every BOWTIE2_ASSEMBLY_ALIGN task
     ch_reads_count = ch_reads
-        .map { meta, _reads -> [mappingKey(meta), 1] }
+        .map { meta, _reads -> [mappingKey(meta, val_map_mode), 1] }
         .groupTuple()
         .map { key, counts -> [key, counts.size()] }
 
     ch_mapping_counts = ch_assemblies
-        .map { meta, _assembly -> [mappingKey(meta), meta.assembler, meta.id] }
+        .map { meta, _assembly -> [mappingKey(meta, val_map_mode), meta.assembler, meta.id] }
         .combine(ch_reads_count, by: 0)
         .map { _key, assembler, id, count -> [[assembler, id], count] }
 

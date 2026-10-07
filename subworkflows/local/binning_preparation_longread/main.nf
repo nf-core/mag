@@ -1,11 +1,11 @@
 include { MINIMAP2_INDEX as MINIMAP2_ASSEMBLY_INDEX } from '../../../modules/nf-core/minimap2/index/main'
 include { MINIMAP2_ALIGN as MINIMAP2_ASSEMBLY_ALIGN } from '../../../modules/nf-core/minimap2/align/main'
 
-def mappingKey(meta) {
-    if (params.binning_map_mode == 'group') {
+def mappingKey(meta, map_mode) {
+    if (map_mode == 'group') {
         return meta.group
     }
-    if (params.binning_map_mode == 'own') {
+    if (map_mode == 'own') {
         return meta.id
     }
     return 'all'
@@ -15,6 +15,7 @@ workflow LONGREAD_BINNING_PREPARATION {
     take:
     ch_assemblies // [val(meta), path(assembly)]
     ch_reads // [val(meta), path(reads)]
+    val_map_mode // val(string): 'own', 'group' or 'all'
 
     main:
     ch_versions = channel.empty()
@@ -22,9 +23,9 @@ workflow LONGREAD_BINNING_PREPARATION {
     MINIMAP2_ASSEMBLY_INDEX(ch_assemblies)
 
     // combine assemblies with reads depending on mapping mode
-    ch_reads_minimap2 = ch_reads.map { meta, reads -> [mappingKey(meta), meta, reads] }
+    ch_reads_minimap2 = ch_reads.map { meta, reads -> [mappingKey(meta, val_map_mode), meta, reads] }
     ch_minimap2_input = MINIMAP2_ASSEMBLY_INDEX.out.index
-        .map { meta_idx, index -> [mappingKey(meta_idx), meta_idx, index] }
+        .map { meta_idx, index -> [mappingKey(meta_idx, val_map_mode), meta_idx, index] }
         .combine(ch_reads_minimap2, by: 0)
         .multiMap { _key, meta_idx, index, meta_reads, reads ->
             reads: [meta_idx, reads]
@@ -37,12 +38,12 @@ workflow LONGREAD_BINNING_PREPARATION {
     // release each assembly as soon as its own alignments finish instead of
     // waiting for every MINIMAP2_ASSEMBLY_ALIGN task
     ch_reads_count = ch_reads
-        .map { meta, _reads -> [mappingKey(meta), 1] }
+        .map { meta, _reads -> [mappingKey(meta, val_map_mode), 1] }
         .groupTuple()
         .map { key, counts -> [key, counts.size()] }
 
     ch_mapping_counts = ch_assemblies
-        .map { meta, _assembly -> [mappingKey(meta), meta.assembler, meta.id] }
+        .map { meta, _assembly -> [mappingKey(meta, val_map_mode), meta.assembler, meta.id] }
         .combine(ch_reads_count, by: 0)
         .map { _key, assembler, id, count -> [[assembler, id], count] }
 

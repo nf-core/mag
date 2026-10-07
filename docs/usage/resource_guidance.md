@@ -102,7 +102,6 @@ The table is ordered first by 'Source' of defaults by specificity of definition,
 | FIND_CONCATENATE                     | 2   | 12.GB  | 4.h  | Label: process_low    |
 | METABINNER_BINS                      | 2   | 12.GB  | 4.h  | Label: process_low    |
 | METABINNER_KMER                      | 2   | 12.GB  | 4.h  | Label: process_low    |
-| METABINNER_TOOSHORT                  | 2   | 12.GB  | 4.h  | Label: process_low    |
 | MINIMAP2_INDEX                       | 2   | 12.GB  | 4.h  | Label: process_low    |
 | NANOPLOT                             | 2   | 12.GB  | 4.h  | Label: process_low    |
 | NANOQ                                | 2   | 12.GB  | 4.h  | Label: process_low    |

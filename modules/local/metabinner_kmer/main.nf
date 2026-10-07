@@ -10,23 +10,21 @@ process METABINNER_KMER {
 
     input:
     tuple val(meta), path(fasta)
-    val val_min_contig_size
 
     output:
-    tuple val(meta), path("*_kmer_4_f${min_contig_size}.csv.gz"), emit: composition_profile
+    tuple val(meta), path("*_kmer_4_f0.csv.gz"), emit: composition_profile
     path "versions.yml"                                         , emit: versions
 
     script:
     def prefix = task.ext.prefix ?: "${meta.id}"
-    min_contig_size = val_min_contig_size ?: "1000"
     def VERSION = '1.4.4-0' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
     """
     metabinner_path=\$(dirname \$(which run_metabinner.sh))
 
-    # create composition profile (contigs > ${min_contig_size} p (default 1000), k = 4)
-    python \${metabinner_path}/scripts/gen_kmer.py ${fasta} ${min_contig_size} 4
+    # create composition profile (k = 4); no length threshold, input is already filtered by --min_contig_size
+    python \${metabinner_path}/scripts/gen_kmer.py ${fasta} 0 4
 
-    gzip -cn ${fasta.baseName}_kmer_4_f${min_contig_size}.csv > ${prefix}_kmer_4_f${min_contig_size}.csv.gz
+    gzip -cn ${fasta.baseName}_kmer_4_f0.csv > ${prefix}_kmer_4_f0.csv.gz
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

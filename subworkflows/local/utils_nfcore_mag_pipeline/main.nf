@@ -7,13 +7,13 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { UTILS_NFSCHEMA_PLUGIN     } from '../../nf-core/utils_nfschema_plugin'
-include { paramsSummaryMap          } from 'plugin/nf-schema'
-include { samplesheetToList         } from 'plugin/nf-schema'
-include { completionEmail           } from '../../nf-core/utils_nfcore_pipeline'
-include { completionSummary         } from '../../nf-core/utils_nfcore_pipeline'
-include { UTILS_NFCORE_PIPELINE     } from '../../nf-core/utils_nfcore_pipeline'
-include { UTILS_NEXTFLOW_PIPELINE   } from '../../nf-core/utils_nextflow_pipeline'
+include { UTILS_NFSCHEMA_PLUGIN   } from '../../nf-core/utils_nfschema_plugin'
+include { paramsSummaryMap        } from 'plugin/nf-schema'
+include { samplesheetToList       } from 'plugin/nf-schema'
+include { completionEmail         } from '../../nf-core/utils_nfcore_pipeline'
+include { completionSummary       } from '../../nf-core/utils_nfcore_pipeline'
+include { UTILS_NFCORE_PIPELINE   } from '../../nf-core/utils_nfcore_pipeline'
+include { UTILS_NEXTFLOW_PIPELINE } from '../../nf-core/utils_nextflow_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -245,7 +245,7 @@ workflow PIPELINE_COMPLETION {
     plaintext_email // boolean: Send plain-text email instead of HTML
     outdir //    path: Path to output directory where results will be published
     monochrome_logs // boolean: Disable ANSI colour codes in log output
-    multiqc_report  //  string: Path to MultiQC report
+    multiqc_report //  string: Path to MultiQC report
 
     main:
     summary_params = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
@@ -268,11 +268,10 @@ workflow PIPELINE_COMPLETION {
         }
 
         completionSummary(monochrome_logs)
-
     }
 
     workflow.onError {
-        log.error "Pipeline failed. Please refer to troubleshooting docs for common issues: https://nf-co.re/docs/running/troubleshooting"
+        log.error("Pipeline failed. Please refer to troubleshooting docs for common issues: https://nf-co.re/docs/running/troubleshooting")
     }
 }
 
@@ -380,6 +379,10 @@ def validateInputParameters(hybrid) {
         log.warn("[nf-core/mag]: The parameter '--gtdbtk_skip_aniscreen' is deprecated and will be removed in a future release. Please use '--gtdbtk_place_species' instead.")
     }
 
+    if (params.skip_ale) {
+        log.warn("[nf-core/mag]: The parameter '--skip_ale' is deprecated and will be removed in a future release. ALE is now disabled by default, use '--run_ale' to enable it.")
+    }
+
     if (params.skip_adapter_trimming) {
         log.warn("[nf-core/mag]: The parameter '--skip_adapter_trimming' is deprecated and will be removed in a future release. Please use '--skip_longread_adapter_trimming' instead.")
     }
@@ -425,8 +428,9 @@ def validateInputParameters(hybrid) {
     }
 
     // Check ancient DNA damage parameters
-    if (params.ancient_dna && params.binning_map_mode != 'own') {
-        log.warn("[nf-core/mag] WARNING: Running in --binning_map_mode ${params.binning_map_mode} will result in unstable pyDamage output files. You might not receive pyDamage results for all bins in bin_summary.tsv, and `-resume` may not work; `--binning_map_mode own` is recommended!")
+    // PyDamage uses a single mapping, which is only well defined when each assembly comes from one sample
+    if (params.ancient_dna && params.coassemble_group) {
+        log.warn("[nf-core/mag] WARNING: Running --ancient_dna with --coassemble_group will result in unstable pyDamage output files. You might not receive pyDamage results for all bins in bin_summary.tsv, and `-resume` may not work.")
     }
 }
 
@@ -473,9 +477,7 @@ def genomeExistsError() {
 //
 def toolCitationText() {
 
-    def specific_options = [
-        params.ancient_dna ? "with `--ancient_dna` mode (Fellows Yates et al. 2026)" : ""
-    ]
+    def specific_options = [params.ancient_dna ? "with `--ancient_dna` mode (Fellows Yates et al. 2026)" : ""]
     def paper_citation = "Data was assembled with nf-core/mag (Alvarez Saravia et al. 2026; Krakau et al. 2022) ${specific_options.join(' ')}."
 
 
@@ -514,7 +516,7 @@ def toolCitationText() {
 
     def assembly_qc_tools = [
         !params.skip_quast ? "metaQUAST (Mikheenko et al. 2016)" : "",
-        !params.skip_ale ? "ALE (Clark et al. 2013)" : "",
+        params.run_ale ? "ALE (Clark et al. 2013)" : "",
         params.run_deepmased ? "DeepMAsED (Mineeva et al. 2020)" : "",
     ].findAll { tool -> tool != '' }
     def text_assembly_qc = "Assembly quality was assessed with ${assembly_qc_tools.join(', ')}."
@@ -564,7 +566,7 @@ def toolCitationText() {
         "Tools used in the workflow included:",
         text_seq_qc,
         (!params.skip_shortread_qc && !params.skip_clipping) ? text_shortread_qc : "",
-        (params.host_fasta || params.host_genome || !params.skip_binning || params.ancient_dna || !params.skip_ale) ? text_mapping : "",
+        (params.host_fasta || params.host_genome || !params.skip_binning || params.ancient_dna || params.run_ale || params.run_deepmased) ? text_mapping : "",
         (!params.skip_longread_qc && longread_qc_tools) ? text_longread_qc : "",
         params.bbnorm ? text_bbnorm : "",
         assembly_tools ? text_assembly : "",
@@ -607,7 +609,7 @@ def toolBibliographyText() {
             references << "<li>Bolger, A. M., Lohse, M., & Usadel, B. (2014). Trimmomatic: a flexible trimmer for Illumina sequence data. Bioinformatics, 30(15), 2114-2120. doi: 10.1093/bioinformatics/btu170</li>"
         }
     }
-    if (params.host_fasta || params.host_genome || !params.skip_binning || params.ancient_dna || !params.skip_ale) {
+    if (params.host_fasta || params.host_genome || !params.skip_binning || params.ancient_dna || params.run_ale || params.run_deepmased) {
         references << "<li>Langmead, B. and Salzberg, S. L. 2012 Fast gapped-read alignment with Bowtie 2. Nature methods, 9(4), p. 357–359. doi: 10.1038/nmeth.1923.</li>"
         // Note: we don't have a simple way to determine if long reads are present, so we add minimap2 at the same time as Bowtie2
         references << "<li>Li, H. (2018). Minimap2: pairwise alignment for nucleotide sequences. Bioinformatics , 34(18), 3094–3100. doi: 10.1093/bioinformatics/bty191</li>"
@@ -653,7 +655,7 @@ def toolBibliographyText() {
     if (!params.skip_quast) {
         references << "<li>Mikheenko, A., Saveliev, V., & Gurevich, A. (2016). MetaQUAST: evaluation of metagenome assemblies. Bioinformatics, 32(7), 1088-1090. doi: 10.1093/bioinformatics/btv697</li>"
     }
-    if (!params.skip_ale) {
+    if (params.run_ale) {
         references << "<li>Clark, S. C., Egan, R., Frazier, P. I., & Wang, Z. (2013). ALE: a generic assembly likelihood evaluation framework for assessing the accuracy of genome and metagenome assemblies. Bioinformatics, 29(4), 435-443. doi: 10.1093/bioinformatics/bts723</li>"
     }
     if (params.run_deepmased) {

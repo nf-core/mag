@@ -7,7 +7,6 @@ keywords:
   - metabinner
 components:
   - metabinner/kmer
-  - metabinner/tooshort
   - metabinner/metabinner
   - metabinner/bins
 input:
@@ -26,16 +25,6 @@ input:
             description: Contig depth/coverage information
             pattern: "*.txt"
 output:
-  - tooshort:
-      description: Contigs below the minimum size threshold
-      structure:
-        - meta:
-            type: map
-            description: Metadata map
-        - fasta:
-            type: file
-            description: Short contigs in FASTA format
-            pattern: "*.{fasta,fa}"
   - unbinned:
       description: Unbinned sequences
       structure:
