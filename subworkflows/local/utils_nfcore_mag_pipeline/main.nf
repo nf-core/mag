@@ -430,6 +430,11 @@ def validateInputParameters(hybrid) {
         error('[nf-core/mag] ERROR: To generate the BIgMAG file you need to include the parameters `--run_checkm2` and `--run_gunc`, and you cannot skip BINQC, GTDB-TK, QUAST nor BUSCO.')
     }
 
+    // Check dereplication parameters
+    if (params.dereplicate && (params.skip_binqc || (!params.run_checkm2 && !params.run_checkm && !params.run_busco))) {
+        error('[nf-core/mag] ERROR: To dereplicate bins with Galah you need to include the parameter `--run_checkm2`, `--run_checkm` and/or `--run_busco`, and you cannot skip BINQC.')
+    }
+
     // Check ancient DNA damage parameters
     // PyDamage uses a single mapping, which is only well defined when each assembly comes from one sample
     if (params.ancient_dna && params.coassemble_group) {

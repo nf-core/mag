@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1124](https://github.com/nf-core/mag/pull/1124) - Add `--max_contig_size` to discard contigs longer than a given length before binning, e.g. to remove host contigs (suggested by @prototaxites, by @dialvarezs)
 - [#1102](https://github.com/nf-core/mag/pull/1102) - Add new nf-core/mag ancient DNA mode publication citations (by @jfy133)
 - [#1102](https://github.com/nf-core/mag/pull/1102) - Add nf-core/mag v5 long-read and binning update publication citations (by @dialvarezs)
+- [#1110](https://github.com/nf-core/mag/pull/1110) - Add optional study-wide bin dereplication with [Galah](https://github.com/wwood/galah) (`--dereplicate`); see [usage docs](https://nf-co.re/mag/docs/usage#a-note-on-bin-dereplication) for details (by @erikrikarddaniel).
 
 ### `Changed`
 
@@ -19,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1106](https://github.com/nf-core/mag/pull/1106) - Renamed `--skip_adapter_trimming` to `--skip_longread_adapter_trimming` (old name deprecated) and replaced `--skip_deepmased` with `--run_deepmased` (by @dialvarezs)
 - [#1118](https://github.com/nf-core/mag/pull/1118) - Replaced `--skip_ale` with `--run_ale` (old name deprecated): ALE is now opt-in, as it needs an extra read mapping against the unfiltered assemblies (by @dialvarezs)
 - [#1116](https://github.com/nf-core/mag/pull/1116) - Use a small CheckM2 database in `test_alternatives` instead of downloading the full one, by updating `checkm2/predict` to pass the database via `CHECKM2DB` (by @dialvarezs)
+- [#1110](https://github.com/nf-core/mag/pull/1110) - Documented the interplay between `--postbinning_input` and `--dereplicate`, and when GTDB-Tk/CAT-BAT/Prokka cost is actually bounded by which (by @erikrikarddaniel).
 
 ### `Fixed`
 
@@ -31,10 +33,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Dependencies`
 
-| Tool    | Previous version | New version |
-| ------- | ---------------- | ----------- |
-| MultiQC | 1.34             | 1.35        |
-| nf-core | 4.0.3            | 4.1.0       |
+| Tool      | Previous version | New version |
+| --------- | ---------------- | ----------- |
+| MultiQC   | 1.34             | 1.35        |
+| nf-core   | 4.0.3            | 4.1.0       |
+| Galah     |                  | 0.4.2       |
+| DeepMAsED |                  | 0.3.1       |
 
 ### `Deprecated`
 
