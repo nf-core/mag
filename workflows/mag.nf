@@ -17,6 +17,7 @@ include { BINNING_PREPARATION as BINNING_PREPARATION_FULL  } from '../subworkflo
 include { BINNING                                          } from '../subworkflows/local/binning/main'
 include { BIN_QC                                           } from '../subworkflows/local/bin_qc/main'
 include { BINNING_REFINEMENT                               } from '../subworkflows/local/binning_refinement/main'
+include { DEREPLICATION                                    } from '../subworkflows/local/dereplication/main'
 include { VIRUS_IDENTIFICATION                             } from '../subworkflows/local/virus_identification/main'
 include { GTDBTK                                           } from '../subworkflows/local/gtdbtk/main'
 include { ANCIENT_DNA_ASSEMBLY_VALIDATION                  } from '../subworkflows/local/ancient_dna/main'
@@ -311,14 +312,14 @@ workflow MAG {
         ch_versions = ch_versions.mix(BINNING_PREPARATION_FULL.out.versions)
     }
 
-    // Binners get only contigs >= --min_contig_size, filtered before mapping so FASTA and BAMs agree
+    // Binners get only contigs within --min_contig_size and --max_contig_size, filtered before mapping so FASTA and BAMs agree
     if (!params.skip_binning) {
         SEQKIT_SEQ_MINCONTIGSIZE(ch_assemblies)
 
-        // assemblies without any contig >= --min_contig_size cannot be mapped against
+        // assemblies without any contig left cannot be mapped against
         ch_filtered_assemblies = SEQKIT_SEQ_MINCONTIGSIZE.out.fastx.filter { meta, assembly ->
             if (assembly.size() == 0) {
-                log.warn("[nf-core/mag]: No contigs >= --min_contig_size (${params.min_contig_size}) in ${meta.assembler} assembly of '${meta.id}', skipping its binning.")
+                log.warn("[nf-core/mag]: No contigs within --min_contig_size (${params.min_contig_size}) and --max_contig_size (${params.max_contig_size ?: 'none'}) in ${meta.assembler} assembly of '${meta.id}', skipping its binning.")
                 return false
             }
             return true
@@ -523,6 +524,9 @@ workflow MAG {
         */
 
         ch_bin_qc_metrics = channel.empty()
+        ch_busco_summary = channel.empty()
+        ch_checkm_summary = channel.empty()
+        ch_checkm2_summary = channel.empty()
         if (!params.skip_binqc) {
             BIN_QC(ch_input_for_postbinning)
             ch_versions = ch_versions.mix(BIN_QC.out.versions)
@@ -530,6 +534,18 @@ workflow MAG {
             ch_busco_summary = BIN_QC.out.busco_summary
             ch_checkm_summary = BIN_QC.out.checkm_summary
             ch_checkm2_summary = BIN_QC.out.checkm2_summary
+        }
+
+        /*
+        * Dereplication: study-wide bin dereplication with Galah
+        */
+
+        ch_dereplicated_bins = channel.empty()
+        ch_dereplication_cluster_tsv = channel.empty()
+        if (params.dereplicate) {
+            DEREPLICATION(ch_input_for_postbinning, ch_bin_qc_metrics, params.dereplicate_min_completeness, params.dereplicate_max_contamination)
+            ch_dereplicated_bins = DEREPLICATION.out.dereplicated_bins
+            ch_dereplication_cluster_tsv = DEREPLICATION.out.cluster_tsv.map { _meta, tsv -> tsv }
         }
 
         ch_quast_bins_summary = channel.empty()
@@ -555,8 +571,14 @@ workflow MAG {
          */
         ch_catpack_summary = channel.empty()
         if (params.cat_db || params.cat_db_generate) {
+            // Unlike GTDB-Tk, CATPACK also classifies eukaryotic bins, which DEREPLICATION
+            // excludes from clustering -- add them back so they aren't silently dropped.
+            ch_bins_for_catpack = params.dereplicate
+                ? ch_dereplicated_bins.groupTuple().mix(ch_input_for_postbinning_bins.filter { meta, _bins -> meta.domain == "eukarya" })
+                : ch_input_for_postbinning_bins
+
             CATPACK(
-                ch_input_for_postbinning_bins,
+                ch_bins_for_catpack,
                 ch_input_for_postbinning_unbins,
             )
             ch_versions = ch_versions.mix(CATPACK.out.versions)
@@ -572,9 +594,13 @@ workflow MAG {
             ch_gtdbtk_summary = channel.empty()
             if (gtdb) {
 
-                ch_gtdb_bins = ch_input_for_postbinning.filter { meta, _bins ->
-                    meta.domain != "eukarya"
-                }
+                // GTDBTK re-joins against ch_bin_qc_metrics by binner-sample group, so
+                // dereplicated bins (flat, one representative per tuple) need regrouping.
+                ch_gtdb_bins = params.dereplicate
+                    ? ch_dereplicated_bins.groupTuple()
+                    : ch_input_for_postbinning.filter { meta, _bins ->
+                        meta.domain != "eukarya"
+                    }
 
                 GTDBTK(
                     ch_gtdb_bins,
@@ -583,6 +609,7 @@ workflow MAG {
                 )
                 ch_versions = ch_versions.mix(GTDBTK.out.versions)
                 ch_gtdbtk_summary = GTDBTK.out.summary
+                ch_multiqc_files = ch_multiqc_files.mix(GTDBTK.out.multiqc_files.collect().ifEmpty([]))
             }
         }
         else {
@@ -608,6 +635,7 @@ workflow MAG {
                 ch_checkm_summary.ifEmpty([]),
                 ch_checkm2_summary.ifEmpty([]),
                 ch_summarisepydamage.ifEmpty([]),
+                ch_dereplication_cluster_tsv.ifEmpty([]),
             )
             ch_versions = ch_versions.mix(BIN_SUMMARY.out.versions)
         }
@@ -624,15 +652,23 @@ workflow MAG {
          */
 
         if (!params.skip_prokka) {
-            ch_bins_for_prokka = ch_input_for_postbinning
-                .transpose()
-                .map { meta, bin ->
+            if (params.dereplicate && !params.dereplicate_annotate_all) {
+                ch_bins_for_prokka = ch_dereplicated_bins.map { meta, bin ->
                     def meta_new = meta + [id: bin.getName() - ~/\.fa(sta)?(\.gz)?$/]
                     [meta_new, bin]
                 }
-                .filter { meta, _bin ->
-                    meta.domain != "eukarya"
-                }
+            }
+            else {
+                ch_bins_for_prokka = ch_input_for_postbinning
+                    .transpose()
+                    .map { meta, bin ->
+                        def meta_new = meta + [id: bin.getName() - ~/\.fa(sta)?(\.gz)?$/]
+                        [meta_new, bin]
+                    }
+                    .filter { meta, _bin ->
+                        meta.domain != "eukarya"
+                    }
+            }
 
             PROKKA(
                 ch_bins_for_prokka,
@@ -713,10 +749,6 @@ workflow MAG {
 
         if (!params.skip_binqc) {
             ch_multiqc_files = ch_multiqc_files.mix(BIN_QC.out.multiqc_files.collect().ifEmpty([]))
-        }
-
-        if (!params.skip_gtdbtk) {
-            ch_multiqc_files = ch_multiqc_files.mix(GTDBTK.out.multiqc_files.collect().ifEmpty([]))
         }
     }
 

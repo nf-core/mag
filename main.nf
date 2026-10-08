@@ -118,6 +118,7 @@ params {
     // Binning options
     skip_binning: Boolean
     min_contig_size: Integer = 1500
+    max_contig_size: Integer?
     bin_min_size: Integer = 0
     bin_max_size: Integer?
     skip_comebin: Boolean
@@ -224,6 +225,11 @@ params {
     max_multiqc_email_size: String = '25.MB'
     multiqc_methods_description: Path?
     generate_bigmag_file: Boolean
+    dereplicate: Boolean
+    dereplicate_annotate_all: Boolean
+    dereplicate_min_completeness: Float = 50
+    dereplicate_max_contamination: Float = 10
+    dereplicate_ani: Float = 95
 
     // Reference genome options
     igenomes_ignore: Boolean

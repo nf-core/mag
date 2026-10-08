@@ -292,6 +292,9 @@ def validateInputParameters(hybrid) {
     }
 
     // Check binning length filter parameters are valid
+    if (params.max_contig_size && (params.max_contig_size < params.min_contig_size)) {
+        error("[nf-core/mag] ERROR: Invalid value specified for '--max_contig_size'! Value must be at least --min_contig_size ${params.min_contig_size}. You gave: --max_contig_size ${params.max_contig_size}")
+    }
     if (params.bin_max_size && (params.bin_max_size <= params.bin_min_size)) {
         error("[nf-core/mag] ERROR: Invalid value specified for '--bin_max_size'! Value must be greater than --bin_min_size ${params.bin_min_size}. You gave: --bin_max_size ${params.bin_max_size}")
     }
@@ -425,6 +428,11 @@ def validateInputParameters(hybrid) {
     // Check BIgMAG parameters
     if (params.generate_bigmag_file && (!params.run_gunc || !params.run_checkm2 || !params.run_busco || params.skip_gtdbtk || params.skip_quast || params.skip_binqc)) {
         error('[nf-core/mag] ERROR: To generate the BIgMAG file you need to include the parameters `--run_checkm2` and `--run_gunc`, and you cannot skip BINQC, GTDB-TK, QUAST nor BUSCO.')
+    }
+
+    // Check dereplication parameters
+    if (params.dereplicate && (params.skip_binqc || (!params.run_checkm2 && !params.run_checkm && !params.run_busco))) {
+        error('[nf-core/mag] ERROR: To dereplicate bins with Galah you need to include the parameter `--run_checkm2`, `--run_checkm` and/or `--run_busco`, and you cannot skip BINQC.')
     }
 
     // Check ancient DNA damage parameters

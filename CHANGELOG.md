@@ -8,8 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Added`
 
 - [#1051](https://github.com/nf-core/mag/pull/1051) - Add DeepMAsED assembly error detection to the MAG workflow as two sequential steps (`features` and `predict`) for short-read assemblies (by @SkyLexS).
+- [#1124](https://github.com/nf-core/mag/pull/1124) - Add `--max_contig_size` to discard contigs longer than a given length before binning, e.g. to remove host contigs (suggested by @prototaxites, by @dialvarezs)
 - [#1102](https://github.com/nf-core/mag/pull/1102) - Add new nf-core/mag ancient DNA mode publication citations (by @jfy133)
 - [#1102](https://github.com/nf-core/mag/pull/1102) - Add nf-core/mag v5 long-read and binning update publication citations (by @dialvarezs)
+- [#1110](https://github.com/nf-core/mag/pull/1110) - Add optional study-wide bin dereplication with [Galah](https://github.com/wwood/galah) (`--dereplicate`); see [usage docs](https://nf-co.re/mag/docs/usage#a-note-on-bin-dereplication) for details (by @erikrikarddaniel).
 
 ### `Changed`
 
@@ -18,12 +20,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1106](https://github.com/nf-core/mag/pull/1106) - Renamed `--skip_adapter_trimming` to `--skip_longread_adapter_trimming` (old name deprecated) and replaced `--skip_deepmased` with `--run_deepmased` (by @dialvarezs)
 - [#1118](https://github.com/nf-core/mag/pull/1118) - Replaced `--skip_ale` with `--run_ale` (old name deprecated): ALE is now opt-in, as it needs an extra read mapping against the unfiltered assemblies (by @dialvarezs)
 - [#1116](https://github.com/nf-core/mag/pull/1116) - Use a small CheckM2 database in `test_alternatives` instead of downloading the full one, by updating `checkm2/predict` to pass the database via `CHECKM2DB` (by @dialvarezs)
+- [#1110](https://github.com/nf-core/mag/pull/1110) - Documented the interplay between `--postbinning_input` and `--dereplicate`, and when GTDB-Tk/CAT-BAT/Prokka cost is actually bounded by which (by @erikrikarddaniel).
 
 ### `Fixed`
 
 - [#1118](https://github.com/nf-core/mag/pull/1118) - Fix `--min_contig_size` not being applied by all binners ([#1100](https://github.com/nf-core/mag/issues/1100)): assemblies are now filtered before the binning read mapping, while ALE, DeepMAsED and ancient DNA validation use a separate mapping of each assembly's own reads against the unfiltered assemblies (reported by @cdiener, fix by @dialvarezs)
 - [#1118](https://github.com/nf-core/mag/pull/1118) - Fix DAS Tool never running with `--ancient_dna --skip_ancient_damagecorrection`, as it received an empty contigs channel (by @dialvarezs)
 - [#1123](https://github.com/nf-core/mag/pull/1123) - Fix long-read assemblies going through ancient DNA validation with `--ancient_dna`; they are now binned without damage evaluation or correction (reported by @jfy133, fix by @dialvarezs)
+- [#1125](https://github.com/nf-core/mag/pull/1125) - Fix `--skip_binqc` failing with `No such variable: ch_busco_summary`, and then on accessing the GTDB-Tk output when GTDB-Tk was not run (by @dialvarezs)
 - [#1114](https://github.com/nf-core/mag/pull/1114) - Fix `test_single_end` snapshot flakiness caused by CPU-dependent floating-point output from PyDamage and geNomad, by content-checking those files instead of hashing them (by @erikrikarddaniel)
 - [#1099](https://github.com/nf-core/mag/pull/1099) - Fix invalid `--gunc_database_type` options to match the values accepted by `gunc download_db` ([#1098](https://github.com/nf-core/mag/issues/1098), reported by @cdiener, fix by @dialvarezs)
 - [#1105](https://github.com/nf-core/mag/pull/1105) - Fix corrupted bin paths when a process emits a single file: `java.nio.file.Path` is `Iterable` over its path segments, so list operations on an unwrapped output silently iterated the path components (by @dialvarezs)
@@ -31,10 +35,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Dependencies`
 
-| Tool    | Previous version | New version |
-| ------- | ---------------- | ----------- |
-| MultiQC | 1.34             | 1.35        |
-| nf-core | 4.0.3            | 4.1.0       |
+| Tool      | Previous version | New version |
+| --------- | ---------------- | ----------- |
+| MultiQC   | 1.34             | 1.35        |
+| nf-core   | 4.0.3            | 4.1.0       |
+| Galah     |                  | 0.4.2       |
+| DeepMAsED |                  | 0.3.1       |
 
 ### `Deprecated`
 
