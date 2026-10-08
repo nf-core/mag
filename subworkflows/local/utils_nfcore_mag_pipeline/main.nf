@@ -292,6 +292,9 @@ def validateInputParameters(hybrid) {
     }
 
     // Check binning length filter parameters are valid
+    if (params.max_contig_size && (params.max_contig_size < params.min_contig_size)) {
+        error("[nf-core/mag] ERROR: Invalid value specified for '--max_contig_size'! Value must be at least --min_contig_size ${params.min_contig_size}. You gave: --max_contig_size ${params.max_contig_size}")
+    }
     if (params.bin_max_size && (params.bin_max_size <= params.bin_min_size)) {
         error("[nf-core/mag] ERROR: Invalid value specified for '--bin_max_size'! Value must be greater than --bin_min_size ${params.bin_min_size}. You gave: --bin_max_size ${params.bin_max_size}")
     }

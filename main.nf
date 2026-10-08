@@ -118,6 +118,7 @@ params {
     // Binning options
     skip_binning: Boolean
     min_contig_size: Integer = 1500
+    max_contig_size: Integer?
     bin_min_size: Integer = 0
     bin_max_size: Integer?
     skip_comebin: Boolean
