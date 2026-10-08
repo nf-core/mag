@@ -20,6 +20,7 @@ workflow BINNING_PYDAMAGE {
             // Sort based on filename only (not full path) as work directory path will be different each run
             file(pydamage_report).getBaseName()
         }
+        .filter { pydamage_reports -> pydamage_reports }
 
     SUMMARISE_PYDAMAGEBINS(ch_collected_pydamage_results, ch_contig2binmap)
     ch_versions = ch_versions.mix(SUMMARISE_PYDAMAGEBINS.out.versions)

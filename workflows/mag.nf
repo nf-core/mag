@@ -297,15 +297,15 @@ workflow MAG {
     ================================================================================
     */
 
-    // Full-assembly QC (ALE, DeepMAsED) and aDNA validation need reads mapped to all contigs;
-    // ALE and DeepMAsED only use short-read assemblies. They only need the reads each assembly
+    // Full-assembly QC (ALE, DeepMAsED) and aDNA validation need reads mapped to all contigs of the
+    // short-read assemblies, which are the only ones they evaluate. They only need the reads each assembly
     // was built from, so map own reads (or the group's for co-assemblies) regardless of --binning_map_mode
     if (params.ancient_dna || params.run_ale || params.run_deepmased) {
         BINNING_PREPARATION_FULL(
             ch_shortread_assemblies,
             ch_short_reads,
-            params.ancient_dna ? ch_longread_assemblies : channel.empty(),
-            ch_long_reads,
+            channel.empty(),
+            channel.empty(),
             params.coassemble_group ? 'group' : 'own',
         )
         ch_versions = ch_versions.mix(BINNING_PREPARATION_FULL.out.versions)
@@ -402,14 +402,17 @@ workflow MAG {
 
     if (!params.skip_binning) {
 
+        ch_binning_contigs = BINNING_PREPARATION.out.grouped_mappings.map { meta, contigs, _bams, _bais -> [meta, contigs] }
+
         // Make sure if running aDNA subworkflow to use the damage-corrected contigs for higher accuracy
         if (params.ancient_dna && !params.skip_ancient_damagecorrection) {
             // consensus calling keeps only SNPs/MNPs, so lengths are unchanged and the same contigs pass the filter
             SEQKIT_SEQ_MINCONTIGSIZE_CORRECTED(ANCIENT_DNA_ASSEMBLY_VALIDATION.out.contigs_recalled)
-            ch_binning_contigs = SEQKIT_SEQ_MINCONTIGSIZE_CORRECTED.out.fastx
-        }
-        else {
-            ch_binning_contigs = BINNING_PREPARATION.out.grouped_mappings.map { meta, contigs, _bams, _bais -> [meta, contigs] }
+            // long-read assemblies are not damage-corrected, so they keep their filtered contigs
+            ch_binning_contigs = ch_binning_contigs
+                .join(SEQKIT_SEQ_MINCONTIGSIZE_CORRECTED.out.fastx, remainder: true)
+                .filter { _meta, contigs, _corrected -> contigs }
+                .map { meta, contigs, corrected -> [meta, corrected ?: contigs] }
         }
 
         BINNING(
