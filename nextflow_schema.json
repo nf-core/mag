@@ -874,6 +874,12 @@
                     "description": "Minimum contig size to be considered for binning and for bin quality check.",
                     "help_text": "Assemblies are filtered to contigs of at least this length before read mapping for binning, so all binners see the same contigs, except for the fixed internal minimums of MetaBAT2 (1500 bp), CONCOCT and COMEBin (1000 bp). Assembly QC (ALE, DeepMAsED) and ancient DNA validation use a separate mapping against the unfiltered assemblies."
                 },
+                "max_contig_size": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": "Maximum contig size to be considered for binning. By default no limit.",
+                    "help_text": "Assemblies are filtered to contigs of at most this length before read mapping for binning, along with `--min_contig_size`. Prokaryotic contigs are rarely very long, so this can remove host or other eukaryotic contigs. Assembly QC (ALE, DeepMAsED) and ancient DNA validation are not affected."
+                },
                 "min_length_unbinned_contigs": {
                     "type": "integer",
                     "default": 1000000,

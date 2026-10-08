@@ -311,14 +311,14 @@ workflow MAG {
         ch_versions = ch_versions.mix(BINNING_PREPARATION_FULL.out.versions)
     }
 
-    // Binners get only contigs >= --min_contig_size, filtered before mapping so FASTA and BAMs agree
+    // Binners get only contigs within --min_contig_size and --max_contig_size, filtered before mapping so FASTA and BAMs agree
     if (!params.skip_binning) {
         SEQKIT_SEQ_MINCONTIGSIZE(ch_assemblies)
 
-        // assemblies without any contig >= --min_contig_size cannot be mapped against
+        // assemblies without any contig left cannot be mapped against
         ch_filtered_assemblies = SEQKIT_SEQ_MINCONTIGSIZE.out.fastx.filter { meta, assembly ->
             if (assembly.size() == 0) {
-                log.warn("[nf-core/mag]: No contigs >= --min_contig_size (${params.min_contig_size}) in ${meta.assembler} assembly of '${meta.id}', skipping its binning.")
+                log.warn("[nf-core/mag]: No contigs within --min_contig_size (${params.min_contig_size}) and --max_contig_size (${params.max_contig_size ?: 'none'}) in ${meta.assembler} assembly of '${meta.id}', skipping its binning.")
                 return false
             }
             return true

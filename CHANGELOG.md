@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Added`
 
 - [#1051](https://github.com/nf-core/mag/pull/1051) - Add DeepMAsED assembly error detection to the MAG workflow as two sequential steps (`features` and `predict`) for short-read assemblies (by @SkyLexS).
+- [#1124](https://github.com/nf-core/mag/pull/1124) - Add `--max_contig_size` to discard contigs longer than a given length before binning, e.g. to remove host contigs (suggested by @prototaxites, by @dialvarezs)
 - [#1102](https://github.com/nf-core/mag/pull/1102) - Add new nf-core/mag ancient DNA mode publication citations (by @jfy133)
 - [#1102](https://github.com/nf-core/mag/pull/1102) - Add nf-core/mag v5 long-read and binning update publication citations (by @dialvarezs)
 
