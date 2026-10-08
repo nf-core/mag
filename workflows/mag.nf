@@ -521,6 +521,9 @@ workflow MAG {
         */
 
         ch_bin_qc_metrics = channel.empty()
+        ch_busco_summary = channel.empty()
+        ch_checkm_summary = channel.empty()
+        ch_checkm2_summary = channel.empty()
         if (!params.skip_binqc) {
             BIN_QC(ch_input_for_postbinning)
             ch_versions = ch_versions.mix(BIN_QC.out.versions)
@@ -603,6 +606,7 @@ workflow MAG {
                 )
                 ch_versions = ch_versions.mix(GTDBTK.out.versions)
                 ch_gtdbtk_summary = GTDBTK.out.summary
+                ch_multiqc_files = ch_multiqc_files.mix(GTDBTK.out.multiqc_files.collect().ifEmpty([]))
             }
         }
         else {
@@ -742,10 +746,6 @@ workflow MAG {
 
         if (!params.skip_binqc) {
             ch_multiqc_files = ch_multiqc_files.mix(BIN_QC.out.multiqc_files.collect().ifEmpty([]))
-        }
-
-        if (!params.skip_gtdbtk) {
-            ch_multiqc_files = ch_multiqc_files.mix(GTDBTK.out.multiqc_files.collect().ifEmpty([]))
         }
     }
 
