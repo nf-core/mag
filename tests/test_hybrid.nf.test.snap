@@ -72,22 +72,22 @@
                 "SPAdesHybrid-group-0_prodigal.fna.gz:md5,0d19659ea13c2b5aab09d446f5b9d98d",
                 "SPAdesHybrid-group-0_prodigal.gff.gz:md5,964d2fbc1655db777a8d81d04c07c1d0",
                 "SPAdesHybrid-group-0_prodigal_all.txt.gz:md5,dd68b31c71c0b6cdcbefe26cc9ebd51c",
-                "SPAdesHybrid-MaxBin2-group-0.001.faa:md5,520df90361394e699f8e58dc68a90618",
-                "SPAdesHybrid-MaxBin2-group-0.001.ffn:md5,034b37e717275ade7d78e02d6fb6d076",
-                "SPAdesHybrid-MaxBin2-group-0.001.fna:md5,8ec571278c310b30bd3bb6752e811091",
-                "SPAdesHybrid-MaxBin2-group-0.001.fsa:md5,a74fbfe1e933eb26809bf693a7d96693",
-                "SPAdesHybrid-MaxBin2-group-0.001.gff:md5,48faec710772ad0268a878eedd317789",
-                "SPAdesHybrid-MaxBin2-group-0.001.tbl:md5,007525feba58de2c2b307da6726ec922",
-                "SPAdesHybrid-MaxBin2-group-0.001.tsv:md5,e0c87e2e80296985ae18804aaeb66280",
-                "SPAdesHybrid-MaxBin2-group-0.001.txt:md5,fc3a5b45cc2770bdc5f4075133958143",
-                "SPAdesHybrid-MaxBin2-group-0.002.faa:md5,9e617e443828f0a778adbd5ec1324bfd",
-                "SPAdesHybrid-MaxBin2-group-0.002.ffn:md5,4b6b841e65228f3294efd4bc638e7149",
-                "SPAdesHybrid-MaxBin2-group-0.002.fna:md5,f3e5992f008b484bc6a13cde105d40a3",
-                "SPAdesHybrid-MaxBin2-group-0.002.fsa:md5,ee031ab359e43c8f7875643289d7308c",
-                "SPAdesHybrid-MaxBin2-group-0.002.gff:md5,3e78d28c6059cee4e6b7d8c9f6341ce3",
-                "SPAdesHybrid-MaxBin2-group-0.002.tbl:md5,ecb28e698608fc82c71f1b76c6b7cc94",
-                "SPAdesHybrid-MaxBin2-group-0.002.tsv:md5,c3f3a0e33bb5bd74b6ca09646861b9f1",
-                "SPAdesHybrid-MaxBin2-group-0.002.txt:md5,4a1ca5347e5d640f7bbf2106d7db35f3",
+                "SPAdesHybrid-MaxBin2-group-0.001.faa:md5,14eb88db7cc5da6a4914f486d5590c10",
+                "SPAdesHybrid-MaxBin2-group-0.001.ffn:md5,864f4f7fc9a3ebb518d027a9fd34dc96",
+                "SPAdesHybrid-MaxBin2-group-0.001.fna:md5,ea05611a641d88d3281f1f2395c88200",
+                "SPAdesHybrid-MaxBin2-group-0.001.fsa:md5,3c95a0df52aef6b063473a279b088df1",
+                "SPAdesHybrid-MaxBin2-group-0.001.gff:md5,7e711b87b9b853374f002e0341efa8f4",
+                "SPAdesHybrid-MaxBin2-group-0.001.tbl:md5,2440617486697644a260e821caa73311",
+                "SPAdesHybrid-MaxBin2-group-0.001.tsv:md5,29d7265f5c725ebed351e039d8c2eb6c",
+                "SPAdesHybrid-MaxBin2-group-0.001.txt:md5,61b2cb43811d5fe1631c1d13d50f2838",
+                "SPAdesHybrid-MaxBin2-group-0.002.faa:md5,500a182dc49425d9ec3c4c322afb37c5",
+                "SPAdesHybrid-MaxBin2-group-0.002.ffn:md5,ff72840cd35f2a5866eaec11ffcec669",
+                "SPAdesHybrid-MaxBin2-group-0.002.fna:md5,c6d7877ebe9eb18ec50f9a481ec0455f",
+                "SPAdesHybrid-MaxBin2-group-0.002.fsa:md5,24f8c63ab172252871dbd8375e35d1b6",
+                "SPAdesHybrid-MaxBin2-group-0.002.gff:md5,0da7e6bc28b6e6bbe2eabe2b1f6ebf41",
+                "SPAdesHybrid-MaxBin2-group-0.002.tbl:md5,3af049d8f66d567c3c65e972857f23f1",
+                "SPAdesHybrid-MaxBin2-group-0.002.tsv:md5,8ff604b5c566a83e5a7788903661efdb",
+                "SPAdesHybrid-MaxBin2-group-0.002.txt:md5,ced111a31222bc41f6feafb95f7846f9",
                 "SPAdesHybrid-MetaBAT2-group-0.1.faa:md5,3a2c2cb6240295accc5473ff1a2bb53d",
                 "SPAdesHybrid-MetaBAT2-group-0.1.ffn:md5,9b9f7fd765835c388c41972778cb767b",
                 "SPAdesHybrid-MetaBAT2-group-0.1.fna:md5,34155300864c5daf4fab060e4a1ae5c0",
@@ -114,15 +114,15 @@
                 "SPAdesHybrid-SemiBin2-group-0_0.txt:md5,f3c9e5f7e2651fa893484ca9bb7c3114"
             ]
         ],
+        "timestamp": "2026-09-28T01:44:35.380896087",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-07-27T00:37:07.598453748"
+            "nextflow": "26.04.6"
+        }
     },
     "-profile hybrid": {
         "content": [
-            70,
+            71,
             {
                 "BIN_SUMMARY": {
                     "pandas": "1.4.3",
@@ -248,6 +248,9 @@
                 "SEMIBIN_SINGLEEASYBIN": {
                     "SemiBin": "2.2.0"
                 },
+                "SEQKIT_SEQ_MINCONTIGSIZE": {
+                    "seqkit": "2.13.0"
+                },
                 "SEQKIT_STATS": {
                     "seqkit": "2.9.0"
                 },
@@ -261,11 +264,11 @@
                 }
             }
         ],
+        "timestamp": "2026-09-28T01:44:34.503116437",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "26.04.3"
-        },
-        "timestamp": "2026-08-06T01:55:19.147516199"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
     },
     "log-checks": {
         "content": [
@@ -277,11 +280,11 @@
             "bowtie2_logs contains 'overall alignment rate': true",
             "prokka_logs contains 'Annotation finished successfully.': true"
         ],
+        "timestamp": "2026-06-26T15:16:45.477590782",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
-        },
-        "timestamp": "2026-06-26T15:16:45.477590782"
+        }
     },
     "qc_longreads": {
         "content": [
@@ -334,11 +337,11 @@
                 "minigut_sample2_0.stats:md5,4a2f9b3bc3ba6351207acd63bd75d37c"
             ]
         ],
+        "timestamp": "2026-07-27T00:37:01.688775927",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-07-27T00:37:01.688775927"
+        }
     },
     "assembly": {
         "content": [
@@ -385,11 +388,11 @@
                 "SPAdesHybrid-group-0.scaffolds.fa.gz:md5,665f0ed8bdf0f2857aa713ce3e83f390"
             ]
         ],
+        "timestamp": "2026-07-27T00:37:03.43851536",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-07-27T00:37:03.43851536"
+        }
     },
     "binning": {
         "content": [
@@ -400,13 +403,11 @@
                 "GenomeBinning/MaxBin2/bins/SPAdesHybrid-MaxBin2-group-0.002.fa.gz",
                 "GenomeBinning/MaxBin2/discarded/SPAdesHybrid-MaxBin2-group-0.tooshort.gz",
                 "GenomeBinning/MaxBin2/unbinned/discarded/SPAdesHybrid-MaxBin2-group-0.noclass.pooled.fa.gz",
-                "GenomeBinning/MaxBin2/unbinned/discarded/SPAdesHybrid-MaxBin2-group-0.noclass.remaining.fa.gz",
                 "GenomeBinning/MetaBAT2/bins/SPAdesHybrid-MetaBAT2-group-0.1.fa.gz",
                 "GenomeBinning/MetaBAT2/bins/SPAdesHybrid-MetaBAT2-group-0.2.fa.gz",
                 "GenomeBinning/MetaBAT2/discarded/SPAdesHybrid-MetaBAT2-group-0.lowDepth.fa.gz",
                 "GenomeBinning/MetaBAT2/discarded/SPAdesHybrid-MetaBAT2-group-0.tooShort.fa.gz",
                 "GenomeBinning/MetaBAT2/unbinned/discarded/SPAdesHybrid-MetaBAT2-group-0.unbinned.pooled.fa.gz",
-                "GenomeBinning/MetaBAT2/unbinned/discarded/SPAdesHybrid-MetaBAT2-group-0.unbinned.remaining.fa.gz",
                 "GenomeBinning/QC/BUSCO/SPAdesHybrid-MaxBin2-unclassified-unrefined-group-0/group-0-bacteria_odb10-busco.batch_summary.txt",
                 "GenomeBinning/QC/BUSCO/SPAdesHybrid-MaxBin2-unclassified-unrefined-group-0/group-0-bacteria_odb10-busco.log",
                 "GenomeBinning/QC/BUSCO/SPAdesHybrid-MaxBin2-unclassified-unrefined-group-0/short_summary.specific.bacteria_odb10.SPAdesHybrid-MaxBin2-group-0.001.fa.json",
@@ -536,34 +537,32 @@
                 "GenomeBinning/depths/contigs/SPAdesHybrid-group-0-depth.txt.gz"
             ],
             [
-                "SPAdesHybrid-MaxBin2-group-0.abundance:md5,2b4a9b14da80bbe24c51b741db3f2a4d",
-                "SPAdesHybrid-MaxBin2-group-0.summary:md5,6a74bcf73f4b701bc990f516033480eb",
-                "SPAdesHybrid-MaxBin2-group-0.001.fa.gz:md5,beafaedb77a8dde423103197182494f6",
-                "SPAdesHybrid-MaxBin2-group-0.002.fa.gz:md5,67073a74ff8cb3e87c70347244b3b008",
-                "SPAdesHybrid-MaxBin2-group-0.tooshort.gz:md5,fd70665c38a437b6b9b72bd665506d5b",
+                "SPAdesHybrid-MaxBin2-group-0.abundance:md5,5439aa27b5d430ed036323404d822a9f",
+                "SPAdesHybrid-MaxBin2-group-0.summary:md5,dc57ab2461e13d3ce534f5e54e5ba2e7",
+                "SPAdesHybrid-MaxBin2-group-0.001.fa.gz:md5,caf040ac9b26913e46e69bf9a4137996",
+                "SPAdesHybrid-MaxBin2-group-0.002.fa.gz:md5,e8e835b15a6f021648e7d04f4a47ea37",
+                "SPAdesHybrid-MaxBin2-group-0.tooshort.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "SPAdesHybrid-MaxBin2-group-0.noclass.pooled.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "SPAdesHybrid-MaxBin2-group-0.noclass.remaining.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "SPAdesHybrid-MetaBAT2-group-0.1.fa.gz:md5,34155300864c5daf4fab060e4a1ae5c0",
                 "SPAdesHybrid-MetaBAT2-group-0.2.fa.gz:md5,90de2b36a2213fe8b90165619bca9a33",
                 "SPAdesHybrid-MetaBAT2-group-0.lowDepth.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "SPAdesHybrid-MetaBAT2-group-0.tooShort.fa.gz:md5,bb8e4f7c33b79803656726c5fb0cd9cc",
+                "SPAdesHybrid-MetaBAT2-group-0.tooShort.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "SPAdesHybrid-MetaBAT2-group-0.unbinned.pooled.fa.gz:md5,646b952d9f6eba4df4e468a7e3ff2bac",
-                "SPAdesHybrid-MetaBAT2-group-0.unbinned.remaining.fa.gz:md5,f37eb74d2eb953771bbbce69b3d3e20c",
-                "SPAdesHybrid-MaxBin2-group-0-001-fa-gz.rna.gff:md5,0970b09432aea3df6e06aaefdca72df1",
-                "report.tex:md5,bd48532f43128b9836860c49cc4a893c",
-                "report.tsv:md5,2b7eabb03904654766daa81ca27bfa89",
-                "report.txt:md5,fec36a910c023d696e0b550badde289f",
-                "transposed_report.tex:md5,1b461f6f7abea8e3c66e5272b19a11d3",
-                "transposed_report.tsv:md5,372916d7c085a21262ed052e9594b7ce",
-                "transposed_report.txt:md5,dff61a84b855257cb52f2a12103ab0ed",
+                "SPAdesHybrid-MaxBin2-group-0-001-fa-gz.rna.gff:md5,43b0792ddf8e8da1c0a75cd2aebcc6b8",
+                "report.tex:md5,331850852ab6dbd15edfae75fca83dcc",
+                "report.tsv:md5,57d962cab742922aac4663c6d0eb06a0",
+                "report.txt:md5,a5dafd25608786e8f9294ffd920d9f52",
+                "transposed_report.tex:md5,6f7db17191882653185ee89ad6bdd400",
+                "transposed_report.tsv:md5,032fb19cf285867d26b8db7da1210c56",
+                "transposed_report.txt:md5,82b6b16c2564fb8d8a0fd077398a9dce",
                 "SPAdesHybrid-MaxBin2-group-0-002-fa-gz.rna.gff:md5,64cc3268a105343756fbe686dc77b300",
-                "report.tex:md5,59c47eadec428956892bd1dee9f11a98",
-                "report.tsv:md5,f77f234f9f59e8b5ec4da896375333f5",
-                "report.txt:md5,cf819d1d75fa55e4211a262f51e183a3",
-                "transposed_report.tex:md5,d02dbd87dcae96a0ec51f40fc70032f1",
-                "transposed_report.tsv:md5,28369eee7402eec5b99a2462052bf466",
-                "transposed_report.txt:md5,6238135363b896a8818b1e2b66e37554",
-                "SPAdesHybrid-MaxBin2-unclassified-unrefined-group-0-quast_summary.tsv:md5,accabd3a2e6df4e815dec554818dc2d4",
+                "report.tex:md5,2080a264c680986c129c83662c36d404",
+                "report.tsv:md5,64e001b3b9b438918ed5c28d9631ae60",
+                "report.txt:md5,a9007599f5a3e14e2a1b3924125f90a8",
+                "transposed_report.tex:md5,bf3a18de623a2d7af8a5105d9540ca83",
+                "transposed_report.tsv:md5,05f16ba6373931c737bd8b075300774e",
+                "transposed_report.txt:md5,336421e3faa49f30788b12a5fba7d4d7",
+                "SPAdesHybrid-MaxBin2-unclassified-unrefined-group-0-quast_summary.tsv:md5,70f117be824e8c0b100f1817e17365c4",
                 "SPAdesHybrid-MetaBAT2-group-0-1-fa-gz.rna.gff:md5,64cc3268a105343756fbe686dc77b300",
                 "report.tex:md5,8e826a2ca36507c5f99b403e93e0dbb6",
                 "report.tsv:md5,e640e43304f0b60d169e693ef2f74889",
@@ -587,18 +586,18 @@
                 "transposed_report.tsv:md5,29a699a812b9cd62612dc81a4ff50f01",
                 "transposed_report.txt:md5,c8fb889f897d9065701f9bd8a665cdb0",
                 "SPAdesHybrid-SemiBin2-unclassified-unrefined-group-0-quast_summary.tsv:md5,29a699a812b9cd62612dc81a4ff50f01",
-                "quast_bin_summary.tsv:md5,9b9c0321daed3d156d4388f3524da54c",
+                "quast_bin_summary.tsv:md5,da587ec91a140cdb755081d404989a7d",
                 "SPAdesHybrid-SemiBin2-group-0_0.fa.gz:md5,2b30803aaf880a9d4c99d41e4754cb2b",
-                "bin_summary.tsv:md5,d994b2bf1b88e002fbac287b089bd5d5",
-                "contig_to_bin_map.tsv:md5,72e8419cccfbed712d40b72449333dca",
-                "bin_depths_summary.tsv:md5,1bb4397dfe72ad4cab619de32a3f36f8"
+                "bin_summary.tsv:md5,144d525abf6de5c9319fc050a336140d",
+                "contig_to_bin_map.tsv:md5,248ee7ec0b01c21f80167527587810e2",
+                "bin_depths_summary.tsv:md5,3b7f08abc34d47952d239ff10c01085e"
             ]
         ],
+        "timestamp": "2026-09-28T18:21:10.566453313",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
-        },
-        "timestamp": "2026-07-14T04:13:35.758490941"
+        }
     },
     "content-checks": {
         "content": [
@@ -609,14 +608,14 @@
             "SemiBin2 bins non-empty: true",
             "Prokka GBK files contain LOCUS: true",
             "Prokka SQN files non-empty: true",
-            "Prokka TSV row counts: [SPAdesHybrid-MaxBin2-group-0.001.tsv=1018, SPAdesHybrid-MaxBin2-group-0.002.tsv=811, SPAdesHybrid-MetaBAT2-group-0.1.tsv=802, SPAdesHybrid-MetaBAT2-group-0.2.tsv=721, SPAdesHybrid-SemiBin2-group-0_0.tsv=1537]",
+            "Prokka TSV row counts: [SPAdesHybrid-MaxBin2-group-0.001.tsv=876, SPAdesHybrid-MaxBin2-group-0.002.tsv=807, SPAdesHybrid-MetaBAT2-group-0.1.tsv=802, SPAdesHybrid-MetaBAT2-group-0.2.tsv=721, SPAdesHybrid-SemiBin2-group-0_0.tsv=1537]",
             "Bin summary row count matches bins: true"
         ],
+        "timestamp": "2026-09-28T01:44:38.285988767",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-07-27T00:37:17.252029688"
+            "nextflow": "26.04.6"
+        }
     },
     "qc_shortreads": {
         "content": [
@@ -645,11 +644,11 @@
                 "minigut_sample2_run0_host_removed.bowtie2.log:md5,fb967944891311058a2c8f2255cfe118"
             ]
         ],
+        "timestamp": "2026-07-27T00:37:00.405989214",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-07-27T00:37:00.405989214"
+        }
     },
     "multiqc": {
         "content": [
@@ -841,8 +840,8 @@
                 "multiqc/multiqc_report.html"
             ],
             [
-                "bowtie2_pe_plot.yaml:md5,57d9c095110edbe586ba68cbfc7ca333",
-                "busco_plot_bacteria_odb10.yaml:md5,5678c9ffd006958201d1595d8e41b8c7",
+                "bowtie2_pe_plot.yaml:md5,55a6787b2cae20c1b7f2bff0b8c58745",
+                "busco_plot_bacteria_odb10.yaml:md5,9ec03ae50745079db45f7b7a807fa178",
                 "fastp-insert-size-plot.yaml:md5,02d324f6ace8d834193b822ce180ce48",
                 "fastp-seq-content-gc-plot_Read_1_After_filtering.yaml:md5,6a2cb29d315e6f885f959c2f4c1c3ef9",
                 "fastp-seq-content-gc-plot_Read_1_Before_filtering.yaml:md5,03ef1d13caf93d7965f7ec1032fe4334",
@@ -876,27 +875,27 @@
                 "fastqc_sequence_length_distribution_plot.yaml:md5,544632a9eea3271872e97c99482237cf",
                 "multiqc_bowtie2.yaml:md5,72037456e22f1daf9f1ad197bd3aedc8",
                 "multiqc_bowtie2_bowtie2-1.yaml:md5,72037456e22f1daf9f1ad197bd3aedc8",
-                "multiqc_bowtie2_bowtie2-2.yaml:md5,f617050111ff30e106c045dad893c0eb",
-                "multiqc_busco.yaml:md5,b1933204f90679866c338a4bbb5d4a29",
+                "multiqc_bowtie2_bowtie2-2.yaml:md5,a1a2a34439152edfb1255d5c6bef70d3",
+                "multiqc_busco.yaml:md5,b99299f8d259972c9561dbeee43e7b9a",
                 "multiqc_citations.yaml:md5,49f79471c1620b06da08b1acb97a1e56",
                 "multiqc_fastp.yaml:md5,ff4fe8f96e7c304ea399605accc49309",
                 "multiqc_fastqc.yaml:md5,73d757b21a60f2dc068857b6fc6c4ff9",
                 "multiqc_fastqc_fastqc-1.yaml:md5,db2e5e4e0b16c4ef7cd8cbbff06c40eb",
-                "multiqc_general_stats.yaml:md5,868f0ce2b7286bb4309d92e4b1f7dc1e",
-                "multiqc_prokka.yaml:md5,42a28b0c79bddc86b17c4c9a63f92bf0",
+                "multiqc_general_stats.yaml:md5,8c221e824e0684641f2fa6debc21f5ea",
+                "multiqc_prokka.yaml:md5,7c3627452ed007da28a82803286df9a0",
                 "multiqc_quast.yaml:md5,66d2f53da8458959128af916f7cab015",
-                "multiqc_quast_quast-1.yaml:md5,685fa1aa9a07f62a36cb5e8658533a02",
+                "multiqc_quast_quast-1.yaml:md5,b2a3bf69afd326bfaca18da4e9d9356b",
                 "porechop.yaml:md5,828d96e2822bb4b4108ab706c00c4450",
-                "prokka_plot.yaml:md5,4d1a47dc4fdd5db528bb76b7ba372f89",
-                "quast_num_contigs.yaml:md5,89690bc82ff198928557f8d896106a55",
-                "quast_table.yaml:md5,2f5c8eae632ff937496491eb1facafd9"
+                "prokka_plot.yaml:md5,2da2a51cd4d6ca8a2081669ac1bdd0e2",
+                "quast_num_contigs.yaml:md5,d5fbbec618dfe047bba2a223716db3bb",
+                "quast_table.yaml:md5,99288698f0f6557889241bf7b682a513"
             ]
         ],
+        "timestamp": "2026-09-28T01:44:35.726666672",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-07-27T00:37:09.97122623"
+            "nextflow": "26.04.6"
+        }
     },
     "summary-rows": {
         "content": [
@@ -904,10 +903,10 @@
             "quast_bin_summary.tsv rows: 5",
             "busco_summary.tsv rows: 5"
         ],
+        "timestamp": "2026-06-26T15:16:43.543930305",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.4"
-        },
-        "timestamp": "2026-06-26T15:16:43.543930305"
+        }
     }
 }

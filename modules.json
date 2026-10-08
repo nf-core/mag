@@ -348,6 +348,11 @@
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/semibin/singleeasybin/semibin-singleeasybin.diff"
                     },
+                    "seqkit/seq": {
+                        "branch": "master",
+                        "git_sha": "d07a945f421a4a91ce4e5a22db63e0e7f8741607",
+                        "installed_by": ["modules"]
+                    },
                     "seqkit/stats": {
                         "branch": "master",
                         "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",

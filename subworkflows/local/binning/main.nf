@@ -98,7 +98,15 @@ workflow BINNING {
     // CONCOCT
     if (!params.skip_concoct) {
 
+        // CONCOCT fails with fewer than two contigs; countFasta stops reading after the second one
         ch_concoct_input = ch_assemblies
+            .filter { meta, assembly, _bams, _bais ->
+                if (assembly.countFasta(limit: 2) < 2) {
+                    log.warn("[nf-core/mag]: Fewer than two contigs in ${meta.assembler} assembly of '${meta.id}', skipping CONCOCT.")
+                    return false
+                }
+                return true
+            }
             .map { meta, bins, bams, bais ->
                 def meta_new = meta + [binner: 'CONCOCT']
                 [meta_new, bins, bams, bais]

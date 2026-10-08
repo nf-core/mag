@@ -205,7 +205,8 @@ Trimmed (short) reads are assembled with both megahit and SPAdes. Hybrid assembl
   - `QC/[sample/group]/`: Directory containing QUAST files and Bowtie2 mapping logs
     - `MEGAHIT-[sample].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the sample that the metagenome was assembled from, only present if `--coassemble_group` is not set.
     - `MEGAHIT-[sample/group]-[sampleToMap].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the respective sample ("sampleToMap").
-    - `MEGAHIT-[sample].[bam/bai]`: Optionally saved BAM file of the Bowtie2 mapping of reads against the assembly.
+    - `MEGAHIT-[sample].[bam/bai]`: Optionally saved BAM file of the Bowtie2 mapping of reads against the assembly. These mappings are against the assembly filtered by `--min_contig_size` and are used for binning.
+    - `full_assembly/`: Bowtie2 logs and optionally saved BAM files of the mapping against the unfiltered assembly, only present if `--run_ale`, `--run_deepmased` or `--ancient_dna` is set.
 
 </details>
 
@@ -224,7 +225,8 @@ Trimmed (short) reads are assembled with both megahit and SPAdes. Hybrid assembl
   - `QC/[sample/group]/`: Directory containing QUAST files and Bowtie2 mapping logs
     - `SPAdes-[sample].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the sample that the metagenome was assembled from, only present if `--coassemble_group` is not set.
     - `SPAdes-[sample/group]-[sampleToMap].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the respective sample ("sampleToMap").
-    - `SPAdes-[sample].[bam/bai]`: Optionally saved BAM file of the Bowtie2 mapping of reads against the assembly.
+    - `SPAdes-[sample].[bam/bai]`: Optionally saved BAM file of the Bowtie2 mapping of reads against the assembly. These mappings are against the assembly filtered by `--min_contig_size` and are used for binning.
+    - `full_assembly/`: Bowtie2 logs and optionally saved BAM files of the mapping against the unfiltered assembly, only present if `--run_ale`, `--run_deepmased` or `--ancient_dna` is set.
 
 </details>
 
@@ -243,7 +245,8 @@ SPAdesHybrid is a part of the [SPAdes](http://cab.spbu.ru/software/spades/) soft
   - `QC/[sample/group]/`: Directory containing QUAST files and Bowtie2 mapping logs
     - `SPAdesHybrid-[sample].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the sample that the metagenome was assembled from, only present if `--coassemble_group` is not set.
     - `SPAdesHybrid-[sample/group]-[sampleToMap].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the respective sample ("sampleToMap").
-    - `SPAdesHybrid-[sample].[bam/bai]`: Optionally saved BAM file of the Bowtie2 mapping of reads against the assembly.
+    - `SPAdesHybrid-[sample].[bam/bai]`: Optionally saved BAM file of the Bowtie2 mapping of reads against the assembly. These mappings are against the assembly filtered by `--min_contig_size` and are used for binning.
+    - `full_assembly/`: Bowtie2 logs and optionally saved BAM files of the mapping against the unfiltered assembly, only present if `--run_ale`, `--run_deepmased` or `--ancient_dna` is set.
 
 </details>
 
@@ -319,7 +322,7 @@ SPAdesHybrid is a part of the [SPAdes](http://cab.spbu.ru/software/spades/) soft
 
 [ALE (Assembly Likelihood Estimator)](https://github.com/sc932/ALE) is a probabilistic framework that evaluates assembly quality by computing the likelihood of the sequencing reads given an assembly. ALE provides per-contig quality scores and identifies potentially problematic regions in assemblies by analyzing read mapping patterns and insert size distributions. It is particularly useful for comparing assemblies and identifying misassemblies or low-confidence regions.
 
-ALE can run only on assemblies generated from short reads, like SPAdes and MEGAHIT. Hybrid assembly with SPAdesHybrid uses only the short reads for ALE scoring.
+ALE is only run with `--run_ale`, on the full (unfiltered) assembly. It can run only on assemblies generated from short reads, like SPAdes and MEGAHIT. Hybrid assembly with SPAdesHybrid uses only the short reads for ALE scoring.
 
 <details markdown="1">
 <summary>Output files</summary>
@@ -436,7 +439,6 @@ All other files that were discarded by the tool, or from the low-quality unbinne
   - `*.tooShort.fa.gz`: Too short contigs that are filtered by MetaBAT2
 - `GenomeBinning/MetaBAT2/unbinned/discarded/`
   - `*.unbinned.pooled.fa.gz`: Pooled unbinned contigs equal or above `--min_contig_size`, by default 1500 bp.
-  - `*.unbinned.remaining.fa.gz`: Remaining unbinned contigs below `--min_contig_size`, by default 1500 bp, but not in any other file.
 
 </details>
 
@@ -466,7 +468,6 @@ All the files and contigs in these folders will be assessed by QUAST and BUSCO.
   - `*.tooshort.gz`: Too short contigs that are filtered by MaxBin2
 - `GenomeBinning/MaxBin2/unbinned/discarded/`
   - `*.noclass.pooled.fa.gz`: Pooled unbinned contigs equal or above `--min_contig_size`, by default 1500 bp.
-  - `*.noclass.remaining.fa.gz`: Remaining unbinned contigs below `--min_contig_size`, by default 1500 bp, but not in any other file.
 
 </details>
 
@@ -524,7 +525,6 @@ Note that COMEBin does not output what it considers 'unbinned' contigs, therefor
 
 - `GenomeBinning/MetaBinner/`
   - `bins/[assembler]-[binner]-[sample/group].*.fa.gz`: Genome bins retrieved from input assembly.
-  - `discarded/[assembler]-[binner]-[sample/group].tooShort.fa.gz`: Contigs that were not considered for binning because of length.
   - `unbinned/[assembler]-[binner]-[sample/group].unbinned.fa.gz`: Contigs that were not binned despite having suitable length.
   - `stats/[assembler]-[binner]-[sample/group].metabinner.log.gz`: Log file.
   - `stats/[assembler]-[binner]-[sample/group].tsv.gz`: TSV mapping the contigs to output clusters.

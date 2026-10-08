@@ -14,13 +14,12 @@ process SPLIT_FASTA {
     output:
     tuple val(meta), path("${meta.assembler}-${meta.binner}-${meta.id}.*.[1-9]*.fa.gz")   , optional:true, emit: unbinned
     tuple val(meta), path("${meta.assembler}-${meta.binner}-${meta.id}.*.pooled.fa.gz")   , optional:true, emit: pooled
-    tuple val(meta), path("${meta.assembler}-${meta.binner}-${meta.id}.*.remaining.fa.gz"), optional:true, emit: remaining
     path "versions.yml"                                                                   , emit: versions
 
     script:
     """
     # save unbinned contigs above thresholds into individual files, dump others in one file
-    split_fasta.py $unbinned ${params.min_length_unbinned_contigs} ${params.max_unbinned_contigs} ${params.min_contig_size}
+    split_fasta.py $unbinned ${params.min_length_unbinned_contigs} ${params.max_unbinned_contigs}
 
     gzip *.fa
 

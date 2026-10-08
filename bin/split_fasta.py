@@ -4,7 +4,7 @@
 ## under the MIT license.
 ## See git repository (https://github.com/nf-core/mag) for full license text.
 
-# USAGE: ./split_fasta.py <*.unbinned.fa(.gz)> <min_length_unbinned_contigs> <max_unbinned_contigs> <min_contig_size>
+# USAGE: ./split_fasta.py <*.unbinned.fa(.gz)> <min_length_unbinned_contigs> <max_unbinned_contigs>
 
 import pandas as pd
 import gzip
@@ -20,7 +20,6 @@ import re
 input_file = argv[1]
 length_threshold = int(argv[2])
 max_sequences = int(argv[3])
-min_length_to_retain_contig = int(argv[4])
 
 # Base name for file output
 if input_file.endswith(".gz"):
@@ -32,7 +31,6 @@ else:
 # Data structures to separate and store sequences
 df_above_threshold = pd.DataFrame(columns=["id", "seq", "length"])
 pooled = []
-remaining = []
 
 if input_file.endswith(".gz"):
     with gzip.open(input_file, "rt") as f:
@@ -47,14 +45,9 @@ if input_file.endswith(".gz"):
                 df_above_threshold = df_above_threshold.append(
                     {"id": name, "seq": sequence, "length": length}, ignore_index=True
                 )
-            # contigs to retain and pool
-            elif length >= min_length_to_retain_contig:
-                pooled.append(
-                    SeqRecord(Seq(sequence, generic_dna), id=name, description="")
-                )
-            # remaining sequences
+            # contigs to pool
             else:
-                remaining.append(
+                pooled.append(
                     SeqRecord(Seq(sequence, generic_dna), id=name, description="")
                 )
 else:
@@ -70,14 +63,9 @@ else:
                 df_above_threshold = df_above_threshold.append(
                     {"id": name, "seq": sequence, "length": length}, ignore_index=True
                 )
-            # contigs to retain and pool
-            elif length >= min_length_to_retain_contig:
-                pooled.append(
-                    SeqRecord(Seq(sequence, generic_dna), id=name, description="")
-                )
-            # remaining sequences
+            # contigs to pool
             else:
-                remaining.append(
+                pooled.append(
                     SeqRecord(Seq(sequence, generic_dna), id=name, description="")
                 )
 
@@ -98,5 +86,3 @@ for index, row in df_above_threshold.iterrows():
 
 print("write " + out_base + ".pooled.fa")
 SeqIO.write(pooled, out_base + ".pooled.fa", "fasta")
-print("write " + out_base + ".remaining.fa")
-SeqIO.write(remaining, out_base + ".remaining.fa", "fasta")
