@@ -431,6 +431,7 @@ NXF_OPTS='-Xms1g -Xmx4g'
 ## A note on the ancient DNA subworkflow
 
 nf-core/mag integrates an additional subworkflow to validate ancient DNA _de novo_ assembly that is activated by the parameter `--ancient_dna`.
+Only short-read and hybrid assemblies are validated; long-read assemblies are binned without damage evaluation or correction.
 
 [Characteristic patterns of ancient DNA (aDNA) damage](<(https://doi.org/10.1073/pnas.0704665104)>), namely DNA fragmentation and cytosine deamination (observed as C-to-T transitions) are typically used to authenticate aDNA sequences.
 By identifying assembled contigs carrying typical aDNA damages using [PyDamage](https://github.com/maxibor/pydamage), nf-core/mag can report and distinguish ancient contigs from contigs carrying no aDNA damage.
