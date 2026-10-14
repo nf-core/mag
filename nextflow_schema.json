@@ -10,7 +10,7 @@
             "type": "object",
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should find input data and save output data.",
-            "required": ["input", "outdir"],
+            "required": ["outdir"],
             "properties": {
                 "input": {
                     "type": "string",
@@ -38,6 +38,17 @@
                     "pattern": "^\\S+\\.csv$",
                     "description": "Additional input CSV samplesheet containing information about pre-computed assemblies. When set, assembly is skipped and the supplied assemblies are used for downstream analysis.",
                     "help_text": "If you have pre-computed assemblies from another source, you can skip the assembly step by supplying these assemblies in a CSV file. This CSV file must contain the required columns `id,group,assembler,fasta` (including `group` for single assemblies). Short reads must still be supplied to `--input` in CSV format for downstream steps such as QC and binning. See [usage docs](https://nf-co.re/mag/usage#input-specifications) for further details.",
+                    "fa_icon": "fas fa-file-csv"
+                },
+                "bins_input": {
+                    "type": "string",
+                    "mimetype": "text/csv",
+                    "format": "file-path",
+                    "exists": true,
+                    "schema": "assets/schema_bins_input.json",
+                    "pattern": "^\\S+\\.csv$",
+                    "description": "CSV samplesheet of pre-computed bins. When set, the pipeline starts at bin quality control and skips read processing, assembly and binning.",
+                    "help_text": "Use this to run bin QC, dereplication, taxonomic classification and annotation on genomes you already have. The CSV must contain the column `fasta` (extension `.fa` or `.fa.gz`; file names must be unique) and may contain `group`. Bins sharing a `group` are processed as one batch; the default group is `bins`. Cannot be combined with `--input` or `--assembly_input`. See [usage docs](https://nf-co.re/mag/usage#input-specifications).",
                     "fa_icon": "fas fa-file-csv"
                 },
                 "outdir": {
@@ -1060,7 +1071,7 @@
                     "type": "number",
                     "default": 0.5,
                     "description": "Specify single-copy gene score threshold for bin refinement.",
-                    "help_text": "Score threshold for single-copy gene selection algorithm to keep selecting bins, with a value ranging from 0-1.\n\nFor description of scoring algorithm, see: Sieber, Christian M. K., et al. 2018. Nature Microbiology 3 (7): 836\u201343. https://doi.org/10.1038/s41564-018-0171-1.\n\n> Modifies DAS Tool parameter --score_threshold\n"
+                    "help_text": "Score threshold for single-copy gene selection algorithm to keep selecting bins, with a value ranging from 0-1.\n\nFor description of scoring algorithm, see: Sieber, Christian M. K., et al. 2018. Nature Microbiology 3 (7): 836–43. https://doi.org/10.1038/s41564-018-0171-1.\n\n> Modifies DAS Tool parameter --score_threshold\n"
                 },
                 "refine_bins_dastool_savecontig2bin": {
                     "type": "boolean",

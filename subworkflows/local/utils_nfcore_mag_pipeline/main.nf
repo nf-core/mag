@@ -103,10 +103,12 @@ workflow PIPELINE_INITIALISATION {
     //
 
     // Validate FASTQ input
-    ch_samplesheet = channel.fromList(samplesheetToList(input, "${projectDir}/assets/schema_input.json"))
-        .map { meta, sr1, sr2, lr ->
-            validateInputSamplesheet(meta, sr1, sr2, lr)
-        }
+    ch_samplesheet = input
+        ? channel.fromList(samplesheetToList(input, "${projectDir}/assets/schema_input.json"))
+            .map { meta, sr1, sr2, lr ->
+                validateInputSamplesheet(meta, sr1, sr2, lr)
+            }
+        : channel.empty()
 
     // if coassemble_group or binning_map_mode is set to not 'own', check if all samples in a group have the same platform
     ch_samplesheet
@@ -225,10 +227,25 @@ workflow PIPELINE_INITIALISATION {
             }
     }
 
+    // Prepare pre-computed BINS input channel
+    if (params.bins_input) {
+        ch_input_bins = channel.fromList(
+            samplesheetToList(params.bins_input, "${projectDir}/assets/schema_bins_input.json")
+        )
+            .map { meta, fasta ->
+                [meta + [group: meta.id, assembler: 'external', binner: 'external', domain: 'unclassified', refinement: 'unrefined'], fasta]
+            }
+            .groupTuple()
+    }
+    else {
+        ch_input_bins = channel.empty()
+    }
+
     emit:
     raw_short_reads  = ch_raw_short_reads
     raw_long_reads   = ch_raw_long_reads
     input_assemblies = ch_input_assemblies
+    input_bins       = ch_input_bins
     versions         = ch_versions
 }
 
@@ -285,6 +302,19 @@ workflow PIPELINE_COMPLETION {
 //
 def validateInputParameters(hybrid) {
     genomeExistsError()
+
+    if (!params.input && !params.bins_input) {
+        error("[nf-core/mag] ERROR: Please provide either --input or --bins_input.")
+    }
+    if (params.input && params.bins_input) {
+        error("[nf-core/mag] ERROR: --input and --bins_input cannot be combined.")
+    }
+    if (params.bins_input && params.assembly_input) {
+        error("[nf-core/mag] ERROR: --bins_input and --assembly_input cannot be combined.")
+    }
+    if (params.bins_input && (params.skip_binning || params.ancient_dna)) {
+        error("[nf-core/mag] ERROR: --bins_input cannot be combined with --skip_binning or --ancient_dna.")
+    }
 
     // Check if binning mapping mode is valid
     if (params.coassemble_group && params.binning_map_mode == 'own') {
