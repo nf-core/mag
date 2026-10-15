@@ -721,6 +721,19 @@
                     "type": "boolean",
                     "description": "Specify to skip CDS/product searching in Prokka runs"
                 },
+                "bakta_with_compliance": {
+                    "type": "boolean",
+                    "help_text": "Force Genbank/ENA/DDJB compliance.",
+                    "description": "Turn on Bakta complicance mode for truncating contig names for NCBI/ENA compatibility."
+                },
+                "bakta_fast_mode": {
+                    "type": "boolean",
+                    "description": "POSSIBLY WRONG PARAM NAME ; Specify to skip CDS/product searching in Bakta runs"    
+                },
+                "skip_bakta": {
+                    "type": "boolean",
+                    "description": "Skip Bakta genome annotation."
+                },
                 "skip_metaeuk": {
                     "type": "boolean",
                     "description": "[DEPRECATED] This parameter no longer has any effect and will be removed in a future release. MetaEuk only runs when `--metaeuk_db` or `--metaeuk_mmseqs_db` is supplied."
