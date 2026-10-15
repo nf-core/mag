@@ -4,6 +4,8 @@
 
 include { FLYE         } from '../../../modules/nf-core/flye/main'
 include { METAMDBG_ASM } from '../../../modules/nf-core/metamdbg/asm/main'
+include { MYLOASM      } from '../../../modules/nf-core/myloasm/main'
+
 
 workflow LONGREAD_ASSEMBLY {
     take:
@@ -83,6 +85,19 @@ workflow LONGREAD_ASSEMBLY {
             [meta_new, assembly]
         }
         ch_assembled_contigs = ch_assembled_contigs.mix(ch_metamdbg_assemblies)
+    }
+
+    if (!params.skip_myloasm) {
+
+        MYLOASM(
+            ch_long_reads
+        )
+
+        ch_myloasm_assemblies = MYLOASM.out.contigs.map { meta, assembly ->
+            def meta_new = meta + [assembler: "MYLOASM"]
+            [meta_new, assembly]
+        }
+        ch_assembled_contigs = ch_assembled_contigs.mix(ch_myloasm_assemblies)
     }
 
     emit:
