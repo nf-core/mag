@@ -496,7 +496,7 @@ workflow MAG {
             : ch_input_for_postbinning_bins.mix(ch_input_for_postbinning_unbins)
 
         if (params.bins_input) {
-            // BIN_SUMMARY keys its tables on a bin column; without binning there are no depths to provide it
+            // BIN_SUMMARY joins on a bin column that DEPTHS normally provides
             ch_input_for_binsummary = ch_input_bins
                 .flatMap { _meta, bins -> [bins].flatten().collect { bin -> bin.name - ~/\.gz$/ } }
                 .collectFile(name: 'bins.tsv', seed: 'bin', newLine: true, sort: true)
