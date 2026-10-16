@@ -5,6 +5,11 @@ Annotation/Prokka/**/*.{err,gbk,log,sqn}
 Annotation/Prokka/**/*.tmp.*
 Assembly/*/*.log
 Assembly/myloasm/*/myloasm_*.log
+Assembly/myloasm/*/0-cleaning_and_unitigs/{all-cont-r2,overlaps}.txt.gz
+Assembly/myloasm/*/0-cleaning_and_unitigs/remap_temp/all-cont-r3.txt.gz
+Assembly/myloasm/*/3-mapping/*.map_to_unitigs.paf.gz
+Assembly/myloasm/*/binary_temp/{huffman_tables,snpmer_info,twin_reads}.bin
+Assembly/myloasm/*/misc/timing_steps.tsv
 Assembly/*/QC/*/*.bowtie2.log
 Assembly/*/QC/*/QUAST/*.{pdf,html,log}
 Assembly/*/QC/*/QUAST/**/*.{pdf,html,log}
