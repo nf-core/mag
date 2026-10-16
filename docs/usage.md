@@ -75,7 +75,7 @@ sample2,0,0,data/sample2.fastq.gz,OXFORD_NANOPORE
 sample3,1,0,data/sample3.fastq.gz,OXFORD_NANOPORE
 ```
 
-In this case only long-read only assemblies will be able to be executed (e.g. Flye or MetaMDBG).
+In this case only long-read only assemblies will be able to be executed (e.g. Flye, MetaMDBG, or myloasm).
 
 Please note the following requirements:
 
@@ -112,7 +112,7 @@ The assembly CSV file should contain the following columns:
 
 `id,group,assembler,fasta`
 
-Where `id` is the ID of the assembly, group is the assembly/binning group (see samplesheet information section for more details), `assembler` is the assembler used to produce the assembly (one of `MEGAHIT`, `SPAdes`, `SPAdesHybrid`, `Flye` or `MetaMDBG`), and `fasta` is the path to the assembly fasta file. Input fasta files can be compressed or uncompressed, but compressed assemblies will be automatically uncompressed for use within the pipeline. The exact information required for each supplied assembly depends on whether the assemblies provided are single assemblies or group-wise co-assemblies. For the following example `--input` CSV:
+Where `id` is the ID of the assembly, group is the assembly/binning group (see samplesheet information section for more details), `assembler` is the assembler used to produce the assembly (one of `MEGAHIT`, `SPAdes`, `SPAdesHybrid`, `Flye`, `MetaMDBG` or `myloasm`), and `fasta` is the path to the assembly fasta file. Input fasta files can be compressed or uncompressed, but compressed assemblies will be automatically uncompressed for use within the pipeline. The exact information required for each supplied assembly depends on whether the assemblies provided are single assemblies or group-wise co-assemblies. For the following example `--input` CSV:
 
 ```csv title="samplesheet.csv"
 sample,group,short_reads_1,short_reads_2,short_reads_platform

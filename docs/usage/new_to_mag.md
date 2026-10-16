@@ -25,7 +25,7 @@ This page is split into four specific sections:
 > However, we list here a very brief summary of the advice for commonly asked questions:
 >
 > - **Short read only data?** SPAdes and MEGAHIT will run by default
-> - **Long read only data?** Flye and MetaMDBG will run by default
+> - **Long read only data?** Flye, MetaMDBG and myloasm will run by default
 > - **Short and long reads?** All assemblers run by default, including SPAdes in Hybrid mode
 > - **Already have assemblies?** Use the `--assembly_input` flag to start from binning
 > - **Assemble or co-assemble?** It's complicated! Check our advice below.
@@ -55,7 +55,7 @@ A run of nf-core/mag without any customisation or additional parameters will:
 - Assemble reads into contigs with
   - `MEGAHIT` and `SPAdes` if short reads are provided
   - `SPAdesHybrid` if short and long reads are provided
-  - `Flye` and `metaMDBG` if long reads are provided
+  - `Flye`, `metaMDBG`, and `myloasm` if long reads are provided
 - Post-assembly tasks
   - Quality control by `QUAST` and optionally `ALE`
   - Annotate assemblies with `prodigal`
