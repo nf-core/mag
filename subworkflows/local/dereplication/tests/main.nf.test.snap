@@ -29,7 +29,7 @@
                         {
                             "id": "study"
                         },
-                        "/home/sam/mag/.nf-test/tests/b6ddeb17cc54dcc44f883a26ed0f9ac6/work/c0/39d608ac3223f2363bfd420ece3f13/dereplicated_bins.tsv"
+                        "dereplicated_bins.tsv:md5,512c85becdd924d7ffbc3e325983b397"
                     ]
                 ],
                 "cluster_tsv": [
@@ -37,7 +37,7 @@
                         {
                             "id": "study"
                         },
-                        "/home/sam/mag/.nf-test/tests/b6ddeb17cc54dcc44f883a26ed0f9ac6/work/c0/39d608ac3223f2363bfd420ece3f13/dereplicated_bins.tsv"
+                        "dereplicated_bins.tsv:md5,512c85becdd924d7ffbc3e325983b397"
                     ]
                 ],
                 "dereplicated_bins": [
@@ -64,7 +64,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-10-16T12:08:46.869532875",
+        "timestamp": "2026-10-16T13:14:10.074604161",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.1"

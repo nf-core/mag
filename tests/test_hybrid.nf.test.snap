@@ -580,12 +580,9 @@
                 "SPAdesHybrid-group-0.assembly.gfa.gz:md5,006134e6f525943b0111eb279eb0403d",
                 "SPAdesHybrid-group-0.contigs.fa.gz:md5,4412e0be7df82de5ad66653c9444ed90",
                 "SPAdesHybrid-group-0.scaffolds.fa.gz:md5,665f0ed8bdf0f2857aa713ce3e83f390",
-                "all-cont-r2.txt.gz:md5,a70455ecb6337ea91871cb02f558a900",
                 "contained_during_overlaps.txt.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "lax_overlaps_cut.txt.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "overlaps.txt.gz:md5,9496061c373b94684f6cd95fbf66b45e",
                 "read_coverages.txt.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "all-cont-r3.txt.gz:md5,76a41b76cc95883dc46cc556f7a38ff8",
                 "read_coverages.txt.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "1-pre_bridge_cuts.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "2-pre_bridge_cuts.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -727,7 +724,6 @@
                 "walk_for_tip_clean-0.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "group-0.dereplicate_unitigs.paf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "group-0.final_contigs_nopolish.fa.gz:md5,d1c8e37258e6a4952a11439f451e0240",
-                "group-0.map_to_unitigs.paf.gz:md5,0c1326fbc42689e4d07c123b11302e89",
                 "low_quality_regions.bed:md5,512baf7bb4a8c7aab061101cdcccab74",
                 "group-0.assembly_alternate.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "group-0.duplicated_contigs.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -740,18 +736,14 @@
                 "group-0.unitig_graph-0.edges.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "group-0.unitig_graph-0.gfa.gz:md5,dcc16a510296911a7ffc0cd696867d22",
                 "contig_graph.bin:md5,ae8552ffcf2857275433b1f50343b928",
-                "huffman_tables.bin:md5,a1b79676a7f59773f22ab59290004ff0",
                 "overlaps.bin:md5,35c771d7e555a257fce9434365cb4cb9",
-                "snpmer_info.bin:md5,7d51205aeb1a10deb4e3406f9f291e1e",
-                "twin_reads.bin:md5,5fd46ee3898d60794b24075fab86b271",
                 "group-0.assembly_primary.fa.gz:md5,d0d267ca04798d8b86718f40e6379ea6",
                 "group-0.final_contig_graph.edges.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "group-0.final_contig_graph.gfa.gz:md5,dcc16a510296911a7ffc0cd696867d22",
-                "kmer_count_histogram.tsv:md5,88ed755f4f051af670d94309a530dfc5",
-                "timing_steps.tsv:md5,7d3a1a8e9bb183002d845a276450a1f8"
+                "kmer_count_histogram.tsv:md5,88ed755f4f051af670d94309a530dfc5"
             ]
         ],
-        "timestamp": "2026-10-16T12:29:21.347778583",
+        "timestamp": "2026-10-16T14:21:28.800318203",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.1"
