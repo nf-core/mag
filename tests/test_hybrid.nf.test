@@ -38,7 +38,7 @@ nextflow_pipeline {
             // Output dir: Assembly
             def stable_name_assembly = getAllFilesFromDir(
                 params.outdir, include: ['Assembly/**'], relative: true, includeDir: false, ignore: ["myloasm_*_log"]
-            )             
+            )
             def stable_path_assembly = getAllFilesFromDir(
                 params.outdir, include: ['Assembly/**'], ignoreFile: 'tests/.nftignore'
             )
