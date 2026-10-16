@@ -652,7 +652,7 @@ workflow MAG {
         /*
          * Prokka: Genome annotation
          */
-if (!params.skip_prokka && !params.skip_bakta) {
+if (!params.skip_prokka || !params.skip_bakta) {
 
             if (params.dereplicate && !params.dereplicate_annotate_all) {
                 ch_bins_for_annotation = ch_dereplicated_bins.map { meta, bin ->

@@ -783,7 +783,7 @@ If `--gunc_save_db` is specified, the output directory will also contain the req
 
 Only bins passing a minimum completeness/contamination threshold (`--dereplicate_min_completeness`, default 50%; `--dereplicate_max_contamination`, default 10%) are dereplicated, since ANI estimates on poor-quality bins aren't trustworthy; bins below that threshold are excluded from clustering entirely rather than being force-assigned to a cluster, and consequently never reach GTDB-Tk, CAT/BAT or Prokka either, since those only run on cluster representatives. If every bin in a study happens to fail the threshold, dereplication is skipped for that run with a warning, rather than failing: [Galah crashes outright](https://github.com/wwood/galah/issues/75) rather than handling zero qualifying genomes gracefully. Leftover unbinned-contig pseudo-bins are excluded from clustering unconditionally, regardless of QC results, since they aren't real curated genomes; the same is true for GTDB-Tk classification whether or not `--dereplicate` is set (a bin QC tool would need to have assessed them for GTDB-Tk to consider them, which normally doesn't happen).
 
-Dereplication is off by default. Enable it with `--dereplicate` (requires `--run_checkm2`, `--run_checkm` and/or `--run_busco`, and cannot be combined with `--skip_binqc`, since Galah picks representatives using each bin's best-available completeness/contamination estimate -- see the [note on bin dereplication](usage.md#a-note-on-bin-dereplication) for how that estimate is chosen when more than one tool assessed a bin). When enabled, GTDB-Tk and the CAT/BAT bin-classification step run on cluster representatives only, and their taxonomic assignment is copied to the rest of each cluster in `bin_summary.tsv` (see [below](#additional-summary-for-binned-genomes)) rather than left blank. Prokka annotation also runs on representatives only by default; set `--dereplicate_annotate_all` to annotate every bin regardless of cluster membership, e.g. for pan-genome analyses that need per-strain gene content. MetaEuk (eukaryotic bins) and the CAT/BAT unbinned-contig classification leg are unaffected by dereplication, since neither of those operates on the set of bins being dereplicated.
+Dereplication is off by default. Enable it with `--dereplicate` (requires `--run_checkm2`, `--run_checkm` and/or `--run_busco`, and cannot be combined with `--skip_binqc`, since Galah picks representatives using each bin's best-available completeness/contamination estimate -- see the [note on bin dereplication](usage.md#a-note-on-bin-dereplication) for how that estimate is chosen when more than one tool assessed a bin). When enabled, GTDB-Tk and the CAT/BAT bin-classification step run on cluster representatives only, and their taxonomic assignment is copied to the rest of each cluster in `bin_summary.tsv` (see [below](#additional-summary-for-binned-genomes)) rather than left blank. Prokka and Bakta annotations also run on representatives only by default; set `--dereplicate_annotate_all` to annotate every bin regardless of cluster membership, e.g. for pan-genome analyses that need per-strain gene content. MetaEuk (eukaryotic bins) and the CAT/BAT unbinned-contig classification leg are unaffected by dereplication, since neither of those operates on the set of bins being dereplicated.
 
 <details markdown="1">
 <summary>Output files</summary>
@@ -879,6 +879,28 @@ Whole genome annotation is the process of identifying features of interest in a 
   - `[assembler]-[binner]-[bin].log`: contains all the output that Prokka produced during its run
   - `[assembler]-[binner]-[bin].txt`: statistics relating to the annotated features found
   - `[assembler]-[binner]-[bin].tsv`: tab-separated file of all features (locus_tag, ftype, len_bp, gene, EC_number, COG, product)
+
+</details>
+
+### Bakta
+
+[Bakta](https://github.com/oschwengers/bakta) is a software tool for rapid, standardised annotation of bacterial MAGs. It detects and annotates tRNA, tmRNA, rRNA and ncRNA genes, CRISPR arrays, CDS, pseudogenes and small ORFs, and produces standards-compliant output files. Bakta is an alternative to [Prokka](#prokka) and can be run alongside or instead of it.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `Annotation/Bakta/[assembler]/`
+  - `[assembler]-[binner]-[bin].gff3`: annotation in GFF3 format, containing both sequences and annotations
+  - `[assembler]-[binner]-[bin].gbff`: annotation in multi-record GenBank format, containing both sequences and annotations
+  - `[assembler]-[binner]-[bin].embl`: annotation in multi-record EMBL format, containing both sequences and annotations
+  - `[assembler]-[binner]-[bin].fna`: nucleotide FASTA file of the input contig sequences
+  - `[assembler]-[binner]-[bin].faa`: protein FASTA file of the translated CDS and small ORF sequences
+  - `[assembler]-[binner]-[bin].ffn`: nucleotide FASTA file of all annotated features
+  - `[assembler]-[binner]-[bin].tsv`: tab-separated file of all annotated features
+  - `[assembler]-[binner]-[bin].hypotheticals.tsv`: tab-separated file with additional information on hypothetical protein CDS
+  - `[assembler]-[binner]-[bin].hypotheticals.faa`: protein FASTA file of the hypothetical protein CDS
+  - `[assembler]-[binner]-[bin].txt`: plain-text summary of the annotation, also included in the MultiQC report
+  - `[assembler]-[binner]-[bin].json`: all annotation and sequence information in machine-readable JSON format
 
 </details>
 

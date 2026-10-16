@@ -721,9 +721,9 @@
                     "type": "boolean",
                     "description": "Specify to skip CDS/product searching in Prokka runs"
                 },
-                "bakta_db_downloadtype":{
+                "bakta_db_downloadtype": {
                     "type": "string",
-                    "description": "Specify the download type for Bakta databases. Options are 'full' (~1.3Gb) or 'light' (30+Gb).",
+                    "description": "Specify the download type for Bakta databases. Options are 'full' (30+Gb) or 'light' (~1.3Gb).",
                     "help_text": "Bakta documentation for this parameter can be found here: https://github.com/oschwengers/bakta#database",
                     "enum": ["full", "light"],
                     "default": "full"
@@ -731,11 +731,11 @@
                 "bakta_with_compliance": {
                     "type": "boolean",
                     "help_text": "Force Genbank/ENA/DDJB compliance.",
-                    "description": "Turn on Bakta complicance mode for truncating contig names for NCBI/ENA compatibility."
+                    "description": "Turn on Bakta compliance mode for truncating contig names for NCBI/ENA compatibility."
                 },
                 "bakta_fast_mode": {
                     "type": "boolean",
-                    "description": "POSSIBLY WRONG PARAM NAME ; Specify to skip CDS/product searching in Bakta runs"    
+                    "description": "POSSIBLY WRONG PARAM NAME ; Specify to skip CDS/product searching in Bakta runs"
                 },
                 "skip_bakta": {
                     "type": "boolean",
