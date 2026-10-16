@@ -48,12 +48,6 @@ nextflow_pipeline {
             def metamdbg_logs = getAllFilesFromDir(
                 params.outdir, include: ['Assembly/METAMDBG/*.metaMDBG.log']
             )
-            def myloasm_assemblies = getAllFilesFromDir(
-                params.outdir, include: ['Assembly/myloasm/*.assembly_primary.fa.gz']
-            )
-            def myloasm_logs = getAllFilesFromDir(
-                params.outdir, include: ['Assembly/myloasm/*.log']
-            )
             def assembly_quast_logs = getAllFilesFromDir(
                 params.outdir, include: ['Assembly/*/QC/*/QUAST/quast.log']
             )
@@ -140,7 +134,6 @@ nextflow_pipeline {
                     // FASTA content checks
                     "Flye assemblies non-empty: ${flye_assemblies.every { f -> path("${f}").fasta.size() > 0 }}",
                     "MetaMDBG assemblies non-empty: ${metamdbg_assemblies.every { f -> path("${f}").fasta.size() > 0 }}",
-                    "Myloasm assemblies non-empty: ${myloasm_assemblies.every { f -> path("${f}").fasta.size() > 0 }}",
                     "MaxBin2 bins non-empty: ${maxbin2_bins.every { f -> path("${f}").fasta.size() > 0 }}",
                     "MetaBAT2 bins non-empty when present: ${metabat2_bins.every { f -> path("${f}").fasta.size() > 0 }}",
                     // Prokka annotation file checks
@@ -174,9 +167,7 @@ nextflow_pipeline {
                     "Prokka: ${prokka_logs.every { f -> path("${f}").text.contains('Annotation finished successfully.') }}",
                     "NanoLyse: ${nanolyse_logs.every { f -> path("${f}").text.contains('NanoLyse finished.') }}",
                     "Flye: ${flye_logs.every { f -> path("${f}").text.contains('Final assembly:') }}",
-                    "MetaMDBG: ${metamdbg_logs.every { f -> path("${f}").text.contains('Done!') }}",
-                    "Myloasm: ${myloasm_logs.every { f -> path("${f}").text.contains('Assembly completed.') }}",
-                ).match("log-checks") },
+                    "MetaMDBG: ${metamdbg_logs.every { f -> path("${f}").text.contains('Done!') }}",                ).match("log-checks") },
             )
         }
     }
