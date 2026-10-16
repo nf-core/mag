@@ -89,11 +89,8 @@ workflow LONGREAD_ASSEMBLY {
 
     if (!params.skip_myloasm) {
 
-        // Don't run MYLOASM on PACBIO_CLR reads, it isn't supported
-        ch_long_reads_myloasm_input = ch_long_reads.filter { meta, _reads -> meta.lr_platform != "PACBIO_CLR" }
-
         MYLOASM(
-            ch_long_reads_myloasm_input
+            ch_long_reads
         )
 
         ch_myloasm_assemblies = MYLOASM.out.contigs.map { meta, assembly ->
