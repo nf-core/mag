@@ -178,6 +178,7 @@ params {
     prokka_with_compliance: Boolean
     prokka_compliance_centre: String?
     skip_bakta: Boolean
+    bakta_db_downloadtype: String = 'full'
     bakta_with_compliance: Boolean
     bakta_fast_mode: Boolean
     // [DEPRECATED] This parameter no longer has any effect and will be removed in a future release. MetaEuk only runs when `--metaeuk_db` or `--metaeuk_mmseqs_db` is supplied.

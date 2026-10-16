@@ -721,6 +721,13 @@
                     "type": "boolean",
                     "description": "Specify to skip CDS/product searching in Prokka runs"
                 },
+                "bakta_db_downloadtype":{
+                    "type": "string",
+                    "description": "Specify the download type for Bakta databases. Options are 'full' (~1.3Gb) or 'light' (30+Gb).",
+                    "help_text": "Bakta documentation for this parameter can be found here: https://github.com/oschwengers/bakta#database",
+                    "enum": ["full", "light"],
+                    "default": "full"
+                },
                 "bakta_with_compliance": {
                     "type": "boolean",
                     "help_text": "Force Genbank/ENA/DDJB compliance.",
