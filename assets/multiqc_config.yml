@@ -217,11 +217,11 @@ table_columns_placement:
     CDS: 22000
     organism: 23000
   Bakta:
-    Count: 25000
-    Length: 26000
-    CDSs: 27000
+    Count: 24000
+    Length: 25000
+    CDSs: 26000
   "GTDB-Tk":
-    "classification": 24000
+    "classification": 27000
 
 table_columns_name:
   "FastQC: raw reads":

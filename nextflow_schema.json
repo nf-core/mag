@@ -735,7 +735,7 @@
                 },
                 "bakta_fast_mode": {
                     "type": "boolean",
-                    "description": "POSSIBLY WRONG PARAM NAME ; Specify to skip CDS/product searching in Bakta runs"
+                    "description": "Specify to skip CDS/product searching in Bakta runs"
                 },
                 "skip_bakta": {
                     "type": "boolean",
