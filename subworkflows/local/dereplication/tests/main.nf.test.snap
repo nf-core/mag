@@ -29,7 +29,7 @@
                         {
                             "id": "study"
                         },
-                        "dereplicated_bins.tsv:md5,e4eee6bbc3e7186884ebf829f468b4c0"
+                        "/home/sam/mag/.nf-test/tests/b6ddeb17cc54dcc44f883a26ed0f9ac6/work/c0/39d608ac3223f2363bfd420ece3f13/dereplicated_bins.tsv"
                     ]
                 ],
                 "cluster_tsv": [
@@ -37,7 +37,7 @@
                         {
                             "id": "study"
                         },
-                        "dereplicated_bins.tsv:md5,e4eee6bbc3e7186884ebf829f468b4c0"
+                        "/home/sam/mag/.nf-test/tests/b6ddeb17cc54dcc44f883a26ed0f9ac6/work/c0/39d608ac3223f2363bfd420ece3f13/dereplicated_bins.tsv"
                     ]
                 ],
                 "dereplicated_bins": [
@@ -64,10 +64,10 @@
                 ]
             }
         ],
-        "timestamp": "2026-09-15T08:53:34.695533869",
+        "timestamp": "2026-10-16T12:08:46.869532875",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
+            "nextflow": "26.04.1"
         }
     }
 }
