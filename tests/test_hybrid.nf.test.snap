@@ -558,7 +558,7 @@
                 "Assembly/myloasm/group-0/group-0.final_contig_graph.gfa.gz",
                 "Assembly/myloasm/group-0/misc/kmer_count_histogram.tsv",
                 "Assembly/myloasm/group-0/misc/timing_steps.tsv",
-                "Assembly/myloasm/group-0/myloasm_2026-10-16_11-24-04.log"
+                "Assembly/myloasm/group-0/myloasm_<timestamp>.log"
             ],
             [
                 "MYLOASM-group-0.rna.gff:md5,0f8880a791d831c35eb34e53829a369a",
@@ -748,8 +748,7 @@
                 "group-0.final_contig_graph.edges.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "group-0.final_contig_graph.gfa.gz:md5,dcc16a510296911a7ffc0cd696867d22",
                 "kmer_count_histogram.tsv:md5,88ed755f4f051af670d94309a530dfc5",
-                "timing_steps.tsv:md5,7d3a1a8e9bb183002d845a276450a1f8",
-                "myloasm_2026-10-16_11-24-04.log:md5,49ad6b33b44eefa080bd9b79e2acf602"
+                "timing_steps.tsv:md5,7d3a1a8e9bb183002d845a276450a1f8"
             ]
         ],
         "timestamp": "2026-10-16T12:29:21.347778583",

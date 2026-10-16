@@ -4,6 +4,7 @@ Ancient_DNA/variant_calling/*/*.vcf.gz
 Annotation/Prokka/**/*.{err,gbk,log,sqn}
 Annotation/Prokka/**/*.tmp.*
 Assembly/*/*.log
+Assembly/myloasm/*/myloasm_*.log
 Assembly/*/QC/*/*.bowtie2.log
 Assembly/*/QC/*/QUAST/*.{pdf,html,log}
 Assembly/*/QC/*/QUAST/**/*.{pdf,html,log}
