@@ -167,8 +167,7 @@ nextflow_pipeline {
                     "Prokka: ${prokka_logs.every { f -> path("${f}").text.contains('Annotation finished successfully.') }}",
                     "NanoLyse: ${nanolyse_logs.every { f -> path("${f}").text.contains('NanoLyse finished.') }}",
                     "Flye: ${flye_logs.every { f -> path("${f}").text.contains('Final assembly:') }}",
-                    "MetaMDBG: ${metamdbg_logs.every { f -> path("${f}").text.contains('Done!') }}",
-                ).match("log-checks") },
+                    "MetaMDBG: ${metamdbg_logs.every { f -> path("${f}").text.contains('Done!') }}",                ).match("log-checks") },
             )
         }
     }

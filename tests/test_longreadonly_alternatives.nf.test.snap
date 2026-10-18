@@ -25,10 +25,10 @@
                 "minigut_run0_nanoq_filtered.stats:md5,00dfdbb0bfa701faf739b3339246a4d0"
             ]
         ],
-        "timestamp": "2026-05-04T09:01:09.14935308",
+        "timestamp": "2026-10-16T12:00:13.311348862",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.0"
+            "nextflow": "26.04.1"
         }
     },
     "log-checks": {
@@ -62,10 +62,10 @@
                 "FLYE-minigut.assembly_info.txt:md5,8af4d61c811efe1796e8af7a4385bb26"
             ]
         ],
-        "timestamp": "2026-07-10T15:27:44.003057445",
+        "timestamp": "2026-10-16T12:53:53.518635553",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nextflow": "26.04.1"
         }
     },
     "binning": {
@@ -105,10 +105,10 @@
                 "bin_depths_summary.tsv:md5,985f843d43973cbfe5b49f0ad0628193"
             ]
         ],
-        "timestamp": "2026-09-28T18:27:53.051373219",
+        "timestamp": "2026-10-16T12:53:53.579034062",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
+            "nextflow": "26.04.1"
         }
     },
     "content-checks": {
@@ -229,10 +229,10 @@
                 }
             }
         ],
-        "timestamp": "2026-09-28T01:40:44.384843166",
+        "timestamp": "2026-10-16T12:53:53.481516323",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
+            "nextflow": "26.04.1"
         }
     },
     "multiqc": {
@@ -445,10 +445,10 @@
                 "porechop.yaml:md5,828d96e2822bb4b4108ab706c00c4450"
             ]
         ],
-        "timestamp": "2026-06-17T17:01:34.016518547",
+        "timestamp": "2026-10-16T12:53:53.653922558",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.3"
+            "nextflow": "26.04.1"
         }
     },
     "summary-rows": {

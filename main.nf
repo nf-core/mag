@@ -96,6 +96,7 @@ params {
     megahit_fix_cpu_1: Boolean
     skip_flye: Boolean
     skip_metamdbg: Boolean
+    skip_myloasm: Boolean
     coassemble_group: Boolean
 
     // Assembly QC and polishing options

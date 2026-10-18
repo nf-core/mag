@@ -42,10 +42,10 @@
                 "MEGAHIT-MetaBAT2-test_minigut.1.txt:md5,8e3a1a9ae89afe966484b9eb5e47266b"
             ]
         ],
-        "timestamp": "2026-10-08T17:17:00.207031385",
+        "timestamp": "2026-10-16T12:02:59.781008595",
         "meta": {
-            "nf-test": "0.9.4",
-            "nextflow": "26.04.6"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.1"
         }
     },
     "qc": {
@@ -69,10 +69,10 @@
                 "test_minigut_sample2_run0_host_removed.bowtie2.log:md5,ce114382b98cd86beeea13aeeeee2bbd"
             ]
         ],
-        "timestamp": "2026-07-27T00:51:14.899103031",
+        "timestamp": "2026-10-15T16:57:56.772872",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.0"
         }
     },
     "log-checks": {
@@ -163,10 +163,10 @@
                 "MEGAHIT-test_minigut_sample2.bowtie2.log:md5,1246a63b074719ecad06b5ec3220fca5"
             ]
         ],
-        "timestamp": "2026-09-28T00:37:40.321171545",
+        "timestamp": "2026-10-16T12:02:59.867062344",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
+            "nextflow": "26.04.1"
         }
     },
     "binning": {
@@ -1146,10 +1146,10 @@
                 "bin_depths_summary.tsv:md5,0a477339e6cd68388f76f2c4335f6eeb"
             ]
         ],
-        "timestamp": "2026-10-08T17:17:00.53557779",
+        "timestamp": "2026-10-16T12:02:59.982378089",
         "meta": {
-            "nf-test": "0.9.4",
-            "nextflow": "26.04.6"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.1"
         }
     },
     "viral": {
@@ -1203,10 +1203,10 @@
                 "MEGAHIT-test_minigut_sample2.contigs_virus_proteins.faa.gz:md5,79089b17750dec52668b2f0fdf7d638b"
             ]
         ],
-        "timestamp": "2026-09-16T09:51:09.03666262",
+        "timestamp": "2026-10-16T12:03:00.234311292",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
+            "nextflow": "26.04.1"
         }
     },
     "content-checks": {
@@ -1286,10 +1286,10 @@
                 "gtdbtk_summary.tsv:md5,7f32b92c78f6f3bf07f7039529dbe772"
             ]
         ],
-        "timestamp": "2026-10-08T17:17:01.004996009",
+        "timestamp": "2026-10-16T12:03:00.359593352",
         "meta": {
-            "nf-test": "0.9.4",
-            "nextflow": "26.04.6"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.1"
         }
     },
     "-profile test_single_end": {
@@ -1475,10 +1475,10 @@
                 }
             }
         ],
-        "timestamp": "2026-10-08T17:16:59.955666283",
+        "timestamp": "2026-10-16T12:02:59.719853924",
         "meta": {
-            "nf-test": "0.9.4",
-            "nextflow": "26.04.6"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.1"
         }
     },
     "multiqc": {
@@ -1674,10 +1674,10 @@
                 "quast_table.yaml:md5,0c9c06e841a123865816dab15487b280"
             ]
         ],
-        "timestamp": "2026-10-08T17:17:00.778798326",
+        "timestamp": "2026-10-16T12:03:00.108084167",
         "meta": {
-            "nf-test": "0.9.4",
-            "nextflow": "26.04.6"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.1"
         }
     },
     "ancient": {
@@ -1701,10 +1701,10 @@
                 "MEGAHIT-test_minigut_sample2.fa:md5,f76f599c3048c8794ade2a8f3bfdb205"
             ]
         ],
-        "timestamp": "2026-09-28T00:55:22.405383044",
+        "timestamp": "2026-10-16T12:02:59.727077431",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
+            "nextflow": "26.04.1"
         }
     },
     "summary-rows": {

@@ -16,7 +16,9 @@ process GTDBTK_DB_PREPARATION {
     script:
     """
     mkdir database
-    tar -xzf ${database} -C database --strip 1
+    # -m: don't restore archived mtimes; setting them on directories can fail with
+    # EPERM on some bind-mounted filesystems (e.g. Docker Desktop on macOS)
+    tar -xzf ${database} -C database --strip 1 -m
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

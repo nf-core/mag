@@ -29,7 +29,7 @@
                         {
                             "id": "study"
                         },
-                        "dereplicated_bins.tsv:md5,e4eee6bbc3e7186884ebf829f468b4c0"
+                        "dereplicated_bins.tsv:md5,512c85becdd924d7ffbc3e325983b397"
                     ]
                 ],
                 "cluster_tsv": [
@@ -37,7 +37,7 @@
                         {
                             "id": "study"
                         },
-                        "dereplicated_bins.tsv:md5,e4eee6bbc3e7186884ebf829f468b4c0"
+                        "dereplicated_bins.tsv:md5,512c85becdd924d7ffbc3e325983b397"
                     ]
                 ],
                 "dereplicated_bins": [
@@ -64,10 +64,10 @@
                 ]
             }
         ],
-        "timestamp": "2026-09-15T08:53:34.695533869",
+        "timestamp": "2026-10-16T13:14:10.074604161",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
+            "nextflow": "26.04.1"
         }
     }
 }

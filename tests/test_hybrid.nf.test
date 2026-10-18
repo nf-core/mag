@@ -37,7 +37,7 @@ nextflow_pipeline {
 
             // Output dir: Assembly
             def stable_name_assembly = getAllFilesFromDir(
-                params.outdir, include: ['Assembly/**'], relative: true, includeDir: false
+                params.outdir, include: ['Assembly/**'], relative: true, includeDir: false, ignore: ["myloasm_*_log"]
             )
             def stable_path_assembly = getAllFilesFromDir(
                 params.outdir, include: ['Assembly/**'], ignoreFile: 'tests/.nftignore'
@@ -47,6 +47,12 @@ nextflow_pipeline {
             )
             def spades_logs = getAllFilesFromDir(
                 params.outdir, include: ['Assembly/SPAdesHybrid/*.spades.log']
+            )
+            def myloasm_assemblies = getAllFilesFromDir(
+                params.outdir, include: ['Assembly/myloasm/**/*.assembly_primary.fa.gz']
+            )
+            def myloasm_logs = getAllFilesFromDir(
+                params.outdir, include: ['Assembly/myloasm/**/*.log']
             )
 
             // Output dir: GenomeBinning
@@ -72,17 +78,11 @@ nextflow_pipeline {
             def metabat2_unbins = getAllFilesFromDir(
                 params.outdir, include: ['GenomeBinning/MetaBAT2/{discarded,unbinned/*}/*.fa.gz']
             )
-            def semibin2_bins = getAllFilesFromDir(
-                params.outdir, include: ['GenomeBinning/SemiBin2/bins/*.fa.gz']
-            )
             def binning_quast_logs = getAllFilesFromDir(
                 params.outdir, include: ['GenomeBinning/QC/QUAST/*/quast.log']
             )
             def busco_logs = getAllFilesFromDir(
                 params.outdir, include: ['GenomeBinning/QC/BUSCO/*/*-busco.log']
-            )
-            def semibin2_logs = getAllFilesFromDir(
-                params.outdir, include: ['GenomeBinning/SemiBin2/log/*.log']
             )
             def bin_summary = path("${params.outdir}/GenomeBinning/bin_summary.tsv")
             def quast_bin_summary = path("${params.outdir}/GenomeBinning/QC/quast_bin_summary.tsv")
@@ -135,17 +135,18 @@ nextflow_pipeline {
 
                 { assert snapshot(
                     // FASTA content checks
+                    "Myloasm assemblies present: ${myloasm_assemblies.size() > 0}",
+                    "Myloasm assemblies non-empty: ${myloasm_assemblies.collect { f -> path("${f}").fasta.size() > 0 }.every()}",
                     "MaxBin2 bins non-empty: ${maxbin2_bins.collect { f -> path("${f}").fasta.size() > 0 }.every()}",
                     "MaxBin2 unbinned/discarded non-empty: ${maxbin2_unbins.collect { f -> path("${f}").fasta.size() >= 0 }.every()}",
                     "MetaBAT2 bins non-empty: ${metabat2_bins.collect { f -> path("${f}").fasta.size() > 0 }.every()}",
                     "MetaBAT2 unbinned/discarded non-empty: ${metabat2_unbins.collect { f -> path("${f}").fasta.size() >= 0 }.every()}",
-                    "SemiBin2 bins non-empty: ${semibin2_bins.collect { f -> path("${f}").fasta.size() > 0 }.every()}",
                     // Prokka annotation file checks
                     "Prokka GBK files contain LOCUS: ${prokka_gbk.collect { f -> path("${f}").text.contains('LOCUS') }.every()}",
                     "Prokka SQN files non-empty: ${prokka_sqn.collect { f -> path("${f}").size() > 0 }.every()}",
                     "Prokka TSV row counts: ${prokka_tsv.collect { f -> "${f.name}=${path("${f}").csv(sep: '\t').rowCount}" }.sort()}",
                     // Summary row count checks
-                    "Bin summary row count matches bins: ${bin_summary.csv(sep: '\t').rowCount == maxbin2_bins.size() + metabat2_bins.size() + semibin2_bins.size()}",
+                    "Bin summary row count matches bins: ${bin_summary.csv(sep: '\t').rowCount == maxbin2_bins.size() + metabat2_bins.size()}",
                 ).match("content-checks") },
 
                 { assert snapshot(
@@ -159,7 +160,7 @@ nextflow_pipeline {
                     "assembly_quast_logs contains 'Finished:': ${assembly_quast_logs.collect { log -> log.readLines().any { it.contains('Finished:') } }.every()}",
                     "binning_quast_logs contains 'Finished:': ${binning_quast_logs.collect { log -> log.readLines().any { it.contains('Finished:') } }.every()}",
                     "busco_logs contains 'BUSCO analysis done.': ${busco_logs.collect { log -> log.readLines().any { it.contains('BUSCO analysis done.') } }.every()}",
-                    "semibin2_logs contains 'Binning finished': ${semibin2_logs.collect { log -> log.readLines().any { it.contains('Binning finished') } }.every()}",
+                    "myloasm_logs contains 'Assembly completed.': ${myloasm_logs.collect { log -> log.readLines().any { it.contains('Assembly completed.') } }.every()}",
                     "bowtie2_logs contains 'overall alignment rate': ${bowtie2_logs.collect { log -> log.readLines().any { it.contains('overall alignment rate') } }.every()}",
                     "prokka_logs contains 'Annotation finished successfully.': ${prokka_logs.collect { log -> log.readLines().any { it.contains('Annotation finished successfully.') } }.every()}",
                 ).match("log-checks") },

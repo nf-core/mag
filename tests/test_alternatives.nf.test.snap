@@ -94,10 +94,10 @@
                 }
             }
         ],
-        "timestamp": "2026-09-28T01:42:22.208023303",
+        "timestamp": "2026-10-15T16:25:38.420764",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
+            "nextflow": "26.04.0"
         }
     },
     "qc": {
@@ -121,10 +121,10 @@
                 "test_minigut_sample2_run0_trimmomatic_trim.log:md5,ea9f15adce3091c96ef7ba6285957676"
             ]
         ],
-        "timestamp": "2026-06-21T22:36:03.532077574",
+        "timestamp": "2026-10-15T16:25:38.44757",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.4"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
         }
     },
     "log-checks": {
@@ -152,10 +152,10 @@
                 "MEGAHIT-group-0.contigs.fa.gz:md5,4b1c9360be95e596b87194b12a5db645"
             ]
         ],
-        "timestamp": "2026-07-14T18:52:06.9332908",
+        "timestamp": "2026-10-15T16:25:38.501775",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "26.04.3"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
         }
     },
     "binning": {
@@ -203,10 +203,10 @@
                 "bin_depths_summary.tsv:md5,a73f2fc180a2c52038c88fbbfa6a95c3"
             ]
         ],
-        "timestamp": "2026-09-28T18:18:58.430919828",
+        "timestamp": "2026-10-15T16:25:38.588682",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
+            "nextflow": "26.04.0"
         }
     },
     "content-checks": {
@@ -379,10 +379,10 @@
                 "trimmomatic_plot.yaml:md5,9557cd587ace0a93912179cb0deafe3b"
             ]
         ],
-        "timestamp": "2026-09-28T01:42:22.321160896",
+        "timestamp": "2026-10-15T16:25:38.68942",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
+            "nextflow": "26.04.0"
         }
     },
     "summary-rows": {

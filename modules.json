@@ -272,6 +272,11 @@
                         "git_sha": "98403d15b0e50edae1f3fec5eae5e24982f1fade",
                         "installed_by": ["modules"]
                     },
+                    "myloasm": {
+                        "branch": "master",
+                        "git_sha": "2a55fbb146d13f5058756c27cbf0b2e41e2a0729",
+                        "installed_by": ["modules"]
+                    },
                     "nanolyse": {
                         "branch": "master",
                         "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",

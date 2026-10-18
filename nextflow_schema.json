@@ -687,6 +687,10 @@
                     "type": "boolean",
                     "description": "Skip Flye assembly."
                 },
+                "skip_myloasm": {
+                    "type": "boolean",
+                    "description": "Skip Myloasm assembly."
+                },
                 "run_pypolca": {
                     "type": "boolean",
                     "description": "Run PyPOLCA polishing on long-read assemblies before binning."

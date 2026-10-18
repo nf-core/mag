@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1102](https://github.com/nf-core/mag/pull/1102) - Add new nf-core/mag ancient DNA mode publication citations (by @jfy133)
 - [#1102](https://github.com/nf-core/mag/pull/1102) - Add nf-core/mag v5 long-read and binning update publication citations (by @dialvarezs)
 - [#1110](https://github.com/nf-core/mag/pull/1110) - Add optional study-wide bin dereplication with [Galah](https://github.com/wwood/galah) (`--dereplicate`); see [usage docs](https://nf-co.re/mag/docs/usage#a-note-on-bin-dereplication) for details (by @erikrikarddaniel).
+- [#1128](https://github.com/nf-core/mag/pull/1128) - Add [Myloasm](https://github.com/bluenote-1577/myloasm) as a long read assembler option.
 
 ### `Changed`
 

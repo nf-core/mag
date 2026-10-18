@@ -23,15 +23,15 @@ include { UTILS_NEXTFLOW_PIPELINE } from '../../nf-core/utils_nextflow_pipeline'
 
 workflow PIPELINE_INITIALISATION {
     take:
-    version // boolean: Display version and exit
-    validate_params // boolean: Boolean whether to validate parameters against the schema at runtime
-    monochrome_logs // boolean: Do not use coloured log outputs
+    version           // boolean: Display version and exit
+    validate_params   // boolean: Boolean whether to validate parameters against the schema at runtime
+    monochrome_logs   // boolean: Do not use coloured log outputs
     nextflow_cli_args //   array: List of positional nextflow CLI args
-    outdir //  string: The output directory where the results will be saved
-    input //  string: Path to input samplesheet
-    help // boolean: Display help message and exit
-    help_full // boolean: Show the full help message
-    show_hidden // boolean: Show hidden parameters in the help message
+    outdir            //  string: The output directory where the results will be saved
+    input             //  string: Path to input samplesheet
+    help              // boolean: Display help message and exit
+    help_full         // boolean: Show the full help message
+    show_hidden       // boolean: Show hidden parameters in the help message
 
     main:
 
@@ -103,7 +103,8 @@ workflow PIPELINE_INITIALISATION {
     //
 
     // Validate FASTQ input
-    ch_samplesheet = channel.fromList(samplesheetToList(input, "${projectDir}/assets/schema_input.json"))
+    ch_samplesheet = channel
+        .fromList(samplesheetToList(input, "${projectDir}/assets/schema_input.json"))
         .map { meta, sr1, sr2, lr ->
             validateInputSamplesheet(meta, sr1, sr2, lr)
         }
@@ -240,12 +241,12 @@ workflow PIPELINE_INITIALISATION {
 
 workflow PIPELINE_COMPLETION {
     take:
-    email //  string: email address
-    email_on_fail //  string: email address sent on pipeline failure
+    email           //  string: email address
+    email_on_fail   //  string: email address sent on pipeline failure
     plaintext_email // boolean: Send plain-text email instead of HTML
-    outdir //    path: Path to output directory where results will be published
+    outdir          //    path: Path to output directory where results will be published
     monochrome_logs // boolean: Disable ANSI colour codes in log output
-    multiqc_report //  string: Path to MultiQC report
+    multiqc_report  //  string: Path to MultiQC report
 
     main:
     summary_params = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
@@ -573,9 +574,9 @@ def toolCitationText() {
         paper_citation,
         "Tools used in the workflow included:",
         text_seq_qc,
-        (!params.skip_shortread_qc && !params.skip_clipping) ? text_shortread_qc : "",
-        (params.host_fasta || params.host_genome || !params.skip_binning || params.ancient_dna || params.run_ale || params.run_deepmased) ? text_mapping : "",
-        (!params.skip_longread_qc && longread_qc_tools) ? text_longread_qc : "",
+        !params.skip_shortread_qc && !params.skip_clipping ? text_shortread_qc : "",
+        params.host_fasta || params.host_genome || !params.skip_binning || params.ancient_dna || params.run_ale || params.run_deepmased ? text_mapping : "",
+        !params.skip_longread_qc && longread_qc_tools ? text_longread_qc : "",
         params.bbnorm ? text_bbnorm : "",
         assembly_tools ? text_assembly : "",
         assembly_qc_tools ? text_assembly_qc : "",
@@ -583,9 +584,9 @@ def toolCitationText() {
         gene_prediction_tools ? text_gene_prediction : "",
         params.run_virus_identification ? text_virus_id : "",
         params.bin_domain_classification_tool == "tiara" ? text_tiara : "",
-        (!params.skip_binning && binning_tools) ? text_binning : "",
-        (!params.skip_binqc && params.refine_bins_dastool) ? text_bin_refinement : "",
-        (!params.skip_binqc && binqc_tools) ? text_binqc : "",
+        !params.skip_binning && binning_tools ? text_binning : "",
+        !params.skip_binqc && params.refine_bins_dastool ? text_bin_refinement : "",
+        !params.skip_binqc && binqc_tools ? text_binqc : "",
         !params.skip_gtdbtk ? text_gtdbtk : "",
         params.ancient_dna ? text_ancient_dna : "",
         "Pipeline results statistics were summarised with MultiQC (Ewels et al. 2016).",
@@ -735,6 +736,9 @@ def toolBibliographyText() {
             references << "<li>Danecek, P., Bonfield, J. K., Liddle, J., Marshall, J., Stackmayer, V., Li, H., ... & SAMtools Subgroup. (2021). Twelve years of SAMtools and BCFtools. GigaScience, 10(2), giab008. doi: 10.1093/gigascience/giab008</li>"
             references << "<li>Li, H., Handsaker, B., Wysoker, A., Fennell, T., Ruan, J., Homer, N., … 1000 Genome Project Data Processing Subgroup. (2009). The Sequence Alignment/Map format and SAMtools. Bioinformatics, 25(16), 2078–2079. doi: 10.1093/bioinformatics/btp352</li>"
         }
+    }
+    if (!params.skip_myloasm) {
+        references << "<li>Shaw, J., Marin, M.G. & Li, H. High-resolution metagenome assembly for modern long reads with myloasm. Nat Biotechnol (2026). doi: 10.1038/s41587-026-03053-z</li>"
     }
 
     def reference_text = references.join(' ').trim()

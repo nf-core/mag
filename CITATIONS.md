@@ -148,6 +148,10 @@ If you are limited in the number of references, cite according to the version yo
 
   > Benoit, G., Raguideau, S., James, R. et al. High-quality metagenome assembly from long accurate reads with metaMDBG. Nat Biotechnol 42, 1378–1383 (2024). doi: 10.1038/s41587-023-01983-6
 
+- [myloasm](https://doi.org/10.1038/s41587-026-03053-z)
+
+> Shaw, J., Marin, M.G. & Li, H. High-resolution metagenome assembly for modern long reads with myloasm. Nat Biotechnol (2026). doi: 10.1038/s41587-026-03053-z
+
 - [minimap2](https://doi.org/10.1093/bioinformatics/bty191)
 
   > Li, H. (2018). Minimap2: pairwise alignment for nucleotide sequences. Bioinformatics , 34(18), 3094–3100. doi: 10.1093/bioinformatics/bty191
