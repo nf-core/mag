@@ -1,0 +1,120 @@
+{
+    "output-names": {
+        "content": [
+            [
+                "Annotation/Prokka/external/MEGAHIT-MaxBin2-minigut.001/MEGAHIT-MaxBin2-minigut.001.err",
+                "Annotation/Prokka/external/MEGAHIT-MaxBin2-minigut.001/MEGAHIT-MaxBin2-minigut.001.faa",
+                "Annotation/Prokka/external/MEGAHIT-MaxBin2-minigut.001/MEGAHIT-MaxBin2-minigut.001.ffn",
+                "Annotation/Prokka/external/MEGAHIT-MaxBin2-minigut.001/MEGAHIT-MaxBin2-minigut.001.fna",
+                "Annotation/Prokka/external/MEGAHIT-MaxBin2-minigut.001/MEGAHIT-MaxBin2-minigut.001.fsa",
+                "Annotation/Prokka/external/MEGAHIT-MaxBin2-minigut.001/MEGAHIT-MaxBin2-minigut.001.gbk",
+                "Annotation/Prokka/external/MEGAHIT-MaxBin2-minigut.001/MEGAHIT-MaxBin2-minigut.001.gff",
+                "Annotation/Prokka/external/MEGAHIT-MaxBin2-minigut.001/MEGAHIT-MaxBin2-minigut.001.log",
+                "Annotation/Prokka/external/MEGAHIT-MaxBin2-minigut.001/MEGAHIT-MaxBin2-minigut.001.sqn",
+                "Annotation/Prokka/external/MEGAHIT-MaxBin2-minigut.001/MEGAHIT-MaxBin2-minigut.001.tbl",
+                "Annotation/Prokka/external/MEGAHIT-MaxBin2-minigut.001/MEGAHIT-MaxBin2-minigut.001.tsv",
+                "Annotation/Prokka/external/MEGAHIT-MaxBin2-minigut.001/MEGAHIT-MaxBin2-minigut.001.txt",
+                "Annotation/Prokka/external/SPAdes-MaxBin2-test_minigut.002/SPAdes-MaxBin2-test_minigut.002.err",
+                "Annotation/Prokka/external/SPAdes-MaxBin2-test_minigut.002/SPAdes-MaxBin2-test_minigut.002.faa",
+                "Annotation/Prokka/external/SPAdes-MaxBin2-test_minigut.002/SPAdes-MaxBin2-test_minigut.002.ffn",
+                "Annotation/Prokka/external/SPAdes-MaxBin2-test_minigut.002/SPAdes-MaxBin2-test_minigut.002.fna",
+                "Annotation/Prokka/external/SPAdes-MaxBin2-test_minigut.002/SPAdes-MaxBin2-test_minigut.002.fsa",
+                "Annotation/Prokka/external/SPAdes-MaxBin2-test_minigut.002/SPAdes-MaxBin2-test_minigut.002.gbk",
+                "Annotation/Prokka/external/SPAdes-MaxBin2-test_minigut.002/SPAdes-MaxBin2-test_minigut.002.gff",
+                "Annotation/Prokka/external/SPAdes-MaxBin2-test_minigut.002/SPAdes-MaxBin2-test_minigut.002.log",
+                "Annotation/Prokka/external/SPAdes-MaxBin2-test_minigut.002/SPAdes-MaxBin2-test_minigut.002.sqn",
+                "Annotation/Prokka/external/SPAdes-MaxBin2-test_minigut.002/SPAdes-MaxBin2-test_minigut.002.tbl",
+                "Annotation/Prokka/external/SPAdes-MaxBin2-test_minigut.002/SPAdes-MaxBin2-test_minigut.002.tsv",
+                "Annotation/Prokka/external/SPAdes-MaxBin2-test_minigut.002/SPAdes-MaxBin2-test_minigut.002.txt",
+                "Annotation/Prokka/external/SPAdes-MaxBin2-test_minigut_sample2.001/SPAdes-MaxBin2-test_minigut_sample2.001.err",
+                "Annotation/Prokka/external/SPAdes-MaxBin2-test_minigut_sample2.001/SPAdes-MaxBin2-test_minigut_sample2.001.faa",
+                "Annotation/Prokka/external/SPAdes-MaxBin2-test_minigut_sample2.001/SPAdes-MaxBin2-test_minigut_sample2.001.ffn",
+                "Annotation/Prokka/external/SPAdes-MaxBin2-test_minigut_sample2.001/SPAdes-MaxBin2-test_minigut_sample2.001.fna",
+                "Annotation/Prokka/external/SPAdes-MaxBin2-test_minigut_sample2.001/SPAdes-MaxBin2-test_minigut_sample2.001.fsa",
+                "Annotation/Prokka/external/SPAdes-MaxBin2-test_minigut_sample2.001/SPAdes-MaxBin2-test_minigut_sample2.001.gbk",
+                "Annotation/Prokka/external/SPAdes-MaxBin2-test_minigut_sample2.001/SPAdes-MaxBin2-test_minigut_sample2.001.gff",
+                "Annotation/Prokka/external/SPAdes-MaxBin2-test_minigut_sample2.001/SPAdes-MaxBin2-test_minigut_sample2.001.log",
+                "Annotation/Prokka/external/SPAdes-MaxBin2-test_minigut_sample2.001/SPAdes-MaxBin2-test_minigut_sample2.001.sqn",
+                "Annotation/Prokka/external/SPAdes-MaxBin2-test_minigut_sample2.001/SPAdes-MaxBin2-test_minigut_sample2.001.tbl",
+                "Annotation/Prokka/external/SPAdes-MaxBin2-test_minigut_sample2.001/SPAdes-MaxBin2-test_minigut_sample2.001.tsv",
+                "Annotation/Prokka/external/SPAdes-MaxBin2-test_minigut_sample2.001/SPAdes-MaxBin2-test_minigut_sample2.001.txt",
+                "GenomeBinning/Dereplication/dereplicated_bins.tsv",
+                "GenomeBinning/Dereplication/dereplicated_bins/MEGAHIT-MaxBin2-minigut.001.fa.gz",
+                "GenomeBinning/Dereplication/dereplicated_bins/SPAdes-MaxBin2-test_minigut.002.fa.gz",
+                "GenomeBinning/Dereplication/dereplicated_bins/SPAdes-MaxBin2-test_minigut_sample2.001.fa.gz",
+                "GenomeBinning/QC/CheckM2/external-external-unclassified-unrefined-minigut/checkm2.log",
+                "GenomeBinning/QC/CheckM2/external-external-unclassified-unrefined-minigut/diamond_output/DIAMOND_RESULTS.tsv",
+                "GenomeBinning/QC/CheckM2/external-external-unclassified-unrefined-minigut/protein_files/MEGAHIT-MaxBin2-minigut.001.faa",
+                "GenomeBinning/QC/CheckM2/external-external-unclassified-unrefined-minigut/protein_files/MEGAHIT-MaxBin2-minigut.002.faa",
+                "GenomeBinning/QC/CheckM2/external-external-unclassified-unrefined-minigut/protein_files/SPAdes-MaxBin2-test_minigut.002.faa",
+                "GenomeBinning/QC/CheckM2/external-external-unclassified-unrefined-minigut/protein_files/SPAdes-MaxBin2-test_minigut_sample2.001.faa",
+                "GenomeBinning/QC/CheckM2/external-external-unclassified-unrefined-minigut/quality_report.tsv",
+                "GenomeBinning/QC/CheckM2/external-external-unclassified-unrefined-minigut_checkm2_report.tsv",
+                "GenomeBinning/QC/checkm2_summary.tsv",
+                "GenomeBinning/bin_summary.tsv",
+                "Taxonomy/GTDB-Tk/all/all/all_bins/all-all-all-all-all_bins/align/all-all-all-all-all_bins.bac120.filtered.tsv",
+                "Taxonomy/GTDB-Tk/all/all/all_bins/all-all-all-all-all_bins/align/all-all-all-all-all_bins.bac120.msa.fasta.gz",
+                "Taxonomy/GTDB-Tk/all/all/all_bins/all-all-all-all-all_bins/align/all-all-all-all-all_bins.bac120.user_msa.fasta.gz",
+                "Taxonomy/GTDB-Tk/all/all/all_bins/all-all-all-all-all_bins/all-all-all-all-all_bins.bac120.summary.tsv",
+                "Taxonomy/GTDB-Tk/all/all/all_bins/all-all-all-all-all_bins/all-all-all-all-all_bins.log",
+                "Taxonomy/GTDB-Tk/all/all/all_bins/all-all-all-all-all_bins/all-all-all-all-all_bins.warnings.log",
+                "Taxonomy/GTDB-Tk/all/all/all_bins/all-all-all-all-all_bins/classify/all-all-all-all-all_bins.bac120.classify.tree",
+                "Taxonomy/GTDB-Tk/all/all/all_bins/all-all-all-all-all_bins/classify/all-all-all-all-all_bins.bac120.summary.tsv",
+                "Taxonomy/GTDB-Tk/all/all/all_bins/all-all-all-all-all_bins/classify/ani_screen/all-all-all-all-all_bins.bac120.ani_summary.tsv",
+                "Taxonomy/GTDB-Tk/all/all/all_bins/all-all-all-all-all_bins/gtdbtk.json",
+                "Taxonomy/GTDB-Tk/all/all/all_bins/all-all-all-all-all_bins/identify/all-all-all-all-all_bins.ar53.markers_summary.tsv",
+                "Taxonomy/GTDB-Tk/all/all/all_bins/all-all-all-all-all_bins/identify/all-all-all-all-all_bins.bac120.markers_summary.tsv",
+                "Taxonomy/GTDB-Tk/all/all/all_bins/all-all-all-all-all_bins/identify/all-all-all-all-all_bins.failed_genomes.tsv",
+                "Taxonomy/GTDB-Tk/all/all/all_bins/all-all-all-all-all_bins/identify/all-all-all-all-all_bins.translation_table_summary.tsv",
+                "Taxonomy/GTDB-Tk/gtdbtk_summary.tsv"
+            ]
+        ],
+        "timestamp": "2026-10-15T09:22:40.096403248",
+        "meta": {
+            "nf-test": "0.9.4",
+            "nextflow": "26.04.6"
+        }
+    },
+    "-profile test_bins_input": {
+        "content": [
+            11,
+            {
+                "BIN_SUMMARY": {
+                    "pandas": "1.4.3",
+                    "python": "3.10.6"
+                },
+                "CHECKM2_PREDICT": {
+                    "checkm2": "1.1.0"
+                },
+                "CONCAT_CHECKM2_TSV": {
+                    "qsv": "5.1.0"
+                },
+                "GALAH": {
+                    "galah": "0.4.2"
+                },
+                "GTDBTK_CLASSIFYWF": {
+                    "gtdb_db": "r232",
+                    "gtdbtk": "2.7.2"
+                },
+                "GTDBTK_DB_PREPARATION": {
+                    "tar": 1.34
+                },
+                "GTDBTK_SUMMARY": {
+                    "pandas": "1.4.3",
+                    "python": "3.10.6"
+                },
+                "PROKKA": {
+                    "prokka": "1.15.6"
+                },
+                "Workflow": {
+                    "nf-core/mag": "v5.6.0dev"
+                }
+            }
+        ],
+        "timestamp": "2026-10-15T09:22:40.070388458",
+        "meta": {
+            "nf-test": "0.9.4",
+            "nextflow": "26.04.6"
+        }
+    }
+}

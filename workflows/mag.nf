@@ -59,6 +59,7 @@ workflow MAG {
     ch_raw_short_reads // channel: samplesheet read in from --input
     ch_raw_long_reads
     ch_input_assemblies
+    ch_input_bins
     multiqc_config
     multiqc_logo
     multiqc_methods_description
@@ -488,36 +489,48 @@ workflow MAG {
             ch_input_for_postbinning_unbins = ch_binning_results_unbins
         }
 
+        ch_input_for_postbinning_bins = ch_input_for_postbinning_bins.mix(ch_input_bins)
+
         ch_input_for_postbinning = params.exclude_unbins_from_postbinning
             ? ch_input_for_postbinning_bins
             : ch_input_for_postbinning_bins.mix(ch_input_for_postbinning_unbins)
 
-        DEPTHS(ch_input_for_postbinning, BINNING.out.metabat2depths)
-        ch_versions = ch_versions.mix(DEPTHS.out.versions)
+        if (params.bins_input) {
+            // BIN_SUMMARY joins on a bin column that DEPTHS normally provides
+            ch_input_for_binsummary = ch_input_bins
+                .flatMap { _meta, bins -> [bins].flatten().collect { bin -> bin.name - ~/\.gz$/ } }
+                .collectFile(name: 'bins.tsv', seed: 'bin', newLine: true, sort: true)
+        }
+        else {
+            DEPTHS(ch_input_for_postbinning, BINNING.out.metabat2depths)
+            ch_versions = ch_versions.mix(DEPTHS.out.versions)
 
-        ch_input_for_binsummary = DEPTHS.out.depths_summary
+            ch_input_for_binsummary = DEPTHS.out.depths_summary
+        }
 
         /*
             Generate contig2bin map files for all bins
         */
 
-        // generate a contig2bin map
-        // separate the contig files, use Nextflow splitFasta to extract header name
-        // and add other metadata from the metamap into a string with a prefixed header
-        // then use collectFile to save this as a tsv file.
-        ch_allcontig2binmap = ch_input_for_postbinning
-            .transpose()
-            .map { meta, binfile -> [meta + [bin_id: binfile.name - ~/\.gz$/], binfile] }
-            .splitFasta(record: [header: true], elem: 1)
-            .map { meta, contig_header ->
-                "assembly_id\tcontig_id\tbinner\tbin_id\n${meta['assembler']}-${meta['id']}\t${contig_header['header']}\t${meta['binner']}\t${meta['bin_id']}\n"
-            }
-            .collectFile(
-                name: 'contig_to_bin_map.tsv',
-                storeDir: params.outdir + '/GenomeBinning/contig_to_bin/',
-                keepHeader: true,
-                sort: true,
-            )
+        if (!params.bins_input) {
+            // generate a contig2bin map
+            // separate the contig files, use Nextflow splitFasta to extract header name
+            // and add other metadata from the metamap into a string with a prefixed header
+            // then use collectFile to save this as a tsv file.
+            ch_allcontig2binmap = ch_input_for_postbinning
+                .transpose()
+                .map { meta, binfile -> [meta + [bin_id: binfile.name - ~/\.gz$/], binfile] }
+                .splitFasta(record: [header: true], elem: 1)
+                .map { meta, contig_header ->
+                    "assembly_id\tcontig_id\tbinner\tbin_id\n${meta['assembler']}-${meta['id']}\t${contig_header['header']}\t${meta['binner']}\t${meta['bin_id']}\n"
+                }
+                .collectFile(
+                    name: 'contig_to_bin_map.tsv',
+                    storeDir: params.outdir + '/GenomeBinning/contig_to_bin/',
+                    keepHeader: true,
+                    sort: true,
+                )
+        }
 
         /*
         * Bin QC subworkflows: for checking bin completeness with either BUSCO, CHECKM, CHECKM2, and/or GUNC

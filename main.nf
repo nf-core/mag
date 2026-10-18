@@ -30,6 +30,7 @@ params {
     // Input options
     input: Path?
     assembly_input: Path?
+    bins_input: Path?
     single_end: Boolean
 
     // Short read preprocessing options
@@ -276,6 +277,7 @@ workflow NFCORE_MAG {
     raw_short_reads // channel: samplesheet read in from --input
     raw_long_reads
     input_assemblies
+    input_bins
 
     main:
 
@@ -286,6 +288,7 @@ workflow NFCORE_MAG {
         raw_short_reads,
         raw_long_reads,
         input_assemblies,
+        input_bins,
         params.multiqc_config,
         params.multiqc_logo,
         params.multiqc_methods_description,
@@ -325,6 +328,7 @@ workflow {
         PIPELINE_INITIALISATION.out.raw_short_reads,
         PIPELINE_INITIALISATION.out.raw_long_reads,
         PIPELINE_INITIALISATION.out.input_assemblies,
+        PIPELINE_INITIALISATION.out.input_bins,
     )
     //
     // SUBWORKFLOW: Run completion tasks
