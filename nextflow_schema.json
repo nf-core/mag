@@ -721,6 +721,12 @@
                     "type": "boolean",
                     "description": "Specify to skip CDS/product searching in Prokka runs"
                 },
+                "bakta_db": {
+                    "type": "string",
+                    "description": "Local tar.gz archive or uncompressed directory of a Bakta database. If not given, it is downloaded (see `--bakta_db_downloadtype`).",
+                    "format": "path",
+                    "exists": true
+                },
                 "bakta_db_downloadtype": {
                     "type": "string",
                     "description": "Specify the download type for Bakta databases. Options are 'full' (30+Gb) or 'light' (~1.3Gb).",

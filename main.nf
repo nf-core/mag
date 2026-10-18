@@ -178,6 +178,7 @@ params {
     prokka_with_compliance: Boolean
     prokka_compliance_centre: String?
     skip_bakta: Boolean
+    bakta_db: Path?
     bakta_db_downloadtype: String = 'full'
     bakta_with_compliance: Boolean
     bakta_fast_mode: Boolean

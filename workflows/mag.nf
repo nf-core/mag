@@ -43,8 +43,9 @@ include { SEQKIT_SEQ as SEQKIT_SEQ_MINCONTIGSIZE           } from '../modules/nf
 include { SEQKIT_SEQ as SEQKIT_SEQ_MINCONTIGSIZE_CORRECTED } from '../modules/nf-core/seqkit/seq/main'
 include { DEEPMASED_FEATURES                               } from '../modules/nf-core/deepmased/features/main'
 include { DEEPMASED_PREDICT                                } from '../modules/nf-core/deepmased/predict/main'
-include { BAKTA_BAKTA                                      } from '../modules/nf-core/bakta/bakta/main'     
-include { BAKTA_BAKTADBDOWNLOAD                            } from '../modules/nf-core/bakta/baktadbdownload/main'                                                                                                                                                                                         
+include { BAKTA_BAKTA                                      } from '../modules/nf-core/bakta/bakta/main'
+include { UNTAR as BAKTA_UNTAR                             } from '../modules/nf-core/untar/main'
+include { BAKTA_BAKTADBDOWNLOAD                            } from '../modules/nf-core/bakta/baktadbdownload/main'
 
 //
 // MODULE: Local to the pipeline
@@ -682,11 +683,21 @@ if (!params.skip_prokka || !params.skip_bakta) {
         }
 
         if (!params.skip_bakta) {
-            BAKTA_BAKTADBDOWNLOAD()
+            if (params.bakta_db && params.bakta_db.name.endsWith('.tar.gz')) {
+                BAKTA_UNTAR([[id: 'bakta_db'], params.bakta_db])
+                ch_bakta_db = BAKTA_UNTAR.out.untar.map { _meta, db -> db }
+            }
+            else if (params.bakta_db) {
+                ch_bakta_db = channel.value(params.bakta_db)
+            }
+            else {
+                BAKTA_BAKTADBDOWNLOAD()
+                ch_bakta_db = BAKTA_BAKTADBDOWNLOAD.out.db
+            }
 
             BAKTA_BAKTA(
                 ch_bins_for_annotation,
-                BAKTA_BAKTADBDOWNLOAD.out.db,
+                ch_bakta_db,
                 [],
                 [],
                 [],
