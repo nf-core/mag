@@ -43,6 +43,9 @@ include { SEQKIT_SEQ as SEQKIT_SEQ_MINCONTIGSIZE           } from '../modules/nf
 include { SEQKIT_SEQ as SEQKIT_SEQ_MINCONTIGSIZE_CORRECTED } from '../modules/nf-core/seqkit/seq/main'
 include { DEEPMASED_FEATURES                               } from '../modules/nf-core/deepmased/features/main'
 include { DEEPMASED_PREDICT                                } from '../modules/nf-core/deepmased/predict/main'
+include { BAKTA_BAKTA                                      } from '../modules/nf-core/bakta/bakta/main'
+include { UNTAR as BAKTA_UNTAR                             } from '../modules/nf-core/untar/main'
+include { BAKTA_BAKTADBDOWNLOAD                            } from '../modules/nf-core/bakta/baktadbdownload/main'
 
 //
 // MODULE: Local to the pipeline
@@ -650,16 +653,16 @@ workflow MAG {
         /*
          * Prokka: Genome annotation
          */
+if (!params.skip_prokka || !params.skip_bakta) {
 
-        if (!params.skip_prokka) {
             if (params.dereplicate && !params.dereplicate_annotate_all) {
-                ch_bins_for_prokka = ch_dereplicated_bins.map { meta, bin ->
+                ch_bins_for_annotation = ch_dereplicated_bins.map { meta, bin ->
                     def meta_new = meta + [id: bin.getName() - ~/\.fa(sta)?(\.gz)?$/]
                     [meta_new, bin]
                 }
             }
             else {
-                ch_bins_for_prokka = ch_input_for_postbinning
+                ch_bins_for_annotation = ch_input_for_postbinning
                     .transpose()
                     .map { meta, bin ->
                         def meta_new = meta + [id: bin.getName() - ~/\.fa(sta)?(\.gz)?$/]
@@ -670,12 +673,38 @@ workflow MAG {
                     }
             }
 
-            PROKKA(
-                ch_bins_for_prokka,
+
+        if (!params.skip_prokka) {
+               PROKKA(
+                ch_bins_for_annotation,
                 [],
                 [],
             )
         }
+
+        if (!params.skip_bakta) {
+            if (params.bakta_db && params.bakta_db.name.endsWith('.tar.gz')) {
+                BAKTA_UNTAR([[id: 'bakta_db'], params.bakta_db])
+                ch_bakta_db = BAKTA_UNTAR.out.untar.map { _meta, db -> db }
+            }
+            else if (params.bakta_db) {
+                ch_bakta_db = channel.value(params.bakta_db)
+            }
+            else {
+                BAKTA_BAKTADBDOWNLOAD()
+                ch_bakta_db = BAKTA_BAKTADBDOWNLOAD.out.db
+            }
+
+            BAKTA_BAKTA(
+                ch_bins_for_annotation,
+                ch_bakta_db,
+                [],
+                [],
+                [],
+                []
+            )
+        }
+}
 
         if (params.metaeuk_db || params.metaeuk_mmseqs_db) {
             ch_bins_for_metaeuk = ch_input_for_postbinning
@@ -745,6 +774,10 @@ workflow MAG {
     if (!params.skip_binning) {
         if (!params.skip_prokka) {
             ch_multiqc_files = ch_multiqc_files.mix(PROKKA.out.txt.collect { _meta, report -> report }.ifEmpty([]))
+        }
+
+        if (!params.skip_bakta) {
+            ch_multiqc_files = ch_multiqc_files.mix(BAKTA_BAKTA.out.txt.collect { _meta, report -> report }.ifEmpty([]))
         }
 
         if (!params.skip_binqc) {

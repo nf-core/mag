@@ -721,6 +721,32 @@
                     "type": "boolean",
                     "description": "Specify to skip CDS/product searching in Prokka runs"
                 },
+                "bakta_db": {
+                    "type": "string",
+                    "description": "Local tar.gz archive or uncompressed directory of a Bakta database. If not given, it is downloaded (see `--bakta_db_downloadtype`).",
+                    "format": "path",
+                    "exists": true
+                },
+                "bakta_db_downloadtype": {
+                    "type": "string",
+                    "description": "Specify the download type for Bakta databases. Options are 'full' (30+Gb) or 'light' (~1.3Gb).",
+                    "help_text": "Bakta documentation for this parameter can be found here: https://github.com/oschwengers/bakta#database",
+                    "enum": ["full", "light"],
+                    "default": "full"
+                },
+                "bakta_with_compliance": {
+                    "type": "boolean",
+                    "help_text": "Force Genbank/ENA/DDJB compliance.",
+                    "description": "Turn on Bakta compliance mode for truncating contig names for NCBI/ENA compatibility."
+                },
+                "bakta_fast_mode": {
+                    "type": "boolean",
+                    "description": "Specify to skip CDS/product searching in Bakta runs"
+                },
+                "skip_bakta": {
+                    "type": "boolean",
+                    "description": "Skip Bakta genome annotation."
+                },
                 "skip_metaeuk": {
                     "type": "boolean",
                     "description": "[DEPRECATED] This parameter no longer has any effect and will be removed in a future release. MetaEuk only runs when `--metaeuk_db` or `--metaeuk_mmseqs_db` is supplied."
