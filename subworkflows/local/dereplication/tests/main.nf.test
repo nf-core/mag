@@ -3,6 +3,7 @@ nextflow_workflow {
     name "Test Subworkflow DEREPLICATION"
     script "../main.nf"
     workflow "DEREPLICATION"
+    config "./nextflow.config"
 
     tag "subworkflows"
     tag "subworkflows_"

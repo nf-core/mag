@@ -29,7 +29,7 @@
                         {
                             "id": "study"
                         },
-                        "/project/6047190/ronj2303/mag/.nf-test/tests/6d52f1237f40a755058ce9369735623e/work/a0/0eb7ff7ac3b42480436acc9ea29fa4/dereplicated_bins.tsv"
+                        "dereplicated_bins.tsv:md5,e4eee6bbc3e7186884ebf829f468b4c0"
                     ]
                 ],
                 "cluster_tsv": [
@@ -37,7 +37,7 @@
                         {
                             "id": "study"
                         },
-                        "/project/6047190/ronj2303/mag/.nf-test/tests/6d52f1237f40a755058ce9369735623e/work/a0/0eb7ff7ac3b42480436acc9ea29fa4/dereplicated_bins.tsv"
+                        "dereplicated_bins.tsv:md5,e4eee6bbc3e7186884ebf829f468b4c0"
                     ]
                 ],
                 "dereplicated_bins": [
