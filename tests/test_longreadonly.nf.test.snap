@@ -2,6 +2,50 @@
     "annotation": {
         "content": [
             [
+                "Annotation/Bakta/FLYE/FLYE-MaxBin2-minigut.001.embl",
+                "Annotation/Bakta/FLYE/FLYE-MaxBin2-minigut.001.faa",
+                "Annotation/Bakta/FLYE/FLYE-MaxBin2-minigut.001.ffn",
+                "Annotation/Bakta/FLYE/FLYE-MaxBin2-minigut.001.fna",
+                "Annotation/Bakta/FLYE/FLYE-MaxBin2-minigut.001.gbff",
+                "Annotation/Bakta/FLYE/FLYE-MaxBin2-minigut.001.gff3",
+                "Annotation/Bakta/FLYE/FLYE-MaxBin2-minigut.001.hypotheticals.faa",
+                "Annotation/Bakta/FLYE/FLYE-MaxBin2-minigut.001.hypotheticals.tsv",
+                "Annotation/Bakta/FLYE/FLYE-MaxBin2-minigut.001.json",
+                "Annotation/Bakta/FLYE/FLYE-MaxBin2-minigut.001.tsv",
+                "Annotation/Bakta/FLYE/FLYE-MaxBin2-minigut.001.txt",
+                "Annotation/Bakta/FLYE/FLYE-MaxBin2-minigut.002.embl",
+                "Annotation/Bakta/FLYE/FLYE-MaxBin2-minigut.002.faa",
+                "Annotation/Bakta/FLYE/FLYE-MaxBin2-minigut.002.ffn",
+                "Annotation/Bakta/FLYE/FLYE-MaxBin2-minigut.002.fna",
+                "Annotation/Bakta/FLYE/FLYE-MaxBin2-minigut.002.gbff",
+                "Annotation/Bakta/FLYE/FLYE-MaxBin2-minigut.002.gff3",
+                "Annotation/Bakta/FLYE/FLYE-MaxBin2-minigut.002.hypotheticals.faa",
+                "Annotation/Bakta/FLYE/FLYE-MaxBin2-minigut.002.hypotheticals.tsv",
+                "Annotation/Bakta/FLYE/FLYE-MaxBin2-minigut.002.json",
+                "Annotation/Bakta/FLYE/FLYE-MaxBin2-minigut.002.tsv",
+                "Annotation/Bakta/FLYE/FLYE-MaxBin2-minigut.002.txt",
+                "Annotation/Bakta/METAMDBG/METAMDBG-MaxBin2-minigut.001.embl",
+                "Annotation/Bakta/METAMDBG/METAMDBG-MaxBin2-minigut.001.faa",
+                "Annotation/Bakta/METAMDBG/METAMDBG-MaxBin2-minigut.001.ffn",
+                "Annotation/Bakta/METAMDBG/METAMDBG-MaxBin2-minigut.001.fna",
+                "Annotation/Bakta/METAMDBG/METAMDBG-MaxBin2-minigut.001.gbff",
+                "Annotation/Bakta/METAMDBG/METAMDBG-MaxBin2-minigut.001.gff3",
+                "Annotation/Bakta/METAMDBG/METAMDBG-MaxBin2-minigut.001.hypotheticals.faa",
+                "Annotation/Bakta/METAMDBG/METAMDBG-MaxBin2-minigut.001.hypotheticals.tsv",
+                "Annotation/Bakta/METAMDBG/METAMDBG-MaxBin2-minigut.001.json",
+                "Annotation/Bakta/METAMDBG/METAMDBG-MaxBin2-minigut.001.tsv",
+                "Annotation/Bakta/METAMDBG/METAMDBG-MaxBin2-minigut.001.txt",
+                "Annotation/Bakta/METAMDBG/METAMDBG-MaxBin2-minigut.002.embl",
+                "Annotation/Bakta/METAMDBG/METAMDBG-MaxBin2-minigut.002.faa",
+                "Annotation/Bakta/METAMDBG/METAMDBG-MaxBin2-minigut.002.ffn",
+                "Annotation/Bakta/METAMDBG/METAMDBG-MaxBin2-minigut.002.fna",
+                "Annotation/Bakta/METAMDBG/METAMDBG-MaxBin2-minigut.002.gbff",
+                "Annotation/Bakta/METAMDBG/METAMDBG-MaxBin2-minigut.002.gff3",
+                "Annotation/Bakta/METAMDBG/METAMDBG-MaxBin2-minigut.002.hypotheticals.faa",
+                "Annotation/Bakta/METAMDBG/METAMDBG-MaxBin2-minigut.002.hypotheticals.tsv",
+                "Annotation/Bakta/METAMDBG/METAMDBG-MaxBin2-minigut.002.json",
+                "Annotation/Bakta/METAMDBG/METAMDBG-MaxBin2-minigut.002.tsv",
+                "Annotation/Bakta/METAMDBG/METAMDBG-MaxBin2-minigut.002.txt",
                 "Annotation/Prodigal/FLYE/minigut/FLYE-minigut_prodigal.faa.gz",
                 "Annotation/Prodigal/FLYE/minigut/FLYE-minigut_prodigal.fna.gz",
                 "Annotation/Prodigal/FLYE/minigut/FLYE-minigut_prodigal.gff.gz",
@@ -60,6 +104,38 @@
                 "Annotation/Prokka/METAMDBG/METAMDBG-MaxBin2-minigut.002/METAMDBG-MaxBin2-minigut.002.txt"
             ],
             [
+                "FLYE-MaxBin2-minigut.001.faa:md5,6e684b027b4a68b1044fa0be70d34682",
+                "FLYE-MaxBin2-minigut.001.ffn:md5,e872225f3b12b18aa4553888e559d888",
+                "FLYE-MaxBin2-minigut.001.fna:md5,0d4ed89a6c949c069e128406eb0526b2",
+                "FLYE-MaxBin2-minigut.001.gff3:md5,5177db8c828860b8d7b1263859b92882",
+                "FLYE-MaxBin2-minigut.001.hypotheticals.faa:md5,ad2d7159079939cd5e2e5472c5b2d830",
+                "FLYE-MaxBin2-minigut.001.hypotheticals.tsv:md5,29c4d38f530d733236012e0abe57780f",
+                "FLYE-MaxBin2-minigut.001.tsv:md5,af5a7066605480181047bf0044ddb812",
+                "FLYE-MaxBin2-minigut.001.txt:md5,54eb197c77aef70d30735d4138c62c2f",
+                "FLYE-MaxBin2-minigut.002.faa:md5,8962570eae325f6fd6c6e22a8dbd5668",
+                "FLYE-MaxBin2-minigut.002.ffn:md5,03e7805c6a8a1d36c78f3c171babc09f",
+                "FLYE-MaxBin2-minigut.002.fna:md5,1cd346d692034983bf56402c1466f209",
+                "FLYE-MaxBin2-minigut.002.gff3:md5,6854a8426bdeb0edff70b621722cc740",
+                "FLYE-MaxBin2-minigut.002.hypotheticals.faa:md5,cc261d4eb65629a652eae5a9c0da9b1f",
+                "FLYE-MaxBin2-minigut.002.hypotheticals.tsv:md5,c8c005773f2aff8abc656a707cb47c5a",
+                "FLYE-MaxBin2-minigut.002.tsv:md5,10b40b653e563f4283e3e846e32847c7",
+                "FLYE-MaxBin2-minigut.002.txt:md5,42dfa68cdcbe9a83030c1781cbec914a",
+                "METAMDBG-MaxBin2-minigut.001.faa:md5,569411a1839384722038be96fd14ae6a",
+                "METAMDBG-MaxBin2-minigut.001.ffn:md5,564f75293820560520d68a13d61ca283",
+                "METAMDBG-MaxBin2-minigut.001.fna:md5,2059b08dd01752f298fdbf02123568f8",
+                "METAMDBG-MaxBin2-minigut.001.gff3:md5,42fb5aa8e9c58f7bc13494606ca429df",
+                "METAMDBG-MaxBin2-minigut.001.hypotheticals.faa:md5,93bf2ec6158ffe4e204b0c8262915724",
+                "METAMDBG-MaxBin2-minigut.001.hypotheticals.tsv:md5,6f11bd25f208f46ef0fc2f64d5f6403d",
+                "METAMDBG-MaxBin2-minigut.001.tsv:md5,4516c88bbf1e7acf51fd872ead37d25d",
+                "METAMDBG-MaxBin2-minigut.001.txt:md5,e604cdde8a7c165f090e366d940e323c",
+                "METAMDBG-MaxBin2-minigut.002.faa:md5,fda00f1ac5488dd4572628f6b733f622",
+                "METAMDBG-MaxBin2-minigut.002.ffn:md5,628090fae7fa6801e660263b45e4f1fb",
+                "METAMDBG-MaxBin2-minigut.002.fna:md5,ba01e6df8526dab1805646163902dd53",
+                "METAMDBG-MaxBin2-minigut.002.gff3:md5,3ca6f0fb024e927219ebafb8af00acb9",
+                "METAMDBG-MaxBin2-minigut.002.hypotheticals.faa:md5,0bec67d3eb4ab8100f127e1be2c456c7",
+                "METAMDBG-MaxBin2-minigut.002.hypotheticals.tsv:md5,a9ec53069cafb925952d293567ba091f",
+                "METAMDBG-MaxBin2-minigut.002.tsv:md5,f45da1a8aa2f9342906df558364988f7",
+                "METAMDBG-MaxBin2-minigut.002.txt:md5,237f1b7fd5fce7d30bf858fb4e16fee4",
                 "FLYE-minigut_prodigal.faa.gz:md5,220e2f100394d28bd62b03048f99ac19",
                 "FLYE-minigut_prodigal.fna.gz:md5,b97e36840fd59232bcf3d3743750cdca",
                 "FLYE-minigut_prodigal.gff.gz:md5,1bbcf7e9de2eecdeea4e7a14c8172bbe",
@@ -102,10 +178,10 @@
                 "METAMDBG-MaxBin2-minigut.002.txt:md5,6a3b8ff37f997bb0d47788ed20ef2bdf"
             ]
         ],
-        "timestamp": "2026-08-12T08:32:51.659878299",
+        "timestamp": "2026-10-23T17:01:32.129271298",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
+            "nextflow": "26.04.4"
         }
     },
     "qc": {
@@ -432,8 +508,11 @@
     },
     "-profile longreadonly": {
         "content": [
-            53,
+            58,
             {
+                "BAKTA_BAKTA": {
+                    "bakta": "1.12.0"
+                },
                 "BIN_SUMMARY": {
                     "pandas": "1.4.3",
                     "python": "3.10.6"
@@ -542,7 +621,7 @@
                 }
             }
         ],
-        "timestamp": "2026-09-28T01:46:32.581143979",
+        "timestamp": "2026-10-18T04:55:06.901916678",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
@@ -551,10 +630,12 @@
     "multiqc": {
         "content": [
             [
+                "multiqc/multiqc_data/bakta_feature_types.yaml",
                 "multiqc/multiqc_data/busco_plot_bacteria_odb10.yaml",
                 "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/multiqc.log",
                 "multiqc/multiqc_data/multiqc.parquet",
+                "multiqc/multiqc_data/multiqc_bakta.yaml",
                 "multiqc/multiqc_data/multiqc_busco.yaml",
                 "multiqc/multiqc_data/multiqc_citations.yaml",
                 "multiqc/multiqc_data/multiqc_data.json",
@@ -568,6 +649,8 @@
                 "multiqc/multiqc_data/prokka_plot.yaml",
                 "multiqc/multiqc_data/quast_num_contigs.yaml",
                 "multiqc/multiqc_data/quast_table.yaml",
+                "multiqc/multiqc_plots/pdf/bakta_feature_types-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/bakta_feature_types-pct.pdf",
                 "multiqc/multiqc_plots/pdf/busco_plot_bacteria_odb10-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/busco_plot_bacteria_odb10-pct.pdf",
                 "multiqc/multiqc_plots/pdf/prokka_plot-cnt.pdf",
@@ -575,6 +658,8 @@
                 "multiqc/multiqc_plots/pdf/quast_num_contigs-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/quast_num_contigs-pct.pdf",
                 "multiqc/multiqc_plots/pdf/quast_table.pdf",
+                "multiqc/multiqc_plots/png/bakta_feature_types-cnt.png",
+                "multiqc/multiqc_plots/png/bakta_feature_types-pct.png",
                 "multiqc/multiqc_plots/png/busco_plot_bacteria_odb10-cnt.png",
                 "multiqc/multiqc_plots/png/busco_plot_bacteria_odb10-pct.png",
                 "multiqc/multiqc_plots/png/prokka_plot-cnt.png",
@@ -582,6 +667,8 @@
                 "multiqc/multiqc_plots/png/quast_num_contigs-cnt.png",
                 "multiqc/multiqc_plots/png/quast_num_contigs-pct.png",
                 "multiqc/multiqc_plots/png/quast_table.png",
+                "multiqc/multiqc_plots/svg/bakta_feature_types-cnt.svg",
+                "multiqc/multiqc_plots/svg/bakta_feature_types-pct.svg",
                 "multiqc/multiqc_plots/svg/busco_plot_bacteria_odb10-cnt.svg",
                 "multiqc/multiqc_plots/svg/busco_plot_bacteria_odb10-pct.svg",
                 "multiqc/multiqc_plots/svg/prokka_plot-cnt.svg",
@@ -595,7 +682,7 @@
                 
             ]
         ],
-        "timestamp": "2026-08-12T08:32:52.318223817",
+        "timestamp": "2026-10-18T04:55:08.659352157",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"

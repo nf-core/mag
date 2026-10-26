@@ -2,6 +2,17 @@
     "annotation": {
         "content": [
             [
+                "Annotation/Bakta/MEGAHIT/MEGAHIT-MetaBAT2-test_minigut.1.embl",
+                "Annotation/Bakta/MEGAHIT/MEGAHIT-MetaBAT2-test_minigut.1.faa",
+                "Annotation/Bakta/MEGAHIT/MEGAHIT-MetaBAT2-test_minigut.1.ffn",
+                "Annotation/Bakta/MEGAHIT/MEGAHIT-MetaBAT2-test_minigut.1.fna",
+                "Annotation/Bakta/MEGAHIT/MEGAHIT-MetaBAT2-test_minigut.1.gbff",
+                "Annotation/Bakta/MEGAHIT/MEGAHIT-MetaBAT2-test_minigut.1.gff3",
+                "Annotation/Bakta/MEGAHIT/MEGAHIT-MetaBAT2-test_minigut.1.hypotheticals.faa",
+                "Annotation/Bakta/MEGAHIT/MEGAHIT-MetaBAT2-test_minigut.1.hypotheticals.tsv",
+                "Annotation/Bakta/MEGAHIT/MEGAHIT-MetaBAT2-test_minigut.1.json",
+                "Annotation/Bakta/MEGAHIT/MEGAHIT-MetaBAT2-test_minigut.1.tsv",
+                "Annotation/Bakta/MEGAHIT/MEGAHIT-MetaBAT2-test_minigut.1.txt",
                 "Annotation/Prodigal/MEGAHIT/test_minigut/MEGAHIT-test_minigut_prodigal.faa.gz",
                 "Annotation/Prodigal/MEGAHIT/test_minigut/MEGAHIT-test_minigut_prodigal.fna.gz",
                 "Annotation/Prodigal/MEGAHIT/test_minigut/MEGAHIT-test_minigut_prodigal.gff.gz",
@@ -24,6 +35,14 @@
                 "Annotation/Prokka/MEGAHIT/MEGAHIT-MetaBAT2-test_minigut.1/MEGAHIT-MetaBAT2-test_minigut.1.txt"
             ],
             [
+                "MEGAHIT-MetaBAT2-test_minigut.1.faa:md5,0bbd8d9f041167a9d259358480202a99",
+                "MEGAHIT-MetaBAT2-test_minigut.1.ffn:md5,9979fb401bf258ba79e936c325518833",
+                "MEGAHIT-MetaBAT2-test_minigut.1.fna:md5,4e95a3bf9880ad01b48bead3a0b0f7bf",
+                "MEGAHIT-MetaBAT2-test_minigut.1.gff3:md5,7c07da147dd5ddf00d0529f8f98d14a4",
+                "MEGAHIT-MetaBAT2-test_minigut.1.hypotheticals.faa:md5,71d428597bbb01297dbe7280a63fd03a",
+                "MEGAHIT-MetaBAT2-test_minigut.1.hypotheticals.tsv:md5,2b1f0b989ecd97ad1379dc69bd78f1fc",
+                "MEGAHIT-MetaBAT2-test_minigut.1.tsv:md5,fc631765ab24923c721d62c570f8fca9",
+                "MEGAHIT-MetaBAT2-test_minigut.1.txt:md5,ee3e39369982fbc16eeff8dd455acd02",
                 "MEGAHIT-test_minigut_prodigal.faa.gz:md5,d1ebce030c6e071fce9bd969163f2042",
                 "MEGAHIT-test_minigut_prodigal.fna.gz:md5,f996e4f7ba895eac532a511cb6e519ca",
                 "MEGAHIT-test_minigut_prodigal.gff.gz:md5,2b52f6ab2f4ad7ac813d6f7562f60d7f",
@@ -42,10 +61,10 @@
                 "MEGAHIT-MetaBAT2-test_minigut.1.txt:md5,8e3a1a9ae89afe966484b9eb5e47266b"
             ]
         ],
-        "timestamp": "2026-10-08T17:17:00.207031385",
+        "timestamp": "2026-10-23T18:50:49.743420178",
         "meta": {
-            "nf-test": "0.9.4",
-            "nextflow": "26.04.6"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.4"
         }
     },
     "qc": {
@@ -1294,10 +1313,13 @@
     },
     "-profile test_single_end": {
         "content": [
-            105,
+            107,
             {
                 "ADAPTERREMOVAL_SE": {
                     "adapterremoval": "2.3.2"
+                },
+                "BAKTA_BAKTA": {
+                    "bakta": "1.12.0"
                 },
                 "BCFTOOLS_CONSENSUS": {
                     "bcftools": 1.22
@@ -1475,9 +1497,9 @@
                 }
             }
         ],
-        "timestamp": "2026-10-08T17:16:59.955666283",
+        "timestamp": "2026-10-18T04:55:33.380165964",
         "meta": {
-            "nf-test": "0.9.4",
+            "nf-test": "0.9.5",
             "nextflow": "26.04.6"
         }
     },
@@ -1488,6 +1510,7 @@
                 "multiqc/multiqc_data/ar_length_count_plot_Discarded.yaml",
                 "multiqc/multiqc_data/ar_length_count_plot_Mate1.yaml",
                 "multiqc/multiqc_data/ar_retained_plot.yaml",
+                "multiqc/multiqc_data/bakta_feature_types.yaml",
                 "multiqc/multiqc_data/bowtie2_se_plot.yaml",
                 "multiqc/multiqc_data/checkm-first-table.yaml",
                 "multiqc/multiqc_data/fastqc-1-status-check-heatmap.yaml",
@@ -1512,6 +1535,7 @@
                 "multiqc/multiqc_data/multiqc.log",
                 "multiqc/multiqc_data/multiqc.parquet",
                 "multiqc/multiqc_data/multiqc_adapter_removal.yaml",
+                "multiqc/multiqc_data/multiqc_bakta.yaml",
                 "multiqc/multiqc_data/multiqc_bowtie2.yaml",
                 "multiqc/multiqc_data/multiqc_bowtie2_bowtie2-1.yaml",
                 "multiqc/multiqc_data/multiqc_bowtie2_bowtie2-2.yaml",
@@ -1535,6 +1559,8 @@
                 "multiqc/multiqc_plots/pdf/ar_length_count_plot_Mate1.pdf",
                 "multiqc/multiqc_plots/pdf/ar_retained_plot-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/ar_retained_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/bakta_feature_types-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/bakta_feature_types-pct.pdf",
                 "multiqc/multiqc_plots/pdf/bowtie2_se_plot-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/bowtie2_se_plot-pct.pdf",
                 "multiqc/multiqc_plots/pdf/checkm-first-table.pdf",
@@ -1568,6 +1594,8 @@
                 "multiqc/multiqc_plots/png/ar_length_count_plot_Mate1.png",
                 "multiqc/multiqc_plots/png/ar_retained_plot-cnt.png",
                 "multiqc/multiqc_plots/png/ar_retained_plot-pct.png",
+                "multiqc/multiqc_plots/png/bakta_feature_types-cnt.png",
+                "multiqc/multiqc_plots/png/bakta_feature_types-pct.png",
                 "multiqc/multiqc_plots/png/bowtie2_se_plot-cnt.png",
                 "multiqc/multiqc_plots/png/bowtie2_se_plot-pct.png",
                 "multiqc/multiqc_plots/png/checkm-first-table.png",
@@ -1601,6 +1629,8 @@
                 "multiqc/multiqc_plots/svg/ar_length_count_plot_Mate1.svg",
                 "multiqc/multiqc_plots/svg/ar_retained_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/ar_retained_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/bakta_feature_types-cnt.svg",
+                "multiqc/multiqc_plots/svg/bakta_feature_types-pct.svg",
                 "multiqc/multiqc_plots/svg/bowtie2_se_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/bowtie2_se_plot-pct.svg",
                 "multiqc/multiqc_plots/svg/checkm-first-table.svg",
@@ -1636,6 +1666,7 @@
                 "ar_length_count_plot_Discarded.yaml:md5,38bd5fbf7d0d0c209fdc6094b31895ce",
                 "ar_length_count_plot_Mate1.yaml:md5,e1da3cb2aefa03c331ced545e2912bb4",
                 "ar_retained_plot.yaml:md5,8dde263d7e320026adecda2e2275cf30",
+                "bakta_feature_types.yaml:md5,4c5e85d9e5456630950fb3176c604291",
                 "bowtie2_se_plot.yaml:md5,ac59dedb87fa1d8039f4603986e4d015",
                 "checkm-first-table.yaml:md5,652190bbd8be58d3d365beeec97422ad",
                 "fastqc-1-status-check-heatmap.yaml:md5,9c2b76a7b237bbc833da8c096a3b7ad4",
@@ -1657,14 +1688,15 @@
                 "fastqc_sequence_length_distribution_plot.yaml:md5,65d8d87d8ca970f93b1168c0d0c416e1",
                 "gtdbtk-first-table.yaml:md5,6adc5749010fcf132cbe29fb7d1bbe73",
                 "multiqc_adapter_removal.yaml:md5,a1af2581288dffacad44a69744f6d93b",
+                "multiqc_bakta.yaml:md5,f7d0a8e482322aeadf257f161499fcd4",
                 "multiqc_bowtie2.yaml:md5,b4e58a2943b5009634fa5da76214073d",
                 "multiqc_bowtie2_bowtie2-1.yaml:md5,b4e58a2943b5009634fa5da76214073d",
                 "multiqc_bowtie2_bowtie2-2.yaml:md5,0718437181f3f781e1e085ddb7dae253",
                 "multiqc_checkm.yaml:md5,7d15bf92e3ae14f9cd72ff1762b415e6",
-                "multiqc_citations.yaml:md5,332da3731e12b7a0d205f47685ddd53e",
+                "multiqc_citations.yaml:md5,b0ce5d1ec1e4f9afd5111a2183ab1d31",
                 "multiqc_fastqc.yaml:md5,2bbd80f21c5c264249bc935eada2ff41",
                 "multiqc_fastqc_fastqc-1.yaml:md5,b21efcd71ad261049a5aeaa238492f92",
-                "multiqc_general_stats.yaml:md5,c81abf85aa9ed1bc01a2c2ce24b379b8",
+                "multiqc_general_stats.yaml:md5,27def228ea9b917db1b2f98933f38b62",
                 "multiqc_gtdbtk.yaml:md5,2fb152df6adfa797d511a346e9d8acc0",
                 "multiqc_prokka.yaml:md5,62998c20f018edc54f01550096687980",
                 "multiqc_quast.yaml:md5,b7dae5bb61679ff9d5a3ede9898e5cfa",
@@ -1674,9 +1706,9 @@
                 "quast_table.yaml:md5,0c9c06e841a123865816dab15487b280"
             ]
         ],
-        "timestamp": "2026-10-08T17:17:00.778798326",
+        "timestamp": "2026-10-18T04:55:33.664359816",
         "meta": {
-            "nf-test": "0.9.4",
+            "nf-test": "0.9.5",
             "nextflow": "26.04.6"
         }
     },
