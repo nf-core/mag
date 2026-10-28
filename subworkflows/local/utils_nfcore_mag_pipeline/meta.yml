@@ -1,0 +1,82 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "pipeline_initialisation"
+description: Utility functions and common operations specific to nf-core/mag pipeline
+keywords:
+  - utilities
+  - pipeline
+  - mag
+  - metagenomics
+  - nf-core
+components:
+  - completionemail
+  - completionsummary
+  - imnotification
+  - utils_nfschema_plugin
+  - utils_nextflow_pipeline
+  - utils_nfcore_pipeline
+input:
+  - version:
+      type: val
+      description: Display version and exit
+  - validate_params:
+      type: val
+      description: Boolean whether to validate parameters against the schema at runtime
+  - _monochrome_logs:
+      type: val
+      description: Do not use coloured log outputs
+  - nextflow_cli_args:
+      type: val
+      description: List of positional nextflow CLI args
+  - outdir:
+      type: val
+      description: The output directory where the results will be saved
+  - input:
+      type: val
+      description: Path to input samplesheet
+output:
+  - raw_short_reads:
+      description: Raw short-read sequencing data
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - fastq1:
+            type: file
+            description: First pair of raw short-read FASTQ files
+            pattern: "*.{fastq,fq}.gz"
+        - fastq2:
+            type: file
+            description: Second pair of raw short-read FASTQ files
+            pattern: "*.{fastq,fq}.gz"
+  - raw_long_reads:
+      description: Raw long-read sequencing data
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - fastq:
+            type: file
+            description: Raw long-read FASTQ files
+            pattern: "*.{fastq,fq}.gz"
+  - input_assemblies:
+      description: Input assembly files if provided
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - fasta:
+            type: file
+            description: Input assembly files
+            pattern: "*.{fasta,fa}"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@jfy133"
+maintainers:
+  - "@jfy133"
+  - "@prototaxites"
+  - "@dialvarezs"
+  - "@d4straub"
+  - "@muabnezor"

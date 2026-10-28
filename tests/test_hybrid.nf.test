@@ -1,0 +1,169 @@
+nextflow_pipeline {
+
+    name "Test pipeline with test_hybrid profile"
+    script "../main.nf"
+    tag "pipeline"
+    tag "test_hybrid"
+    profile "test_hybrid"
+
+    test("-profile hybrid") {
+
+        when {
+            params {
+                outdir = "${outputDir}"
+            }
+        }
+
+        then {
+
+            // Output dir: QC_shortreads
+            def stable_name_qc_short = getAllFilesFromDir(
+                params.outdir, include: ['QC_shortreads/**'], relative: true, includeDir: false
+            )
+            def stable_path_qc_short = getAllFilesFromDir(
+                params.outdir, include: ['QC_shortreads/**'], ignoreFile: 'tests/.nftignore'
+            )
+            def bowtie2_logs = getAllFilesFromDir(
+                params.outdir, include: ['QC_shortreads/remove_*/*.bowtie2.log', 'Assembly/*/QC/*/*.bowtie2.log']
+            )
+
+            // Output dir: QC_longreads
+            def stable_name_qc_long = getAllFilesFromDir(
+                params.outdir, include: ['QC_longreads/**'], relative: true, includeDir: false
+            )
+            def stable_path_qc_long = getAllFilesFromDir(
+                params.outdir, include: ['QC_longreads/**'], ignoreFile: 'tests/.nftignore'
+            )
+
+            // Output dir: Assembly
+            def stable_name_assembly = getAllFilesFromDir(
+                params.outdir, include: ['Assembly/**'], relative: true, includeDir: false
+            )
+            def stable_path_assembly = getAllFilesFromDir(
+                params.outdir, include: ['Assembly/**'], ignoreFile: 'tests/.nftignore'
+            )
+            def assembly_quast_logs = getAllFilesFromDir(
+                params.outdir, include: ['Assembly/SPAdesHybrid/QC/*/QUAST/quast.log']
+            )
+            def spades_logs = getAllFilesFromDir(
+                params.outdir, include: ['Assembly/SPAdesHybrid/*.spades.log']
+            )
+
+            // Output dir: GenomeBinning
+            def stable_name_binning = getAllFilesFromDir(
+                params.outdir,
+                include: ['GenomeBinning/**'],
+                ignore: ['GenomeBinning/QC/BUSCO/**/{logs,prodigal_output,busco_sequences,hmmer_output}/**'],
+                relative: true,
+                includeDir: false
+            )
+            def stable_path_binning = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/**'], ignoreFile: 'tests/.nftignore'
+            )
+            def maxbin2_bins = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/MaxBin2/bins/*.fa.gz']
+            )
+            def maxbin2_unbins = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/MaxBin2/{discarded,unbinned/*}/*.fa.gz']
+            )
+            def metabat2_bins = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/MetaBAT2/bins/*.fa.gz']
+            )
+            def metabat2_unbins = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/MetaBAT2/{discarded,unbinned/*}/*.fa.gz']
+            )
+            def semibin2_bins = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/SemiBin2/bins/*.fa.gz']
+            )
+            def binning_quast_logs = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/QC/QUAST/*/quast.log']
+            )
+            def busco_logs = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/QC/BUSCO/*/*-busco.log']
+            )
+            def semibin2_logs = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/SemiBin2/log/*.log']
+            )
+            def bin_summary = path("${params.outdir}/GenomeBinning/bin_summary.tsv")
+            def quast_bin_summary = path("${params.outdir}/GenomeBinning/QC/quast_bin_summary.tsv")
+            def busco_summary = path("${params.outdir}/GenomeBinning/QC/busco_summary.tsv")
+
+            // Output dir: Annotation
+            def stable_name_annotation = getAllFilesFromDir(
+                params.outdir,
+                include: ['Annotation/**'],
+                ignore: ['Annotation/Prokka/**/*.tmp.*'],
+                relative: true,
+                includeDir: false
+            )
+            def stable_path_annotation = getAllFilesFromDir(
+                params.outdir, include: ['Annotation/**'], ignoreFile: 'tests/.nftignore'
+            )
+            def prokka_logs = getAllFilesFromDir(
+                params.outdir, include: ['Annotation/Prokka/**/*.log']
+            )
+            def prokka_gbk = getAllFilesFromDir(
+                params.outdir, include: ['Annotation/Prokka/**/*.gbk']
+            )
+            def prokka_sqn = getAllFilesFromDir(
+                params.outdir, include: ['Annotation/Prokka/**/*.sqn']
+            )
+            def prokka_tsv = getAllFilesFromDir(
+                params.outdir, include: ['Annotation/Prokka/**/*.tsv']
+            )
+
+            // Output directory: multiqc
+            def stable_name_multiqc = getAllFilesFromDir(
+                params.outdir, include: ['multiqc/**'], relative: true, includeDir: false
+            )
+            def stable_path_multiqc = getAllFilesFromDir(
+                params.outdir, include: ['multiqc/**'], ignoreFile: 'tests/.nftignore'
+            )
+
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.trace.succeeded().size(),
+                    removeNextflowVersion("${params.outdir}/pipeline_info/nf_core_mag_software_mqc_versions.yml"),
+                ).match() },
+                { assert snapshot(stable_name_qc_short,   stable_path_qc_short  ).match('qc_shortreads') },
+                { assert snapshot(stable_name_qc_long,    stable_path_qc_long   ).match('qc_longreads') },
+                { assert snapshot(stable_name_assembly,   stable_path_assembly  ).match('assembly') },
+                { assert snapshot(stable_name_binning,    stable_path_binning   ).match('binning') },
+                { assert snapshot(stable_name_annotation, stable_path_annotation).match('annotation') },
+                { assert snapshot(stable_name_multiqc,    stable_path_multiqc   ).match('multiqc') },
+
+                { assert snapshot(
+                    // FASTA content checks
+                    "MaxBin2 bins non-empty: ${maxbin2_bins.collect { f -> path("${f}").fasta.size() > 0 }.every()}",
+                    "MaxBin2 unbinned/discarded non-empty: ${maxbin2_unbins.collect { f -> path("${f}").fasta.size() >= 0 }.every()}",
+                    "MetaBAT2 bins non-empty: ${metabat2_bins.collect { f -> path("${f}").fasta.size() > 0 }.every()}",
+                    "MetaBAT2 unbinned/discarded non-empty: ${metabat2_unbins.collect { f -> path("${f}").fasta.size() >= 0 }.every()}",
+                    "SemiBin2 bins non-empty: ${semibin2_bins.collect { f -> path("${f}").fasta.size() > 0 }.every()}",
+                    // Prokka annotation file checks
+                    "Prokka GBK files contain LOCUS: ${prokka_gbk.collect { f -> path("${f}").text.contains('LOCUS') }.every()}",
+                    "Prokka SQN files non-empty: ${prokka_sqn.collect { f -> path("${f}").size() > 0 }.every()}",
+                    "Prokka TSV row counts: ${prokka_tsv.collect { f -> "${f.name}=${path("${f}").csv(sep: '\t').rowCount}" }.sort()}",
+                    // Summary row count checks
+                    "Bin summary row count matches bins: ${bin_summary.csv(sep: '\t').rowCount == maxbin2_bins.size() + metabat2_bins.size() + semibin2_bins.size()}",
+                ).match("content-checks") },
+
+                { assert snapshot(
+                    "bin_summary.tsv rows: ${bin_summary.csv(sep: '\t').rowCount}",
+                    "quast_bin_summary.tsv rows: ${quast_bin_summary.csv(sep: '\t').rowCount}",
+                    "busco_summary.tsv rows: ${busco_summary.csv(sep: '\t').rowCount}",
+                ).match("summary-rows") },
+
+                { assert snapshot(
+                    "spades_logs contains 'SPAdes pipeline finished.': ${spades_logs.collect { log -> log.readLines().any { it.contains('SPAdes pipeline finished.') } }.every()}",
+                    "assembly_quast_logs contains 'Finished:': ${assembly_quast_logs.collect { log -> log.readLines().any { it.contains('Finished:') } }.every()}",
+                    "binning_quast_logs contains 'Finished:': ${binning_quast_logs.collect { log -> log.readLines().any { it.contains('Finished:') } }.every()}",
+                    "busco_logs contains 'BUSCO analysis done.': ${busco_logs.collect { log -> log.readLines().any { it.contains('BUSCO analysis done.') } }.every()}",
+                    "semibin2_logs contains 'Binning finished': ${semibin2_logs.collect { log -> log.readLines().any { it.contains('Binning finished') } }.every()}",
+                    "bowtie2_logs contains 'overall alignment rate': ${bowtie2_logs.collect { log -> log.readLines().any { it.contains('overall alignment rate') } }.every()}",
+                    "prokka_logs contains 'Annotation finished successfully.': ${prokka_logs.collect { log -> log.readLines().any { it.contains('Annotation finished successfully.') } }.every()}",
+                ).match("log-checks") },
+            )
+        }
+    }
+}

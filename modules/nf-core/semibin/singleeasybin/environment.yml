@@ -1,0 +1,10 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/environment-schema.json
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - bioconda::semibin=2.2.0
+  # This pins solves an issue of SemiBin getting stuck.
+  # See https://github.com/BigDataBiology/SemiBin/issues/208
+  - conda-forge::igraph=0.10.17
