@@ -895,10 +895,10 @@
                     "fastp": "1.0.1"
                 },
                 "FASTQC_RAW": {
-                    "fastqc": "0.12.1"
+                    "fastqc": "0.13.0"
                 },
                 "FASTQC_TRIMMED": {
-                    "fastqc": "0.12.1"
+                    "fastqc": "0.13.0"
                 },
                 "GTDBTK_CLASSIFYWF": {
                     "gtdb_db": "r232",
@@ -970,10 +970,10 @@
                 }
             }
         ],
-        "timestamp": "2026-10-18T04:50:02.924423014",
+        "timestamp": "2026-10-28T00:44:02.461271793",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
+            "nextflow": "26.10.3"
         }
     },
     "log-checks": {
@@ -2403,8 +2403,8 @@
                 "multiqc_busco.yaml:md5,3e44505515f85379bd02f668f1513c5c",
                 "multiqc_citations.yaml:md5,c413dd63d9c4db3dbf2e67adfd1de115",
                 "multiqc_fastp.yaml:md5,51ec2abfc64be1bc93c4c3f7298da1e1",
-                "multiqc_fastqc.yaml:md5,c856302b60a6c3c3fd5f273ed1a7c967",
-                "multiqc_fastqc_fastqc-1.yaml:md5,b090818c369a65b9218bae720078035c",
+                "multiqc_fastqc.yaml:md5,ecfe8dfa59bd6e1484e2d6313b7fb1d8",
+                "multiqc_fastqc_fastqc-1.yaml:md5,92dbcd4a04efd0bff3fab518708af18d",
                 "multiqc_general_stats.yaml:md5,3179e9c7df8e5469d37d2b7b2705218b",
                 "multiqc_gtdbtk.yaml:md5,27f679a59efbd54b9d44acab40d4c7eb",
                 "multiqc_prokka.yaml:md5,dd349a1016bc5120459c3bb4d497ecc0",
@@ -2415,10 +2415,10 @@
                 "quast_table.yaml:md5,24f6777d01e580283474a2cc711d7060"
             ]
         ],
-        "timestamp": "2026-10-18T04:50:04.597386756",
+        "timestamp": "2026-10-28T00:44:02.966301601",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
+            "nextflow": "26.10.3"
         }
     },
     "tsv-rows": {
