@@ -35,20 +35,20 @@
                     "bowtie2": "2.4.2"
                 },
                 "FASTQC_RAW": {
-                    "fastqc": "0.12.1"
+                    "fastqc": "0.13.0"
                 },
                 "FASTQC_TRIMMED": {
-                    "fastqc": "0.12.1"
+                    "fastqc": "0.13.0"
                 },
                 "Workflow": {
                     "nf-core/mag": "v5.6.0dev"
                 }
             }
         ],
-        "timestamp": "2026-04-01T14:50:43.124920452",
+        "timestamp": "2026-10-28T00:39:17.798247259",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.10.3"
         }
     },
     "multiqc": {
@@ -164,15 +164,15 @@
                 "fastqc_sequence_duplication_levels_plot.yaml:md5,12e97e035fe5b0a924d47873e215c6c2",
                 "multiqc_bowtie2.yaml:md5,ec545a7f2fb2063843656189a8f230d3",
                 "multiqc_citations.yaml:md5,05dac77128eb2753da32070f6f51b242",
-                "multiqc_fastqc.yaml:md5,f50da8bfd062b9399911ba19b34831db",
-                "multiqc_fastqc_fastqc-1.yaml:md5,fb8bb23de40d40e481288c8b8f56fb53",
+                "multiqc_fastqc.yaml:md5,155b77ad8c6ac1a8ed2fd4e6b2086f30",
+                "multiqc_fastqc_fastqc-1.yaml:md5,cedc09dc8705ee963d0fa98767a06080",
                 "multiqc_general_stats.yaml:md5,7af44ea787e0cd5aa679fb7e7e7370f8"
             ]
         ],
-        "timestamp": "2026-05-04T08:58:06.583951903",
+        "timestamp": "2026-10-28T00:39:17.846435617",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.0"
+            "nextflow": "26.10.3"
         }
     }
 }
