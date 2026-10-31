@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
+- [#1135](https://github.com/nf-core/mag/pull/1135) - Replace `.toList().sort()` with `toSortedList()` in the read/assembly ID cross-validation, which relied on undocumented GPars behaviour (by @bentsherman)
 - [#1118](https://github.com/nf-core/mag/pull/1118) - Fix `--min_contig_size` not being applied by all binners ([#1100](https://github.com/nf-core/mag/issues/1100)): assemblies are now filtered before the binning read mapping, while ALE, DeepMAsED and ancient DNA validation use a separate mapping of each assembly's own reads against the unfiltered assemblies (reported by @cdiener, fix by @dialvarezs)
 - [#1118](https://github.com/nf-core/mag/pull/1118) - Fix DAS Tool never running with `--ancient_dna --skip_ancient_damagecorrection`, as it received an empty contigs channel (by @dialvarezs)
 - [#1123](https://github.com/nf-core/mag/pull/1123) - Fix long-read assemblies going through ancient DNA validation with `--ancient_dna`; they are now binned without damage evaluation or correction (reported by @jfy133, fix by @dialvarezs)
