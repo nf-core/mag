@@ -206,14 +206,12 @@ workflow PIPELINE_INITIALISATION {
         ch_read_ids = ch_samplesheet
             .map { meta, _sr1, _sr2, _lr -> params.coassemble_group ? meta.group : meta.id }
             .unique()
-            .toList()
-            .sort()
+            .toSortedList()
 
         ch_assembly_ids = ch_input_assemblies
             .map { meta, _fasta -> params.coassemble_group ? meta.group : meta.id }
             .unique()
-            .toList()
-            .sort()
+            .toSortedList()
 
         ch_read_ids
             .concat(ch_assembly_ids)
