@@ -298,7 +298,12 @@ workflow NFCORE_MAG {
     )
 
     emit:
-    multiqc_report = MAG.out.multiqc_report // channel: /path/to/multiqc_report.html
+    multiqc_report        = MAG.out.multiqc_report // channel: /path/to/multiqc_report.html
+    shortread_fastqc      = MAG.out.shortread_fastqc
+    shortread_clipping    = MAG.out.shortread_clipping
+    shortread_hostremoval = MAG.out.shortread_hostremoval
+    shortread_phixremoval = MAG.out.shortread_phixremoval
+    shortread_bbnorm      = MAG.out.shortread_bbnorm
 }
 
 /*
@@ -308,6 +313,7 @@ workflow NFCORE_MAG {
 */
 
 workflow {
+    main:
     //
     // SUBWORKFLOW: Run initialisation tasks
     //
@@ -342,4 +348,38 @@ workflow {
         params.monochrome_logs,
         NFCORE_MAG.out.multiqc_report,
     )
+
+    publish:
+    shortread_fastqc      = NFCORE_MAG.out.shortread_fastqc
+    shortread_clipping    = NFCORE_MAG.out.shortread_clipping
+    shortread_hostremoval = NFCORE_MAG.out.shortread_hostremoval
+    shortread_phixremoval = NFCORE_MAG.out.shortread_phixremoval
+    shortread_bbnorm      = NFCORE_MAG.out.shortread_bbnorm
+}
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    WORKFLOW OUTPUTS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+
+output {
+    shortread_fastqc {
+        path 'QC_shortreads/fastqc'
+    }
+    shortread_clipping {
+        path { meta, _files -> "QC_shortreads/${params.clip_tool}/${meta.id}" }
+    }
+    shortread_hostremoval {
+        path 'QC_shortreads/remove_host'
+    }
+    shortread_phixremoval {
+        path 'QC_shortreads/remove_phix'
+    }
+    shortread_bbnorm {
+        path { _meta, fastq, log ->
+            fastq >> 'bbmap/bbnorm/'
+            log >> 'bbmap/bbnorm/logs/'
+        }
+    }
 }

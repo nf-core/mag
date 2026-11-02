@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
+- [#1136](https://github.com/nf-core/mag/pull/1136) - Migrated output publishing from `publishDir` to workflow outputs; output directory structure is unchanged (by @dialvarezs)
 - [#1104](https://github.com/nf-core/mag/pull/1104) - Updated to nf-core 4.1.0 template (by @dialvarezs)
 - [#1103](https://github.com/nf-core/mag/pull/1103) - Support parameter types (by @dialvarezs)
 - [#1106](https://github.com/nf-core/mag/pull/1106) - Renamed `--skip_adapter_trimming` to `--skip_longread_adapter_trimming` (old name deprecated) and replaced `--skip_deepmased` with `--run_deepmased` (by @dialvarezs)
@@ -24,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
+- [#1136](https://github.com/nf-core/mag/pull/1136) - `--save_clipped_reads` now also saves AdapterRemoval reads, which were never published due to a mismatched file pattern (by @dialvarezs)
 - [#1135](https://github.com/nf-core/mag/pull/1135) - Replace `.toList().sort()` with `toSortedList()` in the read/assembly ID cross-validation, which relied on undocumented GPars behaviour (by @bentsherman)
 - [#1118](https://github.com/nf-core/mag/pull/1118) - Fix `--min_contig_size` not being applied by all binners ([#1100](https://github.com/nf-core/mag/issues/1100)): assemblies are now filtered before the binning read mapping, while ALE, DeepMAsED and ancient DNA validation use a separate mapping of each assembly's own reads against the unfiltered assemblies (reported by @cdiener, fix by @dialvarezs)
 - [#1118](https://github.com/nf-core/mag/pull/1118) - Fix DAS Tool never running with `--ancient_dna --skip_ancient_damagecorrection`, as it received an empty contigs channel (by @dialvarezs)

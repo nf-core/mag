@@ -809,6 +809,11 @@ if (!params.skip_prokka || !params.skip_bakta) {
     )
 
     emit:
-    multiqc_report = MULTIQC.out.report.map { _meta, report -> [report] }.toList() // channel: /path/to/multiqc_report.html
-    versions       = ch_versions // channel: [ path(versions.yml) ]
+    multiqc_report        = MULTIQC.out.report.map { _meta, report -> [report] }.toList() // channel: /path/to/multiqc_report.html
+    versions              = ch_versions // channel: [ path(versions.yml) ]
+    shortread_fastqc      = SHORTREAD_PREPROCESSING.out.publish_fastqc
+    shortread_clipping    = SHORTREAD_PREPROCESSING.out.publish_clipping
+    shortread_hostremoval = SHORTREAD_PREPROCESSING.out.publish_hostremoval
+    shortread_phixremoval = SHORTREAD_PREPROCESSING.out.publish_phixremoval
+    shortread_bbnorm      = SHORTREAD_PREPROCESSING.out.publish_bbnorm
 }
