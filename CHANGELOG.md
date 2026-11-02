@@ -25,7 +25,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
-- [#1136](https://github.com/nf-core/mag/pull/1136) - `--save_clipped_reads` now also saves AdapterRemoval reads, which were never published due to a mismatched file pattern (by @dialvarezs)
+- [#1136](https://github.com/nf-core/mag/pull/1136) - `--save_clipped_reads` now also saves paired-end AdapterRemoval reads, which were never published due to a mismatched file pattern (by @dialvarezs)
+- [#1136](https://github.com/nf-core/mag/pull/1136) - `--save_lambdaremoved_reads` now saves NanoLyse-filtered reads, which were never published due to a mismatched file pattern (by @dialvarezs)
 - [#1136](https://github.com/nf-core/mag/pull/1136) - `--save_assembly_mapped_reads` now saves long-read assembly mappings under `Assembly/<assembler>/QC/<id>/` instead of `Assembly/null/QC/<reads_id>/` (by @dialvarezs)
 - [#1136](https://github.com/nf-core/mag/pull/1136) - `--generate_bigmag_file` now publishes `GenomeBinning/BIgMAG/bigmag_summary.tsv`, which was never published due to a mismatched process selector (by @dialvarezs)
 - [#1135](https://github.com/nf-core/mag/pull/1135) - Replace `.toList().sort()` with `toSortedList()` in the read/assembly ID cross-validation, which relied on undocumented GPars behaviour (by @bentsherman)
