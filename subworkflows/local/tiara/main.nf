@@ -120,4 +120,5 @@ workflow TIARA {
     classified_bins   = ch_classified_bins
     classified_unbins = ch_classified_unbins
     versions          = ch_versions
+    summary           = CONCAT_TIARA_TSV.out.csv // [val(meta), path(tsv)]
 }

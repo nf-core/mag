@@ -100,6 +100,18 @@ workflow MAG {
     def ch_publish_binning_dereplication = channel.empty()
     def ch_publish_binning_summary = channel.empty()
     def ch_publish_binning_bigmag = channel.empty()
+    def ch_publish_binqc_busco = channel.empty()
+    def ch_publish_binqc_busco_db = channel.empty()
+    def ch_publish_binqc_checkm_db = channel.empty()
+    def ch_publish_binqc_checkm = channel.empty()
+    def ch_publish_binqc_checkm2_db = channel.empty()
+    def ch_publish_binqc_checkm2 = channel.empty()
+    def ch_publish_binqc_gunc_db = channel.empty()
+    def ch_publish_binqc_gunc_raw = channel.empty()
+    def ch_publish_binqc_gunc_checkm = channel.empty()
+    def ch_publish_binqc_summaries = channel.empty()
+    def ch_publish_binqc_pydamage_bins = channel.empty()
+    def ch_publish_binqc_tiara = channel.empty()
     def ch_multiqc_files = channel.empty()
 
     ////////////////////////////////////////////////////
@@ -488,6 +500,7 @@ workflow MAG {
 
             ch_binning_results_bins = DOMAIN_CLASSIFICATION.out.classified_bins
             ch_binning_results_unbins = DOMAIN_CLASSIFICATION.out.classified_unbins
+            ch_publish_binqc_tiara = DOMAIN_CLASSIFICATION.out.tiara_summary
         }
         else {
             ch_binning_results_bins = BINNING.out.bins.map { meta, bins ->
@@ -594,6 +607,16 @@ workflow MAG {
             ch_busco_summary = BIN_QC.out.busco_summary
             ch_checkm_summary = BIN_QC.out.checkm_summary
             ch_checkm2_summary = BIN_QC.out.checkm2_summary
+            ch_publish_binqc_busco = BIN_QC.out.publish_busco
+            ch_publish_binqc_busco_db = BIN_QC.out.publish_busco_db
+            ch_publish_binqc_checkm_db = BIN_QC.out.publish_checkm_db
+            ch_publish_binqc_checkm = BIN_QC.out.publish_checkm
+            ch_publish_binqc_checkm2_db = BIN_QC.out.publish_checkm2_db
+            ch_publish_binqc_checkm2 = BIN_QC.out.publish_checkm2
+            ch_publish_binqc_gunc_db = BIN_QC.out.publish_gunc_db
+            ch_publish_binqc_gunc_raw = BIN_QC.out.publish_gunc_raw
+            ch_publish_binqc_gunc_checkm = BIN_QC.out.publish_gunc_checkm
+            ch_publish_binqc_summaries = ch_publish_binqc_summaries.mix(BIN_QC.out.publish_summaries)
         }
 
         /*
@@ -625,6 +648,7 @@ workflow MAG {
             CONCAT_QUAST_SUMMARY(ch_quast_bin_summaries, 'rowskey', 'tsv', true)
 
             ch_quast_bins_summary = CONCAT_QUAST_SUMMARY.out.csv.map { _meta, summary -> summary }
+            ch_publish_binqc_summaries = ch_publish_binqc_summaries.mix(QUAST_BINS.out.dir, QUAST_BINS.out.quast_bin_summaries, CONCAT_QUAST_SUMMARY.out.csv)
         }
 
         /*
@@ -681,6 +705,8 @@ workflow MAG {
             BINNING_PYDAMAGE(ANCIENT_DNA_ASSEMBLY_VALIDATION.out.pydamage_results, ch_allcontig2binmap)
             ch_versions = ch_versions.mix(BINNING_PYDAMAGE.out.versions)
             ch_summarisepydamage = BINNING_PYDAMAGE.out.tsv
+            ch_publish_binqc_summaries = ch_publish_binqc_summaries.mix(BINNING_PYDAMAGE.out.tsv)
+            ch_publish_binqc_pydamage_bins = BINNING_PYDAMAGE.out.results
         }
         else {
             ch_summarisepydamage = channel.empty()
@@ -914,4 +940,16 @@ if (!params.skip_prokka || !params.skip_bakta) {
     binning_dereplication       = ch_publish_binning_dereplication
     binning_summary             = ch_publish_binning_summary
     binning_bigmag              = ch_publish_binning_bigmag
+    binqc_busco                 = ch_publish_binqc_busco
+    binqc_busco_db              = ch_publish_binqc_busco_db
+    binqc_checkm_db             = ch_publish_binqc_checkm_db
+    binqc_checkm                = ch_publish_binqc_checkm
+    binqc_checkm2_db            = ch_publish_binqc_checkm2_db
+    binqc_checkm2               = ch_publish_binqc_checkm2
+    binqc_gunc_db               = ch_publish_binqc_gunc_db
+    binqc_gunc_raw              = ch_publish_binqc_gunc_raw
+    binqc_gunc_checkm           = ch_publish_binqc_gunc_checkm
+    binqc_summaries             = ch_publish_binqc_summaries
+    binqc_pydamage_bins         = ch_publish_binqc_pydamage_bins
+    binqc_tiara                 = ch_publish_binqc_tiara
 }

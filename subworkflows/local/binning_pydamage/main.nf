@@ -28,4 +28,5 @@ workflow BINNING_PYDAMAGE {
     emit:
     tsv      = SUMMARISE_PYDAMAGEBINS.out.pydamage_bin_summary
     versions = ch_versions
+    results  = SUMMARISE_PYDAMAGEBINS.out.pydamage_bin_results // path(tsv)
 }

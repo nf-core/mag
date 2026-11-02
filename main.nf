@@ -342,6 +342,18 @@ workflow NFCORE_MAG {
     binning_dereplication       = MAG.out.binning_dereplication
     binning_summary             = MAG.out.binning_summary
     binning_bigmag              = MAG.out.binning_bigmag
+    binqc_busco                 = MAG.out.binqc_busco
+    binqc_busco_db              = MAG.out.binqc_busco_db
+    binqc_checkm_db             = MAG.out.binqc_checkm_db
+    binqc_checkm                = MAG.out.binqc_checkm
+    binqc_checkm2_db            = MAG.out.binqc_checkm2_db
+    binqc_checkm2               = MAG.out.binqc_checkm2
+    binqc_gunc_db               = MAG.out.binqc_gunc_db
+    binqc_gunc_raw              = MAG.out.binqc_gunc_raw
+    binqc_gunc_checkm           = MAG.out.binqc_gunc_checkm
+    binqc_summaries             = MAG.out.binqc_summaries
+    binqc_pydamage_bins         = MAG.out.binqc_pydamage_bins
+    binqc_tiara                 = MAG.out.binqc_tiara
 }
 
 /*
@@ -431,6 +443,18 @@ workflow {
     binning_dereplication       = NFCORE_MAG.out.binning_dereplication
     binning_summary             = NFCORE_MAG.out.binning_summary
     binning_bigmag              = NFCORE_MAG.out.binning_bigmag
+    binqc_busco                 = NFCORE_MAG.out.binqc_busco
+    binqc_busco_db              = NFCORE_MAG.out.binqc_busco_db
+    binqc_checkm_db             = NFCORE_MAG.out.binqc_checkm_db
+    binqc_checkm                = NFCORE_MAG.out.binqc_checkm
+    binqc_checkm2_db            = NFCORE_MAG.out.binqc_checkm2_db
+    binqc_checkm2               = NFCORE_MAG.out.binqc_checkm2
+    binqc_gunc_db               = NFCORE_MAG.out.binqc_gunc_db
+    binqc_gunc_raw              = NFCORE_MAG.out.binqc_gunc_raw
+    binqc_gunc_checkm           = NFCORE_MAG.out.binqc_gunc_checkm
+    binqc_summaries             = NFCORE_MAG.out.binqc_summaries
+    binqc_pydamage_bins         = NFCORE_MAG.out.binqc_pydamage_bins
+    binqc_tiara                 = NFCORE_MAG.out.binqc_tiara
 }
 
 /*
@@ -606,5 +630,46 @@ output {
     }
     binning_bigmag {
         path 'GenomeBinning/BIgMAG'
+    }
+    binqc_busco {
+        path { meta, _files -> "GenomeBinning/QC/BUSCO/${meta.assembler}-${meta.binner}-${meta.domain}-${meta.refinement}-${meta.id}" }
+        overwrite false
+    }
+    binqc_busco_db {
+        path 'GenomeBinning/QC/BUSCO'
+        // several tasks publish the same shared `busco_downloads/lineages/` directory
+        overwrite false
+    }
+    binqc_checkm_db {
+        path 'GenomeBinning/QC/CheckM/checkm_downloads'
+        overwrite false
+    }
+    binqc_checkm {
+        path 'GenomeBinning/QC/CheckM'
+    }
+    binqc_checkm2_db {
+        path 'GenomeBinning/QC/CheckM2/checkm2_downloads'
+        overwrite false
+    }
+    binqc_checkm2 {
+        path 'GenomeBinning/QC/CheckM2'
+    }
+    binqc_gunc_db {
+        path 'GenomeBinning/QC/GUNC'
+    }
+    binqc_gunc_raw {
+        path { meta, _files -> "GenomeBinning/QC/GUNC/raw/${meta.assembler}-${meta.binner}-${meta.domain}-${meta.refinement}-${meta.id}" }
+    }
+    binqc_gunc_checkm {
+        path { meta, _files -> "GenomeBinning/QC/GUNC/checkmmerged/${meta.assembler}-${meta.binner}-${meta.domain}-${meta.refinement}-${meta.id}" }
+    }
+    binqc_summaries {
+        path 'GenomeBinning/QC'
+    }
+    binqc_pydamage_bins {
+        path 'GenomeBinning/QC/summarise_pydamagebins'
+    }
+    binqc_tiara {
+        path 'GenomeBinning/Tiara'
     }
 }
