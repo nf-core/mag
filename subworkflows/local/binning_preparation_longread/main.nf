@@ -60,4 +60,5 @@ workflow LONGREAD_BINNING_PREPARATION {
     emit:
     versions         = ch_versions
     grouped_mappings = ch_grouped_mappings
+    publish          = params.save_assembly_mapped_reads ? MINIMAP2_ASSEMBLY_ALIGN.out.bam.mix(MINIMAP2_ASSEMBLY_ALIGN.out.index) : channel.empty() // [val(meta), path(file)]
 }

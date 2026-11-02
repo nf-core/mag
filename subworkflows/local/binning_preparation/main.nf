@@ -28,4 +28,5 @@ workflow BINNING_PREPARATION {
     grouped_mappings = ch_grouped_mappings
     versions         = ch_versions
     multiqc_files    = ch_multiqc_files
+    publish          = SHORTREAD_BINNING_PREPARATION.out.publish.mix(LONGREAD_BINNING_PREPARATION.out.publish) // [val(meta), path(files)...]
 }

@@ -10,6 +10,7 @@ workflow SHORTREAD_ASSEMBLY {
     main:
     ch_versions = channel.empty()
     ch_assembled_contigs = channel.empty()
+    ch_publish = channel.empty()
 
     if (!params.single_end && !params.skip_spades) {
         METASPADES(ch_short_reads_spades.map { meta, reads -> [meta, reads, [], []] }, [], [])
@@ -20,6 +21,9 @@ workflow SHORTREAD_ASSEMBLY {
         ch_versions = ch_versions.mix(METASPADES.out.versions)
 
         ch_assembled_contigs = ch_assembled_contigs.mix(ch_spades_assemblies)
+        ch_publish = ch_publish
+            .mix(METASPADES.out.scaffolds, METASPADES.out.contigs, METASPADES.out.transcripts, METASPADES.out.gene_clusters, METASPADES.out.gfa, METASPADES.out.warnings, METASPADES.out.log)
+            .map { meta, files -> [meta + [assembler: 'SPAdes'], files] }
     }
 
     if (!params.skip_megahit) {
@@ -31,9 +35,13 @@ workflow SHORTREAD_ASSEMBLY {
         ch_versions = ch_versions.mix(MEGAHIT.out.versions)
 
         ch_assembled_contigs = ch_assembled_contigs.mix(ch_megahit_assemblies)
+        ch_publish = ch_publish.mix(
+            MEGAHIT.out.contigs.mix(MEGAHIT.out.log).map { meta, files -> [meta + [assembler: 'MEGAHIT'], files] }
+        )
     }
 
     emit:
     assembled_contigs = ch_assembled_contigs
     versions          = ch_versions
+    publish           = ch_publish // [val(meta), path(files)]
 }

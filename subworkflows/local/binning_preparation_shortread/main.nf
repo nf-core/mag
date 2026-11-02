@@ -65,4 +65,11 @@ workflow SHORTREAD_BINNING_PREPARATION {
     bowtie2_assembly_multiqc = BOWTIE2_ASSEMBLY_ALIGN.out.log.map { _assembly_meta, _reads_meta, log -> [log] }
     versions                 = ch_versions
     grouped_mappings         = ch_grouped_mappings
+    publish                  = BOWTIE2_ASSEMBLY_ALIGN.out.log
+        .map { assembly_meta, _reads_meta, log -> [assembly_meta, log] }
+        .mix(
+            params.save_assembly_mapped_reads
+                ? BOWTIE2_ASSEMBLY_ALIGN.out.mappings.map { assembly_meta, _assembly, bam, bai -> [assembly_meta, [bam, bai]] }
+                : channel.empty()
+        ) // [val(meta), path(files)]
 }

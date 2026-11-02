@@ -70,6 +70,14 @@ workflow MAG {
     main:
 
     def ch_versions = channel.empty()
+    def ch_publish_assembly = channel.empty()
+    def ch_publish_assembly_pypolca = channel.empty()
+    def ch_publish_assembly_quast = channel.empty()
+    def ch_publish_assembly_mapping = channel.empty()
+    def ch_publish_assembly_mapping_full = channel.empty()
+    def ch_publish_assembly_ale = channel.empty()
+    def ch_publish_assembly_deepmased_features = channel.empty()
+    def ch_publish_assembly_deepmased = channel.empty()
     def ch_multiqc_files = channel.empty()
 
     ////////////////////////////////////////////////////
@@ -191,6 +199,7 @@ workflow MAG {
             ch_long_reads,
         )
         ch_versions = ch_versions.mix(ASSEMBLY.out.versions)
+        ch_publish_assembly = ASSEMBLY.out.publish
 
         ch_shortread_assemblies = ASSEMBLY.out.shortread_assemblies
         ch_longread_raw_assemblies = ASSEMBLY.out.longread_assemblies
@@ -259,6 +268,7 @@ workflow MAG {
         PYPOLCA_RUN(ch_longread_assemblies_branched.polish)
 
         ch_longread_assemblies = PYPOLCA_RUN.out.polished.mix(ch_longread_assemblies_branched.no_short_reads)
+        ch_publish_assembly_pypolca = PYPOLCA_RUN.out.polished.join(PYPOLCA_RUN.out.vcf).join(PYPOLCA_RUN.out.report)
     }
     else {
         ch_longread_assemblies = ch_longread_raw_assemblies
@@ -269,6 +279,7 @@ workflow MAG {
     if (!params.skip_quast) {
         QUAST(ch_assemblies)
         ch_versions = ch_versions.mix(QUAST.out.versions)
+        ch_publish_assembly_quast = QUAST.out.qc
     }
 
     /*
@@ -313,6 +324,7 @@ workflow MAG {
             params.coassemble_group ? 'group' : 'own',
         )
         ch_versions = ch_versions.mix(BINNING_PREPARATION_FULL.out.versions)
+        ch_publish_assembly_mapping_full = BINNING_PREPARATION_FULL.out.publish
     }
 
     // Binners get only contigs within --min_contig_size and --max_contig_size, filtered before mapping so FASTA and BAMs agree
@@ -336,6 +348,7 @@ workflow MAG {
             params.binning_map_mode,
         )
         ch_versions = ch_versions.mix(BINNING_PREPARATION.out.versions)
+        ch_publish_assembly_mapping = BINNING_PREPARATION.out.publish
     }
 
     /*
@@ -369,6 +382,7 @@ workflow MAG {
 
         ALE(ch_ale_input)
         ch_versions = ch_versions.mix(ALE.out.versions)
+        ch_publish_assembly_ale = ALE.out.ale
     }
 
     /*
@@ -396,6 +410,8 @@ workflow MAG {
 
         DEEPMASED_FEATURES(ch_deepmased_input)
         DEEPMASED_PREDICT(DEEPMASED_FEATURES.out.feature_table.join(DEEPMASED_FEATURES.out.feature_files, by: 0))
+        ch_publish_assembly_deepmased_features = DEEPMASED_FEATURES.out.feature_table.mix(DEEPMASED_FEATURES.out.feature_files)
+        ch_publish_assembly_deepmased = DEEPMASED_PREDICT.out.predictions
     }
 
     /*
@@ -809,19 +825,27 @@ if (!params.skip_prokka || !params.skip_bakta) {
     )
 
     emit:
-    multiqc_report             = MULTIQC.out.report.map { _meta, report -> [report] }.toList() // channel: /path/to/multiqc_report.html
-    versions                   = ch_versions // channel: [ path(versions.yml) ]
-    shortread_fastqc           = SHORTREAD_PREPROCESSING.out.publish_fastqc
-    shortread_clipping         = SHORTREAD_PREPROCESSING.out.publish_clipping
-    shortread_hostremoval      = SHORTREAD_PREPROCESSING.out.publish_hostremoval
-    shortread_phixremoval      = SHORTREAD_PREPROCESSING.out.publish_phixremoval
-    shortread_bbnorm           = SHORTREAD_PREPROCESSING.out.publish_bbnorm
-    longread_adaptertrimming   = LONGREAD_PREPROCESSING.out.publish_adaptertrimming
-    longread_filtering         = LONGREAD_PREPROCESSING.out.publish_filtering
-    longread_nanolyse          = LONGREAD_PREPROCESSING.out.publish_nanolyse
-    longread_nanoplot          = LONGREAD_PREPROCESSING.out.publish_nanoplot
-    longread_hostremoval_index = LONGREAD_PREPROCESSING.out.publish_hostremoval_index
-    longread_hostremoval_bam   = LONGREAD_PREPROCESSING.out.publish_hostremoval_bam
-    longread_hostremoval_fastq = LONGREAD_PREPROCESSING.out.publish_hostremoval_fastq
-    longread_hostremoval_stats = LONGREAD_PREPROCESSING.out.publish_hostremoval_stats
+    multiqc_report              = MULTIQC.out.report.map { _meta, report -> [report] }.toList() // channel: /path/to/multiqc_report.html
+    versions                    = ch_versions // channel: [ path(versions.yml) ]
+    shortread_fastqc            = SHORTREAD_PREPROCESSING.out.publish_fastqc
+    shortread_clipping          = SHORTREAD_PREPROCESSING.out.publish_clipping
+    shortread_hostremoval       = SHORTREAD_PREPROCESSING.out.publish_hostremoval
+    shortread_phixremoval       = SHORTREAD_PREPROCESSING.out.publish_phixremoval
+    shortread_bbnorm            = SHORTREAD_PREPROCESSING.out.publish_bbnorm
+    longread_adaptertrimming    = LONGREAD_PREPROCESSING.out.publish_adaptertrimming
+    longread_filtering          = LONGREAD_PREPROCESSING.out.publish_filtering
+    longread_nanolyse           = LONGREAD_PREPROCESSING.out.publish_nanolyse
+    longread_nanoplot           = LONGREAD_PREPROCESSING.out.publish_nanoplot
+    longread_hostremoval_index  = LONGREAD_PREPROCESSING.out.publish_hostremoval_index
+    longread_hostremoval_bam    = LONGREAD_PREPROCESSING.out.publish_hostremoval_bam
+    longread_hostremoval_fastq  = LONGREAD_PREPROCESSING.out.publish_hostremoval_fastq
+    longread_hostremoval_stats  = LONGREAD_PREPROCESSING.out.publish_hostremoval_stats
+    assembly                    = ch_publish_assembly
+    assembly_pypolca            = ch_publish_assembly_pypolca
+    assembly_quast              = ch_publish_assembly_quast
+    assembly_mapping            = ch_publish_assembly_mapping
+    assembly_mapping_full       = ch_publish_assembly_mapping_full
+    assembly_ale                = ch_publish_assembly_ale
+    assembly_deepmased_features = ch_publish_assembly_deepmased_features
+    assembly_deepmased          = ch_publish_assembly_deepmased
 }
