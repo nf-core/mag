@@ -118,6 +118,11 @@ workflow MAG {
     def ch_publish_taxonomy_cat_unbins = channel.empty()
     def ch_publish_taxonomy_gtdbtk = channel.empty()
     def ch_publish_taxonomy_gtdbtk_summary = channel.empty()
+    def ch_publish_annotation_prodigal = channel.empty()
+    def ch_publish_annotation_prokka = channel.empty()
+    def ch_publish_annotation_bakta = channel.empty()
+    def ch_publish_annotation_mmseqs_db = channel.empty()
+    def ch_publish_annotation_metaeuk = channel.empty()
     def ch_multiqc_files = channel.empty()
 
     ////////////////////////////////////////////////////
@@ -184,6 +189,7 @@ workflow MAG {
         MMSEQS_DATABASES(params.metaeuk_mmseqs_db)
         ch_versions = ch_versions.mix(MMSEQS_DATABASES.out.versions)
         ch_metaeuk_db = MMSEQS_DATABASES.out.database
+        ch_publish_annotation_mmseqs_db = params.save_mmseqs_db ? MMSEQS_DATABASES.out.database : channel.empty()
     }
 
     /*
@@ -332,6 +338,11 @@ workflow MAG {
         PRODIGAL(
             ch_assemblies,
             'gff',
+        )
+        ch_publish_annotation_prodigal = PRODIGAL.out.gene_annotations.mix(
+            PRODIGAL.out.nucleotide_fasta,
+            PRODIGAL.out.amino_acid_fasta,
+            PRODIGAL.out.all_gene_annotations,
         )
     }
 
@@ -778,6 +789,19 @@ if (!params.skip_prokka || !params.skip_bakta) {
                 [],
                 [],
             )
+            ch_publish_annotation_prokka = PROKKA.out.gff.mix(
+                PROKKA.out.gbk,
+                PROKKA.out.fna,
+                PROKKA.out.faa,
+                PROKKA.out.ffn,
+                PROKKA.out.sqn,
+                PROKKA.out.fsa,
+                PROKKA.out.tbl,
+                PROKKA.out.err,
+                PROKKA.out.log,
+                PROKKA.out.txt,
+                PROKKA.out.tsv,
+            )
         }
 
         if (!params.skip_bakta) {
@@ -801,6 +825,18 @@ if (!params.skip_prokka || !params.skip_bakta) {
                 [],
                 []
             )
+            ch_publish_annotation_bakta = BAKTA_BAKTA.out.embl.mix(
+                BAKTA_BAKTA.out.faa,
+                BAKTA_BAKTA.out.ffn,
+                BAKTA_BAKTA.out.fna,
+                BAKTA_BAKTA.out.gbff,
+                BAKTA_BAKTA.out.gff,
+                BAKTA_BAKTA.out.hypotheticals_tsv,
+                BAKTA_BAKTA.out.hypotheticals_faa,
+                BAKTA_BAKTA.out.tsv,
+                BAKTA_BAKTA.out.txt,
+                BAKTA_BAKTA.out.json,
+            )
         }
 }
 
@@ -817,6 +853,11 @@ if (!params.skip_prokka || !params.skip_bakta) {
 
             METAEUK_EASYPREDICT(ch_bins_for_metaeuk, ch_metaeuk_db)
             ch_versions = ch_versions.mix(METAEUK_EASYPREDICT.out.versions)
+            ch_publish_annotation_metaeuk = METAEUK_EASYPREDICT.out.faa.mix(
+                METAEUK_EASYPREDICT.out.codon,
+                METAEUK_EASYPREDICT.out.tsv,
+                METAEUK_EASYPREDICT.out.gff,
+            )
         }
     }
 
@@ -970,4 +1011,9 @@ if (!params.skip_prokka || !params.skip_bakta) {
     taxonomy_cat_unbins         = ch_publish_taxonomy_cat_unbins
     taxonomy_gtdbtk             = ch_publish_taxonomy_gtdbtk
     taxonomy_gtdbtk_summary     = ch_publish_taxonomy_gtdbtk_summary
+    annotation_prodigal         = ch_publish_annotation_prodigal
+    annotation_prokka           = ch_publish_annotation_prokka
+    annotation_bakta            = ch_publish_annotation_bakta
+    annotation_mmseqs_db        = ch_publish_annotation_mmseqs_db
+    annotation_metaeuk          = ch_publish_annotation_metaeuk
 }

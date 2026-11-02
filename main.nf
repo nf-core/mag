@@ -360,6 +360,11 @@ workflow NFCORE_MAG {
     taxonomy_cat_unbins         = MAG.out.taxonomy_cat_unbins
     taxonomy_gtdbtk             = MAG.out.taxonomy_gtdbtk
     taxonomy_gtdbtk_summary     = MAG.out.taxonomy_gtdbtk_summary
+    annotation_prodigal         = MAG.out.annotation_prodigal
+    annotation_prokka           = MAG.out.annotation_prokka
+    annotation_bakta            = MAG.out.annotation_bakta
+    annotation_mmseqs_db        = MAG.out.annotation_mmseqs_db
+    annotation_metaeuk          = MAG.out.annotation_metaeuk
 }
 
 /*
@@ -467,6 +472,11 @@ workflow {
     taxonomy_cat_unbins         = NFCORE_MAG.out.taxonomy_cat_unbins
     taxonomy_gtdbtk             = NFCORE_MAG.out.taxonomy_gtdbtk
     taxonomy_gtdbtk_summary     = NFCORE_MAG.out.taxonomy_gtdbtk_summary
+    annotation_prodigal         = NFCORE_MAG.out.annotation_prodigal
+    annotation_prokka           = NFCORE_MAG.out.annotation_prokka
+    annotation_bakta            = NFCORE_MAG.out.annotation_bakta
+    annotation_mmseqs_db        = NFCORE_MAG.out.annotation_mmseqs_db
+    annotation_metaeuk          = NFCORE_MAG.out.annotation_metaeuk
 }
 
 /*
@@ -701,5 +711,20 @@ output {
     }
     taxonomy_gtdbtk_summary {
         path 'Taxonomy/GTDB-Tk'
+    }
+    annotation_prodigal {
+        path { meta, _files -> "Annotation/Prodigal/${meta.assembler}/${meta.id}" }
+    }
+    annotation_prokka {
+        path { meta, _files -> "Annotation/Prokka/${meta.assembler}" }
+    }
+    annotation_bakta {
+        path { meta, _files -> "Annotation/Bakta/${meta.assembler}" }
+    }
+    annotation_mmseqs_db {
+        path 'Annotation/mmseqs_db'
+    }
+    annotation_metaeuk {
+        path { meta, _files -> "Annotation/MetaEuk/${meta.assembler}" }
     }
 }
