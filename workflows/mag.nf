@@ -112,6 +112,12 @@ workflow MAG {
     def ch_publish_binqc_summaries = channel.empty()
     def ch_publish_binqc_pydamage_bins = channel.empty()
     def ch_publish_binqc_tiara = channel.empty()
+    def ch_publish_taxonomy_tiara = channel.empty()
+    def ch_publish_taxonomy_cat_db = channel.empty()
+    def ch_publish_taxonomy_cat_bins = channel.empty()
+    def ch_publish_taxonomy_cat_unbins = channel.empty()
+    def ch_publish_taxonomy_gtdbtk = channel.empty()
+    def ch_publish_taxonomy_gtdbtk_summary = channel.empty()
     def ch_multiqc_files = channel.empty()
 
     ////////////////////////////////////////////////////
@@ -501,6 +507,7 @@ workflow MAG {
             ch_binning_results_bins = DOMAIN_CLASSIFICATION.out.classified_bins
             ch_binning_results_unbins = DOMAIN_CLASSIFICATION.out.classified_unbins
             ch_publish_binqc_tiara = DOMAIN_CLASSIFICATION.out.tiara_summary
+            ch_publish_taxonomy_tiara = DOMAIN_CLASSIFICATION.out.publish_tiara
         }
         else {
             ch_binning_results_bins = BINNING.out.bins.map { meta, bins ->
@@ -669,6 +676,9 @@ workflow MAG {
             ch_versions = ch_versions.mix(CATPACK.out.versions)
 
             ch_catpack_summary = CATPACK.out.summary
+            ch_publish_taxonomy_cat_db = CATPACK.out.publish_db
+            ch_publish_taxonomy_cat_bins = CATPACK.out.publish_bins
+            ch_publish_taxonomy_cat_unbins = CATPACK.out.publish_unbins
         }
 
         /*
@@ -694,6 +704,8 @@ workflow MAG {
                 )
                 ch_versions = ch_versions.mix(GTDBTK.out.versions)
                 ch_gtdbtk_summary = GTDBTK.out.summary
+                ch_publish_taxonomy_gtdbtk = GTDBTK.out.publish_classify
+                ch_publish_taxonomy_gtdbtk_summary = GTDBTK.out.publish_summary
                 ch_multiqc_files = ch_multiqc_files.mix(GTDBTK.out.multiqc_files.collect().ifEmpty([]))
             }
         }
@@ -952,4 +964,10 @@ if (!params.skip_prokka || !params.skip_bakta) {
     binqc_summaries             = ch_publish_binqc_summaries
     binqc_pydamage_bins         = ch_publish_binqc_pydamage_bins
     binqc_tiara                 = ch_publish_binqc_tiara
+    taxonomy_tiara              = ch_publish_taxonomy_tiara
+    taxonomy_cat_db             = ch_publish_taxonomy_cat_db
+    taxonomy_cat_bins           = ch_publish_taxonomy_cat_bins
+    taxonomy_cat_unbins         = ch_publish_taxonomy_cat_unbins
+    taxonomy_gtdbtk             = ch_publish_taxonomy_gtdbtk
+    taxonomy_gtdbtk_summary     = ch_publish_taxonomy_gtdbtk_summary
 }

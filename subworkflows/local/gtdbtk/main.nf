@@ -145,7 +145,9 @@ workflow GTDBTK {
     ch_versions = ch_versions.mix(GTDBTK_SUMMARY.out.versions)
 
     emit:
-    summary       = ch_summary
-    multiqc_files = ch_summary
-    versions      = ch_versions
+    summary          = ch_summary
+    multiqc_files    = ch_summary
+    versions         = ch_versions
+    publish_classify = GTDBTK_CLASSIFYWF.out.gtdb_outdir // [val(meta), path(dir)]
+    publish_summary  = GTDBTK_SUMMARY.out.summary // path(tsv)
 }

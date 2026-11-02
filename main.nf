@@ -354,6 +354,12 @@ workflow NFCORE_MAG {
     binqc_summaries             = MAG.out.binqc_summaries
     binqc_pydamage_bins         = MAG.out.binqc_pydamage_bins
     binqc_tiara                 = MAG.out.binqc_tiara
+    taxonomy_tiara              = MAG.out.taxonomy_tiara
+    taxonomy_cat_db             = MAG.out.taxonomy_cat_db
+    taxonomy_cat_bins           = MAG.out.taxonomy_cat_bins
+    taxonomy_cat_unbins         = MAG.out.taxonomy_cat_unbins
+    taxonomy_gtdbtk             = MAG.out.taxonomy_gtdbtk
+    taxonomy_gtdbtk_summary     = MAG.out.taxonomy_gtdbtk_summary
 }
 
 /*
@@ -455,6 +461,12 @@ workflow {
     binqc_summaries             = NFCORE_MAG.out.binqc_summaries
     binqc_pydamage_bins         = NFCORE_MAG.out.binqc_pydamage_bins
     binqc_tiara                 = NFCORE_MAG.out.binqc_tiara
+    taxonomy_tiara              = NFCORE_MAG.out.taxonomy_tiara
+    taxonomy_cat_db             = NFCORE_MAG.out.taxonomy_cat_db
+    taxonomy_cat_bins           = NFCORE_MAG.out.taxonomy_cat_bins
+    taxonomy_cat_unbins         = NFCORE_MAG.out.taxonomy_cat_unbins
+    taxonomy_gtdbtk             = NFCORE_MAG.out.taxonomy_gtdbtk
+    taxonomy_gtdbtk_summary     = NFCORE_MAG.out.taxonomy_gtdbtk_summary
 }
 
 /*
@@ -671,5 +683,23 @@ output {
     }
     binqc_tiara {
         path 'GenomeBinning/Tiara'
+    }
+    taxonomy_tiara {
+        path 'Taxonomy/Tiara'
+    }
+    taxonomy_cat_db {
+        path 'Taxonomy/CAT/db'
+    }
+    taxonomy_cat_bins {
+        path { meta, _files -> "Taxonomy/CAT/${meta.assembler}/${meta.binner}/${meta.id}/bins" }
+    }
+    taxonomy_cat_unbins {
+        path { meta, _files -> "Taxonomy/CAT/${meta.assembler}/${meta.binner}/${meta.id}/unbins" }
+    }
+    taxonomy_gtdbtk {
+        path { meta, _dir -> "Taxonomy/GTDB-Tk/${meta.assembler}/${meta.binner}/${meta.id}" }
+    }
+    taxonomy_gtdbtk_summary {
+        path 'Taxonomy/GTDB-Tk'
     }
 }
