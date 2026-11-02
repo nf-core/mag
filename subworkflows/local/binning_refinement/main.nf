@@ -83,7 +83,10 @@ workflow BINNING_REFINEMENT {
     }
 
     emit:
-    refined_bins   = RENAME_POSTDASTOOL.out.refined_bins
-    refined_unbins = refined_unbins
-    versions       = ch_versions
+    refined_bins       = RENAME_POSTDASTOOL.out.refined_bins
+    refined_unbins     = refined_unbins
+    versions           = ch_versions
+    publish_contig2bin = params.refine_bins_dastool_savecontig2bin ? DASTOOL_FASTATOCONTIG2BIN.out.fastatocontig2bin : channel.empty() // [val(meta), path(tsv)]
+    publish_dastool    = DASTOOL_DASTOOL.out.log.mix(DASTOOL_DASTOOL.out.summary, DASTOOL_DASTOOL.out.contig2bin, DASTOOL_DASTOOL.out.seqlength) // [val(meta), path(file)]
+    publish_bins       = RENAME_POSTDASTOOL.out.refined_bins.join(RENAME_POSTDASTOOL.out.refined_unbins, remainder: true) // [val(meta), path(bins), path(unbins)]
 }

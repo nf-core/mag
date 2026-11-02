@@ -84,6 +84,22 @@ workflow MAG {
     def ch_publish_adna_consensus = channel.empty()
     def ch_publish_adna_pydamage_analyze = channel.empty()
     def ch_publish_adna_pydamage_filter = channel.empty()
+    def ch_publish_binning_depths_contigs = channel.empty()
+    def ch_publish_binning_metabat2 = channel.empty()
+    def ch_publish_binning_maxbin2 = channel.empty()
+    def ch_publish_binning_concoct_stats = channel.empty()
+    def ch_publish_binning_concoct_bins = channel.empty()
+    def ch_publish_binning_comebin = channel.empty()
+    def ch_publish_binning_metabinner = channel.empty()
+    def ch_publish_binning_semibin = channel.empty()
+    def ch_publish_binning_unbinned = channel.empty()
+    def ch_publish_binning_dastool_contig2bin = channel.empty()
+    def ch_publish_binning_dastool = channel.empty()
+    def ch_publish_binning_dastool_bins = channel.empty()
+    def ch_publish_binning_depths_bins = channel.empty()
+    def ch_publish_binning_dereplication = channel.empty()
+    def ch_publish_binning_summary = channel.empty()
+    def ch_publish_binning_bigmag = channel.empty()
     def ch_multiqc_files = channel.empty()
 
     ////////////////////////////////////////////////////
@@ -455,6 +471,15 @@ workflow MAG {
             params.bin_max_size,
         )
         ch_versions = ch_versions.mix(BINNING.out.versions)
+        ch_publish_binning_depths_contigs = BINNING.out.metabat2depths
+        ch_publish_binning_metabat2 = BINNING.out.publish_metabat2
+        ch_publish_binning_maxbin2 = BINNING.out.publish_maxbin2
+        ch_publish_binning_concoct_stats = BINNING.out.publish_concoct_stats
+        ch_publish_binning_concoct_bins = BINNING.out.publish_concoct_bins
+        ch_publish_binning_comebin = BINNING.out.publish_comebin
+        ch_publish_binning_metabinner = BINNING.out.publish_metabinner
+        ch_publish_binning_semibin = BINNING.out.publish_semibin
+        ch_publish_binning_unbinned = BINNING.out.publish_splitfasta
 
         if (params.bin_domain_classification) {
 
@@ -497,6 +522,9 @@ workflow MAG {
 
             BINNING_REFINEMENT(ch_binning_contigs, ch_prokarya_bins_dastool)
             ch_versions = ch_versions.mix(BINNING_REFINEMENT.out.versions)
+            ch_publish_binning_dastool_contig2bin = BINNING_REFINEMENT.out.publish_contig2bin
+            ch_publish_binning_dastool = BINNING_REFINEMENT.out.publish_dastool
+            ch_publish_binning_dastool_bins = BINNING_REFINEMENT.out.publish_bins
 
             ch_refined_bins = BINNING_REFINEMENT.out.refined_bins
             ch_refined_unbins = BINNING_REFINEMENT.out.refined_unbins
@@ -525,6 +553,7 @@ workflow MAG {
 
         DEPTHS(ch_input_for_postbinning, BINNING.out.metabat2depths)
         ch_versions = ch_versions.mix(DEPTHS.out.versions)
+        ch_publish_binning_depths_bins = DEPTHS.out.depths_summary
 
         ch_input_for_binsummary = DEPTHS.out.depths_summary
 
@@ -577,6 +606,7 @@ workflow MAG {
             DEREPLICATION(ch_input_for_postbinning, ch_bin_qc_metrics, params.dereplicate_min_completeness, params.dereplicate_max_contamination)
             ch_dereplicated_bins = DEREPLICATION.out.dereplicated_bins
             ch_dereplication_cluster_tsv = DEREPLICATION.out.cluster_tsv.map { _meta, tsv -> tsv }
+            ch_publish_binning_dereplication = DEREPLICATION.out.publish
         }
 
         ch_quast_bins_summary = channel.empty()
@@ -669,6 +699,7 @@ workflow MAG {
                 ch_dereplication_cluster_tsv.ifEmpty([]),
             )
             ch_versions = ch_versions.mix(BIN_SUMMARY.out.versions)
+            ch_publish_binning_summary = BIN_SUMMARY.out.summary
         }
         if (params.generate_bigmag_file) {
             PREPARE_BIGMAG_SUMMARY(
@@ -676,6 +707,7 @@ workflow MAG {
                 BIN_QC.out.gunc_summary,
             )
             ch_versions = ch_versions.mix(PREPARE_BIGMAG_SUMMARY.out.versions)
+            ch_publish_binning_bigmag = PREPARE_BIGMAG_SUMMARY.out.bigmag_summary
         }
 
         /*
@@ -866,4 +898,20 @@ if (!params.skip_prokka || !params.skip_bakta) {
     adna_consensus              = ch_publish_adna_consensus
     adna_pydamage_analyze       = ch_publish_adna_pydamage_analyze
     adna_pydamage_filter        = ch_publish_adna_pydamage_filter
+    binning_depths_contigs      = ch_publish_binning_depths_contigs
+    binning_metabat2            = ch_publish_binning_metabat2
+    binning_maxbin2             = ch_publish_binning_maxbin2
+    binning_concoct_stats       = ch_publish_binning_concoct_stats
+    binning_concoct_bins        = ch_publish_binning_concoct_bins
+    binning_comebin             = ch_publish_binning_comebin
+    binning_metabinner          = ch_publish_binning_metabinner
+    binning_semibin             = ch_publish_binning_semibin
+    binning_unbinned            = ch_publish_binning_unbinned
+    binning_dastool_contig2bin  = ch_publish_binning_dastool_contig2bin
+    binning_dastool             = ch_publish_binning_dastool
+    binning_dastool_bins        = ch_publish_binning_dastool_bins
+    binning_depths_bins         = ch_publish_binning_depths_bins
+    binning_dereplication       = ch_publish_binning_dereplication
+    binning_summary             = ch_publish_binning_summary
+    binning_bigmag              = ch_publish_binning_bigmag
 }

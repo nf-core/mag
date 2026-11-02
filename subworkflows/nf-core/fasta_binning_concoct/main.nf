@@ -42,6 +42,8 @@ workflow FASTA_BINNING_CONCOCT {
     raw_clustering_csv  = CONCOCT_CONCOCT.out.clustering_csv       // channel: [ val(meta), [ csv ] ]
     pca_original        = CONCOCT_CONCOCT.out.pca_components_csv   // channel: [ val(meta), [ csv ] ]
     pca_transformed     = CONCOCT_CONCOCT.out.pca_transformed_csv  // channel: [ val(meta), [ csv ] ]
+    args_txt            = CONCOCT_CONCOCT.out.args_txt             // channel: [ val(meta), [ txt ] ]
+    log_txt             = CONCOCT_CONCOCT.out.log_txt              // channel: [ val(meta), [ txt ] ]
 
     cluster_table       = CONCOCT_MERGECUTUPCLUSTERING.out.csv     // channel: [ val(meta), [ csv ] ]
     bins                = CONCOCT_EXTRACTFASTABINS.out.fasta       // channel: [ val(meta), [ fasta ] ]

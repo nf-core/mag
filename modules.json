@@ -401,7 +401,8 @@
                     "fasta_binning_concoct": {
                         "branch": "master",
                         "git_sha": "6ae294906b568ca100ae7a68c24758c2509b650f",
-                        "installed_by": ["subworkflows"]
+                        "installed_by": ["subworkflows"],
+                        "patch": "subworkflows/nf-core/fasta_binning_concoct/fasta_binning_concoct.diff"
                     },
                     "utils_nextflow_pipeline": {
                         "branch": "master",

@@ -135,4 +135,5 @@ workflow DEREPLICATION {
     emit:
     dereplicated_bins = ch_dereplicated_bins // channel: [ val(meta), path(bin) ], one representative genome per cluster, original metadata preserved
     cluster_tsv       = GALAH.out.tsv // channel: [ val(meta), path(tsv) ], representative <TAB> member cluster definition
+    publish           = GALAH.out.tsv.join(GALAH.out.dereplicated_bins) // channel: [ val(meta), path(tsv), path(bins) ]
 }

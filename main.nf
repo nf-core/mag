@@ -326,6 +326,22 @@ workflow NFCORE_MAG {
     adna_consensus              = MAG.out.adna_consensus
     adna_pydamage_analyze       = MAG.out.adna_pydamage_analyze
     adna_pydamage_filter        = MAG.out.adna_pydamage_filter
+    binning_depths_contigs      = MAG.out.binning_depths_contigs
+    binning_metabat2            = MAG.out.binning_metabat2
+    binning_maxbin2             = MAG.out.binning_maxbin2
+    binning_concoct_stats       = MAG.out.binning_concoct_stats
+    binning_concoct_bins        = MAG.out.binning_concoct_bins
+    binning_comebin             = MAG.out.binning_comebin
+    binning_metabinner          = MAG.out.binning_metabinner
+    binning_semibin             = MAG.out.binning_semibin
+    binning_unbinned            = MAG.out.binning_unbinned
+    binning_dastool_contig2bin  = MAG.out.binning_dastool_contig2bin
+    binning_dastool             = MAG.out.binning_dastool
+    binning_dastool_bins        = MAG.out.binning_dastool_bins
+    binning_depths_bins         = MAG.out.binning_depths_bins
+    binning_dereplication       = MAG.out.binning_dereplication
+    binning_summary             = MAG.out.binning_summary
+    binning_bigmag              = MAG.out.binning_bigmag
 }
 
 /*
@@ -399,6 +415,22 @@ workflow {
     adna_consensus              = NFCORE_MAG.out.adna_consensus
     adna_pydamage_analyze       = NFCORE_MAG.out.adna_pydamage_analyze
     adna_pydamage_filter        = NFCORE_MAG.out.adna_pydamage_filter
+    binning_depths_contigs      = NFCORE_MAG.out.binning_depths_contigs
+    binning_metabat2            = NFCORE_MAG.out.binning_metabat2
+    binning_maxbin2             = NFCORE_MAG.out.binning_maxbin2
+    binning_concoct_stats       = NFCORE_MAG.out.binning_concoct_stats
+    binning_concoct_bins        = NFCORE_MAG.out.binning_concoct_bins
+    binning_comebin             = NFCORE_MAG.out.binning_comebin
+    binning_metabinner          = NFCORE_MAG.out.binning_metabinner
+    binning_semibin             = NFCORE_MAG.out.binning_semibin
+    binning_unbinned            = NFCORE_MAG.out.binning_unbinned
+    binning_dastool_contig2bin  = NFCORE_MAG.out.binning_dastool_contig2bin
+    binning_dastool             = NFCORE_MAG.out.binning_dastool
+    binning_dastool_bins        = NFCORE_MAG.out.binning_dastool_bins
+    binning_depths_bins         = NFCORE_MAG.out.binning_depths_bins
+    binning_dereplication       = NFCORE_MAG.out.binning_dereplication
+    binning_summary             = NFCORE_MAG.out.binning_summary
+    binning_bigmag              = NFCORE_MAG.out.binning_bigmag
 }
 
 /*
@@ -495,5 +527,84 @@ output {
     }
     adna_pydamage_filter {
         path { meta, _files -> "Ancient_DNA/pydamage/filter/${meta.assembler}-${meta.id}" }
+    }
+    binning_depths_contigs {
+        path 'GenomeBinning/depths/contigs'
+    }
+    binning_metabat2 {
+        path { _meta, bins, tooshort, lowdepth ->
+            bins >> 'GenomeBinning/MetaBAT2/bins/'
+            tooshort >> 'GenomeBinning/MetaBAT2/discarded/'
+            lowdepth >> 'GenomeBinning/MetaBAT2/discarded/'
+        }
+    }
+    binning_maxbin2 {
+        path { _meta, bins, tooshort, summary, abundance ->
+            bins >> 'GenomeBinning/MaxBin2/bins/'
+            tooshort >> 'GenomeBinning/MaxBin2/discarded/'
+            summary >> 'GenomeBinning/MaxBin2/'
+            abundance >> 'GenomeBinning/MaxBin2/'
+        }
+    }
+    binning_concoct_stats {
+        path 'GenomeBinning/CONCOCT/stats'
+    }
+    binning_concoct_bins {
+        path { _meta, bin ->
+            bin >> "GenomeBinning/CONCOCT/bins/${bin.name}"
+        }
+    }
+    binning_comebin {
+        path { _meta, bins, tsv, log, embeddings, covembeddings ->
+            bins >> 'GenomeBinning/COMEBin/bins/'
+            tsv >> 'GenomeBinning/COMEBin/stats/'
+            log >> 'GenomeBinning/COMEBin/stats/'
+            embeddings >> 'GenomeBinning/COMEBin/stats/'
+            covembeddings >> 'GenomeBinning/COMEBin/stats/'
+        }
+    }
+    binning_metabinner {
+        path { _meta, membership, log, bins, unbinned ->
+            membership >> 'GenomeBinning/MetaBinner/stats/'
+            log >> 'GenomeBinning/MetaBinner/stats/'
+            bins >> 'GenomeBinning/MetaBinner/'
+            unbinned >> 'GenomeBinning/MetaBinner/unbinned/'
+        }
+    }
+    binning_semibin {
+        path { _meta, bins, log ->
+            bins >> 'GenomeBinning/SemiBin2/'
+            log >> 'GenomeBinning/SemiBin2/log/'
+        }
+    }
+    binning_unbinned {
+        path { meta, unbinned, pooled ->
+            unbinned >> "GenomeBinning/${meta.binner}/unbinned/"
+            pooled >> "GenomeBinning/${meta.binner}/unbinned/discarded/"
+        }
+    }
+    binning_dastool_contig2bin {
+        path 'GenomeBinning/DASTool/fastatocontig2bin'
+    }
+    binning_dastool {
+        path 'GenomeBinning/DASTool'
+    }
+    binning_dastool_bins {
+        path { _meta, bins, unbins ->
+            bins >> 'GenomeBinning/DASTool/bins/'
+            unbins >> 'GenomeBinning/DASTool/unbinned/'
+        }
+    }
+    binning_depths_bins {
+        path 'GenomeBinning/depths/bins'
+    }
+    binning_dereplication {
+        path 'GenomeBinning/Dereplication'
+    }
+    binning_summary {
+        path 'GenomeBinning'
+    }
+    binning_bigmag {
+        path 'GenomeBinning/BIgMAG'
     }
 }
