@@ -809,11 +809,19 @@ if (!params.skip_prokka || !params.skip_bakta) {
     )
 
     emit:
-    multiqc_report        = MULTIQC.out.report.map { _meta, report -> [report] }.toList() // channel: /path/to/multiqc_report.html
-    versions              = ch_versions // channel: [ path(versions.yml) ]
-    shortread_fastqc      = SHORTREAD_PREPROCESSING.out.publish_fastqc
-    shortread_clipping    = SHORTREAD_PREPROCESSING.out.publish_clipping
-    shortread_hostremoval = SHORTREAD_PREPROCESSING.out.publish_hostremoval
-    shortread_phixremoval = SHORTREAD_PREPROCESSING.out.publish_phixremoval
-    shortread_bbnorm      = SHORTREAD_PREPROCESSING.out.publish_bbnorm
+    multiqc_report             = MULTIQC.out.report.map { _meta, report -> [report] }.toList() // channel: /path/to/multiqc_report.html
+    versions                   = ch_versions // channel: [ path(versions.yml) ]
+    shortread_fastqc           = SHORTREAD_PREPROCESSING.out.publish_fastqc
+    shortread_clipping         = SHORTREAD_PREPROCESSING.out.publish_clipping
+    shortread_hostremoval      = SHORTREAD_PREPROCESSING.out.publish_hostremoval
+    shortread_phixremoval      = SHORTREAD_PREPROCESSING.out.publish_phixremoval
+    shortread_bbnorm           = SHORTREAD_PREPROCESSING.out.publish_bbnorm
+    longread_adaptertrimming   = LONGREAD_PREPROCESSING.out.publish_adaptertrimming
+    longread_filtering         = LONGREAD_PREPROCESSING.out.publish_filtering
+    longread_nanolyse          = LONGREAD_PREPROCESSING.out.publish_nanolyse
+    longread_nanoplot          = LONGREAD_PREPROCESSING.out.publish_nanoplot
+    longread_hostremoval_index = LONGREAD_PREPROCESSING.out.publish_hostremoval_index
+    longread_hostremoval_bam   = LONGREAD_PREPROCESSING.out.publish_hostremoval_bam
+    longread_hostremoval_fastq = LONGREAD_PREPROCESSING.out.publish_hostremoval_fastq
+    longread_hostremoval_stats = LONGREAD_PREPROCESSING.out.publish_hostremoval_stats
 }

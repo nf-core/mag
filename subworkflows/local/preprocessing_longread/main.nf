@@ -26,11 +26,19 @@ workflow LONGREAD_PREPROCESSING {
     main:
     ch_versions = channel.empty()
     ch_multiqc_files = channel.empty()
+    ch_publish_adaptertrimming = channel.empty()
+    ch_publish_filtering = channel.empty()
+    ch_publish_nanolyse = channel.empty()
+    ch_publish_hostremoval_index = channel.empty()
+    ch_publish_hostremoval_bam = channel.empty()
+    ch_publish_hostremoval_fastq = channel.empty()
+    ch_publish_hostremoval_stats = channel.empty()
 
     NANOPLOT_RAW(
         ch_raw_long_reads
     )
     ch_versions = ch_versions.mix(NANOPLOT_RAW.out.versions)
+    ch_publish_nanoplot = NANOPLOT_RAW.out.html.mix(NANOPLOT_RAW.out.png, NANOPLOT_RAW.out.txt)
 
     if (!params.assembly_input) {
         if (!(params.skip_longread_adapter_trimming || params.skip_adapter_trimming) && !val_skip_qc) {
@@ -51,6 +59,9 @@ workflow LONGREAD_PREPROCESSING {
                 ch_versions = ch_versions.mix(PORECHOP_ABI.out.versions)
                 ch_long_reads = ch_long_reads.mix(PORECHOP_ABI.out.reads)
                 ch_multiqc_files = ch_multiqc_files.mix(PORECHOP_ABI.out.log)
+                if (params.save_porechop_reads) {
+                    ch_publish_adaptertrimming = PORECHOP_ABI.out.reads
+                }
             }
             else if (params.longread_adaptertrimming_tool == 'porechop') {
                 PORECHOP_PORECHOP(
@@ -59,6 +70,9 @@ workflow LONGREAD_PREPROCESSING {
                 ch_versions = ch_versions.mix(PORECHOP_PORECHOP.out.versions)
                 ch_long_reads = ch_long_reads.mix(PORECHOP_PORECHOP.out.reads)
                 ch_multiqc_files = ch_multiqc_files.mix(PORECHOP_PORECHOP.out.log)
+                if (params.save_porechop_reads) {
+                    ch_publish_adaptertrimming = PORECHOP_PORECHOP.out.reads
+                }
             }
         }
         else {
@@ -72,6 +86,7 @@ workflow LONGREAD_PREPROCESSING {
             )
             ch_versions = ch_versions.mix(NANOLYSE.out.versions)
             ch_long_reads = NANOLYSE.out.fastq
+            ch_publish_nanolyse = NANOLYSE.out.log.mix(params.save_lambdaremoved_reads ? NANOLYSE.out.fastq : channel.empty())
         }
         if (!params.skip_longread_filtering && !val_skip_qc) {
             if (params.longread_filtering_tool == 'filtlong') {
@@ -97,6 +112,9 @@ workflow LONGREAD_PREPROCESSING {
                 ch_versions = ch_versions.mix(FILTLONG.out.versions)
                 ch_long_reads = FILTLONG.out.reads
                 ch_multiqc_files = ch_multiqc_files.mix(FILTLONG.out.log)
+                if (params.save_filtered_longreads) {
+                    ch_publish_filtering = FILTLONG.out.reads
+                }
             }
             else if (params.longread_filtering_tool == 'nanoq') {
                 NANOQ(
@@ -106,6 +124,7 @@ workflow LONGREAD_PREPROCESSING {
                 ch_versions = ch_versions.mix(NANOQ.out.versions)
                 ch_long_reads = NANOQ.out.reads
                 ch_multiqc_files = ch_multiqc_files.mix(NANOQ.out.stats)
+                ch_publish_filtering = NANOQ.out.stats.mix(params.save_filtered_longreads ? NANOQ.out.reads : channel.empty())
             }
             else if (params.longread_filtering_tool == 'chopper') {
                 CHOPPER(
@@ -114,6 +133,9 @@ workflow LONGREAD_PREPROCESSING {
                 )
                 ch_versions = ch_versions.mix(CHOPPER.out.versions)
                 ch_long_reads = CHOPPER.out.fastq
+                if (params.save_lambdaremoved_reads || params.save_filtered_longreads) {
+                    ch_publish_filtering = CHOPPER.out.fastq
+                }
             }
         }
 
@@ -126,6 +148,10 @@ workflow LONGREAD_PREPROCESSING {
             ch_versions = ch_versions.mix(LONGREAD_HOSTREMOVAL.out.versions)
             ch_multiqc_files = ch_multiqc_files.mix(LONGREAD_HOSTREMOVAL.out.multiqc_files)
             ch_long_reads = LONGREAD_HOSTREMOVAL.out.reads
+            ch_publish_hostremoval_index = LONGREAD_HOSTREMOVAL.out.publish_index
+            ch_publish_hostremoval_bam = LONGREAD_HOSTREMOVAL.out.publish_bam
+            ch_publish_hostremoval_fastq = LONGREAD_HOSTREMOVAL.out.publish_fastq
+            ch_publish_hostremoval_stats = LONGREAD_HOSTREMOVAL.out.publish_stats
         }
 
         /**
@@ -137,6 +163,7 @@ workflow LONGREAD_PREPROCESSING {
             if (!((params.skip_longread_adapter_trimming || params.skip_adapter_trimming) && params.skip_longread_filtering && params.keep_lambda && !(params.host_fasta || params.host_genome))) {
                 NANOPLOT_FILTERED(ch_long_reads)
                 ch_versions = ch_versions.mix(NANOPLOT_FILTERED.out.versions)
+                ch_publish_nanoplot = ch_publish_nanoplot.mix(NANOPLOT_FILTERED.out.html, NANOPLOT_FILTERED.out.png, NANOPLOT_FILTERED.out.txt)
             }
         }
 
@@ -164,7 +191,15 @@ workflow LONGREAD_PREPROCESSING {
     ch_long_reads = CAT_FASTQ_LONGREADS.out.reads.mix(ch_long_reads_forcat.skip_cat.map { meta, reads -> [meta, reads[0]] })
 
     emit:
-    long_reads    = ch_long_reads
-    versions      = ch_versions
-    multiqc_files = ch_multiqc_files
+    long_reads                = ch_long_reads
+    versions                  = ch_versions
+    multiqc_files             = ch_multiqc_files
+    publish_adaptertrimming   = ch_publish_adaptertrimming   // [val(meta), path(fastq)]
+    publish_filtering         = ch_publish_filtering         // [val(meta), path(files)]
+    publish_nanolyse          = ch_publish_nanolyse          // path(log) | [val(meta), path(fastq)]
+    publish_nanoplot          = ch_publish_nanoplot          // [val(meta), path(files)]
+    publish_hostremoval_index = ch_publish_hostremoval_index // [val(meta), path(mmi)]
+    publish_hostremoval_bam   = ch_publish_hostremoval_bam   // [val(meta), path(bam)]
+    publish_hostremoval_fastq = ch_publish_hostremoval_fastq // [val(meta), path(fastq)]
+    publish_hostremoval_stats = ch_publish_hostremoval_stats // [val(meta), path(stats)]
 }

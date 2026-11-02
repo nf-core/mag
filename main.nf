@@ -298,12 +298,20 @@ workflow NFCORE_MAG {
     )
 
     emit:
-    multiqc_report        = MAG.out.multiqc_report // channel: /path/to/multiqc_report.html
-    shortread_fastqc      = MAG.out.shortread_fastqc
-    shortread_clipping    = MAG.out.shortread_clipping
-    shortread_hostremoval = MAG.out.shortread_hostremoval
-    shortread_phixremoval = MAG.out.shortread_phixremoval
-    shortread_bbnorm      = MAG.out.shortread_bbnorm
+    multiqc_report             = MAG.out.multiqc_report // channel: /path/to/multiqc_report.html
+    shortread_fastqc           = MAG.out.shortread_fastqc
+    shortread_clipping         = MAG.out.shortread_clipping
+    shortread_hostremoval      = MAG.out.shortread_hostremoval
+    shortread_phixremoval      = MAG.out.shortread_phixremoval
+    shortread_bbnorm           = MAG.out.shortread_bbnorm
+    longread_adaptertrimming   = MAG.out.longread_adaptertrimming
+    longread_filtering         = MAG.out.longread_filtering
+    longread_nanolyse          = MAG.out.longread_nanolyse
+    longread_nanoplot          = MAG.out.longread_nanoplot
+    longread_hostremoval_index = MAG.out.longread_hostremoval_index
+    longread_hostremoval_bam   = MAG.out.longread_hostremoval_bam
+    longread_hostremoval_fastq = MAG.out.longread_hostremoval_fastq
+    longread_hostremoval_stats = MAG.out.longread_hostremoval_stats
 }
 
 /*
@@ -350,11 +358,19 @@ workflow {
     )
 
     publish:
-    shortread_fastqc      = NFCORE_MAG.out.shortread_fastqc
-    shortread_clipping    = NFCORE_MAG.out.shortread_clipping
-    shortread_hostremoval = NFCORE_MAG.out.shortread_hostremoval
-    shortread_phixremoval = NFCORE_MAG.out.shortread_phixremoval
-    shortread_bbnorm      = NFCORE_MAG.out.shortread_bbnorm
+    shortread_fastqc           = NFCORE_MAG.out.shortread_fastqc
+    shortread_clipping         = NFCORE_MAG.out.shortread_clipping
+    shortread_hostremoval      = NFCORE_MAG.out.shortread_hostremoval
+    shortread_phixremoval      = NFCORE_MAG.out.shortread_phixremoval
+    shortread_bbnorm           = NFCORE_MAG.out.shortread_bbnorm
+    longread_adaptertrimming   = NFCORE_MAG.out.longread_adaptertrimming
+    longread_filtering         = NFCORE_MAG.out.longread_filtering
+    longread_nanolyse          = NFCORE_MAG.out.longread_nanolyse
+    longread_nanoplot          = NFCORE_MAG.out.longread_nanoplot
+    longread_hostremoval_index = NFCORE_MAG.out.longread_hostremoval_index
+    longread_hostremoval_bam   = NFCORE_MAG.out.longread_hostremoval_bam
+    longread_hostremoval_fastq = NFCORE_MAG.out.longread_hostremoval_fastq
+    longread_hostremoval_stats = NFCORE_MAG.out.longread_hostremoval_stats
 }
 
 /*
@@ -381,5 +397,29 @@ output {
             fastq >> 'bbmap/bbnorm/'
             log >> 'bbmap/bbnorm/logs/'
         }
+    }
+    longread_adaptertrimming {
+        path 'QC_longreads/porechop'
+    }
+    longread_filtering {
+        path "QC_longreads/${[filtlong: 'Filtlong', nanoq: 'Nanoq', chopper: 'Chopper'][params.longread_filtering_tool]}"
+    }
+    longread_nanolyse {
+        path 'QC_longreads/NanoLyse'
+    }
+    longread_nanoplot {
+        path { meta, _files -> "QC_longreads/NanoPlot/${meta.id}" }
+    }
+    longread_hostremoval_index {
+        path 'QC_longreads/minimap2/index'
+    }
+    longread_hostremoval_bam {
+        path 'QC_longreads/minimap2/align'
+    }
+    longread_hostremoval_fastq {
+        path 'QC_longreads/samtools/fastq'
+    }
+    longread_hostremoval_stats {
+        path 'QC_longreads/samtools/stats'
     }
 }
