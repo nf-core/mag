@@ -455,10 +455,9 @@ output {
     }
     assembly_pypolca {
         path { meta, polished, vcf, report ->
-            def prefix = "${meta.assembler}-${meta.id}"
-            polished >> "Assembly/${meta.assembler}-pypolca/${prefix}/${polished.name.replace('_corrected.fasta', '_pypolca.fasta')}"
-            vcf >> "Assembly/${meta.assembler}-pypolca/${prefix}/"
-            report >> "Assembly/${meta.assembler}-pypolca/${prefix}/"
+            polished >> "Assembly/${meta.assembler}-pypolca/${meta.assembler}-${meta.id}/${polished.name.replace('_corrected.fasta', '_pypolca.fasta')}"
+            vcf >> "Assembly/${meta.assembler}-pypolca/${meta.assembler}-${meta.id}/"
+            report >> "Assembly/${meta.assembler}-pypolca/${meta.assembler}-${meta.id}/"
         }
     }
     assembly_quast {
