@@ -342,6 +342,7 @@ workflow NFCORE_MAG {
     binning_dereplication       = MAG.out.binning_dereplication
     binning_summary             = MAG.out.binning_summary
     binning_bigmag              = MAG.out.binning_bigmag
+    binning_contig2bin          = MAG.out.binning_contig2bin
     binqc_busco                 = MAG.out.binqc_busco
     binqc_busco_db              = MAG.out.binqc_busco_db
     binqc_checkm_db             = MAG.out.binqc_checkm_db
@@ -357,6 +358,7 @@ workflow NFCORE_MAG {
     taxonomy_tiara              = MAG.out.taxonomy_tiara
     taxonomy_cat_db             = MAG.out.taxonomy_cat_db
     taxonomy_cat_bins           = MAG.out.taxonomy_cat_bins
+    taxonomy_cat_summary        = MAG.out.taxonomy_cat_summary
     taxonomy_cat_unbins         = MAG.out.taxonomy_cat_unbins
     taxonomy_gtdbtk             = MAG.out.taxonomy_gtdbtk
     taxonomy_gtdbtk_summary     = MAG.out.taxonomy_gtdbtk_summary
@@ -455,6 +457,7 @@ workflow {
     binning_dereplication       = NFCORE_MAG.out.binning_dereplication
     binning_summary             = NFCORE_MAG.out.binning_summary
     binning_bigmag              = NFCORE_MAG.out.binning_bigmag
+    binning_contig2bin          = NFCORE_MAG.out.binning_contig2bin
     binqc_busco                 = NFCORE_MAG.out.binqc_busco
     binqc_busco_db              = NFCORE_MAG.out.binqc_busco_db
     binqc_checkm_db             = NFCORE_MAG.out.binqc_checkm_db
@@ -470,6 +473,7 @@ workflow {
     taxonomy_tiara              = NFCORE_MAG.out.taxonomy_tiara
     taxonomy_cat_db             = NFCORE_MAG.out.taxonomy_cat_db
     taxonomy_cat_bins           = NFCORE_MAG.out.taxonomy_cat_bins
+    taxonomy_cat_summary        = NFCORE_MAG.out.taxonomy_cat_summary
     taxonomy_cat_unbins         = NFCORE_MAG.out.taxonomy_cat_unbins
     taxonomy_gtdbtk             = NFCORE_MAG.out.taxonomy_gtdbtk
     taxonomy_gtdbtk_summary     = NFCORE_MAG.out.taxonomy_gtdbtk_summary
@@ -652,6 +656,9 @@ output {
     binning_summary {
         path 'GenomeBinning'
     }
+    binning_contig2bin {
+        path 'GenomeBinning/contig_to_bin'
+    }
     binning_bigmag {
         path 'GenomeBinning/BIgMAG'
     }
@@ -701,6 +708,9 @@ output {
     }
     taxonomy_cat_db {
         path 'Taxonomy/CAT/db'
+    }
+    taxonomy_cat_summary {
+        path 'Taxonomy/CAT'
     }
     taxonomy_cat_bins {
         path { meta, _files -> "Taxonomy/CAT/${meta.assembler}/${meta.binner}/${meta.id}/bins" }

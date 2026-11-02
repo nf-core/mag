@@ -92,7 +92,6 @@ workflow CATPACK {
         .map { _meta, summary -> summary }
         .collectFile(
             name: 'bat_summary.tsv',
-            storeDir: "${params.outdir}/Taxonomy/CAT/",
             keepHeader: true,
             sort: 'deep',
         )

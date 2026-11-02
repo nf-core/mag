@@ -100,6 +100,8 @@ workflow MAG {
     def ch_publish_binning_dereplication = channel.empty()
     def ch_publish_binning_summary = channel.empty()
     def ch_publish_binning_bigmag = channel.empty()
+    def ch_publish_binning_contig2bin = channel.empty()
+    def ch_publish_taxonomy_cat_summary = channel.empty()
     def ch_publish_binqc_busco = channel.empty()
     def ch_publish_binqc_busco_db = channel.empty()
     def ch_publish_binqc_checkm_db = channel.empty()
@@ -605,10 +607,10 @@ workflow MAG {
             }
             .collectFile(
                 name: 'contig_to_bin_map.tsv',
-                storeDir: params.outdir + '/GenomeBinning/contig_to_bin/',
                 keepHeader: true,
                 sort: true,
             )
+        ch_publish_binning_contig2bin = ch_allcontig2binmap
 
         /*
         * Bin QC subworkflows: for checking bin completeness with either BUSCO, CHECKM, CHECKM2, and/or GUNC
@@ -689,6 +691,7 @@ workflow MAG {
             ch_catpack_summary = CATPACK.out.summary
             ch_publish_taxonomy_cat_db = CATPACK.out.publish_db
             ch_publish_taxonomy_cat_bins = CATPACK.out.publish_bins
+            ch_publish_taxonomy_cat_summary = CATPACK.out.summary
             ch_publish_taxonomy_cat_unbins = CATPACK.out.publish_unbins
         }
 
@@ -993,6 +996,7 @@ if (!params.skip_prokka || !params.skip_bakta) {
     binning_dereplication       = ch_publish_binning_dereplication
     binning_summary             = ch_publish_binning_summary
     binning_bigmag              = ch_publish_binning_bigmag
+    binning_contig2bin          = ch_publish_binning_contig2bin
     binqc_busco                 = ch_publish_binqc_busco
     binqc_busco_db              = ch_publish_binqc_busco_db
     binqc_checkm_db             = ch_publish_binqc_checkm_db
@@ -1008,6 +1012,7 @@ if (!params.skip_prokka || !params.skip_bakta) {
     taxonomy_tiara              = ch_publish_taxonomy_tiara
     taxonomy_cat_db             = ch_publish_taxonomy_cat_db
     taxonomy_cat_bins           = ch_publish_taxonomy_cat_bins
+    taxonomy_cat_summary        = ch_publish_taxonomy_cat_summary
     taxonomy_cat_unbins         = ch_publish_taxonomy_cat_unbins
     taxonomy_gtdbtk             = ch_publish_taxonomy_gtdbtk
     taxonomy_gtdbtk_summary     = ch_publish_taxonomy_gtdbtk_summary
