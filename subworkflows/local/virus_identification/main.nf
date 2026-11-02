@@ -33,4 +33,19 @@ workflow VIRUS_IDENTIFICATION {
     emit:
     identified_viruses = ch_identified_viruses
     versions           = ch_versions
+    publish            = GENOMAD_ENDTOEND.out.aggregated_classification.mix(
+        GENOMAD_ENDTOEND.out.marker_classification,
+        GENOMAD_ENDTOEND.out.taxonomy,
+        GENOMAD_ENDTOEND.out.provirus,
+        GENOMAD_ENDTOEND.out.compositions,
+        GENOMAD_ENDTOEND.out.calibrated_classification,
+        GENOMAD_ENDTOEND.out.plasmid_fasta,
+        GENOMAD_ENDTOEND.out.plasmid_genes,
+        GENOMAD_ENDTOEND.out.plasmid_proteins,
+        GENOMAD_ENDTOEND.out.plasmid_summary,
+        GENOMAD_ENDTOEND.out.virus_fasta,
+        GENOMAD_ENDTOEND.out.virus_genes,
+        GENOMAD_ENDTOEND.out.virus_proteins,
+        GENOMAD_ENDTOEND.out.virus_summary,
+    ) // [val(meta), path(file)]
 }

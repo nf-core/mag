@@ -27,6 +27,8 @@ workflow ANCIENT_DNA_ASSEMBLY_VALIDATION {
 
     if (params.skip_ancient_damagecorrection) {
         ch_corrected_contigs = channel.empty()
+        ch_freebayes_vcf = channel.empty()
+        ch_filtered_vcf = channel.empty()
     }
 
     if (!params.skip_ancient_damagecorrection) {
@@ -60,6 +62,8 @@ workflow ANCIENT_DNA_ASSEMBLY_VALIDATION {
         ch_versions = ch_versions.mix(BCFTOOLS_CONSENSUS.out.versions)
 
         ch_corrected_contigs = BCFTOOLS_CONSENSUS.out.fasta
+        ch_freebayes_vcf = FREEBAYES.out.vcf
+        ch_filtered_vcf = BCFTOOLS_VIEW.out.vcf
     }
 
     emit:
@@ -67,4 +71,6 @@ workflow ANCIENT_DNA_ASSEMBLY_VALIDATION {
     pydamage_results          = PYDAMAGE_ANALYZE.out.csv // channel: [ val(meta), path(csv) ]
     pydamage_filtered_results = PYDAMAGE_FILTER.out.csv // channel: [ val(meta), path(csv) ]
     versions                  = ch_versions // channel: [ versions.yml ]
+    freebayes_vcf             = ch_freebayes_vcf // channel: [ val(meta), path(vcf) ]
+    filtered_vcf              = ch_filtered_vcf // channel: [ val(meta), path(vcf) ]
 }

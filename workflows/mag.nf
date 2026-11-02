@@ -78,6 +78,12 @@ workflow MAG {
     def ch_publish_assembly_ale = channel.empty()
     def ch_publish_assembly_deepmased_features = channel.empty()
     def ch_publish_assembly_deepmased = channel.empty()
+    def ch_publish_virus_identification = channel.empty()
+    def ch_publish_adna_freebayes = channel.empty()
+    def ch_publish_adna_filtered = channel.empty()
+    def ch_publish_adna_consensus = channel.empty()
+    def ch_publish_adna_pydamage_analyze = channel.empty()
+    def ch_publish_adna_pydamage_filter = channel.empty()
     def ch_multiqc_files = channel.empty()
 
     ////////////////////////////////////////////////////
@@ -304,6 +310,7 @@ workflow MAG {
     if (params.run_virus_identification) {
         VIRUS_IDENTIFICATION(ch_assemblies, params.genomad_db)
         ch_versions = ch_versions.mix(VIRUS_IDENTIFICATION.out.versions)
+        ch_publish_virus_identification = VIRUS_IDENTIFICATION.out.publish
     }
 
     /*
@@ -360,6 +367,11 @@ workflow MAG {
     if (params.ancient_dna) {
         ANCIENT_DNA_ASSEMBLY_VALIDATION(BINNING_PREPARATION_FULL.out.grouped_mappings)
         ch_versions = ch_versions.mix(ANCIENT_DNA_ASSEMBLY_VALIDATION.out.versions)
+        ch_publish_adna_freebayes = ANCIENT_DNA_ASSEMBLY_VALIDATION.out.freebayes_vcf
+        ch_publish_adna_filtered = ANCIENT_DNA_ASSEMBLY_VALIDATION.out.filtered_vcf
+        ch_publish_adna_consensus = ANCIENT_DNA_ASSEMBLY_VALIDATION.out.contigs_recalled
+        ch_publish_adna_pydamage_analyze = ANCIENT_DNA_ASSEMBLY_VALIDATION.out.pydamage_results
+        ch_publish_adna_pydamage_filter = ANCIENT_DNA_ASSEMBLY_VALIDATION.out.pydamage_filtered_results
     }
 
     /*
@@ -848,4 +860,10 @@ if (!params.skip_prokka || !params.skip_bakta) {
     assembly_ale                = ch_publish_assembly_ale
     assembly_deepmased_features = ch_publish_assembly_deepmased_features
     assembly_deepmased          = ch_publish_assembly_deepmased
+    virus_identification        = ch_publish_virus_identification
+    adna_freebayes              = ch_publish_adna_freebayes
+    adna_filtered               = ch_publish_adna_filtered
+    adna_consensus              = ch_publish_adna_consensus
+    adna_pydamage_analyze       = ch_publish_adna_pydamage_analyze
+    adna_pydamage_filter        = ch_publish_adna_pydamage_filter
 }

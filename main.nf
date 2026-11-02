@@ -320,6 +320,12 @@ workflow NFCORE_MAG {
     assembly_ale                = MAG.out.assembly_ale
     assembly_deepmased_features = MAG.out.assembly_deepmased_features
     assembly_deepmased          = MAG.out.assembly_deepmased
+    virus_identification        = MAG.out.virus_identification
+    adna_freebayes              = MAG.out.adna_freebayes
+    adna_filtered               = MAG.out.adna_filtered
+    adna_consensus              = MAG.out.adna_consensus
+    adna_pydamage_analyze       = MAG.out.adna_pydamage_analyze
+    adna_pydamage_filter        = MAG.out.adna_pydamage_filter
 }
 
 /*
@@ -387,6 +393,12 @@ workflow {
     assembly_ale                = NFCORE_MAG.out.assembly_ale
     assembly_deepmased_features = NFCORE_MAG.out.assembly_deepmased_features
     assembly_deepmased          = NFCORE_MAG.out.assembly_deepmased
+    virus_identification        = NFCORE_MAG.out.virus_identification
+    adna_freebayes              = NFCORE_MAG.out.adna_freebayes
+    adna_filtered               = NFCORE_MAG.out.adna_filtered
+    adna_consensus              = NFCORE_MAG.out.adna_consensus
+    adna_pydamage_analyze       = NFCORE_MAG.out.adna_pydamage_analyze
+    adna_pydamage_filter        = NFCORE_MAG.out.adna_pydamage_filter
 }
 
 /*
@@ -466,5 +478,23 @@ output {
     }
     assembly_deepmased {
         path { meta, _files -> "Assembly/${meta.assembler}/QC/${meta.id}/DeepMAsED" }
+    }
+    virus_identification {
+        path { meta, _files -> "VirusIdentification/geNomad/${meta.id}" }
+    }
+    adna_freebayes {
+        path 'Ancient_DNA/variant_calling/freebayes'
+    }
+    adna_filtered {
+        path 'Ancient_DNA/variant_calling/filtered'
+    }
+    adna_consensus {
+        path 'Ancient_DNA/variant_calling/consensus'
+    }
+    adna_pydamage_analyze {
+        path { meta, _files -> "Ancient_DNA/pydamage/analyze/${meta.assembler}-${meta.id}" }
+    }
+    adna_pydamage_filter {
+        path { meta, _files -> "Ancient_DNA/pydamage/filter/${meta.assembler}-${meta.id}" }
     }
 }
