@@ -365,6 +365,7 @@ workflow NFCORE_MAG {
     annotation_bakta            = MAG.out.annotation_bakta
     annotation_mmseqs_db        = MAG.out.annotation_mmseqs_db
     annotation_metaeuk          = MAG.out.annotation_metaeuk
+    multiqc                     = MAG.out.multiqc
 }
 
 /*
@@ -477,6 +478,7 @@ workflow {
     annotation_bakta            = NFCORE_MAG.out.annotation_bakta
     annotation_mmseqs_db        = NFCORE_MAG.out.annotation_mmseqs_db
     annotation_metaeuk          = NFCORE_MAG.out.annotation_metaeuk
+    multiqc                     = NFCORE_MAG.out.multiqc
 }
 
 /*
@@ -726,5 +728,8 @@ output {
     }
     annotation_metaeuk {
         path { meta, _files -> "Annotation/MetaEuk/${meta.assembler}" }
+    }
+    multiqc {
+        path 'multiqc'
     }
 }

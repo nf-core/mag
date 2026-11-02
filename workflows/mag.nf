@@ -1016,4 +1016,5 @@ if (!params.skip_prokka || !params.skip_bakta) {
     annotation_bakta            = ch_publish_annotation_bakta
     annotation_mmseqs_db        = ch_publish_annotation_mmseqs_db
     annotation_metaeuk          = ch_publish_annotation_metaeuk
+    multiqc                     = MULTIQC.out.report.mix(MULTIQC.out.data, MULTIQC.out.plots)
 }
