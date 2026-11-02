@@ -538,10 +538,11 @@ output {
         path { meta, _files -> "Assembly/${meta.assembler}" }
     }
     assembly_pypolca {
+        // vcf and report already sit in a <assembler>-<id>/ subdir of the task dir, which is kept
         path { meta, polished, vcf, report ->
             polished >> "Assembly/${meta.assembler}-pypolca/${meta.assembler}-${meta.id}/${polished.name.replace('_corrected.fasta', '_pypolca.fasta')}"
-            vcf >> "Assembly/${meta.assembler}-pypolca/${meta.assembler}-${meta.id}/"
-            report >> "Assembly/${meta.assembler}-pypolca/${meta.assembler}-${meta.id}/"
+            vcf >> "Assembly/${meta.assembler}-pypolca/"
+            report >> "Assembly/${meta.assembler}-pypolca/"
         }
     }
     assembly_quast {
