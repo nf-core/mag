@@ -72,6 +72,9 @@ nextflow_pipeline {
             def dastool_unbins = getAllFilesFromDir(
                 params.outdir, include: ['GenomeBinning/DASTool/unbinned/*.fa.gz']
             )
+            def binette_bins = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/Binette/bins/*.fa.gz']
+            )
             def busco_summary = "${params.outdir}/GenomeBinning/QC/busco_summary.tsv"
             def bin_summary = "${params.outdir}/GenomeBinning/bin_summary.tsv"
 
@@ -102,10 +105,12 @@ nextflow_pipeline {
                 { assert metabat2_unbins.collect { file -> path("${file}").fasta.size() >= 0 }.every() },
                 { assert dastool_bins.collect { file -> path("${file}").fasta.size() > 0 }.every() },
                 { assert dastool_unbins.collect { file -> path("${file}").fasta.size() >= 0 }.every() },
+                { assert binette_bins.size() > 0 },
+                { assert binette_bins.collect { file -> path("${file}").fasta.size() > 0 }.every() },
 
                 // CSV checks
                 { assert path(bin_summary).csv(sep: "\t").rowCount > 0 },
-                { assert path(bin_summary).csv(sep: "\t").rowCount == dastool_bins.size() },
+                { assert path(bin_summary).csv(sep: "\t").rowCount == dastool_bins.size() + binette_bins.size() },
                 { assert path(busco_summary).csv(sep: "\t").rowCount > 0 },
                 { assert snapshot(
                     path(bin_summary).csv(sep: "\t").rowCount,

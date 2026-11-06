@@ -484,11 +484,22 @@ In this case, DAS Tool has not necessarily failed but was unable to complete the
 
 If you are regularly getting such errors, you can try reducing the `--refine_bins_dastool_threshold` value, which will modify the scoring threshold defined in the [DAS Tool publication](https://www.nature.com/articles/s41564-018-0171-1).
 
+### Choosing a refinement tool
+
+The pipeline supports two bin refinement tools, [DAS Tool](https://github.com/cmks/DAS_Tool) (`--refine_bins_dastool`) and [Binette](https://github.com/genotoul-bioinfo/Binette) (`--refine_bins_binette`).
+Both need at least two binners to be enabled.
+They run independently on the same input bins, so you can enable both and compare their refined bins.
+Each tool produces its own set of refined bins, and both sets are sent downstream when `--postbinning_input` is `refined_bins_only` or `both`.
+
+Binette assesses bin quality with CheckM2.
+It uses the database given with `--checkm2_db`, or downloads one otherwise.
+The same database is shared with CheckM2 bin QC (`--run_checkm2`), so it is only downloaded once.
+
 ### Reducing downstream runtime with `--postbinning_input`
 
 By default (`--postbinning_input raw_bins_only`), the raw output of every enabled binner is sent on to bin quality control (CheckM2/BUSCO).
 With more than one binner enabled, this means several likely redundant versions of the same underlying genome each pay the full CheckM2/BUSCO cost.
-Setting `--postbinning_input refined_bins_only` restricts this to DAS Tool's refined bins instead, which can substantially cut this cost whenever more than one binner is enabled; `both` runs it on both sets, useful for comparing raw vs. refined bins but paying the cost of both.
+Setting `--postbinning_input refined_bins_only` restricts this to the refined bins of DAS Tool and/or Binette instead, which can substantially cut this cost whenever more than one binner is enabled; `both` runs it on both sets, useful for comparing raw vs. refined bins but paying the cost of both.
 
 Taxonomic classification (GTDB-Tk, CAT/BAT) and Prokka and Bakta annotation are affected differently, and it depends on whether `--dereplicate` is also set.
 Without dereplication, they too run directly on whatever `--postbinning_input` selects, so `refined_bins_only` reduces their cost the same way it does for CheckM2/BUSCO.

@@ -144,6 +144,7 @@ params {
     refine_bins_dastool: Boolean
     refine_bins_dastool_threshold: Float = 0.5
     refine_bins_dastool_savecontig2bin: Boolean
+    refine_bins_binette: Boolean
 
     // Bin QC options
     skip_binqc: Boolean

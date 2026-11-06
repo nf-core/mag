@@ -86,6 +86,10 @@ If you are limited in the number of references, cite according to the version yo
 
   > Sieber, C. M. K., et al. 2018. "Recovery of Genomes from Metagenomes via a Dereplication, Aggregation and Scoring Strategy." Nature Microbiology 3 (7): 836-43. doi: 10.1038/s41564-018-0171-1
 
+- [Binette](https://doi.org/10.21105/joss.06782)
+
+  > Mainguy, J., & Hoede, C. 2024. "Binette: a fast and accurate bin refinement tool to construct high quality Metagenome Assembled Genomes." Journal of Open Source Software 9 (102): 6782. doi: 10.21105/joss.06782
+
 - [DeepMAsED](https://doi.org/10.1093/bioinformatics/btaa124)
 
   > Mineeva, O., Rojas-Carulla, M., Ley, R. E., Schölkopf, B., & Youngblut, N. D. (2020). DeepMAsED: evaluating the quality of metagenomic assemblies. Bioinformatics, 36(10), 3011-3017. doi: 10.1093/bioinformatics/btaa124
