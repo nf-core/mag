@@ -348,15 +348,19 @@ def validateInputParameters(hybrid) {
         log.warn("[nf-core/mag]: Specified min. contig size under minimum for MetaBAT2. MetaBAT2 will be run with 1500 (other binners not affected). You supplied: --min_contig_size ${params.min_contig_size}")
     }
 
-    // Check more than one binner is run for bin refinement  (required DAS by Tool)
+    // Check more than one binner is run for bin refinement
     // If the number of run binners (i.e., number of not-skipped) is more than one, otherwise throw an error
-    if (params.refine_bins_dastool && !([params.skip_metabat2, params.skip_maxbin2, params.skip_concoct, params.skip_metabinner, params.skip_comebin, params.skip_semibin].count(false) > 1)) {
+    def n_binners = [params.skip_metabat2, params.skip_maxbin2, params.skip_concoct, params.skip_metabinner, params.skip_comebin, params.skip_semibin].count(false)
+    if (params.refine_bins_dastool && n_binners < 2) {
         error('[nf-core/mag] ERROR: Bin refinement with --refine_bins_dastool requires at least two binners to be running (not skipped). Check input.')
+    }
+    if (params.refine_bins_binette && n_binners < 2) {
+        error('[nf-core/mag] ERROR: Bin refinement with --refine_bins_binette requires at least two binners to be running (not skipped). Check input.')
     }
 
     // Check that bin refinement is actually turned on if any of the refined bins are requested for downstream
-    if (!params.refine_bins_dastool && params.postbinning_input != 'raw_bins_only') {
-        error("[nf-core/mag] ERROR: The parameter '--postbinning_input ${params.postbinning_input}' for downstream steps can only be specified if bin refinement is activated with --refine_bins_dastool! Check input.")
+    if (!params.refine_bins_dastool && !params.refine_bins_binette && params.postbinning_input != 'raw_bins_only') {
+        error("[nf-core/mag] ERROR: The parameter '--postbinning_input ${params.postbinning_input}' for downstream steps can only be specified if bin refinement is activated with --refine_bins_dastool and/or --refine_bins_binette! Check input.")
     }
 
     if (params.skip_binqc && (params.run_busco || params.run_checkm || params.run_checkm2)) {
@@ -551,7 +555,11 @@ def toolCitationText() {
     ].findAll { tool -> tool != '' }
     def text_binning = "Metagenome binning was performed with ${binning_tools.join(', ')}."
 
-    def text_bin_refinement = "Bin refinement was performed with DAS Tool (Sieber et al. 2018)."
+    def bin_refinement_tools = [
+        params.refine_bins_dastool ? "DAS Tool (Sieber et al. 2018)" : "",
+        params.refine_bins_binette ? "Binette (Mainguy and Hoede 2024)" : "",
+    ].findAll { tool -> tool != "" }.join(" and ")
+    def text_bin_refinement = "Bin refinement was performed with ${bin_refinement_tools}."
 
     def binqc_tools = [
         params.run_busco ? "BUSCO (Seppey et al. 2019)" : "",
@@ -583,7 +591,7 @@ def toolCitationText() {
         params.run_virus_identification ? text_virus_id : "",
         params.bin_domain_classification_tool == "tiara" ? text_tiara : "",
         (!params.skip_binning && binning_tools) ? text_binning : "",
-        (!params.skip_binqc && params.refine_bins_dastool) ? text_bin_refinement : "",
+        (!params.skip_binqc && (params.refine_bins_dastool || params.refine_bins_binette)) ? text_bin_refinement : "",
         (!params.skip_binqc && binqc_tools) ? text_binqc : "",
         !params.skip_gtdbtk ? text_gtdbtk : "",
         params.ancient_dna ? text_ancient_dna : "",
@@ -722,6 +730,9 @@ def toolBibliographyText() {
         }
         if (params.refine_bins_dastool) {
             references << "<li>Sieber, C. M. K., et al. (2018). Recovery of Genomes from Metagenomes via a Dereplication, Aggregation and Scoring Strategy. Nature Microbiology 3 (7): 836-43. doi: 10.1038/s41564-018-0171-1</li>"
+        }
+        if (params.refine_bins_binette) {
+            references << "<li>Mainguy, J., & Hoede, C. (2024). Binette: a fast and accurate bin refinement tool to construct high quality Metagenome Assembled Genomes. Journal of Open Source Software, 9(102), 6782. doi: 10.21105/joss.06782</li>"
         }
         if (params.run_gunc) {
             references << "<li>Orakov, A., Fullam, A., Coelho, A. P., Khedkar, S., Szklarczyk, D., Mende, D. R., Schmidt, T. S. B., & Bork, P. (2021). GUNC: detection of chimerism and contamination in prokaryotic genomes. Genome Biology, 22(1), 178. doi: 10.1186/s13059-021-02393-0</li>"

@@ -573,9 +573,28 @@ DAS Tool will remove contigs from bins that do not pass additional filtering cri
 
 </details>
 
-By default, only the raw bins (and unbinned contigs) from the actual binning methods, but not from the binning refinement with DAS Tool, will be used for downstream bin quality control, annotation and taxonomic classification. The parameter `--postbinning_input` can be used to change this behaviour.
+By default, only the raw bins (and unbinned contigs) from the actual binning methods, but not from the binning refinement with DAS Tool or Binette, will be used for downstream bin quality control, annotation and taxonomic classification. The parameter `--postbinning_input` can be used to change this behaviour.
 
 ⚠️ Due to the ability to perform downstream QC of both raw and refined bins in parallel (via `--postbinning_input`), bin names in DAS Tool's `*_allBins.eval` file will include `Refined`. However for this particular file, they _actually_ refer to the 'raw' input bins. The pipeline renames the input files prior to running DASTool to ensure they can be disambiguated from the original bin files in the downstream QC steps.
+
+### Binette
+
+[Binette](https://github.com/genotoul-bioinfo/Binette) is a bin refinement tool that builds new candidate bins from the intersections, differences and unions of the input bin sets. It assesses every candidate bin with CheckM2 and keeps the best non-redundant set of bins for each assembly. nf-core/mag runs it with `--refine_bins_binette`, using the bins of all enabled binners as input. Binette runs independently of DAS Tool, so both can be enabled at the same time.
+
+Binette needs a CheckM2 database. The pipeline uses the database given with `--checkm2_db`, or downloads one otherwise (see `--checkm2_db_version`).
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `GenomeBinning/Binette/`
+  - `[assembler]-BinetteRefined-[sample/group].final_bins_quality_reports.tsv`: CheckM2 completeness and contamination, and Binette score, of the refined bins.
+  - `[assembler]-BinetteRefined-[sample/group].final_contig_to_bin.tsv`: Contig to bin assignment of the refined bins.
+  - `input_bins_quality_reports/[assembler]-BinetteRefined-[sample/group].*.tsv`: CheckM2 completeness and contamination of the input bins, one file per input bin set.
+  - `bins/[assembler]-BinetteRefined-[sample/group].*.fa.gz`: Refined bins in fasta format.
+
+</details>
+
+Binette does not report unbinned contigs. Refined bins are only used for downstream bin quality control, annotation and taxonomic classification if `--postbinning_input` is set to `refined_bins_only` or `both`.
 
 ### Tiara
 

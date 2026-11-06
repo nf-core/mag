@@ -46,6 +46,7 @@ include { DEEPMASED_PREDICT                                } from '../modules/nf
 include { BAKTA_BAKTA                                      } from '../modules/nf-core/bakta/bakta/main'
 include { UNTAR as BAKTA_UNTAR                             } from '../modules/nf-core/untar/main'
 include { BAKTA_BAKTADBDOWNLOAD                            } from '../modules/nf-core/bakta/baktadbdownload/main'
+include { CHECKM2_DATABASEDOWNLOAD                         } from '../modules/nf-core/checkm2/databasedownload/main'
 
 //
 // MODULE: Local to the pipeline
@@ -406,6 +407,18 @@ workflow MAG {
 
     if (!params.skip_binning) {
 
+        // Shared by Binette bin refinement and CheckM2 bin QC
+        if (params.checkm2_db) {
+            ch_checkm2_db = [[:], file(params.checkm2_db, checkIfExists: true)]
+        }
+        else if ((!params.skip_binqc && params.run_checkm2) || params.refine_bins_binette) {
+            CHECKM2_DATABASEDOWNLOAD(params.checkm2_db_version)
+            ch_checkm2_db = CHECKM2_DATABASEDOWNLOAD.out.database
+        }
+        else {
+            ch_checkm2_db = []
+        }
+
         ch_binning_contigs = BINNING_PREPARATION.out.grouped_mappings.map { meta, contigs, _bams, _bais -> [meta, contigs] }
 
         // Make sure if running aDNA subworkflow to use the damage-corrected contigs for higher accuracy
@@ -462,12 +475,12 @@ workflow MAG {
         }
 
         // If any two of the binners are both skipped at once, do not run because DAS_Tool needs at least one
-        if (params.refine_bins_dastool) {
-            ch_prokarya_bins_dastool = ch_binning_results_bins.filter { meta, _bins ->
+        if (params.refine_bins_dastool || params.refine_bins_binette) {
+            ch_prokarya_bins_for_refinement = ch_binning_results_bins.filter { meta, _bins ->
                 meta.domain != "eukarya"
             }
 
-            BINNING_REFINEMENT(ch_binning_contigs, ch_prokarya_bins_dastool)
+            BINNING_REFINEMENT(ch_binning_contigs, ch_prokarya_bins_for_refinement, ch_checkm2_db)
             ch_versions = ch_versions.mix(BINNING_REFINEMENT.out.versions)
 
             ch_refined_bins = BINNING_REFINEMENT.out.refined_bins
@@ -531,7 +544,7 @@ workflow MAG {
         ch_checkm_summary = channel.empty()
         ch_checkm2_summary = channel.empty()
         if (!params.skip_binqc) {
-            BIN_QC(ch_input_for_postbinning)
+            BIN_QC(ch_input_for_postbinning, ch_checkm2_db)
             ch_versions = ch_versions.mix(BIN_QC.out.versions)
             ch_bin_qc_metrics = BIN_QC.out.qc_metrics
             ch_busco_summary = BIN_QC.out.busco_summary
