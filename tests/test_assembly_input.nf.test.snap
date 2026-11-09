@@ -140,7 +140,7 @@
                     "setuptools": 78.1
                 },
                 "FASTQC_RAW": {
-                    "fastqc": "0.12.1"
+                    "fastqc": "0.13.0"
                 },
                 "GUNC_RUN": {
                     "gunc": "1.1.0"
@@ -193,10 +193,10 @@
                 }
             }
         ],
-        "timestamp": "2026-10-05T18:32:40.6899262",
+        "timestamp": "2026-10-28T00:45:40.773766705",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
+            "nextflow": "26.10.3"
         }
     },
     "binning": {
@@ -597,14 +597,14 @@
                 "multiqc_bowtie2_bowtie2-2.yaml:md5,f9bfad19fc83c17a4ef2234daea6cee4",
                 "multiqc_busco.yaml:md5,35f43cd730f8d61d18fbe3c37d5da3f8",
                 "multiqc_citations.yaml:md5,4aaa7714bb3dba1dd50f383c2ae4f4bb",
-                "multiqc_fastqc.yaml:md5,f50da8bfd062b9399911ba19b34831db",
+                "multiqc_fastqc.yaml:md5,155b77ad8c6ac1a8ed2fd4e6b2086f30",
                 "multiqc_general_stats.yaml:md5,d20f739aefae92872ed60be875cf1b5e"
             ]
         ],
-        "timestamp": "2026-09-28T01:44:47.07997326",
+        "timestamp": "2026-10-28T00:45:40.888371402",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
+            "nextflow": "26.10.3"
         }
     }
 }

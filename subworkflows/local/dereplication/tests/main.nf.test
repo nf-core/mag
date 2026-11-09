@@ -3,6 +3,7 @@ nextflow_workflow {
     name "Test Subworkflow DEREPLICATION"
     script "../main.nf"
     workflow "DEREPLICATION"
+    config "./nextflow.config"
 
     tag "subworkflows"
     tag "subworkflows_"
@@ -23,7 +24,7 @@ nextflow_workflow {
             }
             workflow {
                 """
-                def stagingDir = File.createTempDir()
+                def stagingDir = java.nio.file.Files.createTempDirectory(workDir, 'dereplication-bins').toFile()
 
                 def binSample1 = new File(stagingDir, 'SPAdes-MetaBAT2-sample1.fa.gz')
                 file('https://github.com/nf-core/test-datasets/raw/refs/heads/magmap/testdata/GCA_002688505.1_ASM268850v1_genomic.fna.gz', checkIfExists: true).copyTo(binSample1.toPath())
@@ -99,7 +100,7 @@ nextflow_workflow {
         when {
             workflow {
                 """
-                def stagingDir = File.createTempDir()
+                def stagingDir = java.nio.file.Files.createTempDirectory(workDir, 'dereplication-bins').toFile()
 
                 def binSample1 = new File(stagingDir, 'SPAdes-MetaBAT2-sample1.fa.gz')
                 file('https://github.com/nf-core/test-datasets/raw/refs/heads/magmap/testdata/GCA_002688505.1_ASM268850v1_genomic.fna.gz', checkIfExists: true).copyTo(binSample1.toPath())

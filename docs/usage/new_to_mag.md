@@ -63,7 +63,7 @@ A run of nf-core/mag without any customisation or additional parameters will:
   - By binning with `MetaBat2`, `MaxBin2`, `CONCOCT`, `COMEBin`, `MetaBinner` and `SemiBin2`
 - Post-binning tasks
   - Quality control bins with `QUAST` and `BUSCO`
-  - Annotate bins with `PROKKA` (for bacteria and archaea) and `MetaEuk` (for eukaryotes)
+  - Annotate bins with `PROKKA` (for bacteria and archaea), `Bakta` (for bacteria) and `MetaEuk` (for eukaryotes)
   - Taxonomically assign bins with `GTDB-Tk` (for bacteria and archaea)
 
 > [!NOTE]

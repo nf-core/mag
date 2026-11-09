@@ -3,6 +3,7 @@ Ancient_DNA/pydamage/analyze/*/*.csv
 Ancient_DNA/variant_calling/*/*.vcf.gz
 Annotation/Prokka/**/*.{err,gbk,log,sqn}
 Annotation/Prokka/**/*.tmp.*
+Annotation/Bakta/**/*.{gbff,json,embl}
 Assembly/*/*.log
 Assembly/*/QC/*/*.bowtie2.log
 Assembly/*/QC/*/QUAST/*.{pdf,html,log}

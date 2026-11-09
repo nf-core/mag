@@ -84,7 +84,7 @@ workflow PIPELINE_INITIALISATION {
         before_text,
         after_text,
         command,
-        false,
+        null
     )
 
     //
@@ -208,14 +208,12 @@ workflow PIPELINE_INITIALISATION {
         ch_read_ids = ch_samplesheet
             .map { meta, _sr1, _sr2, _lr -> params.coassemble_group ? meta.group : meta.id }
             .unique()
-            .toList()
-            .sort()
+            .toSortedList()
 
         ch_assembly_ids = ch_input_assemblies
             .map { meta, _fasta -> params.coassemble_group ? meta.group : meta.id }
             .unique()
-            .toList()
-            .sort()
+            .toSortedList()
 
         ch_read_ids
             .concat(ch_assembly_ids)
@@ -280,7 +278,7 @@ workflow PIPELINE_COMPLETION {
                 plaintext_email,
                 outdir,
                 monochrome_logs,
-                multiqc_reports.getVal(),
+                multiqc_reports.isBound() ? multiqc_reports.getVal() : [],
             )
         }
 
@@ -564,6 +562,7 @@ def toolCitationText() {
     def gene_prediction_tools = [
         !params.skip_prodigal ? "Prodigal (Hyatt et al. 2010)" : "",
         !params.skip_prokka ? "Prokka (Seemann 2014)" : "",
+        !params.skip_bakta ? "Bakta (Schwengers et al. 2021)" : "",
         !params.skip_metaeuk ? "MetaEuk (Levy Karin et al. 2020) with MMseqs2 (Steinegger and Söding 2017)" : "",
     ].findAll { tool -> tool != '' }
     def text_gene_prediction = "Gene prediction was performed with ${gene_prediction_tools.join(', ')}."
@@ -707,6 +706,9 @@ def toolBibliographyText() {
     }
     if (!params.skip_prokka) {
         references << "<li>Seemann, T. (2014). Prokka: rapid prokaryotic genome annotation. Bioinformatics, 30(14), 2068-2069. doi: 10.1093/bioinformatics/btu153</li>"
+    }
+    if (!params.skip_bakta) {
+        references << "<li>Schwengers, O., Barth, P., Falgenhauer, L., Hain, T., Chakraborty, T., & Goesmann, A. (2021). Bakta: rapid and standardized annotation of bacterial genomes via alignment-free sequence identification. Microbial Genomics, 7(11), 000685. doi: 10.1099/mgen.0.000685</li>"
     }
     if (!params.skip_metaeuk) {
         references << "<li>Levy Karin, E., Mirdita, M. & Söding, J. (2020). MetaEuk—sensitive, high-throughput gene discovery, and annotation for large-scale eukaryotic metagenomics. Microbiome 8, 48. doi: 10.1186/s40168-020-00808-x</li>"

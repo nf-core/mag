@@ -40,10 +40,10 @@
                     "dastool": "1.1.7"
                 },
                 "FASTQC_RAW": {
-                    "fastqc": "0.12.1"
+                    "fastqc": "0.13.0"
                 },
                 "FASTQC_TRIMMED": {
-                    "fastqc": "0.12.1"
+                    "fastqc": "0.13.0"
                 },
                 "GUNZIP_SHORTREAD_ASSEMBLIES": {
                     "gunzip": 1.13
@@ -94,10 +94,10 @@
                 }
             }
         ],
-        "timestamp": "2026-09-28T01:42:22.208023303",
+        "timestamp": "2026-10-28T00:44:39.85671074",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
+            "nextflow": "26.10.3"
         }
     },
     "qc": {
@@ -372,17 +372,17 @@
                 "multiqc_busco.yaml:md5,62d093e7da3477c1b58c76b5e49f28da",
                 "multiqc_checkm2.yaml:md5,3868a66bd13bf14fdc673394b968d0d1",
                 "multiqc_citations.yaml:md5,50440bb766620557f852bbd53357a098",
-                "multiqc_fastqc.yaml:md5,f50da8bfd062b9399911ba19b34831db",
-                "multiqc_fastqc_fastqc-1.yaml:md5,4c2c5a5e7b370b0668c1360b7927d0a8",
+                "multiqc_fastqc.yaml:md5,155b77ad8c6ac1a8ed2fd4e6b2086f30",
+                "multiqc_fastqc_fastqc-1.yaml:md5,6bfa9b6b55cc17cbfa74dc9372e1508c",
                 "multiqc_general_stats.yaml:md5,ac0c0e1b8561380e73edc7b44df6aa70",
                 "multiqc_trimmomatic.yaml:md5,d4aaff3725c28801ae0577d97c2f9b30",
                 "trimmomatic_plot.yaml:md5,9557cd587ace0a93912179cb0deafe3b"
             ]
         ],
-        "timestamp": "2026-09-28T01:42:22.321160896",
+        "timestamp": "2026-10-28T00:44:39.918198347",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
+            "nextflow": "26.10.3"
         }
     },
     "summary-rows": {

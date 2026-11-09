@@ -22,6 +22,7 @@ run_modules:
   - busco
   - quast
   - prokka
+  - bakta
   - porechop
   - filtlong
   - trimmomatic
@@ -78,6 +79,7 @@ top_modules:
   - "checkm"
   - "checkm2"
   - "prokka"
+  - "bakta"
   - "gtdbtk"
 
 custom_data:
@@ -152,6 +154,7 @@ table_columns_visible:
     N50: true
   "BUSCO": false
   "Prokka": false
+  "Bakta": false
   "CheckM": false
   "CheckM2": false
   "GTDB-Tk": false
@@ -213,8 +216,12 @@ table_columns_placement:
     bases: 21000
     CDS: 22000
     organism: 23000
+  Bakta:
+    Count: 24000
+    Length: 25000
+    CDSs: 26000
   "GTDB-Tk":
-    "classification": 24000
+    "classification": 27000
 
 table_columns_name:
   "FastQC: raw reads":
