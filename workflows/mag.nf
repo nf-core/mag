@@ -1,8 +1,8 @@
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    IMPORT MODULES / SUBWORKFLOWS / FUNCTIONS
+IMPORT MODULES / SUBWORKFLOWS / FUNCTIONS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
+ */
 include { MULTIQC                                          } from '../modules/nf-core/multiqc/main'
 include { paramsSummaryMap                                 } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc                             } from '../subworkflows/nf-core/utils_nfcore_pipeline'
@@ -59,7 +59,7 @@ include { PYPOLCA_RUN                                      } from '../modules/nf
 
 workflow MAG {
     take:
-    ch_raw_short_reads // channel: samplesheet read in from --input
+    ch_raw_short_reads          // channel: samplesheet read in from --input
     ch_raw_long_reads
     ch_input_assemblies
     multiqc_config
@@ -196,9 +196,9 @@ workflow MAG {
 
     /*
     ================================================================================
-                                    Preprocessing and QC for short reads
+    Preprocessing and QC for short reads
     ================================================================================
-    */
+     */
 
     SHORTREAD_PREPROCESSING(
         ch_raw_short_reads,
@@ -217,9 +217,9 @@ workflow MAG {
 
     /*
     ================================================================================
-                                    Preprocessing and QC for long reads
+    Preprocessing and QC for long reads
     ================================================================================
-    */
+     */
 
     LONGREAD_PREPROCESSING(
         ch_raw_long_reads,
@@ -236,9 +236,9 @@ workflow MAG {
 
     /*
     ================================================================================
-                                    Assembly
+    Assembly
     ================================================================================
-    */
+     */
 
     if (!params.assembly_input) {
 
@@ -332,9 +332,9 @@ workflow MAG {
 
     /*
     ================================================================================
-                                    Predict proteins
+    Predict proteins
     ================================================================================
-    */
+     */
 
     if (!params.skip_prodigal) {
         PRODIGAL(
@@ -350,9 +350,9 @@ workflow MAG {
 
     /*
     ================================================================================
-                                    Virus identification
+    Virus identification
     ================================================================================
-    */
+     */
 
     if (params.run_virus_identification) {
         VIRUS_IDENTIFICATION(ch_assemblies, params.genomad_db)
@@ -362,9 +362,9 @@ workflow MAG {
 
     /*
     ================================================================================
-                                Binning preparation
+    Binning preparation
     ================================================================================
-    */
+     */
 
     // Full-assembly QC (ALE, DeepMAsED) and aDNA validation need reads mapped to all contigs of the
     // short-read assemblies, which are the only ones they evaluate. They only need the reads each assembly
@@ -407,9 +407,9 @@ workflow MAG {
 
     /*
     ================================================================================
-                                    Ancient DNA
+    Ancient DNA
     ================================================================================
-    */
+     */
 
     if (params.ancient_dna) {
         ANCIENT_DNA_ASSEMBLY_VALIDATION(BINNING_PREPARATION_FULL.out.grouped_mappings)
@@ -423,9 +423,9 @@ workflow MAG {
 
     /*
     ================================================================================
-                                        ALE
+    ALE
     ================================================================================
-    */
+     */
 
     if (params.run_ale) {
         ch_ale_input = BINNING_PREPARATION_FULL.out.grouped_mappings
@@ -446,9 +446,9 @@ workflow MAG {
 
     /*
     ================================================================================
-                                    DeepMAsED
+    DeepMAsED
     ================================================================================
-    */
+     */
 
     if (params.run_deepmased) {
         // DeepMAsED's pre-trained model was only validated on short-read (MEGAHIT/SPAdes) assemblies;
@@ -475,9 +475,9 @@ workflow MAG {
 
     /*
     ================================================================================
-                                    Binning
+    Binning
     ================================================================================
-    */
+     */
 
     if (!params.skip_binning) {
 
@@ -534,8 +534,8 @@ workflow MAG {
         }
 
         /*
-        * DAS Tool: binning refinement
-        */
+         * DAS Tool: binning refinement
+         */
 
         ch_binning_results_bins = ch_binning_results_bins.map { meta, bins ->
             def meta_new = meta + [refinement: 'unrefined']
@@ -591,8 +591,8 @@ workflow MAG {
         ch_input_for_binsummary = DEPTHS.out.depths_summary
 
         /*
-            Generate contig2bin map files for all bins
-        */
+         * Generate contig2bin map files for all bins
+         */
 
         // generate a contig2bin map
         // separate the contig files, use Nextflow splitFasta to extract header name
@@ -613,8 +613,8 @@ workflow MAG {
         ch_publish_binning_contig2bin = ch_allcontig2binmap
 
         /*
-        * Bin QC subworkflows: for checking bin completeness with either BUSCO, CHECKM, CHECKM2, and/or GUNC
-        */
+         * Bin QC subworkflows: for checking bin completeness with either BUSCO, CHECKM, CHECKM2, and/or GUNC
+         */
 
         ch_bin_qc_metrics = channel.empty()
         ch_busco_summary = channel.empty()
@@ -640,8 +640,8 @@ workflow MAG {
         }
 
         /*
-        * Dereplication: study-wide bin dereplication with Galah
-        */
+         * Dereplication: study-wide bin dereplication with Galah
+         */
 
         ch_dereplicated_bins = channel.empty()
         ch_dereplication_cluster_tsv = channel.empty()
@@ -765,7 +765,7 @@ workflow MAG {
         /*
          * Prokka: Genome annotation
          */
-if (!params.skip_prokka || !params.skip_bakta) {
+        if (!params.skip_prokka || !params.skip_bakta) {
 
             if (params.dereplicate && !params.dereplicate_annotate_all) {
                 ch_bins_for_annotation = ch_dereplicated_bins.map { meta, bin ->
@@ -786,62 +786,62 @@ if (!params.skip_prokka || !params.skip_bakta) {
             }
 
 
-        if (!params.skip_prokka) {
-               PROKKA(
-                ch_bins_for_annotation,
-                [],
-                [],
-            )
-            ch_publish_annotation_prokka = PROKKA.out.gff.mix(
-                PROKKA.out.gbk,
-                PROKKA.out.fna,
-                PROKKA.out.faa,
-                PROKKA.out.ffn,
-                PROKKA.out.sqn,
-                PROKKA.out.fsa,
-                PROKKA.out.tbl,
-                PROKKA.out.err,
-                PROKKA.out.log,
-                PROKKA.out.txt,
-                PROKKA.out.tsv,
-            )
-        }
-
-        if (!params.skip_bakta) {
-            if (params.bakta_db && params.bakta_db.name.endsWith('.tar.gz')) {
-                BAKTA_UNTAR([[id: 'bakta_db'], params.bakta_db])
-                ch_bakta_db = BAKTA_UNTAR.out.untar.map { _meta, db -> db }
-            }
-            else if (params.bakta_db) {
-                ch_bakta_db = channel.value(params.bakta_db)
-            }
-            else {
-                BAKTA_BAKTADBDOWNLOAD()
-                ch_bakta_db = BAKTA_BAKTADBDOWNLOAD.out.db
+            if (!params.skip_prokka) {
+                PROKKA(
+                    ch_bins_for_annotation,
+                    [],
+                    [],
+                )
+                ch_publish_annotation_prokka = PROKKA.out.gff.mix(
+                    PROKKA.out.gbk,
+                    PROKKA.out.fna,
+                    PROKKA.out.faa,
+                    PROKKA.out.ffn,
+                    PROKKA.out.sqn,
+                    PROKKA.out.fsa,
+                    PROKKA.out.tbl,
+                    PROKKA.out.err,
+                    PROKKA.out.log,
+                    PROKKA.out.txt,
+                    PROKKA.out.tsv,
+                )
             }
 
-            BAKTA_BAKTA(
-                ch_bins_for_annotation,
-                ch_bakta_db,
-                [],
-                [],
-                [],
-                []
-            )
-            ch_publish_annotation_bakta = BAKTA_BAKTA.out.embl.mix(
-                BAKTA_BAKTA.out.faa,
-                BAKTA_BAKTA.out.ffn,
-                BAKTA_BAKTA.out.fna,
-                BAKTA_BAKTA.out.gbff,
-                BAKTA_BAKTA.out.gff,
-                BAKTA_BAKTA.out.hypotheticals_tsv,
-                BAKTA_BAKTA.out.hypotheticals_faa,
-                BAKTA_BAKTA.out.tsv,
-                BAKTA_BAKTA.out.txt,
-                BAKTA_BAKTA.out.json,
-            )
+            if (!params.skip_bakta) {
+                if (params.bakta_db && params.bakta_db.name.endsWith('.tar.gz')) {
+                    BAKTA_UNTAR([[id: 'bakta_db'], params.bakta_db])
+                    ch_bakta_db = BAKTA_UNTAR.out.untar.map { _meta, db -> db }
+                }
+                else if (params.bakta_db) {
+                    ch_bakta_db = channel.value(params.bakta_db)
+                }
+                else {
+                    BAKTA_BAKTADBDOWNLOAD()
+                    ch_bakta_db = BAKTA_BAKTADBDOWNLOAD.out.db
+                }
+
+                BAKTA_BAKTA(
+                    ch_bins_for_annotation,
+                    ch_bakta_db,
+                    [],
+                    [],
+                    [],
+                    [],
+                )
+                ch_publish_annotation_bakta = BAKTA_BAKTA.out.embl.mix(
+                    BAKTA_BAKTA.out.faa,
+                    BAKTA_BAKTA.out.ffn,
+                    BAKTA_BAKTA.out.fna,
+                    BAKTA_BAKTA.out.gbff,
+                    BAKTA_BAKTA.out.gff,
+                    BAKTA_BAKTA.out.hypotheticals_tsv,
+                    BAKTA_BAKTA.out.hypotheticals_faa,
+                    BAKTA_BAKTA.out.tsv,
+                    BAKTA_BAKTA.out.txt,
+                    BAKTA_BAKTA.out.json,
+                )
+            }
         }
-}
 
         if (params.metaeuk_db || params.metaeuk_mmseqs_db) {
             ch_bins_for_metaeuk = ch_input_for_postbinning
@@ -952,7 +952,7 @@ if (!params.skip_prokka || !params.skip_bakta) {
 
     emit:
     multiqc_report              = MULTIQC.out.report.map { _meta, report -> [report] }.toList() // channel: /path/to/multiqc_report.html
-    versions                    = ch_versions // channel: [ path(versions.yml) ]
+    versions                    = ch_versions                                                   // channel: [ path(versions.yml) ]
     shortread_fastqc            = SHORTREAD_PREPROCESSING.out.publish_fastqc
     shortread_clipping          = SHORTREAD_PREPROCESSING.out.publish_clipping
     shortread_hostremoval       = SHORTREAD_PREPROCESSING.out.publish_hostremoval

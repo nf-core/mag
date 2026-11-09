@@ -1,19 +1,19 @@
 #!/usr/bin/env nextflow
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    nf-core/mag
+nf-core/mag
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    Github : https://github.com/nf-core/mag
-    Website: https://nf-co.re/mag
-    Slack  : https://nfcore.slack.com/channels/mag
+Github : https://github.com/nf-core/mag
+Website: https://nf-co.re/mag
+Slack  : https://nfcore.slack.com/channels/mag
 ----------------------------------------------------------------------------------------
-*/
+ */
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    IMPORT FUNCTIONS / MODULES / SUBWORKFLOWS / WORKFLOWS
+IMPORT FUNCTIONS / MODULES / SUBWORKFLOWS / WORKFLOWS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
+ */
 
 include { MAG                     } from './workflows/mag'
 include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_mag_pipeline'
@@ -22,9 +22,9 @@ include { getGenomeAttribute      } from './subworkflows/local/utils_nfcore_mag_
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    PARAMETERS
+PARAMETERS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
+ */
 
 params {
     // Input options
@@ -269,16 +269,16 @@ params {
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    NAMED WORKFLOWS FOR PIPELINE
+NAMED WORKFLOWS FOR PIPELINE
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
+ */
 
 //
 // WORKFLOW: Run main analysis pipeline depending on type of input
 //
 workflow NFCORE_MAG {
     take:
-    raw_short_reads // channel: samplesheet read in from --input
+    raw_short_reads  // channel: samplesheet read in from --input
     raw_long_reads
     input_assemblies
 
@@ -298,7 +298,7 @@ workflow NFCORE_MAG {
     )
 
     emit:
-    multiqc_report              = MAG.out.multiqc_report // channel: /path/to/multiqc_report.html
+    multiqc_report              = MAG.out.multiqc_report              // channel: /path/to/multiqc_report.html
     shortread_fastqc            = MAG.out.shortread_fastqc
     shortread_clipping          = MAG.out.shortread_clipping
     shortread_hostremoval       = MAG.out.shortread_hostremoval
@@ -372,11 +372,12 @@ workflow NFCORE_MAG {
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    RUN MAIN WORKFLOW
+RUN MAIN WORKFLOW
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
+ */
 
 workflow {
+
     main:
     //
     // SUBWORKFLOW: Run initialisation tasks
@@ -487,9 +488,9 @@ workflow {
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    WORKFLOW OUTPUTS
+WORKFLOW OUTPUTS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
+ */
 
 output {
     shortread_fastqc {
