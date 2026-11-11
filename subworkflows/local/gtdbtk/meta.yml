@@ -1,0 +1,62 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "gtdbtk"
+description: Taxonomic classification of metagenomic bins using GTDB-Tk with quality filtering
+keywords:
+  - taxonomy
+  - classification
+  - metagenomics
+  - bins
+  - gtdb-tk
+  - phylogenetics
+components:
+  - gtdbtk/classifywf
+  - gtdbtk/db/preparation
+  - gtdbtk/summary
+input:
+  - ch_bins:
+      description: Metagenomic bins in FASTA format
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - fasta:
+            type: file
+            description: Metagenomic bins in FASTA format
+            pattern: "*.{fasta,fa}"
+  - ch_bin_qc_summary:
+      type: file
+      description: Quality control summary to filter high-quality bins
+      pattern: "*.tsv"
+  - val_gtdb:
+      type: val
+      description: Path to GTDB-Tk reference database
+  - val_gtdb_mash:
+      type: val
+      description: Path to GTDB-Tk MASH database for species assignment
+output:
+  - summary:
+      description: Summary of taxonomic classifications
+      structure:
+        - tsv:
+            type: file
+            description: Taxonomic classification summary in TSV format
+            pattern: "*.tsv"
+  - multiqc_files:
+      description: MultiQC files for classification results
+      structure:
+        - tsv:
+            type: file
+            description: GTDB-Tk classification summary for MultiQC
+            pattern: "*.tsv"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@skrakau"
+maintainers:
+  - "@jfy133"
+  - "@prototaxites"
+  - "@dialvarezs"
+  - "@d4straub"
+  - "@muabnezor"

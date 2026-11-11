@@ -1,0 +1,43 @@
+nextflow_pipeline {
+
+    name "Test pipeline with test_minimal profile"
+    script "../main.nf"
+    tag "pipeline"
+    tag "test_minimal"
+    profile "test_minimal"
+
+    test("-profile test_minimal") {
+
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+        }
+
+        then {
+
+            // Output directory: multiqc
+            def stable_name_multiqc = getAllFilesFromDir(
+                params.outdir, include: ['multiqc/**'], relative: true, includeDir: false
+            )
+            def stable_path_multiqc = getAllFilesFromDir(
+                params.outdir, include: ['multiqc/**'], ignoreFile: 'tests/.nftignore'
+            )
+            // Output directory: QC_shortreads
+            def stable_name_qcshortreads = getAllFilesFromDir("$outputDir/QC_shortreads" , relative: true, includeDir: false )
+            def stable_path_qcshortreads= getAllFilesFromDir("$outputDir/QC_shortreads"  , ignore: ['**/*.{svg,png}','**/*_fastqc.html'])
+
+            assert workflow.success
+            assertAll(
+                { assert snapshot(
+                    // Number of successful tasks
+                    workflow.trace.succeeded().size(),
+                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we test pipelines on multiple Nextflow versions
+                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_mag_software_mqc_versions.yml"),
+                ).match() },
+                { assert snapshot(stable_name_multiqc, stable_path_multiqc).match('multiqc') },
+                { assert snapshot( stable_name_qcshortreads,  stable_path_qcshortreads  ).match('QC_shortreads') },
+            )
+        }
+    }
+}

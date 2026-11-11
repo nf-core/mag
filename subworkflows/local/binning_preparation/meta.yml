@@ -1,0 +1,90 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "binning_preparation"
+description: Wrapper subworkflow that prepares short and long-read assemblies for binning
+keywords:
+  - binning
+  - preparation
+  - metagenomics
+  - contigs
+  - filtering
+components:
+  - shortread_binning_preparation
+  - longread_binning_preparation
+input:
+  - ch_shortread_assemblies:
+      description: Short-read assemblies to prepare
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - assembly:
+            type: file
+            description: Short-read assembled contigs
+            pattern: "*.{fasta,fa}"
+  - ch_shortreads:
+      description: Short-read sequencing data
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - reads:
+            type: file
+            description: Short-read FASTQ files (array)
+            pattern: "*.{fastq,fq}.gz"
+  - ch_longread_assemblies:
+      description: Long-read assemblies to prepare
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - assembly:
+            type: file
+            description: Long-read assembled contigs
+            pattern: "*.{fasta,fa}"
+  - ch_longreads:
+      description: Long-read sequencing data
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - reads:
+            type: file
+            description: Long-read FASTQ files (array)
+            pattern: "*.{fastq,fq}.gz"
+output:
+  - grouped_mappings:
+      description: Grouped mappings of reads to assemblies
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - assembly:
+            type: file
+            description: Assembly FASTA file
+            pattern: "*.{fasta,fa}"
+        - bam:
+            type: file
+            description: BAM alignment files (array)
+            pattern: "*.bam"
+        - bai:
+            type: file
+            description: BAM index files (array)
+            pattern: "*.bai"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+  - multiqc_files:
+      description: MultiQC files for preparation statistics
+      structure:
+        - "*":
+            type: file
+            description: MultiQC report files
+authors:
+  - "@jfy133"
+maintainers:
+  - "@jfy133"
+  - "@prototaxites"
+  - "@dialvarezs"
+  - "@d4straub"
+  - "@muabnezor"

@@ -1,0 +1,175 @@
+nextflow_pipeline {
+
+    name "Test pipeline with test_longreadonly profile"
+    script "../main.nf"
+    tag "pipeline"
+    tag "test_longreadonly"
+    profile "test_longreadonly"
+
+    test("-profile longreadonly") {
+
+        when {
+            params {
+                outdir = "${outputDir}"
+            }
+        }
+
+        then {
+            // Output directory: QC_longreads
+            def stable_name_qc = getAllFilesFromDir(
+                params.outdir, include: ['QC_longreads/**'], relative: true, includeDir: false
+            )
+            def stable_path_qc = getAllFilesFromDir(
+                params.outdir, include: ['QC_longreads/**'], ignoreFile: 'tests/.nftignore'
+            )
+            def nanoplot_stats = getAllFilesFromDir(
+                params.outdir, include: ['QC_longreads/NanoPlot/*/*NanoStats.txt']
+            )
+            def nanolyse_logs = getAllFilesFromDir(
+                params.outdir, include: ['QC_longreads/NanoLyse/*.log']
+            )
+
+            // Output directory: Assembly
+            def stable_name_assembly = getAllFilesFromDir(
+                params.outdir, include: ['Assembly/**'], relative: true, includeDir: false
+            )
+            def stable_path_assembly = getAllFilesFromDir(
+                params.outdir, include: ['Assembly/**'], ignoreFile: 'tests/.nftignore'
+            )
+            def flye_assemblies = getAllFilesFromDir(
+                params.outdir, include: ['Assembly/FLYE/*.assembly.fasta.gz']
+            )
+            def flye_logs = getAllFilesFromDir(
+                params.outdir, include: ['Assembly/FLYE/*.flye.log']
+            )
+            def metamdbg_assemblies = getAllFilesFromDir(
+                params.outdir, include: ['Assembly/METAMDBG/*.contigs.fasta.gz']
+            )
+            def metamdbg_logs = getAllFilesFromDir(
+                params.outdir, include: ['Assembly/METAMDBG/*.metaMDBG.log']
+            )
+            def assembly_quast_logs = getAllFilesFromDir(
+                params.outdir, include: ['Assembly/*/QC/*/QUAST/quast.log']
+            )
+
+            // Output directory: GenomeBinning
+            def stable_name_binning = getAllFilesFromDir(
+                params.outdir,
+                include: ['GenomeBinning/**'],
+                ignore: ['GenomeBinning/QC/BUSCO/**/{logs,prodigal_output,busco_sequences,hmmer_output}/**'],
+                relative: true,
+                includeDir: false
+            )
+            def stable_path_binning = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/**'], ignoreFile: 'tests/.nftignore'
+            )
+            def maxbin2_bins = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/MaxBin2/bins/*.fa.gz']
+            )
+            def maxbin2_unbins = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/MaxBin2/{discarded,unbinned/*}/*.{gz,fa.gz}']
+            )
+            def metabat2_bins = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/MetaBAT2/bins/*.fa.gz']
+            )
+            def metabat2_unbins = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/MetaBAT2/{discarded,unbinned/*}/*.fa.gz']
+            )
+            def busco_logs = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/QC/BUSCO/*/*-busco.log']
+            )
+            def binning_quast_logs = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/QC/QUAST/*/quast.log']
+            )
+            def bin_summary = path("${params.outdir}/GenomeBinning/bin_summary.tsv")
+            def busco_summary = path("${params.outdir}/GenomeBinning/QC/busco_summary.tsv")
+            def bin_depths_summary = path("${params.outdir}/GenomeBinning/depths/bins/bin_depths_summary.tsv")
+            def quast_bin_summary = path("${params.outdir}/GenomeBinning/QC/quast_bin_summary.tsv")
+
+            // Output directory: Annotation
+            def stable_name_annotation = getAllFilesFromDir(
+                params.outdir,
+                include: ['Annotation/**'],
+                ignore: ['Annotation/Prokka/**/*.tmp.*'],
+                relative: true,
+                includeDir: false
+            )
+            def stable_path_annotation = getAllFilesFromDir(
+                params.outdir, include: ['Annotation/**'], ignoreFile: 'tests/.nftignore'
+            )
+            def prokka_sequences = getAllFilesFromDir(
+                params.outdir, include: ['Annotation/Prokka/**/*.{fna,faa}']
+            )
+            def prokka_logs = getAllFilesFromDir(
+                params.outdir, include: ['Annotation/Prokka/**/*.log']
+            )
+            def prokka_gbk = getAllFilesFromDir(
+                params.outdir, include: ['Annotation/Prokka/**/*.gbk']
+            )
+            def prokka_sqn = getAllFilesFromDir(
+                params.outdir, include: ['Annotation/Prokka/**/*.sqn']
+            )
+
+            // Output directory: multiqc
+            def stable_name_multiqc = getAllFilesFromDir(
+                params.outdir, include: ['multiqc/**'], relative: true, includeDir: false
+            )
+            def stable_path_multiqc = getAllFilesFromDir(
+                params.outdir, include: ['multiqc/**'], ignore: ['multiqc/**.yaml'], ignoreFile: 'tests/.nftignore'
+            )
+
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.trace.succeeded().size(),
+                    removeNextflowVersion("${params.outdir}/pipeline_info/nf_core_mag_software_mqc_versions.yml"),
+                ).match() },
+                { assert snapshot(stable_name_qc,         stable_path_qc        ).match('qc') },
+                { assert snapshot(stable_name_assembly,   stable_path_assembly  ).match('assembly') },
+                { assert snapshot(stable_name_binning,    stable_path_binning   ).match('binning') },
+                { assert snapshot(stable_name_annotation, stable_path_annotation).match('annotation') },
+                { assert snapshot(stable_name_multiqc,    stable_path_multiqc   ).match('multiqc') },
+
+                { assert snapshot(
+                    // FASTA content checks
+                    "Flye assemblies non-empty: ${flye_assemblies.every { f -> path("${f}").fasta.size() > 0 }}",
+                    "MetaMDBG assemblies non-empty: ${metamdbg_assemblies.every { f -> path("${f}").fasta.size() > 0 }}",
+                    "MaxBin2 bins non-empty: ${maxbin2_bins.every { f -> path("${f}").fasta.size() > 0 }}",
+                    "MetaBAT2 bins non-empty when present: ${metabat2_bins.every { f -> path("${f}").fasta.size() > 0 }}",
+                    // Prokka annotation file checks
+                    "Prokka GBK files contain LOCUS: ${prokka_gbk.every { f -> path("${f}").text.contains('LOCUS') }}",
+                    "Prokka SQN files non-empty: ${prokka_sqn.every { f -> path("${f}").size() > 0 }}",
+                    // QC content checks
+                    "NanoPlot stats non-empty: ${nanoplot_stats.every { f -> path("${f}").size() > 0 }}",
+                    "NanoPlot stats contain summaries: ${nanoplot_stats.every { f -> path("${f}").text.contains('General summary:') }}",
+                    // Binning content checks
+                    "MaxBin2 produced unbinned/discarded output: ${maxbin2_unbins.size() > 0}",
+                    "MetaBAT2 produced classified or unclassified output: ${metabat2_bins.size() + metabat2_unbins.size() > 0}",
+                    // Summary row count checks
+                    "Bin summary non-empty: ${bin_summary.csv(sep: '\t').rowCount > 0}",
+                    "Bin summary row count matches bins: ${bin_summary.csv(sep: '\t').rowCount == maxbin2_bins.size() + metabat2_bins.size()}",
+                    "BUSCO summary non-empty: ${busco_summary.csv(sep: '\t').rowCount > 0}",
+                    "Bin depths summary non-empty: ${bin_depths_summary.csv(sep: '\t').rowCount > 0}",
+                    "QUAST bin summary non-empty: ${quast_bin_summary.csv(sep: '\t').rowCount > 0}",
+                ).match("content-checks") },
+
+                { assert snapshot(
+                    "Bin summary: ${bin_summary.csv(sep: '\t').rowCount}",
+                    "BUSCO summary: ${busco_summary.csv(sep: '\t').rowCount}",
+                    "Bin depths summary: ${bin_depths_summary.csv(sep: '\t').rowCount}",
+                    "QUAST bin summary: ${quast_bin_summary.csv(sep: '\t').rowCount}",
+                ).match("summary-rows") },
+
+                { assert snapshot(
+                    "assembly QUAST: ${assembly_quast_logs.every { f -> path("${f}").text.contains('Finished:') }}",
+                    "binning QUAST: ${binning_quast_logs.every { f -> path("${f}").text.contains('Finished:') }}",
+                    "BUSCO: ${busco_logs.every { f -> path("${f}").text.contains('BUSCO analysis done.') }}",
+                    "Prokka: ${prokka_logs.every { f -> path("${f}").text.contains('Annotation finished successfully.') }}",
+                    "NanoLyse: ${nanolyse_logs.every { f -> path("${f}").text.contains('NanoLyse finished.') }}",
+                    "Flye: ${flye_logs.every { f -> path("${f}").text.contains('Final assembly:') }}",
+                    "MetaMDBG: ${metamdbg_logs.every { f -> path("${f}").text.contains('Done!') }}",
+                ).match("log-checks") },
+            )
+        }
+    }
+}
