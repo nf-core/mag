@@ -591,10 +591,11 @@ Binette needs a CheckM2 database. The pipeline uses the database given with `--c
   - `[assembler]-BinetteRefined-[sample/group].final_contig_to_bin.tsv`: Contig to bin assignment of the refined bins.
   - `input_bins_quality_reports/[assembler]-BinetteRefined-[sample/group].*.tsv`: CheckM2 completeness and contamination of the input bins, one file per input bin set.
   - `bins/[assembler]-BinetteRefined-[sample/group].*.fa.gz`: Refined bins in fasta format.
+  - `unbinned/[assembler]-BinetteUnbinned-[sample/group].fa.gz`: Contigs not assigned to any refined bin, in fasta format. Binette does not report these, so the pipeline derives them from the assembly and `final_contig_to_bin.tsv`.
 
 </details>
 
-Binette does not report unbinned contigs. Refined bins are only used for downstream bin quality control, annotation and taxonomic classification if `--postbinning_input` is set to `refined_bins_only` or `both`.
+Refined bins are only used for downstream bin quality control, annotation and taxonomic classification if `--postbinning_input` is set to `refined_bins_only` or `both`.
 
 ### Tiara
 
