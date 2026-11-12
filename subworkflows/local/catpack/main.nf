@@ -59,7 +59,7 @@ workflow CATPACK {
         )
 
         ch_cat_db = CATPACK_PREPARE.out
-        ch_publish_db = params.save_cat_db ? CATPACK_PREPARE.out.db.mix(CATPACK_PREPARE.out.taxonomy) : channel.empty()
+        ch_publish_db = CATPACK_PREPARE.out.db.mix(CATPACK_PREPARE.out.taxonomy)
     }
 
     /*
@@ -145,7 +145,7 @@ workflow CATPACK {
     emit:
     summary        = bin_summary
     versions       = ch_versions
-    publish_db     = ch_publish_db // [val(meta), path(dir)]
-    publish_bins   = ch_publish_bins // [val(meta), path(files)]
+    publish_db     = ch_publish_db     // [val(meta), path(dir)]
+    publish_bins   = ch_publish_bins   // [val(meta), path(files)]
     publish_unbins = ch_publish_unbins // [val(meta), path(files)]
 }

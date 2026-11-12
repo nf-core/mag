@@ -64,7 +64,7 @@ workflow BIN_QC {
         ch_versions = ch_versions.mix(CHECKM_UNTAR.out.versions)
 
         ch_checkm_db = CHECKM_UNTAR.out.untar.map { _meta, db -> db }
-        ch_publish_checkm_db = params.save_checkm_data ? CHECKM_UNTAR.out.untar : channel.empty()
+        ch_publish_checkm_db = CHECKM_UNTAR.out.untar
     }
     else {
         ch_checkm_db = []
@@ -76,7 +76,7 @@ workflow BIN_QC {
     else if (params.run_checkm2) {
         CHECKM2_DATABASEDOWNLOAD(params.checkm2_db_version)
         ch_checkm2_db = CHECKM2_DATABASEDOWNLOAD.out.database
-        ch_publish_checkm2_db = params.save_checkm2_data ? CHECKM2_DATABASEDOWNLOAD.out.database : channel.empty()
+        ch_publish_checkm2_db = CHECKM2_DATABASEDOWNLOAD.out.database
     }
     else {
         ch_checkm2_db = []
@@ -135,7 +135,7 @@ workflow BIN_QC {
             BUSCO_BUSCO.out.short_summaries_json,
             BUSCO_BUSCO.out.log,
         )
-        ch_publish_busco_db = params.save_busco_db ? BUSCO_BUSCO.out.downloaded_lineages : channel.empty()
+        ch_publish_busco_db = BUSCO_BUSCO.out.downloaded_lineages
         ch_publish_summaries = ch_publish_summaries.mix(CONCAT_BUSCO_TSV.out.csv)
     }
     if (params.run_checkm) {
@@ -230,7 +230,7 @@ workflow BIN_QC {
         }
         else {
             ch_db_for_gunc = GUNC_DOWNLOADDB(params.gunc_database_type).db
-            ch_publish_gunc_db = params.gunc_save_db ? ch_db_for_gunc : channel.empty()
+            ch_publish_gunc_db = ch_db_for_gunc
         }
 
         GUNC_RUN(ch_input_bins_for_gunc, ch_db_for_gunc)

@@ -31,8 +31,11 @@ workflow SHORTREAD_PREPROCESSING {
     ch_multiqc_files = channel.empty()
     ch_publish_fastqc = channel.empty()
     ch_publish_clipping = channel.empty()
+    ch_publish_clipping_reads = channel.empty()
     ch_publish_hostremoval = channel.empty()
+    ch_publish_hostremoval_reads = channel.empty()
     ch_publish_phixremoval = channel.empty()
+    ch_publish_phixremoval_reads = channel.empty()
     ch_publish_bbnorm = channel.empty()
 
     if (!val_skip_fastqc) {
@@ -53,11 +56,8 @@ workflow SHORTREAD_PREPROCESSING {
                 ch_versions = ch_versions.mix(FASTP.out.versions)
                 ch_short_reads_prepped = FASTP.out.reads
                 ch_multiqc_files = ch_multiqc_files.mix(FASTP.out.json)
-                ch_publish_clipping = ch_publish_clipping.mix(
-                    FASTP.out.html,
-                    FASTP.out.json,
-                    params.save_clipped_reads ? FASTP.out.reads.mix(FASTP.out.reads_fail) : channel.empty(),
-                )
+                ch_publish_clipping = ch_publish_clipping.mix(FASTP.out.html, FASTP.out.json)
+                ch_publish_clipping_reads = ch_publish_clipping_reads.mix(FASTP.out.reads, FASTP.out.reads_fail)
             }
             else if (params.clip_tool == 'adapterremoval') {
 
@@ -81,16 +81,12 @@ workflow SHORTREAD_PREPROCESSING {
 
                 ch_multiqc_files = ch_multiqc_files.mix(ADAPTERREMOVAL_PE.out.settings)
                 ch_multiqc_files = ch_multiqc_files.mix(ADAPTERREMOVAL_SE.out.settings)
-                ch_publish_clipping = ch_publish_clipping.mix(
-                    ADAPTERREMOVAL_PE.out.settings,
-                    ADAPTERREMOVAL_SE.out.settings,
-                    params.save_clipped_reads
-                        ? ADAPTERREMOVAL_PE.out.paired_truncated.mix(
-                            ADAPTERREMOVAL_PE.out.singles_truncated,
-                            ADAPTERREMOVAL_PE.out.collapsed_truncated,
-                            ADAPTERREMOVAL_PE.out.discarded,
-                        )
-                        : channel.empty(),
+                ch_publish_clipping = ch_publish_clipping.mix(ADAPTERREMOVAL_PE.out.settings, ADAPTERREMOVAL_SE.out.settings)
+                ch_publish_clipping_reads = ch_publish_clipping_reads.mix(
+                    ADAPTERREMOVAL_PE.out.paired_truncated,
+                    ADAPTERREMOVAL_PE.out.singles_truncated,
+                    ADAPTERREMOVAL_PE.out.collapsed_truncated,
+                    ADAPTERREMOVAL_PE.out.discarded,
                 )
             }
             else if (params.clip_tool == 'trimmomatic') {
@@ -102,10 +98,8 @@ workflow SHORTREAD_PREPROCESSING {
                 ch_short_reads_prepped = TRIMMOMATIC.out.trimmed_reads
 
                 ch_multiqc_files = ch_multiqc_files.mix(TRIMMOMATIC.out.out_log)
-                ch_publish_clipping = ch_publish_clipping.mix(
-                    TRIMMOMATIC.out.trim_log,
-                    params.save_clipped_reads ? TRIMMOMATIC.out.trimmed_reads.mix(TRIMMOMATIC.out.unpaired_reads) : channel.empty(),
-                )
+                ch_publish_clipping = ch_publish_clipping.mix(TRIMMOMATIC.out.trim_log)
+                ch_publish_clipping_reads = ch_publish_clipping_reads.mix(TRIMMOMATIC.out.trimmed_reads, TRIMMOMATIC.out.unpaired_reads)
             }
         }
         else {
@@ -145,11 +139,8 @@ workflow SHORTREAD_PREPROCESSING {
 
             ch_short_reads_hostremoved = BOWTIE2_HOST_REMOVAL_ALIGN.out.reads
             ch_multiqc_files = ch_multiqc_files.mix(BOWTIE2_HOST_REMOVAL_ALIGN.out.log)
-            ch_publish_hostremoval = ch_publish_hostremoval.mix(
-                BOWTIE2_HOST_REMOVAL_ALIGN.out.log,
-                BOWTIE2_HOST_REMOVAL_ALIGN.out.read_ids,
-                params.save_hostremoved_reads ? BOWTIE2_HOST_REMOVAL_ALIGN.out.reads : channel.empty(),
-            )
+            ch_publish_hostremoval = ch_publish_hostremoval.mix(BOWTIE2_HOST_REMOVAL_ALIGN.out.log, BOWTIE2_HOST_REMOVAL_ALIGN.out.read_ids)
+            ch_publish_hostremoval_reads = BOWTIE2_HOST_REMOVAL_ALIGN.out.reads
         }
         else {
             ch_short_reads_hostremoved = ch_short_reads_prepped
@@ -175,10 +166,8 @@ workflow SHORTREAD_PREPROCESSING {
 
             ch_short_reads_for_merge = BOWTIE2_PHIX_REMOVAL_ALIGN.out.reads
             ch_multiqc_files = ch_multiqc_files.mix(BOWTIE2_PHIX_REMOVAL_ALIGN.out.log)
-            ch_publish_phixremoval = ch_publish_phixremoval.mix(
-                BOWTIE2_PHIX_REMOVAL_ALIGN.out.log,
-                params.save_phixremoved_reads ? BOWTIE2_PHIX_REMOVAL_ALIGN.out.reads : channel.empty(),
-            )
+            ch_publish_phixremoval = ch_publish_phixremoval.mix(BOWTIE2_PHIX_REMOVAL_ALIGN.out.log)
+            ch_publish_phixremoval_reads = BOWTIE2_PHIX_REMOVAL_ALIGN.out.reads
         }
         else {
             ch_short_reads_for_merge = ch_short_reads_hostremoved
@@ -255,22 +244,23 @@ workflow SHORTREAD_PREPROCESSING {
         BBMAP_BBNORM(ch_bbnorm)
         ch_versions = ch_versions.mix(BBMAP_BBNORM.out.versions)
         ch_short_reads_assembly = BBMAP_BBNORM.out.fastq
-        if (params.save_bbnorm_reads) {
-            ch_publish_bbnorm = BBMAP_BBNORM.out.fastq.join(BBMAP_BBNORM.out.log)
-        }
+        ch_publish_bbnorm = BBMAP_BBNORM.out.fastq.join(BBMAP_BBNORM.out.log)
     }
     else {
         ch_short_reads_assembly = ch_short_reads
     }
 
     emit:
-    short_reads          = ch_short_reads
-    short_reads_assembly = ch_short_reads_assembly
-    versions             = ch_versions
-    multiqc_files        = ch_multiqc_files
-    publish_fastqc       = ch_publish_fastqc       // [val(meta), path(html)]
-    publish_clipping     = ch_publish_clipping     // [val(meta), path(files)]
-    publish_hostremoval  = ch_publish_hostremoval  // [val(meta), path(files)]
-    publish_phixremoval  = ch_publish_phixremoval  // [val(meta), path(files)]
-    publish_bbnorm       = ch_publish_bbnorm       // [val(meta), path(fastq), path(log)]
+    short_reads               = ch_short_reads
+    short_reads_assembly      = ch_short_reads_assembly
+    versions                  = ch_versions
+    multiqc_files             = ch_multiqc_files
+    publish_fastqc            = ch_publish_fastqc            // [val(meta), path(html)]
+    publish_clipping          = ch_publish_clipping          // [val(meta), path(files)]
+    publish_clipping_reads    = ch_publish_clipping_reads    // [val(meta), path(fastq)]
+    publish_hostremoval       = ch_publish_hostremoval       // [val(meta), path(files)]
+    publish_hostremoval_reads = ch_publish_hostremoval_reads // [val(meta), path(fastq)]
+    publish_phixremoval       = ch_publish_phixremoval       // [val(meta), path(files)]
+    publish_phixremoval_reads = ch_publish_phixremoval_reads // [val(meta), path(fastq)]
+    publish_bbnorm            = ch_publish_bbnorm            // [val(meta), path(fastq), path(log)]
 }

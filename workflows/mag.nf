@@ -75,6 +75,8 @@ workflow MAG {
     def ch_publish_assembly_quast = channel.empty()
     def ch_publish_assembly_mapping = channel.empty()
     def ch_publish_assembly_mapping_full = channel.empty()
+    def ch_publish_assembly_mapping_bams = channel.empty()
+    def ch_publish_assembly_mapping_full_bams = channel.empty()
     def ch_publish_assembly_ale = channel.empty()
     def ch_publish_assembly_deepmased_features = channel.empty()
     def ch_publish_assembly_deepmased = channel.empty()
@@ -191,7 +193,7 @@ workflow MAG {
         MMSEQS_DATABASES(params.metaeuk_mmseqs_db)
         ch_versions = ch_versions.mix(MMSEQS_DATABASES.out.versions)
         ch_metaeuk_db = MMSEQS_DATABASES.out.database
-        ch_publish_annotation_mmseqs_db = params.save_mmseqs_db ? MMSEQS_DATABASES.out.database : channel.empty()
+        ch_publish_annotation_mmseqs_db = MMSEQS_DATABASES.out.database
     }
 
     /*
@@ -379,6 +381,7 @@ workflow MAG {
         )
         ch_versions = ch_versions.mix(BINNING_PREPARATION_FULL.out.versions)
         ch_publish_assembly_mapping_full = BINNING_PREPARATION_FULL.out.publish
+        ch_publish_assembly_mapping_full_bams = BINNING_PREPARATION_FULL.out.publish_bams
     }
 
     // Binners get only contigs within --min_contig_size and --max_contig_size, filtered before mapping so FASTA and BAMs agree
@@ -403,6 +406,7 @@ workflow MAG {
         )
         ch_versions = ch_versions.mix(BINNING_PREPARATION.out.versions)
         ch_publish_assembly_mapping = BINNING_PREPARATION.out.publish
+        ch_publish_assembly_mapping_bams = BINNING_PREPARATION.out.publish_bams
     }
 
     /*
@@ -955,12 +959,17 @@ workflow MAG {
     versions                    = ch_versions                                                   // channel: [ path(versions.yml) ]
     shortread_fastqc            = SHORTREAD_PREPROCESSING.out.publish_fastqc
     shortread_clipping          = SHORTREAD_PREPROCESSING.out.publish_clipping
+    shortread_clipping_reads    = SHORTREAD_PREPROCESSING.out.publish_clipping_reads
     shortread_hostremoval       = SHORTREAD_PREPROCESSING.out.publish_hostremoval
+    shortread_hostremoval_reads = SHORTREAD_PREPROCESSING.out.publish_hostremoval_reads
     shortread_phixremoval       = SHORTREAD_PREPROCESSING.out.publish_phixremoval
+    shortread_phixremoval_reads = SHORTREAD_PREPROCESSING.out.publish_phixremoval_reads
     shortread_bbnorm            = SHORTREAD_PREPROCESSING.out.publish_bbnorm
     longread_adaptertrimming    = LONGREAD_PREPROCESSING.out.publish_adaptertrimming
     longread_filtering          = LONGREAD_PREPROCESSING.out.publish_filtering
+    longread_filtering_reads    = LONGREAD_PREPROCESSING.out.publish_filtering_reads
     longread_nanolyse           = LONGREAD_PREPROCESSING.out.publish_nanolyse
+    longread_nanolyse_reads     = LONGREAD_PREPROCESSING.out.publish_nanolyse_reads
     longread_nanoplot           = LONGREAD_PREPROCESSING.out.publish_nanoplot
     longread_hostremoval_index  = LONGREAD_PREPROCESSING.out.publish_hostremoval_index
     longread_hostremoval_bam    = LONGREAD_PREPROCESSING.out.publish_hostremoval_bam
@@ -971,6 +980,8 @@ workflow MAG {
     assembly_quast              = ch_publish_assembly_quast
     assembly_mapping            = ch_publish_assembly_mapping
     assembly_mapping_full       = ch_publish_assembly_mapping_full
+    assembly_mapping_bams       = ch_publish_assembly_mapping_bams
+    assembly_mapping_full_bams  = ch_publish_assembly_mapping_full_bams
     assembly_ale                = ch_publish_assembly_ale
     assembly_deepmased_features = ch_publish_assembly_deepmased_features
     assembly_deepmased          = ch_publish_assembly_deepmased

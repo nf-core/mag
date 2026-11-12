@@ -301,12 +301,17 @@ workflow NFCORE_MAG {
     multiqc_report              = MAG.out.multiqc_report              // channel: /path/to/multiqc_report.html
     shortread_fastqc            = MAG.out.shortread_fastqc
     shortread_clipping          = MAG.out.shortread_clipping
+    shortread_clipping_reads    = MAG.out.shortread_clipping_reads
     shortread_hostremoval       = MAG.out.shortread_hostremoval
+    shortread_hostremoval_reads = MAG.out.shortread_hostremoval_reads
     shortread_phixremoval       = MAG.out.shortread_phixremoval
+    shortread_phixremoval_reads = MAG.out.shortread_phixremoval_reads
     shortread_bbnorm            = MAG.out.shortread_bbnorm
     longread_adaptertrimming    = MAG.out.longread_adaptertrimming
     longread_filtering          = MAG.out.longread_filtering
+    longread_filtering_reads    = MAG.out.longread_filtering_reads
     longread_nanolyse           = MAG.out.longread_nanolyse
+    longread_nanolyse_reads     = MAG.out.longread_nanolyse_reads
     longread_nanoplot           = MAG.out.longread_nanoplot
     longread_hostremoval_index  = MAG.out.longread_hostremoval_index
     longread_hostremoval_bam    = MAG.out.longread_hostremoval_bam
@@ -317,6 +322,8 @@ workflow NFCORE_MAG {
     assembly_quast              = MAG.out.assembly_quast
     assembly_mapping            = MAG.out.assembly_mapping
     assembly_mapping_full       = MAG.out.assembly_mapping_full
+    assembly_mapping_bams       = MAG.out.assembly_mapping_bams
+    assembly_mapping_full_bams  = MAG.out.assembly_mapping_full_bams
     assembly_ale                = MAG.out.assembly_ale
     assembly_deepmased_features = MAG.out.assembly_deepmased_features
     assembly_deepmased          = MAG.out.assembly_deepmased
@@ -417,12 +424,17 @@ workflow {
     publish:
     shortread_fastqc            = NFCORE_MAG.out.shortread_fastqc
     shortread_clipping          = NFCORE_MAG.out.shortread_clipping
+    shortread_clipping_reads    = NFCORE_MAG.out.shortread_clipping_reads
     shortread_hostremoval       = NFCORE_MAG.out.shortread_hostremoval
+    shortread_hostremoval_reads = NFCORE_MAG.out.shortread_hostremoval_reads
     shortread_phixremoval       = NFCORE_MAG.out.shortread_phixremoval
+    shortread_phixremoval_reads = NFCORE_MAG.out.shortread_phixremoval_reads
     shortread_bbnorm            = NFCORE_MAG.out.shortread_bbnorm
     longread_adaptertrimming    = NFCORE_MAG.out.longread_adaptertrimming
     longread_filtering          = NFCORE_MAG.out.longread_filtering
+    longread_filtering_reads    = NFCORE_MAG.out.longread_filtering_reads
     longread_nanolyse           = NFCORE_MAG.out.longread_nanolyse
+    longread_nanolyse_reads     = NFCORE_MAG.out.longread_nanolyse_reads
     longread_nanoplot           = NFCORE_MAG.out.longread_nanoplot
     longread_hostremoval_index  = NFCORE_MAG.out.longread_hostremoval_index
     longread_hostremoval_bam    = NFCORE_MAG.out.longread_hostremoval_bam
@@ -433,6 +445,8 @@ workflow {
     assembly_quast              = NFCORE_MAG.out.assembly_quast
     assembly_mapping            = NFCORE_MAG.out.assembly_mapping
     assembly_mapping_full       = NFCORE_MAG.out.assembly_mapping_full
+    assembly_mapping_bams       = NFCORE_MAG.out.assembly_mapping_bams
+    assembly_mapping_full_bams  = NFCORE_MAG.out.assembly_mapping_full_bams
     assembly_ale                = NFCORE_MAG.out.assembly_ale
     assembly_deepmased_features = NFCORE_MAG.out.assembly_deepmased_features
     assembly_deepmased          = NFCORE_MAG.out.assembly_deepmased
@@ -499,26 +513,48 @@ output {
     shortread_clipping {
         path { meta, _files -> "QC_shortreads/${params.clip_tool}/${meta.id}" }
     }
+    shortread_clipping_reads {
+        path { meta, _files -> "QC_shortreads/${params.clip_tool}/${meta.id}" }
+        enabled params.save_clipped_reads
+    }
     shortread_hostremoval {
         path 'QC_shortreads/remove_host'
     }
+    shortread_hostremoval_reads {
+        path 'QC_shortreads/remove_host'
+        enabled params.save_hostremoved_reads
+    }
     shortread_phixremoval {
         path 'QC_shortreads/remove_phix'
+    }
+    shortread_phixremoval_reads {
+        path 'QC_shortreads/remove_phix'
+        enabled params.save_phixremoved_reads
     }
     shortread_bbnorm {
         path { _meta, fastq, log ->
             fastq >> 'bbmap/bbnorm/'
             log >> 'bbmap/bbnorm/logs/'
         }
+        enabled params.save_bbnorm_reads
     }
     longread_adaptertrimming {
         path 'QC_longreads/porechop'
+        enabled params.save_porechop_reads
     }
     longread_filtering {
         path "QC_longreads/${[filtlong: 'Filtlong', nanoq: 'Nanoq', chopper: 'Chopper'][params.longread_filtering_tool]}"
     }
+    longread_filtering_reads {
+        path "QC_longreads/${[filtlong: 'Filtlong', nanoq: 'Nanoq', chopper: 'Chopper'][params.longread_filtering_tool]}"
+        enabled params.save_filtered_longreads || (params.longread_filtering_tool == 'chopper' && params.save_lambdaremoved_reads)
+    }
     longread_nanolyse {
         path 'QC_longreads/NanoLyse'
+    }
+    longread_nanolyse_reads {
+        path 'QC_longreads/NanoLyse'
+        enabled params.save_lambdaremoved_reads
     }
     longread_nanoplot {
         path { meta, _files -> "QC_longreads/NanoPlot/${meta.id}" }
@@ -528,9 +564,11 @@ output {
     }
     longread_hostremoval_bam {
         path 'QC_longreads/minimap2/align'
+        enabled params.save_hostremoved_reads
     }
     longread_hostremoval_fastq {
         path 'QC_longreads/samtools/fastq'
+        enabled params.save_hostremoved_reads
     }
     longread_hostremoval_stats {
         path 'QC_longreads/samtools/stats'
@@ -554,6 +592,14 @@ output {
     }
     assembly_mapping_full {
         path { meta, _files -> "Assembly/${meta.assembler}/QC/${meta.id}/full_assembly" }
+    }
+    assembly_mapping_bams {
+        path { meta, _files -> "Assembly/${meta.assembler}/QC/${meta.id}" }
+        enabled params.save_assembly_mapped_reads
+    }
+    assembly_mapping_full_bams {
+        path { meta, _files -> "Assembly/${meta.assembler}/QC/${meta.id}/full_assembly" }
+        enabled params.save_assembly_mapped_reads
     }
     assembly_ale {
         path { meta, _files -> "Assembly/${meta.assembler}/QC/${meta.id}/ALE" }
@@ -639,6 +685,7 @@ output {
     }
     binning_dastool_contig2bin {
         path 'GenomeBinning/DASTool/fastatocontig2bin'
+        enabled params.refine_bins_dastool_savecontig2bin
     }
     binning_dastool {
         path 'GenomeBinning/DASTool'
@@ -672,10 +719,12 @@ output {
         path 'GenomeBinning/QC/BUSCO'
         // several tasks publish the same shared `busco_downloads/lineages/` directory
         overwrite false
+        enabled params.save_busco_db
     }
     binqc_checkm_db {
         path 'GenomeBinning/QC/CheckM/checkm_downloads'
         overwrite false
+        enabled params.save_checkm_data
     }
     binqc_checkm {
         path 'GenomeBinning/QC/CheckM'
@@ -683,12 +732,14 @@ output {
     binqc_checkm2_db {
         path 'GenomeBinning/QC/CheckM2/checkm2_downloads'
         overwrite false
+        enabled params.save_checkm2_data
     }
     binqc_checkm2 {
         path 'GenomeBinning/QC/CheckM2'
     }
     binqc_gunc_db {
         path 'GenomeBinning/QC/GUNC'
+        enabled params.gunc_save_db
     }
     binqc_gunc_raw {
         path { meta, _files -> "GenomeBinning/QC/GUNC/raw/${meta.assembler}-${meta.binner}-${meta.domain}-${meta.refinement}-${meta.id}" }
@@ -710,6 +761,7 @@ output {
     }
     taxonomy_cat_db {
         path 'Taxonomy/CAT/db'
+        enabled params.save_cat_db
     }
     taxonomy_cat_summary {
         path 'Taxonomy/CAT'
@@ -737,6 +789,7 @@ output {
     }
     annotation_mmseqs_db {
         path 'Annotation/mmseqs_db'
+        enabled params.save_mmseqs_db
     }
     annotation_metaeuk {
         path { meta, _files -> "Annotation/MetaEuk/${meta.assembler}" }

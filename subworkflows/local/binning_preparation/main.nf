@@ -4,10 +4,10 @@ include { LONGREAD_BINNING_PREPARATION  } from '../binning_preparation_longread/
 workflow BINNING_PREPARATION {
     take:
     ch_shortread_assemblies // [val(meta), path(assembly)]
-    ch_shortreads // [val(meta), path(reads)]
-    ch_longread_assemblies // [val(meta), path(assembly)]
-    ch_longreads // [val(meta), path(reads)]
-    val_map_mode // val(string): 'own', 'group' or 'all'
+    ch_shortreads           // [val(meta), path(reads)]
+    ch_longread_assemblies  // [val(meta), path(assembly)]
+    ch_longreads            // [val(meta), path(reads)]
+    val_map_mode            // val(string): 'own', 'group' or 'all'
 
     main:
     ch_versions = channel.empty()
@@ -28,5 +28,6 @@ workflow BINNING_PREPARATION {
     grouped_mappings = ch_grouped_mappings
     versions         = ch_versions
     multiqc_files    = ch_multiqc_files
-    publish          = SHORTREAD_BINNING_PREPARATION.out.publish.mix(LONGREAD_BINNING_PREPARATION.out.publish) // [val(meta), path(files)...]
+    publish          = SHORTREAD_BINNING_PREPARATION.out.publish                                                         // [val(meta), path(log)]
+    publish_bams     = SHORTREAD_BINNING_PREPARATION.out.publish_bams.mix(LONGREAD_BINNING_PREPARATION.out.publish_bams) // [val(meta), path(files)...]
 }

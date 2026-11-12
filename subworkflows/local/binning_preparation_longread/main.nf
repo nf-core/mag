@@ -14,8 +14,8 @@ def mappingKey(meta, map_mode) {
 workflow LONGREAD_BINNING_PREPARATION {
     take:
     ch_assemblies // [val(meta), path(assembly)]
-    ch_reads // [val(meta), path(reads)]
-    val_map_mode // val(string): 'own', 'group' or 'all'
+    ch_reads      // [val(meta), path(reads)]
+    val_map_mode  // val(string): 'own', 'group' or 'all'
 
     main:
     ch_versions = channel.empty()
@@ -60,5 +60,5 @@ workflow LONGREAD_BINNING_PREPARATION {
     emit:
     versions         = ch_versions
     grouped_mappings = ch_grouped_mappings
-    publish          = params.save_assembly_mapped_reads ? MINIMAP2_ASSEMBLY_ALIGN.out.bam.mix(MINIMAP2_ASSEMBLY_ALIGN.out.index) : channel.empty() // [val(meta), path(file)]
+    publish_bams     = MINIMAP2_ASSEMBLY_ALIGN.out.bam.mix(MINIMAP2_ASSEMBLY_ALIGN.out.index) // [val(meta), path(file)]
 }
