@@ -15,7 +15,7 @@ In addition to this page, you can find additional usage information on the follo
 
 ## Input specifications
 
-The input data can be passed to nf-core/mag in two possible ways, either using the `--input` parameter of raw-reads alone or `--input` additionally with `--assembly_input` that specifies pre-built assemblies.
+The input data can be passed to nf-core/mag in three possible ways: the `--input` parameter with raw reads alone, `--input` together with `--assembly_input` that specifies pre-built assemblies, or `--bins_input` that specifies pre-built bins.
 
 ### Samplesheet input file
 
@@ -144,6 +144,30 @@ group-1,1,SPAdes,SPAdes-group-1.contigs.fasta.gz
 ```
 
 When supplying pre-computed assemblies, reads **must** also be provided in the CSV input format to `--input`, and should be the reads used to build the assemblies, i.e., adapter-removed, run-merged etc. Preprocessing steps will not be run on raw reads when pre-computed assemblies are supplied. As long reads are only used for assembly, any long read fastq files listed in the reads CSV are ignored.
+
+### Supplying pre-computed bins
+
+If you already have genomes, for example bins or MAGs from earlier studies, supply them in a CSV file to `--bins_input` instead of `--input`.
+The pipeline then skips read processing, assembly and binning, and starts at bin quality control.
+Bin QC, dereplication (`--dereplicate`), GTDB-Tk, CAT/BAT, QUAST and annotation work as for bins produced by the pipeline.
+`--bins_input` cannot be combined with `--input`, `--assembly_input`, `--skip_binning` or `--ancient_dna`.
+
+The CSV file has one row per bin:
+
+```csv title="bins.csv"
+group,fasta
+study1,data/study1_bin1.fa.gz
+study1,data/study1_bin2.fa.gz
+study2,data/study2_bin1.fa
+```
+
+The `fasta` column is required.
+File names must end in `.fa` or `.fa.gz` and must be unique across the whole sheet, since bin file names identify the bins in all result tables.
+Bins that share a `group` are processed as one batch by the quality control and classification tools.
+The `group` column is optional and defaults to `bins`.
+Dereplication always runs across all bins, regardless of group.
+
+No depth information is available for such bins, so the `bin_summary.tsv` file has no depth columns.
 
 ### Databases
 

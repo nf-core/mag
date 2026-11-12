@@ -1,0 +1,65 @@
+nextflow_pipeline {
+
+    name "Test pipeline with test_bins_input profile"
+    script "../main.nf"
+    tag "pipeline"
+    tag "test_bins_input"
+    profile "test_bins_input"
+
+    test("-profile test_bins_input") {
+
+        when {
+            params {
+                outdir = "${outputDir}"
+            }
+        }
+
+        then {
+            def stable_name_all = getAllFilesFromDir(
+                params.outdir,
+                include: ['GenomeBinning/**', 'Taxonomy/**', 'Annotation/**'],
+                ignore: ['Annotation/Prokka/**/*.tmp.*'],
+                relative: true,
+                includeDir: false
+            )
+            def bin_summary = path("${params.outdir}/GenomeBinning/bin_summary.tsv")
+            def checkm2_summary = path("${params.outdir}/GenomeBinning/QC/checkm2_summary.tsv")
+            def gtdbtk_summary = path("${params.outdir}/Taxonomy/GTDB-Tk/gtdbtk_summary.tsv")
+            def dereplicated_tsv = path("${params.outdir}/GenomeBinning/Dereplication/dereplicated_bins.tsv")
+            def dereplicated_bins = getAllFilesFromDir(
+                params.outdir, include: ['GenomeBinning/Dereplication/dereplicated_bins/*.fa.gz']
+            )
+            def prokka_dirs = getAllFilesFromDir(
+                params.outdir, include: ['Annotation/Prokka/external/*'], includeDir: true
+            )
+            def input_bins = ['MEGAHIT-MaxBin2-minigut.001', 'MEGAHIT-MaxBin2-minigut.002', 'SPAdes-MaxBin2-test_minigut.002', 'SPAdes-MaxBin2-test_minigut_sample2.001']
+            def cluster_lines = dereplicated_tsv.text.readLines()
+
+            assert workflow.success
+            assertAll(
+                { assert snapshot(
+                    workflow.trace.succeeded().size(),
+                    removeNextflowVersion("${outputDir}/pipeline_info/nf_core_mag_software_mqc_versions.yml"),
+                ).match() },
+                { assert snapshot(stable_name_all).match('output-names') },
+
+                // Every input bin is assessed, and nothing else
+                { assert checkm2_summary.csv(sep: "\t").rowCount == input_bins.size() },
+                { assert input_bins.every { name -> checkm2_summary.text.contains("${name}\t") } },
+                { assert bin_summary.csv(sep: "\t").rowCount == input_bins.size() },
+
+                // Bins from the two assemblers that are near-identical end up in one cluster
+                { assert cluster_lines.any { line ->
+                        line.contains('MEGAHIT-MaxBin2-minigut.002') && line.contains('SPAdes-MaxBin2-test_minigut.002')
+                    }
+                },
+                { assert dereplicated_bins.size() == 3 },
+                { assert bin_summary.text.readLines().first().contains('dereplication_is_representative') },
+
+                // Representatives are classified and annotated
+                { assert gtdbtk_summary.csv(sep: "\t").rowCount == dereplicated_bins.size() },
+                { assert prokka_dirs.size() == dereplicated_bins.size() },
+            )
+        }
+    }
+}
