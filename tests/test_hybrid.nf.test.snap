@@ -686,15 +686,15 @@
                 "SPAdesHybrid-SemiBin2-unclassified-unrefined-group-0-quast_summary.tsv:md5,29a699a812b9cd62612dc81a4ff50f01",
                 "quast_bin_summary.tsv:md5,da587ec91a140cdb755081d404989a7d",
                 "SPAdesHybrid-SemiBin2-group-0_0.fa.gz:md5,2b30803aaf880a9d4c99d41e4754cb2b",
-                "bin_summary.tsv:md5,144d525abf6de5c9319fc050a336140d",
+                "bin_summary.tsv:md5,06b4d198506d55e7439e3a75d9948973",
                 "contig_to_bin_map.tsv:md5,248ee7ec0b01c21f80167527587810e2",
                 "bin_depths_summary.tsv:md5,3b7f08abc34d47952d239ff10c01085e"
             ]
         ],
-        "timestamp": "2026-09-28T18:21:10.566453313",
+        "timestamp": "2026-11-13T11:52:12.580629322",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
+            "nextflow": "26.10.5"
         }
     },
     "content-checks": {
