@@ -49,6 +49,12 @@ def parse_args(args=None):
     )
 
     parser.add_argument(
+        "--binners",
+        required=True,
+        metavar="FILE",
+        help="Table of bin name and the binner or refinement tool that produced it (bin<TAB>binner, no header).",
+    )
+    parser.add_argument(
         "-o",
         "--out",
         required=True,
@@ -145,6 +151,10 @@ def main(args=None):
         "Depth " + str(col) if col != "bin" else col for col in results.columns
     ]
     bins = results["bin"].sort_values().reset_index(drop=True)
+    binners = pd.read_csv(
+        args.binners, sep="\t", header=None, names=["bin", "binner"]
+    )
+    results = pd.merge(binners, results, on="bin", how="right")
 
     ## BUSCO PROCESSING
 
