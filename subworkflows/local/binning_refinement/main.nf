@@ -92,21 +92,30 @@ workflow BINNING_REFINEMENT {
         )
     }
 
-    // Binette does not report unbinned contigs, so it adds nothing to ch_refined_unbins
     if (params.refine_bins_binette) {
         ch_input_for_binette = ch_contigs_and_contig2bin.map { meta, contigs, bins -> [meta, bins, [], contigs, []] }
 
         BINETTE(ch_input_for_binette, ch_checkm2_db)
 
-        ch_input_for_renamebinette = BINETTE.out.final_bins.map { meta, bin_list ->
-            def meta_new = meta + [refinement: 'binette_refined', binner: 'Binette', domain: domain_class]
-            [meta_new, bin_list]
-        }
+        // contigs are needed to recover the unbinned contigs, which Binette does not report
+        ch_input_for_renamebinette = BINETTE.out.final_bins
+            .join(BINETTE.out.contig2bin)
+            .join(ch_contigs_for_dastool)
+            .map { meta, bin_list, contig2bin, contigs ->
+                def meta_new = meta + [refinement: 'binette_refined', binner: 'Binette', domain: domain_class]
+                [meta_new, bin_list, contig2bin, contigs]
+            }
 
         RENAME_POSTBINETTE(ch_input_for_renamebinette)
         ch_versions = ch_versions.mix(RENAME_POSTBINETTE.out.versions)
 
         ch_refined_bins = ch_refined_bins.mix(RENAME_POSTBINETTE.out.refined_bins)
+        ch_refined_unbins = ch_refined_unbins.mix(
+            RENAME_POSTBINETTE.out.refined_unbins.map { meta, bin_list ->
+                def meta_new = meta + [refinement: 'binette_refined_unbinned']
+                [meta_new, bin_list]
+            }
+        )
     }
 
     emit:
