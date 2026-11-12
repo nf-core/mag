@@ -950,7 +950,7 @@ In cases where eukaryotic genomes are recovered in binning, [MetaEuk](https://gi
 
 This `bin_summary.tsv` is the primary output file from nf-core/mag, giving the most comprehensive overview of the quality and taxonomic classification of all bins produced by the pipeline.
 
-This will also include rows for refined bins if `--refine_bins_dastool` binning refinement is performed.
+This will also include rows for refined bins if `--refine_bins_dastool` or `--refine_bins_binette` binning refinement is performed. The `binner` column gives the tool that produced each bin: the binner for raw bins, and `DASTool` or `Binette` for refined bins.
 Note that in contrast to the other tools, for CheckM the bin name given in the column "Bin Id" does not contain the ".fa" extension.
 
 All columns other than the primary `bin` key column, and the `Depth <sample name>` columns, will include a suffix specifying from which bin QC tool the column is derived from to distinguish identically named columns from different tools.

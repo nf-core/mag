@@ -513,6 +513,13 @@ workflow MAG {
 
         ch_input_for_binsummary = DEPTHS.out.depths_summary
 
+        // Table of bin name and tool that produced it, for the binner column of bin_summary.tsv
+        ch_bin_binners = ch_input_for_postbinning
+            .flatMap { meta, bins ->
+                [bins].flatten().collect { bin -> "${bin.name - ~/\.gz$/}\t${meta.binner}" }
+            }
+            .collectFile(name: 'bin_binners.tsv', newLine: true, sort: true)
+
         /*
             Generate contig2bin map files for all bins
         */
@@ -644,6 +651,7 @@ workflow MAG {
         if ((!params.skip_binqc) || !params.skip_quast || !params.skip_gtdbtk) {
             BIN_SUMMARY(
                 ch_input_for_binsummary,
+                ch_bin_binners,
                 ch_quast_bins_summary.ifEmpty([]),
                 ch_gtdbtk_summary.ifEmpty([]),
                 ch_catpack_summary.ifEmpty([]),

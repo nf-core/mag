@@ -556,15 +556,15 @@
                 "GUNC.progenomes_2.1.maxCSS_level.tsv:md5,bd81873ed240e2a04d07d353eaffb33b",
                 "GUNC.progenomes_2.1.maxCSS_level.tsv:md5,07980c2ff290ddc651dad1ce0671bb3b",
                 "gunc_summary.tsv:md5,3247401b30b1fe85b23b81cd730dbf28",
-                "bin_summary.tsv:md5,05e9cadfdf3e038af0efe1b853baa0b9",
+                "bin_summary.tsv:md5,2a604ebba94b2d515271329339fb106c",
                 "contig_to_bin_map.tsv:md5,b59bac2a922d1be03c3aebbe0aaa50c4",
                 "bin_depths_summary.tsv:md5,9650b9751b9379a45ab91db801a900ff"
             ]
         ],
-        "timestamp": "2026-11-06T16:57:12.615239195",
+        "timestamp": "2026-11-12T18:38:27.000330071",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.0"
+            "nextflow": "26.10.5"
         }
     },
     "csv-rows": {
