@@ -71,62 +71,14 @@ workflow MAG {
 
     def ch_versions = channel.empty()
     def ch_publish_assembly = channel.empty()
-    def ch_publish_assembly_pypolca = channel.empty()
-    def ch_publish_assembly_quast = channel.empty()
-    def ch_publish_assembly_mapping = channel.empty()
-    def ch_publish_assembly_mapping_full = channel.empty()
-    def ch_publish_assembly_mapping_bams = channel.empty()
-    def ch_publish_assembly_mapping_full_bams = channel.empty()
-    def ch_publish_assembly_ale = channel.empty()
-    def ch_publish_assembly_deepmased_features = channel.empty()
-    def ch_publish_assembly_deepmased = channel.empty()
+    def ch_publish_assembly_qc = channel.empty()
     def ch_publish_virus_identification = channel.empty()
-    def ch_publish_adna_freebayes = channel.empty()
-    def ch_publish_adna_filtered = channel.empty()
-    def ch_publish_adna_consensus = channel.empty()
-    def ch_publish_adna_pydamage_analyze = channel.empty()
-    def ch_publish_adna_pydamage_filter = channel.empty()
-    def ch_publish_binning_depths_contigs = channel.empty()
-    def ch_publish_binning_metabat2 = channel.empty()
-    def ch_publish_binning_maxbin2 = channel.empty()
-    def ch_publish_binning_concoct_stats = channel.empty()
-    def ch_publish_binning_concoct_bins = channel.empty()
-    def ch_publish_binning_comebin = channel.empty()
-    def ch_publish_binning_metabinner = channel.empty()
-    def ch_publish_binning_semibin = channel.empty()
-    def ch_publish_binning_unbinned = channel.empty()
-    def ch_publish_binning_dastool_contig2bin = channel.empty()
-    def ch_publish_binning_dastool = channel.empty()
-    def ch_publish_binning_dastool_bins = channel.empty()
-    def ch_publish_binning_depths_bins = channel.empty()
-    def ch_publish_binning_dereplication = channel.empty()
-    def ch_publish_binning_summary = channel.empty()
-    def ch_publish_binning_bigmag = channel.empty()
-    def ch_publish_binning_contig2bin = channel.empty()
-    def ch_publish_taxonomy_cat_summary = channel.empty()
-    def ch_publish_binqc_busco = channel.empty()
-    def ch_publish_binqc_busco_db = channel.empty()
-    def ch_publish_binqc_checkm_db = channel.empty()
-    def ch_publish_binqc_checkm = channel.empty()
-    def ch_publish_binqc_checkm2_db = channel.empty()
-    def ch_publish_binqc_checkm2 = channel.empty()
-    def ch_publish_binqc_gunc_db = channel.empty()
-    def ch_publish_binqc_gunc_raw = channel.empty()
-    def ch_publish_binqc_gunc_checkm = channel.empty()
-    def ch_publish_binqc_summaries = channel.empty()
-    def ch_publish_binqc_pydamage_bins = channel.empty()
-    def ch_publish_binqc_tiara = channel.empty()
-    def ch_publish_taxonomy_tiara = channel.empty()
-    def ch_publish_taxonomy_cat_db = channel.empty()
-    def ch_publish_taxonomy_cat_bins = channel.empty()
-    def ch_publish_taxonomy_cat_unbins = channel.empty()
-    def ch_publish_taxonomy_gtdbtk = channel.empty()
-    def ch_publish_taxonomy_gtdbtk_summary = channel.empty()
-    def ch_publish_annotation_prodigal = channel.empty()
-    def ch_publish_annotation_prokka = channel.empty()
-    def ch_publish_annotation_bakta = channel.empty()
-    def ch_publish_annotation_mmseqs_db = channel.empty()
-    def ch_publish_annotation_metaeuk = channel.empty()
+    def ch_publish_ancient_dna = channel.empty()
+    def ch_publish_binning = channel.empty()
+    def ch_publish_bin_qc = channel.empty()
+    def ch_publish_taxonomy = channel.empty()
+    def ch_publish_annotation = channel.empty()
+    def ch_publish_databases = channel.empty()
     def ch_multiqc_files = channel.empty()
 
     ////////////////////////////////////////////////////
@@ -193,7 +145,7 @@ workflow MAG {
         MMSEQS_DATABASES(params.metaeuk_mmseqs_db)
         ch_versions = ch_versions.mix(MMSEQS_DATABASES.out.versions)
         ch_metaeuk_db = MMSEQS_DATABASES.out.database
-        ch_publish_annotation_mmseqs_db = MMSEQS_DATABASES.out.database
+        ch_publish_databases = ch_publish_databases.mix(MMSEQS_DATABASES.out.database.map { item -> toPublish('mmseqs_db', item) })
     }
 
     /*
@@ -249,7 +201,7 @@ workflow MAG {
             ch_long_reads,
         )
         ch_versions = ch_versions.mix(ASSEMBLY.out.versions)
-        ch_publish_assembly = ASSEMBLY.out.publish
+        ch_publish_assembly = ch_publish_assembly.mix(ASSEMBLY.out.publish.map { item -> toPublish('assembly', item) })
 
         ch_shortread_assemblies = ASSEMBLY.out.shortread_assemblies
         ch_longread_raw_assemblies = ASSEMBLY.out.longread_assemblies
@@ -318,7 +270,7 @@ workflow MAG {
         PYPOLCA_RUN(ch_longread_assemblies_branched.polish)
 
         ch_longread_assemblies = PYPOLCA_RUN.out.polished.mix(ch_longread_assemblies_branched.no_short_reads)
-        ch_publish_assembly_pypolca = PYPOLCA_RUN.out.polished.join(PYPOLCA_RUN.out.vcf).join(PYPOLCA_RUN.out.report)
+        ch_publish_assembly = ch_publish_assembly.mix(PYPOLCA_RUN.out.polished.join(PYPOLCA_RUN.out.vcf).join(PYPOLCA_RUN.out.report).map { meta, polished, vcf, report -> [meta, [pypolca_polished: polished, pypolca_vcf: vcf, pypolca_report: report]] })
     }
     else {
         ch_longread_assemblies = ch_longread_raw_assemblies
@@ -329,7 +281,7 @@ workflow MAG {
     if (!params.skip_quast) {
         QUAST(ch_assemblies)
         ch_versions = ch_versions.mix(QUAST.out.versions)
-        ch_publish_assembly_quast = QUAST.out.qc
+        ch_publish_assembly_qc = ch_publish_assembly_qc.mix(QUAST.out.qc.map { item -> toPublish('quast', item) })
     }
 
     /*
@@ -343,11 +295,11 @@ workflow MAG {
             ch_assemblies,
             'gff',
         )
-        ch_publish_annotation_prodigal = PRODIGAL.out.gene_annotations.mix(
+        ch_publish_annotation = ch_publish_annotation.mix(PRODIGAL.out.gene_annotations.mix(
             PRODIGAL.out.nucleotide_fasta,
             PRODIGAL.out.amino_acid_fasta,
             PRODIGAL.out.all_gene_annotations,
-        )
+        ).map { item -> toPublish('prodigal', item) })
     }
 
     /*
@@ -359,7 +311,7 @@ workflow MAG {
     if (params.run_virus_identification) {
         VIRUS_IDENTIFICATION(ch_assemblies, params.genomad_db)
         ch_versions = ch_versions.mix(VIRUS_IDENTIFICATION.out.versions)
-        ch_publish_virus_identification = VIRUS_IDENTIFICATION.out.publish
+        ch_publish_virus_identification = ch_publish_virus_identification.mix(VIRUS_IDENTIFICATION.out.publish.map { item -> toPublish('genomad', item) })
     }
 
     /*
@@ -380,8 +332,8 @@ workflow MAG {
             params.coassemble_group ? 'group' : 'own',
         )
         ch_versions = ch_versions.mix(BINNING_PREPARATION_FULL.out.versions)
-        ch_publish_assembly_mapping_full = BINNING_PREPARATION_FULL.out.publish
-        ch_publish_assembly_mapping_full_bams = BINNING_PREPARATION_FULL.out.publish_bams
+        ch_publish_assembly_qc = ch_publish_assembly_qc.mix(BINNING_PREPARATION_FULL.out.publish.map { item -> toPublish('mapping_full', item) })
+        ch_publish_assembly_qc = ch_publish_assembly_qc.mix(BINNING_PREPARATION_FULL.out.publish_bams.map { item -> toPublish('mapping_full_bams', item) })
     }
 
     // Binners get only contigs within --min_contig_size and --max_contig_size, filtered before mapping so FASTA and BAMs agree
@@ -405,8 +357,8 @@ workflow MAG {
             params.binning_map_mode,
         )
         ch_versions = ch_versions.mix(BINNING_PREPARATION.out.versions)
-        ch_publish_assembly_mapping = BINNING_PREPARATION.out.publish
-        ch_publish_assembly_mapping_bams = BINNING_PREPARATION.out.publish_bams
+        ch_publish_assembly_qc = ch_publish_assembly_qc.mix(BINNING_PREPARATION.out.publish.map { item -> toPublish('mapping', item) })
+        ch_publish_assembly_qc = ch_publish_assembly_qc.mix(BINNING_PREPARATION.out.publish_bams.map { item -> toPublish('mapping_bams', item) })
     }
 
     /*
@@ -418,11 +370,11 @@ workflow MAG {
     if (params.ancient_dna) {
         ANCIENT_DNA_ASSEMBLY_VALIDATION(BINNING_PREPARATION_FULL.out.grouped_mappings)
         ch_versions = ch_versions.mix(ANCIENT_DNA_ASSEMBLY_VALIDATION.out.versions)
-        ch_publish_adna_freebayes = ANCIENT_DNA_ASSEMBLY_VALIDATION.out.freebayes_vcf
-        ch_publish_adna_filtered = ANCIENT_DNA_ASSEMBLY_VALIDATION.out.filtered_vcf
-        ch_publish_adna_consensus = ANCIENT_DNA_ASSEMBLY_VALIDATION.out.contigs_recalled
-        ch_publish_adna_pydamage_analyze = ANCIENT_DNA_ASSEMBLY_VALIDATION.out.pydamage_results
-        ch_publish_adna_pydamage_filter = ANCIENT_DNA_ASSEMBLY_VALIDATION.out.pydamage_filtered_results
+        ch_publish_ancient_dna = ch_publish_ancient_dna.mix(ANCIENT_DNA_ASSEMBLY_VALIDATION.out.freebayes_vcf.map { item -> toPublish('freebayes', item) })
+        ch_publish_ancient_dna = ch_publish_ancient_dna.mix(ANCIENT_DNA_ASSEMBLY_VALIDATION.out.filtered_vcf.map { item -> toPublish('filtered', item) })
+        ch_publish_ancient_dna = ch_publish_ancient_dna.mix(ANCIENT_DNA_ASSEMBLY_VALIDATION.out.contigs_recalled.map { item -> toPublish('consensus', item) })
+        ch_publish_ancient_dna = ch_publish_ancient_dna.mix(ANCIENT_DNA_ASSEMBLY_VALIDATION.out.pydamage_results.map { item -> toPublish('pydamage_analyze', item) })
+        ch_publish_ancient_dna = ch_publish_ancient_dna.mix(ANCIENT_DNA_ASSEMBLY_VALIDATION.out.pydamage_filtered_results.map { item -> toPublish('pydamage_filter', item) })
     }
 
     /*
@@ -445,7 +397,7 @@ workflow MAG {
 
         ALE(ch_ale_input)
         ch_versions = ch_versions.mix(ALE.out.versions)
-        ch_publish_assembly_ale = ALE.out.ale
+        ch_publish_assembly_qc = ch_publish_assembly_qc.mix(ALE.out.ale.map { item -> toPublish('ale', item) })
     }
 
     /*
@@ -473,8 +425,8 @@ workflow MAG {
 
         DEEPMASED_FEATURES(ch_deepmased_input)
         DEEPMASED_PREDICT(DEEPMASED_FEATURES.out.feature_table.join(DEEPMASED_FEATURES.out.feature_files, by: 0))
-        ch_publish_assembly_deepmased_features = DEEPMASED_FEATURES.out.feature_table.mix(DEEPMASED_FEATURES.out.feature_files)
-        ch_publish_assembly_deepmased = DEEPMASED_PREDICT.out.predictions
+        ch_publish_assembly_qc = ch_publish_assembly_qc.mix(DEEPMASED_FEATURES.out.feature_table.mix(DEEPMASED_FEATURES.out.feature_files).map { item -> toPublish('deepmased_features', item) })
+        ch_publish_assembly_qc = ch_publish_assembly_qc.mix(DEEPMASED_PREDICT.out.predictions.map { item -> toPublish('deepmased', item) })
     }
 
     /*
@@ -506,15 +458,8 @@ workflow MAG {
             params.bin_max_size,
         )
         ch_versions = ch_versions.mix(BINNING.out.versions)
-        ch_publish_binning_depths_contigs = BINNING.out.metabat2depths
-        ch_publish_binning_metabat2 = BINNING.out.publish_metabat2
-        ch_publish_binning_maxbin2 = BINNING.out.publish_maxbin2
-        ch_publish_binning_concoct_stats = BINNING.out.publish_concoct_stats
-        ch_publish_binning_concoct_bins = BINNING.out.publish_concoct_bins
-        ch_publish_binning_comebin = BINNING.out.publish_comebin
-        ch_publish_binning_metabinner = BINNING.out.publish_metabinner
-        ch_publish_binning_semibin = BINNING.out.publish_semibin
-        ch_publish_binning_unbinned = BINNING.out.publish_splitfasta
+        ch_publish_binning = ch_publish_binning.mix(BINNING.out.metabat2depths.map { item -> toPublish('depths_contigs', item) })
+        ch_publish_binning = ch_publish_binning.mix(BINNING.out.publish)
 
         if (params.bin_domain_classification) {
 
@@ -523,8 +468,8 @@ workflow MAG {
 
             ch_binning_results_bins = DOMAIN_CLASSIFICATION.out.classified_bins
             ch_binning_results_unbins = DOMAIN_CLASSIFICATION.out.classified_unbins
-            ch_publish_binqc_tiara = DOMAIN_CLASSIFICATION.out.tiara_summary
-            ch_publish_taxonomy_tiara = DOMAIN_CLASSIFICATION.out.publish_tiara
+            ch_publish_bin_qc = ch_publish_bin_qc.mix(DOMAIN_CLASSIFICATION.out.tiara_summary.map { item -> toPublish('tiara', item) })
+            ch_publish_taxonomy = ch_publish_taxonomy.mix(DOMAIN_CLASSIFICATION.out.publish_tiara.map { item -> toPublish('tiara', item) })
         }
         else {
             ch_binning_results_bins = BINNING.out.bins.map { meta, bins ->
@@ -559,9 +504,7 @@ workflow MAG {
 
             BINNING_REFINEMENT(ch_binning_contigs, ch_prokarya_bins_dastool)
             ch_versions = ch_versions.mix(BINNING_REFINEMENT.out.versions)
-            ch_publish_binning_dastool_contig2bin = BINNING_REFINEMENT.out.publish_contig2bin
-            ch_publish_binning_dastool = BINNING_REFINEMENT.out.publish_dastool
-            ch_publish_binning_dastool_bins = BINNING_REFINEMENT.out.publish_bins
+            ch_publish_binning = ch_publish_binning.mix(BINNING_REFINEMENT.out.publish)
 
             ch_refined_bins = BINNING_REFINEMENT.out.refined_bins
             ch_refined_unbins = BINNING_REFINEMENT.out.refined_unbins
@@ -590,7 +533,7 @@ workflow MAG {
 
         DEPTHS(ch_input_for_postbinning, BINNING.out.metabat2depths)
         ch_versions = ch_versions.mix(DEPTHS.out.versions)
-        ch_publish_binning_depths_bins = DEPTHS.out.depths_summary
+        ch_publish_binning = ch_publish_binning.mix(DEPTHS.out.depths_summary.map { item -> toPublish('depths_bins', item) })
 
         ch_input_for_binsummary = DEPTHS.out.depths_summary
 
@@ -614,7 +557,7 @@ workflow MAG {
                 keepHeader: true,
                 sort: true,
             )
-        ch_publish_binning_contig2bin = ch_allcontig2binmap
+        ch_publish_binning = ch_publish_binning.mix(ch_allcontig2binmap.map { item -> toPublish('contig2bin', item) })
 
         /*
          * Bin QC subworkflows: for checking bin completeness with either BUSCO, CHECKM, CHECKM2, and/or GUNC
@@ -631,16 +574,8 @@ workflow MAG {
             ch_busco_summary = BIN_QC.out.busco_summary
             ch_checkm_summary = BIN_QC.out.checkm_summary
             ch_checkm2_summary = BIN_QC.out.checkm2_summary
-            ch_publish_binqc_busco = BIN_QC.out.publish_busco
-            ch_publish_binqc_busco_db = BIN_QC.out.publish_busco_db
-            ch_publish_binqc_checkm_db = BIN_QC.out.publish_checkm_db
-            ch_publish_binqc_checkm = BIN_QC.out.publish_checkm
-            ch_publish_binqc_checkm2_db = BIN_QC.out.publish_checkm2_db
-            ch_publish_binqc_checkm2 = BIN_QC.out.publish_checkm2
-            ch_publish_binqc_gunc_db = BIN_QC.out.publish_gunc_db
-            ch_publish_binqc_gunc_raw = BIN_QC.out.publish_gunc_raw
-            ch_publish_binqc_gunc_checkm = BIN_QC.out.publish_gunc_checkm
-            ch_publish_binqc_summaries = ch_publish_binqc_summaries.mix(BIN_QC.out.publish_summaries)
+            ch_publish_bin_qc = ch_publish_bin_qc.mix(BIN_QC.out.publish)
+            ch_publish_databases = ch_publish_databases.mix(BIN_QC.out.publish_db)
         }
 
         /*
@@ -653,7 +588,7 @@ workflow MAG {
             DEREPLICATION(ch_input_for_postbinning, ch_bin_qc_metrics, params.dereplicate_min_completeness, params.dereplicate_max_contamination)
             ch_dereplicated_bins = DEREPLICATION.out.dereplicated_bins
             ch_dereplication_cluster_tsv = DEREPLICATION.out.cluster_tsv.map { _meta, tsv -> tsv }
-            ch_publish_binning_dereplication = DEREPLICATION.out.publish
+            ch_publish_binning = ch_publish_binning.mix(DEREPLICATION.out.publish.map { meta, tsv, bins -> [meta, [dereplication_tsv: tsv, dereplication_bins: bins]] })
         }
 
         ch_quast_bins_summary = channel.empty()
@@ -672,7 +607,7 @@ workflow MAG {
             CONCAT_QUAST_SUMMARY(ch_quast_bin_summaries, 'rowskey', 'tsv', true)
 
             ch_quast_bins_summary = CONCAT_QUAST_SUMMARY.out.csv.map { _meta, summary -> summary }
-            ch_publish_binqc_summaries = ch_publish_binqc_summaries.mix(QUAST_BINS.out.dir, QUAST_BINS.out.quast_bin_summaries, CONCAT_QUAST_SUMMARY.out.csv)
+            ch_publish_bin_qc = ch_publish_bin_qc.mix(QUAST_BINS.out.dir.mix(QUAST_BINS.out.quast_bin_summaries, CONCAT_QUAST_SUMMARY.out.csv).map { item -> toPublish('summaries', item) })
         }
 
         /*
@@ -693,10 +628,9 @@ workflow MAG {
             ch_versions = ch_versions.mix(CATPACK.out.versions)
 
             ch_catpack_summary = CATPACK.out.summary
-            ch_publish_taxonomy_cat_db = CATPACK.out.publish_db
-            ch_publish_taxonomy_cat_bins = CATPACK.out.publish_bins
-            ch_publish_taxonomy_cat_summary = CATPACK.out.summary
-            ch_publish_taxonomy_cat_unbins = CATPACK.out.publish_unbins
+            ch_publish_taxonomy = ch_publish_taxonomy.mix(CATPACK.out.publish)
+            ch_publish_databases = ch_publish_databases.mix(CATPACK.out.publish_db)
+            ch_publish_taxonomy = ch_publish_taxonomy.mix(CATPACK.out.summary.map { item -> toPublish('cat_summary', item) })
         }
 
         /*
@@ -722,8 +656,7 @@ workflow MAG {
                 )
                 ch_versions = ch_versions.mix(GTDBTK.out.versions)
                 ch_gtdbtk_summary = GTDBTK.out.summary
-                ch_publish_taxonomy_gtdbtk = GTDBTK.out.publish_classify
-                ch_publish_taxonomy_gtdbtk_summary = GTDBTK.out.publish_summary
+                ch_publish_taxonomy = ch_publish_taxonomy.mix(GTDBTK.out.publish)
                 ch_multiqc_files = ch_multiqc_files.mix(GTDBTK.out.multiqc_files.collect().ifEmpty([]))
             }
         }
@@ -735,8 +668,8 @@ workflow MAG {
             BINNING_PYDAMAGE(ANCIENT_DNA_ASSEMBLY_VALIDATION.out.pydamage_results, ch_allcontig2binmap)
             ch_versions = ch_versions.mix(BINNING_PYDAMAGE.out.versions)
             ch_summarisepydamage = BINNING_PYDAMAGE.out.tsv
-            ch_publish_binqc_summaries = ch_publish_binqc_summaries.mix(BINNING_PYDAMAGE.out.tsv)
-            ch_publish_binqc_pydamage_bins = BINNING_PYDAMAGE.out.results
+            ch_publish_bin_qc = ch_publish_bin_qc.mix(BINNING_PYDAMAGE.out.tsv.map { item -> toPublish('summaries', item) })
+            ch_publish_bin_qc = ch_publish_bin_qc.mix(BINNING_PYDAMAGE.out.results.map { item -> toPublish('pydamage_bins', item) })
         }
         else {
             ch_summarisepydamage = channel.empty()
@@ -755,7 +688,7 @@ workflow MAG {
                 ch_dereplication_cluster_tsv.ifEmpty([]),
             )
             ch_versions = ch_versions.mix(BIN_SUMMARY.out.versions)
-            ch_publish_binning_summary = BIN_SUMMARY.out.summary
+            ch_publish_binning = ch_publish_binning.mix(BIN_SUMMARY.out.summary.map { item -> toPublish('summary', item) })
         }
         if (params.generate_bigmag_file) {
             PREPARE_BIGMAG_SUMMARY(
@@ -763,7 +696,7 @@ workflow MAG {
                 BIN_QC.out.gunc_summary,
             )
             ch_versions = ch_versions.mix(PREPARE_BIGMAG_SUMMARY.out.versions)
-            ch_publish_binning_bigmag = PREPARE_BIGMAG_SUMMARY.out.bigmag_summary
+            ch_publish_binning = ch_publish_binning.mix(PREPARE_BIGMAG_SUMMARY.out.bigmag_summary.map { item -> toPublish('bigmag', item) })
         }
 
         /*
@@ -796,7 +729,7 @@ workflow MAG {
                     [],
                     [],
                 )
-                ch_publish_annotation_prokka = PROKKA.out.gff.mix(
+                ch_publish_annotation = ch_publish_annotation.mix(PROKKA.out.gff.mix(
                     PROKKA.out.gbk,
                     PROKKA.out.fna,
                     PROKKA.out.faa,
@@ -808,7 +741,7 @@ workflow MAG {
                     PROKKA.out.log,
                     PROKKA.out.txt,
                     PROKKA.out.tsv,
-                )
+                ).map { item -> toPublish('prokka', item) })
             }
 
             if (!params.skip_bakta) {
@@ -832,7 +765,7 @@ workflow MAG {
                     [],
                     [],
                 )
-                ch_publish_annotation_bakta = BAKTA_BAKTA.out.embl.mix(
+                ch_publish_annotation = ch_publish_annotation.mix(BAKTA_BAKTA.out.embl.mix(
                     BAKTA_BAKTA.out.faa,
                     BAKTA_BAKTA.out.ffn,
                     BAKTA_BAKTA.out.fna,
@@ -843,7 +776,7 @@ workflow MAG {
                     BAKTA_BAKTA.out.tsv,
                     BAKTA_BAKTA.out.txt,
                     BAKTA_BAKTA.out.json,
-                )
+                ).map { item -> toPublish('bakta', item) })
             }
         }
 
@@ -860,11 +793,11 @@ workflow MAG {
 
             METAEUK_EASYPREDICT(ch_bins_for_metaeuk, ch_metaeuk_db)
             ch_versions = ch_versions.mix(METAEUK_EASYPREDICT.out.versions)
-            ch_publish_annotation_metaeuk = METAEUK_EASYPREDICT.out.faa.mix(
+            ch_publish_annotation = ch_publish_annotation.mix(METAEUK_EASYPREDICT.out.faa.mix(
                 METAEUK_EASYPREDICT.out.codon,
                 METAEUK_EASYPREDICT.out.tsv,
                 METAEUK_EASYPREDICT.out.gff,
-            )
+            ).map { item -> toPublish('metaeuk', item) })
         }
     }
 
@@ -957,80 +890,25 @@ workflow MAG {
     emit:
     multiqc_report              = MULTIQC.out.report.map { _meta, report -> [report] }.toList() // channel: /path/to/multiqc_report.html
     versions                    = ch_versions                                                   // channel: [ path(versions.yml) ]
-    shortread_fastqc            = SHORTREAD_PREPROCESSING.out.publish_fastqc
-    shortread_clipping          = SHORTREAD_PREPROCESSING.out.publish_clipping
-    shortread_clipping_reads    = SHORTREAD_PREPROCESSING.out.publish_clipping_reads
-    shortread_hostremoval       = SHORTREAD_PREPROCESSING.out.publish_hostremoval
-    shortread_hostremoval_reads = SHORTREAD_PREPROCESSING.out.publish_hostremoval_reads
-    shortread_phixremoval       = SHORTREAD_PREPROCESSING.out.publish_phixremoval
-    shortread_phixremoval_reads = SHORTREAD_PREPROCESSING.out.publish_phixremoval_reads
-    shortread_bbnorm            = SHORTREAD_PREPROCESSING.out.publish_bbnorm
-    longread_adaptertrimming    = LONGREAD_PREPROCESSING.out.publish_adaptertrimming
-    longread_filtering          = LONGREAD_PREPROCESSING.out.publish_filtering
-    longread_filtering_reads    = LONGREAD_PREPROCESSING.out.publish_filtering_reads
-    longread_nanolyse           = LONGREAD_PREPROCESSING.out.publish_nanolyse
-    longread_nanolyse_reads     = LONGREAD_PREPROCESSING.out.publish_nanolyse_reads
-    longread_nanoplot           = LONGREAD_PREPROCESSING.out.publish_nanoplot
-    longread_hostremoval_index  = LONGREAD_PREPROCESSING.out.publish_hostremoval_index
-    longread_hostremoval_bam    = LONGREAD_PREPROCESSING.out.publish_hostremoval_bam
-    longread_hostremoval_fastq  = LONGREAD_PREPROCESSING.out.publish_hostremoval_fastq
-    longread_hostremoval_stats  = LONGREAD_PREPROCESSING.out.publish_hostremoval_stats
+    shortread_qc                = SHORTREAD_PREPROCESSING.out.publish
+    longread_qc                 = LONGREAD_PREPROCESSING.out.publish
     assembly                    = ch_publish_assembly
-    assembly_pypolca            = ch_publish_assembly_pypolca
-    assembly_quast              = ch_publish_assembly_quast
-    assembly_mapping            = ch_publish_assembly_mapping
-    assembly_mapping_full       = ch_publish_assembly_mapping_full
-    assembly_mapping_bams       = ch_publish_assembly_mapping_bams
-    assembly_mapping_full_bams  = ch_publish_assembly_mapping_full_bams
-    assembly_ale                = ch_publish_assembly_ale
-    assembly_deepmased_features = ch_publish_assembly_deepmased_features
-    assembly_deepmased          = ch_publish_assembly_deepmased
+    assembly_qc                 = ch_publish_assembly_qc
     virus_identification        = ch_publish_virus_identification
-    adna_freebayes              = ch_publish_adna_freebayes
-    adna_filtered               = ch_publish_adna_filtered
-    adna_consensus              = ch_publish_adna_consensus
-    adna_pydamage_analyze       = ch_publish_adna_pydamage_analyze
-    adna_pydamage_filter        = ch_publish_adna_pydamage_filter
-    binning_depths_contigs      = ch_publish_binning_depths_contigs
-    binning_metabat2            = ch_publish_binning_metabat2
-    binning_maxbin2             = ch_publish_binning_maxbin2
-    binning_concoct_stats       = ch_publish_binning_concoct_stats
-    binning_concoct_bins        = ch_publish_binning_concoct_bins
-    binning_comebin             = ch_publish_binning_comebin
-    binning_metabinner          = ch_publish_binning_metabinner
-    binning_semibin             = ch_publish_binning_semibin
-    binning_unbinned            = ch_publish_binning_unbinned
-    binning_dastool_contig2bin  = ch_publish_binning_dastool_contig2bin
-    binning_dastool             = ch_publish_binning_dastool
-    binning_dastool_bins        = ch_publish_binning_dastool_bins
-    binning_depths_bins         = ch_publish_binning_depths_bins
-    binning_dereplication       = ch_publish_binning_dereplication
-    binning_summary             = ch_publish_binning_summary
-    binning_bigmag              = ch_publish_binning_bigmag
-    binning_contig2bin          = ch_publish_binning_contig2bin
-    binqc_busco                 = ch_publish_binqc_busco
-    binqc_busco_db              = ch_publish_binqc_busco_db
-    binqc_checkm_db             = ch_publish_binqc_checkm_db
-    binqc_checkm                = ch_publish_binqc_checkm
-    binqc_checkm2_db            = ch_publish_binqc_checkm2_db
-    binqc_checkm2               = ch_publish_binqc_checkm2
-    binqc_gunc_db               = ch_publish_binqc_gunc_db
-    binqc_gunc_raw              = ch_publish_binqc_gunc_raw
-    binqc_gunc_checkm           = ch_publish_binqc_gunc_checkm
-    binqc_summaries             = ch_publish_binqc_summaries
-    binqc_pydamage_bins         = ch_publish_binqc_pydamage_bins
-    binqc_tiara                 = ch_publish_binqc_tiara
-    taxonomy_tiara              = ch_publish_taxonomy_tiara
-    taxonomy_cat_db             = ch_publish_taxonomy_cat_db
-    taxonomy_cat_bins           = ch_publish_taxonomy_cat_bins
-    taxonomy_cat_summary        = ch_publish_taxonomy_cat_summary
-    taxonomy_cat_unbins         = ch_publish_taxonomy_cat_unbins
-    taxonomy_gtdbtk             = ch_publish_taxonomy_gtdbtk
-    taxonomy_gtdbtk_summary     = ch_publish_taxonomy_gtdbtk_summary
-    annotation_prodigal         = ch_publish_annotation_prodigal
-    annotation_prokka           = ch_publish_annotation_prokka
-    annotation_bakta            = ch_publish_annotation_bakta
-    annotation_mmseqs_db        = ch_publish_annotation_mmseqs_db
-    annotation_metaeuk          = ch_publish_annotation_metaeuk
+    ancient_dna                 = ch_publish_ancient_dna
+    binning                     = ch_publish_binning
+    bin_qc                      = ch_publish_bin_qc
+    taxonomy                    = ch_publish_taxonomy
+    annotation                  = ch_publish_annotation
+    databases                   = ch_publish_databases
     multiqc                     = MULTIQC.out.report.mix(MULTIQC.out.data, MULTIQC.out.plots)
+}
+
+// Wrap a publish channel element into a `[meta, record]` pair for the stage-level workflow outputs
+def toPublish(String key, item) {
+    if (item instanceof List && item[0] instanceof Map) {
+        assert item.size() == 2 : "toPublish('${key}'): expected [meta, files], got ${item.size()} elements"
+        return [item[0], [(key): item[1]]]
+    }
+    return [[:], [(key): item]]
 }

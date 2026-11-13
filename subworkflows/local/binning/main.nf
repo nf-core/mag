@@ -257,12 +257,14 @@ workflow BINNING {
     unbinned              = SPLIT_FASTA.out.unbinned
     metabat2depths        = ch_combined_depths
     versions              = ch_versions
-    publish_metabat2      = ch_publish_metabat2 // [val(meta), path(bins), path(tooshort), path(lowdepth)]
-    publish_maxbin2       = ch_publish_maxbin2 // [val(meta), path(bins), path(tooshort), path(summary), path(abundance)]
-    publish_concoct_stats = ch_publish_concoct_stats // [val(meta), path(file)]
-    publish_concoct_bins  = ch_publish_concoct_bins // [val(meta), path(bin)]
-    publish_comebin       = ch_publish_comebin // [val(meta), path(bins), path(tsv), path(log), path(embeddings), path(covembeddings)]
-    publish_metabinner    = ch_publish_metabinner // [val(meta), path(membership), path(log), path(bins), path(unbinned)]
-    publish_semibin       = ch_publish_semibin // [val(meta), path(bins), path(log)]
-    publish_splitfasta    = SPLIT_FASTA.out.unbinned.join(SPLIT_FASTA.out.pooled, remainder: true) // [val(meta), path(unbinned), path(pooled)]
+    publish               = ch_publish_metabat2.map { meta, bins, tooshort, lowdepth -> [meta, [metabat2_bins: bins, metabat2_tooshort: tooshort, metabat2_lowdepth: lowdepth]] }
+        .mix(
+            ch_publish_maxbin2.map { meta, bins, tooshort, summary, abundance -> [meta, [maxbin2_bins: bins, maxbin2_tooshort: tooshort, maxbin2_summary: summary, maxbin2_abundance: abundance]] },
+            ch_publish_concoct_stats.map { meta, f -> [meta, [concoct_stats: f]] },
+            ch_publish_concoct_bins.map { meta, f -> [meta, [concoct_bin: f]] },
+            ch_publish_comebin.map { meta, bins, tsv, log, embeddings, covembeddings -> [meta, [comebin_bins: bins, comebin_tsv: tsv, comebin_log: log, comebin_embeddings: embeddings, comebin_covembeddings: covembeddings]] },
+            ch_publish_metabinner.map { meta, membership, log, bins, unbinned -> [meta, [metabinner_membership: membership, metabinner_log: log, metabinner_bins: bins, metabinner_unbinned: unbinned]] },
+            ch_publish_semibin.map { meta, bins, log -> [meta, [semibin_bins: bins, semibin_log: log]] },
+            SPLIT_FASTA.out.unbinned.join(SPLIT_FASTA.out.pooled, remainder: true).map { meta, unbinned, pooled -> [meta, [unbinned: unbinned, unbinned_pooled: pooled]] },
+        ) // [val(meta), val(record)]
 }

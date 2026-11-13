@@ -53,8 +53,10 @@ workflow LONGREAD_HOSTREMOVAL {
     reads         = SAMTOOLS_HOSTREMOVED_UNMAPPED.out.fastq // channel: [ val(meta), [ reads ] ]
     versions      = ch_versions                             // channel: [ versions.yml ]
     multiqc_files = ch_multiqc_files
-    publish_index = MINIMAP2_HOST_INDEX.out.index
-    publish_bam   = MINIMAP2_HOST_ALIGN.out.bam
-    publish_fastq = SAMTOOLS_HOSTREMOVED_UNMAPPED.out.fastq
-    publish_stats = SAMTOOLS_HOSTREMOVED_STATS.out.stats
+    publish       = MINIMAP2_HOST_INDEX.out.index.map { meta, f -> [meta, [hostremoval_index: f]] }
+        .mix(
+            MINIMAP2_HOST_ALIGN.out.bam.map { meta, f -> [meta, [hostremoval_bam: f]] },
+            SAMTOOLS_HOSTREMOVED_UNMAPPED.out.fastq.map { meta, f -> [meta, [hostremoval_fastq: f]] },
+            SAMTOOLS_HOSTREMOVED_STATS.out.stats.map { meta, f -> [meta, [hostremoval_stats: f]] },
+        ) // [val(meta), val(record)]
 }

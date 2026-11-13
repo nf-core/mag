@@ -85,7 +85,9 @@ workflow BINNING_REFINEMENT {
     refined_bins       = RENAME_POSTDASTOOL.out.refined_bins
     refined_unbins     = refined_unbins
     versions           = ch_versions
-    publish_contig2bin = DASTOOL_FASTATOCONTIG2BIN.out.fastatocontig2bin                                                                                                   // [val(meta), path(tsv)]
-    publish_dastool    = DASTOOL_DASTOOL.out.log.mix(DASTOOL_DASTOOL.out.summary, DASTOOL_DASTOOL.out.contig2bin, DASTOOL_DASTOOL.out.eval, DASTOOL_DASTOOL.out.seqlength) // [val(meta), path(file)]
-    publish_bins       = RENAME_POSTDASTOOL.out.refined_bins.join(RENAME_POSTDASTOOL.out.refined_unbins, remainder: true)                                                  // [val(meta), path(bins), path(unbins)]
+    publish            = DASTOOL_FASTATOCONTIG2BIN.out.fastatocontig2bin.map { meta, f -> [meta, [dastool_contig2bin: f]] }
+        .mix(
+            DASTOOL_DASTOOL.out.log.mix(DASTOOL_DASTOOL.out.summary, DASTOOL_DASTOOL.out.contig2bin, DASTOOL_DASTOOL.out.eval, DASTOOL_DASTOOL.out.seqlength).map { meta, f -> [meta, [dastool: f]] },
+            RENAME_POSTDASTOOL.out.refined_bins.join(RENAME_POSTDASTOOL.out.refined_unbins, remainder: true).map { meta, bins, unbins -> [meta, [dastool_bins: bins, dastool_unbins: unbins]] },
+        ) // [val(meta), val(record)]
 }

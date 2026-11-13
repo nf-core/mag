@@ -255,12 +255,14 @@ workflow SHORTREAD_PREPROCESSING {
     short_reads_assembly      = ch_short_reads_assembly
     versions                  = ch_versions
     multiqc_files             = ch_multiqc_files
-    publish_fastqc            = ch_publish_fastqc            // [val(meta), path(html)]
-    publish_clipping          = ch_publish_clipping          // [val(meta), path(files)]
-    publish_clipping_reads    = ch_publish_clipping_reads    // [val(meta), path(fastq)]
-    publish_hostremoval       = ch_publish_hostremoval       // [val(meta), path(files)]
-    publish_hostremoval_reads = ch_publish_hostremoval_reads // [val(meta), path(fastq)]
-    publish_phixremoval       = ch_publish_phixremoval       // [val(meta), path(files)]
-    publish_phixremoval_reads = ch_publish_phixremoval_reads // [val(meta), path(fastq)]
-    publish_bbnorm            = ch_publish_bbnorm            // [val(meta), path(fastq), path(log)]
+    publish                   = ch_publish_fastqc.map { meta, f -> [meta, [fastqc: f]] }
+        .mix(
+            ch_publish_clipping.map { meta, f -> [meta, [clipping: f]] },
+            ch_publish_clipping_reads.map { meta, f -> [meta, [clipping_reads: f]] },
+            ch_publish_hostremoval.map { meta, f -> [meta, [hostremoval: f]] },
+            ch_publish_hostremoval_reads.map { meta, f -> [meta, [hostremoval_reads: f]] },
+            ch_publish_phixremoval.map { meta, f -> [meta, [phixremoval: f]] },
+            ch_publish_phixremoval_reads.map { meta, f -> [meta, [phixremoval_reads: f]] },
+            ch_publish_bbnorm.map { meta, fastq, log -> [meta, [bbnorm_fastq: fastq, bbnorm_log: log]] },
+        ) // [val(meta), val(record)]
 }

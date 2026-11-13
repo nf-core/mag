@@ -31,10 +31,7 @@ workflow LONGREAD_PREPROCESSING {
     ch_publish_nanolyse = channel.empty()
     ch_publish_nanolyse_reads = channel.empty()
     ch_publish_filtering_reads = channel.empty()
-    ch_publish_hostremoval_index = channel.empty()
-    ch_publish_hostremoval_bam = channel.empty()
-    ch_publish_hostremoval_fastq = channel.empty()
-    ch_publish_hostremoval_stats = channel.empty()
+    ch_publish_hostremoval = channel.empty()
 
     NANOPLOT_RAW(
         ch_raw_long_reads
@@ -144,10 +141,7 @@ workflow LONGREAD_PREPROCESSING {
             ch_versions = ch_versions.mix(LONGREAD_HOSTREMOVAL.out.versions)
             ch_multiqc_files = ch_multiqc_files.mix(LONGREAD_HOSTREMOVAL.out.multiqc_files)
             ch_long_reads = LONGREAD_HOSTREMOVAL.out.reads
-            ch_publish_hostremoval_index = LONGREAD_HOSTREMOVAL.out.publish_index
-            ch_publish_hostremoval_bam = LONGREAD_HOSTREMOVAL.out.publish_bam
-            ch_publish_hostremoval_fastq = LONGREAD_HOSTREMOVAL.out.publish_fastq
-            ch_publish_hostremoval_stats = LONGREAD_HOSTREMOVAL.out.publish_stats
+            ch_publish_hostremoval = LONGREAD_HOSTREMOVAL.out.publish
         }
 
         /**
@@ -190,14 +184,13 @@ workflow LONGREAD_PREPROCESSING {
     long_reads                = ch_long_reads
     versions                  = ch_versions
     multiqc_files             = ch_multiqc_files
-    publish_adaptertrimming   = ch_publish_adaptertrimming   // [val(meta), path(fastq)]
-    publish_filtering         = ch_publish_filtering         // [val(meta), path(stats)]
-    publish_filtering_reads   = ch_publish_filtering_reads   // [val(meta), path(fastq)]
-    publish_nanolyse          = ch_publish_nanolyse          // path(log)
-    publish_nanolyse_reads    = ch_publish_nanolyse_reads    // [val(meta), path(fastq)]
-    publish_nanoplot          = ch_publish_nanoplot          // [val(meta), path(files)]
-    publish_hostremoval_index = ch_publish_hostremoval_index // [val(meta), path(mmi)]
-    publish_hostremoval_bam   = ch_publish_hostremoval_bam   // [val(meta), path(bam)]
-    publish_hostremoval_fastq = ch_publish_hostremoval_fastq // [val(meta), path(fastq)]
-    publish_hostremoval_stats = ch_publish_hostremoval_stats // [val(meta), path(stats)]
+    publish                   = ch_publish_adaptertrimming.map { meta, f -> [meta, [adaptertrimming: f]] }
+        .mix(
+            ch_publish_filtering.map { meta, f -> [meta, [filtering: f]] },
+            ch_publish_filtering_reads.map { meta, f -> [meta, [filtering_reads: f]] },
+            ch_publish_nanolyse.map { f -> [[:], [nanolyse: f]] },
+            ch_publish_nanolyse_reads.map { meta, f -> [meta, [nanolyse_reads: f]] },
+            ch_publish_nanoplot.map { meta, f -> [meta, [nanoplot: f]] },
+            ch_publish_hostremoval,
+        ) // [val(meta), val(record)]
 }

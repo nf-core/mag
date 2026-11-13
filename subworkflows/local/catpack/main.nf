@@ -145,7 +145,7 @@ workflow CATPACK {
     emit:
     summary        = bin_summary
     versions       = ch_versions
-    publish_db     = ch_publish_db     // [val(meta), path(dir)]
-    publish_bins   = ch_publish_bins   // [val(meta), path(files)]
-    publish_unbins = ch_publish_unbins // [val(meta), path(files)]
+    publish        = ch_publish_bins.map { meta, f -> [meta, [cat_bins: f]] }
+        .mix(ch_publish_unbins.map { meta, f -> [meta, [cat_unbins: f]] }) // [val(meta), val(record)]
+    publish_db     = ch_publish_db.map { meta, f -> [meta, [cat_db: f]] } // [val(meta), val(record)]
 }

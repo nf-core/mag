@@ -268,14 +268,18 @@ workflow BIN_QC {
     gunc_summary        = ch_gunc_summary
     multiqc_files       = ch_multiqc_files
     versions            = ch_versions
-    publish_busco       = ch_publish_busco // [val(meta), path(files)]
-    publish_busco_db    = ch_publish_busco_db // [val(meta), path(lineages)]
-    publish_checkm_db   = ch_publish_checkm_db // [val(meta), path(db)]
-    publish_checkm      = ch_publish_checkm // [val(meta), path(files)]
-    publish_checkm2_db  = ch_publish_checkm2_db // [val(meta), path(db)]
-    publish_checkm2     = ch_publish_checkm2 // [val(meta), path(files)]
-    publish_gunc_db     = ch_publish_gunc_db // path(db)
-    publish_gunc_raw    = ch_publish_gunc_raw // [val(meta), path(tsv)]
-    publish_gunc_checkm = ch_publish_gunc_checkm // [val(meta), path(tsv)]
-    publish_summaries   = ch_publish_summaries // [val(meta), path(tsv)]
+    publish             = ch_publish_busco.map { meta, f -> [meta, [busco: f]] }
+        .mix(
+            ch_publish_checkm.map { meta, f -> [meta, [checkm: f]] },
+            ch_publish_checkm2.map { meta, f -> [meta, [checkm2: f]] },
+            ch_publish_gunc_raw.map { meta, f -> [meta, [gunc_raw: f]] },
+            ch_publish_gunc_checkm.map { meta, f -> [meta, [gunc_checkm: f]] },
+            ch_publish_summaries.map { meta, f -> [meta, [summaries: f]] },
+        ) // [val(meta), val(record)]
+    publish_db          = ch_publish_busco_db.map { meta, f -> [meta, [busco_db: f]] }
+        .mix(
+            ch_publish_checkm_db.map { meta, f -> [meta, [checkm_db: f]] },
+            ch_publish_checkm2_db.map { meta, f -> [meta, [checkm2_db: f]] },
+            ch_publish_gunc_db.map { f -> [[:], [gunc_db: f]] },
+        ) // [val(meta), val(record)]
 }
