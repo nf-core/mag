@@ -45,6 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | --------- | ---------------- | ----------- |
 | MultiQC   | 1.34             | 1.35        |
 | nf-core   | 4.0.3            | 4.1.0       |
+| Nextflow  | 26.04.0          | 26.10.0     |
 | Galah     |                  | 0.4.2       |
 | DeepMAsED |                  | 0.3.1       |
 
