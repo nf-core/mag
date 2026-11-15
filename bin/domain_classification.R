@@ -86,11 +86,12 @@ classify_bins <- function(tiara, contig2bin, join_prokaryotes){
         group_by(BinID) |>
         summarise(across(all_of(prob_columns), sum), .groups = "drop") |>
         rowwise() |>
-        mutate(denominator = sum(exp(c_across(all_of(prob_columns))))) |>
-        mutate(across(all_of(prob_columns), \(x) exp(x)/denominator),
+        mutate(max_logit = max(c_across(all_of(prob_columns)))) |>
+        mutate(denominator = sum(exp(c_across(all_of(prob_columns)) - max_logit))) |>
+        mutate(across(all_of(prob_columns), \(x) exp(x - max_logit)/denominator),
                 classification = find_classification(c_across(all_of(prob_columns)),
                                                 join_prokaryotes = join_prokaryotes)) |>
-        select(-denominator)
+        select(-denominator, -max_logit)
 
     ## A bin may have no classified contigs if all contigs are below the minimum
     ## Tiara length threshold
