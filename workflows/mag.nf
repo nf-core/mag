@@ -278,11 +278,13 @@ workflow MAG {
     ================================================================================
     */
 
+    ch_assembly_proteins = channel.empty()
     if (!params.skip_prodigal) {
         PRODIGAL(
             ch_assemblies,
             'gff',
         )
+        ch_assembly_proteins = PRODIGAL.out.amino_acid_fasta
     }
 
     /*
@@ -480,7 +482,7 @@ workflow MAG {
                 meta.domain != "eukarya"
             }
 
-            BINNING_REFINEMENT(ch_binning_contigs, ch_prokarya_bins_for_refinement, ch_checkm2_db)
+            BINNING_REFINEMENT(ch_binning_contigs, ch_prokarya_bins_for_refinement, ch_checkm2_db, ch_assembly_proteins)
             ch_versions = ch_versions.mix(BINNING_REFINEMENT.out.versions)
 
             ch_refined_bins = BINNING_REFINEMENT.out.refined_bins

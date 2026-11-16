@@ -19,6 +19,7 @@ workflow BINNING_REFINEMENT {
     ch_contigs_for_dastool // [val(meta), path(contigs)]
     ch_in_bins // [val(meta), path(bins)]
     ch_checkm2_db // [val(meta), path(db)], only used by Binette
+    ch_assembly_proteins // [val(meta), path(faa)], Prodigal proteins of the assemblies, empty if Prodigal is skipped
 
     main:
     ch_versions = channel.empty()
@@ -93,7 +94,14 @@ workflow BINNING_REFINEMENT {
     }
 
     if (params.refine_bins_binette) {
-        ch_input_for_binette = ch_contigs_and_contig2bin.map { meta, contigs, bins -> [meta, bins, [], contigs, []] }
+        // Reuse Prodigal proteins to skip Binette's own gene prediction, unless the binned contigs
+        // are aDNA damage-corrected and so differ from the assemblies Prodigal ran on
+        def reuse_proteins = !params.skip_prodigal && !(params.ancient_dna && !params.skip_ancient_damagecorrection)
+        ch_input_for_binette = reuse_proteins
+            ? ch_contigs_and_contig2bin
+                .join(ch_assembly_proteins)
+                .map { meta, contigs, bins, proteins -> [meta, bins, [], contigs, proteins] }
+            : ch_contigs_and_contig2bin.map { meta, contigs, bins -> [meta, bins, [], contigs, []] }
 
         BINETTE(ch_input_for_binette, ch_checkm2_db)
 

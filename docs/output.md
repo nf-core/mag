@@ -583,6 +583,8 @@ By default, only the raw bins (and unbinned contigs) from the actual binning met
 
 Binette needs a CheckM2 database. The pipeline uses the database given with `--checkm2_db`, or downloads one otherwise (see `--checkm2_db_version`).
 
+When Prodigal is run (i.e. without `--skip_prodigal`), Binette reuses its protein predictions instead of predicting genes again. In that case, Binette does not report the coding density of the bins. With `--ancient_dna`, Binette always predicts genes itself, as the binned contigs are damage-corrected.
+
 <details markdown="1">
 <summary>Output files</summary>
 
