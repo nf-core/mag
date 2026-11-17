@@ -109,6 +109,7 @@ Other code contributors include:
 - [Alex Caswell](https://github.com/AlexHoratio)
 - [Jeferyd Yepes](https://github.com/jeffe107)
 - [Jean Mainguy](https://github.com/JeanMainguy)
+- [Farhana Haque](https://github.com/Farhana-Anika)
 
 Long read processing was inspired by [caspargross/HybridAssembly](https://github.com/caspargross/HybridAssembly) written by Caspar Gross [@caspargross](https://github.com/caspargross)
 
