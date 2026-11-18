@@ -46,6 +46,7 @@ include { DEEPMASED_PREDICT                                } from '../modules/nf
 include { BAKTA_BAKTA                                      } from '../modules/nf-core/bakta/bakta/main'
 include { UNTAR as BAKTA_UNTAR                             } from '../modules/nf-core/untar/main'
 include { BAKTA_BAKTADBDOWNLOAD                            } from '../modules/nf-core/bakta/baktadbdownload/main'
+include { CHECKM2_DATABASEDOWNLOAD                         } from '../modules/nf-core/checkm2/databasedownload/main'
 
 //
 // MODULE: Local to the pipeline
@@ -290,11 +291,13 @@ workflow MAG {
     ================================================================================
      */
 
+    ch_assembly_proteins = channel.empty()
     if (!params.skip_prodigal) {
         PRODIGAL(
             ch_assemblies,
             'gff',
         )
+        ch_assembly_proteins = PRODIGAL.out.amino_acid_fasta
         ch_publish_annotation = ch_publish_annotation.mix(PRODIGAL.out.gene_annotations.mix(
             PRODIGAL.out.nucleotide_fasta,
             PRODIGAL.out.amino_acid_fasta,
@@ -437,6 +440,19 @@ workflow MAG {
 
     if (!params.skip_binning) {
 
+        // Shared by Binette bin refinement and CheckM2 bin QC
+        if (params.checkm2_db) {
+            ch_checkm2_db = [[:], file(params.checkm2_db, checkIfExists: true)]
+        }
+        else if ((!params.skip_binqc && params.run_checkm2) || params.refine_bins_binette) {
+            CHECKM2_DATABASEDOWNLOAD(params.checkm2_db_version)
+            ch_checkm2_db = CHECKM2_DATABASEDOWNLOAD.out.database
+            ch_publish_databases = ch_publish_databases.mix(CHECKM2_DATABASEDOWNLOAD.out.database.map { item -> toPublish('checkm2_db', item) })
+        }
+        else {
+            ch_checkm2_db = []
+        }
+
         ch_binning_contigs = BINNING_PREPARATION.out.grouped_mappings.map { meta, contigs, _bams, _bais -> [meta, contigs] }
 
         // Make sure if running aDNA subworkflow to use the damage-corrected contigs for higher accuracy
@@ -497,12 +513,12 @@ workflow MAG {
         }
 
         // If any two of the binners are both skipped at once, do not run because DAS_Tool needs at least one
-        if (params.refine_bins_dastool) {
-            ch_prokarya_bins_dastool = ch_binning_results_bins.filter { meta, _bins ->
+        if (params.refine_bins_dastool || params.refine_bins_binette) {
+            ch_prokarya_bins_for_refinement = ch_binning_results_bins.filter { meta, _bins ->
                 meta.domain != "eukarya"
             }
 
-            BINNING_REFINEMENT(ch_binning_contigs, ch_prokarya_bins_dastool)
+            BINNING_REFINEMENT(ch_binning_contigs, ch_prokarya_bins_for_refinement, ch_checkm2_db, ch_assembly_proteins)
             ch_versions = ch_versions.mix(BINNING_REFINEMENT.out.versions)
             ch_publish_binning = ch_publish_binning.mix(BINNING_REFINEMENT.out.publish)
 
@@ -537,6 +553,13 @@ workflow MAG {
 
         ch_input_for_binsummary = DEPTHS.out.depths_summary
 
+        // Table of bin name and tool that produced it, for the binner column of bin_summary.tsv
+        ch_bin_binners = ch_input_for_postbinning
+            .flatMap { meta, bins ->
+                [bins].flatten().collect { bin -> "${bin.name - ~/\.gz$/}\t${meta.binner}" }
+            }
+            .collectFile(name: 'bin_binners.tsv', newLine: true, sort: true)
+
         /*
          * Generate contig2bin map files for all bins
          */
@@ -568,7 +591,7 @@ workflow MAG {
         ch_checkm_summary = channel.empty()
         ch_checkm2_summary = channel.empty()
         if (!params.skip_binqc) {
-            BIN_QC(ch_input_for_postbinning)
+            BIN_QC(ch_input_for_postbinning, ch_checkm2_db)
             ch_versions = ch_versions.mix(BIN_QC.out.versions)
             ch_bin_qc_metrics = BIN_QC.out.qc_metrics
             ch_busco_summary = BIN_QC.out.busco_summary
@@ -678,6 +701,7 @@ workflow MAG {
         if ((!params.skip_binqc) || !params.skip_quast || !params.skip_gtdbtk) {
             BIN_SUMMARY(
                 ch_input_for_binsummary,
+                ch_bin_binners,
                 ch_quast_bins_summary.ifEmpty([]),
                 ch_gtdbtk_summary.ifEmpty([]),
                 ch_catpack_summary.ifEmpty([]),

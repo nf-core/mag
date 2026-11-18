@@ -8,7 +8,7 @@
 <!-- Meta data and citations badges -->
 
 [![Nextflow](https://img.shields.io/badge/version-%E2%89%A526.10.0-green?style=flat&logo=nextflow&logoColor=white&color=%230DC09D&link=https%3A%2F%2Fnextflow.io)](https://www.nextflow.io/)
-[![nf-core template version](https://img.shields.io/badge/nf--core_template-4.2.1-green?style=flat&logo=nfcore&logoColor=white&color=%2324B064&link=https%3A%2F%2Fnf-co.re)](https://github.com/nf-core/tools/releases/tag/4.2.1)
+[![nf-core template version](https://img.shields.io/badge/nf--core_template-4.2.2-green?style=flat&logo=nfcore&logoColor=white&color=%2324B064&link=https%3A%2F%2Fnf-co.re)](https://github.com/nf-core/tools/releases/tag/4.2.2)
 [![Cite Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.3589527-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.3589527)
 [![Cite Publication](https://img.shields.io/badge/cite%20-Publication-orange)](https://doi.org/10.1093/bioinformatics/btag628)
 ![HiRSE Code Promo Badge](https://img.shields.io/badge/Promo-8db427?label=HiRSE&labelColor=005aa0&link=go.fzj.de/CodePromo) [![Static Badge](https://img.shields.io/badge/%F0%9F%8D%94%20%20BIgMAG-compatible-%2324B064)](https://github.com/jeffe107/BIgMAG)
@@ -54,7 +54,7 @@ The pipeline then:
 - performs metagenome binning using [MetaBAT2](https://bitbucket.org/berkeleylab/metabat/src/master/), [MaxBin2](https://sourceforge.net/projects/maxbin2/), [CONCOCT](https://github.com/BinPro/CONCOCT), [COMEBin](https://github.com/ziyewang/COMEBin), [MetaBinner](https://github.com/ziyewang/MetaBinner), and/or [SemiBin2](https://github.com/BigDataBiology/SemiBin)
 - checks the quality of the genome bins using [Busco](https://busco.ezlab.org/), [CheckM](https://ecogenomics.github.io/CheckM/), or [CheckM2](https://github.com/chklovski/CheckM2) and optionally [GUNC](https://grp-bork.embl-community.io/gunc/)
 - Performs ancient DNA validation and repair with [pyDamage](https://github.com/maxibor/pydamage) and [freebayes](https://github.com/freebayes/freebayes)
-- optionally refines bins with [DAS Tool](https://github.com/cmks/DAS_Tool)
+- optionally refines bins with [DAS Tool](https://github.com/cmks/DAS_Tool) and/or [Binette](https://github.com/genotoul-bioinfo/Binette)
 - optionally dereplicates bins study-wide by average nucleotide identity with [Galah](https://github.com/wwood/galah)
 - assigns taxonomy to bins using [GTDB-Tk](https://github.com/Ecogenomics/GTDBTk) and/or [CAT](https://github.com/dutilh/CAT) and optionally identifies viruses in assemblies using [geNomad](https://github.com/apcamargo/genomad), or Eukaryotes with [Tiara](https://github.com/ibe-uw/tiara)
 
@@ -108,6 +108,8 @@ Other code contributors include:
 - [Vini Salazar](https://github.com/vinisalazar)
 - [Alex Caswell](https://github.com/AlexHoratio)
 - [Jeferyd Yepes](https://github.com/jeffe107)
+- [Jean Mainguy](https://github.com/JeanMainguy)
+- [Farhana Haque](https://github.com/Farhana-Anika)
 
 Long read processing was inspired by [caspargross/HybridAssembly](https://github.com/caspargross/HybridAssembly) written by Caspar Gross [@caspargross](https://github.com/caspargross)
 

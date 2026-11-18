@@ -1817,15 +1817,15 @@
                 "MEGAHIT-SemiBin2-test_minigut_0.fa.gz:md5,f3505b2a132f217148936566c5c2300f",
                 "SPAdes-SemiBin2-test_minigut_0.fa.gz:md5,30b2d79961f225ed7d9e6156a4bdf482",
                 "SPAdes-SemiBin2-test_minigut_1.fa.gz:md5,40ec6d89351332f6f34a442441757ca7",
-                "bin_summary.tsv:md5,2cb426696a090cd23f404562a291e458",
+                "bin_summary.tsv:md5,13d8aca0f43ff8737d257586997bc4b6",
                 "contig_to_bin_map.tsv:md5,d171401d287113bfc695a225512790ec",
                 "bin_depths_summary.tsv:md5,1e8fb5bcb45aed9fc365339d26547f6c"
             ]
         ],
-        "timestamp": "2026-09-28T18:18:00.917369202",
+        "timestamp": "2026-11-13T10:55:50.606836638",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
+            "nextflow": "26.10.5"
         }
     },
     "content-checks": {

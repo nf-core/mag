@@ -7,6 +7,7 @@ process BIN_SUMMARY {
 
     input:
     path bin_depths
+    path bin_binners
     path quast_sum
     path gtdbtk_sum
     path cat_sum
@@ -32,6 +33,7 @@ process BIN_SUMMARY {
     """
     combine_tables.py \
         --depths_summary ${bin_depths} \
+        --binners ${bin_binners} \
         ${quast_summary} \
         ${gtdbtk_summary} \
         ${cat_summary} \

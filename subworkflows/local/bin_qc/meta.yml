@@ -11,7 +11,6 @@ keywords:
   - gunc
 components:
   - busco/busco
-  - checkm2/databasedownload
   - checkm/qa
   - checkm/lineagewf
   - checkm2/predict
@@ -31,6 +30,16 @@ input:
             type: file
             description: Metagenomic bins in FASTA format
             pattern: "*.{fasta,fa}"
+  - ch_checkm2_db:
+      description: CheckM2 database, or [] if CheckM2 is not run
+      structure:
+        - meta:
+            type: map
+            description: Metadata map
+        - db:
+            type: file
+            description: CheckM2 DIAMOND database
+            pattern: "*.dmnd"
 output:
   - qc_summary:
       description: Combined quality assessment summary

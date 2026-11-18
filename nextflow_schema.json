@@ -1092,6 +1092,11 @@
                     "type": "boolean",
                     "description": "Specify to save contig to bin maps used for bin refinement"
                 },
+                "refine_bins_binette": {
+                    "type": "boolean",
+                    "description": "Turn on bin refinement using Binette.",
+                    "help_text": "Binette assesses bin quality with CheckM2. It uses the database given with `--checkm2_db`, or downloads one otherwise. Binette runs independently of DAS Tool, so both can be turned on together."
+                },
                 "postbinning_input": {
                     "type": "string",
                     "default": "raw_bins_only",

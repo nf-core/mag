@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
+- [#1138](https://github.com/nf-core/mag/pull/1138) - Add bin refinement with [Binette](https://github.com/genotoul-bioinfo/Binette) (`--refine_bins_binette`), which can run alongside or instead of DAS Tool (by @JeanMainguy)
+- [#1138](https://github.com/nf-core/mag/pull/1138) - Add a `binner` column to `bin_summary.tsv`, giving the binner or refinement tool that produced each bin (by @JeanMainguy)
 - [#1051](https://github.com/nf-core/mag/pull/1051) - Add DeepMAsED assembly error detection to the MAG workflow as two sequential steps (`features` and `predict`) for short-read assemblies (by @SkyLexS).
 - [#1124](https://github.com/nf-core/mag/pull/1124) - Add `--max_contig_size` to discard contigs longer than a given length before binning, e.g. to remove host contigs (suggested by @prototaxites, by @dialvarezs)
 - [#1102](https://github.com/nf-core/mag/pull/1102) - Add new nf-core/mag ancient DNA mode publication citations (by @jfy133)
@@ -29,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1136](https://github.com/nf-core/mag/pull/1136) - `--save_lambdaremoved_reads` now saves NanoLyse-filtered reads, which were never published due to a mismatched file pattern (by @dialvarezs)
 - [#1136](https://github.com/nf-core/mag/pull/1136) - `--save_assembly_mapped_reads` now saves long-read assembly mappings under `Assembly/<assembler>/QC/<id>/` instead of `Assembly/null/QC/<reads_id>/` (by @dialvarezs)
 - [#1136](https://github.com/nf-core/mag/pull/1136) - `--generate_bigmag_file` now publishes `GenomeBinning/BIgMAG/bigmag_summary.tsv`, which was never published due to a mismatched process selector (by @dialvarezs)
+- [#1140](https://github.com/nf-core/mag/pull/1140) - Fix numerical overflow in Tiara bin domain classification that labelled large eukaryotic bins as `prokarya` ([#1139](https://github.com/nf-core/mag/issues/1139), reported and fixed by @Farhana-Anika)
 - [#1135](https://github.com/nf-core/mag/pull/1135) - Replace `.toList().sort()` with `toSortedList()` in the read/assembly ID cross-validation, which relied on undocumented GPars behaviour (by @bentsherman)
 - [#1118](https://github.com/nf-core/mag/pull/1118) - Fix `--min_contig_size` not being applied by all binners ([#1100](https://github.com/nf-core/mag/issues/1100)): assemblies are now filtered before the binning read mapping, while ALE, DeepMAsED and ancient DNA validation use a separate mapping of each assembly's own reads against the unfiltered assemblies (reported by @cdiener, fix by @dialvarezs)
 - [#1118](https://github.com/nf-core/mag/pull/1118) - Fix DAS Tool never running with `--ancient_dna --skip_ancient_damagecorrection`, as it received an empty contigs channel (by @dialvarezs)

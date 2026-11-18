@@ -144,6 +144,7 @@ params {
     refine_bins_dastool: Boolean
     refine_bins_dastool_threshold: Float = 0.5
     refine_bins_dastool_savecontig2bin: Boolean
+    refine_bins_binette: Boolean
 
     // Bin QC options
     skip_binqc: Boolean
@@ -470,6 +471,9 @@ output {
             out.dastool >> 'GenomeBinning/DASTool/'
             out.dastool_bins >> 'GenomeBinning/DASTool/bins/'
             out.dastool_unbins >> 'GenomeBinning/DASTool/unbinned/'
+            out.binette >> 'GenomeBinning/Binette/'
+            out.binette_bins >> 'GenomeBinning/Binette/bins/'
+            out.binette_unbins >> 'GenomeBinning/Binette/unbinned/'
             out.depths_bins >> 'GenomeBinning/depths/bins/'
             out.dereplication_tsv >> 'GenomeBinning/Dereplication/'
             out.dereplication_bins >> 'GenomeBinning/Dereplication/'
