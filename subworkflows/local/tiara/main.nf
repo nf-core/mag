@@ -120,4 +120,6 @@ workflow TIARA {
     classified_bins   = ch_classified_bins
     classified_unbins = ch_classified_unbins
     versions          = ch_versions
+    summary           = CONCAT_TIARA_TSV.out.csv // [val(meta), path(tsv)]
+    publish_tiara     = TIARA_TIARA.out.classifications.mix(TIARA_TIARA.out.log).filter { _meta, file -> file.name.endsWith('.txt') } // [val(meta), path(txt)]
 }

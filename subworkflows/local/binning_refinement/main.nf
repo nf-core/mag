@@ -40,16 +40,16 @@ workflow BINNING_REFINEMENT {
 
     // prepare bins
     RENAME_PREDASTOOL(ch_bins)
-    ch_bins_for_fastatocontig2bin = RENAME_PREDASTOOL.out.renamed_bins
-        .multiMap { meta, bins ->
-            bins: [meta, bins]
-            ext: 'fa'
-        }
+    ch_bins_for_fastatocontig2bin = RENAME_PREDASTOOL.out.renamed_bins.multiMap { meta, bins ->
+        bins: [meta, bins]
+        ext: 'fa'
+    }
     ch_versions = ch_versions.mix(RENAME_PREDASTOOL.out.versions)
 
     // Generate contig-to-bin tables, used by both DAS Tool and Binette
     DASTOOL_FASTATOCONTIG2BIN(ch_bins_for_fastatocontig2bin.bins, ch_bins_for_fastatocontig2bin.ext)
     ch_versions = ch_versions.mix(DASTOOL_FASTATOCONTIG2BIN.out.versions)
+    ch_publish = DASTOOL_FASTATOCONTIG2BIN.out.fastatocontig2bin.map { meta, f -> [meta, [dastool_contig2bin: f]] }
 
     ch_fastatocontig2bin_for_refinement = DASTOOL_FASTATOCONTIG2BIN.out.fastatocontig2bin
         .map { meta, fastatocontig2bin ->
@@ -85,6 +85,10 @@ workflow BINNING_REFINEMENT {
         ch_versions = ch_versions.mix(RENAME_POSTDASTOOL.out.versions)
 
         ch_refined_bins = ch_refined_bins.mix(RENAME_POSTDASTOOL.out.refined_bins)
+        ch_publish = ch_publish.mix(
+            DASTOOL_DASTOOL.out.log.mix(DASTOOL_DASTOOL.out.summary, DASTOOL_DASTOOL.out.contig2bin, DASTOOL_DASTOOL.out.eval, DASTOOL_DASTOOL.out.seqlength).map { meta, f -> [meta, [dastool: f]] },
+            RENAME_POSTDASTOOL.out.refined_bins.join(RENAME_POSTDASTOOL.out.refined_unbins, remainder: true).map { meta, bins, unbins -> [meta, [dastool_bins: bins, dastool_unbins: unbins]] },
+        )
         ch_refined_unbins = ch_refined_unbins.mix(
             RENAME_POSTDASTOOL.out.refined_unbins.map { meta, bin_list ->
                 def meta_new = meta + [refinement: 'dastool_refined_unbinned']
@@ -118,6 +122,10 @@ workflow BINNING_REFINEMENT {
         ch_versions = ch_versions.mix(RENAME_POSTBINETTE.out.versions)
 
         ch_refined_bins = ch_refined_bins.mix(RENAME_POSTBINETTE.out.refined_bins)
+        ch_publish = ch_publish.mix(
+            BINETTE.out.contig2bin.mix(BINETTE.out.input_bins_quality_reports, BINETTE.out.final_bins_quality_report).map { meta, f -> [meta, [binette: f]] },
+            RENAME_POSTBINETTE.out.refined_bins.join(RENAME_POSTBINETTE.out.refined_unbins, remainder: true).map { meta, bins, unbins -> [meta, [binette_bins: bins, binette_unbins: unbins]] },
+        )
         ch_refined_unbins = ch_refined_unbins.mix(
             RENAME_POSTBINETTE.out.refined_unbins.map { meta, bin_list ->
                 def meta_new = meta + [refinement: 'binette_refined_unbinned']
@@ -130,4 +138,5 @@ workflow BINNING_REFINEMENT {
     refined_bins   = ch_refined_bins
     refined_unbins = ch_refined_unbins
     versions       = ch_versions
+    publish        = ch_publish // [val(meta), val(record)]
 }

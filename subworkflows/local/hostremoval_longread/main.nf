@@ -12,7 +12,7 @@ include { SAMTOOLS_UNMAPPED as SAMTOOLS_HOSTREMOVED_UNMAPPED } from '../../../mo
 
 workflow LONGREAD_HOSTREMOVAL {
     take:
-    ch_reads // [val(meta), path(fastq)]
+    ch_reads      // [val(meta), path(fastq)]
     val_reference // path
 
     main:
@@ -49,8 +49,14 @@ workflow LONGREAD_HOSTREMOVAL {
     ch_multiqc_files = ch_multiqc_files.mix(SAMTOOLS_HOSTREMOVED_STATS.out.stats)
 
     emit:
-    stats         = SAMTOOLS_HOSTREMOVED_STATS.out.stats //channel: [val(meta), [reads  ] ]
+    stats         = SAMTOOLS_HOSTREMOVED_STATS.out.stats    //channel: [val(meta), [reads  ] ]
     reads         = SAMTOOLS_HOSTREMOVED_UNMAPPED.out.fastq // channel: [ val(meta), [ reads ] ]
-    versions      = ch_versions // channel: [ versions.yml ]
+    versions      = ch_versions                             // channel: [ versions.yml ]
     multiqc_files = ch_multiqc_files
+    publish       = MINIMAP2_HOST_INDEX.out.index.map { meta, f -> [meta, [hostremoval_index: f]] }
+        .mix(
+            MINIMAP2_HOST_ALIGN.out.bam.map { meta, f -> [meta, [hostremoval_bam: f]] },
+            SAMTOOLS_HOSTREMOVED_UNMAPPED.out.fastq.map { meta, f -> [meta, [hostremoval_fastq: f]] },
+            SAMTOOLS_HOSTREMOVED_STATS.out.stats.map { meta, f -> [meta, [hostremoval_stats: f]] },
+        ) // [val(meta), val(record)]
 }

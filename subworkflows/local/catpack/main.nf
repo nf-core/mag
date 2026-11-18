@@ -19,6 +19,8 @@ workflow CATPACK {
 
     main:
     ch_versions = channel.empty()
+    ch_publish_db = channel.empty()
+    ch_publish_unbins = channel.empty()
 
     /*
     ========================================
@@ -57,6 +59,7 @@ workflow CATPACK {
         )
 
         ch_cat_db = CATPACK_PREPARE.out
+        ch_publish_db = CATPACK_PREPARE.out.db.mix(CATPACK_PREPARE.out.taxonomy)
     }
 
     /*
@@ -76,17 +79,26 @@ workflow CATPACK {
 
     CATPACK_ADDNAMES_BINS(CATPACK_BINS.out.bin2classification, ch_cat_db.taxonomy)
 
+    ch_publish_bins = CATPACK_BINS.out.orf2lca.mix(
+        CATPACK_BINS.out.bin2classification,
+        CATPACK_BINS.out.log,
+        CATPACK_BINS.out.diamond,
+        CATPACK_BINS.out.faa,
+        CATPACK_BINS.out.gff,
+        CATPACK_ADDNAMES_BINS.out.txt,
+    )
+
     bin_summary = CATPACK_ADDNAMES_BINS.out.txt
         .map { _meta, summary -> summary }
         .collectFile(
             name: 'bat_summary.tsv',
-            storeDir: "${params.outdir}/Taxonomy/CAT/",
             keepHeader: true,
             sort: 'deep',
         )
 
     if (!params.cat_allow_unofficial_lineages) {
         CATPACK_SUMMARISE_BINS(CATPACK_ADDNAMES_BINS.out.txt, [[:], []])
+        ch_publish_bins = ch_publish_bins.mix(CATPACK_SUMMARISE_BINS.out.txt)
     }
 
     /*
@@ -108,6 +120,15 @@ workflow CATPACK {
 
         CATPACK_ADDNAMES_UNBINS(CATPACK_UNBINS.out.contig2classification, ch_cat_db.taxonomy)
 
+        ch_publish_unbins = CATPACK_UNBINS.out.orf2lca.mix(
+            CATPACK_UNBINS.out.contig2classification,
+            CATPACK_UNBINS.out.log,
+            CATPACK_UNBINS.out.diamond,
+            CATPACK_UNBINS.out.faa,
+            CATPACK_UNBINS.out.gff,
+            CATPACK_ADDNAMES_UNBINS.out.txt,
+        )
+
         if (!params.cat_allow_unofficial_lineages) {
             ch_unbin_classification = CATPACK_ADDNAMES_UNBINS.out.txt
                 .join(CONCAT_UNBINS.out.file_out)
@@ -117,10 +138,14 @@ workflow CATPACK {
                 }
 
             CATPACK_SUMMARISE_UNBINS(ch_unbin_classification.names, ch_unbin_classification.contigs)
+            ch_publish_unbins = ch_publish_unbins.mix(CATPACK_SUMMARISE_UNBINS.out.txt)
         }
     }
 
     emit:
-    summary  = bin_summary
-    versions = ch_versions
+    summary        = bin_summary
+    versions       = ch_versions
+    publish        = ch_publish_bins.map { meta, f -> [meta, [cat_bins: f]] }
+        .mix(ch_publish_unbins.map { meta, f -> [meta, [cat_unbins: f]] }) // [val(meta), val(record)]
+    publish_db     = ch_publish_db.map { meta, f -> [meta, [cat_db: f]] } // [val(meta), val(record)]
 }

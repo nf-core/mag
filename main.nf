@@ -1,19 +1,19 @@
 #!/usr/bin/env nextflow
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    nf-core/mag
+nf-core/mag
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    Github : https://github.com/nf-core/mag
-    Website: https://nf-co.re/mag
-    Slack  : https://nfcore.slack.com/channels/mag
+Github : https://github.com/nf-core/mag
+Website: https://nf-co.re/mag
+Slack  : https://nfcore.slack.com/channels/mag
 ----------------------------------------------------------------------------------------
-*/
+ */
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    IMPORT FUNCTIONS / MODULES / SUBWORKFLOWS / WORKFLOWS
+IMPORT FUNCTIONS / MODULES / SUBWORKFLOWS / WORKFLOWS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
+ */
 
 include { MAG                     } from './workflows/mag'
 include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_mag_pipeline'
@@ -22,9 +22,9 @@ include { getGenomeAttribute      } from './subworkflows/local/utils_nfcore_mag_
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    PARAMETERS
+PARAMETERS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
+ */
 
 params {
     // Input options
@@ -270,16 +270,16 @@ params {
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    NAMED WORKFLOWS FOR PIPELINE
+NAMED WORKFLOWS FOR PIPELINE
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
+ */
 
 //
 // WORKFLOW: Run main analysis pipeline depending on type of input
 //
 workflow NFCORE_MAG {
     take:
-    raw_short_reads // channel: samplesheet read in from --input
+    raw_short_reads  // channel: samplesheet read in from --input
     raw_long_reads
     input_assemblies
 
@@ -299,16 +299,30 @@ workflow NFCORE_MAG {
     )
 
     emit:
-    multiqc_report = MAG.out.multiqc_report // channel: /path/to/multiqc_report.html
+    multiqc_report              = MAG.out.multiqc_report              // channel: /path/to/multiqc_report.html
+    shortread_qc                = MAG.out.shortread_qc
+    longread_qc                 = MAG.out.longread_qc
+    assembly                    = MAG.out.assembly
+    assembly_qc                 = MAG.out.assembly_qc
+    virus_identification        = MAG.out.virus_identification
+    ancient_dna                 = MAG.out.ancient_dna
+    binning                     = MAG.out.binning
+    bin_qc                      = MAG.out.bin_qc
+    taxonomy                    = MAG.out.taxonomy
+    annotation                  = MAG.out.annotation
+    databases                   = MAG.out.databases
+    multiqc                     = MAG.out.multiqc
 }
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    RUN MAIN WORKFLOW
+RUN MAIN WORKFLOW
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
+ */
 
 workflow {
+
+    main:
     //
     // SUBWORKFLOW: Run initialisation tasks
     //
@@ -343,4 +357,174 @@ workflow {
         params.monochrome_logs,
         NFCORE_MAG.out.multiqc_report,
     )
+
+    publish:
+    shortread_qc                = NFCORE_MAG.out.shortread_qc
+    longread_qc                 = NFCORE_MAG.out.longread_qc
+    assembly                    = NFCORE_MAG.out.assembly
+    assembly_qc                 = NFCORE_MAG.out.assembly_qc
+    virus_identification        = NFCORE_MAG.out.virus_identification
+    ancient_dna                 = NFCORE_MAG.out.ancient_dna
+    binning                     = NFCORE_MAG.out.binning
+    bin_qc                      = NFCORE_MAG.out.bin_qc
+    taxonomy                    = NFCORE_MAG.out.taxonomy
+    annotation                  = NFCORE_MAG.out.annotation
+    databases                   = NFCORE_MAG.out.databases
+    multiqc                     = NFCORE_MAG.out.multiqc
+}
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+WORKFLOW OUTPUTS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ */
+
+output {
+    shortread_qc {
+        path { meta, out ->
+            out.fastqc >> 'QC_shortreads/fastqc/'
+            out.clipping >> "QC_shortreads/${params.clip_tool}/${meta.id}/"
+            out.clipping_reads >> (params.save_clipped_reads ? "QC_shortreads/${params.clip_tool}/${meta.id}/" : null)
+            out.hostremoval >> 'QC_shortreads/remove_host/'
+            out.hostremoval_reads >> (params.save_hostremoved_reads ? 'QC_shortreads/remove_host/' : null)
+            out.phixremoval >> 'QC_shortreads/remove_phix/'
+            out.phixremoval_reads >> (params.save_phixremoved_reads ? 'QC_shortreads/remove_phix/' : null)
+            out.bbnorm_fastq >> (params.save_bbnorm_reads ? 'bbmap/bbnorm/' : null)
+            out.bbnorm_log >> (params.save_bbnorm_reads ? 'bbmap/bbnorm/logs/' : null)
+        }
+    }
+    longread_qc {
+        path { meta, out ->
+            out.adaptertrimming >> (params.save_porechop_reads ? 'QC_longreads/porechop/' : null)
+            out.filtering >> "QC_longreads/${[filtlong: 'Filtlong', nanoq: 'Nanoq', chopper: 'Chopper'][params.longread_filtering_tool]}/"
+            out.filtering_reads >> (params.save_filtered_longreads || (params.longread_filtering_tool == 'chopper' && params.save_lambdaremoved_reads) ? "QC_longreads/${[filtlong: 'Filtlong', nanoq: 'Nanoq', chopper: 'Chopper'][params.longread_filtering_tool]}/" : null)
+            out.nanolyse >> 'QC_longreads/NanoLyse/'
+            out.nanolyse_reads >> (params.save_lambdaremoved_reads ? 'QC_longreads/NanoLyse/' : null)
+            out.nanoplot >> "QC_longreads/NanoPlot/${meta.id}/"
+            out.hostremoval_index >> 'QC_longreads/minimap2/index/'
+            out.hostremoval_bam >> (params.save_hostremoved_reads ? 'QC_longreads/minimap2/align/' : null)
+            out.hostremoval_fastq >> (params.save_hostremoved_reads ? 'QC_longreads/samtools/fastq/' : null)
+            out.hostremoval_stats >> 'QC_longreads/samtools/stats/'
+        }
+    }
+    assembly {
+        // pypolca vcf and report already sit in a <assembler>-<id>/ subdir of the task dir, which is kept
+        path { meta, out ->
+            out.assembly >> "Assembly/${meta.assembler}/"
+            out.pypolca_polished >> "Assembly/${meta.assembler}-pypolca/${meta.assembler}-${meta.id}/${out.pypolca_polished?.name?.replace('_corrected.fasta', '_pypolca.fasta')}"
+            out.pypolca_vcf >> "Assembly/${meta.assembler}-pypolca/"
+            out.pypolca_report >> "Assembly/${meta.assembler}-pypolca/"
+        }
+    }
+    assembly_qc {
+        path { meta, out ->
+            out.quast >> "Assembly/${meta.assembler}/QC/${meta.id}/"
+            out.mapping >> "Assembly/${meta.assembler}/QC/${meta.id}/"
+            out.mapping_bams >> (params.save_assembly_mapped_reads ? "Assembly/${meta.assembler}/QC/${meta.id}/" : null)
+            out.mapping_full >> "Assembly/${meta.assembler}/QC/${meta.id}/full_assembly/"
+            out.mapping_full_bams >> (params.save_assembly_mapped_reads ? "Assembly/${meta.assembler}/QC/${meta.id}/full_assembly/" : null)
+            out.ale >> "Assembly/${meta.assembler}/QC/${meta.id}/ALE/"
+            out.deepmased_features >> "Assembly/${meta.assembler}/QC/${meta.id}/DeepMAsED/features/"
+            out.deepmased >> "Assembly/${meta.assembler}/QC/${meta.id}/DeepMAsED/"
+        }
+    }
+    virus_identification {
+        path { meta, out ->
+            out.genomad >> "VirusIdentification/geNomad/${meta.id}/"
+        }
+    }
+    ancient_dna {
+        path { meta, out ->
+            out.freebayes >> 'Ancient_DNA/variant_calling/freebayes/'
+            out.filtered >> 'Ancient_DNA/variant_calling/filtered/'
+            out.consensus >> 'Ancient_DNA/variant_calling/consensus/'
+            out.pydamage_analyze >> "Ancient_DNA/pydamage/analyze/${meta.assembler}-${meta.id}/"
+            out.pydamage_filter >> "Ancient_DNA/pydamage/filter/${meta.assembler}-${meta.id}/"
+        }
+    }
+    binning {
+        path { meta, out ->
+            out.depths_contigs >> 'GenomeBinning/depths/contigs/'
+            out.metabat2_bins >> 'GenomeBinning/MetaBAT2/bins/'
+            out.metabat2_tooshort >> 'GenomeBinning/MetaBAT2/discarded/'
+            out.metabat2_lowdepth >> 'GenomeBinning/MetaBAT2/discarded/'
+            out.maxbin2_bins >> 'GenomeBinning/MaxBin2/bins/'
+            out.maxbin2_tooshort >> 'GenomeBinning/MaxBin2/discarded/'
+            out.maxbin2_summary >> 'GenomeBinning/MaxBin2/'
+            out.maxbin2_abundance >> 'GenomeBinning/MaxBin2/'
+            out.concoct_stats >> 'GenomeBinning/CONCOCT/stats/'
+            out.concoct_bin >> "GenomeBinning/CONCOCT/bins/${out.concoct_bin?.name}"
+            out.comebin_bins >> 'GenomeBinning/COMEBin/bins/'
+            out.comebin_tsv >> 'GenomeBinning/COMEBin/stats/'
+            out.comebin_log >> 'GenomeBinning/COMEBin/stats/'
+            out.comebin_embeddings >> 'GenomeBinning/COMEBin/stats/'
+            out.comebin_covembeddings >> 'GenomeBinning/COMEBin/stats/'
+            out.metabinner_membership >> 'GenomeBinning/MetaBinner/stats/'
+            out.metabinner_log >> 'GenomeBinning/MetaBinner/stats/'
+            out.metabinner_bins >> 'GenomeBinning/MetaBinner/'
+            out.metabinner_unbinned >> 'GenomeBinning/MetaBinner/unbinned/'
+            out.semibin_bins >> 'GenomeBinning/SemiBin2/'
+            out.semibin_log >> 'GenomeBinning/SemiBin2/log/'
+            out.unbinned >> "GenomeBinning/${meta.binner}/unbinned/"
+            out.unbinned_pooled >> "GenomeBinning/${meta.binner}/unbinned/discarded/"
+            out.dastool_contig2bin >> (params.refine_bins_dastool_savecontig2bin ? 'GenomeBinning/DASTool/fastatocontig2bin/' : null)
+            out.dastool >> 'GenomeBinning/DASTool/'
+            out.dastool_bins >> 'GenomeBinning/DASTool/bins/'
+            out.dastool_unbins >> 'GenomeBinning/DASTool/unbinned/'
+            out.binette >> 'GenomeBinning/Binette/'
+            out.binette_bins >> 'GenomeBinning/Binette/bins/'
+            out.binette_unbins >> 'GenomeBinning/Binette/unbinned/'
+            out.depths_bins >> 'GenomeBinning/depths/bins/'
+            out.dereplication_tsv >> 'GenomeBinning/Dereplication/'
+            out.dereplication_bins >> 'GenomeBinning/Dereplication/'
+            out.summary >> 'GenomeBinning/'
+            out.contig2bin >> 'GenomeBinning/contig_to_bin/'
+            out.bigmag >> 'GenomeBinning/BIgMAG/'
+        }
+    }
+    bin_qc {
+        path { meta, out ->
+            out.busco >> "GenomeBinning/QC/BUSCO/${meta.assembler}-${meta.binner}-${meta.domain}-${meta.refinement}-${meta.id}/"
+            out.checkm >> 'GenomeBinning/QC/CheckM/'
+            out.checkm2 >> 'GenomeBinning/QC/CheckM2/'
+            out.gunc_raw >> "GenomeBinning/QC/GUNC/raw/${meta.assembler}-${meta.binner}-${meta.domain}-${meta.refinement}-${meta.id}/"
+            out.gunc_checkm >> "GenomeBinning/QC/GUNC/checkmmerged/${meta.assembler}-${meta.binner}-${meta.domain}-${meta.refinement}-${meta.id}/"
+            out.summaries >> 'GenomeBinning/QC/'
+            out.pydamage_bins >> 'GenomeBinning/QC/summarise_pydamagebins/'
+            out.tiara >> 'GenomeBinning/Tiara/'
+        }
+    }
+    taxonomy {
+        path { meta, out ->
+            out.tiara >> 'Taxonomy/Tiara/'
+            out.cat_summary >> 'Taxonomy/CAT/'
+            out.cat_bins >> "Taxonomy/CAT/${meta.assembler}/${meta.binner}/${meta.id}/bins/"
+            out.cat_unbins >> "Taxonomy/CAT/${meta.assembler}/${meta.binner}/${meta.id}/unbins/"
+            out.gtdbtk >> "Taxonomy/GTDB-Tk/${meta.assembler}/${meta.binner}/${meta.id}/"
+            out.gtdbtk_summary >> 'Taxonomy/GTDB-Tk/'
+        }
+    }
+    annotation {
+        path { meta, out ->
+            out.prodigal >> "Annotation/Prodigal/${meta.assembler}/${meta.id}/"
+            out.prokka >> "Annotation/Prokka/${meta.assembler}/"
+            out.bakta >> "Annotation/Bakta/${meta.assembler}/"
+            out.metaeuk >> "Annotation/MetaEuk/${meta.assembler}/"
+        }
+    }
+    databases {
+        path { _meta, out ->
+            out.busco_db >> (params.save_busco_db ? 'GenomeBinning/QC/BUSCO/' : null)
+            out.checkm_db >> (params.save_checkm_data ? 'GenomeBinning/QC/CheckM/checkm_downloads/' : null)
+            out.checkm2_db >> (params.save_checkm2_data ? 'GenomeBinning/QC/CheckM2/checkm2_downloads/' : null)
+            out.gunc_db >> (params.gunc_save_db ? 'GenomeBinning/QC/GUNC/' : null)
+            out.cat_db >> (params.save_cat_db ? 'Taxonomy/CAT/db/' : null)
+            out.mmseqs_db >> (params.save_mmseqs_db ? 'Annotation/mmseqs_db/' : null)
+        }
+        // several BUSCO tasks publish the same shared `busco_downloads/lineages/` directory
+        overwrite false
+    }
+    multiqc {
+        path 'multiqc'
+    }
 }

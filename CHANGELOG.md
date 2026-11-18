@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
+- [#1136](https://github.com/nf-core/mag/pull/1136) - Migrated output publishing from `publishDir` to workflow outputs; output directory structure is unchanged (by @dialvarezs)
 - [#1104](https://github.com/nf-core/mag/pull/1104) - Updated to nf-core 4.1.0 template (by @dialvarezs)
 - [#1103](https://github.com/nf-core/mag/pull/1103) - Support parameter types (by @dialvarezs)
 - [#1106](https://github.com/nf-core/mag/pull/1106) - Renamed `--skip_adapter_trimming` to `--skip_longread_adapter_trimming` (old name deprecated) and replaced `--skip_deepmased` with `--run_deepmased` (by @dialvarezs)
@@ -26,6 +27,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
+- [#1136](https://github.com/nf-core/mag/pull/1136) - `--save_clipped_reads` now also saves paired-end AdapterRemoval reads, which were never published due to a mismatched file pattern (by @dialvarezs)
+- [#1136](https://github.com/nf-core/mag/pull/1136) - `--save_lambdaremoved_reads` now saves NanoLyse-filtered reads, which were never published due to a mismatched file pattern (by @dialvarezs)
+- [#1136](https://github.com/nf-core/mag/pull/1136) - `--save_assembly_mapped_reads` now saves long-read assembly mappings under `Assembly/<assembler>/QC/<id>/` instead of `Assembly/null/QC/<reads_id>/` (by @dialvarezs)
+- [#1136](https://github.com/nf-core/mag/pull/1136) - `--generate_bigmag_file` now publishes `GenomeBinning/BIgMAG/bigmag_summary.tsv`, which was never published due to a mismatched process selector (by @dialvarezs)
 - [#1140](https://github.com/nf-core/mag/pull/1140) - Fix numerical overflow in Tiara bin domain classification that labelled large eukaryotic bins as `prokarya` ([#1139](https://github.com/nf-core/mag/issues/1139), reported and fixed by @Farhana-Anika)
 - [#1135](https://github.com/nf-core/mag/pull/1135) - Replace `.toList().sort()` with `toSortedList()` in the read/assembly ID cross-validation, which relied on undocumented GPars behaviour (by @bentsherman)
 - [#1118](https://github.com/nf-core/mag/pull/1118) - Fix `--min_contig_size` not being applied by all binners ([#1100](https://github.com/nf-core/mag/issues/1100)): assemblies are now filtered before the binning read mapping, while ALE, DeepMAsED and ancient DNA validation use a separate mapping of each assembly's own reads against the unfiltered assemblies (reported by @cdiener, fix by @dialvarezs)
@@ -43,6 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | --------- | ---------------- | ----------- |
 | MultiQC   | 1.34             | 1.35        |
 | nf-core   | 4.0.3            | 4.1.0       |
+| Nextflow  | 26.04.0          | 26.10.0     |
 | Galah     |                  | 0.4.2       |
 | DeepMAsED |                  | 0.3.1       |
 

@@ -162,4 +162,5 @@ workflow ASSEMBLY {
     shortread_assemblies = ch_shortread_assemblies
     longread_assemblies  = ch_longread_assemblies
     versions             = ch_versions
+    publish              = SHORTREAD_ASSEMBLY.out.publish.mix(HYBRID_ASSEMBLY.out.publish, LONGREAD_ASSEMBLY.out.publish) // [val(meta), path(files)]
 }
