@@ -3,7 +3,6 @@
  */
 
 include { BUSCO_BUSCO                       } from '../../../modules/nf-core/busco/busco/main'
-include { CHECKM2_DATABASEDOWNLOAD          } from '../../../modules/nf-core/checkm2/databasedownload/main'
 include { CHECKM_QA                         } from '../../../modules/nf-core/checkm/qa/main'
 include { CHECKM_LINEAGEWF                  } from '../../../modules/nf-core/checkm/lineagewf/main'
 include { CHECKM2_PREDICT                   } from '../../../modules/nf-core/checkm2/predict/main'
@@ -21,6 +20,7 @@ include { UNTAR as CHECKM_UNTAR             } from '../../../modules/nf-core/unt
 workflow BIN_QC {
     take:
     ch_bins // [val(meta), [path(fasta)]], input bins (mandatory)
+    ch_checkm2_db // [val(meta), path(db)], or [] if CheckM2 is not run
 
     main:
     ch_qc_metrics = channel.empty()
@@ -57,17 +57,6 @@ workflow BIN_QC {
     }
     else {
         ch_checkm_db = []
-    }
-
-    if (params.checkm2_db) {
-        ch_checkm2_db = [[:], file(params.checkm2_db, checkIfExists: true)]
-    }
-    else if (params.run_checkm2) {
-        CHECKM2_DATABASEDOWNLOAD(params.checkm2_db_version)
-        ch_checkm2_db = CHECKM2_DATABASEDOWNLOAD.out.database
-    }
-    else {
-        ch_checkm2_db = []
     }
 
     if (params.gunc_db) {

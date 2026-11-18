@@ -80,6 +80,7 @@ The table is ordered first by 'Source' of defaults by specificity of definition,
 | GENOMAD_ENDTOEND                     | 12  | 72.GB  | 16.h | Label: process_high   |
 | MINIMAP2_HOST_ALIGN                  | 12  | 72.GB  | 16.h | Label: process_high   |
 | ADAPTERREMOVAL                       | 6   | 36.GB  | 8.h  | Label: process_medium |
+| BINETTE                              | 6   | 36.GB  | 8.h  | Label: process_medium |
 | BBMAP_BBNORM                         | 6   | 36.GB  | 8.h  | Label: process_medium |
 | BCFTOOLS_CONSENSUS                   | 6   | 36.GB  | 8.h  | Label: process_medium |
 | BCFTOOLS_VIEW                        | 6   | 36.GB  | 8.h  | Label: process_medium |
@@ -126,6 +127,7 @@ The table is ordered first by 'Source' of defaults by specificity of definition,
 | GUNZIP                               | 1   | 6.GB   | 4.h  | Label: process_single |
 | PYDAMAGE_FILTER                      | 1   | 6.GB   | 4.h  | Label: process_single |
 | QSV_CAT                              | 1   | 6.GB   | 4.h  | Label: process_single |
+| RENAME_POSTBINETTE                   | 1   | 6.GB   | 4.h  | Label: process_single |
 | SAMTOOLS_FAIDX                       | 1   | 6.GB   | 4.h  | Label: process_single |
 | SAMTOOLS_STATS                       | 1   | 6.GB   | 4.h  | Label: process_single |
 | SEQTK_MERGEPE                        | 1   | 6.GB   | 4.h  | Label: process_single |
