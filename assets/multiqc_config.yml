@@ -20,7 +20,7 @@ run_modules:
   - custom_content
   - bowtie2
   - busco
-  - quast
+  - seqkit
   - prokka
   - bakta
   - porechop
@@ -31,6 +31,25 @@ run_modules:
   - gtdbtk
 
 ## Module order
+# Must list every module in run_modules: MultiQC adds an unfiltered extra instance of any module
+# missing from module_order (seqkit is not in the default one)
+module_order:
+  - fastqc
+  - fastp
+  - adapterremoval
+  - custom_content
+  - bowtie2
+  - busco
+  - seqkit
+  - prokka
+  - bakta
+  - porechop
+  - filtlong
+  - trimmomatic
+  - checkm
+  - checkm2
+  - gtdbtk
+
 top_modules:
   - "fastqc":
       name: "FastQC: raw reads"
@@ -56,11 +75,11 @@ top_modules:
       info: "Mapping statistics of reads mapped against host genome and subsequently removed."
       path_filters:
         - "*_host_removed.bowtie2.log"
-  - "quast":
-      name: "QUAST: assembly"
+  - "seqkit":
+      name: "SeqKit: assembly"
       info: "Assembly statistics of raw assemblies."
       path_filters:
-        - "*rawassemblies.tsv"
+        - "*-assembly_stats.tsv"
   - "bowtie2":
       name: "Bowtie2: assembly"
       info: "Mapping statistics of reads mapped against assemblies."
@@ -69,11 +88,11 @@ top_modules:
         - "*_phix_removed.bowtie2.log"
   - "bcftools"
   - custom_content
-  - "quast":
-      name: "QUAST: bins"
+  - "seqkit":
+      name: "SeqKit: bins"
       info: "Assembly statistics of binned assemblies."
-      path_filters_exclude:
-        - "*rawassemblies.tsv"
+      path_filters:
+        - "*-bin_stats.tsv"
   - "busco":
       info: "assesses genome assembly and annotation completeness with Benchmarking Universal Single-Copy Orthologs. In case BUSCO's automated lineage selection was used, only generic results for the selected domain are shown and only for genome bins and kept, unbinned contigs for which the BUSCO analysis was successfull, i.e. not for contigs for which no BUSCO genes could be found. Bins for which a specific virus lineage was selected are also not shown."
   - "checkm"
@@ -99,8 +118,6 @@ sp:
     fn: "host_removal_metrics.tsv"
   adapterremoval:
     fn: "*_ar2.settings"
-  quast:
-    fn: "report*.tsv"
   filtlong:
     num_lines: 20
     fn_re: ".*_filtlong.log"
@@ -137,21 +154,23 @@ table_columns_visible:
     after_filtering_gc_content: false
     pct_surviving: true
     pct_adapter: true
-  "QUAST: assembly":
-    N75: true
-    L50: true
-    L75: true
-    "Largest contig": true
-    "Total length": true
+  "SeqKit: assembly: seqkit":
+    num_seqs: true
+    sum_len: true
     N50: true
+    GC_pct: true
+    avg_len: false
+    Q30_pct: false
+    AvgQual: false
   "Bowtie2: assembly": false
-  "QUAST: bins":
-    N75: true
-    L50: true
-    L75: true
-    "Largest contig": true
-    "Total length": true
+  "SeqKit: bins: seqkit":
+    num_seqs: true
+    sum_len: true
     N50: true
+    GC_pct: true
+    avg_len: false
+    Q30_pct: false
+    AvgQual: false
   "BUSCO": false
   "Prokka": false
   "Bakta": false
@@ -190,14 +209,14 @@ table_columns_placement:
     overall_alignment_rate: 5000
   "Bowtie2: host removal":
     overall_alignment_rate: 6000
-  "QUAST: assembly":
-    "N50": 10000
-    "Total length": 11000
+  "SeqKit: assembly: seqkit":
+    N50: 10000
+    sum_len: 11000
   "Bowtie2: assembly":
     overall_alignment_rate: 7000
-  "QUAST: bins":
-    "N50": 10000
-    "Total length": 11000
+  "SeqKit: bins: seqkit":
+    N50: 10000
+    sum_len: 11000
   Busco:
     "complete": 12000
     "complete_single_copy": 12100
@@ -244,10 +263,3 @@ table_columns_name:
     overall_alignment_rate: "% Aligned (Host)"
   "Bowtie2: assembly":
     overall_alignment_rate: "% Aligned (Assem.)"
-
-custom_table_header_config:
-  general_stats_table:
-    "Total length":
-      hidden: true
-    N50:
-      hidden: true

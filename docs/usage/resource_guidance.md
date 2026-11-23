@@ -67,7 +67,6 @@ The table is ordered first by 'Source' of defaults by specificity of definition,
 | PRODIGAL                             | 1   | 4.GB   | 4.h  | Named customisation   |
 | PROKKA                               | 2   | 4.GB   | 4.h  | Named customisation   |
 | BOWTIE2_PHIX_REMOVAL_ALIGN           | 8   | 2.GB   | 6.h  | Named customisation   |
-| QUAST_BINS                           | 1   | 2.GB   | 4.h  | Named customisation   |
 | CONCAT_BUSCO_TSV                     | 1   | 1.GB   | 4.h  | Named customisation   |
 | CONCAT_CHECKM_TSV                    | 1   | 1.GB   | 4.h  | Named customisation   |
 | CONCAT_CHECKM2_TSV                   | 1   | 1.GB   | 4.h  | Named customisation   |
@@ -141,7 +140,6 @@ The table is ordered first by 'Source' of defaults by specificity of definition,
 | GTDBTK_SUMMARY                       | 1   | 7.GB   | 4.h  | Default               |
 | MAG_DEPTHS_SUMMARY                   | 1   | 7.GB   | 4.h  | Default               |
 | PREPARE_BIGMAG_SUMMARY               | 1   | 7.GB   | 4.h  | Default               |
-| QUAST                                | 1   | 7.GB   | 4.h  | Default               |
 
 _Table generated for nf-core/mag v5.5, using Claude Haiku 4.5, and corrected for accuracy by a human._
 

@@ -1,7 +1,7 @@
 {
     "-profile test_alternatives": {
         "content": [
-            32,
+            35,
             {
                 "BIN_SUMMARY": {
                     "pandas": "1.4.3",
@@ -31,6 +31,9 @@
                     "qsv": "5.1.0"
                 },
                 "CONCAT_CHECKM2_TSV": {
+                    "qsv": "5.1.0"
+                },
+                "CONCAT_SEQKIT_STATS_BINS": {
                     "qsv": "5.1.0"
                 },
                 "CONCAT_TIARA_TSV": {
@@ -74,6 +77,12 @@
                 "SEQKIT_STATS": {
                     "seqkit": "2.9.0"
                 },
+                "SEQKIT_STATS_ASSEMBLY": {
+                    "seqkit": "2.9.0"
+                },
+                "SEQKIT_STATS_BINS": {
+                    "seqkit": "2.9.0"
+                },
                 "SPLIT_FASTA": {
                     "biopython": "1.74",
                     "pandas": "1.1.5",
@@ -94,10 +103,10 @@
                 }
             }
         ],
-        "timestamp": "2026-10-28T00:44:39.85671074",
+        "timestamp": "2026-11-23T17:37:59.005335863",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.10.3"
+            "nextflow": "26.10.6"
         }
     },
     "qc": {
@@ -145,17 +154,19 @@
             [
                 "Assembly/MEGAHIT/MEGAHIT-group-0.contigs.fa.gz",
                 "Assembly/MEGAHIT/MEGAHIT-group-0.log",
+                "Assembly/MEGAHIT/QC/group-0/MEGAHIT-group-0-assembly_stats.tsv",
                 "Assembly/MEGAHIT/QC/group-0/MEGAHIT-group-0-test_minigut.bowtie2.log",
                 "Assembly/MEGAHIT/QC/group-0/MEGAHIT-group-0-test_minigut_sample2.bowtie2.log"
             ],
             [
-                "MEGAHIT-group-0.contigs.fa.gz:md5,4b1c9360be95e596b87194b12a5db645"
+                "MEGAHIT-group-0.contigs.fa.gz:md5,4b1c9360be95e596b87194b12a5db645",
+                "MEGAHIT-group-0-assembly_stats.tsv:md5,c685c2526ecf4ba0640f9b9cc4bdd278"
             ]
         ],
-        "timestamp": "2026-07-14T18:52:06.9332908",
+        "timestamp": "2026-11-23T17:37:59.057258199",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "26.04.3"
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.6"
         }
     },
     "binning": {
@@ -178,8 +189,10 @@
                 "GenomeBinning/QC/CheckM2/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/protein_files/MEGAHIT-MetaBAT2-group-0.2.faa",
                 "GenomeBinning/QC/CheckM2/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0/quality_report.tsv",
                 "GenomeBinning/QC/CheckM2/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0_checkm2_report.tsv",
+                "GenomeBinning/QC/MEGAHIT-MetaBAT2-prokarya-unrefined-group-0-bin_stats.tsv",
                 "GenomeBinning/QC/busco_summary.tsv",
                 "GenomeBinning/QC/checkm2_summary.tsv",
+                "GenomeBinning/QC/seqkit_bin_summary.tsv",
                 "GenomeBinning/Tiara/tiara_summary.tsv",
                 "GenomeBinning/bin_summary.tsv",
                 "GenomeBinning/contig_to_bin/contig_to_bin_map.tsv",
@@ -196,17 +209,19 @@
                 "MEGAHIT-MetaBAT2-group-0.2.faa:md5,903b0e2ed9a0ff98c1c9af09b16ae527",
                 "quality_report.tsv:md5,7d4f078beed6465403ec536a050ac615",
                 "MEGAHIT-MetaBAT2-prokarya-unrefined-group-0_checkm2_report.tsv:md5,7d4f078beed6465403ec536a050ac615",
+                "MEGAHIT-MetaBAT2-prokarya-unrefined-group-0-bin_stats.tsv:md5,25f88955a8216045b93fe90a8cef6523",
                 "checkm2_summary.tsv:md5,7d4f078beed6465403ec536a050ac615",
+                "seqkit_bin_summary.tsv:md5,25f88955a8216045b93fe90a8cef6523",
                 "tiara_summary.tsv:md5,dee89e435a020f5d9f0233f065338578",
-                "bin_summary.tsv:md5,a2b3423bb19aee66d99a0dfe07b20f83",
+                "bin_summary.tsv:md5,8006dca02580f5e85369c7afce67bb78",
                 "contig_to_bin_map.tsv:md5,2bea485185ed808e9b5568438f603e2a",
                 "bin_depths_summary.tsv:md5,a73f2fc180a2c52038c88fbbfa6a95c3"
             ]
         ],
-        "timestamp": "2026-11-16T11:12:56.467650912",
+        "timestamp": "2026-11-23T17:37:59.114831515",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.10.5"
+            "nextflow": "26.10.6"
         }
     },
     "content-checks": {
@@ -262,9 +277,13 @@
                 "multiqc/multiqc_data/multiqc_fastqc.yaml",
                 "multiqc/multiqc_data/multiqc_fastqc_fastqc-1.yaml",
                 "multiqc/multiqc_data/multiqc_general_stats.yaml",
+                "multiqc/multiqc_data/multiqc_seqkit_stats.yaml",
+                "multiqc/multiqc_data/multiqc_seqkit_stats_seqkit-1.yaml",
                 "multiqc/multiqc_data/multiqc_software_versions.yaml",
                 "multiqc/multiqc_data/multiqc_sources.yaml",
                 "multiqc/multiqc_data/multiqc_trimmomatic.yaml",
+                "multiqc/multiqc_data/seqkit-stats-seqcounts-plot.yaml",
+                "multiqc/multiqc_data/seqkit-stats-table.yaml",
                 "multiqc/multiqc_data/trimmomatic_plot.yaml",
                 "multiqc/multiqc_plots/pdf/bowtie2_pe_plot-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/bowtie2_pe_plot-pct.pdf",
@@ -290,6 +309,8 @@
                 "multiqc/multiqc_plots/pdf/fastqc_sequence_counts_plot-pct.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc_sequence_duplication_levels_plot.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc_sequence_length_distribution_plot.pdf",
+                "multiqc/multiqc_plots/pdf/seqkit-stats-seqcounts-plot.pdf",
+                "multiqc/multiqc_plots/pdf/seqkit-stats-table.pdf",
                 "multiqc/multiqc_plots/pdf/trimmomatic_plot-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/trimmomatic_plot-pct.pdf",
                 "multiqc/multiqc_plots/png/bowtie2_pe_plot-cnt.png",
@@ -316,6 +337,8 @@
                 "multiqc/multiqc_plots/png/fastqc_sequence_counts_plot-pct.png",
                 "multiqc/multiqc_plots/png/fastqc_sequence_duplication_levels_plot.png",
                 "multiqc/multiqc_plots/png/fastqc_sequence_length_distribution_plot.png",
+                "multiqc/multiqc_plots/png/seqkit-stats-seqcounts-plot.png",
+                "multiqc/multiqc_plots/png/seqkit-stats-table.png",
                 "multiqc/multiqc_plots/png/trimmomatic_plot-cnt.png",
                 "multiqc/multiqc_plots/png/trimmomatic_plot-pct.png",
                 "multiqc/multiqc_plots/svg/bowtie2_pe_plot-cnt.svg",
@@ -342,6 +365,8 @@
                 "multiqc/multiqc_plots/svg/fastqc_sequence_counts_plot-pct.svg",
                 "multiqc/multiqc_plots/svg/fastqc_sequence_duplication_levels_plot.svg",
                 "multiqc/multiqc_plots/svg/fastqc_sequence_length_distribution_plot.svg",
+                "multiqc/multiqc_plots/svg/seqkit-stats-seqcounts-plot.svg",
+                "multiqc/multiqc_plots/svg/seqkit-stats-table.svg",
                 "multiqc/multiqc_plots/svg/trimmomatic_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/trimmomatic_plot-pct.svg",
                 "multiqc/multiqc_report.html"
@@ -371,18 +396,22 @@
                 "multiqc_bowtie2_bowtie2-2.yaml:md5,a1f441faed0bf8f899f556298552be12",
                 "multiqc_busco.yaml:md5,62d093e7da3477c1b58c76b5e49f28da",
                 "multiqc_checkm2.yaml:md5,3868a66bd13bf14fdc673394b968d0d1",
-                "multiqc_citations.yaml:md5,50440bb766620557f852bbd53357a098",
+                "multiqc_citations.yaml:md5,5ca31c6f7559464bf2186d19c76973df",
                 "multiqc_fastqc.yaml:md5,155b77ad8c6ac1a8ed2fd4e6b2086f30",
                 "multiqc_fastqc_fastqc-1.yaml:md5,6bfa9b6b55cc17cbfa74dc9372e1508c",
-                "multiqc_general_stats.yaml:md5,ac0c0e1b8561380e73edc7b44df6aa70",
+                "multiqc_general_stats.yaml:md5,93316d757f89b359e2ac9b7f27afb2bb",
+                "multiqc_seqkit_stats.yaml:md5,ac66a41ef69ac4d96b9a93e23065cf79",
+                "multiqc_seqkit_stats_seqkit-1.yaml:md5,3b2501fb2158b85391c92c6cbda1bff8",
                 "multiqc_trimmomatic.yaml:md5,d4aaff3725c28801ae0577d97c2f9b30",
+                "seqkit-stats-seqcounts-plot.yaml:md5,034d0d596a6f062b903b543afed9822f",
+                "seqkit-stats-table.yaml:md5,f28e8b08d28dbdc500de63703cd9c63c",
                 "trimmomatic_plot.yaml:md5,9557cd587ace0a93912179cb0deafe3b"
             ]
         ],
-        "timestamp": "2026-10-28T00:44:39.918198347",
+        "timestamp": "2026-11-23T17:53:09.30088286",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.10.3"
+            "nextflow": "26.10.6"
         }
     },
     "summary-rows": {

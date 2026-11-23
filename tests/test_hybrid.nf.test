@@ -42,9 +42,6 @@ nextflow_pipeline {
             def stable_path_assembly = getAllFilesFromDir(
                 params.outdir, include: ['Assembly/**'], ignoreFile: 'tests/.nftignore'
             )
-            def assembly_quast_logs = getAllFilesFromDir(
-                params.outdir, include: ['Assembly/SPAdesHybrid/QC/*/QUAST/quast.log']
-            )
             def spades_logs = getAllFilesFromDir(
                 params.outdir, include: ['Assembly/SPAdesHybrid/*.spades.log']
             )
@@ -75,9 +72,6 @@ nextflow_pipeline {
             def semibin2_bins = getAllFilesFromDir(
                 params.outdir, include: ['GenomeBinning/SemiBin2/bins/*.fa.gz']
             )
-            def binning_quast_logs = getAllFilesFromDir(
-                params.outdir, include: ['GenomeBinning/QC/QUAST/*/quast.log']
-            )
             def busco_logs = getAllFilesFromDir(
                 params.outdir, include: ['GenomeBinning/QC/BUSCO/*/*-busco.log']
             )
@@ -85,7 +79,7 @@ nextflow_pipeline {
                 params.outdir, include: ['GenomeBinning/SemiBin2/log/*.log']
             )
             def bin_summary = path("${params.outdir}/GenomeBinning/bin_summary.tsv")
-            def quast_bin_summary = path("${params.outdir}/GenomeBinning/QC/quast_bin_summary.tsv")
+            def seqkit_bin_summary = path("${params.outdir}/GenomeBinning/QC/seqkit_bin_summary.tsv")
             def busco_summary = path("${params.outdir}/GenomeBinning/QC/busco_summary.tsv")
 
             // Output dir: Annotation
@@ -150,14 +144,12 @@ nextflow_pipeline {
 
                 { assert snapshot(
                     "bin_summary.tsv rows: ${bin_summary.csv(sep: '\t').rowCount}",
-                    "quast_bin_summary.tsv rows: ${quast_bin_summary.csv(sep: '\t').rowCount}",
+                    "seqkit_bin_summary.tsv rows: ${seqkit_bin_summary.csv(sep: '\t').rowCount}",
                     "busco_summary.tsv rows: ${busco_summary.csv(sep: '\t').rowCount}",
                 ).match("summary-rows") },
 
                 { assert snapshot(
                     "spades_logs contains 'SPAdes pipeline finished.': ${spades_logs.collect { log -> log.readLines().any { it.contains('SPAdes pipeline finished.') } }.every()}",
-                    "assembly_quast_logs contains 'Finished:': ${assembly_quast_logs.collect { log -> log.readLines().any { it.contains('Finished:') } }.every()}",
-                    "binning_quast_logs contains 'Finished:': ${binning_quast_logs.collect { log -> log.readLines().any { it.contains('Finished:') } }.every()}",
                     "busco_logs contains 'BUSCO analysis done.': ${busco_logs.collect { log -> log.readLines().any { it.contains('BUSCO analysis done.') } }.every()}",
                     "semibin2_logs contains 'Binning finished': ${semibin2_logs.collect { log -> log.readLines().any { it.contains('Binning finished') } }.every()}",
                     "bowtie2_logs contains 'overall alignment rate': ${bowtie2_logs.collect { log -> log.readLines().any { it.contains('overall alignment rate') } }.every()}",

@@ -37,7 +37,9 @@ include { PRODIGAL                                         } from '../modules/nf
 include { PROKKA                                           } from '../modules/nf-core/prokka/main'
 include { MMSEQS_DATABASES                                 } from '../modules/nf-core/mmseqs/databases/main'
 include { METAEUK_EASYPREDICT                              } from '../modules/nf-core/metaeuk/easypredict/main'
-include { QSV_CAT as CONCAT_QUAST_SUMMARY                  } from '../modules/nf-core/qsv/cat/main'
+include { QSV_CAT as CONCAT_SEQKIT_STATS_BINS              } from '../modules/nf-core/qsv/cat/main'
+include { SEQKIT_STATS as SEQKIT_STATS_ASSEMBLY            } from '../modules/nf-core/seqkit/stats/main'
+include { SEQKIT_STATS as SEQKIT_STATS_BINS                } from '../modules/nf-core/seqkit/stats/main'
 include { ALE                                              } from '../modules/nf-core/ale/main'
 include { SEQKIT_SEQ as SEQKIT_SEQ_MINCONTIGSIZE           } from '../modules/nf-core/seqkit/seq/main'
 include { SEQKIT_SEQ as SEQKIT_SEQ_MINCONTIGSIZE_CORRECTED } from '../modules/nf-core/seqkit/seq/main'
@@ -51,8 +53,6 @@ include { CHECKM2_DATABASEDOWNLOAD                         } from '../modules/nf
 //
 // MODULE: Local to the pipeline
 //
-include { QUAST                                            } from '../modules/local/quast_run/main'
-include { QUAST_BINS                                       } from '../modules/local/quast_bins/main'
 include { BIN_SUMMARY                                      } from '../modules/local/bin_summary/main'
 include { PREPARE_BIGMAG_SUMMARY                           } from '../modules/local/bigmag_summary/main'
 include { PYPOLCA_RUN                                      } from '../modules/nf-core/pypolca/run/main'
@@ -279,11 +279,9 @@ workflow MAG {
 
     ch_assemblies = ch_shortread_assemblies.mix(ch_longread_assemblies)
 
-    if (!params.skip_quast) {
-        QUAST(ch_assemblies)
-        ch_versions = ch_versions.mix(QUAST.out.versions)
-        ch_publish_assembly_qc = ch_publish_assembly_qc.mix(QUAST.out.qc.map { item -> toPublish('quast', item) })
-    }
+    SEQKIT_STATS_ASSEMBLY(ch_assemblies)
+    ch_versions = ch_versions.mix(SEQKIT_STATS_ASSEMBLY.out.versions)
+    ch_publish_assembly_qc = ch_publish_assembly_qc.mix(SEQKIT_STATS_ASSEMBLY.out.stats.map { item -> toPublish('seqkit', item) })
 
     /*
     ================================================================================
@@ -614,24 +612,17 @@ workflow MAG {
             ch_publish_binning = ch_publish_binning.mix(DEREPLICATION.out.publish.map { meta, tsv, bins -> [meta, [dereplication_tsv: tsv, dereplication_bins: bins]] })
         }
 
-        ch_quast_bins_summary = channel.empty()
-        if (!params.skip_quast) {
-            ch_input_for_quast_bins = ch_input_for_postbinning.map { meta, bins ->
-                [meta, [bins].flatten().toSorted { a, b -> a.getBaseName() <=> b.getBaseName() }]
-            }
+        SEQKIT_STATS_BINS(ch_input_for_postbinning)
+        ch_versions = ch_versions.mix(SEQKIT_STATS_BINS.out.versions)
 
-            QUAST_BINS(ch_input_for_quast_bins)
-            ch_versions = ch_versions.mix(QUAST_BINS.out.versions)
+        ch_seqkit_bin_stats = SEQKIT_STATS_BINS.out.stats
+            .collect { _meta, stats -> stats }
+            .map { stats -> [[id: 'seqkit_bin_summary'], stats.toSorted { a, b -> a.getName() <=> b.getName() }] }
 
-            ch_quast_bin_summaries = QUAST_BINS.out.quast_bin_summaries
-                .collect { _meta, summary -> summary }
-                .map { summaries -> [[id: 'quast_bin_summary'], summaries.toSorted { a, b -> a.getBaseName() <=> b.getBaseName() }] }
+        CONCAT_SEQKIT_STATS_BINS(ch_seqkit_bin_stats, 'rowskey', 'tsv', true)
 
-            CONCAT_QUAST_SUMMARY(ch_quast_bin_summaries, 'rowskey', 'tsv', true)
-
-            ch_quast_bins_summary = CONCAT_QUAST_SUMMARY.out.csv.map { _meta, summary -> summary }
-            ch_publish_bin_qc = ch_publish_bin_qc.mix(QUAST_BINS.out.dir.mix(QUAST_BINS.out.quast_bin_summaries, CONCAT_QUAST_SUMMARY.out.csv).map { item -> toPublish('summaries', item) })
-        }
+        ch_seqkit_bins_summary = CONCAT_SEQKIT_STATS_BINS.out.csv.map { _meta, summary -> summary }
+        ch_publish_bin_qc = ch_publish_bin_qc.mix(SEQKIT_STATS_BINS.out.stats.mix(CONCAT_SEQKIT_STATS_BINS.out.csv).map { item -> toPublish('summaries', item) })
 
         /*
          * CATPACK: bin / contig taxonomic classification
@@ -698,22 +689,20 @@ workflow MAG {
             ch_summarisepydamage = channel.empty()
         }
 
-        if ((!params.skip_binqc) || !params.skip_quast || !params.skip_gtdbtk) {
-            BIN_SUMMARY(
-                ch_input_for_binsummary,
-                ch_bin_binners,
-                ch_quast_bins_summary.ifEmpty([]),
-                ch_gtdbtk_summary.ifEmpty([]),
-                ch_catpack_summary.ifEmpty([]),
-                ch_busco_summary.ifEmpty([]),
-                ch_checkm_summary.ifEmpty([]),
-                ch_checkm2_summary.ifEmpty([]),
-                ch_summarisepydamage.ifEmpty([]),
-                ch_dereplication_cluster_tsv.ifEmpty([]),
-            )
-            ch_versions = ch_versions.mix(BIN_SUMMARY.out.versions)
-            ch_publish_binning = ch_publish_binning.mix(BIN_SUMMARY.out.summary.map { item -> toPublish('summary', item) })
-        }
+        BIN_SUMMARY(
+            ch_input_for_binsummary,
+            ch_bin_binners,
+            ch_seqkit_bins_summary.ifEmpty([]),
+            ch_gtdbtk_summary.ifEmpty([]),
+            ch_catpack_summary.ifEmpty([]),
+            ch_busco_summary.ifEmpty([]),
+            ch_checkm_summary.ifEmpty([]),
+            ch_checkm2_summary.ifEmpty([]),
+            ch_summarisepydamage.ifEmpty([]),
+            ch_dereplication_cluster_tsv.ifEmpty([]),
+        )
+        ch_versions = ch_versions.mix(BIN_SUMMARY.out.versions)
+        ch_publish_binning = ch_publish_binning.mix(BIN_SUMMARY.out.summary.map { item -> toPublish('summary', item) })
         if (params.generate_bigmag_file) {
             PREPARE_BIGMAG_SUMMARY(
                 BIN_SUMMARY.out.summary,
@@ -858,12 +847,9 @@ workflow MAG {
     // MODULE: MultiQC
     //
     ch_multiqc_files = ch_multiqc_files.mix(ch_collated_versions)
-    if (!params.skip_quast) {
-        ch_multiqc_files = ch_multiqc_files.mix(QUAST.out.report.collect().ifEmpty([]))
-
-        if (!params.skip_binning) {
-            ch_multiqc_files = ch_multiqc_files.mix(QUAST_BINS.out.dir.collect().ifEmpty([]))
-        }
+    ch_multiqc_files = ch_multiqc_files.mix(SEQKIT_STATS_ASSEMBLY.out.stats.collect { _meta, stats -> stats }.ifEmpty([]))
+    if (!params.skip_binning) {
+        ch_multiqc_files = ch_multiqc_files.mix(SEQKIT_STATS_BINS.out.stats.collect { _meta, stats -> stats }.ifEmpty([]))
     }
 
     // both mappings write identically named logs, so report only one of them

@@ -57,12 +57,12 @@ A run of nf-core/mag without any customisation or additional parameters will:
   - `SPAdesHybrid` if short and long reads are provided
   - `Flye` and `metaMDBG` if long reads are provided
 - Post-assembly tasks
-  - Quality control by `QUAST` and optionally `ALE`
+  - Quality control by `SeqKit` and optionally `ALE`
   - Annotate assemblies with `prodigal`
 - Group contigs
   - By binning with `MetaBat2`, `MaxBin2`, `CONCOCT`, `COMEBin`, `MetaBinner` and `SemiBin2`
 - Post-binning tasks
-  - Quality control bins with `QUAST` and `BUSCO`
+  - Quality control bins with `SeqKit` and `BUSCO`
   - Annotate bins with `PROKKA` (for bacteria and archaea), `Bakta` (for bacteria) and `MetaEuk` (for eukaryotes)
   - Taxonomically assign bins with `GTDB-Tk` (for bacteria and archaea)
 

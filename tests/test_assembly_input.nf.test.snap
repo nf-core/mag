@@ -98,38 +98,42 @@
                 "Assembly/MEGAHIT/QC/test_minigut/DeepMAsED/features/MEGAHIT-test_minigut-test_minigut_feats.tsv",
                 "Assembly/MEGAHIT/QC/test_minigut/DeepMAsED/features/test_minigut-MEGAHIT_feature_file_paths.tsv",
                 "Assembly/MEGAHIT/QC/test_minigut/DeepMAsED/test_minigut-MEGAHIT_predictions.tsv",
+                "Assembly/MEGAHIT/QC/test_minigut/MEGAHIT-test_minigut-assembly_stats.tsv",
                 "Assembly/MEGAHIT/QC/test_minigut/MEGAHIT-test_minigut-test_minigut_sample2.bowtie2.log",
                 "Assembly/MEGAHIT/QC/test_minigut/MEGAHIT-test_minigut.bowtie2.log",
                 "Assembly/MEGAHIT/QC/test_minigut/full_assembly/MEGAHIT-test_minigut.bowtie2.log",
                 "Assembly/MEGAHIT/QC/test_minigut_sample2/DeepMAsED/features/MEGAHIT-test_minigut_sample2-test_minigut_sample2_feats.tsv",
                 "Assembly/MEGAHIT/QC/test_minigut_sample2/DeepMAsED/features/test_minigut_sample2-MEGAHIT_feature_file_paths.tsv",
                 "Assembly/MEGAHIT/QC/test_minigut_sample2/DeepMAsED/test_minigut_sample2-MEGAHIT_predictions.tsv",
+                "Assembly/MEGAHIT/QC/test_minigut_sample2/MEGAHIT-test_minigut_sample2-assembly_stats.tsv",
                 "Assembly/MEGAHIT/QC/test_minigut_sample2/MEGAHIT-test_minigut_sample2-test_minigut.bowtie2.log",
                 "Assembly/MEGAHIT/QC/test_minigut_sample2/MEGAHIT-test_minigut_sample2.bowtie2.log",
                 "Assembly/MEGAHIT/QC/test_minigut_sample2/full_assembly/MEGAHIT-test_minigut_sample2.bowtie2.log",
                 "Assembly/SPAdes/QC/test_minigut/DeepMAsED/features/SPAdes-test_minigut-test_minigut_feats.tsv",
                 "Assembly/SPAdes/QC/test_minigut/DeepMAsED/features/test_minigut-SPAdes_feature_file_paths.tsv",
                 "Assembly/SPAdes/QC/test_minigut/DeepMAsED/test_minigut-SPAdes_predictions.tsv",
+                "Assembly/SPAdes/QC/test_minigut/SPAdes-test_minigut-assembly_stats.tsv",
                 "Assembly/SPAdes/QC/test_minigut/SPAdes-test_minigut-test_minigut_sample2.bowtie2.log",
                 "Assembly/SPAdes/QC/test_minigut/SPAdes-test_minigut.bowtie2.log",
                 "Assembly/SPAdes/QC/test_minigut/full_assembly/SPAdes-test_minigut.bowtie2.log",
                 "Assembly/SPAdes/QC/test_minigut_sample2/DeepMAsED/features/SPAdes-test_minigut_sample2-test_minigut_sample2_feats.tsv",
                 "Assembly/SPAdes/QC/test_minigut_sample2/DeepMAsED/features/test_minigut_sample2-SPAdes_feature_file_paths.tsv",
                 "Assembly/SPAdes/QC/test_minigut_sample2/DeepMAsED/test_minigut_sample2-SPAdes_predictions.tsv",
+                "Assembly/SPAdes/QC/test_minigut_sample2/SPAdes-test_minigut_sample2-assembly_stats.tsv",
                 "Assembly/SPAdes/QC/test_minigut_sample2/SPAdes-test_minigut_sample2-test_minigut.bowtie2.log",
                 "Assembly/SPAdes/QC/test_minigut_sample2/SPAdes-test_minigut_sample2.bowtie2.log",
                 "Assembly/SPAdes/QC/test_minigut_sample2/full_assembly/SPAdes-test_minigut_sample2.bowtie2.log"
             ]
         ],
-        "timestamp": "2026-10-05T18:32:40.720548053",
+        "timestamp": "2026-11-23T17:38:46.134263605",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
+            "nextflow": "26.10.6"
         }
     },
     "-profile assembly_input": {
         "content": [
-            139,
+            148,
             {
                 "BINETTE": {
                     "binette": "1.2.1"
@@ -156,6 +160,9 @@
                     "qsv": "5.1.0"
                 },
                 "CONCAT_GUNC_TSV": {
+                    "qsv": "5.1.0"
+                },
+                "CONCAT_SEQKIT_STATS_BINS": {
                     "qsv": "5.1.0"
                 },
                 "CONCOCT_CONCOCT": {
@@ -240,6 +247,12 @@
                 "SEQKIT_STATS": {
                     "seqkit": "2.9.0"
                 },
+                "SEQKIT_STATS_ASSEMBLY": {
+                    "seqkit": "2.9.0"
+                },
+                "SEQKIT_STATS_BINS": {
+                    "seqkit": "2.9.0"
+                },
                 "SPLIT_FASTA": {
                     "biopython": "1.74",
                     "pandas": "1.1.5",
@@ -250,10 +263,10 @@
                 }
             }
         ],
-        "timestamp": "2026-11-13T12:40:15.200862115",
+        "timestamp": "2026-11-23T17:38:46.09727027",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.10.5"
+            "nextflow": "26.10.6"
         }
     },
     "binning": {
@@ -441,8 +454,13 @@
                 "GenomeBinning/QC/GUNC/raw/MEGAHIT-DASTool-unclassified-dastool_refined-test_minigut/GUNC.progenomes_2.1.maxCSS_level.tsv",
                 "GenomeBinning/QC/GUNC/raw/SPAdes-Binette-unclassified-binette_refined-test_minigut/GUNC.progenomes_2.1.maxCSS_level.tsv",
                 "GenomeBinning/QC/GUNC/raw/SPAdes-DASTool-unclassified-dastool_refined-test_minigut/GUNC.progenomes_2.1.maxCSS_level.tsv",
+                "GenomeBinning/QC/MEGAHIT-Binette-unclassified-binette_refined-test_minigut-bin_stats.tsv",
+                "GenomeBinning/QC/MEGAHIT-DASTool-unclassified-dastool_refined-test_minigut-bin_stats.tsv",
+                "GenomeBinning/QC/SPAdes-Binette-unclassified-binette_refined-test_minigut-bin_stats.tsv",
+                "GenomeBinning/QC/SPAdes-DASTool-unclassified-dastool_refined-test_minigut-bin_stats.tsv",
                 "GenomeBinning/QC/busco_summary.tsv",
                 "GenomeBinning/QC/gunc_summary.tsv",
+                "GenomeBinning/QC/seqkit_bin_summary.tsv",
                 "GenomeBinning/bin_summary.tsv",
                 "GenomeBinning/contig_to_bin/contig_to_bin_map.tsv",
                 "GenomeBinning/depths/bins/bin_depths_summary.tsv",
@@ -590,16 +608,21 @@
                 "GUNC.progenomes_2.1.maxCSS_level.tsv:md5,918dd147fc3706acd0ec1b8cd9eb4e48",
                 "GUNC.progenomes_2.1.maxCSS_level.tsv:md5,bd81873ed240e2a04d07d353eaffb33b",
                 "GUNC.progenomes_2.1.maxCSS_level.tsv:md5,07980c2ff290ddc651dad1ce0671bb3b",
+                "MEGAHIT-Binette-unclassified-binette_refined-test_minigut-bin_stats.tsv:md5,a871e7f37bb2be1273fede5e475dfba1",
+                "MEGAHIT-DASTool-unclassified-dastool_refined-test_minigut-bin_stats.tsv:md5,99a996953f8690d6712e053c00781d8b",
+                "SPAdes-Binette-unclassified-binette_refined-test_minigut-bin_stats.tsv:md5,67b8eefd908ddbafadd2e17dc85204f0",
+                "SPAdes-DASTool-unclassified-dastool_refined-test_minigut-bin_stats.tsv:md5,52b164afadb0d36c1bc0e20dba2b0111",
                 "gunc_summary.tsv:md5,3247401b30b1fe85b23b81cd730dbf28",
-                "bin_summary.tsv:md5,2a604ebba94b2d515271329339fb106c",
+                "seqkit_bin_summary.tsv:md5,09f30d8a97fd09a578c40a5331cce598",
+                "bin_summary.tsv:md5,5fecb682dbf2246d63a632c9e33d04a7",
                 "contig_to_bin_map.tsv:md5,b59bac2a922d1be03c3aebbe0aaa50c4",
                 "bin_depths_summary.tsv:md5,9650b9751b9379a45ab91db801a900ff"
             ]
         ],
-        "timestamp": "2026-11-13T12:40:16.298051776",
+        "timestamp": "2026-11-23T17:38:46.442361202",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.10.5"
+            "nextflow": "26.10.6"
         }
     },
     "csv-rows": {
@@ -635,8 +658,12 @@
                 "multiqc/multiqc_data/multiqc_data.json",
                 "multiqc/multiqc_data/multiqc_fastqc.yaml",
                 "multiqc/multiqc_data/multiqc_general_stats.yaml",
+                "multiqc/multiqc_data/multiqc_seqkit_stats.yaml",
+                "multiqc/multiqc_data/multiqc_seqkit_stats_seqkit-1.yaml",
                 "multiqc/multiqc_data/multiqc_software_versions.yaml",
                 "multiqc/multiqc_data/multiqc_sources.yaml",
+                "multiqc/multiqc_data/seqkit-stats-seqcounts-plot.yaml",
+                "multiqc/multiqc_data/seqkit-stats-table.yaml",
                 "multiqc/multiqc_plots/pdf/bowtie2_pe_plot-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/bowtie2_pe_plot-pct.pdf",
                 "multiqc/multiqc_plots/pdf/busco_plot_bacteria_odb10-cnt.pdf",
@@ -650,6 +677,8 @@
                 "multiqc/multiqc_plots/pdf/fastqc_sequence_counts_plot-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc_sequence_counts_plot-pct.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc_sequence_duplication_levels_plot.pdf",
+                "multiqc/multiqc_plots/pdf/seqkit-stats-seqcounts-plot.pdf",
+                "multiqc/multiqc_plots/pdf/seqkit-stats-table.pdf",
                 "multiqc/multiqc_plots/png/bowtie2_pe_plot-cnt.png",
                 "multiqc/multiqc_plots/png/bowtie2_pe_plot-pct.png",
                 "multiqc/multiqc_plots/png/busco_plot_bacteria_odb10-cnt.png",
@@ -663,6 +692,8 @@
                 "multiqc/multiqc_plots/png/fastqc_sequence_counts_plot-cnt.png",
                 "multiqc/multiqc_plots/png/fastqc_sequence_counts_plot-pct.png",
                 "multiqc/multiqc_plots/png/fastqc_sequence_duplication_levels_plot.png",
+                "multiqc/multiqc_plots/png/seqkit-stats-seqcounts-plot.png",
+                "multiqc/multiqc_plots/png/seqkit-stats-table.png",
                 "multiqc/multiqc_plots/svg/bowtie2_pe_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/bowtie2_pe_plot-pct.svg",
                 "multiqc/multiqc_plots/svg/busco_plot_bacteria_odb10-cnt.svg",
@@ -676,6 +707,8 @@
                 "multiqc/multiqc_plots/svg/fastqc_sequence_counts_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/fastqc_sequence_counts_plot-pct.svg",
                 "multiqc/multiqc_plots/svg/fastqc_sequence_duplication_levels_plot.svg",
+                "multiqc/multiqc_plots/svg/seqkit-stats-seqcounts-plot.svg",
+                "multiqc/multiqc_plots/svg/seqkit-stats-table.svg",
                 "multiqc/multiqc_report.html"
             ],
             [
@@ -691,15 +724,19 @@
                 "fastqc_sequence_duplication_levels_plot.yaml:md5,12e97e035fe5b0a924d47873e215c6c2",
                 "multiqc_bowtie2_bowtie2-2.yaml:md5,f9bfad19fc83c17a4ef2234daea6cee4",
                 "multiqc_busco.yaml:md5,9122abe810dc01c10531cb635b21644e",
-                "multiqc_citations.yaml:md5,4aaa7714bb3dba1dd50f383c2ae4f4bb",
+                "multiqc_citations.yaml:md5,6b51fa17235008272f1585227cdb196e",
                 "multiqc_fastqc.yaml:md5,155b77ad8c6ac1a8ed2fd4e6b2086f30",
-                "multiqc_general_stats.yaml:md5,f50f7c8bc699b4c0b89fd2e68157553b"
+                "multiqc_general_stats.yaml:md5,fb46321ae1ffbb8f24a7d5bbf93b59ec",
+                "multiqc_seqkit_stats.yaml:md5,b5f054cf7ec745dc50c7b68ad7421d14",
+                "multiqc_seqkit_stats_seqkit-1.yaml:md5,7fdff3fa9f224a0adbb9ef3b965bfaef",
+                "seqkit-stats-seqcounts-plot.yaml:md5,1284480bac9422d38365408047907a9a",
+                "seqkit-stats-table.yaml:md5,8f0425cf1b7741e9d1ad77ed58f5a825"
             ]
         ],
-        "timestamp": "2026-11-06T13:28:56.766695856",
+        "timestamp": "2026-11-23T17:54:08.976234155",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.0"
+            "nextflow": "26.10.6"
         }
     }
 }

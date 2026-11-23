@@ -675,10 +675,6 @@
                     "type": "boolean",
                     "description": "Enable ALE per-base output. This output can be very large (tens of GB)."
                 },
-                "skip_quast": {
-                    "type": "boolean",
-                    "description": "Skip metaQUAST."
-                },
                 "skip_metamdbg": {
                     "type": "boolean",
                     "description": "Skip MetaDBG assembly."
@@ -1128,7 +1124,7 @@
                 "generate_bigmag_file": {
                     "type": "boolean",
                     "description": "Make a BIgMAG input file including GUNC results.",
-                    "help_text": "It requires --run_gunc and --run_checkm2 to be executed. BINQC, GTDB-TK, QUAST nor BUSCO can't be skipped."
+                    "help_text": "It requires --run_gunc and --run_checkm2 to be executed. BINQC, GTDB-TK nor BUSCO can't be skipped."
                 },
                 "dereplicate": {
                     "type": "boolean",

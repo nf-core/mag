@@ -39,7 +39,7 @@ def main(args=None):
         )
 
     df_summary = pd.read_csv(args.summary, sep='\t')
-    df_summary.columns = df_summary.columns.str.replace(r'(_busco|_checkm2|_checkm|_gtdbtk|_gunc|_quast)$', '', regex=True)
+    df_summary.columns = df_summary.columns.str.replace(r'(_busco|_checkm2|_checkm|_gtdbtk|_gunc)$', '', regex=True)
     for i in range(len(df_summary["bin"])):
         name = df_summary["bin"][i]
         name = re.sub(r'\.(fa|fasta)(\..*)?$', '', name)

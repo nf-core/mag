@@ -30,9 +30,6 @@ nextflow_pipeline {
             def stable_path_assembly = getAllFilesFromDir(
                 params.outdir, include: ['Assembly/**'], ignoreFile: 'tests/.nftignore'
             )
-            def assembly_quast_logs = getAllFilesFromDir(
-                params.outdir, include: ['Assembly/MEGAHIT/QC/*/QUAST/quast.log']
-            )
 
             // Output dir: Ancient_DNA
             def stable_name_ancient = getAllFilesFromDir(
@@ -61,9 +58,6 @@ nextflow_pipeline {
             def checkm_logs = getAllFilesFromDir(
                 params.outdir, include: ['GenomeBinning/QC/CheckM/*/checkm.log']
             )
-            def binning_quast_logs = getAllFilesFromDir(
-                params.outdir, include: ['GenomeBinning/QC/QUAST/*/quast.log']
-            )
             def concoct_bins = getAllFilesFromDir(
                 params.outdir, include: ['GenomeBinning/CONCOCT/bins/*.fa.gz']
             )
@@ -81,7 +75,7 @@ nextflow_pipeline {
             )
             def bin_summary = path("${params.outdir}/GenomeBinning/bin_summary.tsv")
             def checkm_summary = path("${params.outdir}/GenomeBinning/QC/checkm_summary.tsv")
-            def quast_bin_summary = path("${params.outdir}/GenomeBinning/QC/quast_bin_summary.tsv")
+            def seqkit_bin_summary = path("${params.outdir}/GenomeBinning/QC/seqkit_bin_summary.tsv")
             def dereplicated_bins = getAllFilesFromDir(
                 params.outdir, include: ['GenomeBinning/Dereplication/dereplicated_bins/*.fa.gz']
             )
@@ -184,7 +178,7 @@ nextflow_pipeline {
                     "Bin summary non-empty: ${bin_summary.csv(sep: '\t').rowCount > 0}",
                     "Bin summary row count matches bins: ${bin_summary.csv(sep: '\t').rowCount == concoct_bins.size() + maxbin2_bins.size() + metabat2_bins.size()}",
                     "CheckM summary non-empty: ${checkm_summary.csv(sep: '\t').rowCount > 0}",
-                    "QUAST bin summary non-empty: ${quast_bin_summary.csv(sep: '\t').rowCount > 0}",
+                    "SeqKit bin summary non-empty: ${seqkit_bin_summary.csv(sep: '\t').rowCount > 0}",
                     "BAT summary non-empty: ${bat_summary.text.readLines().size() > 1}",
                     "GTDB-Tk summary non-empty: ${gtdbtk_summary.csv(sep: '\t').rowCount > 0}",
                     // Dereplication result checks
@@ -208,15 +202,13 @@ nextflow_pipeline {
                 { assert snapshot(
                     "Bin summary: ${bin_summary.csv(sep: '\t').rowCount}",
                     "CheckM summary: ${checkm_summary.csv(sep: '\t').rowCount}",
-                    "QUAST bin summary: ${quast_bin_summary.csv(sep: '\t').rowCount}",
+                    "SeqKit bin summary: ${seqkit_bin_summary.csv(sep: '\t').rowCount}",
                     "BAT summary: ${bat_summary.text.readLines().size() - 1}",  // CAT output is not a proper TSV
                     "GTDB-Tk summary: ${gtdbtk_summary.csv(sep: '\t').rowCount}",
                     "Dereplicated bins: ${dereplicated_bins.size()}",
                 ).match("summary-rows") },
 
                 { assert snapshot(
-                    "assembly QUAST: ${assembly_quast_logs.collect { log -> log.readLines().any { it.contains('Finished:') } }.every()}",
-                    "binning QUAST: ${binning_quast_logs.collect { log -> log.readLines().any { it.contains('Finished:') } }.every()}",
                     "CheckM: ${checkm_logs.collect { log -> log.readLines().any { it.contains('QA information written to:') } }.every()}",
                     "Prokka: ${prokka_logs.collect { log -> log.readLines().any { it.contains('Annotation finished successfully.') } }.every()}",
                     "BAT: ${bat_logs.collect { log -> log.readLines().any { it.contains('BAT is done!') } }.every()}",
