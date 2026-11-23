@@ -26,6 +26,13 @@ workflow BINNING {
 
     ch_versions = channel.empty()
     ch_input_splitfasta = channel.empty()
+    ch_publish_metabat2 = channel.empty()
+    ch_publish_maxbin2 = channel.empty()
+    ch_publish_concoct_stats = channel.empty()
+    ch_publish_concoct_bins = channel.empty()
+    ch_publish_comebin = channel.empty()
+    ch_publish_metabinner = channel.empty()
+    ch_publish_semibin = channel.empty()
 
     // generate coverage depths for each contig and branch by assembler type
     ch_summarizedepth_input = ch_assemblies
@@ -84,6 +91,9 @@ workflow BINNING {
 
         ch_bins_for_seqkit = ch_bins_for_seqkit.mix(METABAT2_METABAT2.out.fasta)
         ch_input_splitfasta = ch_input_splitfasta.mix(METABAT2_METABAT2.out.unbinned)
+        ch_publish_metabat2 = METABAT2_METABAT2.out.fasta
+            .join(METABAT2_METABAT2.out.tooshort, remainder: true)
+            .join(METABAT2_METABAT2.out.lowdepth, remainder: true)
     }
 
     // MaxBin2
@@ -93,6 +103,10 @@ workflow BINNING {
 
         ch_bins_for_seqkit = ch_bins_for_seqkit.mix(MAXBIN2.out.binned_fastas)
         ch_input_splitfasta = ch_input_splitfasta.mix(MAXBIN2.out.unbinned_fasta)
+        ch_publish_maxbin2 = MAXBIN2.out.binned_fastas
+            .join(MAXBIN2.out.tooshort_fasta)
+            .join(MAXBIN2.out.summary)
+            .join(MAXBIN2.out.abundance, remainder: true)
     }
 
     // CONCOCT
@@ -119,6 +133,17 @@ workflow BINNING {
         FASTA_BINNING_CONCOCT(ch_concoct_input.bins, ch_concoct_input.bams)
 
         ch_bins_for_seqkit = ch_bins_for_seqkit.mix(FASTA_BINNING_CONCOCT.out.bins)
+        ch_publish_concoct_stats = FASTA_BINNING_CONCOCT.out.coverage_table.mix(
+            FASTA_BINNING_CONCOCT.out.original_csv,
+            FASTA_BINNING_CONCOCT.out.raw_clustering_csv,
+            FASTA_BINNING_CONCOCT.out.pca_original,
+            FASTA_BINNING_CONCOCT.out.pca_transformed,
+            FASTA_BINNING_CONCOCT.out.args_txt,
+            FASTA_BINNING_CONCOCT.out.log_txt,
+            FASTA_BINNING_CONCOCT.out.cluster_table,
+        )
+        // one bin per element, as bins are published flattened out of their subdirectory
+        ch_publish_concoct_bins = FASTA_BINNING_CONCOCT.out.bins.flatMap { meta, bins -> [bins].flatten().collect { bin -> [meta, bin] } }
     }
 
     // COMEBin
@@ -132,6 +157,11 @@ workflow BINNING {
         ch_versions = ch_versions.mix(COMEBIN_RUNCOMEBIN.out.versions)
 
         ch_bins_for_seqkit = ch_bins_for_seqkit.mix(COMEBIN_RUNCOMEBIN.out.bins)
+        ch_publish_comebin = COMEBIN_RUNCOMEBIN.out.bins
+            .join(COMEBIN_RUNCOMEBIN.out.tsv)
+            .join(COMEBIN_RUNCOMEBIN.out.log)
+            .join(COMEBIN_RUNCOMEBIN.out.embeddings)
+            .join(COMEBIN_RUNCOMEBIN.out.covembeddings)
     }
 
     // MetaBinner
@@ -146,6 +176,7 @@ workflow BINNING {
 
         ch_bins_for_seqkit = ch_bins_for_seqkit.mix(BINNING_METABINNER.out.bins)
         ch_input_splitfasta = ch_input_splitfasta.mix(BINNING_METABINNER.out.unbinned)
+        ch_publish_metabinner = BINNING_METABINNER.out.publish
     }
 
     // SemiBin2
@@ -167,6 +198,7 @@ workflow BINNING {
         }
 
         ch_bins_for_seqkit = ch_bins_for_seqkit.mix(ch_semibin_bins)
+        ch_publish_semibin = SEMIBIN_SINGLEEASYBIN.out.output_fasta.join(SEMIBIN_SINGLEEASYBIN.out.log, remainder: true)
     }
 
     // Performance note: grouping seqkit jobs by sample across binners locks
@@ -221,8 +253,18 @@ workflow BINNING {
     ch_versions = ch_versions.mix(SPLIT_FASTA.out.versions)
 
     emit:
-    bins           = ch_binning_results
-    unbinned       = SPLIT_FASTA.out.unbinned
-    metabat2depths = ch_combined_depths
-    versions       = ch_versions
+    bins                  = ch_binning_results
+    unbinned              = SPLIT_FASTA.out.unbinned
+    metabat2depths        = ch_combined_depths
+    versions              = ch_versions
+    publish               = ch_publish_metabat2.map { meta, bins, tooshort, lowdepth -> [meta, [metabat2_bins: bins, metabat2_tooshort: tooshort, metabat2_lowdepth: lowdepth]] }
+        .mix(
+            ch_publish_maxbin2.map { meta, bins, tooshort, summary, abundance -> [meta, [maxbin2_bins: bins, maxbin2_tooshort: tooshort, maxbin2_summary: summary, maxbin2_abundance: abundance]] },
+            ch_publish_concoct_stats.map { meta, f -> [meta, [concoct_stats: f]] },
+            ch_publish_concoct_bins.map { meta, f -> [meta, [concoct_bin: f]] },
+            ch_publish_comebin.map { meta, bins, tsv, log, embeddings, covembeddings -> [meta, [comebin_bins: bins, comebin_tsv: tsv, comebin_log: log, comebin_embeddings: embeddings, comebin_covembeddings: covembeddings]] },
+            ch_publish_metabinner.map { meta, membership, log, bins, unbinned -> [meta, [metabinner_membership: membership, metabinner_log: log, metabinner_bins: bins, metabinner_unbinned: unbinned]] },
+            ch_publish_semibin.map { meta, bins, log -> [meta, [semibin_bins: bins, semibin_log: log]] },
+            SPLIT_FASTA.out.unbinned.join(SPLIT_FASTA.out.pooled, remainder: true).map { meta, unbinned, pooled -> [meta, [unbinned: unbinned, unbinned_pooled: pooled]] },
+        ) // [val(meta), val(record)]
 }

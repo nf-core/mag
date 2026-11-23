@@ -11,6 +11,7 @@ workflow LONGREAD_ASSEMBLY {
 
     main:
     ch_assembled_contigs = channel.empty()
+    ch_publish = channel.empty()
     ch_versions = channel.empty()
 
     if (!params.skip_flye) {
@@ -47,6 +48,9 @@ workflow LONGREAD_ASSEMBLY {
             [meta_new, assembly]
         }
         ch_assembled_contigs = ch_assembled_contigs.mix(ch_flye_assemblies)
+        ch_publish = ch_publish
+            .mix(FLYE.out.fasta, FLYE.out.gfa, FLYE.out.txt, FLYE.out.log)
+            .map { meta, files -> [meta + [assembler: 'FLYE'], files] }
     }
 
     if (!params.skip_metamdbg) {
@@ -83,9 +87,13 @@ workflow LONGREAD_ASSEMBLY {
             [meta_new, assembly]
         }
         ch_assembled_contigs = ch_assembled_contigs.mix(ch_metamdbg_assemblies)
+        ch_publish = ch_publish.mix(
+            METAMDBG_ASM.out.contigs.mix(METAMDBG_ASM.out.log).map { meta, files -> [meta + [assembler: 'METAMDBG'], files] }
+        )
     }
 
     emit:
     assembled_contigs = ch_assembled_contigs
     versions          = ch_versions
+    publish           = ch_publish // [val(meta), path(files)]
 }

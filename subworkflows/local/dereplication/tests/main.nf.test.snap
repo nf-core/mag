@@ -32,6 +32,18 @@
                         "dereplicated_bins.tsv:md5,e4eee6bbc3e7186884ebf829f468b4c0"
                     ]
                 ],
+                "2": [
+                    [
+                        {
+                            "id": "study"
+                        },
+                        "dereplicated_bins.tsv:md5,e4eee6bbc3e7186884ebf829f468b4c0",
+                        [
+                            "SPAdes-MetaBAT2-sample1.fa.gz:md5,fe93f30498a00395d0aa61ff51346df0",
+                            "SPAdes-MetaBAT2-sample2.fa.gz:md5,d2b13175217b96d0ed2881ccdb510357"
+                        ]
+                    ]
+                ],
                 "cluster_tsv": [
                     [
                         {
@@ -61,13 +73,25 @@
                         },
                         "SPAdes-MetaBAT2-sample2.fa.gz:md5,d2b13175217b96d0ed2881ccdb510357"
                     ]
+                ],
+                "publish": [
+                    [
+                        {
+                            "id": "study"
+                        },
+                        "dereplicated_bins.tsv:md5,e4eee6bbc3e7186884ebf829f468b4c0",
+                        [
+                            "SPAdes-MetaBAT2-sample1.fa.gz:md5,fe93f30498a00395d0aa61ff51346df0",
+                            "SPAdes-MetaBAT2-sample2.fa.gz:md5,d2b13175217b96d0ed2881ccdb510357"
+                        ]
+                    ]
                 ]
             }
         ],
-        "timestamp": "2026-10-23T12:38:04.019265238",
+        "timestamp": "2026-11-02T01:48:50.796569912",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nextflow": "26.10.3"
         }
     }
 }

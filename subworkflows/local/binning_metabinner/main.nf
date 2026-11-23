@@ -30,4 +30,8 @@ workflow BINNING_METABINNER {
     unbinned = METABINNER_BINS.out.unbinned
     bins     = METABINNER_BINS.out.bins
     versions = ch_versions // channel: [ versions.yml ]
+    publish  = METABINNER_METABINNER.out.membership
+        .join(METABINNER_METABINNER.out.log)
+        .join(METABINNER_BINS.out.bins, remainder: true)
+        .join(METABINNER_BINS.out.unbinned, remainder: true) // [val(meta), path(membership), path(log), path(bins), path(unbinned)]
 }

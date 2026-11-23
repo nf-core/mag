@@ -10,6 +10,7 @@ workflow HYBRID_ASSEMBLY {
 
     ch_versions = channel.empty()
     ch_assembled_contigs = channel.empty()
+    ch_publish = channel.empty()
 
     if (!params.single_end && !params.skip_spadeshybrid) {
         ch_short_reads_spades_tmp = ch_short_reads_spades.map { meta, reads -> [meta.id, meta, reads] }
@@ -35,9 +36,13 @@ workflow HYBRID_ASSEMBLY {
             [meta_new, assembly]
         }
         ch_assembled_contigs = ch_assembled_contigs.mix(ch_spadeshybrid_assemblies)
+        ch_publish = ch_publish
+            .mix(METASPADESHYBRID.out.scaffolds, METASPADESHYBRID.out.contigs, METASPADESHYBRID.out.transcripts, METASPADESHYBRID.out.gene_clusters, METASPADESHYBRID.out.gfa, METASPADESHYBRID.out.warnings, METASPADESHYBRID.out.log)
+            .map { meta, files -> [meta + [assembler: 'SPAdesHybrid'], files] }
     }
 
     emit:
     assembled_contigs = ch_assembled_contigs
     versions          = ch_versions
+    publish           = ch_publish // [val(meta), path(files)]
 }

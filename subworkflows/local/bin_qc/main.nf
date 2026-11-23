@@ -30,6 +30,15 @@ workflow BIN_QC {
     ch_checkm_final_summaries = channel.empty()
     ch_checkm2_final_summaries = channel.empty()
     ch_gunc_summary = channel.empty()
+    ch_publish_busco = channel.empty()
+    ch_publish_busco_db = channel.empty()
+    ch_publish_checkm_db = channel.empty()
+    ch_publish_checkm = channel.empty()
+    ch_publish_checkm2 = channel.empty()
+    ch_publish_gunc_db = channel.empty()
+    ch_publish_gunc_raw = channel.empty()
+    ch_publish_gunc_checkm = channel.empty()
+    ch_publish_summaries = channel.empty()
 
     /*
     ================================
@@ -54,6 +63,7 @@ workflow BIN_QC {
         ch_versions = ch_versions.mix(CHECKM_UNTAR.out.versions)
 
         ch_checkm_db = CHECKM_UNTAR.out.untar.map { _meta, db -> db }
+        ch_publish_checkm_db = CHECKM_UNTAR.out.untar
     }
     else {
         ch_checkm_db = []
@@ -106,6 +116,14 @@ workflow BIN_QC {
         ch_qc_metrics = ch_qc_metrics.mix(
             BUSCO_BUSCO.out.batch_summary.map { meta, summary -> [meta, 'busco', summary] }
         )
+        ch_publish_busco = BUSCO_BUSCO.out.batch_summary.mix(
+            BUSCO_BUSCO.out.batch_summary_failed,
+            BUSCO_BUSCO.out.short_summaries_txt,
+            BUSCO_BUSCO.out.short_summaries_json,
+            BUSCO_BUSCO.out.log,
+        )
+        ch_publish_busco_db = BUSCO_BUSCO.out.downloaded_lineages
+        ch_publish_summaries = ch_publish_summaries.mix(CONCAT_BUSCO_TSV.out.csv)
     }
     if (params.run_checkm) {
         /*
@@ -150,6 +168,13 @@ workflow BIN_QC {
         ch_qc_metrics = ch_qc_metrics.mix(
             CHECKM_QA.out.output.map { meta, summary -> [meta, 'checkm', summary] }
         )
+        // lineage.ms (marker_file) is published as part of the CheckM output directory
+        ch_publish_checkm = CHECKM_LINEAGEWF.out.checkm_output.mix(
+            CHECKM_LINEAGEWF.out.checkm_tsv,
+            CHECKM_QA.out.output,
+            CHECKM_QA.out.fasta,
+        )
+        ch_publish_summaries = ch_publish_summaries.mix(CONCAT_CHECKM_TSV.out.csv)
     }
     if (params.run_checkm2) {
         /*
@@ -175,6 +200,8 @@ workflow BIN_QC {
         ch_qc_metrics = ch_qc_metrics.mix(
             CHECKM2_PREDICT.out.checkm2_tsv.map { meta, summary -> [meta, 'checkm2', summary] }
         )
+        ch_publish_checkm2 = CHECKM2_PREDICT.out.checkm2_output.mix(CHECKM2_PREDICT.out.checkm2_tsv)
+        ch_publish_summaries = ch_publish_summaries.mix(CONCAT_CHECKM2_TSV.out.csv)
     }
 
     if (params.run_gunc) {
@@ -190,6 +217,7 @@ workflow BIN_QC {
         }
         else {
             ch_db_for_gunc = GUNC_DOWNLOADDB(params.gunc_database_type).db
+            ch_publish_gunc_db = ch_db_for_gunc
         }
 
         GUNC_RUN(ch_input_bins_for_gunc, ch_db_for_gunc)
@@ -201,6 +229,8 @@ workflow BIN_QC {
         CONCAT_GUNC_TSV(gunc_summaries, 'rowskey', 'tsv', true)
 
         ch_gunc_summary = CONCAT_GUNC_TSV.out.csv.map { _meta, csv -> csv }
+        ch_publish_gunc_raw = GUNC_RUN.out.maxcss_level_tsv.mix(GUNC_RUN.out.all_levels_tsv)
+        ch_publish_summaries = ch_publish_summaries.mix(CONCAT_GUNC_TSV.out.csv)
 
         if (params.run_checkm) {
             ch_input_to_mergecheckm = GUNC_RUN.out.maxcss_level_tsv.combine(CHECKM_QA.out.output, by: 0)
@@ -212,15 +242,30 @@ workflow BIN_QC {
                 .groupTuple()
 
             CONCAT_GUNC_CHECKM_TSV(gunc_checkm_summaries, 'rowskey', 'tsv', true)
+            ch_publish_gunc_checkm = GUNC_MERGECHECKM.out.tsv
+            ch_publish_summaries = ch_publish_summaries.mix(CONCAT_GUNC_CHECKM_TSV.out.csv)
         }
     }
 
     emit:
-    qc_metrics      = ch_qc_metrics
-    busco_summary   = ch_busco_final_summaries
-    checkm_summary  = ch_checkm_final_summaries
-    checkm2_summary = ch_checkm2_final_summaries
-    gunc_summary    = ch_gunc_summary
-    multiqc_files   = ch_multiqc_files
-    versions        = ch_versions
+    qc_metrics          = ch_qc_metrics
+    busco_summary       = ch_busco_final_summaries
+    checkm_summary      = ch_checkm_final_summaries
+    checkm2_summary     = ch_checkm2_final_summaries
+    gunc_summary        = ch_gunc_summary
+    multiqc_files       = ch_multiqc_files
+    versions            = ch_versions
+    publish             = ch_publish_busco.map { meta, f -> [meta, [busco: f]] }
+        .mix(
+            ch_publish_checkm.map { meta, f -> [meta, [checkm: f]] },
+            ch_publish_checkm2.map { meta, f -> [meta, [checkm2: f]] },
+            ch_publish_gunc_raw.map { meta, f -> [meta, [gunc_raw: f]] },
+            ch_publish_gunc_checkm.map { meta, f -> [meta, [gunc_checkm: f]] },
+            ch_publish_summaries.map { meta, f -> [meta, [summaries: f]] },
+        ) // [val(meta), val(record)]
+    publish_db          = ch_publish_busco_db.map { meta, f -> [meta, [busco_db: f]] }
+        .mix(
+            ch_publish_checkm_db.map { meta, f -> [meta, [checkm_db: f]] },
+            ch_publish_gunc_db.map { f -> [[:], [gunc_db: f]] },
+        ) // [val(meta), val(record)]
 }
