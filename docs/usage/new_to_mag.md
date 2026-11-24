@@ -188,9 +188,9 @@ Short-read polishing of long-read assemblies is available with `--run_pypolca`, 
 It is turned off by default, and long-read assemblies of samples without short reads are passed on unpolished.
 Long-read polishing (for example, with `Medaka`) is _not_ implemented in the pipeline.
 
-For metagenomes, polishing can harm assembly quality by erroneously modifying low-abundance genomes using high-abundance data.
-High-quality Nanopore data (10.4) may not benefit substantially from long-read polishing.
-Polishing long-read assemblies with short-read data might be beneficial but remains debated, so evaluate the results (for example, with `seqkit stats`) before relying on them.
+For metagenomes, polishing can harm assembly quality: reads from closely related, more abundant strains may erroneously "correct" low-abundance genomes.
+High-quality Nanopore data (R10.4.1) may not benefit substantially from long-read polishing.
+Polishing long-read assemblies with short reads may help but remains debated, so compare results with and without polishing (e.g., using [Merqury](https://github.com/marbl/merqury), or bin completeness and contamination from BUSCO/CheckM2) before relying on them.
 
 ### What binning tool should I select?
 
