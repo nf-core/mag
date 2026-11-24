@@ -255,7 +255,7 @@
                 "CONCAT_BUSCO_TSV": {
                     "qsv": "5.1.0"
                 },
-                "CONCAT_QUAST_SUMMARY": {
+                "CONCAT_SEQKIT_STATS_BINS": {
                     "qsv": "5.1.0"
                 },
                 "CONVERT_DEPTHS": {
@@ -326,14 +326,6 @@
                 "PROKKA": {
                     "prokka": "1.15.6"
                 },
-                "QUAST": {
-                    "metaquast": "5.0.2",
-                    "python": "3.7.6"
-                },
-                "QUAST_BINS": {
-                    "metaquast": "5.0.2",
-                    "python": "3.7.6"
-                },
                 "SAMTOOLS_HOSTREMOVED_INDEX": {
                     "samtools": "1.22.1"
                 },
@@ -352,6 +344,12 @@
                 "SEQKIT_STATS": {
                     "seqkit": "2.9.0"
                 },
+                "SEQKIT_STATS_ASSEMBLY": {
+                    "seqkit": "2.9.0"
+                },
+                "SEQKIT_STATS_BINS": {
+                    "seqkit": "2.9.0"
+                },
                 "SPLIT_FASTA": {
                     "biopython": "1.74",
                     "pandas": "1.1.5",
@@ -362,26 +360,24 @@
                 }
             }
         ],
-        "timestamp": "2026-10-28T00:46:55.249111645",
+        "timestamp": "2026-11-23T17:40:21.846890739",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.10.3"
+            "nextflow": "26.10.6"
         }
     },
     "log-checks": {
         "content": [
             "spades_logs contains 'SPAdes pipeline finished.': true",
-            "assembly_quast_logs contains 'Finished:': true",
-            "binning_quast_logs contains 'Finished:': true",
             "busco_logs contains 'BUSCO analysis done.': true",
             "semibin2_logs contains 'Binning finished': true",
             "bowtie2_logs contains 'overall alignment rate': true",
             "prokka_logs contains 'Annotation finished successfully.': true"
         ],
-        "timestamp": "2026-06-26T15:16:45.477590782",
+        "timestamp": "2026-11-23T17:40:25.98797693",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nextflow": "26.10.6"
         }
     },
     "qc_longreads": {
@@ -444,27 +440,7 @@
     "assembly": {
         "content": [
             [
-                "Assembly/SPAdesHybrid/QC/group-0/QUAST/basic_stats/GC_content_plot.pdf",
-                "Assembly/SPAdesHybrid/QC/group-0/QUAST/basic_stats/Nx_plot.pdf",
-                "Assembly/SPAdesHybrid/QC/group-0/QUAST/basic_stats/SPAdesHybrid-group-0_GC_content_plot.pdf",
-                "Assembly/SPAdesHybrid/QC/group-0/QUAST/basic_stats/SPAdesHybrid-group-0_coverage_histogram.pdf",
-                "Assembly/SPAdesHybrid/QC/group-0/QUAST/basic_stats/coverage_histogram.pdf",
-                "Assembly/SPAdesHybrid/QC/group-0/QUAST/basic_stats/cumulative_plot.pdf",
-                "Assembly/SPAdesHybrid/QC/group-0/QUAST/icarus.html",
-                "Assembly/SPAdesHybrid/QC/group-0/QUAST/icarus_viewers/contig_size_viewer.html",
-                "Assembly/SPAdesHybrid/QC/group-0/QUAST/metaquast.log",
-                "Assembly/SPAdesHybrid/QC/group-0/QUAST/predicted_genes/SPAdesHybrid-group-0.rna.gff",
-                "Assembly/SPAdesHybrid/QC/group-0/QUAST/predicted_genes/barrnap.log",
-                "Assembly/SPAdesHybrid/QC/group-0/QUAST/quast.log",
-                "Assembly/SPAdesHybrid/QC/group-0/QUAST/report.html",
-                "Assembly/SPAdesHybrid/QC/group-0/QUAST/report.pdf",
-                "Assembly/SPAdesHybrid/QC/group-0/QUAST/report.tex",
-                "Assembly/SPAdesHybrid/QC/group-0/QUAST/report.tsv",
-                "Assembly/SPAdesHybrid/QC/group-0/QUAST/report.txt",
-                "Assembly/SPAdesHybrid/QC/group-0/QUAST/report_rawassemblies.tsv",
-                "Assembly/SPAdesHybrid/QC/group-0/QUAST/transposed_report.tex",
-                "Assembly/SPAdesHybrid/QC/group-0/QUAST/transposed_report.tsv",
-                "Assembly/SPAdesHybrid/QC/group-0/QUAST/transposed_report.txt",
+                "Assembly/SPAdesHybrid/QC/group-0/SPAdesHybrid-group-0-assembly_stats.tsv",
                 "Assembly/SPAdesHybrid/QC/group-0/SPAdesHybrid-group-0-minigut.bowtie2.log",
                 "Assembly/SPAdesHybrid/QC/group-0/SPAdesHybrid-group-0-minigut_sample2.bowtie2.log",
                 "Assembly/SPAdesHybrid/SPAdesHybrid-group-0.assembly.gfa.gz",
@@ -473,23 +449,16 @@
                 "Assembly/SPAdesHybrid/SPAdesHybrid-group-0.spades.log"
             ],
             [
-                "SPAdesHybrid-group-0.rna.gff:md5,7c75e7285ddbdd34de7db9a5e0c8e2c0",
-                "report.tex:md5,ad471d5662dd03c72bb60de697a210b0",
-                "report.tsv:md5,c0890e5f1d7ebcec65d24e7c78795a2c",
-                "report.txt:md5,1b0b64bff73e3386aaa2f750f9667736",
-                "report_rawassemblies.tsv:md5,c0890e5f1d7ebcec65d24e7c78795a2c",
-                "transposed_report.tex:md5,aca408998205d24c4f912398769e3bbe",
-                "transposed_report.tsv:md5,ba37041c13cb6ea0ec9e86fa8c1a0d21",
-                "transposed_report.txt:md5,c7256bdcb2938e6c3606725f8f683c71",
+                "SPAdesHybrid-group-0-assembly_stats.tsv:md5,c1b135d38a4f3a5fdb2b9ef963089bc9",
                 "SPAdesHybrid-group-0.assembly.gfa.gz:md5,006134e6f525943b0111eb279eb0403d",
                 "SPAdesHybrid-group-0.contigs.fa.gz:md5,4412e0be7df82de5ad66653c9444ed90",
                 "SPAdesHybrid-group-0.scaffolds.fa.gz:md5,665f0ed8bdf0f2857aa713ce3e83f390"
             ]
         ],
-        "timestamp": "2026-07-27T00:37:03.43851536",
+        "timestamp": "2026-11-23T17:40:22.411931222",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.10.6"
         }
     },
     "binning": {
@@ -522,111 +491,11 @@
                 "GenomeBinning/QC/BUSCO/SPAdesHybrid-SemiBin2-unclassified-unrefined-group-0/group-0-bacteria_odb10-busco.log",
                 "GenomeBinning/QC/BUSCO/SPAdesHybrid-SemiBin2-unclassified-unrefined-group-0/short_summary.specific.bacteria_odb10.SPAdesHybrid-SemiBin2-group-0_0.fa.json",
                 "GenomeBinning/QC/BUSCO/SPAdesHybrid-SemiBin2-unclassified-unrefined-group-0/short_summary.specific.bacteria_odb10.SPAdesHybrid-SemiBin2-group-0_0.fa.txt",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MaxBin2-group-0.001.fa.gz/basic_stats/GC_content_plot.pdf",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MaxBin2-group-0.001.fa.gz/basic_stats/Nx_plot.pdf",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MaxBin2-group-0.001.fa.gz/basic_stats/SPAdesHybrid-MaxBin2-group-0-001-fa-gz_coverage_histogram.pdf",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MaxBin2-group-0.001.fa.gz/basic_stats/SPAdesHybrid-MaxBin2-group-0.001.fa.gz_GC_content_plot.pdf",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MaxBin2-group-0.001.fa.gz/basic_stats/coverage_histogram.pdf",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MaxBin2-group-0.001.fa.gz/basic_stats/cumulative_plot.pdf",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MaxBin2-group-0.001.fa.gz/icarus.html",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MaxBin2-group-0.001.fa.gz/icarus_viewers/contig_size_viewer.html",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MaxBin2-group-0.001.fa.gz/metaquast.log",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MaxBin2-group-0.001.fa.gz/predicted_genes/SPAdesHybrid-MaxBin2-group-0-001-fa-gz.rna.gff",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MaxBin2-group-0.001.fa.gz/predicted_genes/barrnap.log",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MaxBin2-group-0.001.fa.gz/quast.log",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MaxBin2-group-0.001.fa.gz/report.html",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MaxBin2-group-0.001.fa.gz/report.pdf",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MaxBin2-group-0.001.fa.gz/report.tex",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MaxBin2-group-0.001.fa.gz/report.tsv",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MaxBin2-group-0.001.fa.gz/report.txt",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MaxBin2-group-0.001.fa.gz/transposed_report.tex",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MaxBin2-group-0.001.fa.gz/transposed_report.tsv",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MaxBin2-group-0.001.fa.gz/transposed_report.txt",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MaxBin2-group-0.002.fa.gz/basic_stats/GC_content_plot.pdf",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MaxBin2-group-0.002.fa.gz/basic_stats/Nx_plot.pdf",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MaxBin2-group-0.002.fa.gz/basic_stats/SPAdesHybrid-MaxBin2-group-0-002-fa-gz_coverage_histogram.pdf",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MaxBin2-group-0.002.fa.gz/basic_stats/SPAdesHybrid-MaxBin2-group-0.002.fa.gz_GC_content_plot.pdf",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MaxBin2-group-0.002.fa.gz/basic_stats/coverage_histogram.pdf",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MaxBin2-group-0.002.fa.gz/basic_stats/cumulative_plot.pdf",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MaxBin2-group-0.002.fa.gz/icarus.html",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MaxBin2-group-0.002.fa.gz/icarus_viewers/contig_size_viewer.html",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MaxBin2-group-0.002.fa.gz/metaquast.log",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MaxBin2-group-0.002.fa.gz/predicted_genes/SPAdesHybrid-MaxBin2-group-0-002-fa-gz.rna.gff",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MaxBin2-group-0.002.fa.gz/predicted_genes/barrnap.log",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MaxBin2-group-0.002.fa.gz/quast.log",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MaxBin2-group-0.002.fa.gz/report.html",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MaxBin2-group-0.002.fa.gz/report.pdf",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MaxBin2-group-0.002.fa.gz/report.tex",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MaxBin2-group-0.002.fa.gz/report.tsv",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MaxBin2-group-0.002.fa.gz/report.txt",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MaxBin2-group-0.002.fa.gz/transposed_report.tex",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MaxBin2-group-0.002.fa.gz/transposed_report.tsv",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MaxBin2-group-0.002.fa.gz/transposed_report.txt",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MaxBin2-unclassified-unrefined-group-0-quast_summary.tsv",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MetaBAT2-group-0.1.fa.gz/basic_stats/GC_content_plot.pdf",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MetaBAT2-group-0.1.fa.gz/basic_stats/Nx_plot.pdf",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MetaBAT2-group-0.1.fa.gz/basic_stats/SPAdesHybrid-MetaBAT2-group-0-1-fa-gz_coverage_histogram.pdf",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MetaBAT2-group-0.1.fa.gz/basic_stats/SPAdesHybrid-MetaBAT2-group-0.1.fa.gz_GC_content_plot.pdf",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MetaBAT2-group-0.1.fa.gz/basic_stats/coverage_histogram.pdf",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MetaBAT2-group-0.1.fa.gz/basic_stats/cumulative_plot.pdf",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MetaBAT2-group-0.1.fa.gz/icarus.html",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MetaBAT2-group-0.1.fa.gz/icarus_viewers/contig_size_viewer.html",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MetaBAT2-group-0.1.fa.gz/metaquast.log",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MetaBAT2-group-0.1.fa.gz/predicted_genes/SPAdesHybrid-MetaBAT2-group-0-1-fa-gz.rna.gff",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MetaBAT2-group-0.1.fa.gz/predicted_genes/barrnap.log",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MetaBAT2-group-0.1.fa.gz/quast.log",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MetaBAT2-group-0.1.fa.gz/report.html",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MetaBAT2-group-0.1.fa.gz/report.pdf",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MetaBAT2-group-0.1.fa.gz/report.tex",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MetaBAT2-group-0.1.fa.gz/report.tsv",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MetaBAT2-group-0.1.fa.gz/report.txt",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MetaBAT2-group-0.1.fa.gz/transposed_report.tex",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MetaBAT2-group-0.1.fa.gz/transposed_report.tsv",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MetaBAT2-group-0.1.fa.gz/transposed_report.txt",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MetaBAT2-group-0.2.fa.gz/basic_stats/GC_content_plot.pdf",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MetaBAT2-group-0.2.fa.gz/basic_stats/Nx_plot.pdf",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MetaBAT2-group-0.2.fa.gz/basic_stats/SPAdesHybrid-MetaBAT2-group-0-2-fa-gz_coverage_histogram.pdf",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MetaBAT2-group-0.2.fa.gz/basic_stats/SPAdesHybrid-MetaBAT2-group-0.2.fa.gz_GC_content_plot.pdf",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MetaBAT2-group-0.2.fa.gz/basic_stats/coverage_histogram.pdf",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MetaBAT2-group-0.2.fa.gz/basic_stats/cumulative_plot.pdf",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MetaBAT2-group-0.2.fa.gz/icarus.html",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MetaBAT2-group-0.2.fa.gz/icarus_viewers/contig_size_viewer.html",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MetaBAT2-group-0.2.fa.gz/metaquast.log",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MetaBAT2-group-0.2.fa.gz/predicted_genes/SPAdesHybrid-MetaBAT2-group-0-2-fa-gz.rna.gff",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MetaBAT2-group-0.2.fa.gz/predicted_genes/barrnap.log",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MetaBAT2-group-0.2.fa.gz/quast.log",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MetaBAT2-group-0.2.fa.gz/report.html",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MetaBAT2-group-0.2.fa.gz/report.pdf",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MetaBAT2-group-0.2.fa.gz/report.tex",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MetaBAT2-group-0.2.fa.gz/report.tsv",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MetaBAT2-group-0.2.fa.gz/report.txt",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MetaBAT2-group-0.2.fa.gz/transposed_report.tex",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MetaBAT2-group-0.2.fa.gz/transposed_report.tsv",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MetaBAT2-group-0.2.fa.gz/transposed_report.txt",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-MetaBAT2-unclassified-unrefined-group-0-quast_summary.tsv",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-SemiBin2-group-0_0.fa.gz/basic_stats/GC_content_plot.pdf",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-SemiBin2-group-0_0.fa.gz/basic_stats/Nx_plot.pdf",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-SemiBin2-group-0_0.fa.gz/basic_stats/SPAdesHybrid-SemiBin2-group-0_0-fa-gz_coverage_histogram.pdf",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-SemiBin2-group-0_0.fa.gz/basic_stats/SPAdesHybrid-SemiBin2-group-0_0.fa.gz_GC_content_plot.pdf",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-SemiBin2-group-0_0.fa.gz/basic_stats/coverage_histogram.pdf",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-SemiBin2-group-0_0.fa.gz/basic_stats/cumulative_plot.pdf",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-SemiBin2-group-0_0.fa.gz/icarus.html",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-SemiBin2-group-0_0.fa.gz/icarus_viewers/contig_size_viewer.html",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-SemiBin2-group-0_0.fa.gz/metaquast.log",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-SemiBin2-group-0_0.fa.gz/predicted_genes/SPAdesHybrid-SemiBin2-group-0_0-fa-gz.rna.gff",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-SemiBin2-group-0_0.fa.gz/predicted_genes/barrnap.log",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-SemiBin2-group-0_0.fa.gz/quast.log",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-SemiBin2-group-0_0.fa.gz/report.html",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-SemiBin2-group-0_0.fa.gz/report.pdf",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-SemiBin2-group-0_0.fa.gz/report.tex",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-SemiBin2-group-0_0.fa.gz/report.tsv",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-SemiBin2-group-0_0.fa.gz/report.txt",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-SemiBin2-group-0_0.fa.gz/transposed_report.tex",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-SemiBin2-group-0_0.fa.gz/transposed_report.tsv",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-SemiBin2-group-0_0.fa.gz/transposed_report.txt",
-                "GenomeBinning/QC/QUAST/SPAdesHybrid-SemiBin2-unclassified-unrefined-group-0-quast_summary.tsv",
+                "GenomeBinning/QC/SPAdesHybrid-MaxBin2-unclassified-unrefined-group-0-bin_stats.tsv",
+                "GenomeBinning/QC/SPAdesHybrid-MetaBAT2-unclassified-unrefined-group-0-bin_stats.tsv",
+                "GenomeBinning/QC/SPAdesHybrid-SemiBin2-unclassified-unrefined-group-0-bin_stats.tsv",
                 "GenomeBinning/QC/busco_summary.tsv",
-                "GenomeBinning/QC/quast_bin_summary.tsv",
+                "GenomeBinning/QC/seqkit_bin_summary.tsv",
                 "GenomeBinning/SemiBin2/bins/SPAdesHybrid-SemiBin2-group-0_0.fa.gz",
                 "GenomeBinning/SemiBin2/log/SPAdesHybrid-SemiBin2-group-0.SemiBinRun.log",
                 "GenomeBinning/bin_summary.tsv",
@@ -646,55 +515,20 @@
                 "SPAdesHybrid-MetaBAT2-group-0.lowDepth.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "SPAdesHybrid-MetaBAT2-group-0.tooShort.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "SPAdesHybrid-MetaBAT2-group-0.unbinned.pooled.fa.gz:md5,646b952d9f6eba4df4e468a7e3ff2bac",
-                "SPAdesHybrid-MaxBin2-group-0-001-fa-gz.rna.gff:md5,43b0792ddf8e8da1c0a75cd2aebcc6b8",
-                "report.tex:md5,331850852ab6dbd15edfae75fca83dcc",
-                "report.tsv:md5,57d962cab742922aac4663c6d0eb06a0",
-                "report.txt:md5,a5dafd25608786e8f9294ffd920d9f52",
-                "transposed_report.tex:md5,6f7db17191882653185ee89ad6bdd400",
-                "transposed_report.tsv:md5,032fb19cf285867d26b8db7da1210c56",
-                "transposed_report.txt:md5,82b6b16c2564fb8d8a0fd077398a9dce",
-                "SPAdesHybrid-MaxBin2-group-0-002-fa-gz.rna.gff:md5,64cc3268a105343756fbe686dc77b300",
-                "report.tex:md5,2080a264c680986c129c83662c36d404",
-                "report.tsv:md5,64e001b3b9b438918ed5c28d9631ae60",
-                "report.txt:md5,a9007599f5a3e14e2a1b3924125f90a8",
-                "transposed_report.tex:md5,bf3a18de623a2d7af8a5105d9540ca83",
-                "transposed_report.tsv:md5,05f16ba6373931c737bd8b075300774e",
-                "transposed_report.txt:md5,336421e3faa49f30788b12a5fba7d4d7",
-                "SPAdesHybrid-MaxBin2-unclassified-unrefined-group-0-quast_summary.tsv:md5,70f117be824e8c0b100f1817e17365c4",
-                "SPAdesHybrid-MetaBAT2-group-0-1-fa-gz.rna.gff:md5,64cc3268a105343756fbe686dc77b300",
-                "report.tex:md5,8e826a2ca36507c5f99b403e93e0dbb6",
-                "report.tsv:md5,e640e43304f0b60d169e693ef2f74889",
-                "report.txt:md5,ff00fb0b5274a6d664678d7032f1b318",
-                "transposed_report.tex:md5,ef90b2fdb6cb02e053da56adcb0a55e7",
-                "transposed_report.tsv:md5,fb985cc98beff288819e9fed74793ee5",
-                "transposed_report.txt:md5,0de45cb8f0f30b7334a398a856ce22d0",
-                "SPAdesHybrid-MetaBAT2-group-0-2-fa-gz.rna.gff:md5,df19e1b84ba6f691d20c72b397c88abf",
-                "report.tex:md5,46abbaa82d42e24e0759c548de3bb3dd",
-                "report.tsv:md5,6b9ab2f45069e1e757d86cc920b8a977",
-                "report.txt:md5,08275aae4b40690c8362eb62ba233239",
-                "transposed_report.tex:md5,5c7fc7a10612b7c1dc373804e3ad4803",
-                "transposed_report.tsv:md5,74a769d580d3c5198889e31ee94ef391",
-                "transposed_report.txt:md5,8a7bacef6924d0341d3217c9e252be2d",
-                "SPAdesHybrid-MetaBAT2-unclassified-unrefined-group-0-quast_summary.tsv:md5,04f08124821fad31d7b296f7f7b6fbe6",
-                "SPAdesHybrid-SemiBin2-group-0_0-fa-gz.rna.gff:md5,435630ed97c64d9cf4ed26b3e363c2b3",
-                "report.tex:md5,a23c04f8464840a6a938ae6557f624b5",
-                "report.tsv:md5,76f87d5f33c6b6e5492167b70a32ab14",
-                "report.txt:md5,2054721a9d03a245f76bbfc69def05e0",
-                "transposed_report.tex:md5,27d0154cc0111711dd9b1be176f852e4",
-                "transposed_report.tsv:md5,29a699a812b9cd62612dc81a4ff50f01",
-                "transposed_report.txt:md5,c8fb889f897d9065701f9bd8a665cdb0",
-                "SPAdesHybrid-SemiBin2-unclassified-unrefined-group-0-quast_summary.tsv:md5,29a699a812b9cd62612dc81a4ff50f01",
-                "quast_bin_summary.tsv:md5,da587ec91a140cdb755081d404989a7d",
+                "SPAdesHybrid-MaxBin2-unclassified-unrefined-group-0-bin_stats.tsv:md5,8c07da14a36ccd1b8dd19a8d980fdc4f",
+                "SPAdesHybrid-MetaBAT2-unclassified-unrefined-group-0-bin_stats.tsv:md5,e698a3a0ed15b0dbbca6373acf7cfd8f",
+                "SPAdesHybrid-SemiBin2-unclassified-unrefined-group-0-bin_stats.tsv:md5,8d2de1d73fcd967af2780d062d34b269",
+                "seqkit_bin_summary.tsv:md5,023fb3feed48ad40b1f0096668e364cf",
                 "SPAdesHybrid-SemiBin2-group-0_0.fa.gz:md5,2b30803aaf880a9d4c99d41e4754cb2b",
-                "bin_summary.tsv:md5,06b4d198506d55e7439e3a75d9948973",
+                "bin_summary.tsv:md5,6f81e1aac6cdaaaa42b7cadb2d164890",
                 "contig_to_bin_map.tsv:md5,248ee7ec0b01c21f80167527587810e2",
                 "bin_depths_summary.tsv:md5,3b7f08abc34d47952d239ff10c01085e"
             ]
         ],
-        "timestamp": "2026-11-13T11:52:12.580629322",
+        "timestamp": "2026-11-23T17:40:22.59890296",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.10.5"
+            "nextflow": "26.10.6"
         }
     },
     "content-checks": {
@@ -800,14 +634,14 @@
                 "multiqc/multiqc_data/multiqc_fastqc_fastqc-1.yaml",
                 "multiqc/multiqc_data/multiqc_general_stats.yaml",
                 "multiqc/multiqc_data/multiqc_prokka.yaml",
-                "multiqc/multiqc_data/multiqc_quast.yaml",
-                "multiqc/multiqc_data/multiqc_quast_quast-1.yaml",
+                "multiqc/multiqc_data/multiqc_seqkit_stats.yaml",
+                "multiqc/multiqc_data/multiqc_seqkit_stats_seqkit-1.yaml",
                 "multiqc/multiqc_data/multiqc_software_versions.yaml",
                 "multiqc/multiqc_data/multiqc_sources.yaml",
                 "multiqc/multiqc_data/porechop.yaml",
                 "multiqc/multiqc_data/prokka_plot.yaml",
-                "multiqc/multiqc_data/quast_num_contigs.yaml",
-                "multiqc/multiqc_data/quast_table.yaml",
+                "multiqc/multiqc_data/seqkit-stats-seqcounts-plot.yaml",
+                "multiqc/multiqc_data/seqkit-stats-table.yaml",
                 "multiqc/multiqc_plots/pdf/bakta_feature_types-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/bakta_feature_types-pct.pdf",
                 "multiqc/multiqc_plots/pdf/bowtie2_pe_plot-cnt.pdf",
@@ -850,9 +684,8 @@
                 "multiqc/multiqc_plots/pdf/fastqc_sequence_length_distribution_plot.pdf",
                 "multiqc/multiqc_plots/pdf/prokka_plot-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/prokka_plot-pct.pdf",
-                "multiqc/multiqc_plots/pdf/quast_num_contigs-cnt.pdf",
-                "multiqc/multiqc_plots/pdf/quast_num_contigs-pct.pdf",
-                "multiqc/multiqc_plots/pdf/quast_table.pdf",
+                "multiqc/multiqc_plots/pdf/seqkit-stats-seqcounts-plot.pdf",
+                "multiqc/multiqc_plots/pdf/seqkit-stats-table.pdf",
                 "multiqc/multiqc_plots/png/bakta_feature_types-cnt.png",
                 "multiqc/multiqc_plots/png/bakta_feature_types-pct.png",
                 "multiqc/multiqc_plots/png/bowtie2_pe_plot-cnt.png",
@@ -895,9 +728,8 @@
                 "multiqc/multiqc_plots/png/fastqc_sequence_length_distribution_plot.png",
                 "multiqc/multiqc_plots/png/prokka_plot-cnt.png",
                 "multiqc/multiqc_plots/png/prokka_plot-pct.png",
-                "multiqc/multiqc_plots/png/quast_num_contigs-cnt.png",
-                "multiqc/multiqc_plots/png/quast_num_contigs-pct.png",
-                "multiqc/multiqc_plots/png/quast_table.png",
+                "multiqc/multiqc_plots/png/seqkit-stats-seqcounts-plot.png",
+                "multiqc/multiqc_plots/png/seqkit-stats-table.png",
                 "multiqc/multiqc_plots/svg/bakta_feature_types-cnt.svg",
                 "multiqc/multiqc_plots/svg/bakta_feature_types-pct.svg",
                 "multiqc/multiqc_plots/svg/bowtie2_pe_plot-cnt.svg",
@@ -940,9 +772,8 @@
                 "multiqc/multiqc_plots/svg/fastqc_sequence_length_distribution_plot.svg",
                 "multiqc/multiqc_plots/svg/prokka_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/prokka_plot-pct.svg",
-                "multiqc/multiqc_plots/svg/quast_num_contigs-cnt.svg",
-                "multiqc/multiqc_plots/svg/quast_num_contigs-pct.svg",
-                "multiqc/multiqc_plots/svg/quast_table.svg",
+                "multiqc/multiqc_plots/svg/seqkit-stats-seqcounts-plot.svg",
+                "multiqc/multiqc_plots/svg/seqkit-stats-table.svg",
                 "multiqc/multiqc_report.html"
             ],
             [
@@ -985,36 +816,36 @@
                 "multiqc_bowtie2_bowtie2-1.yaml:md5,72037456e22f1daf9f1ad197bd3aedc8",
                 "multiqc_bowtie2_bowtie2-2.yaml:md5,a1a2a34439152edfb1255d5c6bef70d3",
                 "multiqc_busco.yaml:md5,b99299f8d259972c9561dbeee43e7b9a",
-                "multiqc_citations.yaml:md5,9eff848d7825caa850cf7250cbea70e6",
+                "multiqc_citations.yaml:md5,ba32c8e3105fd54da55c1b9ad6817da8",
                 "multiqc_fastp.yaml:md5,ff4fe8f96e7c304ea399605accc49309",
                 "multiqc_fastqc.yaml:md5,cd42d95e1d7ad3784b6e62327031e1a8",
                 "multiqc_fastqc_fastqc-1.yaml:md5,111806c9b926b048a319fbc58606ae5e",
-                "multiqc_general_stats.yaml:md5,936e94ffeb192a8dd50235b92121d019",
+                "multiqc_general_stats.yaml:md5,0268997651e13a426644fa6bc20a2600",
                 "multiqc_prokka.yaml:md5,7c3627452ed007da28a82803286df9a0",
-                "multiqc_quast.yaml:md5,66d2f53da8458959128af916f7cab015",
-                "multiqc_quast_quast-1.yaml:md5,b2a3bf69afd326bfaca18da4e9d9356b",
+                "multiqc_seqkit_stats.yaml:md5,8ce389b3521b85b533fa702743f2f4ed",
+                "multiqc_seqkit_stats_seqkit-1.yaml:md5,cef7bf007dc744f29b00b92c2920b48e",
                 "porechop.yaml:md5,828d96e2822bb4b4108ab706c00c4450",
                 "prokka_plot.yaml:md5,2da2a51cd4d6ca8a2081669ac1bdd0e2",
-                "quast_num_contigs.yaml:md5,d5fbbec618dfe047bba2a223716db3bb",
-                "quast_table.yaml:md5,99288698f0f6557889241bf7b682a513"
+                "seqkit-stats-seqcounts-plot.yaml:md5,da80c0d8a816e7bafc351139c2376577",
+                "seqkit-stats-table.yaml:md5,b96532ba6b9fdaf1f9bdbee036ffc55b"
             ]
         ],
-        "timestamp": "2026-10-28T00:46:55.911379713",
+        "timestamp": "2026-11-23T17:55:29.952329067",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.10.3"
+            "nextflow": "26.10.6"
         }
     },
     "summary-rows": {
         "content": [
             "bin_summary.tsv rows: 5",
-            "quast_bin_summary.tsv rows: 5",
+            "seqkit_bin_summary.tsv rows: 5",
             "busco_summary.tsv rows: 5"
         ],
-        "timestamp": "2026-06-26T15:16:43.543930305",
+        "timestamp": "2026-11-23T17:40:25.775582562",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nextflow": "26.10.6"
         }
     }
 }

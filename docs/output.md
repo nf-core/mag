@@ -202,7 +202,7 @@ Trimmed (short) reads are assembled with both megahit and SPAdes. Hybrid assembl
 - `Assembly/MEGAHIT/`
   - `[sample/group].contigs.fa.gz`: Compressed metagenome assembly in fasta format
   - `[sample/group].log`: Log file
-  - `QC/[sample/group]/`: Directory containing QUAST files and Bowtie2 mapping logs
+  - `QC/[sample/group]/`: Directory containing SeqKit statistics and Bowtie2 mapping logs
     - `MEGAHIT-[sample].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the sample that the metagenome was assembled from, only present if `--coassemble_group` is not set.
     - `MEGAHIT-[sample/group]-[sampleToMap].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the respective sample ("sampleToMap").
     - `MEGAHIT-[sample].[bam/bai]`: Optionally saved BAM file of the Bowtie2 mapping of reads against the assembly. These mappings are against the assembly filtered by `--min_contig_size` and are used for binning.
@@ -222,7 +222,7 @@ Trimmed (short) reads are assembled with both megahit and SPAdes. Hybrid assembl
   - `[sample/group].assembly.gfa.gz`: Compressed assembly graph in gfa format
   - `[sample/group].contigs.fa.gz`: Compressed assembled contigs in fasta format
   - `[sample/group].spades.log`: Log file
-  - `QC/[sample/group]/`: Directory containing QUAST files and Bowtie2 mapping logs
+  - `QC/[sample/group]/`: Directory containing SeqKit statistics and Bowtie2 mapping logs
     - `SPAdes-[sample].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the sample that the metagenome was assembled from, only present if `--coassemble_group` is not set.
     - `SPAdes-[sample/group]-[sampleToMap].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the respective sample ("sampleToMap").
     - `SPAdes-[sample].[bam/bai]`: Optionally saved BAM file of the Bowtie2 mapping of reads against the assembly. These mappings are against the assembly filtered by `--min_contig_size` and are used for binning.
@@ -242,7 +242,7 @@ SPAdesHybrid is a part of the [SPAdes](http://cab.spbu.ru/software/spades/) soft
   - `[sample/group].assembly.gfa.gz`: Compressed assembly graph in gfa format
   - `[sample/group].contigs.fa.gz`: Compressed assembled contigs in fasta format
   - `[sample/group].spades.log`: Log file
-  - `QC/[sample/group]/`: Directory containing QUAST files and Bowtie2 mapping logs
+  - `QC/[sample/group]/`: Directory containing SeqKit statistics and Bowtie2 mapping logs
     - `SPAdesHybrid-[sample].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the sample that the metagenome was assembled from, only present if `--coassemble_group` is not set.
     - `SPAdesHybrid-[sample/group]-[sampleToMap].bowtie2.log`: Bowtie2 log file indicating how many reads have been mapped from the respective sample ("sampleToMap").
     - `SPAdesHybrid-[sample].[bam/bai]`: Optionally saved BAM file of the Bowtie2 mapping of reads against the assembly. These mappings are against the assembly filtered by `--min_contig_size` and are used for binning.
@@ -263,7 +263,7 @@ SPAdesHybrid is a part of the [SPAdes](http://cab.spbu.ru/software/spades/) soft
   - `[sample/group].assembly_graph.gfa.gz`: Compressed assembly graph in gfa format
   - `[sample/group].assembly.fa.gz`: Compressed assembled contigs in fasta format
   - `[sample/group].flye.log`: Log file
-  - `QC/[sample/group]/`: Directory containing QUAST files
+  - `QC/[sample/group]/`: Directory containing SeqKit statistics
 
 </details>
 
@@ -277,7 +277,7 @@ SPAdesHybrid is a part of the [SPAdes](http://cab.spbu.ru/software/spades/) soft
 - `Assembly/METAMDBG/`
   - `[sample/group].contigs.fa.gz`: Compressed assembled contigs in fasta format
   - `[sample/group].metaMDBG.log`: Log file
-  - `QC/[sample/group]/`: Directory containing QUAST files
+  - `QC/[sample/group]/`: Directory containing SeqKit statistics
 
 </details>
 
@@ -295,26 +295,15 @@ SPAdesHybrid is a part of the [SPAdes](http://cab.spbu.ru/software/spades/) soft
 
 </details>
 
-### Metagenome QC with QUAST
+### Metagenome QC with SeqKit
 
-[QUAST](http://cab.spbu.ru/software/quast/) is a tool that evaluates metagenome assemblies by computing various metrics. The QUAST output is also included in the MultiQC report, as well as in the assembly directories themselves.
+[SeqKit](https://bioinf.shenwei.me/seqkit/) `stats` computes basic assembly statistics, such as the number of contigs, total length, largest contig, GC content, N50 and N90. The statistics are included in the MultiQC report and in the assembly directories.
 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `Assembly/[assembler]/QC/[sample/group]/QUAST/`
-  - `report.*`: QUAST report in various formats, such as html, pdf, tex, tsv, or txt
-  - `transposed_report.*`: QUAST report that has been transposed into wide format (tex, tsv, or txt)
-  - `quast.log`: QUAST log file
-  - `metaquast.log`: MetaQUAST log file
-  - `icarus.html`: Icarus main menu with links to interactive viewers
-  - `icarus_viewers/contig_size_viewer.html`: Diagram of contigs that are ordered from longest to shortest
-  - `basic_stats/cumulative_plot.pdf`: Shows the growth of contig lengths (contigs are ordered from largest to shortest)
-  - `basic_stats/GC_content_plot.pdf`: Shows the distribution of GC content in the contigs
-  - `basic_stats/[assembler]-[sample/group]_GC_content_plot.pdf`: Histogram of the GC percentage for the contigs
-  - `basic_stats/Nx_plot.pdf`: Plot of Nx values as x varies from 0 to 100%.
-  - `predicted_genes/[assembler]-[sample/group].rna.gff`: Contig positions for rRNA genes in gff version 3 format
-  - `predicted_genes/barrnap.log`: Barrnap log file (ribosomal RNA predictor)
+- `Assembly/[assembler]/QC/[sample/group]/`
+  - `[assembler]-[sample/group]-assembly_stats.tsv`: SeqKit statistics of the assembly
 
 </details>
 
@@ -427,7 +416,7 @@ These depth files are used for downstream binning steps.
 
 </details>
 
-All the files and contigs in these folders will be assessed by QUAST and BUSCO.
+All the files and contigs in these folders will be assessed by SeqKit and BUSCO.
 
 All other files that were discarded by the tool, or from the low-quality unbinned contigs, can be found here.
 
@@ -459,7 +448,7 @@ Files in these two folders contain all contigs of an assembly.
 
 </details>
 
-All the files and contigs in these folders will be assessed by QUAST and BUSCO.
+All the files and contigs in these folders will be assessed by SeqKit and BUSCO.
 
 <details markdown="1">
 <summary>Output files</summary>
@@ -492,7 +481,7 @@ Files in these two folders contain all contigs of an assembly.
 
 </details>
 
-All the files and contigs in these folders will be assessed by QUAST and BUSCO, if the parameter `--postbinning_input` is not set to `refined_bins_only`.
+All the files and contigs in these folders will be assessed by SeqKit and BUSCO, if the parameter `--postbinning_input` is not set to `refined_bins_only`.
 
 Note that CONCOCT does not output what it considers 'unbinned' contigs, therefore no 'discarded' contigs are produced here. You may still need to do your own manual curation of the resulting bins.
 
@@ -512,7 +501,7 @@ Note that CONCOCT does not output what it considers 'unbinned' contigs, therefor
 
 </details>
 
-All the files and contigs in these folders will be assessed by QUAST and BUSCO, if the parameter `--postbinning_input` is not set to `refined_bins_only`.
+All the files and contigs in these folders will be assessed by SeqKit and BUSCO, if the parameter `--postbinning_input` is not set to `refined_bins_only`.
 
 Note that COMEBin does not output what it considers 'unbinned' contigs, therefore no 'discarded' contigs are produced here. You may still need to do your own manual curation of the resulting bins.
 
@@ -531,7 +520,7 @@ Note that COMEBin does not output what it considers 'unbinned' contigs, therefor
 
 </details>
 
-All the files and contigs in these folders will be assessed by QUAST and binning QC tools, if the parameter `--postbinning_input` is not set to `refined_bins_only`.
+All the files and contigs in these folders will be assessed by SeqKit and binning QC tools, if the parameter `--postbinning_input` is not set to `refined_bins_only`.
 
 ### SemiBin2
 
@@ -546,7 +535,7 @@ All the files and contigs in these folders will be assessed by QUAST and binning
 
 </details>
 
-All the files and contigs in these folders will be assessed by QUAST and binning QC tools, if the parameter `--postbinning_input` is not set to `refined_bins_only`.
+All the files and contigs in these folders will be assessed by SeqKit and binning QC tools, if the parameter `--postbinning_input` is not set to `refined_bins_only`.
 
 Note that SemiBin2 does not output what it considers 'unbinned' contigs, therefore no 'discarded' contigs are produced here. You may still need to do your own manual curation of the resulting bins.
 
@@ -638,29 +627,16 @@ The pipeline also generates a 'contig to bin map' to help users explore track wh
   - `contig_to_bin_map.tsv`: Tab-separated file with columns: assembly ID, contig_id, binner, and bin ID, for all contigs of all bins (and refined bins, if activated) in the run.
 </details>
 
-### QC for metagenome assembled genomes with QUAST
+### QC for metagenome assembled genomes with SeqKit
 
-[QUAST](http://cab.spbu.ru/software/quast/) is a tool that evaluates genome assemblies by computing various metrics. The QUAST output is in the bin directories shown below. This QUAST output is not shown in the MultiQC report.
+[SeqKit](https://bioinf.shenwei.me/seqkit/) `stats` computes basic statistics for each bin, such as the number of contigs, total length, largest contig, GC content, N50 and N90. The statistics are included in the MultiQC report and in `bin_summary.tsv`, where the columns use QUAST names (`# contigs`, `Total length`, `Largest contig`, `GC (%)`, `N50`, `N90` and `L50`).
 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `GenomeBinning/QC/QUAST/[assembler]-[bin]/`
-  - `report.*`: QUAST report in various formats, such as html, pdf, tex, tsv, or txt
-  - `transposed_report.*`: QUAST report that has been transposed into wide format (tex, tsv, or txt)
-  - `quast.log`: QUAST log file
-  - `metaquast.log`: MetaQUAST log file
-  - `icarus.html`: Icarus main menu with links to interactive viewers
-  - `icarus_viewers/contig_size_viewer.html`: Diagram of contigs that are ordered from longest to shortest
-  - `basic_stats/cumulative_plot.pdf`: Shows the growth of contig lengths (contigs are ordered from largest to shortest)
-  - `basic_stats/GC_content_plot.pdf`: Shows the distribution of GC content in the contigs
-  - `basic_stats/[assembler]-[bin]_GC_content_plot.pdf`: Histogram of the GC percentage for the contigs
-  - `basic_stats/Nx_plot.pdf`: Plot of Nx values as x varies from 0 to 100%.
-  - `predicted_genes/[assembler]-[bin].rna.gff`: Contig positions for rRNA genes in gff version 3 format
-  - `predicted_genes/barrnap.log`: Barrnap log file (ribosomal RNA predictor)
 - `GenomeBinning/QC/`
-  - `[assembler]-[binner]-[domain]-[refinement]-[sample/group]-quast_summary.tsv`: QUAST output summarized per sample/condition.
-  - `quast_bin_summary.tsv`: QUAST output for all bins summarized
+  - `[assembler]-[binner]-[domain]-[refinement]-[sample/group]-bin_stats.tsv`: SeqKit statistics per sample/condition, one row per bin.
+  - `seqkit_bin_summary.tsv`: SeqKit statistics for all bins
 
 </details>
 
@@ -946,7 +922,7 @@ In cases where eukaryotic genomes are recovered in binning, [MetaEuk](https://gi
 <details markdown="1">
 <summary>Output files</summary>
 
-- `GenomeBinning/bin_summary.tsv`: Summary of bin sequencing depths together with any BUSCO, CheckM, CheckM2, QUAST, CAT, GTDB-Tk, pyDamage, [dereplication](#dereplication) results, when any activated.
+- `GenomeBinning/bin_summary.tsv`: Summary of bin sequencing depths together with any BUSCO, CheckM, CheckM2, SeqKit, CAT, GTDB-Tk, pyDamage, [dereplication](#dereplication) results, when any activated.
 
 </details>
 
@@ -969,7 +945,7 @@ For non-representative bins, the `classification_gtdbtk` and `CAT_rank_catpack` 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `GenomeBinning/BIgMAG/bigmag_summary.tsv`: Summary of bin sequencing depths together with GUNC, QUAST, GTDB-Tk, BUSCO and CheckM2 results.
+- `GenomeBinning/BIgMAG/bigmag_summary.tsv`: Summary of bin sequencing depths together with GUNC, SeqKit, GTDB-Tk, BUSCO and CheckM2 results.
 
 </details>
 
@@ -1043,7 +1019,7 @@ Summary tool-specific plots and tables of following tools are currently displaye
 - Adapter Removal
 - bowtie2
 - BUSCO
-- QUAST
+- SeqKit
 - PROKKA
 - BUSCO
 - CheckM

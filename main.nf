@@ -102,7 +102,6 @@ params {
     run_ale: Boolean
     skip_ale: Boolean
     run_deepmased: Boolean
-    skip_quast: Boolean
     ale_per_base_output: Boolean
     deepmased_features_gzip: Boolean
     deepmased_predict_seed: Integer = 12
@@ -418,7 +417,7 @@ output {
     }
     assembly_qc {
         path { meta, out ->
-            out.quast >> "Assembly/${meta.assembler}/QC/${meta.id}/"
+            out.seqkit >> "Assembly/${meta.assembler}/QC/${meta.id}/"
             out.mapping >> "Assembly/${meta.assembler}/QC/${meta.id}/"
             out.mapping_bams >> (params.save_assembly_mapped_reads ? "Assembly/${meta.assembler}/QC/${meta.id}/" : null)
             out.mapping_full >> "Assembly/${meta.assembler}/QC/${meta.id}/full_assembly/"

@@ -428,8 +428,8 @@ def validateInputParameters(hybrid) {
     }
 
     // Check BIgMAG parameters
-    if (params.generate_bigmag_file && (!params.run_gunc || !params.run_checkm2 || !params.run_busco || params.skip_gtdbtk || params.skip_quast || params.skip_binqc)) {
-        error('[nf-core/mag] ERROR: To generate the BIgMAG file you need to include the parameters `--run_checkm2` and `--run_gunc`, and you cannot skip BINQC, GTDB-TK, QUAST nor BUSCO.')
+    if (params.generate_bigmag_file && (!params.run_gunc || !params.run_checkm2 || !params.run_busco || params.skip_gtdbtk || params.skip_binqc)) {
+        error('[nf-core/mag] ERROR: To generate the BIgMAG file you need to include the parameters `--run_checkm2` and `--run_gunc`, and you cannot skip BINQC, GTDB-TK nor BUSCO.')
     }
 
     // Check dereplication parameters
@@ -525,7 +525,7 @@ def toolCitationText() {
     def text_assembly = "Metagenome assembly was performed with ${assembly_tools.join(', ')}."
 
     def assembly_qc_tools = [
-        !params.skip_quast ? "metaQUAST (Mikheenko et al. 2016)" : "",
+        "SeqKit (Shen et al. 2016)",
         params.run_ale ? "ALE (Clark et al. 2013)" : "",
         params.run_deepmased ? "DeepMAsED (Mineeva et al. 2020)" : "",
     ].findAll { tool -> tool != '' }
@@ -667,9 +667,7 @@ def toolBibliographyText() {
     if (!params.skip_flye) {
         references << "<li>Kolmogorov, M., Bickhart, D. M., Behsaz, B. et al. (2020). metaFlye: scalable long-read metagenome assembly using repeat graphs. Nature Methods, 17(11), 1103-1110. doi: 10.1038/s41592-020-00971-x</li>"
     }
-    if (!params.skip_quast) {
-        references << "<li>Mikheenko, A., Saveliev, V., & Gurevich, A. (2016). MetaQUAST: evaluation of metagenome assemblies. Bioinformatics, 32(7), 1088-1090. doi: 10.1093/bioinformatics/btv697</li>"
-    }
+    references << "<li>Shen, W., Le, S., Li, Y., & Hu, F. (2016). SeqKit: a cross-platform and ultrafast toolkit for FASTA/Q file manipulation. PLoS ONE, 11(10), e0163962. doi: 10.1371/journal.pone.0163962</li>"
     if (params.run_ale) {
         references << "<li>Clark, S. C., Egan, R., Frazier, P. I., & Wang, Z. (2013). ALE: a generic assembly likelihood evaluation framework for assessing the accuracy of genome and metagenome assemblies. Bioinformatics, 29(4), 435-443. doi: 10.1093/bioinformatics/bts723</li>"
     }

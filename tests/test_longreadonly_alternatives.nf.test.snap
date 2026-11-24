@@ -52,20 +52,22 @@
                 "Assembly/FLYE/FLYE-minigut.assembly.fasta.gz",
                 "Assembly/FLYE/FLYE-minigut.assembly_graph.gfa.gz",
                 "Assembly/FLYE/FLYE-minigut.assembly_info.txt",
-                "Assembly/FLYE/FLYE-minigut.flye.log"
+                "Assembly/FLYE/FLYE-minigut.flye.log",
+                "Assembly/FLYE/QC/minigut/FLYE-minigut-assembly_stats.tsv"
             ],
             [
                 "FLYE-minigut.report:md5,56ea0f4e221dd083e45bcc5b3743532c",
                 "FLYE-minigut_pypolca.fasta:md5,79c2c6b99d5808d1ea1fb3bc70427837",
                 "FLYE-minigut.assembly.fasta.gz:md5,f4fcf5e1c94901ef1fac2b335f4729f1",
                 "FLYE-minigut.assembly_graph.gfa.gz:md5,f23173732f3fdb68e26276438fc6bc9d",
-                "FLYE-minigut.assembly_info.txt:md5,8af4d61c811efe1796e8af7a4385bb26"
+                "FLYE-minigut.assembly_info.txt:md5,8af4d61c811efe1796e8af7a4385bb26",
+                "FLYE-minigut-assembly_stats.tsv:md5,ac9e38d8098d35f1edfc811874e4de05"
             ]
         ],
-        "timestamp": "2026-07-10T15:27:44.003057445",
+        "timestamp": "2026-11-23T17:36:14.633045132",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nextflow": "26.10.6"
         }
     },
     "binning": {
@@ -85,7 +87,9 @@
                 "GenomeBinning/QC/BUSCO/FLYE-MaxBin2-unclassified-unrefined-minigut/short_summary.specific.bacteria_odb10.FLYE-MaxBin2-minigut.001.fa.txt",
                 "GenomeBinning/QC/BUSCO/FLYE-MaxBin2-unclassified-unrefined-minigut/short_summary.specific.bacteria_odb10.FLYE-MaxBin2-minigut.002.fa.json",
                 "GenomeBinning/QC/BUSCO/FLYE-MaxBin2-unclassified-unrefined-minigut/short_summary.specific.bacteria_odb10.FLYE-MaxBin2-minigut.002.fa.txt",
+                "GenomeBinning/QC/FLYE-MaxBin2-unclassified-unrefined-minigut-bin_stats.tsv",
                 "GenomeBinning/QC/busco_summary.tsv",
+                "GenomeBinning/QC/seqkit_bin_summary.tsv",
                 "GenomeBinning/bin_summary.tsv",
                 "GenomeBinning/contig_to_bin/contig_to_bin_map.tsv",
                 "GenomeBinning/depths/bins/bin_depths_summary.tsv",
@@ -100,15 +104,17 @@
                 "FLYE-MetaBAT2-minigut.lowDepth.fa.gz:md5,79c2c6b99d5808d1ea1fb3bc70427837",
                 "FLYE-MetaBAT2-minigut.tooShort.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "FLYE-MetaBAT2-minigut.unbinned.pooled.fa.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "bin_summary.tsv:md5,2c0ac94e4139377d24fe39103b8f769b",
+                "FLYE-MaxBin2-unclassified-unrefined-minigut-bin_stats.tsv:md5,61a738dd8287c55636de5215925c8ef6",
+                "seqkit_bin_summary.tsv:md5,61a738dd8287c55636de5215925c8ef6",
+                "bin_summary.tsv:md5,f20f819a51957e0f0f34b91c4f3a2b3d",
                 "contig_to_bin_map.tsv:md5,6a781efcbb14d97f5c049c69c935c0da",
                 "bin_depths_summary.tsv:md5,985f843d43973cbfe5b49f0ad0628193"
             ]
         ],
-        "timestamp": "2026-11-13T11:41:22.48417976",
+        "timestamp": "2026-11-23T17:36:14.75961608",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.10.5"
+            "nextflow": "26.10.6"
         }
     },
     "content-checks": {
@@ -133,7 +139,7 @@
     },
     "-profile longreadonly_alternatives": {
         "content": [
-            30,
+            33,
             {
                 "BIN_SUMMARY": {
                     "pandas": "1.4.3",
@@ -152,6 +158,9 @@
                     "untar": 1.34
                 },
                 "CONCAT_BUSCO_TSV": {
+                    "qsv": "5.1.0"
+                },
+                "CONCAT_SEQKIT_STATS_BINS": {
                     "qsv": "5.1.0"
                 },
                 "CONVERT_DEPTHS": {
@@ -219,6 +228,12 @@
                 "SEQKIT_STATS": {
                     "seqkit": "2.9.0"
                 },
+                "SEQKIT_STATS_ASSEMBLY": {
+                    "seqkit": "2.9.0"
+                },
+                "SEQKIT_STATS_BINS": {
+                    "seqkit": "2.9.0"
+                },
                 "SPLIT_FASTA": {
                     "biopython": "1.74",
                     "pandas": "1.1.5",
@@ -229,10 +244,10 @@
                 }
             }
         ],
-        "timestamp": "2026-10-28T00:42:49.970784854",
+        "timestamp": "2026-11-23T17:36:14.50874658",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.10.3"
+            "nextflow": "26.10.6"
         }
     },
     "multiqc": {
@@ -282,9 +297,13 @@
                 "multiqc/multiqc_data/multiqc_fastqc.yaml",
                 "multiqc/multiqc_data/multiqc_fastqc_fastqc-1.yaml",
                 "multiqc/multiqc_data/multiqc_general_stats.yaml",
+                "multiqc/multiqc_data/multiqc_seqkit_stats.yaml",
+                "multiqc/multiqc_data/multiqc_seqkit_stats_seqkit-1.yaml",
                 "multiqc/multiqc_data/multiqc_software_versions.yaml",
                 "multiqc/multiqc_data/multiqc_sources.yaml",
                 "multiqc/multiqc_data/porechop.yaml",
+                "multiqc/multiqc_data/seqkit-stats-seqcounts-plot.yaml",
+                "multiqc/multiqc_data/seqkit-stats-table.yaml",
                 "multiqc/multiqc_plots/pdf/bowtie2_pe_plot-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/bowtie2_pe_plot-pct.pdf",
                 "multiqc/multiqc_plots/pdf/busco_plot_bacteria_odb10-cnt.pdf",
@@ -323,6 +342,8 @@
                 "multiqc/multiqc_plots/pdf/fastqc_sequence_counts_plot-pct.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc_sequence_duplication_levels_plot.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc_sequence_length_distribution_plot.pdf",
+                "multiqc/multiqc_plots/pdf/seqkit-stats-seqcounts-plot.pdf",
+                "multiqc/multiqc_plots/pdf/seqkit-stats-table.pdf",
                 "multiqc/multiqc_plots/png/bowtie2_pe_plot-cnt.png",
                 "multiqc/multiqc_plots/png/bowtie2_pe_plot-pct.png",
                 "multiqc/multiqc_plots/png/busco_plot_bacteria_odb10-cnt.png",
@@ -361,6 +382,8 @@
                 "multiqc/multiqc_plots/png/fastqc_sequence_counts_plot-pct.png",
                 "multiqc/multiqc_plots/png/fastqc_sequence_duplication_levels_plot.png",
                 "multiqc/multiqc_plots/png/fastqc_sequence_length_distribution_plot.png",
+                "multiqc/multiqc_plots/png/seqkit-stats-seqcounts-plot.png",
+                "multiqc/multiqc_plots/png/seqkit-stats-table.png",
                 "multiqc/multiqc_plots/svg/bowtie2_pe_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/bowtie2_pe_plot-pct.svg",
                 "multiqc/multiqc_plots/svg/busco_plot_bacteria_odb10-cnt.svg",
@@ -399,6 +422,8 @@
                 "multiqc/multiqc_plots/svg/fastqc_sequence_counts_plot-pct.svg",
                 "multiqc/multiqc_plots/svg/fastqc_sequence_duplication_levels_plot.svg",
                 "multiqc/multiqc_plots/svg/fastqc_sequence_length_distribution_plot.svg",
+                "multiqc/multiqc_plots/svg/seqkit-stats-seqcounts-plot.svg",
+                "multiqc/multiqc_plots/svg/seqkit-stats-table.svg",
                 "multiqc/multiqc_report.html"
             ],
             [
@@ -437,18 +462,22 @@
                 "fastqc_sequence_length_distribution_plot.yaml:md5,054f8574b204516f6e6739691a117612",
                 "multiqc_bowtie2.yaml:md5,d6a4f1f2e6952801eda62c414c1685cb",
                 "multiqc_busco.yaml:md5,ee7e87e8e9507722f0fce6b7d59a2d5c",
-                "multiqc_citations.yaml:md5,206038e615da74a108ec530a09260536",
+                "multiqc_citations.yaml:md5,896b911b3983ad42e55b017cba319c3c",
                 "multiqc_fastp.yaml:md5,29b2500f793b0c444ee7c6535d406b09",
                 "multiqc_fastqc.yaml:md5,8d0fbd7b59aef0cfe70a038420d49890",
                 "multiqc_fastqc_fastqc-1.yaml:md5,b80436e5326754c7e08ea75a54e64713",
-                "multiqc_general_stats.yaml:md5,872d4d7f0b643efee89cf5a7716caa2f",
-                "porechop.yaml:md5,828d96e2822bb4b4108ab706c00c4450"
+                "multiqc_general_stats.yaml:md5,b86ffa47f9c95ed5be5cf9c962c731e3",
+                "multiqc_seqkit_stats.yaml:md5,42f259c8b6799c7d7de67cdc16551762",
+                "multiqc_seqkit_stats_seqkit-1.yaml:md5,dceddabf9ecf80563f7cb290ad5b4780",
+                "porechop.yaml:md5,828d96e2822bb4b4108ab706c00c4450",
+                "seqkit-stats-seqcounts-plot.yaml:md5,58121f3a75e82cb9307ae6615fc15d3b",
+                "seqkit-stats-table.yaml:md5,c9bfcc1be29f080df55304da0b9fc7ce"
             ]
         ],
-        "timestamp": "2026-10-28T00:42:50.084844903",
+        "timestamp": "2026-11-23T17:51:23.166206958",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.10.3"
+            "nextflow": "26.10.6"
         }
     },
     "summary-rows": {

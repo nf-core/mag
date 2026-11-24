@@ -8,7 +8,7 @@ process BIN_SUMMARY {
     input:
     path bin_depths
     path bin_binners
-    path quast_sum
+    path seqkit_sum
     path gtdbtk_sum
     path cat_sum
     path busco_sum
@@ -22,7 +22,7 @@ process BIN_SUMMARY {
     path "versions.yml", emit: versions
 
     script:
-    def quast_summary = quast_sum.sort().size() > 0 ? "--quast_summary ${quast_sum}" : ""
+    def seqkit_summary = seqkit_sum.sort().size() > 0 ? "--seqkit_summary ${seqkit_sum}" : ""
     def gtdbtk_summary = gtdbtk_sum.sort().size() > 0 ? "--gtdbtk_summary ${gtdbtk_sum}" : ""
     def cat_summary = cat_sum.sort().size() > 0 ? "--cat_summary ${cat_sum}" : ""
     def busco_summary = busco_sum.sort().size() > 0 ? "--busco_summary ${busco_sum}" : ""
@@ -34,7 +34,7 @@ process BIN_SUMMARY {
     combine_tables.py \
         --depths_summary ${bin_depths} \
         --binners ${bin_binners} \
-        ${quast_summary} \
+        ${seqkit_summary} \
         ${gtdbtk_summary} \
         ${cat_summary} \
         ${busco_summary} \

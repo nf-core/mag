@@ -20,7 +20,7 @@ def parse_args(args=None):
         help="Bin depths summary file.",
     )
     parser.add_argument(
-        "-q", "--quast_summary", metavar="FILE", help="QUAST BINS summary file."
+        "-q", "--seqkit_summary", metavar="FILE", help="SeqKit stats summary file of the bins."
     )
     parser.add_argument(
         "-g", "--gtdbtk_summary", metavar="FILE", help="GTDB-Tk summary file."
@@ -123,12 +123,12 @@ def main(args=None):
         not args.busco_summary
         and not args.checkm_summary
         and not args.checkm2_summary
-        and not args.quast_summary
+        and not args.seqkit_summary
         and not args.gtdbtk_summary
     ):
         sys.exit(
             "No summary specified! "
-            "Please specify at least one of BUSCO, CheckM, CheckM2 or QUAST summary."
+            "Please specify at least one of BUSCO, CheckM, CheckM2 or SeqKit summary."
         )
 
     ## GTDB-Tk can only be run in combination with BUSCO, CheckM or CheckM2
@@ -242,24 +242,34 @@ def main(args=None):
         )  # assuming depths for all bins are given
         results["Name"] = results["Name_checkm2"].str.removesuffix(".fa")
 
-    ## QUAST PROCESSING
+    ## SEQKIT PROCESSING
 
-    if args.quast_summary:
-        quast_results = pd.read_csv(args.quast_summary, sep="\t")
-        # QUAST reports bins by their (gzipped) filename; normalise to match the depths key
-        quast_results["Assembly"] = quast_results["Assembly"].str.removesuffix(".gz")
+    if args.seqkit_summary:
+        seqkit_results = pd.read_csv(args.seqkit_summary, sep="\t")
+        # SeqKit reports bins by their (gzipped) filename; normalise to match the depths key
+        seqkit_results["file"] = seqkit_results["file"].str.removesuffix(".gz")
         if not bins.equals(
-            quast_results["Assembly"].sort_values().reset_index(drop=True)
+            seqkit_results["file"].sort_values().reset_index(drop=True)
         ):
-            sys.exit("Bins in QUAST summary do not match bins in bin depths summary!")
-        quast_results = quast_results.add_suffix("_quast")
+            sys.exit("Bins in SeqKit summary do not match bins in bin depths summary!")
+        # QUAST column names keep the bin summary compatible with BIgMAG
+        quast_names = {
+            "num_seqs": "# contigs",
+            "max_len": "Largest contig",
+            "sum_len": "Total length",
+            "GC(%)": "GC (%)",
+            "N50": "N50",
+            "N90": "N90",
+            "N50_num": "L50",
+        }
+        seqkit_results = seqkit_results[["file", *quast_names]].rename(columns=quast_names)
         results = pd.merge(
             results,
-            quast_results,
+            seqkit_results,
             left_on="bin",
-            right_on="Assembly_quast",
+            right_on="file",
             how="outer",
-        )  # assuming depths for all bins are given
+        ).drop(columns="file")  # assuming depths for all bins are given
 
     ## GTDBTK PROCESSING
 

@@ -38,9 +38,6 @@ nextflow_pipeline {
             def spades_logs = getAllFilesFromDir(
                 params.outdir, include: ['Assembly/SPAdes/*.log']
             )
-            def assembly_quast_logs = getAllFilesFromDir(
-                params.outdir, include: ['Assembly/*/QC/*/QUAST/quast.log']
-            )
             def bowtie2_assembly_logs = getAllFilesFromDir(
                 params.outdir, include: ['Assembly/*/QC/*/*.log']
             )
@@ -89,12 +86,9 @@ nextflow_pipeline {
             def busco_logs = getAllFilesFromDir(
                 params.outdir, include: ['GenomeBinning/QC/BUSCO/*/*-busco.log']
             )
-            def binning_quast_logs = getAllFilesFromDir(
-                params.outdir, include: ['GenomeBinning/QC/QUAST/*/quast.log']
-            )
             def bin_summary = path("${params.outdir}/GenomeBinning/bin_summary.tsv")
             def busco_summary = path("${params.outdir}/GenomeBinning/QC/busco_summary.tsv")
-            def quast_bin_summary = path("${params.outdir}/GenomeBinning/QC/quast_bin_summary.tsv")
+            def seqkit_bin_summary = path("${params.outdir}/GenomeBinning/QC/seqkit_bin_summary.tsv")
 
             // Output dir: Annotation
             def stable_name_annotation = getAllFilesFromDir(
@@ -167,7 +161,7 @@ nextflow_pipeline {
                     "Bin summary non-empty: ${bin_summary.csv(sep: '\t').rowCount > 0}",
                     "Bin summary row count matches bins: ${bin_summary.csv(sep: '\t').rowCount == maxbin2_bins.size() + maxbin2_kept_unbins.size() + metabat2_bins.size() + metabat2_kept_unbins.size() + semibin2_bins.size()}",
                     "BUSCO summary non-empty: ${busco_summary.csv(sep: '\t').rowCount > 0}",
-                    "QUAST bin summary non-empty: ${quast_bin_summary.csv(sep: '\t').rowCount > 0}",
+                    "SeqKit bin summary non-empty: ${seqkit_bin_summary.csv(sep: '\t').rowCount > 0}",
                     "BAT summary non-empty: ${bat_summary.text.readLines().size() > 1}",
                     "GTDB-Tk summary non-empty: ${gtdbtk_summary.csv(sep: '\t').rowCount > 0}",
                 ).match("content-checks") },
@@ -175,7 +169,7 @@ nextflow_pipeline {
                 { assert snapshot(
                     "bin_summary.tsv rows: ${bin_summary.csv(sep: '\t').rowCount}",
                     "busco_summary.tsv rows: ${busco_summary.csv(sep: '\t').rowCount}",
-                    "quast_bin_summary.tsv rows: ${quast_bin_summary.csv(sep: '\t').rowCount}",
+                    "seqkit_bin_summary.tsv rows: ${seqkit_bin_summary.csv(sep: '\t').rowCount}",
                     "bat_summary.tsv rows: ${bat_summary.text.readLines().size() - 1}",
                     "gtdbtk_summary.tsv rows: ${gtdbtk_summary.csv(sep: '\t').rowCount}",
                     "prokka *.tsv rows: ${prokka_tsv.collect { f -> "${f.name}=${path("${f}").csv(sep: '\t').rowCount}" }.sort()}",
@@ -185,9 +179,7 @@ nextflow_pipeline {
                     "remove_phix_logs match 'overall alignment rate': ${remove_phix_logs.every { log -> log.readLines().last() ==~ /[0-9.]+% overall alignment rate/ }}",
                     "megahit_logs match 'ALL DONE. Time elapsed': ${megahit_logs.every { log -> (log.readLines().last() =~ /ALL DONE. Time elapsed: [0-9.]+ seconds/).find() }}",
                     "spades_logs contains 'SPAdes pipeline finished.': ${spades_logs.every { log -> log.readLines().any { it.contains('SPAdes pipeline finished.') } }}",
-                    "assembly_quast_logs contains 'Finished:': ${assembly_quast_logs.every { log -> log.readLines().any { it.contains('Finished:') } }}",
                     "bowtie2_assembly_logs contains 'overall alignment rate': ${bowtie2_assembly_logs.every { log -> log.readLines().any { it.contains('overall alignment rate') } }}",
-                    "binning_quast_logs contains 'Finished:': ${binning_quast_logs.every { log -> log.readLines().any { it.contains('Finished:') } }}",
                     "busco_logs contains 'BUSCO analysis done': ${busco_logs.every { log -> log.readLines().any { it.contains('BUSCO analysis done') } }}",
                     "semibin2_logs contains 'Binning finished': ${semibin2_logs.every { log -> log.readLines().any { it.contains('Binning finished') } }}",
                     "prokka_logs contains 'Annotation finished successfully.': ${prokka_logs.every { log -> log.readLines().any { it.contains('Annotation finished successfully.') } }}",
