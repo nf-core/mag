@@ -190,7 +190,7 @@ Long-read polishing (for example, with `Medaka`) is _not_ implemented in the pip
 
 For metagenomes, polishing can harm assembly quality by erroneously modifying low-abundance genomes using high-abundance data.
 High-quality Nanopore data (10.4) may not benefit substantially from long-read polishing.
-Polishing long-read assemblies with short-read data might be beneficial but remains debated, so evaluate the results (for example, with `QUAST`) before relying on them.
+Polishing long-read assemblies with short-read data might be beneficial but remains debated, so evaluate the results (for example, with `seqkit stats`) before relying on them.
 
 ### What binning tool should I select?
 
