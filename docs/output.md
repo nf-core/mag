@@ -304,8 +304,327 @@ SPAdesHybrid is a part of the [SPAdes](http://cab.spbu.ru/software/spades/) soft
 
 - `Assembly/[assembler]/QC/[sample/group]/`
   - `[assembler]-[sample/group]-assembly_stats.tsv`: SeqKit statistics of the assembly
-  - `contig_to_bin_map.tsv`: Tab-separated file with columns: assembly ID, contig_id, binner, and bin ID, for all contigs of all bins (and refined bins, if activated) in the run.
 
+</details>
+
+### Assembly Quality Control with ALE
+
+[ALE (Assembly Likelihood Estimator)](https://github.com/sc932/ALE) is a probabilistic framework that evaluates assembly quality by computing the likelihood of the sequencing reads given an assembly. ALE provides per-contig quality scores and identifies potentially problematic regions in assemblies by analyzing read mapping patterns and insert size distributions. It is particularly useful for comparing assemblies and identifying misassemblies or low-confidence regions.
+
+ALE is only run with `--run_ale`, on the full (unfiltered) assembly. It can run only on assemblies generated from short reads, like SPAdes and MEGAHIT. Hybrid assembly with SPAdesHybrid uses only the short reads for ALE scoring.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `Assembly/[assembler]/QC/[sample/group]/ALE/`
+  - `[sample]_ALEoutput.txt`: Per-contig ALE scores and quality metrics, including likelihood estimates for each contig
+
+</details>
+
+### Assembly Quality Control with DeepMAsED
+
+[DeepMAsED (Deep learning for Metagenome Assembly Error Detection)](https://github.com/leylabmpi/DeepMAsED) uses a pre-trained neural network to predict per-contig misassembly scores from read alignment features. It runs in two sequential steps implemented as separate Nextflow modules:
+
+**`DEEPMASED_FEATURES`** extracts alignment statistics (coverage, mismatches, indels, base quality) from the BAM file for each contig and produces feature tables. This is the computationally intensive step.
+
+**`DEEPMASED_PREDICT`** applies the pre-trained model to the feature tables and outputs a misassembly score per contig (0 = correctly assembled, 1 = likely misassembly).
+
+DeepMAsED only runs on short-read assemblies (MEGAHIT, SPAdes). It cannot be used with long-read or hybrid assemblies.
+DeepMAsED prediction is run in CPU-only mode.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `Assembly/[assembler]/QC/[sample/group]/DeepMAsED/features/`
+  - `[sample]-[assembler]_feature_file_paths.tsv`: Index file listing all generated feature table files
+  - `[sample]-[assembler]*_feats.tsv{,.gz}`: Per-contig feature tables (one per parallel processing bin); gzipped if `--deepmased_features_gzip` is set
+- `Assembly/[assembler]/QC/[sample/group]/DeepMAsED/`
+  - `[sample]-[assembler]_predictions.tsv`: Per-contig misassembly scores. Score of 0 indicates a correctly assembled contig; score of 1 indicates a likely misassembly.
+
+</details>
+
+## Gene prediction
+
+Protein-coding genes are predicted for each assembly.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `Annotation/Prodigal/`
+  - `[assembler]-[sample/group].gff.gz`: Gene Coordinates in GFF format
+  - `[assembler]-[sample/group].faa.gz`: The protein translation file consists of all the proteins from all the sequences in multiple FASTA format.
+  - `[assembler]-[sample/group].fna.gz`: Nucleotide sequences of the predicted proteins using the DNA alphabet, not mRNA (so you will see 'T' in the output and not 'U').
+  - `[assembler]-[sample/group]_all.txt.gz`: Information about start positions of genes.
+
+</details>
+
+## Virus identification in assemblies
+
+### geNomad
+
+[geNomad](https://github.com/apcamargo/genomad) identifies viruses and plasmids in sequencing data (isolates, metagenomes, and metatranscriptomes)
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `VirusIdentification/geNomad/[assembler]-[sample/group]*/`
+  - `[assembler]-[sample/group]*_annotate`
+    - `[assembler]-[sample/group]*_taxonomy.tsv`: Taxonomic assignment data
+  - `[assembler]-[sample/group]*_aggregated_classification`
+    - `[assembler]-[sample/group]*_aggregated_classification.tsv`: Sequence classification in tabular format
+  - `[assembler]-[sample/group]*_find_proviruses`
+    - `[assembler]-[sample/group]*_provirus.tsv`: Characteristics of proviruses identified by geNomad
+  - `[assembler]-[sample/group]*_summary`
+    - `[assembler]-[sample/group]*_virus_summary.tsv`: Virus classification summary file in tabular format
+    - `[assembler]-[sample/group]*_plasmid_summary.tsv`: Plasmid classification summary file in tabular format
+    - `[assembler]-[sample/group]*_viruses_genes.tsv`: Virus gene annotation data in tabular format
+    - `[assembler]-[sample/group]*_plasmids_genes.tsv`: Plasmid gene annotation data in tabular format
+    - `[assembler]-[sample/group]*_viruses.fna`: Virus nucleotide sequences in FASTA format
+    - `[assembler]-[sample/group]*_plasmids.fna`: Plasmid nucleotide sequences in FASTA format
+    - `[assembler]-[sample/group]*_viruses_proteins.faa`: Virus protein sequences in FASTA format
+    - `[assembler]-[sample/group]*_plasmids_proteins.faa`: Plasmid protein sequences in FASTA format
+  - `[assembler]-[sample/group]*.log`: Plain text log file detailing the steps executed by geNomad (annotate, find-proviruses, marker-classification, nn-classification, aggregated-classification and summary)
+
+</details>
+
+## Binning and binning refinement
+
+### Contig sequencing depth
+
+Sequencing depth per contig and sample is generated by MetaBAT2's `jgi_summarize_bam_contig_depths --outputDepth`. The values correspond to `(sum of exactly aligned bases) / ((contig length)-2*75)`. For example, for two reads aligned exactly with `10` and `9` bases on a 1000 bp long contig the depth is calculated by `(10+9)/(1000-2*75)` (1000bp length of contig minus 75bp from each end, which is excluded).
+
+These depth files are used for downstream binning steps.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `GenomeBinning/depths/contigs/`
+  - `[assembler]-[sample/group]-depth.txt.gz`: Sequencing depth for each contig and sample or group, only for short reads.
+
+</details>
+
+### MetaBAT2
+
+[MetaBAT2](https://bitbucket.org/berkeleylab/metabat) recovers genome bins (that is, contigs/scaffolds that all belongs to a same organism) from metagenome assemblies.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `GenomeBinning/MetaBAT2/`
+  - `bins/[assembler]-[binner]-[sample/group].*.fa.gz`: Genome bins retrieved from input assembly
+  - `unbinned/[assembler]-[binner]-[sample/group].unbinned.[1-9]*.fa.gz`: Contigs that were not binned with other contigs but considered interesting. By default, these are at least 1 Mbp (`--min_length_unbinned_contigs`) in length and at most the 100 longest contigs (`--max_unbinned_contigs`) are reported
+
+</details>
+
+All the files and contigs in these folders will be assessed by SeqKit and BUSCO.
+
+All other files that were discarded by the tool, or from the low-quality unbinned contigs, can be found here.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `GenomeBinning/MetaBAT2/discarded/`
+  - `*.lowDepth.fa.gz`: Low depth contigs that are filtered by MetaBAT2
+  - `*.tooShort.fa.gz`: Too short contigs that are filtered by MetaBAT2
+- `GenomeBinning/MetaBAT2/unbinned/discarded/`
+  - `*.unbinned.pooled.fa.gz`: Pooled unbinned contigs equal or above `--min_contig_size`, by default 1500 bp.
+
+</details>
+
+All the files in this folder contain small and/or unbinned contigs that are not further processed.
+
+Files in these two folders contain all contigs of an assembly.
+
+### MaxBin2
+
+[MaxBin2](https://sourceforge.net/projects/maxbin2/) recovers genome bins (that is, contigs/scaffolds that all belongs to a same organism) from metagenome assemblies.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `GenomeBinning/MaxBin2/`
+  - `bins/[assembler]-[binner]-[sample/group].*.fa.gz`: Genome bins retrieved from input assembly
+  - `unbinned/[assembler]-[binner]-[sample/group].noclass.[1-9]*.fa.gz`: Contigs that were not binned with other contigs but considered interesting. By default, these are at least 1 Mbp (`--min_length_unbinned_contigs`) in length and at most the 100 longest contigs (`--max_unbinned_contigs`) are reported.
+
+</details>
+
+All the files and contigs in these folders will be assessed by SeqKit and BUSCO.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `GenomeBinning/MaxBin2/discarded/`
+  - `*.tooshort.gz`: Too short contigs that are filtered by MaxBin2
+- `GenomeBinning/MaxBin2/unbinned/discarded/`
+  - `*.noclass.pooled.fa.gz`: Pooled unbinned contigs equal or above `--min_contig_size`, by default 1500 bp.
+
+</details>
+
+All the files in this folder contain small and/or unbinned contigs that are not further processed.
+
+Files in these two folders contain all contigs of an assembly.
+
+### CONCOCT
+
+[CONCOCT](https://github.com/BinPro/CONCOCT) performs unsupervised binning of metagenomic contigs by using nucleotide composition, coverage data in multiple samples and linkage data from paired end reads.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `GenomeBinning/CONCOCT/`
+  - `bins/[assembler]-[binner]-[sample/group].*.fa.gz`: Genome bins retrieved from input assembly
+  - `stats/[assembler]-[binner]-[sample/group].csv`: Table indicating which contig goes with which cluster bin.
+  - `stats/[assembler]-[binner]-[sample/group]*_gt1000.csv`: Various intermediate PCA statistics used for clustering.
+  - `stats/[assembler]-[binner]-[sample/group]_*.tsv`: Coverage statistics of each sub-contig cut up by CONCOCT prior in an intermediate step prior to binning. Likely not useful in most cases.
+  - `stats/[assembler]-[binner]-[sample/group].log.txt`: CONCOCT execution log file.
+  - `stats/[assembler]-[binner]-[sample/group]_*.args`: List of arguments used in CONCOCT execution.
+
+</details>
+
+All the files and contigs in these folders will be assessed by SeqKit and BUSCO, if the parameter `--postbinning_input` is not set to `refined_bins_only`.
+
+Note that CONCOCT does not output what it considers 'unbinned' contigs, therefore no 'discarded' contigs are produced here. You may still need to do your own manual curation of the resulting bins.
+
+### COMEBin
+
+[COMEBin](https://github.com/ziyewang/COMEBin) allows effective binning of metagenomic contigs using COntrastive Multi-viEw representation learning.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `GenomeBinning/COMEBin/`
+  - `bins/[assembler]-[binner]-[sample/group]/comebin_res_bins/[assembler]-[binner]-[sample/group].*.fa.gz`: Genome bins retrieved from input assembly.
+  - `stats/[assembler]-[binner]-[sample/group]/comebin.log`: COMEBin log file.
+  - `stats/[assembler]-[binner]-[sample/group]/comebin_res.tsv`: TSV mapping the output clusters to contigs.
+  - `stats/[assembler]-[binner]-[sample/group]/covembeddings.tsv`: TSV describing the embeddings of the contigs.
+  - `stats/[assembler]-[binner]-[sample/group]/embeddings.tsv`: TSV describing the embeddings of the contigs.
+
+</details>
+
+All the files and contigs in these folders will be assessed by SeqKit and BUSCO, if the parameter `--postbinning_input` is not set to `refined_bins_only`.
+
+Note that COMEBin does not output what it considers 'unbinned' contigs, therefore no 'discarded' contigs are produced here. You may still need to do your own manual curation of the resulting bins.
+
+### MetaBinner
+
+[MetaBinner](https://github.com/ziyewang/MetaBinner) is described as a high-performance and stand-alone ensemble binning method to recover individual genomes from complex microbial communities.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `GenomeBinning/MetaBinner/`
+  - `bins/[assembler]-[binner]-[sample/group].*.fa.gz`: Genome bins retrieved from input assembly.
+  - `unbinned/[assembler]-[binner]-[sample/group].unbinned.fa.gz`: Contigs that were not binned despite having suitable length.
+  - `stats/[assembler]-[binner]-[sample/group].metabinner.log.gz`: Log file.
+  - `stats/[assembler]-[binner]-[sample/group].tsv.gz`: TSV mapping the contigs to output clusters.
+
+</details>
+
+All the files and contigs in these folders will be assessed by SeqKit and binning QC tools, if the parameter `--postbinning_input` is not set to `refined_bins_only`.
+
+### SemiBin2
+
+[SemiBin2](https://github.com/BigDataBiology/SemiBin) is a deep siamese neural network with preset environments (single samples) or self-supervised (multiple samples).
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `GenomeBinning/SemiBin2/`
+  - `bins/[assembler]-[binner]-[sample/group]_._*.fa.gz`: Genome bins retrieved from input assembly.
+  - `log/[assembler]-[binner]-[sample/group].SemiBinRun.log`: Log file.
+
+</details>
+
+All the files and contigs in these folders will be assessed by SeqKit and binning QC tools, if the parameter `--postbinning_input` is not set to `refined_bins_only`.
+
+Note that SemiBin2 does not output what it considers 'unbinned' contigs, therefore no 'discarded' contigs are produced here. You may still need to do your own manual curation of the resulting bins.
+
+### DAS Tool
+
+[DAS Tool](https://github.com/cmks/DAS_Tool) is an automated binning refinement method that integrates the results of a flexible number of binning algorithms to calculate an optimized, non-redundant set of bins from a single assembly. nf-core/mag uses this tool to attempt to further improve bins based on combining the MetaBAT2 and MaxBin2 binning output, assuming sufficient quality is met for those bins.
+
+DAS Tool will remove contigs from bins that do not pass additional filtering criteria, and will discard redundant lower-quality output from binners that represent the same estimated 'organism', until the single highest quality bin is represented.
+
+> ⚠️ If DAS Tool does not find any bins passing your selected threshold it will exit with an error. Such an error is 'ignored' by nf-core/mag, therefore you will not find files in the `GenomeBinning/DASTool/` results directory for that particular sample.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `GenomeBinning/DASTool/`
+  - `[assembler]-[sample/group]_allBins.eval`: Tab-delimited description with quality and completeness metrics for the input bin sets. Quality and completeness are estimated by DAS TOOL using a scoring function based on the frequency of bacterial or archaeal reference single-copy genes (SCG). Please see note at the bottom of this section on file names.
+  - `[assembler]-[sample/group]_DASTool_summary.tsv`: Tab-delimited description with quality and completeness metrics for the refined output bin sets.
+  - `[assembler]-[sample/group]_DASTool_contig2bin.tsv`: File describing which contig is associated to which bin from the input binners.
+  - `[assembler]-[sample/group]_DASTool.log`: Log file from the DAS Tool run describing the command executed and additional runtime information.
+  - `[assembler]-[sample/group].seqlength`: Tab-delimited file describing the length of each contig.
+  - `bins/[assembler]-[binner]Refined-[sample/group].*.fa`: Refined bins in fasta format.
+  - `unbinned/[assembler]-DASToolUnbinned-[sample/group].*.fa`: Unbinned contigs from bin refinement in fasta format.
+  - `fastatocontig2bin/[assembler]-[binner]Refined-[sample/group].*_contiglist.tsv`: DAS Tool compatible file describing which contig is to which bin going into bin refinement (only if `--refine_bins_dastool_savecontig2bin` is specified).
+
+</details>
+
+By default, only the raw bins (and unbinned contigs) from the actual binning methods, but not from the binning refinement with DAS Tool or Binette, will be used for downstream bin quality control, annotation and taxonomic classification. The parameter `--postbinning_input` can be used to change this behaviour.
+
+⚠️ Due to the ability to perform downstream QC of both raw and refined bins in parallel (via `--postbinning_input`), bin names in DAS Tool's `*_allBins.eval` file will include `Refined`. However for this particular file, they _actually_ refer to the 'raw' input bins. The pipeline renames the input files prior to running DASTool to ensure they can be disambiguated from the original bin files in the downstream QC steps.
+
+### Binette
+
+[Binette](https://github.com/genotoul-bioinfo/Binette) is a bin refinement tool that builds new candidate bins from the intersections, differences and unions of the input bin sets. It assesses every candidate bin with CheckM2 and keeps the best non-redundant set of bins for each assembly. nf-core/mag runs it with `--refine_bins_binette`, using the bins of all enabled binners as input. Binette runs independently of DAS Tool, so both can be enabled at the same time.
+
+Binette needs a CheckM2 database. The pipeline uses the database given with `--checkm2_db`, or downloads one otherwise (see `--checkm2_db_version`).
+
+When Prodigal is run (i.e. without `--skip_prodigal`), Binette reuses its protein predictions instead of predicting genes again. In that case, Binette does not report the coding density of the bins. With `--ancient_dna`, Binette always predicts genes itself, as the binned contigs are damage-corrected.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `GenomeBinning/Binette/`
+  - `[assembler]-BinetteRefined-[sample/group].final_bins_quality_reports.tsv`: CheckM2 completeness and contamination, and Binette score, of the refined bins.
+  - `[assembler]-BinetteRefined-[sample/group].final_contig_to_bin.tsv`: Contig to bin assignment of the refined bins.
+  - `input_bins_quality_reports/[assembler]-BinetteRefined-[sample/group].*.tsv`: CheckM2 completeness and contamination of the input bins, one file per input bin set.
+  - `bins/[assembler]-BinetteRefined-[sample/group].*.fa.gz`: Refined bins in fasta format.
+  - `unbinned/[assembler]-BinetteUnbinned-[sample/group].fa.gz`: Contigs not assigned to any refined bin, in fasta format. Binette does not report these, so the pipeline derives them from the assembly and `final_contig_to_bin.tsv`.
+
+</details>
+
+Refined bins are only used for downstream bin quality control, annotation and taxonomic classification if `--postbinning_input` is set to `refined_bins_only` or `both`.
+
+### Tiara
+
+Tiara is a contig classifier that identifies the domain (prokarya, eukarya) of contigs within an assembly. This is used in this pipeline to rapidly and with few resources identify the most likely domain classification of each bin or unbin based on its contig identities.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `Taxonomy/Tiara/`
+  - `[assembler]-[sample/group].tiara.txt` - Tiara output classifications (with probabilities) for all contigs within the specified sample/group assembly
+  - `log_[assembler]-[sample/group].txt` - log file detailing the parameters used by the Tiara model for contig classification.
+- `GenomeBinning/Tiara/tiara_summary.tsv` - Summary of Tiara domain classification for all bins.
+
+</details>
+
+Typically, you would use `tiara_summary.tsv` as the primary file to see which bins or unbins have been classified to which domains at a glance, whereas the files in `Taxonomy/Tiara` provide classifications for each contig.
+
+### Bin sequencing depth
+
+For each bin or refined bin the median sequencing depth is computed based on the corresponding contig depths.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `GenomeBinning/depths/bins/`
+  - `bin_depths_summary.tsv`: Summary of bin sequencing depths for all samples. Depths are available for samples mapped against the corresponding assembly, i.e. according to the mapping strategy specified with `--binning_map_mode`. Only for short reads.
+  - `bin_refined_depths_summary.tsv`: Summary of sequencing depths for refined bins for all samples, if refinement was performed. Depths are available for samples mapped against the corresponding assembly, i.e. according to the mapping strategy specified with `--binning_map_mode`. Only for short reads.
+
+</details>
+
+### Contig to bin map
+
+The pipeline also generates a 'contig to bin map' to help users explore track where each contig from a given assembly was assigned to which bin (and refined bin).
+
+<details markdown="1">
+<summary>Output files</summary>
+- `GenomeBinning/contig_to_bin/`
+  - `contig_to_bin_map.tsv`: Tab-separated file with columns: assembly ID, contig_id, binner, and bin ID, for all contigs of all bins (and refined bins, if activated) in the run.
 </details>
 
 ### QC for metagenome assembled genomes with SeqKit
