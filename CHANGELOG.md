@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
-- [#XXXX](https://github.com/nf-core/mag/pull/XXXX) - Replaced QUAST with SeqKit `stats` for assembly and bin statistics. The QUAST report directories are no longer produced, `--skip_quast` was removed, and `bin_summary.tsv` now has only the `# contigs`, `Total length`, `Largest contig`, `GC (%)`, `N50`, `N90` and `L50` columns, without the `_quast` suffix. BIgMAG metrics based on length thresholds, `auN`, `L90` and `# N's per 100 kbp` are no longer available (by @dialvarezs)
+- [#1142](https://github.com/nf-core/mag/pull/XXXX) - Replaced QUAST with SeqKit `stats` for assembly and bin statistics. Parameter `--skip_quast` was removed, and `bin_summary.tsv` now has only the `# contigs`, `Total length`, `Largest contig`, `GC (%)`, `N50`, `N90` and `L50` columns. BIgMAG metrics based on length thresholds, `auN`, `L90` and `# N's per 100 kbp` are no longer available (by @dialvarezs)
 - [#1136](https://github.com/nf-core/mag/pull/1136) - Migrated output publishing from `publishDir` to workflow outputs; output directory structure is unchanged (by @dialvarezs)
 - [#1104](https://github.com/nf-core/mag/pull/1104) - Updated to nf-core 4.1.0 template (by @dialvarezs)
 - [#1103](https://github.com/nf-core/mag/pull/1103) - Support parameter types (by @dialvarezs)
